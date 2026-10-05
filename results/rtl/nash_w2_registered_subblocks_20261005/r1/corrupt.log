@@ -1,0 +1,6 @@
+PROVIDER_ACCEPT cycle=22 we=1 byte_address=4128 slot=1
+PROVIDER_ACCEPT cycle=42 we=0 byte_address=4128 slot=1
+CORRUPT_READBACK_DETECTED cycle=53 slot=1
+[590000] %Fatal: tb_hbm_integrated_w2_publication_nash.sv:177: Assertion failed in tb_hbm_integrated_w2_publication_nash: EXPECTED_CORRUPT_READBACK_FAIL_CLOSED retained_owner=1 released=0
+%Error: rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_w2_publication_nash.sv:177: Verilog $stop
+Aborting...

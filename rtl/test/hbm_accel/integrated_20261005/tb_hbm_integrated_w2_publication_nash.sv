@@ -2,6 +2,7 @@
 // Component fixture: actual CP20, W2 sink, shared protected borrower and byte RAM.
 // Distinct literal payloads are test stimulus, not native arithmetic outputs.
 module tb_hbm_integrated_w2_publication_nash;
+ parameter integer REGISTERED_SUBBLOCKS=0;
  `include "private_alloc.svh"
  reg clk=0; always #5 clk=~clk;
  reg por_n=0,cmd_we=0,db_v=0,cpl_rdy=0;
@@ -70,7 +71,7 @@ module tb_hbm_integrated_w2_publication_nash;
  assign s_req_r=req_rdy[3];
  assign s_rsp_v=rsp_v[3]&&delivery_enabled;
  assign s_rsp={rsp_tag[63:48],rsp_we[3],rsp_data[1023:768]};
- ot_hbm_integrated_w2_result_sink #(.ENABLE(1)) sink(
+ ot_hbm_integrated_w2_result_sink #(.ENABLE(1),.REGISTERED_SUBBLOCKS(REGISTERED_SUBBLOCKS)) sink(
   .clk(clk),.por_n(por_n),.owned(grants[2]),.installed(installed),.reserve_v(reserve_v),.reserve_r(reserve_r),
   .pair_op(1'b1),.rows_a(2'd2),.rows_b(2'd2),.op_a(OPA),.op_b(OPB),
   .base_a(BASE_A),.limit_a(LIMIT_A),.base_b(BASE_B),.limit_b(LIMIT_B),.provider_tag(16'hf239),.frame(FRAME),
@@ -164,6 +165,7 @@ module tb_hbm_integrated_w2_publication_nash;
   wait(grants[2]);@(negedge clk);
   if(source_permit)$fatal(1,"source permit before accepted output reservation");
   reserve_v=1;wait(reserve_r);@(negedge clk);reserve_v=0;lease_requested=0;
+  wait(source_permit);
   issue_row(1);issue_row(2);issue_row(0);issue_row(3);
   @(negedge clk);result_v=0;native_done=1;release_intent=1;
   @(negedge clk);native_done=0;
