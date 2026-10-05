@@ -42,7 +42,7 @@ def build():
    context_phase_launch_FF=10,context_phase_capture_FF=320,context_stream_capture_FF=48,
    conservative_total_context_clock_sinks=425,fanout8_clock_buffer_allowance=61,
    context_launch_capture_FF_floor_um2=378*.2916,clock_buffer_floor_um2=61*.10206,
-   allocation='Within issuer50pct spare198.60876um2: conservative additional context FF/clock floor116.44776um2 leaves82.161um2 for capture mux/remaining construction; actual mapping must fit or reject. Full four PHROM capture banks retained.',
+   allocation='Within issuer50pct spare198.60876um2: conservative additional context FF/clock floor116.45046um2 leaves82.15830um2 for capture mux/remaining construction; actual mapping must fit or reject. Full four PHROM capture banks retained.',
    policy='ONE common context clock; actual 47FF issuer/active_addr plus all FOUR existing s_pw/s_rs banks and sw captures. Phase i_ph requires held registered launch context, not zero-delay input.',
    trunk='M8 clock with adjacent shields; separate from M6 data corridor. CTS includes phase-launch and all source capture sinks.',
    whole_parent_clock_bound=False),

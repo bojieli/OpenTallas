@@ -3,7 +3,7 @@
   "M6_tracks_after_source_PG_spacing": 215,
   "PDN_source": "Existing M2 followpins + M5/M6/M7 source stripes from dsrom_noECC_local_context_cuts.pdn; construct same-net via landings outside signal tracks, route validates connectivity.",
   "clock": {
-    "allocation": "Within issuer50pct spare198.60876um2: conservative additional context FF/clock floor116.44776um2 leaves82.161um2 for capture mux/remaining construction; actual mapping must fit or reject. Full four PHROM capture banks retained.",
+    "allocation": "Within issuer50pct spare198.60876um2: conservative additional context FF/clock floor116.45046um2 leaves82.15830um2 for capture mux/remaining construction; actual mapping must fit or reject. Full four PHROM capture banks retained.",
     "clock_buffer_floor_um2": 6.2256599999999995,
     "conservative_total_context_clock_sinks": 425,
     "context_launch_capture_FF_floor_um2": 110.22480000000002,
