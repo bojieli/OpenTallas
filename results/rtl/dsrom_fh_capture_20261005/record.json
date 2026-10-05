@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "EXACT_PASS_SYNTH_PASS_FLOORPLAN_RECIPE_FAILURE",
+  "status": "DECODE_SPLIT_EXACT_PASS_C12_PHYSICAL_RUNNING",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -120,6 +120,17 @@
     "warm_mask_reset_debt_preserved": true,
     "model": "results/uarch/dsrom_fh_capture_20261005/decode_split_before_rtl.json",
     "physical_closed": false,
-    "adopted": false
+    "adopted": false,
+    "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split"
+  },
+  "C11_actual_result": {
+    "stage": "floorplan, estimated parasitics, before propagated CTS/extracted route",
+    "setup_ws_ps": -105.632,
+    "hold_ws_ps": -6.98575,
+    "qualified": false,
+    "terminal_exit": 2,
+    "terminal_reason": "Automatic macro placer locks macros before POST_MACRO_PLACE_TCL attempts planned reposition; ODB-0359",
+    "source": "a3046f074",
+    "RTL_and_arithmetic_unchanged": true
   }
 }
