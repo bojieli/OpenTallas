@@ -1073,9 +1073,12 @@
     "results/rtl/dsrom_recovery_20261004/su_chains/anatomy.json": "e290749835c748b5933b0fd8d9f33169e2a50d90ad76ba3d8063454085b64671",
     "results/rtl/dsrom_recovery_20261004/composition.json": "6cef075ee8d265690f609ad727bcb13349f82572005abe1a0ab612ab29623306",
     "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_result.json": "eeb70af58820e0e399b0c15170798ce1f1b4ea5d2abc85d3f924c2261fc01c6d",
-    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_cached_manifest.json": "be3d158443fdb9c75a94f9e56588b1d0594e09a7ffeea80f672ddf238a96adb7"
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_cached_manifest.json": "be3d158443fdb9c75a94f9e56588b1d0594e09a7ffeea80f672ddf238a96adb7",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/run_rtl_W64_NB32_L0.swiglu+L0.shared_swiglu+L3.swiglu+L3.shared_swiglu+L20.swiglu+L20.shared_swiglu+L24.swiglu+L24.shared_swiglu+random.swiglu.json": "658469bd61e6e4d4935aaabc1a7869fb9d2bb6d8413db3c97265aefb459e3a8d",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/run_dpi_beh_W1024_NB32_L0.swiglu+L0.shared_swiglu+L3.swiglu+L3.shared_swiglu+L20.swiglu+L20.shared_swiglu+L24.swiglu+L24.shared_swiglu+random.swiglu.json": "e8145f17eb169cb306062c16a37b0bf2ca738860be9eda9c8f984101fb286b4c",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/cases.json": "988f921371c9301d2e3d31e4ef446d106a901e8a9cd6096ba5b246dd73ec868d"
   },
-  "tool_sha256": "fc9ddec7bfb233cbf8e75a40fd3770e269632ea22b0c0860e42aa640902d9fba",
+  "tool_sha256": "e83f58a9410e79484bdbb94a01a19e51498314d3608f8183e64ca07c0de6e9f0",
   "actual_registered_transport": {
     "chain": "L20.attn.hc_pre_norm",
     "nodes": [
@@ -1138,5 +1141,173 @@
     },
     "cdc": "not in component: use graph crossings once; no zero-CDC adoption",
     "gate": "component functional/transport PASS; credits/VM lease/area/corridor/SSFF HOLD"
+  },
+  "swiglu": {
+    "rows": [
+      {
+        "chain": "L0.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L0.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L3.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L3.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L20.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L20.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L24.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L24.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      }
+    ],
+    "full_shape_exact": true,
+    "token_gain": null,
+    "ss_ff": null,
+    "verdict": "UNVALIDATED_COMPONENT_COMPARISON"
   }
 }

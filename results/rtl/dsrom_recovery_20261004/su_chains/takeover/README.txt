@@ -50,3 +50,20 @@ Consumer: Maxwell, tools/dsrom_1m_allmeasured.py. Machine-readable per-node time
 boundary events: norm_join.json and transport_result.json. Original cached operand
 manifest is independently read from the completed source run. Three rejection checks
 each for baseline join and registered transport are retained; failures are not erased.
+
+Existing SwiGLU terminals joined without rerun: W1024 DPI and W64 RTL cover the
+eight representative routed/shared chains plus existing stress. All source hashes
+and the 1e00804b case-set hash match. Routed3456 elements: baseline swiglu+quant
+347 slow cycles=0.385556us, candidate178 fast cycles=0.148333us. Shared576 elements:
+242 slow=0.268889us versus170 fast=0.141667us. The baseline swiglu instruction
+already includes route weight as E2; a separate graph route_w must not be added a
+second time to this same-chain comparison. Candidate clock/area/corridor remain
+unqualified; these component times are not composed rate or adoption.
+
+Selected HC-post M5A4 existing routed lane has SS setup -52.47ps / FF hold +5.70ps
+at833ps/SS60/FF25: REJECT_SS, regardless of the pending numerical recovery. Its
+measured standard-cell area is5435.51um2/lane; 1024-lane replication is5.56596224mm2
+ESTIMATE excluding outside-lane hub storage2,168,064bits plus90validbits, routing
+and slot fit. Existing M6A5 lane closes SS+0.56/FF+4.47ps, but is a separately
+labelled source/latency configuration without selected full-shape exact evidence.
+It is not a rescue or substitute for M5A4. No new parameter/P&R run is launched.
