@@ -61,3 +61,15 @@ PF=E/LANES. Initial own referenceE64/384 was INVALID at LANES16 (OF0/3),
 not a qualified numerical vehicle. Correct referencesE1024/6144 produce
 PF64/384 andOF8/48. Sole own invalid Icarus compiler identity/cwd/consumer
 audited before SIGTERM; archive and partial output retained. No route changed.
+
+Concrete actual32 caller+endpoint mechanism result: PASS32 completions,
+128TX/256RXranked gather records,789cycles,zero mismatches or addedcycles
+(context32_exact_r1/result.json); original and cuts capture identical vectors.
+This is local actualcaller exactness, not contextualSS/FF or outer adoption.
+
+HA2 source cuts modeled before RTL, defaultCUTS0 forwarding original runtime.
+Enabled: own quotient/remainder rewritten exact bounded range; narrow finite
+read pointer and 128 local onehot selectors (6144FF), sameSLOTREG/tree/pack,
+zero newcycles. Actual prior rptr->sq CTS -3536.49ps and PF384 synthesis
+4082861cells/490159.0422um2 motivate structural source work. No gain/route
+claim yet; corrected full16 baseline gate continues independently.
