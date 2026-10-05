@@ -21,7 +21,8 @@ Owner rules in force:
 
 - Measured compositions only.
 - Every HBM load at ≥ 90% of peak.
-- Acceptance (tau) and GPU baselines come from published third-party figures (`results/external/registry.json`).
+- GPU baselines come from published third-party figures (`results/external/registry.json`).
+- Acceptance (tau), owner decision 2026-10-05: DeepSeek-V4.1 uses **4.159**, the owner 6-class workload blend (harmonic, greedy, gamma 5; `results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json`), because the published V4.1 primary is a single GSM8K dataset and several published sources are V4-Flash, not V4.1. The published V4.1 value 3.8879 and range 3.43–4.32 are a sensitivity (`OT_TAU_SOURCE=third_party`). Qwen3-8B stays at the third-party derived 3.1445 (`tools/third_party_tau.py`).
 - MTP is required where it pays.
 - Mandatory baseline blocks must close: only optional levers face the ≥ 1% reject rule.
 - Nothing heavy on localhost.
@@ -32,24 +33,24 @@ Owner rules in force:
 | Target | Headline (measured) | Exactness | Physical | Status |
 |---|---|---|---|---|
 | Qwen3-8B ROM, 8K | AR on STREAM4: **6,169.7 tok/s** (5,974.3 wire-bound); 2.99x the one-stack path (`results/rtl/qwen_rom_kv_fullbw_20261004/`) | All 4 dies and token K/V bit-exact vs GPU golden | Die 811.8 mm²; global route **closed** (b3r16B40, 0 overflow, `f1df64409`); IR 20–26 mV | Core decode −217 ps; port/scale slab share open; landing merge −0.75 ns |
-| DeepSeek-V4.1 ROM, 1M | **1,612.7 AR / 4,462.1 MTP** (all measured; head lever adopted `1c4e785ee`, window bound `42cf43125`) | Every term bit-exact; 3 interaction bugs found and fixed (`952159dfa`, `be155754b`); no native end-to-end S81 token yet | S81 layer and head dies passed at `21fcf6469` (0 overflow, IR 28.6–32.2 mV), **before** the recovery levers | Recovery in progress; several blocks still closing |
-| HBM accelerator, DS 1M | **2,173.7 AR / 4,377.9 MTP** (fully measured `7dfe62676`, notice default) | Exact | Control loops closed (bulk copy, KV lifecycle `7ce508488`, SECDED fence `b5f1dcdf6`) | Datapath short of 1.2 GHz: collective endpoint −329 ps, SU lane −4.8/−46 ps, SFU tail −113/−167 ps, attention tile about 881 MHz |
+| DeepSeek-V4.1 ROM, 1M | **1,654.7 AR / 4,872.2 MTP** (all measured: AR 604.3 µs, MTP step 853.6 µs; fused hc_post lever `9082d0a53`, head lever `1c4e785ee`, window bound `42cf43125`; tau 4.159, 4,554.6 MTP at the published 3.8879) | Every term bit-exact; 3 interaction bugs found and fixed (`952159dfa`, `be155754b`); no native end-to-end S81 token yet | S81 layer and head dies passed at `21fcf6469` (0 overflow, IR 28.6–32.2 mV), **before** the recovery levers | Recovery in progress; several blocks still closing |
+| HBM accelerator, DS 1M | **2,173.7 AR / 4,683.2 MTP** (fully measured `7dfe62676`, notice default; tau 4.159, 4,377.9 at 3.8879). Matched reference `b39173b46` (review corrections measured, shared levers credited): **474.8 µs AR / 1,050.6 µs MTP step = 3,958.5 MTP** | Exact | Control loops closed (bulk copy, KV lifecycle `7ce508488`, SECDED fence `b5f1dcdf6`) | Datapath short of 1.2 GHz: collective endpoint −329 ps, SU lane −4.8/−46 ps, SFU tail −113/−167 ps, attention tile about 881 MHz |
 | HBM accelerator, Qwen 8K | 2,154–2,220 AR; DSpark about 5,055 (TP4, `2f4a6af49`) | Exact (TP2 and TP4 vs GPU golden) | Not closed: Qwen-side core, collective and lane blocks open | Handed to Codex |
 
 **Comparisons at equal silicon, measured:**
 
 - **Qwen:** the ROM (AR, STREAM4) is about 2.7x the HBM accelerator's AR.
-- **DeepSeek:** the ROM is 0.74x the HBM accelerator on AR and **1.02x on MTP**.
-- **Energy** (`0bc89506e`):
-  - Qwen ROM leads (0.165 vs 0.761 J/token, model power).
-  - DS HBM leads DS ROM at batch 1 (5.81 vs 6.79 J/token) until spine gating is measured.
+- **DeepSeek (per user):** against the fully measured HBM accelerator the ROM is 0.76x on AR and **1.04x on MTP**. Against the matched reference it is 0.79x on AR (604.3 vs 474.8 µs) and **1.23x on MTP** (step 853.6 vs 1,050.6 µs). Both ratios use one tau on both sides, so they do not depend on it.
+- **Energy** (`results/arch/energy_silicon_measured/`, regenerated 2026-10-05):
+  - Qwen ROM leads (0.109 vs 0.761 J/token, model power).
+  - DS at batch 1, AR: ROM 5.80 J/token (measured PG residual) against HBM 5.77, a tie until spine gating is measured.
 
 ## 3. Decisions already taken
 
 - **Qwen ROM operating mode is plain decoding (AR) at 8K.** This is conditional on `results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json`.
   - DSpark on the compute-balanced ROM measured 0.763x AR (free-draft bound 0.969x): the ROM's read rate equals its MAC rate, so a 4-position verify layer costs 3.26x an AR layer.
   - DSpark stays built and exact but off.
-  - MTP stays required and pays on the DS ROM (2.75x) and the HBM accelerator (2.28x).
+  - MTP stays required and pays on the DS ROM (2.94x) and the HBM accelerator (2.15x), both at tau 4.159.
   - Principle: speculation pays only when the dominant per-token cost is shared across the verified positions.
 - **Near-HBM attention dropped** (`c8d7ab368`); the KV path is STREAM4. The old HBM_STREAM controller is retired.
 - **DS ROM batched draft head (L2, NV5) rejected.** It is wire-bound: routed −674 ps.
@@ -62,7 +63,7 @@ Owner rules in force:
 
 | Item | Why Claude |
 |---|---|
-| DS ROM recovery: field-phase lever and SU-chain fusion; DS decision gate | Architecture work; sets whether the DS ROM beats the HBM accelerator |
+| DS ROM recovery: field-phase lever and SU-chain fusion; matched-reference checkpoint | Architecture work; drives the DS ROM to beat the matched HBM accelerator in both AR and MTP |
 | Qwen DSpark final verdict; atlas, analytical-report and paper write-up | Analysis and academic writing |
 | DS q-element closure; DS link/hop closure | Close and subtle |
 | Structural redesigns: Qwen core decode; HBM collective endpoint, SU lane and SFU tail, attention tile, SM element | Need new RTL structure; Codex runs their closure loops after Claude posts a designed fix |
@@ -98,12 +99,12 @@ Handoff files are in `/tmp/claude-review-20261003/handoff_to_codex_20261004/`; t
 
 ## 5. Major risks
 
-1. **DS ROM value proposition.**
-   - Fully measured, it trails the HBM accelerator on AR (0.74x) and only ties on MTP (1.02x).
+1. **DS ROM AR gap to the matched HBM accelerator.**
+   - **Target (owner 2026-10-05):** the DS ROM continues to closure and aims to beat the matched HBM accelerator in both AR and MTP. The comparison is a measured checkpoint for the paper, not a kill switch.
+   - Today, against the matched reference (`b39173b46`), the ROM leads on MTP: step 853.6 vs 1,050.6 µs, 4,872.2 vs 3,958.5 tok/s at tau 4.159. It trails on AR: 604.3 vs 474.8 µs, a 129.5 µs gap.
    - The token is latency-bound. Field matvecs are 37% of the AR critical path: serial phases with a fixed cost of 200–260 cycles each, experts swept one after another, no K-split. Serial SU chains are 26%.
-   - The field-phase and SU-chain levers decide whether it wins.
-   - **Decision gate (about 2026-10-06):** if it is still below the HBM accelerator after those levers land, the owner decides whether the DS ROM continues, is redirected (energy or capacity), or is narrowed.
-2. **1.2 GHz on baseline blocks across all three targets.** Every rate assumes 1.2 GHz. At today's closing clocks the DS HBM AR falls to about 1,646 tok/s. Open baseline blocks:
+   - The field-phase lever (PQ) is exact and worth +20.5% AR (measured on the 1,612.7 tok/s base), but it is rejected until its spine closes SS at 1.2 GHz (−722.8 ps). That spine, the remaining SU-chain fusions and expert concurrency are the levers for the AR gap.
+2. **1.2 GHz on baseline blocks across all three targets.** Every rate assumes 1.2 GHz. At today's closing clocks the DS HBM AR falls to 1,656.3 tok/s. Open baseline blocks:
    - Qwen core decode;
    - Qwen port/scale slab;
    - Qwen landing merge;
@@ -133,11 +134,11 @@ Ranges reflect today's experience that closure needs several iterations.
 | Milestone | Owner | Expected |
 |---|---|---|
 | Qwen DSpark verdict file; atlas/report updated | Claude | 2026-10-05 |
-| DS field-phase + SU-chain lever results; DS decision gate | Claude | about 2026-10-06 |
+| DS field-phase + SU-chain lever results; matched-reference checkpoint (measured, for the paper) | Claude | about 2026-10-06 |
 | Qwen ROM integrated 8K token on STREAM4 (Codex) | Codex | 2026-10-06/07 |
 | Qwen ROM closure (core decode, slab, landing merge, die rerun) | Claude + Codex | 2026-10-07/08 |
 | HBM accelerator 1.2 GHz datapath closure (both models) | Claude designs, Codex closes | 2026-10-08/09 |
-| DS ROM closure (if continued): blocks + S81 die rerun + native token | Claude + Codex | 2026-10-08/09 |
+| DS ROM closure: blocks + S81 die rerun + native token, targeting AR and MTP ahead of the matched HBM accelerator | Claude + Codex | 2026-10-08/09 |
 
 ## 7. Where to look
 

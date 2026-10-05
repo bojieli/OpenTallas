@@ -14,6 +14,28 @@ inline uint32_t dsrom_s81_su_constant_address(
     const DsromS81PrefixOperation& op, unsigned operand, unsigned src, uint32_t address) {
     if (operand>=4) throw std::runtime_error("SU constant operand port");
     switch(op.index) {
+    case 2490: { // Exact L20.I19; coefficients staged by explicit SIM_ONLY I18 caller.
+        static constexpr std::array<uint32_t,64> literal{{0x00000012u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x20000004u,0x00000000u,0x0000035eu,0x00400002u,0x00000000u,0x04000000u,0x03000000u,0x01000000u,0x10800000u,0x00000000u,0x00000000u,0x80000000u,0xc0000002u,0x40000000u,0x20000000u,0x06005840u,0x00000d78u,0x01000008u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x80000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u}};
+        if(op.unit!=2||!op.template_sha256||std::strcmp(op.template_sha256,"fbb809f39f7e40aa80554ef7e8e7ff9a2768c403d772d06bf00e78eae37da28e")!=0||op.instruction!=literal)
+            throw std::runtime_error("SU RoPE canonical key operation mismatch");
+        if(operand==1||operand==3){
+            if(src!=(operand==1?1u:2u)||address<0x31ffffe0u||address>0x31ffffffu)
+                throw std::runtime_error("SU RoPE wrong target position/kind/coefficient span");
+            return 128000u+(address-0x31ffffe0u);
+        }
+        return address;
+    }
+    case 2494: { // Exact L20.I23; coefficients staged by explicit SIM_ONLY I18 caller.
+        static constexpr std::array<uint32_t,64> literal{{0x00000002u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x20000040u,0x00000000u,0x0000036eu,0x00400002u,0x00000000u,0x04000000u,0x03000000u,0x01000000u,0x10800000u,0x00000000u,0x00000000u,0x80000000u,0xc0000002u,0x40000000u,0x20000000u,0x06005840u,0x00000db8u,0x01000008u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x80000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u,0x00000000u}};
+        if(op.unit!=2||!op.template_sha256||std::strcmp(op.template_sha256,"1ec11dc637c0e036e49757e4b0fbbce3258cbb3c7b09838226530cbbb1c3a614")!=0||op.instruction!=literal)
+            throw std::runtime_error("SU RoPE canonical query operation mismatch");
+        if(operand==1||operand==3){
+            if(src!=(operand==1?1u:2u)||address<0x31ffffe0u||address>0x31ffffffu)
+                throw std::runtime_error("SU RoPE wrong target position/kind/coefficient span");
+            return 128000u+(address-0x31ffffe0u);
+        }
+        return address;
+    }
     case 2484: { // L20.I13
         static constexpr std::array<uint32_t,64> literal{{
             0x00000012u, 0x00000000u, 0x00000000u, 0x00000000u, 0x00000000u, 0x00000000u, 0x00000000u, 0x00000000u,

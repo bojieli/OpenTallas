@@ -1,0 +1,38 @@
+{
+  "scope": "Software-only adapter for Einstein HBM SU fused runtime; not native ISA, numerical proof, hardware measurement or adoption",
+  "schema": "opentallas.hbm-su-fused-software-descriptors.v1",
+  "api": "compile_saved(Path(existing_pickle)); cases.load_cases(Path(existing_pickle)) returns unchanged saved arrays/operations",
+  "cli": "python3 tools/hbm_accel_su_fused_compile.py --cases EXISTING_SU_CASES.pkl --output descriptors.json",
+  "inputs": {
+    "v2_ildr.json": {
+      "origin": "ot-epyc2:/srv/opentallas-scratch/claude/hbm-matched-reference/su_m6a5/out/su_cases_v2_ildr.pkl",
+      "scope": "existing HBM single-position saved cases"
+    },
+    "p6om_ildr.json": {
+      "origin": "ot-epyc2:/srv/opentallas-scratch/claude/hbm-matched-reference/su_m6a5/out/su_cases_p6om_ildr.pkl",
+      "scope": "existing HBM six-position op-major saved cases"
+    },
+    "original_norm.json": {
+      "origin": "ot-epyc2:/srv/opentallas-scratch/claude/dsrom-suchains/norm/su_cases.pkl",
+      "scope": "retained original source demonstrates required hcpost redsq fallback; not a new HBM numerical measurement"
+    }
+  },
+  "runtime_contract": [
+    "Load the exact saved pickle by SHA256; expected arrays and initial/CR bits come from that pickle unchanged.",
+    "original_ops and original_op_indexes retain original issue/reduction/rounding order, including noncontiguous interleaved groups; descriptors are not a replacement scheduler.",
+    "selected means a fully matched software candidate, never adopted hardware. Unknown controls, missing operands or interfering VM operations retain original ops.",
+    "hc_post with saved redsq is an unselected candidate; retain its WHOLE original group. No dead-consumer proof is inferred.",
+    "Checks include original labels/addresses/counts/kinds and hashes of expected little-endian binary32 words; no oracle runs.",
+    "Index_q export supports the exact saved two-op contract: original-Q untouched heads plus saved-O rotated tails per head, scaled weights with saved BF16 rounding. No weights quantization.",
+    "No saved index_q SU case pickle was available in the consumed inputs. index_q capability is implemented but no actual index_q enrollment/result is claimed.",
+    "No MTP, tau, rates, clock or new cost assumptions are emitted. Maxwell owns composition; Einstein owns parent/runtime."
+  ],
+  "arithmetic_executed": false,
+  "hardware_jobs_launched": 0,
+  "artifacts_sha256": {
+    "compiler_checks.json": "54bd25798fcedb1692ace0c6dcab9ddf5bca31a49029a15387d685438439e6ee",
+    "original_norm.json": "d3dab7aa14511ac01f3986c9a44d9b799d1842b9ea413521a1d35806e64a9d22",
+    "p6om_ildr.json": "28411a7d465e94b8c4299861b8e96d849cf00c1d145d6c2d3826370c19b2b118",
+    "v2_ildr.json": "9050afb61a4c4058445c786ac2bca17774f1c8f378723d515dddfbf4379a14ac"
+  }
+}

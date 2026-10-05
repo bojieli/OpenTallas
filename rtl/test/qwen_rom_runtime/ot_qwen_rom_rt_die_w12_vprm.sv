@@ -47,6 +47,7 @@ module ot_qwen_rom_rt_die_w12_vprm #(
     parameter integer VPOS = 1,
     parameter integer ENABLE_ARP = 1,
     parameter integer SEQ_LA = 0,          // sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA)
+    parameter integer DEC_LA = 0,          // core decode restructure (tools/qwen_rom_core_dec_emit_w12.py)
     parameter integer VWA = 16,
     parameter integer VPMAX = 4,
     parameter integer NPROG = 1024,
@@ -205,7 +206,7 @@ module ot_qwen_rom_rt_die_w12_vprm #(
         .ME_STALL(1),.ME_IDLE_GATE(ME_IDLE_GATE),
         .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL),.MEM_EXTRA(MEM_EXTRA),
         .ACC_LAT(ACC_LAT),.TREE_LAT(TREE_LAT),.MUL_LAT(MUL_LAT),
-        .FAST_ISSUE(FAST_ISSUE),.KV_PREP(KV_PREP),.VPOS(VPOS)) core (
+        .FAST_ISSUE(FAST_ISSUE),.KV_PREP(KV_PREP),.VPOS(VPOS),.DEC_LA(DEC_LA)) core (
         .clk(clk),.rst_n(rst_n),.start(core_start),.token(core_tok[NW-1:0]),.pos(core_pos[NW-1:0]),
         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
         .cycles(core_cycles),.fault(core_fault),

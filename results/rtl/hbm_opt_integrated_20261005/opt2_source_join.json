@@ -1,0 +1,153 @@
+{
+  "candidate_exact": true,
+  "record_commit": "201b38f8a13ec1bcef7c2160d5ed6fe3996bda74",
+  "measurement_source_commit": "6513ca594cd03f80129c3d3525126cfe0537749c",
+  "source_pins": {
+    "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+    "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606",
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv": "07e87f99a40303729051e483a4fe08d5d912d67b00ebfd4d44cf840c009dcad1",
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv": "0eafaa6fccde0e5add1c40926f50482d87a4fe292882df124ba6bbe5b4473416",
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv": "f9e7c02771419210282e63c1de8a8d1fc5c9882428ff0df674268c3f20765644"
+  },
+  "literal_receipts": {
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/result.json": "f56ef9266e86263699272b6020bd4d4ef404440605f6cc0d40b4bbe8828e8f3a",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/source_pin.json": "6495713c68e0b0d2a1f937743a5410578a2a09c6e2a6c82d973602d1d72afa86",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/source.commit": "5a5f511f9916c64408d97f828866af70e32ced3953cca25201befdad5035e849",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/fixture.json": "893a90770ef8eab19e408823dc744b12dbcfd477254520c91b59be253d995cf1",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/command.json": "26a8a396900726c8408e9fe2f97092639c83193a57e2f87f85a477090acd8e46",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/incremental_verdict.json": "8cbdced9d441d72260aa45ab8f1d3d022bb48bc27951734fbcc9ae54188c866e",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/changed_hook_cases.json": "9edfd2aa39dfa866ab3cb34d2ab686d77aced56762afbc9abcf9bcdd0463a5d4",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/changed_hook_cases.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/terminal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "measured_parameters": {
+    "ENABLE": 1,
+    "PQ_ENABLE": 1,
+    "PACK_W2": 1,
+    "XMAP": 0,
+    "HAZ": 1,
+    "G1ASB": 0
+  },
+  "rows": 86,
+  "composite_descriptors": 28,
+  "original_ops": 31,
+  "baseline_w2_cycles": 609,
+  "paired_w2_cycles": 425,
+  "cycles_saved": 184,
+  "source_fixture_hashes": {
+    "seq.hex": "c9de86a08f421bb29154e623f8a429777367048037678939ac3adac1b5cac64a",
+    "lines.hex": "693cd177d2be7c1fc4e13a4ca1e1e113d94fb5d3053413ab638c5beefea27c9c",
+    "x.hex": "53df4713fc1c6f90ea13ffeab277cb91db57271919ab1c106f5180606d97155f",
+    "out.txt": "52024443f3a3a6c1befc6117f2adacee26bb1b25439c45f0e24676bc8ef8da40"
+  },
+  "negative_checks": {
+    "ordinary_flag_off": {
+      "pass_check": true,
+      "runtime_returncode": 0,
+      "faults": [
+        0
+      ],
+      "outputs": 1,
+      "total_cycles": 408,
+      "cached_descriptor_index": 0,
+      "copied_line_slice": [
+        0,
+        80
+      ],
+      "copied_x_slice": [
+        0,
+        80
+      ],
+      "stimulus_change": null,
+      "executable_sha256": "3feace3b7307dcdbb988cd75137fdde879e942e6dd7b6286539cbdbdd1bd38be",
+      "compiletime_default_off_tested": false,
+      "no_build": true,
+      "no_golden_generation": true
+    },
+    "illegal_pair_shape": {
+      "pass_check": true,
+      "runtime_returncode": 0,
+      "faults": [
+        1
+      ],
+      "outputs": 4,
+      "total_cycles": 235,
+      "cached_descriptor_index": 24,
+      "copied_line_slice": [
+        1440,
+        1504
+      ],
+      "copied_x_slice": [
+        432,
+        464
+      ],
+      "stimulus_change": "c8->c7 only",
+      "executable_sha256": "3feace3b7307dcdbb988cd75137fdde879e942e6dd7b6286539cbdbdd1bd38be",
+      "compiletime_default_off_tested": false,
+      "no_build": true,
+      "no_golden_generation": true
+    }
+  },
+  "ordinary_flag_off_is_compiletime_default_test": false,
+  "production_hook": {
+    "PACK_W2_default": 0,
+    "metadata_bits": 8,
+    "acceptance": "op_pack_w2/op_pack_delta_x in same op queue; capture at h_pop",
+    "shape_guard": "rows4/c8/g2/fmt2/gs1",
+    "added_latency_cycles": 0
+  },
+  "caller_ports": {
+    "descriptor_inputs": [
+      "op_pack_w2",
+      "op_pack_delta_x[7]",
+      "op_bound",
+      "op_id_a[32]",
+      "op_id_b[32]",
+      "d_pair",
+      "d_bound",
+      "d_base_b[32]"
+    ],
+    "request": "Original d_valid/d_ready and req_v/req_ready/req_addr/req_tag; paired address join preserves request tags.",
+    "result": "rv/rrow/rdata plus rop restoring original operation/localrow; context retained until all expected results."
+  },
+  "reuse_job": "ot-epyc1tb:/srv/opentallas/jobs-overflow/erdos-w2-paired-sm-r3",
+  "reuse_driver": "tools/dshbm_w2_pair_seq.py",
+  "arithmetic_inputs_generated": false,
+  "admitted_physical": false,
+  "full_token_measured": false,
+  "adopted": false,
+  "composition_owner": "Maxwell",
+  "combined_XMAP_interaction_measured": true,
+  "next_measurement": null,
+  "next_dependencies": [],
+  "model_threshold_owner_receipt": "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/incremental_verdict.json",
+  "model_threshold_met": true,
+  "headline_clock_qualified": false,
+  "combined_receipt": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+  "actual_joined_cycles": 3864,
+  "actual_joined_saving_cycles": 184,
+  "production_binding_scope": {
+    "selection": "DS20 singleSM0 LSU correctness-only",
+    "owner": "Erdos",
+    "combined_top_owner": "Rawls",
+    "source_model": "tools/dshbm_wavepack_model.py::w2_parent_source_model",
+    "rate_binding": "REJECTED_SINGLE_MREQ_RATE_BINDING",
+    "total_source_bytes": 94592,
+    "bytes_per_edge": 32,
+    "provider_edge_ps": 1000,
+    "minimum_edges": 2956,
+    "minimum_service_us": 2.956,
+    "includes": "weight5-sector packing +55296 activation bytes +896 result write/readback bytes; excludes CDC/latency/arbitration",
+    "production_rate_credit": false,
+    "historical_184_cycle_component_delta_unchanged": true,
+    "actual_linked_images_spans_and_producer_publication_pending": true,
+    "model_record": {
+      "path": "results/rtl/dshbm_hbm_opt_20261005/opt2/parent_source_binding/model.json",
+      "commit": "1d2d4eb43ffeaafb582d4c4069dfd9e031cb6f5b",
+      "sha256": "f526d637a8cddda01b33534dff24d21701612ff5c5e4c7a64b5dfd06cf5ba625"
+    }
+  }
+}

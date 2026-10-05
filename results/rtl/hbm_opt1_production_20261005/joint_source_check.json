@@ -1,0 +1,14 @@
+{
+  "scope": "Static production binding only; Rawls owns HDL joint gate",
+  "checks": {
+    "absolute_address_once": true,
+    "production_issue_enable_forwarding": true,
+    "op_xb_forwarding": true,
+    "XMAP_default_zero": true,
+    "Pauli_leaf_parameter_forwarding": true,
+    "original_leaf_branch_body_unchanged": true
+  },
+  "production_top_sha256": "55350c5919b2cc14620e7cc3b252a3841ed839a91d572c35ae55e5737ade2ed5",
+  "leaf_sha256": "7f271a0f817c4b057dfc27d85b75821813da9851a73ae27a5ed70ad4d8bfaabb",
+  "runtime_PASS": false
+}

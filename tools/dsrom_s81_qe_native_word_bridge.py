@@ -19,8 +19,43 @@ def require(ok, message):
         raise ValueError(message)
 
 
+def native_pp_word_map(matrix, pair):
+    """PP issue address -> canonical payload address, within one allocated run.
+
+    Match the existing PP image compiler's segment/half interleaving. The
+    canonical payload inverse uses word-major/row-minor order; PP issues both
+    FP8 halves for each row before moving to the next row. No values, macro
+    capacity, request count or native arithmetic change.
+    """
+    S = API.M.C.S
+    segments, addresses, allocated = [], {}, []
+    for si, owner, first, n, stride, start, count in matrix['plans']:
+        if owner != pair:
+            continue
+        e0, elems = matrix['segments'][si]
+        order = S.segment_order(matrix['format'], e0, elems)
+        require(len(order) == count, 'PP source word count mismatch')
+        for j in range(n):
+            index = len(segments)
+            segments.append(dict(fmt=matrix['format'], e0=e0, elems=elems,
+                                 row=first+j*stride, tensor=matrix['tensor']))
+            for k, (u, b, h) in enumerate(order):
+                addresses[index, u, b, h] = start+k*n+j
+        allocated.extend(range(start, start+n*count))
+    require(allocated and len(set(allocated)) == len(allocated), 'PP allocation absent/overlapping')
+    start = min(allocated)
+    require(set(allocated) == set(range(start, start+len(allocated))),
+            'PP source phase must own a contiguous word range')
+    issue = S.element_order(segments)
+    require(len(issue) == len(allocated), 'PP phase coverage mismatch')
+    result = {start+i: addresses[key] for i, key in enumerate(issue)}
+    require(set(result.values()) == set(allocated), 'PP source packing must be bijective')
+    return result
+
+
 class ReleasedQeOperationWords:
-    def __init__(self, execution, source, node, rank, *, fragment=0, expert_ids=None):
+    def __init__(self, execution, source, node, rank, *, fragment=0, expert_ids=None,
+                 native_pp=False):
         require(re.fullmatch(r'L\d+\.I\d+', node) is not None, 'actual source node required')
         require(type(rank) is int and 0 <= rank < 4, 'TP4 rank')
         require(source.root.resolve().name == API.SNAPSHOT, 'released checkpoint required')
@@ -75,6 +110,9 @@ class ReleasedQeOperationWords:
         self.source, self.rank = source, rank
         self.pairs = tuple(sorted({p[1] for p in self.matrix['plans']}))
         self.source_matrix_sha256 = digest
+        require(not native_pp or qe, 'PP packing requires native mode0 QE')
+        self.native_pp = native_pp
+        self.pp_maps = {}
 
     def read(self, stage, rank, macro, physical_row):
         require(all(type(v) is int for v in (stage, rank, macro, physical_row)), 'integer address')
@@ -83,6 +121,15 @@ class ReleasedQeOperationWords:
                 'request outside selected QE source')
         require(self.matrix['conversion'] == 'native',
                 'native source transform required; use raw_chunk, no host BF16 conversion')
+        if self.native_pp:
+            pair, leaf = divmod(macro, 4)
+            if pair not in self.pp_maps:
+                self.pp_maps[pair] = native_pp_word_map(self.matrix, pair)
+            address = 2*physical_row+(leaf & 1)
+            require(address in self.pp_maps[pair], 'PP request outside selected phase allocation')
+            canonical = self.pp_maps[pair][address]
+            macro = 4*pair+2*(leaf//2)+(canonical & 1)
+            physical_row = canonical//2
         word = API.matrix_word(self.matrix, self.source, rank, macro, physical_row)
         require(type(word) is int and 0 <= word < 1 << 274, 'native word width')
         return word

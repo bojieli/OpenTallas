@@ -1,0 +1,46 @@
+{
+ "ss": {
+  "exit": 0,
+  "setup_wns_ns": -0.04719,
+  "hold_wns_ns": 0.04206,
+  "setup_tns_ns": -0.21266,
+  "failing_setup_endpoints": 23,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53822,
+  "tap_source_cells": 0,
+  "lw_cells": 0,
+  "worst_setup_slack_ns": -0.04719,
+  "worst_setup_path": {
+   "start": "u_dut.fq_n[20][1]$_SDFFE_PN0P_",
+   "end": "u_dut.room_all$_SDFFE_PN1P_"
+  },
+  "worst_hold_slack_ns": 0.04206,
+  "worst_hold_path": {
+   "start": "u_dut.req_addr[185]$_DFF_P_",
+   "end": "u_c.q[928]$_DFF_P_"
+  }
+ },
+ "ff": {
+  "exit": 0,
+  "setup_wns_ns": 0.2897,
+  "hold_wns_ns": 0.00146,
+  "setup_tns_ns": 0.0,
+  "failing_setup_endpoints": 0,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53822,
+  "tap_source_cells": 0,
+  "lw_cells": 0,
+  "worst_setup_slack_ns": 0.2897,
+  "worst_setup_path": {
+   "start": "u_dut.w_oh0[126]$_SDFF_PP0_",
+   "end": "u_dut.m_fc[126][0]$_DFFE_PP_"
+  },
+  "worst_hold_slack_ns": 0.00146,
+  "worst_hold_path": {
+   "start": "u_dut.pend_s[24][7]$_DFFE_PP_",
+   "end": "u_dut.cpart[24][4]$_DFF_P_"
+  }
+ },
+ "ss_setup_met": false,
+ "ff_hold_met": true
+}

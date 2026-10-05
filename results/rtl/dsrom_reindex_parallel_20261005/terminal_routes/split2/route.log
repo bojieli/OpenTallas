@@ -1,0 +1,29 @@
+view=asap7 corner=TT block=ot_hdc_v41x_idx_kgctl_kc7_split_ctx top=ot_hdc_v41x_idx_kgctl_kc7_split_ctx purpose=characterization
+  pnr:   wirelength=1465437 um vias=2595829 DRC=0 antenna_nets=0 Fmax=1187.69 MHz
+  drv:   max_slew=366 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/codex/russell-reindex-parallel-20261005/split2/physical.json
+	Command being timed: "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_idx_kgctl_kc7_split_ctx --source rtl/experimental/dsrom_reindex_kc7_split_20261005/ot_hdc_v41x_idx_kgctl_kc7_split_ctx.sv --source rtl/experimental/dsrom_reindex_kc7_split_20261005/ot_hdc_v41x_idx_kgather_kc7_split.sv --param OPT_KC6=1 --param OPT_KC7=1 --param OPT_SPLIT_CMP=1 --clock-period-ns 0.833 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --stages pnr --false-path-io --hold-margin-ns 0.008 --max-transition-ns library --max-fanout 32 --die-area 0 0 310.164 310.164 --core-area 2.052 2.160 308.124 308.070 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --nickname-tag kc7_split2 --keep-workdir /srv/opentallas-scratch/codex/russell-reindex-parallel-20261005/split2/work --output /srv/opentallas-scratch/codex/russell-reindex-parallel-20261005/split2/physical.json"
+	User time (seconds): 2.54
+	System time (seconds): 0.57
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:58:07
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 83772
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 74806
+	Voluntary context switches: 25828
+	Involuntary context switches: 2004
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 233992
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

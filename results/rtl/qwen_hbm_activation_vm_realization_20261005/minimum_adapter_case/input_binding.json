@@ -1,0 +1,18 @@
+{
+  "initial_fixture": true,
+  "live_L35_publication": false,
+  "source_path": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/runs/b_p8191_w224/head/preload.hex",
+  "sha256": "9903d197a63927dd0e9461af2334eb23b39edd26043220b21490f479a15afaa7",
+  "scalar_base": 4096,
+  "scalar_words": 4096,
+  "conversion": "literal uint32 parsing only; remove original @1000 base for test input array",
+  "normalized_intermediate": false,
+  "component_read_seats": 5,
+  "component_write_seats": 16,
+  "production_read_seats": 2256,
+  "production_write_seats": 1633,
+  "backend_full_groups": 16,
+  "HEAD_CACHE": 0,
+  "native_SU_present": false,
+  "scope": "adapter protocol only; no native HEAD numerical/hardware closure"
+}

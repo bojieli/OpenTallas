@@ -181,7 +181,14 @@ module ot_qwen_slab_port_group #(
     wire [KR-1:0] m_tag, r_tag;
     reg  [KD+MUL_LAT:1] vline;
     always @(posedge clk) vline <= rs ? {vline[KD+MUL_LAT-1:1], k_v} : {(KD+MUL_LAT){1'b0}};
-    ot_hdc_delay #(.W(KR), .D(KD)) u_mt (.clk(clk), .rst_n(rs), .d(k_tag), .q(m_tag));
+    // KD - 1 shared stages, then the last stage as per-lane copies (S3, timing only): each multiplier's valid and
+    // operand select come from a kept register beside it instead of one tag register fanned out to 16 lanes
+    // (twoface_570 post-CTS: u_mt line -> g_mul[*] 545 ps of buffering, -210 ps).  m_tag itself is unchanged.
+    wire [KR-1:0] e_tag;
+    reg  [KR-1:0] m_tag_q;
+    ot_hdc_delay #(.W(KR), .D(KD - 1)) u_mt (.clk(clk), .rst_n(rs), .d(k_tag), .q(e_tag));
+    always @(posedge clk) m_tag_q <= e_tag;
+    assign m_tag = m_tag_q;
     ot_hdc_delay #(.W(KR), .D(MUL_LAT)) u_rt (.clk(clk), .rst_n(rs), .d(m_tag), .q(r_tag));
     wire m_v = vline[KD];
     wire r_v = vline[KD + MUL_LAT];
@@ -233,16 +240,22 @@ module ot_qwen_slab_port_group #(
     wire [AW-1:0] m_oa;
     wire [NW-1:0] m_rb;
     assign {m_last, m_oen, m_amax, m_rmax, m_wsrc, m_portok, m_mask, m_oa, m_rb} = m_tag;
+    wire e_last, e_wsrc;
+    wire [W-1:0] e_mask;
+    assign {e_last, e_wsrc, e_mask} = {e_tag[KR-1], e_tag[KR-5], e_tag[KR-7 -: W]};
     wire [W*32-1:0] scaled;
     wire [W-1:0]    mfault;
     generate
         for (si = 0; si < W; si = si + 1) begin : g_mul
             wire [1:0] err;
-            wire       vo, rsm;
+            wire       vo, rsm, l_v, l_ws;
             ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsm (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rsm), .addr_q());
+            // == m_v && m_last && m_mask[si] and m_wsrc (vline[KD] = rs ? vline[KD-1] : 0, one edge later)
+            ot_qwen_slab_pg_rcopy #(.AW(1)) u_tc (.clk(clk), .gre(rs && vline[KD-1] && e_last && e_mask[si]),
+                .addr(e_wsrc), .gre_q(l_v), .addr_q(l_ws));
             ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rsm),
-                .valid_in(m_v && m_last && m_mask[si]),
-                .a(res_q[32*si +: 32]), .b({m_wsrc ? 16'h3F80 : m6[16*si +: 16], 16'd0}),
+                .valid_in(l_v),
+                .a(res_q[32*si +: 32]), .b({l_ws ? 16'h3F80 : m6[16*si +: 16], 16'd0}),
                 .y(scaled[32*si +: 32]), .err(err), .valid_out(vo));
             assign mfault[si] = vo && (err != 2'd0);
         end

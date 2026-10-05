@@ -806,7 +806,9 @@ end endgenerate
             assign lvl[0] = sum;
         end
     endgenerate
-    assign tfault[LV0] = 1'b0;
+    // PART2 has no local levels below LV0; their real faults arrive through
+    // t_fault_in. Define every absent local bit before the full-vector OR.
+    assign tfault[LV0:0] = {(LV0 + 1){1'b0}};
     wire [LG*4+3:0] split_at;                       // split at each level's input
     assign split_at[4*LV0+3 -: 4] = t_split;
     generate

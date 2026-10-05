@@ -75,8 +75,9 @@ From `composition.json` at merge time (`baseline: recovery`, position 1,048,575)
 
 | metric | value |
 |---|---|
-| AR | 620.078 us = **1,612.7 tok/s** |
-| MTP | step 871.315 us, tau 3.8879 (published), **4,462.1 tok/s** |
+| AR | 604.348 us = **1,654.7 tok/s** (with the fused hc_post lever, 9082d0a53) |
+| MTP | step 853.613 us, tau 4.159 (owner 6-class workload blend, adopted 2026-10-05), **4,872.2 tok/s** |
+| MTP sensitivity | published V4.1 tau 3.8879: 4,554.6 tok/s; published range 3.43-4.32: 4,018.2-5,057.9 tok/s |
 
 Records: `levers/{head,router,draft,hop}.json`, `physcost/feasibility.json`, `physcost/{head,layer,draft}/floorplan.json`,
 `physcost/abstracts/` (the reproduced r4 routes; see `provenance.json`).
