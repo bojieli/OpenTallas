@@ -10085,3 +10085,65 @@ def hbm_existing_cp_cts_allocation_model():
     return json.loads((Path(__file__).resolve().parents[1] /
         'results/physical/hbm_cp_cts_allocation_20261005/model.json').read_text())
 
+
+
+def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
+    """Mandatory baseline closure: local owner replication, priced before RTL.
+
+    The retained TX-mask endpoint is the ONLY selected mask successor. Neither
+    r7's false-IO route nor utilisation-only live routes qualify this new cut.
+    Parent allocation is deliberately unknown until Turing supplies real loads.
+    """
+    if nsm < 1 or nl < 1 or owner_copies < 1 or owner_copies > nl*32:
+        raise ValueError('nonempty full-shape owner slices required')
+    sb = max(1, (nsm-1).bit_length())
+    width = nl*32
+    copies = min(owner_copies, width)
+    added = max(0, copies-16)*sb
+    return dict(item=9, status='PREBUILD_DEFAULT_OFF', mandatory_clock_closure=True,
+        selected_endpoint='ot_gpu_coll_endpoint_f12_txmask',
+        arithmetic=dict(MACs_per_cycle=0, rounding_changes=0, reduction_order_changes=0),
+        shape=dict(NSM=nsm, NL=nl, data_bits=width, owner_copies=copies,
+            owner_bits_per_copy=sb, max_select_fanout_bits=(width+copies-1)//copies),
+        memory=dict(ingress_bytes_per_accept=nsm*width/8, endpoint_bytes_per_accept=width/8,
+            TX_bytes_per_cycle=64, RX_bytes_per_cycle=64, memory_ports_added=0),
+        communication=dict(SM_ingress_bits_per_cycle=nsm*(width+11),
+            mux_endpoint_bits_per_cycle=width+12, link_record_bits_per_cycle=546,
+            response_bits_per_cycle=width+nsm*2, external_boundary_bits_added=0,
+            added_local_owner_bits=added, owner_update_fanout=copies,
+            select_mux_bit_equivalents=width*(nsm-1), demux_control_outputs=nsm*2,
+            tracks_needed_lower_bound=width+12, actual_channel_capacity=None,
+            actual_parent_channel_fit=False),
+        area=dict(added_owner_FF_bits=added, FF_cell_floor_um2=added*DFF_UM2,
+            retained_context_cell_um2=29809.2, mux_bit_delta=0,
+            extra_buffer_reset_CTS_area_um2=None, actual_floorplan_slot=None,
+            actual_slot_fit=False),
+        latency=dict(new_mux_cycles_per_collective=0, new_mux_cycles_per_record=0,
+            new_mux_token_delta_ns=0, retained_XREG_cycles_per_collective=2,
+            historical_collective_count=265, retained_XREG_token_delta_ns=265*2/1.2,
+            composed_current_token_delta_ns=None, fullshape_cycle_gate=False),
+        clock=dict(period_ns=.833, SS_setup_uncertainty_ps=60,
+            FF_hold_uncertainty_ps=25, macro_load_and_parent_clock_bound=False),
+        endpoint_structural_cuts=dict(default_off=True, RXOH=1, RDUP=16,
+            onehot_lane_select_FF_bits=nl*16*4,
+            retained_binary_lane_select_FF_bits=nl*4,
+            added_select_FF_bits=nl*(16*4-4),
+            select_FF_delta_floor_um2=nl*(16*4-4)*DFF_UM2,
+            added_RX_data_copies_FF_bits=8*512,
+            added_cap_TXword_RXclear_FIFOselect_write_control_FF_bits=468,
+            control_FF_delta_floor_um2=468*DFF_UM2,
+            added_RX_data_copies_floor_um2=8*512*DFF_UM2,
+            RX_tag_independent_checks=6, added_tag_check_FF_bits=5,
+            added_tag_FF_floor_um2=5*DFF_UM2,
+            added_TX_mask_FF_bits=0, TX_mask_copy_fanout_bits=8,
+            RX_select_copy_fanout_bits=8, RX_select_replicas=nl*4,
+            onehot_AND_bit_equivalents=nl*32*16,
+            onehot_OR_bit_equivalents=nl*32*15,
+            removed_binary_16to1_mux_bit_equivalents=nl*32*15,
+            comb_cell_delta_um2=None, clock_reset_route_area_um2=None,
+            extra_cycles_per_collective=0, extra_cycles_per_record=0,
+            extra_boundary_bits_per_cycle=0,
+            affected_classes=['RX_binary_lane_select','RX_FIFO_select_tag_check',
+                'TX_word_select covered by retained qualified-byte TXmask']),
+        gates=dict(fullshape_exact=False, contextual_SS_FF=False,
+            hub_routing_layer_check=False, installed=False, adoption=False))
