@@ -68,6 +68,11 @@ def command(a, out):
         argv += ["--step-tcl", f"PRE_{st}={S}/pre_ref.tcl", "--step-tcl", f"POST_{st}={S}/post_plain.tcl"]
     if a.diamond:
         argv += ["--orfs-var", "DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer"]
+    if a.cts_derate is not None:
+        # obstruction-blind H-tree (measured on r2a's placement: SS -77 vs -78 ps, multiplier stage -8 vs -78) and
+        # a macro-branch delay-buffer derate: the ROM clock leads the capture flops (clk->q 754 ps of 833 at SS)
+        argv += ["--orfs-var", "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -no_obstruction_aware "
+                 f"-delay_buffer_derate {a.cts_derate:g}"]
     if a.td_only:
         argv += ["--orfs-var", "GPL_ROUTABILITY_DRIVEN=0"]
     for kv in a.orfs_var:
@@ -83,6 +88,8 @@ def main():
     p.add_argument("--diamond", action="store_true")
     p.add_argument("--td-only", action="store_true")
     p.add_argument("--orfs-var", action="append", default=[])
+    p.add_argument("--cts-derate", type=float, default=None,
+                   help="tuned CTS: -no_obstruction_aware and -delay_buffer_derate D (macro clock leads)")
     p.add_argument("--param", action="append", default=[], help="extra RTL parameter NAME=VALUE (IN_STAGE, AM_SPLIT, S5_CTL)")
     p.add_argument("--io-hold-extra", type=float, default=60.0,
                    help="flow-only extra boundary hold requirement, ps (io_wc.sdc; stricter only)")
