@@ -14,6 +14,8 @@ int main(int argc,char**argv){
  top->clk=0;
  while(!Verilated::gotFinish()){
   if(!top->clk && sim_time){
+   if(N(core__DOT__g_su_x__DOT__u_su__DOT__u_vec__DOT__b_dst)>=2)
+    std::printf("KV_VECTOR time=%llu pc=%u pos=%u corebase=%u corerow=%u base=%u row=%u inner=%u dst=%u\n", (unsigned long long)sim_time,N(core__DOT__pc),N(core__DOT__pos_r),N(core__DOT__o_base),N(core__DOT__o_row),N(core__DOT__g_su_x__DOT__u_su__DOT__u_vec__DOT__b_obase),N(core__DOT__g_su_x__DOT__u_su__DOT__u_vec__DOT__b_krow),N(core__DOT__g_su_x__DOT__u_su__DOT__u_vec__DOT__b_iv),N(core__DOT__g_su_x__DOT__u_su__DOT__u_vec__DOT__b_dst));
    for(unsigned i=0;i<24;++i)if(K(l_v)[i]&&K(l_word)[i]>=32768)
     std::printf("BAD_PRODUCER time=%llu lane=%u kind=%s base=%u word=%u scalar=%u data=%08x\n",
       (unsigned long long)sim_time,i,i<8?"stream":"SU",N(kv_base),K(l_word)[i],
