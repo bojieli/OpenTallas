@@ -19,7 +19,7 @@ def main():
  original_run=gate.kg_run
  def run(binary,out,lists):
   result=original_run(binary,out,lists)
-  (out/'case.json').write_text(json.dumps(result,indent=2)+'\n')
+  Path(str(out)+'.case.json').write_text(json.dumps(result,indent=2)+'\n')
   return result
  gate.kg_run=run
  try:gate.cmd_gather(a)
