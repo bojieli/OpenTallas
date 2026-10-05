@@ -8,7 +8,8 @@
 //   HC = 0  x_j is the input itself (q latent, kv latent: already BF16 values)
 //   then    ss   = csum(x_j * x_j)                (R-ARITH chunk8: chunks of 8 summed sequentially, chunk sums by a
 //                                                  pairwise tree padded with +0 to a power of two)
-//           r    = rsqrt(ss / D + eps)            (golden div RNE, add, rsqrt = 3 Newton steps from 0x5F3759DF)
+//           r    = rsqrt(ss / D + eps)            (golden div RNE: D = 5 * 2^k or 2^k, ot_dsrom_divc; add; rsqrt =
+//                                                  3 Newton steps from 0x5F3759DF)
 //           y_j  = bf16(w_j * (x_j * r))          (rmsnorm_bf16)
 //   RD > 0  y's last RD elements rotated as adjacent pairs (rope_tail, forward): re = a*c + (-(b*s)),
 //           im = b*c + a*s, BF16
@@ -26,7 +27,7 @@
 //
 // Timing (1.2 GHz units: ot_hdc_qmul_lat LM 5 / ot_hdc_qadd_lat LA 4 through rtl/hdc/ot_hdc_fastfp_lat_f12.sv):
 //   mix LM + 3 LA + 1 (HC), square LM, chain 7 LA, tree log2(N/8) LA, vector levels LA per real add,
-//   RW result-wire stages, divide 19 (ot_hdc_v41x_fdiv), + eps LA, rsqrt 1 + 3(3 LM + LA) (ot_hdc_v41x_rsqrt),
+//   RW result-wire stages, divide by D 8 (ot_dsrom_divc), + eps LA, rsqrt 1 + 3(3 LM + LA) (ot_hdc_v41x_rsqrt),
 //   BW broadcast-wire stages back to the lanes, scale 2 LM + 1, RoPE LM + LA + 1, act-quant 18.
 // The x values wait in the lanes (NV words a lane) between the mix and the scale: nothing is written back.
 // ---------------------------------------------------------------------------
@@ -76,6 +77,18 @@ module ot_dsrom_su_norm #(
     localparam integer DS  = LM + 7 * LA + LT * LA;         // square + chain + tree
     localparam integer DR  = 1 + 3 * (3 * LM + LA);         // ot_hdc_v41x_rsqrt DEPTH
     localparam integer KS  = 1;
+    localparam integer LB  = D - (NV - 1) * N;            // length of the last vector
+    localparam integer LAV = LA + 1;                      // vector-level adds: the operand-multiplexer adder (l5x)
+    function automatic integer tz(input integer x);
+        integer t;
+        begin
+            t = 0;
+            while (t < 31 && ((x >> t) & 1) == 0) t = t + 1;
+            tz = t;
+        end
+    endfunction
+    localparam integer DK  = tz(D);                         // D = DF * 2^DK
+    localparam integer DF  = D >> DK;
 
     function automatic [31:0] bf16(input [31:0] x);         // RNE to BF16 (tools/hdc_golden.to_bf16)
         reg [32:0] s;
@@ -99,32 +112,40 @@ module ot_dsrom_su_norm #(
     wire [DM:0] vm = vm_w[DM:0];
     wire [7:0] xi;
     ot_hdc_delay #(.W(8), .D(DM)) u_xi (.clk(clk), .rst_n(rst_n), .d(in_i), .q(xi));
+    reg in_last;                        // in_i == NV - 1, registered with in_i
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) in_last <= (NV == 1);
+        else if (go) in_last <= (NV == 1);
+        else if (in_v) in_last <= (in_i + 8'd1 == NV - 1);
+    wire x_last;
+    ot_hdc_delay #(.W(1), .D(DM)) u_xl (.clk(clk), .rst_n(rst_n), .d(in_last), .q(x_last));
     wire x_v = vm[DM];
     wire [DS:0] vs;
     ot_hdc_vline #(.D(DS)) u_vs (.clk(clk), .rst_n(rst_n), .v(x_v), .vd(vs));
     wire [7:0] si;
     ot_hdc_delay #(.W(8), .D(DS)) u_si (.clk(clk), .rst_n(rst_n), .d(xi), .q(si));
-    // scale sequencer: vector 0 goes in the cycle the broadcast rstd lands (from the wire), 1 .. NV-1 after it
-    wire [32:0] rb;
-    reg  [31:0] rl;
+    // scale sequencer: vector 0 goes in the cycle the broadcast rstd lands, 1 .. NV-1 after it.  The broadcast
+    // wire's last stage is a hold register (rh), and each lane's x operand is read from its buffer a cycle ahead
+    // (xo), so the multiplier sees registers only.
+    wire        rb_v;
+    reg  [31:0] rh;
     reg         sc_run;
     reg  [7:0]  sc_i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin sc_run <= 1'b0; sc_i <= 8'd0; end
-        else if (rb[32]) begin sc_run <= (NV > 1); sc_i <= 8'd1; end
+        else if (rb_v) begin sc_run <= (NV > 1); sc_i <= 8'd1; end
         else if (sc_run) begin
             if (sc_i == NV - 1) sc_run <= 1'b0;
             sc_i <= sc_i + 8'd1;
         end
     end
-    always @(posedge clk) if (rb[32]) rl <= rb[31:0];
-    wire        sc_go = rb[32] || sc_run;
-    wire [7:0]  sc_x  = rb[32] ? 8'd0 : sc_i;
-    wire [31:0] sc_r  = rb[32] ? rb[31:0] : rl;
+    wire        sc_go = rb_v || sc_run;
+    wire [7:0]  sc_x  = rb_v ? 8'd0 : sc_i;
+    wire [7:0]  sc_nx = rb_v ? 8'd1 : sc_run ? sc_i + 8'd1 : 8'd0;   // the index used in the next cycle
     wire [DY:0] vy;
     ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rst_n), .v(sc_go), .vd(vy));
     wire [7:0] yi_m, yi_o;
-    ot_hdc_delay #(.W(8), .D(LM)) u_yim (.clk(clk), .rst_n(rst_n), .d(sc_x), .q(yi_m));
+    ot_hdc_delay #(.W(8), .D(LM)) u_yim (.clk(clk), .rst_n(rst_n), .d(sc_nx), .q(yi_m));   // gain read a cycle ahead (wo)
     ot_hdc_delay #(.W(8), .D(DY)) u_yio (.clk(clk), .rst_n(rst_n), .d(sc_x), .q(yi_o));
 
     wire [N-1:0]    lf;                 // lane faults
@@ -158,16 +179,20 @@ module ot_dsrom_su_norm #(
             end
             // the x of the row waits here until the rstd comes back
             reg [31:0] xb [0:NV-1];
+            reg [31:0] xo;
             always @(posedge clk) if (x_v) xb[xi] <= xl;
-            wire live = ({24'd0, xi} * N + l) < D;
+            always @(posedge clk) xo <= xb[sc_nx];
+            wire live = (l < LB) || !x_last;          // lanes past D (last vector only) carry +0
             wire [31:0] xs = live ? xl : 32'd0;
             ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xs, xs, sq[l * 32 +: 32], f[7]);
             // gain ROM and the scale y = bf16(w * (x * r))
             reg [31:0] wr [0:NV-1];
+            reg [31:0] wo;
             always @(posedge clk) if (wl_v) wr[wl_i] <= wl_d[l * 32 +: 32];
+            always @(posedge clk) wo <= wr[yi_m];
             wire [31:0] p, q;
-            ot_hdc_qmul_lat #(LM) u_xr (clk, rst_n, sc_go, xb[sc_x], sc_r, p, f[8]);
-            ot_hdc_qmul_lat #(LM) u_w  (clk, rst_n, vy[LM], wr[yi_m], p, q, f[9]);
+            ot_hdc_qmul_lat #(LM) u_xr (clk, rst_n, sc_go, xo, rh, p, f[8]);
+            ot_hdc_qmul_lat #(LM) u_w  (clk, rst_n, vy[LM], wo, p, q, f[9]);
             reg [31:0] yr;
             always @(posedge clk) yr <= bf16(q);
             assign yb[l * 32 +: 32] = yr;
@@ -242,22 +267,22 @@ module ot_dsrom_su_norm #(
             if ((((2 * n + 1) << (H - 1)) - NVP) < NV) begin : g_add      // right child real: an add
                 reg st, vld;
                 reg [31:0] val;
-                wire [LA:0] av;
+                wire [LAV:0] av;
                 wire [31:0] s;
                 wire fire = nd[2 * n] && nd[2 * n + 1] && !st && !go;
-                ot_hdc_vline #(.D(LA)) u_v (.clk(clk), .rst_n(rst_n), .v(fire), .vd(av));
-                ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_a (clk, rst_n, fire, nv[2 * n], nv[2 * n + 1], s, nf[n]);
+                ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rst_n), .v(fire), .vd(av));
+                ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LAV)) u_a (clk, rst_n, fire, nv[2 * n], nv[2 * n + 1], s, nf[n]);
                 always @(posedge clk or negedge rst_n) begin
                     if (!rst_n) begin st <= 1'b0; vld <= 1'b0; end
                     else if (go) begin st <= 1'b0; vld <= 1'b0; end
                     else begin
                         if (fire) st <= 1'b1;
-                        if (av[LA]) vld <= 1'b1;
+                        if (av[LAV]) vld <= 1'b1;
                     end
                 end
-                always @(posedge clk) if (av[LA]) val <= s;
-                assign np[n] = av[LA];
-                assign nd[n] = vld || av[LA];
+                always @(posedge clk) if (av[LAV]) val <= s;
+                assign np[n] = av[LAV];
+                assign nd[n] = vld || av[LAV];
                 assign nv[n] = vld ? val : s;
             end else begin : g_pass                                     // right subtree all padding: x + 0 = x
                 assign nv[n] = nv[2 * n];
@@ -276,7 +301,9 @@ module ot_dsrom_su_norm #(
     ot_hdc_delay #(.W(33), .D(RW), .RESET(1)) u_rw (.clk(clk), .rst_n(rst_n), .d({ss_v, ss}), .q(ssw));
     wire [31:0] mq, me, rr;
     wire        mq_v, me_v, rr_v, f_div, f_eps, f_rsq;
-    ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(ssw[32]), .a(ssw[31:0]), .b(n_f), .y(mq), .vo(mq_v), .fault(f_div));
+    // ss / D: D = DF * 2^DK, DF in {1, 5}: the constant divider (correctly rounded, 8 stages; n_f is D's binary32)
+    ot_dsrom_divc #(.F(DF), .K(DK)) u_div (.clk(clk), .rst_n(rst_n), .v(ssw[32]), .x(ssw[31:0]), .y(mq), .vo(mq_v),
+                                           .fault(f_div));
     wire [LA:0] ve;
     ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rst_n), .v(mq_v), .vd(ve));
     ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_eps (clk, rst_n, mq_v, mq, eps, me, f_eps);
@@ -284,7 +311,12 @@ module ot_dsrom_su_norm #(
     ot_hdc_v41x_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
     assign r_v = rr_v;
     assign r = rr;
-    ot_hdc_delay #(.W(33), .D(BW), .RESET(1)) u_bw (.clk(clk), .rst_n(rst_n), .d({rr_v, rr}), .q(rb));
+    wire [32:0] rbw;                    // BW - 1 pipeline stages, then the hold register rh (the BW-th stage)
+    ot_hdc_delay #(.W(33), .D(BW - 1), .RESET(1)) u_bw (.clk(clk), .rst_n(rst_n), .d({rr_v, rr}), .q(rbw));
+    reg rbv;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rbv <= 1'b0; else rbv <= rbw[32];
+    always @(posedge clk) if (rbw[32]) rh <= rbw[31:0];
+    assign rb_v = rbv;
     assign y_v = vy[DY];
     assign y_i = yi_o;
     assign y = yb;
@@ -293,7 +325,6 @@ module ot_dsrom_su_norm #(
     // The tail is the last RD elements of the row: lanes LB-RD .. LB-1 of the last vector (LB = its length); the
     // other vectors (and lanes) pass with the same delay.
     localparam integer DRO = LM + LA + 1;
-    localparam integer LB = D - (NV - 1) * N;
     wire [DRO:0] vr;
     ot_hdc_vline #(.D(DRO)) u_vr (.clk(clk), .rst_n(rst_n), .v(y_v), .vd(vr));
     wire [7:0] ro_i;

@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.dsrom-recovery.su-norm.divc.v1",
+ "generated_utc": "2026-10-05T07:35:18Z",
+ "rows": [
+  {
+   "D": 5120,
+   "F": 5,
+   "K": 10,
+   "checked": 2139616898,
+   "errors": 0,
+   "faults_ok": 3,
+   "faults_bad": 0,
+   "passed": true,
+   "mismatches": [
+    "DIVC D=5120 lo=0 hi=0x7f800000 checked=2139616898 errors=0 faults_ok=3 faults_bad=0",
+    "PASS"
+   ]
+  },
+  {
+   "D": 1280,
+   "F": 5,
+   "K": 8,
+   "checked": 2139616898,
+   "errors": 0,
+   "faults_ok": 3,
+   "faults_bad": 0,
+   "passed": true,
+   "mismatches": [
+    "DIVC D=1280 lo=0 hi=0x7f800000 checked=2139616898 errors=0 faults_ok=3 faults_bad=0",
+    "PASS"
+   ]
+  },
+  {
+   "D": 512,
+   "F": 1,
+   "K": 9,
+   "checked": 2139616898,
+   "errors": 0,
+   "faults_ok": 3,
+   "faults_bad": 0,
+   "passed": true,
+   "mismatches": [
+    "DIVC D=512 lo=0 hi=0x7f800000 checked=2139616898 errors=0 faults_ok=3 faults_bad=0",
+    "PASS"
+   ]
+  }
+ ],
+ "scope": "every positive finite binary32 x (0 .. 0x7F7FFFFF) + every 4,099th negative + +-inf + NaN",
+ "status": "pass",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+  "rtl/test/tb_dsrom_divc.cpp": "f08a90fe02f2dc3ae10ec7f10555534b4a1096077dd457d02ed42b88bf71badd"
+ }
+}
