@@ -29,10 +29,20 @@ lines=[]
 # Physical receiver context retains the selected original ROM engine RTL, not
 # a donor controller or invented input flops. Same core/clock/parameters.
 if a.retain_receivers:
-    import qwen_rom_rt_verify_w12 as runtime
+    # The selected original runtime source closure, without importing its
+    # numerical/native-build driver into a physical preparation checkout.
+    receiver_rtl=[root/'rtl/hdc'/f'{name}.sv' for name in (
+        'ot_hdc_delay','ot_hdc_fp32_mul_pipe','ot_hdc_fpu','ot_hdc_fastfp',
+        'ot_hdc_sfu','ot_hdc_sfu_q','ot_hdc_reduce','ot_hdc_reduce_q',
+        'ot_hdc_matvec','ot_hdc_stream','ot_hdc_vstream_lane','ot_hdc_vreduce',
+        'ot_hdc_vstream','ot_hdc_dyn_ttiles','ot_hdc_qwen_int8_arith',
+        'ot_hdc_qwen_int8_embed_decode','ot_hdc_cg','ot_qwen_me_array_w12',
+        'ot_hdc_fp32_add_lat','ot_hdc_prefix','ot_qwen_w12_matvec','ot_qwen_w12_arith')]
+    receiver_rtl += [root/'rtl/proto'/f'{name}.sv' for name in
+                     ('ot_fp32_add_rne_pipe','ot_fp32_mul_rne_pipe')]
     already={Path(line.split()[-1]).name for line in old.splitlines() if line.startswith('read_verilog ')}
     seen=set(already)
-    for source in runtime.DIE_RTL:
+    for source in receiver_rtl:
         if source.name in seen or source.suffix != '.sv':
             continue
         if not source.is_file():
