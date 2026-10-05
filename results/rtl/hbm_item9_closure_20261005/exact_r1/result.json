@@ -1,0 +1,60 @@
+{
+  "verdict": "PASS_FULLSHAPE_MUX_EXACT",
+  "rows": [
+    {
+      "OWNER64": 0,
+      "pass_exact": true,
+      "configurations": [
+        [
+          "0",
+          "2",
+          "200000",
+          "21295",
+          "0"
+        ],
+        [
+          "0",
+          "4",
+          "200000",
+          "22087",
+          "0"
+        ]
+      ]
+    },
+    {
+      "OWNER64": 1,
+      "pass_exact": true,
+      "configurations": [
+        [
+          "1",
+          "2",
+          "200000",
+          "21295",
+          "0"
+        ],
+        [
+          "1",
+          "4",
+          "200000",
+          "22087",
+          "0"
+        ]
+      ]
+    }
+  ],
+  "added_mux_cycles": 0,
+  "scope": "all handshakes, payload and responses; NL128 NSM2/4 randomized backpressure",
+  "endpoint_semantic_gate": "reuse unchanged TX_MASK_LA existing exact pin; no new endpoint source",
+  "source_sha256": {
+    "rtl/gpu_sys/ot_gpu_coll_mux.sv": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_coll_mux_owner64.sv": "cd641683b29687801af91fdd5edafd89d05007a86386abea2f52e40af349e2ac",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "results/rtl/hbm_item9_closure_20261005/tb_coll_mux_owner64_ls.sv": "72ecca0b5bece92e0606908841370757242dc51bb39d551a31c2a75b52200438",
+    "tools/uarch_model.py": "ed923a21907ba31c5c64b6b6a8cae4bf33022d04cb1ef6d2f1cac05d8e4bd07f",
+    "tools/hbm_item9_mux_exact.py": "73ded0b60934336a7a1e6f53899662db3817d4640cc82aab3b7c0c02d0295985"
+  },
+  "contextual_SS_FF": false,
+  "adoption": false
+}
