@@ -73,3 +73,12 @@ read pointer and 128 local onehot selectors (6144FF), sameSLOTREG/tree/pack,
 zero newcycles. Actual prior rptr->sq CTS -3536.49ps and PF384 synthesis
 4082861cells/490159.0422um2 motivate structural source work. No gain/route
 claim yet; corrected full16 baseline gate continues independently.
+
+Concrete fullLANES16 HA2 CUTS1 result PASS: PF64/384,28packed512bwords,
+896BF16results,firstlatency23cycles in both phases,zero newcycles,
+foreign destination rejects without slot write; HA2_cuts_exact_r1/result.json.
+Actual current W19 program has265onpath collectives,40ARs: retained SLOTREG
+23 vs current TU model22 costs40/1.2=33.333ns/token, not265reducerstages.
+New HA2 local cuts and TXcontrol successors add0cycles/token. No headline
+credit/adoption until true contextualSS/FF. Original/reference pinned files
+unchanged; default flagsOFF. See measured_cycle_composition.json.

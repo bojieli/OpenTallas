@@ -10267,6 +10267,9 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
     """
     if nsm < 1 or nl < 1 or owner_copies < 1 or owner_copies > nl*32:
         raise ValueError('nonempty full-shape owner slices required')
+    executed_ops, _, _ = w19_collective_ops()
+    actual_collectives = len(executed_ops)
+    actual_ARs = sum(op['kind'] == 'all_reduce' for op in executed_ops)
     sb = max(1, (nsm-1).bit_length())
     width = nl*32
     copies = min(owner_copies, width)
@@ -10401,6 +10404,14 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             new_cycles_per_flit=0, new_cycles_per_collective=0,
             composed_new_token_ns=0,
             retained_reducer_cycles=7*3+1+1,
+            current_unadopted_TU_model_cycles=TU['reducer_cycles'],
+            retained_SLOTREG_delta_vs_TU_model_cycles=7*3+2-TU['reducer_cycles'],
+            current_executed_ARs=actual_ARs,
+            retained_SLOTREG_W19_token_delta_ns=actual_ARs*(7*3+2-TU['reducer_cycles'])/1.2,
+            new_cut_W19_token_delta_ns=0,
+            current_program=W19_PROGRAM,
+            current_program_sha256=hashlib.sha256((ROOT/W19_PROGRAM).read_bytes()).hexdigest(),
+            current_executed_collectives=actual_collectives,
             retained_reducer_hz=1.2e9,
             targets={m:dict(applicable=m.endswith('_hbm'),new_token_ns=0)
                 for m in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
