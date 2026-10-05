@@ -1,0 +1,70 @@
+{
+  "verdict": "FAIL_NUMERICAL",
+  "runtime_exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "position": 1048575,
+  "token": 16754,
+  "stage": 37,
+  "scope": "Native I14 phase20/21 fragments in all four ranks on actual native I13 QR; initial I0-I6 SIM_ONLY. No full-token or physical timing claim.",
+  "host_driver_change": "Recognize opt-in QFIELD actor completion while preserving identity, publication_drained and native quiet checks.",
+  "startup_failure_cause": "L20Bank unconditionally constructs enabled TargetEntry and eagerly reads pinned original initial H/PF files. Those files were missing on EPYC1 in R2/R3; generated host had no early TargetEntry call. Lossless existing-fixture staging resolved startup. Entry participant was not registered or started.",
+  "initial_H": {
+    "bytes": 81920,
+    "sha256": "a00c7f2922f58f7d2d694dc5397f425028f0aad2af2273e2969fc29184c17161"
+  },
+  "initial_PF": {
+    "bytes": 16,
+    "sha256": "dd0440a949965c14524ecc3b0cb500fc900236b8a3e5ae2f14a4590b4ccd46da"
+  },
+  "native_QR_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+  "fragment_complete_cycles": [
+    61433,
+    50166
+  ],
+  "fragment_accept_cycle": 10479,
+  "QR_ACK_cycle": 1520,
+  "cycles_scope": "Actual native runtime ticks through publication and full output readback, separately for each fragment; not pure matvec latency or SS/FF-qualified clock time.",
+  "output_words": 32768,
+  "bit_mismatches": 32713,
+  "ranks": [
+    {
+      "rank": 0,
+      "elapsed_host_seconds": 991.2697360400052,
+      "fragment_mismatches": [
+        4604,
+        3576
+      ]
+    },
+    {
+      "rank": 1,
+      "elapsed_host_seconds": 981.7286448259838,
+      "fragment_mismatches": [
+        4601,
+        3571
+      ]
+    },
+    {
+      "rank": 2,
+      "elapsed_host_seconds": 993.7917852099927,
+      "fragment_mismatches": [
+        4599,
+        3578
+      ]
+    },
+    {
+      "rank": 3,
+      "elapsed_host_seconds": 979.1908615609864,
+      "fragment_mismatches": [
+        4605,
+        3579
+      ]
+    }
+  ],
+  "original_native_ATT": "Separate existing639236 retained unchanged.",
+  "next_blocker": "Arch owns causal field/configuration diagnosis; failed Q is excluded from I15/head. No replay or model rebuild performed.",
+  "driver_sha256": "8f4948abc032dc4b297c718aa56b371b9be15cde4208602223fe1495b273a9f8"
+}

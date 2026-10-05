@@ -1,0 +1,5 @@
+DEFAULT_OFF_PASS live_foreign_bus_ignored cycles=8
+- rtl/test/tb_hbm_accel_su_fused_mreq_off.sv:21: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10ns; walltime 0.000 s; speed 249.314 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

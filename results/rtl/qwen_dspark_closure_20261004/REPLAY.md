@@ -51,12 +51,13 @@ No cycle added anywhere (sequencer LA is cycle-identical; accept unchanged). The
 3,447 accepted tok/s per user vs AR 2,274 = 1.516x (results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json).
 
 ## Open (unvalidated physical terms of the adopted DSpark step)
-- VPOS core: the AR core's own decode path fails 1.2 GHz by 1,257 ps at SS (repaired screen), so VPOS cannot close
-  until the core decode is restructured. Zero-latency VPOS fixes available once it is: register pos_r+o (8 values)
+- VPOS core: the AR core's own decode path fails 1.2 GHz by 1,257 ps at SS (repaired screen); the restructure is
+  results/rtl/qwen_core_decode_closure_20261004 (DEC_LA). Zero-latency VPOS fixes available once it is: register pos_r+o (8 values)
   at S_DYN so me_tiles takes a mux instead of the 18-bit adder, and pre-select the DYNS value when the instruction
   enters ir. The dynp table write (-310 ps, S_DYN only) can take a second S_DYN cycle per segment start if needed.
-- KV: the physical multi-position KV is the near-HBM VP path (rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_vp.sv,
-  routed by the near-HBM stream); the REAL_MEM service measured here is a model of the service boundary.
+- KV (owner decision 2026-10-04): the REAL_MEM simulation-model service (ot_qwen_rt_kv_mp_service) is NOT
+  APPLICABLE to closure. The physical multi-position KV for DSpark is the STREAM4 successor service (tagged reads +
+  multi-position commit/rollback), built, screened and routed by the full-bandwidth stream. Near-HBM is not counted.
 
 ## Replay
 Screens: jobs/screens*.sh (EPYC). Core screens use the screen copy gen_dsc/ot_qwen_rom_core_scr.sv (jobs/fix_scr*.py:

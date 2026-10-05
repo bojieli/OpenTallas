@@ -262,7 +262,10 @@ int main(int argc,char** argv) {
         // Full field actors own their selected pairs and checked GO/ACK counts.
         // The singleton host pair remains quiet; common publication drain applies.
         const char* native_field=std::getenv("DSROM_S81_NATIVE_L20_FIELD");
-        const bool actor_field=native_field&&std::string(native_field)=="1"&&runtime.stage==37&&runtime.rank>=0&&runtime.rank<4;
+        const char* native_qfield=std::getenv("DSROM_S81_NATIVE_L20_QFIELD");
+        const bool actor_field=((native_field&&std::string(native_field)=="1")||
+                                (native_qfield&&std::string(native_qfield)=="1"))&&
+                               runtime.stage==37&&runtime.rank>=0&&runtime.rank<4;
         if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index&&!nonfield_end&&!nonfield_att&&!actor_field)||!runtime.identity||!runtime.publication_drained||
                    !runtime.publication_drained(*runtime.identity)||!native->result().quiet))
             throw std::runtime_error("source exit precedes actual native field/publication drain");

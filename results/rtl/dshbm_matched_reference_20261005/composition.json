@@ -34,7 +34,60 @@
     "MTP_tok_s": 4109.4,
     "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
    }
-  }
+  },
+  "scope": "paper-credited target-clock comparison; not measured integrated finite-provider performance",
+  "physical_qualified": false
+ },
+ "finite_provider_measured_candidate": {
+  "scope": "one Q norm component, different finite provider; not original seven-op Q/KV/RoPE/quant program",
+  "source_records": {
+   "results/rtl/dshbm_matched_reference_20261005/su_fused/finite_q_component/result.json": "2a15ff15960fac81a6bf51eddce567be58c30983f3035e2198fa97e89b86399b",
+   "results/rtl/dshbm_matched_reference_20261005/su_fused/finite_q_component/calendar.json": "c0efb99b8720a5d44a26067da4d2f2f5b466e31264e6f8e3304b28bf4803df79",
+   "results/rtl/dshbm_matched_reference_20261005/su_fused/fused.json": "8dfd9a7ae4db082c5181cd1a38335a8e91101a0a5e1b9d9dd7aa6a6f8b12eebb"
+  },
+  "measured_RTL_source": "7569c1699",
+  "selected_RTL_source": "da89d7d9e",
+  "numerical_exact": true,
+  "checked_Q_words": 1280,
+  "accepted_to_observed_completion_us": 28.296272636999998,
+  "completion_observation": "bench samples hardware done at falling edge; observation includes half a clock after final rising-edge publication",
+  "request_counts": {
+   "read": 320,
+   "write": 160,
+   "ordered_publication_readback": 160,
+   "total": 640
+  },
+  "response_wait_edges": 33087,
+  "resolved_simulation_period_ns": 0.833334,
+  "response_wait_us_including_CDC_backend": 27.572522058,
+  "response_wait_fraction": 0.9744224057958211,
+  "remaining_control_engine_observation_us": 0.7237505789999972,
+  "critical_segments_us": {
+   "command_to_last_gain": 8.527506822,
+   "last_gain_to_first_input": 2.07500166,
+   "first_to_last_input": 7.550006040000002,
+   "last_input_to_last_engine_Y": 0.17916680999999882,
+   "last_engine_Y_to_observed_completion": 9.964591304999997
+  },
+  "extra_CDC_charge_us": 0,
+  "extra_CDC_charge_basis": "already measured inside these request/response waits; unmeasured parent crossings remain unknown, not zero",
+  "parent_extra_crossing_and_borrower_cost_us": null,
+  "historical_wide_provider_Q_KV_pair_us": 0.175,
+  "historical_wide_provider_40_P1_saving_us": 8.867,
+  "cost_over_historical_total_saving": 3.1911889745122357,
+  "historical_comparison_scope": "budget mismatch only; neither a same-provider regression nor an all-layer extrapolation",
+  "effect_on_original_benefit": "historical Q/KV fused benefit cannot be credited to this finite candidate; its single Q cost exceeds the entire old 40-occurrence saving",
+  "native_same_provider_baseline_us": null,
+  "native_provider_cost": "original native wide ports also unpriced; retain neither as a physically guaranteed baseline",
+  "architecture_risk": "one-outstanding sector service and dependent response/publication waits dominate; engine fusion alone does not remove that exposed movement path",
+  "remaining_engineering": "bind actual program borrower/admission and read/write lease, remaining KV/RoPE/quant, actual owner publication and dependent consumer; then measure paired same-provider program",
+  "parent_program_bound": false,
+  "installed_borrower_lease": false,
+  "mixed_native_fused_program_measured": false,
+  "physical_clock_qualified": false,
+  "whole_program_composed_delta_us": null,
+  "headline_acceleration_credit_us": null,
+  "candidate_adopted": false
  },
  "gate": {
   "rule": "ROM target (owner 2026-10-05: a measured checkpoint, not a kill switch): ROM AR <= gate AR_us AND ROM MTP step <= gate MTP_step_us (the step is tau-independent; MTP_tok_s at tau 4.159).  Each figure is the best credited HBM configuration for that mode (a lever that slows one mode is not forced on it), i.e. the harder bar for ROM",
@@ -22420,7 +22473,7 @@
   "results/rtl/dshbm_matched_reference_20261005/su_fused/fused.json": "8dfd9a7ae4db082c5181cd1a38335a8e91101a0a5e1b9d9dd7aa6a6f8b12eebb"
  },
  "tool_sha256": {
-  "tools/dshbm_matched_reference.py": "ef5a01a73968e617586779ab874c8471e36fe8c51d6c27839e61961e524e2abf",
+  "tools/dshbm_matched_reference.py": "89fee2ca38767b01593321dfffa45ecc09309bd3298d177439c7ef685e7378e2",
   "tools/dshbm_1m_allmeasured.py": "f817f8d63e4e9b23621e161c20f3fff37be05879258b9f67387be069466f3d3d"
  }
 }
