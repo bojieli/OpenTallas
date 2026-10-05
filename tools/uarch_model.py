@@ -54,7 +54,7 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
-def dsrom_fh_capture_model(protect_split=False):
+def dsrom_fh_capture_model(protect_split=False, physical_capacity=None):
     """Item2 G4W16 capture successor, before RTL; no adopted rate credit.
 
     A TP4 head rank owns 32,320 logits: 505 64-lane rounds. Each
@@ -112,7 +112,8 @@ def dsrom_fh_capture_model(protect_split=False):
             macro_area_um2=macro_area, std_cell_area_proxy_um2=cell_proxy,
             free_std_cell_area_um2=2000*660-macro_area,
             fits_area_proxy=cell_proxy/(2000*660-macro_area)<0.35,
-            parent_die_slot_fit='No parent placement credit until composition'),
+            parent_die_slot_fit='No parent placement credit until composition',
+            actual_capacity=physical_capacity),
         latency=dict(protected_return_extra_cycles=extra_return, pre_ALAT7_capture_cycles=1,
             context_consumers='Existing result capture and argmax first level; no new production cycles',
             matching_mask_tag_row_cycles=3+int(protect_split), index_prepare_cycles=1,
