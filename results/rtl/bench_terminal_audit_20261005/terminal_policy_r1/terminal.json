@@ -1,0 +1,83 @@
+{
+  "scope": "new source terminal predicates only; no engine, numerical requalification or historical replay",
+  "cases": [
+    {
+      "case": 0,
+      "returncode": 0,
+      "expected_nonzero": false,
+      "correct": true
+    },
+    {
+      "case": 1,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 2,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 3,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 4,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 5,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 6,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 7,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 8,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 9,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 10,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 11,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    },
+    {
+      "case": 12,
+      "returncode": 1,
+      "expected_nonzero": true,
+      "correct": true
+    }
+  ]
+}

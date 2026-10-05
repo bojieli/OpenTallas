@@ -259,7 +259,14 @@ int main(int argc,char** argv) {
         // not this host's field pair. Its own completion still owes all ACKs.
         const char* native_att=std::getenv("DSROM_S81_NATIVE_L20_ATT");
         const bool nonfield_att=native_att&&std::string(native_att)=="1"&&runtime.stage==37&&runtime.rank==0;
-        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index&&!nonfield_end&&!nonfield_att)||!runtime.identity||!runtime.publication_drained||
+        // Full field actors own their selected pairs and checked GO/ACK counts.
+        // The singleton host pair remains quiet; common publication drain applies.
+        const char* native_field=std::getenv("DSROM_S81_NATIVE_L20_FIELD");
+        const char* native_qfield=std::getenv("DSROM_S81_NATIVE_L20_QFIELD");
+        const bool actor_field=((native_field&&std::string(native_field)=="1")||
+                                (native_qfield&&std::string(native_qfield)=="1"))&&
+                               runtime.stage==37&&runtime.rank>=0&&runtime.rank<4;
+        if(rc==0&&((!accepted_go&&!nonfield_i0&&!nonfield_index&&!nonfield_end&&!nonfield_att&&!actor_field)||!runtime.identity||!runtime.publication_drained||
                    !runtime.publication_drained(*runtime.identity)||!native->result().quiet))
             throw std::runtime_error("source exit precedes actual native field/publication drain");
         printf("MINIMUM_SOURCE_EXIT rc=%d cycles=%ld field_go=%llu stage=%d rank=%d pair=%d\n",

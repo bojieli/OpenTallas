@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/dsrom_wf_close.py", line 330, in <module>
+    main()
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/dsrom_wf_close.py", line 326, in main
+    {"route": cmd_route, "stage": cmd_stage, "record": cmd_record}[a.cmd](a)
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/dsrom_wf_close.py", line 208, in cmd_stage
+    W = importlib.import_module("dsrom_wavefront_rtl_campaign")
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/dsrom_wavefront_rtl_campaign.py", line 519, in <module>
+    TAU = _TPT.tau_ds_v41(5)          # V4.1 DSpark gamma 5, third-party published (4.159 self-measured blend SUPERSEDED)
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/third_party_tau.py", line 64, in tau_ds_v41
+    return _model("deepseek_v41", draft_tokens, source)[0]
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/third_party_tau.py", line 55, in _model
+    m = record()["models"][model]
+  File "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/tools/third_party_tau.py", line 46, in record
+    return json.loads(REC.read_text())
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/results/speculative/third_party_acceptance_20261004/acceptance.json'

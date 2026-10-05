@@ -20,9 +20,55 @@ def _one(text, old, new):
     return text.replace(old, new, 1)
 
 
+def install_completion_join(selected, output):
+    """Select Planck's native END join in this exact capture/WAVE parent.
+
+    Complete-plan coverage and visibility remain required producer ports;
+    selecting RTL never makes a source plan or a publication receipt true.
+    """
+    from dsrom_wavefront_native_result_read import install as install_read
+    from dsrom_wfc_stage_completion_bind import install as install_join, JOIN
+    parameters = selected.get('parameters', {})
+    for name in ('PKG_WAVE', 'C8_CONTEXT', 'S81_CAPTURE'):
+        if parameters.get(name) != 1:
+            raise ValueError('native completion join requires ' + name + '=1')
+    output = Path(output).resolve()
+    sources = [Path(p).resolve() for p in selected['sources']]
+    for p in sources:
+        if hashlib.sha256(p.read_bytes()).hexdigest() != selected['source_sha256'].get(str(p)):
+            raise ValueError('selected completion input changed: ' + str(p))
+    # The native readout installer exports the genuine producer/END/data pins.
+    # Its old host consumer may coexist, but never drives this RTL stage_done.
+    if 'NATIVE_RESULT_READ' not in parameters:
+        selected = install_read(selected, output/'readout', enable=False)
+        sources = [Path(p).resolve() for p in selected['sources']]
+    tops = [p for p in sources if p.name == 'ot_v41_rt_die_l20_c8.sv']
+    if len(tops) != 1:
+        raise ValueError('one selected completion parent required')
+    original = tops[0]
+    joined = install_join(original, output/'join')
+    generated = Path(joined['generated']).resolve()
+    sources = [generated if p == original else p for p in sources]
+    leaf = (ROOT/JOIN).resolve()
+    if leaf not in sources:
+        sources.append(leaf)
+    result = dict(selected)
+    result.update(sources=sources,
+                  source_sha256={str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
+                  parameters=dict(selected['parameters'], WFC_COMPLETION_JOIN=1),
+                  verilator_args=[a for a in selected['verilator_args']
+                                  if not a.startswith('-GWFC_COMPLETION_JOIN=')]
+                                 + ['-GWFC_COMPLETION_JOIN=1'],
+                  completion_join=joined,
+                  wholeplan_coverage_authority_bound=False,
+                  real_visibility_authorities_bound=False,
+                  physical_admission=False, measured_system_result=False)
+    return result
+
+
 def install(binding, original_export, output, *, drain=False, head=False,
             actual_collectives=None, trace=False, stage=None, accepted_pop=False,
-            workspace=False, capture=False, kvt_source_stride=False):
+            workspace=False, capture=False, kvt_source_stride=False, capture_stream=False):
     """Return actual elaborator sources/parameters, with every flag default off.
 
     trace is simulation-only and records commands admitted at dut.cmd_go,
@@ -30,6 +76,8 @@ def install(binding, original_export, output, *, drain=False, head=False,
     per-launch ordinal. Tag wrap is never used as a transaction identity.
     No synthetic execution calendar or physical load closure is manufactured.
     """
+    if capture_stream and not capture:
+        raise ValueError('indexed stream requires capture selection')
     if head:
         raise ValueError("headreg candidate rejected; selected baseline requires head=False")
     if trace and (type(stage) is not int or not 0 <= stage < 81):
@@ -86,7 +134,7 @@ def install(binding, original_export, output, *, drain=False, head=False,
                 s = _one(s, module+' #(', module+' #(.SU_KVT_SOURCE_STRIDE(SU_KVT_SOURCE_STRIDE),')
         if capture:
             from dsrom_s81_capture_parent import hook
-            s=hook(role,s)
+            s=hook(role,s,stream=capture_stream)
         changed[p] = s
     dests = {p: output/'native'/p.name for p in changed}
     for p, dest in dests.items():
@@ -101,7 +149,7 @@ def install(binding, original_export, output, *, drain=False, head=False,
         sources = _select_kvt_stride_sources(sources)
     if capture:
         from dsrom_s81_capture_parent import dependencies
-        sources=dependencies(sources,output/'capture')
+        sources=dependencies(sources,output/'capture',stream=capture_stream)
     for rel in DRAIN:
         p = ROOT/rel
         if not p.is_file():
@@ -124,6 +172,12 @@ def install(binding, original_export, output, *, drain=False, head=False,
         result['parameters']['S81_CAPTURE']=1
         result['verilator_args'].extend(['-GS81_CAPTURE=1','-I'+str(ROOT/'rtl/hdc/v41')])
         result['capture_added_idle_edges_per_executed_phase']=2
+        result['physical_admission']=False
+    if capture_stream:
+        result['parameters']['S81_CAPTURE_STREAM']=1
+        result['verilator_args'].append('-GS81_CAPTURE_STREAM=1')
+        result['capture_stream_model']='results/uarch/dsrom_s81_adjacent_stream_price_20261005/model.json'
+        result['capture_stream_remote_terminal_required']=True
         result['physical_admission']=False
     if kvt_source_stride:
         result['parameters']['SU_KVT_SOURCE_STRIDE']=1
@@ -226,9 +280,13 @@ def main():
     parser.add_argument('--trace',action='store_true')
     parser.add_argument('--capture',action='store_true')
     parser.add_argument('--source-kvt-stride',action='store_true')
+    parser.add_argument('--completion-join',action='store_true',
+                        help='select native RTL END completion; actual coverage/fence producer ports required')
     parser.add_argument('--baseline-config',type=Path,
                         help='consume Claude-owned baseline config for the selected layer parent')
     args=parser.parse_args()
+    if args.completion_join and not args.baseline_config:
+        raise ValueError('completion join requires the existing owner capture/WAVE baseline selection')
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
                           payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
     baseline = None
@@ -269,6 +327,8 @@ def main():
         result['baseline_config']=str(args.baseline_config.resolve())
         result['baseline_config_sha256']=hashlib.sha256(args.baseline_config.read_bytes()).hexdigest()
         result['baseline_pending_bindings']=selected['baseline']['not_in_this_die_yet']
+    if args.completion_join:
+        result=install_completion_join(result,Path(args.output)/'completion')
     result['allocation_receipts']=binding.receipts
     text=json.dumps(result,default=str,indent=2)+'\n'
     receipt=Path(args.output)/'sources.json'

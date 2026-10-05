@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "scope": "completed L0 X only; full36/head/final KV drain pending",
+  "position": 4095,
+  "token": 1165,
+  "stage": "STAGE L0 done cycles=4792 start_cyc=7 end_cyc=4799 me_busy=2768/2768 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=1177s",
+  "comparison_source": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/completed_layer_comparison.json",
+  "reference": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P4095",
+  "dies": [
+    {
+      "rank": 0,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176",
+      "expected_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176"
+    },
+    {
+      "rank": 1,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176",
+      "expected_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176"
+    },
+    {
+      "rank": 2,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176",
+      "expected_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176"
+    },
+    {
+      "rank": 3,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176",
+      "expected_sha256": "d0fd1b94de3378311f70ad0d0a77f2864032169185b1216784beead76ec7f176"
+    }
+  ]
+}

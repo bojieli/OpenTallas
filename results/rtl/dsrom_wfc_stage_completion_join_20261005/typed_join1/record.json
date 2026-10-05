@@ -1,0 +1,54 @@
+{
+  "verdict": "PASS_TYPED_COMPONENT_ONLY",
+  "time_utc": "2026-10-05T06:11:29.403400+00:00",
+  "source_commit": "b114bed76a0fef3ffaf55413b8a112531c0d27cc",
+  "host": "ot-epyc2",
+  "owner": "Codex:dsrom-wf-ctrl",
+  "launcher_pid": 3223945,
+  "output": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/typed_completion_join1",
+  "compile_count": 1,
+  "semantic_cases": 1,
+  "admission_GB": 4,
+  "make_j": 4,
+  "source_sha256": {
+    "rtl/rom/wavefront/completion/ot_dsrom_wf_typed_completion_join.sv": "4723400f2d6f752feddda44b41209881e1bf2c10018ea6aeac1d467313c0f877",
+    "rtl/test/dsrom_wavefront/tb_wf_typed_completion_join.sv": "c55185726c1ed103038103b26108c7a71db498787cc9008ea9c556f8ce532289",
+    "tools/dsrom_wfc_typed_completion_bind.py": "d72dd462c4571efd34f0d990c3ae38fbe662428040f49e4fea2bccd616b6dff8",
+    "rtl/dsrom_sys/wfc_typed_completion_parent/ot_v41_rt_die_l20_c8.sv": "0593eb90c95bf6f1d5248a9c6e62c274a4e65c1a4bba022b4e67cf21c6401322",
+    "rtl/dsrom_sys/wfc_typed_completion_parent/compiled_field_keys.json": "416660fc98df3b11132c0770b2402503d7fc647c8ba7202edc6f5a67a3732473",
+    "results/uarch/dsrom_wfc_stage_completion_join_20261005/typed_terminal_model.json": "c3a1f4db388225610bcf18c998e049c3b8396ee00219523dc025aba80adfa148"
+  },
+  "original_fbd7531ca_files_byteidentical": [
+    "rtl/rom/wavefront/completion/ot_dsrom_wf_stage_completion_join.sv",
+    "tools/dsrom_wfc_stage_completion_bind.py",
+    "rtl/dsrom_sys/wfc_stage_completion_parent/ot_v41_rt_die_l20_c8.sv",
+    "rtl/dsrom_sys/wfc_stage_completion_parent/source_binding.json",
+    "rtl/test/dsrom_wavefront/tb_wf_stage_completion_join.sv"
+  ],
+  "checks": [
+    "no-argmax STAGE_HANDOFF accepted only after actual bound END and coverage/visibility",
+    "STAGE_HANDOFF never asserts token_result_valid",
+    "TOKEN_RESULT without fresh argmax refused, accepted debt retained",
+    "TOKEN_RESULT with actual fresh argmax valid",
+    "stale native done cannot replace real END",
+    "missing coverage/fence blocks both types",
+    "actual raw53bit native payload never fabricated or zeroed",
+    "held outputs stable through acceptance",
+    "default-off zero outputs"
+  ],
+  "native_source_interface_rewrite_verified": true,
+  "parent_integration_compiled": false,
+  "actual_ordered_plan_coverage_bound": false,
+  "actual_visibility_bound": false,
+  "actual_stage_handoff_consumer_bound": "Compatible selected intermediate controller acceptance source-wired; actual request/coverage/visibility still unbound",
+  "physical_context_qualified": false,
+  "SSFF": "UNKNOWN",
+  "stage_handoff_END_fence_scope": [
+    "L20.I143",
+    "L20.fence"
+  ],
+  "stage_handoff_requires_HEAD": false,
+  "token_result_requires_fresh_argmax": true,
+  "source_key_scope": "30actual compiled FIELDgroups/rank x4 are subset only, remaining nonfield/fence physical sources null, complete263coverage remainsfalse",
+  "post_component_gate_parent_wire_only_update": "Explicitly compatible intermediate SOURCE0/SEND_RESULT0/COMBINE_IN0 controller may accept typed handoff through original wf_stage_accepted; token result validity remains false. Unsupported result-producing controller fails closed for handoff. Join RTL/checker unchanged."
+}

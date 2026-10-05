@@ -1,0 +1,20 @@
+{
+  "scope": "ND1 actual loader parent elaboration and focused actual interface-payload/control movement only; service responses in gate are directed pin stimuli, not releasedcheckpoint/HBMdevice/fulltoken execution",
+  "default_enabled": false,
+  "fulltarget_adopted": false,
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch/jobs/sagan-loader-service-move-r1",
+  "verdict": "COMPONENT_PASS_PARENT_LINT_EXIT0",
+  "sources": {
+    "tools/hbm_loader_service_join_model.py": "9c0e309000ad3bf97994d82f0e84eff1f50f2b718e440199dd01c0453209570b",
+    "rtl/hbm_accel/integration/ot_hbm_loader_service_join.sv": "580a0490e2fde6ea8923174d441da927d5f5b465f4bd4c7c18a57344fd0e1f7d",
+    "rtl/hbm_accel/integration/ot_hbm_accel_die_host_join.sv": "cb2bcbabac6b00ff8d7c4b825fabbd279da663a428b8991a25c2daf5fff66545",
+    "rtl/test/hbm_accel/integration/tb_hbm_loader_service_join.sv": "5804019a00b3383bc0d3a7372a14bc94c9a2ce9ab789f12e6a94d4c5235fd301"
+  },
+  "logs": {
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "parent.lint.log": "048659a53475a9ca9933d30af45c14164b90e57a839a5c23bbfa7839a230b3eb",
+    "run.log": "3aee81065be787907f53231cea8beb9de36f50bad615d84ddb334ea02e34004e"
+  },
+  "parent_lint_warning": "Inherited ot_hbm_accel_dma64 integer temporary x latch warning; no new parent/join LATCH or UNOPTFLAT. Original source unchanged, reported to Turing; no physical closure claim."
+}

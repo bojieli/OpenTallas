@@ -1,0 +1,341 @@
+{
+ "schema": "opentallas.dsrom.s81.expert-placement-enumeration.v1",
+ "adopted": false,
+ "source_commit": "1ea05d8c9",
+ "total_cases": 406,
+ "complete_chain_latency_us": null,
+ "layers": [
+  {
+   "layer": 3,
+   "experts": [
+    128,
+    129,
+    142,
+    159,
+    160,
+    228
+   ],
+   "canonical_field_node_barrier_sum_us": 4.216666666666667,
+   "canonical_baseline": [
+    {
+     "node": "L3.ffn.experts_gu",
+     "stage": 6,
+     "phases": [
+      "L3.exp128.gu",
+      "L3.exp129.gu",
+      "L3.exp142.gu",
+      "L3.exp159.gu",
+      "L3.exp160.gu",
+      "L3.exp228.gu"
+     ],
+     "phase_count": 6,
+     "measured_cycles": 2380,
+     "wire_cycles": 480,
+     "total_cycles": 2860,
+     "us": 2.3833333333333333
+    },
+    {
+     "node": "L3.ffn.down",
+     "stage": 6,
+     "phases": [
+      "L3.exp128.w2",
+      "L3.exp129.w2",
+      "L3.exp142.w2",
+      "L3.exp159.w2",
+      "L3.exp160.w2",
+      "L3.exp228.w2"
+     ],
+     "phase_count": 6,
+     "measured_cycles": 1720,
+     "wire_cycles": 480,
+     "total_cycles": 2200,
+     "us": 1.8333333333333333
+    },
+    {
+     "node": "L3.ffn.down",
+     "stage": 5,
+     "phases": [
+      "L3.shared.w2"
+     ],
+     "phase_count": 1,
+     "measured_cycles": 255,
+     "wire_cycles": 80,
+     "total_cycles": 335,
+     "us": 0.2791666666666667
+    }
+   ],
+   "summary": [
+    {
+     "groups": 1,
+     "enumerated": 1,
+     "best_candidate": 202,
+     "best_field_only_us": 4.216666666666667,
+     "max_phases_per_node": 6,
+     "added_dies": 4,
+     "added_die_body_mm2": 3356.956,
+     "whole_chain_us": null,
+     "field_only_dominated_by": {
+      "canonical": true,
+      "reason": "same 4.2166667us field calendar, adds4 dies; original canonical group already installed"
+     }
+    },
+    {
+     "groups": 2,
+     "enumerated": 31,
+     "best_candidate": 103,
+     "best_field_only_us": 2.1066666666666665,
+     "max_phases_per_node": 3,
+     "added_dies": 8,
+     "added_die_body_mm2": 6713.912,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    },
+    {
+     "groups": 3,
+     "enumerated": 90,
+     "best_candidate": 38,
+     "best_field_only_us": 1.4033333333333333,
+     "max_phases_per_node": 2,
+     "added_dies": 12,
+     "added_die_body_mm2": 10070.868,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    },
+    {
+     "groups": 4,
+     "enumerated": 65,
+     "best_candidate": 8,
+     "best_field_only_us": 1.4033333333333333,
+     "max_phases_per_node": 2,
+     "added_dies": 16,
+     "added_die_body_mm2": 13427.824,
+     "whole_chain_us": null,
+     "field_only_dominated_by": {
+      "candidate": 38,
+      "groups": 3,
+      "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+     }
+    },
+    {
+     "groups": 5,
+     "enumerated": 15,
+     "best_candidate": 1,
+     "best_field_only_us": 1.4033333333333333,
+     "max_phases_per_node": 2,
+     "added_dies": 20,
+     "added_die_body_mm2": 16784.78,
+     "whole_chain_us": null,
+     "field_only_dominated_by": {
+      "candidate": 38,
+      "groups": 3,
+      "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+     }
+    },
+    {
+     "groups": 6,
+     "enumerated": 1,
+     "best_candidate": 0,
+     "best_field_only_us": 0.7,
+     "max_phases_per_node": 1,
+     "added_dies": 24,
+     "added_die_body_mm2": 20141.736,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    }
+   ],
+   "existing_group_reuse": {
+    "capacity_established": false,
+    "reason": "Fresh-group catalogue excludes other resident tensors. Aggregate canonical free words are not a proof of per-pair intervals, clock/service slots or compatible live controls.",
+    "canonical_stages": {
+     "6": {
+      "occupied_pairs": 2417,
+      "used_pair_words": 15413248,
+      "aggregate_remaining_pair_words": 4386816
+     },
+     "5": {
+      "occupied_pairs": 2417,
+      "used_pair_words": 15401984,
+      "aggregate_remaining_pair_words": 4398080
+     }
+    },
+    "cheaper_reuse_claim": false
+   },
+   "capacity_range": {
+    "min_max_pair_words": 160,
+    "max_max_pair_words": 440,
+    "pair_capacity": 8192
+   },
+   "total_chain_latency_us": null
+  },
+  {
+   "layer": 20,
+   "experts": [
+    41,
+    65,
+    158,
+    164,
+    259,
+    266
+   ],
+   "canonical_field_node_barrier_sum_us": 3.0908333333333333,
+   "canonical_baseline": [
+    {
+     "node": "L20.ffn.experts_gu",
+     "stage": 37,
+     "phases": [
+      "L20.exp158.gu",
+      "L20.exp164.gu",
+      "L20.exp41.gu",
+      "L20.exp65.gu"
+     ],
+     "phase_count": 4,
+     "measured_cycles": 1586,
+     "wire_cycles": 320,
+     "total_cycles": 1906,
+     "us": 1.5883333333333334
+    },
+    {
+     "node": "L20.ffn.experts_gu",
+     "stage": 38,
+     "phases": [
+      "L20.exp259.gu",
+      "L20.exp266.gu"
+     ],
+     "phase_count": 2,
+     "measured_cycles": 792,
+     "wire_cycles": 160,
+     "total_cycles": 952,
+     "us": 0.7933333333333333
+    },
+    {
+     "node": "L20.ffn.down",
+     "stage": 37,
+     "phases": [
+      "L20.exp158.w2",
+      "L20.exp164.w2",
+      "L20.exp41.w2",
+      "L20.exp65.w2",
+      "L20.shared.w2"
+     ],
+     "phase_count": 5,
+     "measured_cycles": 1403,
+     "wire_cycles": 400,
+     "total_cycles": 1803,
+     "us": 1.5025
+    },
+    {
+     "node": "L20.ffn.down",
+     "stage": 38,
+     "phases": [
+      "L20.exp259.w2",
+      "L20.exp266.w2"
+     ],
+     "phase_count": 2,
+     "measured_cycles": 572,
+     "wire_cycles": 160,
+     "total_cycles": 732,
+     "us": 0.61
+    }
+   ],
+   "summary": [
+    {
+     "groups": 1,
+     "enumerated": 1,
+     "best_candidate": 202,
+     "best_field_only_us": 4.216666666666667,
+     "max_phases_per_node": 6,
+     "added_dies": 4,
+     "added_die_body_mm2": 3356.956,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    },
+    {
+     "groups": 2,
+     "enumerated": 31,
+     "best_candidate": 103,
+     "best_field_only_us": 2.1066666666666665,
+     "max_phases_per_node": 3,
+     "added_dies": 8,
+     "added_die_body_mm2": 6713.912,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    },
+    {
+     "groups": 3,
+     "enumerated": 90,
+     "best_candidate": 38,
+     "best_field_only_us": 1.4033333333333333,
+     "max_phases_per_node": 2,
+     "added_dies": 12,
+     "added_die_body_mm2": 10070.868,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    },
+    {
+     "groups": 4,
+     "enumerated": 65,
+     "best_candidate": 8,
+     "best_field_only_us": 1.4033333333333333,
+     "max_phases_per_node": 2,
+     "added_dies": 16,
+     "added_die_body_mm2": 13427.824,
+     "whole_chain_us": null,
+     "field_only_dominated_by": {
+      "candidate": 38,
+      "groups": 3,
+      "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+     }
+    },
+    {
+     "groups": 5,
+     "enumerated": 15,
+     "best_candidate": 1,
+     "best_field_only_us": 1.4033333333333333,
+     "max_phases_per_node": 2,
+     "added_dies": 20,
+     "added_die_body_mm2": 16784.78,
+     "whole_chain_us": null,
+     "field_only_dominated_by": {
+      "candidate": 38,
+      "groups": 3,
+      "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+     }
+    },
+    {
+     "groups": 6,
+     "enumerated": 1,
+     "best_candidate": 0,
+     "best_field_only_us": 0.7,
+     "max_phases_per_node": 1,
+     "added_dies": 24,
+     "added_die_body_mm2": 20141.736,
+     "whole_chain_us": null,
+     "field_only_dominated_by": null
+    }
+   ],
+   "existing_group_reuse": {
+    "capacity_established": false,
+    "reason": "Fresh-group catalogue excludes other resident tensors. Aggregate canonical free words are not a proof of per-pair intervals, clock/service slots or compatible live controls.",
+    "canonical_stages": {
+     "37": {
+      "occupied_pairs": 2417,
+      "used_pair_words": 15368192,
+      "aggregate_remaining_pair_words": 4431872
+     },
+     "38": {
+      "occupied_pairs": 2417,
+      "used_pair_words": 15475712,
+      "aggregate_remaining_pair_words": 4324352
+     }
+    },
+    "cheaper_reuse_claim": false
+   },
+   "capacity_range": {
+    "min_max_pair_words": 160,
+    "max_max_pair_words": 680,
+    "pair_capacity": 8192
+   },
+   "total_chain_latency_us": null
+  }
+ ]
+}

@@ -1,0 +1,146 @@
+{
+  "accepted_sector_actions": {
+    "formatter_two_plane_reads": 24576,
+    "gather_checked_readbacks": 12288,
+    "gather_score_ID_writes": 12288,
+    "producer_score_ID_reads": 12288,
+    "sink_ID_writes": 64,
+    "sink_checked_readbacks": 64
+  },
+  "actual_base": null,
+  "actual_channel_capacity": null,
+  "admission": "Pinned installer allocated/free book with byte-range/alignment/overflow checks; arena/sink/input nonoverlap, all prior accepted SM/SU/W2 owners drained; actual lease, not fixture-ready",
+  "adopted": false,
+  "area": {
+    "additional_to_existing_adapter_and_formatter": true,
+    "estimate_fits_required_envelope": true,
+    "exclusions": "actual loaded CTS/PG/long channels/protected backing implementation, codec cut/hold excess; no parent-space fit claim",
+    "parent_slot_reserved": false,
+    "placement_at50pct_mm2": 0.05194947235800001,
+    "required_component_outline_um": [
+      400,
+      400
+    ],
+    "required_envelope_mm2": 0.16,
+    "shared_ledger_charge_once": true
+  },
+  "arena_bytes": 393216,
+  "clock_qualified": false,
+  "default_enabled": false,
+  "formatter_layout_gate": "Sagan09ed rank-major live component cannot attach unchanged; bounded plane-major opt-in correction/caller binding required, original source and live test preserved",
+  "full_sector_writes": "All32 strobes on each accepted256b sector; no partial-sector RMW required. Changed mask requires actual extra oldread/RMW pricing.",
+  "functional_integration_permitted_after_layout_and_real_lease": true,
+  "installed_pool_lease": false,
+  "layout": "PLANE_MAJOR, byte-addressed: score=BASE+rank*2048+64*(pairword>>1); ID=BASE+196608+rank*2048+64*(pairword>>1); half=pairword&1. Explicit /64 conversion at512b formatter face.",
+  "memory_and_codec_publication_cost_counted_once": true,
+  "memory_source_clock_ns": 1,
+  "new_backing_SRAM_bytes": 0,
+  "new_memory_ports": 0,
+  "next": "Rawls implements priced opt-in loadedbook/lease+bridges; Sagan plane-major actual formatter. Missing installer must fail closed; no free arena/base or port. Compose actual accepted service after implementation, not model rate adoption.",
+  "normal_gathers": [
+    {
+      "GW": 1,
+      "destination_byte_offset": 0,
+      "mode": 1,
+      "n_words512_per_rank": 32,
+      "plane": "score",
+      "topk": 0
+    },
+    {
+      "GW": 1,
+      "destination_byte_offset": 196608,
+      "mode": 1,
+      "n_words512_per_rank": 32,
+      "plane": "ID",
+      "topk": 0
+    }
+  ],
+  "physical_boundary_tracks_lower_bound": 1634,
+  "physical_build_admitted": false,
+  "previous_formatter_9edge_service_not_added_again": true,
+  "protection": {
+    "W6_pairs": 71,
+    "basis": "retained W6 source; positive250ps local loading estimate, held2/3 target edges; physical timing unqualified",
+    "decode_held_edges": 3,
+    "encode_held_edges": 2,
+    "source_body_mm2": 0.02048414184
+  },
+  "protocol": {
+    "CDC_included_in_roundtrip": true,
+    "CDC_positive_minimum_ns": 5.5,
+    "CDC_request_receiver_edges_minimum": 3,
+    "CDC_response_receiver_edges_minimum": 3,
+    "adapter_tree_assembly_load_edges": 436224,
+    "borrowed_lease_release": "Last matched checked VMvisible + positive captured reverse; ACK/done alone never frees arena or requester debt",
+    "checked_readback": "Each pair of write sectorACKs precedes corresponding two readbacks/checked owner capture; whole score+ID arena visible before ordered adapter; result sink similarly checked before publication/reverse",
+    "descriptor_admission_edges": 16,
+    "final_visible_release_edges": 2,
+    "local_bridge_edges": 523346,
+    "local_edges_per_sector": 8,
+    "provider_roundtrip_ns_planning_range": [
+      45,
+      500
+    ],
+    "range_condition": "exclusive/drained path, held sinks accept; CL/REQ/RSP+ACT/PRE/one refresh and CDC included once; not a bound under refusal/competing traffic/fault",
+    "two_sector_word_handoff_edges": 1
+  },
+  "provider": "DS20 SM0 c_req/c_rsp337/273 -> existing g_cdc[0] AW3 -> u_mem; one outstanding sector",
+  "provider_byte_throughput_floor_us": 61.568,
+  "reported_source_construction": {
+    "actual_prior_accept_to_original_response_consume_required": true,
+    "additional_coding_permission": true,
+    "bridge_CP_shared_FF": 3528,
+    "captured_release_edges": 2,
+    "counts_basis": "owner source-construction report; not mapped physical proof",
+    "duplicate_borrower_allowed": false,
+    "existing_model_ceiling_FF": 6696,
+    "grant_edges": 1,
+    "owner": "Rawls15:30/15:31 EXEC-only integration",
+    "parent_slot_reserved": false,
+    "placement_ceiling_mm2": 0.05194947235800001,
+    "prior_native_FF": 2592,
+    "protected_bridge_CP_shared_rows": 49,
+    "protected_prior_native_rows": 36,
+    "quiet_edges": 3,
+    "rate_credit": false,
+    "total_FF": 6120,
+    "within_existing_budget": true
+  },
+  "required_existing_pool_bytes": 395264,
+  "result_sink_bytes": 2048,
+  "schema": "hbm.index.ds20.normal-gather.minimum.v1",
+  "selected_scope": "correctness-only, no419cycle or acceleration credit",
+  "serialized_provider_planning_us_range": [
+    3570.201666666667,
+    31583.641666666666
+  ],
+  "source_VM_producer_reads_included": true,
+  "source_clock_target_ns": 0.8333333333333334,
+  "source_owner": "Rawls enclosing bridges/lease; Sagan plane-major formatter/adapter; Confucius selector unchanged",
+  "source_sha256": {
+    "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
+    "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+    "rtl/chip/ot_w15_coll_dma.sv": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv": "a645259efa9b605d5be5edccd3135bfb8587c22641af84018fa5bd604c286f61",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+    "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+    "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+  },
+  "state": {
+    "Rawls_base_protected_FF": 2952,
+    "bridge_FF": 4104,
+    "capacity512_words_each_direction": 1,
+    "descriptor_CMD64_capacity": 8,
+    "lease_FF_allowance": 576,
+    "provider_outstanding": 1,
+    "second_direction_payload_FF": 576,
+    "shared_borrower_ledger_FF": 2592,
+    "total_with_shared_ledger_once": 6696
+  },
+  "static_source_implementation_permitted": true,
+  "token_gain_us": null,
+  "total_physical_bytes": 1970176,
+  "total_sector_actions": 61568
+}

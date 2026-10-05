@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/kepler-bench-terminal-74a7/src/tools/check_bench_terminal_cleanup.py", line 60, in <module>
+    if __name__=='__main__':main()
+  File "/srv/opentallas-scratch/codex/kepler-bench-terminal-74a7/src/tools/check_bench_terminal_cleanup.py", line 44, in main
+    checks.append(run(['vvp','-n',str(exe)],out,f'guard_run_{int(fail)}',0))
+  File "/srv/opentallas-scratch/codex/kepler-bench-terminal-74a7/src/tools/check_bench_terminal_cleanup.py", line 12, in run
+    raise RuntimeError(f'{name}: unexpected exit {result.returncode}; inspect preserved log')
+RuntimeError: guard_run_0: unexpected exit 1; inspect preserved log

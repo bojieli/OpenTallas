@@ -5,6 +5,8 @@
 // ot_hdc_bmul's decode/exponent-add stage; here the weight enters unchanged and the bubble raises the multiplier's
 // zero flag instead (ot_hbm_accel_bmul `kill`).  Same result bits: a zero operand already gives y = +0 whatever
 // the other operand is, and the fault output is gated by the bubble's own valid (v = 0), as in the original.
+// Its 8x8 significand product is also cut as two 8x4 partial products (stage 2) summed by a kept prefix adder in
+// stage 3 in front of the normalise select (the biased exponents precomputed): LATENCY 5 kept, bit-identical.
 // Zero added cycles.
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_tc_col #(
@@ -159,17 +161,22 @@ module ot_hbm_accel_bmul (
     end
     // stage 2: the 8x8 product
     reg        s2_v, s2_s, s2_z, s2_nf;
-    reg [15:0] s2_p;
-    reg signed [10:0] s2_e;
+    reg [11:0] s2_pl, s2_ph;            // the 8x8 product as two 8x4 partial products (summed in stage 3)
+    reg signed [10:0] s2_e8, s2_e7;     // the exponent with both normalisation biases, precomputed
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s1_v;
     end
     always @(posedge clk) begin
-        s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf; s2_e <= s1_e;
-        s2_p <= s1_a * s1_b;
+        s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf;
+        s2_e8 <= s1_e + 11'sd128; s2_e7 <= s1_e + 11'sd127;
+        s2_pl <= s1_a * s1_b[3:0];
+        s2_ph <= s1_a * s1_b[7:4];
     end
     // stage 3: normalise (leading bit 15 or 14) and bias
+    wire [15:0] s2_p;
+    wire        s2_pc;
+    ot_hdc_ksadd_k #(.W(16)) u_psum (.a({4'd0, s2_pl}), .b({s2_ph, 4'd0}), .cin(1'b0), .s(s2_p), .cout(s2_pc));
     reg        s3_v, s3_s, s3_z, s3_nf;
     reg [22:0] s3_f;
     reg signed [10:0] s3_be;
@@ -179,8 +186,8 @@ module ot_hbm_accel_bmul (
     end
     always @(posedge clk) begin
         s3_s <= s2_s; s3_z <= s2_z; s3_nf <= s2_nf;
-        if (s2_p[15]) begin s3_f <= {s2_p[14:0], 8'd0}; s3_be <= s2_e + 11'sd128; end
-        else          begin s3_f <= {s2_p[13:0], 9'd0}; s3_be <= s2_e + 11'sd127; end
+        if (s2_p[15]) begin s3_f <= {s2_p[14:0], 8'd0}; s3_be <= s2_e8; end
+        else          begin s3_f <= {s2_p[13:0], 9'd0}; s3_be <= s2_e7; end
     end
     // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
     reg        s4_v, s4_bad;

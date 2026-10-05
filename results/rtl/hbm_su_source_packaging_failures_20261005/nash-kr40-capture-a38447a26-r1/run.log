@@ -1,0 +1,28 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=2 warnings=0
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+mkdir -p /work/results/asap7/opentallas_ot_hdc_v41x_vec_light1024rk_asap7_su_kr40_capture_split_r1/base/
+echo 833 > /work/results/asap7/opentallas_ot_hdc_v41x_vec_light1024rk_asap7_su_kr40_capture_split_r1/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_ot_hdc_v41x_vec_light1024rk_asap7_su_kr40_capture_split_r1/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_hdc_v41x_vec_light1024rk_asap7_su_kr40_capture_split_r1/base/clock_period.txt
+Setting clock period to 833
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv
+12. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_vec_phys.sv
+13. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected.sv
+ERROR: Can't open include file `rtl/hdc/v41x/ot_hdc_bf16_capture_split.sv'!
+
+Elapsed time: 0:00.51[h:]min:sec. CPU time: user 0.48 sys 0.03 (99%). Peak memory: 82188KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_ot_hdc_v41x_vec_light1024rk_asap7_su_kr40_capture_split_r1/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/nash-kr40-capture-a38447a26-r1/physical.json

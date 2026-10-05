@@ -1,0 +1,168 @@
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:243:37: Operator ADD expects 12 bits on the RHS, but RHS's ARRAYSEL generates 5 bits.
+                                                           : ... note: In instance 'tb_dsrom_field_addr.dut.g_aq[1].u_aq'
+  243 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                                     ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:243:78: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's10_e' generates 10 bits.
+                                                           : ... note: In instance 'tb_dsrom_field_addr.dut.g_aq[1].u_aq'
+  243 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:245:28: Operator SUB expects 12 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                           : ... note: In instance 'tb_dsrom_field_addr.dut.g_aq[1].u_aq'
+  245 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_actquant.sv:245:58: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's10_e' generates 10 bits.
+                                                           : ... note: In instance 'tb_dsrom_field_addr.dut.g_aq[1].u_aq'
+  245 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:211:55: Operator ADD expects 17 bits on the RHS, but RHS's CONST '15'h20' generates 15 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  211 |     wire [14:0] need_q = sv2[1] ? ({u, 1'b1, b, 5'd0} + 15'd32) : ({u, 1'b0, b, 5'd0} + 15'd32);
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:211:87: Operator ADD expects 17 bits on the RHS, but RHS's CONST '15'h20' generates 15 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  211 |     wire [14:0] need_q = sv2[1] ? ({u, 1'b1, b, 5'd0} + 15'd32) : ({u, 1'b0, b, 5'd0} + 15'd32);
+      |                                                                                       ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:211:24: Operator ASSIGNW expects 15 bits on the Assign RHS, but Assign RHS's COND generates 17 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  211 |     wire [14:0] need_q = sv2[1] ? ({u, 1'b1, b, 5'd0} + 15'd32) : ({u, 1'b0, b, 5'd0} + 15'd32);
+      |                        ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:271:30: Operator COND expects 17 bits on the Conditional True, but Conditional True's SEL generates 16 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  271 |     wire [15:0] blk0 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b0, b};
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:271:30: Operator COND expects 17 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  271 |     wire [15:0] blk0 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b0, b};
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:271:22: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 17 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  271 |     wire [15:0] blk0 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b0, b};
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:272:30: Operator COND expects 17 bits on the Conditional True, but Conditional True's SEL generates 16 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  272 |     wire [15:0] blk1 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b1, b};
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:272:30: Operator COND expects 17 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  272 |     wire [15:0] blk1 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b1, b};
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:272:22: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 17 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  272 |     wire [15:0] blk1 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b1, b};
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:276:29: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  276 |         bt_q0 <= sv2[0] ? qb[blk0] : 256'd0; bt_e0 <= sv2[0] ? eb[blk0] : 10'd0;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:276:66: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  276 |         bt_q0 <= sv2[0] ? qb[blk0] : 256'd0; bt_e0 <= sv2[0] ? eb[blk0] : 10'd0;
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:277:29: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  277 |         bt_q1 <= sv2[1] ? qb[blk1] : 256'd0; bt_e1 <= sv2[1] ? eb[blk1] : 10'd0;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:277:66: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  277 |         bt_q1 <= sv2[1] ? qb[blk1] : 256'd0; bt_e1 <= sv2[1] ? eb[blk1] : 10'd0;
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:283:23: Bit extraction of array[12287:0] requires 14 bit index, not 16 bits.
+                                                                     : ... note: In instance 'tb_dsrom_field_addr.dut'
+  283 |                     bb[(spar ? 16'(KMAX) : 16'd0) + {1'b0, sw[8 + 8*ku +: 8], 7'd0} + 16'(kl * 8) + {13'd0, sw[3:1]}] : 16'd0;
+      |                       ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv:399:58: Operator ADD expects 15 bits on the LHS, but LHS's REPLICATE generates 13 bits.
+                                                                      : ... note: In instance 'tb_dsrom_field_addr.dut'
+  399 |             if (aq_vo[0]) have[aq_par] <= {aq_blk, 5'd0} + 15'd64;
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:204:55: Operator ADD expects 17 bits on the RHS, but RHS's CONST '15'h20' generates 15 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  204 |     wire [14:0] need_q = sv2[1] ? ({u, 1'b1, b, 5'd0} + 15'd32) : ({u, 1'b0, b, 5'd0} + 15'd32);
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:204:87: Operator ADD expects 17 bits on the RHS, but RHS's CONST '15'h20' generates 15 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  204 |     wire [14:0] need_q = sv2[1] ? ({u, 1'b1, b, 5'd0} + 15'd32) : ({u, 1'b0, b, 5'd0} + 15'd32);
+      |                                                                                       ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:204:24: Operator ASSIGNW expects 15 bits on the Assign RHS, but Assign RHS's COND generates 17 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  204 |     wire [14:0] need_q = sv2[1] ? ({u, 1'b1, b, 5'd0} + 15'd32) : ({u, 1'b0, b, 5'd0} + 15'd32);
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:243:30: Operator COND expects 17 bits on the Conditional True, but Conditional True's SEL generates 16 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  243 |     wire [15:0] blk0 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b0, b};
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:243:30: Operator COND expects 17 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  243 |     wire [15:0] blk0 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b0, b};
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:243:22: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 17 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  243 |     wire [15:0] blk0 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b0, b};
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:244:30: Operator COND expects 17 bits on the Conditional True, but Conditional True's SEL generates 16 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  244 |     wire [15:0] blk1 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b1, b};
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:244:30: Operator COND expects 17 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  244 |     wire [15:0] blk1 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b1, b};
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:244:22: Operator ASSIGNW expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 17 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  244 |     wire [15:0] blk1 = (spar ? 16'(NBLK) : 16'd0) + {5'd0, u, 1'b1, b};
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:248:29: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  248 |         bt_q0 <= sv2[0] ? qb[blk0] : 256'd0; bt_e0 <= sv2[0] ? eb[blk0] : 10'd0;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:248:66: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  248 |         bt_q0 <= sv2[0] ? qb[blk0] : 256'd0; bt_e0 <= sv2[0] ? eb[blk0] : 10'd0;
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:249:29: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  249 |         bt_q1 <= sv2[1] ? qb[blk1] : 256'd0; bt_e1 <= sv2[1] ? eb[blk1] : 10'd0;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:249:66: Bit extraction of array[383:0] requires 9 bit index, not 16 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  249 |         bt_q1 <= sv2[1] ? qb[blk1] : 256'd0; bt_e1 <= sv2[1] ? eb[blk1] : 10'd0;
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/v41die/ot_v41_spine_pq_w17w10.sv:255:23: Bit extraction of array[12287:0] requires 14 bit index, not 16 bits.
+                                                                : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  255 |                     bb[(spar ? 16'(KMAX) : 16'd0) + {1'b0, sw[8 + 8*ku +: 8], 7'd0} + 16'(kl * 8) + {13'd0, sw[3:1]}] : 16'd0;
+      |                       ^
+%Warning-WIDTHEXPAND: rtl/v41die/ot_v41_spine_pq_w17w10.sv:371:58: Operator ADD expects 15 bits on the LHS, but LHS's REPLICATE generates 13 bits.
+                                                                 : ... note: In instance 'tb_dsrom_field_addr.baseline'
+  371 |             if (aq_vo[0]) have[aq_par] <= {aq_blk, 5'd0} + 15'd64;
+      |                                                          ^
+make: Entering directory '/srv/opentallas-scratch/codex/epicurus-field-address-20261005-r1/gate/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsrom_field_addr__pch.h -o Vtb_dsrom_field_addr__pch.h.fast.gch
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dsrom_field_addr__pch.h -o Vtb_dsrom_field_addr__pch.h.slow.gch
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr___024root__0.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr___024root__1.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr___024root__2.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr___024root__3.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr_ot_hdc_actquant__0.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr_ot_hdc_actquant__1.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr_ot_hdc_actquant__2.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr_ot_hdc_actquant__3.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.fast -c Vtb_dsrom_field_addr__main.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.slow -c Vtb_dsrom_field_addr__ConstPool__0__Slow.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.slow -c Vtb_dsrom_field_addr___024root__Slow.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.slow -c Vtb_dsrom_field_addr___024root__0__Slow.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.slow -c Vtb_dsrom_field_addr_ot_hdc_actquant__Slow.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.slow -c Vtb_dsrom_field_addr_ot_hdc_actquant__0__Slow.cpp
+g++ -O2  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O2 -fno-fast-math -ffp-contract=off -fno-associative-math -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dsrom_field_addr__pch.h.slow -c Vtb_dsrom_field_addr__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dsrom_field_addr__ALL.a    -pthread -lpthread -latomic   -o Vtb_dsrom_field_addr
+rm Vtb_dsrom_field_addr__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/epicurus-field-address-20261005-r1/gate/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.518 MB sources in 11 modules, into 10.464 MB in 16 C++ files needing 0.046 MB
+- Verilator: Walltime 71.220 s (elab=0.011, cvt=0.967, bld=70.125); cpu 1.180 s on 4 threads; allocated 243.438 MB

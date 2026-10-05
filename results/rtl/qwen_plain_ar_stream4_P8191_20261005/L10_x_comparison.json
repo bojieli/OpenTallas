@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "completed L10 X only; full36/head/final KV drain pending",
+  "position": 8191,
+  "token": 24,
+  "stage": "STAGE L10 done cycles=5282 start_cyc=53599 end_cyc=58881 me_busy=3253/3253 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=10241s",
+  "dies": [
+    {
+      "die": 0,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019",
+      "expected_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019"
+    },
+    {
+      "die": 1,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019",
+      "expected_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019"
+    },
+    {
+      "die": 2,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019",
+      "expected_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019"
+    },
+    {
+      "die": 3,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019",
+      "expected_sha256": "781487f51f4e9ade5eadd7dcf409979c2448ad93bbadbc5308240f2335c19019"
+    }
+  ]
+}

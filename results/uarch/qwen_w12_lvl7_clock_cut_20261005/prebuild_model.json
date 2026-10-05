@@ -55,25 +55,28 @@
   "groups_at_cut": 48,
   "held_beat_bits": 24745,
   "implementation_dependencies": [
-    "match actual selected top.args to retained parameter census",
+    "selected top.args verified; retain source-bound flight148",
     "Maxwell complete landing/credit/alignment/reset/mux/wire and literal schedule price",
-    "source-common issue admission across PART1 tiles and PART2 tags",
+    "owner-selected COMMON logical advance across PART1 tiles and PART2 tags",
     "actual serial result/scale grants and consumed write ACK",
     "source-sized slot and related-clock loaded SS/FF gate"
   ],
   "issue": {
     "accepted_tag_alignment_ff_delta": null,
     "additional_return_credit_and_edge_guard_reservations": null,
-    "alternative_common_advance_requires_all_tiles_and_IL8_feedback_phase": true,
     "depth4_alone_covers_flight": false,
     "existing_release": "e_v <= active every fast edge",
+    "existing_tile_me_or_kv_active_enable_safe": false,
+    "full_flight_alternate_selected": false,
     "full_rate_flight_payload_bits_lower_bound": 3662260,
     "full_rate_flight_storage_ff_delta": null,
     "full_rate_minimum_flight_reservations": 148,
     "issue_to_cut_logical_fast_edges": 148,
     "reservation_required_before_irrevocable_issue": true,
     "reservation_state_bits": null,
+    "selected_common_advance_requires_all_tiles_and_IL8_feedback_phase": true,
     "tile_issue": "independent PART1 loops after delayed tgo",
+    "ungated_service_capture_partition_required": true,
     "xd_logical_fast_edges": 105
   },
   "new_external_memory_ports": 0,
@@ -89,6 +92,8 @@
     "producer_pipeline_quiescence_required": true
   },
   "selected_cut": "PART2 g_tin/lvl[7]",
+  "selected_top_args_sha256": "3f594f557fe8261053f73a8130e411d534f517c62c7209ce7d068c7cd2fee2de",
+  "source_partition_record": "source_cut.json",
   "source_sha256": {
     "results/rtl/qwen_async_collective_20261003/fullshape_20261004/layer_parallel/lp_build.json": "5b5e192cc33d7074b1b76cf347a7c1ff7a6ff121ac824f54b8101d7192557980",
     "results/rtl/qwen_async_collective_20261003/fullshape_20261004/realmem/rm_imgFC_p255_r2.json": "e59fc353aee54de82ea6624d6c7c97ee39c6535d0ddcad6a993db3e07bd04b43",

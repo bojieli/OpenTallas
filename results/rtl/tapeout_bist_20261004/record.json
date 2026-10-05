@@ -4,7 +4,7 @@
  "vehicle": "ot_v41_elem_mbist_top: S81 q pair element (4 x ot_rom_4096x274_m8 behind ROM collars, generated successor ot_v41_rom_elem_qp_mb_w10) + 2 KV staging banks (ot_sram_1r1w_256x256_m2_r2c2) behind SRAM collars, one shared ot_mbist_ctrl",
  "reference": "pinned ot_v41_rom_elem_q_qp_w10 at the routed S81 parameters",
  "simulator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
- "build_seconds": 11.7,
+ "build_seconds": 10.1,
  "rom": {
   "macros": [
    "d_0",
@@ -71,7 +71,7 @@
    "seed": 1,
    "rc": 0,
    "pass": true,
-   "line": "PASS seed=1 compared=1683627 exempt=15 bist_compared=21545 cycles=1683611 hits=135089 issues=191489 rows=4721 nonzero=4160 classes=255 wraps=4696 qadv=457 restarts=264 rejected=12670 go_closed=143 go_drain=163 resets=13 kv_checks=320 bist_runs=1",
+   "line": "PASS seed=1 compared=1683627 exempt=15 bist_compared=21545 cycles=1683611 hits=135089 issues=191489 rows=4721 nonzero=4161 classes=255 wraps=4696 qadv=457 restarts=264 rejected=12670 go_closed=143 go_drain=163 resets=13 kv_checks=320 bist_runs=1",
    "bist": [
     "1",
     "0101",
@@ -79,13 +79,13 @@
     "21545",
     "c3be36d94a11bdbd0082a2b5c029cd00"
    ],
-   "seconds": 64.0
+   "seconds": 46.6
   },
   {
    "seed": 2,
    "rc": 0,
    "pass": true,
-   "line": "PASS seed=2 compared=1641634 exempt=21 bist_compared=21545 cycles=1641610 hits=131803 issues=186036 rows=4705 nonzero=4062 classes=255 wraps=4704 qadv=449 restarts=262 rejected=13085 go_closed=140 go_drain=166 resets=19 kv_checks=320 bist_runs=1",
+   "line": "PASS seed=2 compared=1641634 exempt=21 bist_compared=21545 cycles=1641610 hits=131803 issues=186036 rows=4705 nonzero=4063 classes=255 wraps=4704 qadv=449 restarts=262 rejected=13085 go_closed=140 go_drain=166 resets=19 kv_checks=320 bist_runs=1",
    "bist": [
     "1",
     "0101",
@@ -93,7 +93,7 @@
     "21545",
     "c3be36d94a11bdbd0082a2b5c029cd00"
    ],
-   "seconds": 61.5
+   "seconds": 45.5
   }
  ],
  "functional_pass": true,
@@ -1134,10 +1134,10 @@
  "sources": {
   "rtl/test/tb_v41_elem_mbist.sv": "f930809f464beca28df17b2da26fde4af7ba72adab6b4cd649411f7518fc78e9",
   "rtl/dft/v41/ot_v41_elem_mbist_top.sv": "58814e2df0d14b2277e919843a8cdcbfd177f50d97e8db907b9a82ab05663c02",
-  "rtl/dft/v41/ot_v41_rom_elem_qp_mb_w10.sv": "3f2c9f6d6b6264b34ea7753c7c72b2b515b9980b09eab13d4ebb5f68b2fdf8e7",
+  "rtl/dft/v41/ot_v41_rom_elem_qp_mb_w10.sv": "12deb4af3c5885a8c062df92c19eaa5f7034e414b23c28a34892cbd4ffbba970",
   "rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv": "83eea3416c455bd4c49d6043e997e8bd33e7a081556d51bfbb05983ad9976df5",
-  "rtl/v41rom/ot_v41_rom_elem_qp_w10.sv": "46038fedfe348b2576d310b079c353c9e09e9136990f4649592be4cd103903c3",
-  "rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+  "rtl/v41rom/ot_v41_rom_elem_qp_w10.sv": "b141b97b712105a20d3e7456957273dec740aa738e9dcee86a8a683557e63a79",
+  "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
   "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
   "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
   "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
@@ -1159,13 +1159,14 @@
   "rtl/dft/ot_mbist_ctrl.sv": "0d7d9e900a2e18f0ee42287c0e566602a2c02e0d9fe0197d0db17fa0488ef83e",
   "rtl/dft/ot_mbist_bira.sv": "584282503a83bc47b63e0a7fcaaad29c616e4a6115952be015c89162ca80bb8f",
   "rtl/dft/ot_mbist_rom_collar.sv": "43ca354517ed9a5ee7def67a19a282406a560c15f0f5613453037b5126b736f4",
+  "rtl/dft/ot_mbist_rom_collar_par.sv": "37a1ec17eae96d0de23ad549062eb5fe7a96a1a7cfbee62ec0a55b1efb9e29aa",
   "rtl/dft/ot_mbist_sram_collar.sv": "00bc7a2106d794c6209b74f97ad701c56a204342455dd8b75936d2d6ec4e40b4",
   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
   "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
-  "tools/dft/elem_mbist_campaign.py": "ccc9a2ab9080a4477bce68a0d70adfacecc457c3f1489d78047504e6660b23fd",
-  "tools/dft/gen_elem_mbist.py": "195341428e89fffaf859a3ded0743972b11b096b2b5b3cf7aec541009857d1c7"
+  "tools/dft/elem_mbist_campaign.py": "8f327388431abc03af94bfa1d539c0b9890b60c22c38c61ab5b75a5c803d98bf",
+  "tools/dft/gen_elem_mbist.py": "8363914c0023636afa20f11960a6396f5ad49e161bb74d59b155d676d54968c7"
  },
- "seconds": 77.8,
+ "seconds": 58.6,
  "verdict": "PASS"
 }

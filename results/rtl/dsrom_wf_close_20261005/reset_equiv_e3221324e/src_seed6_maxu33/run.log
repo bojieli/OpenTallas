@@ -1,0 +1,6 @@
+EQUIV STATS source=1 lockstep=0 maxu=33 users=33 cycles=34982 fin=22186/34931 issues=1208/1176 rejects=82/81 squashed=86/54 committed_ok=1122/1122 err=0/0 fault_cyc=0/0 mism=0
+EQUIV PASS
+- /srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-equiv-e3221324e/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv_reset_admission.sv:292: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 35us; walltime 0.021 s; speed 1.705 ms/s
+- Verilator: cpu 0.021 s on 1 threads; allocated 7 MB

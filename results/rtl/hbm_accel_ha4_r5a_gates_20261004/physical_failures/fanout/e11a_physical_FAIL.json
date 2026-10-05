@@ -1,0 +1,226 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T14:05:54.363202+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_accel_expert_fetch_stream_sram",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_accel/r5a_fetch_two_clock.sdc",
+          "sha256": "c4c5a9c1b51b4c45d192f79ef1b4afe852e94a6893b210ec2963ed1f2b5564e0"
+        }
+      ],
+      "lines": [
+        "create_clock -name h_clk -period 1024 [get_ports hclk]",
+        "set_clock_uncertainty -setup 60 [get_clocks h_clk]",
+        "set_clock_uncertainty -hold 25 [get_clocks h_clk]",
+        "set_clock_groups -asynchronous -group [get_clocks core_clk] -group [get_clocks h_clk]",
+        "set h_inputs [get_ports {notice rd_v[*] rd_data[*]}]",
+        "set_input_delay [expr 1024 * 0.2] -clock h_clk $h_inputs",
+        "set h_outputs [get_ports {row_v[*] row_op[*] row_bank[*] row_row[*] col_v[*] col_bank[*] col_col[*]}]",
+        "set_output_delay [expr 1024 * 0.2] -clock h_clk $h_outputs",
+        "set_false_path -from [get_ports hrst_n]"
+      ]
+    },
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+        "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+        "size_bytes": 2276
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_rf.sv",
+        "sha256": "b659edb6f548a923de0ecff4a0e6f314ca9342a1f17da05e63224f4944c379d0",
+        "size_bytes": 2546
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv",
+        "sha256": "0b40d0a56f986dcf73cfe6ca7672f88b3ca21c15dcfde6ef718abb1b39cbc592",
+        "size_bytes": 17403
+      },
+      {
+        "path": "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_sram.sv",
+        "sha256": "a386a5c3196b9a55d5c667fae9def91d8375c0101caad8a3e0332880828a64a7",
+        "size_bytes": 15806
+      },
+      {
+        "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+        "sha256": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+        "size_bytes": 672
+      }
+    ],
+    "top": "ot_hbm_accel_expert_fetch_stream_sram"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\ns.wbin[0]$_DFF_PN0_/D\n   108380 |     466 |  389603 |            0 |    +4.7% | -1777.625 | -181063472.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108390 |     466 |  389658 |            0 |    +4.7% | -1777.625 | -181054384.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108400 |     466 |  389703 |            0 |    +4.7% | -1777.625 | -181041584.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108410 |     466 |  389708 |            0 |    +4.7% | -1777.625 | -181036288.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108420 |     466 |  389752 |            0 |    +4.7% | -1777.625 | -181017264.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108430 |     466 |  389752 |            0 |    +4.7% | -1777.625 | -181017264.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108440 |     466 |  389838 |            0 |    +4.7% | -1777.625 | -180984464.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108450 |     466 |  389898 |            0 |    +4.7% | -1777.625 | -180969488.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108460 |     466 |  389899 |            0 |    +4.7% | -1777.625 | -180969488.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108470 |     466 |  389944 |            0 |    +4.7% | -1777.625 | -180949088.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108480 |     466 |  389971 |            0 |    +4.7% | -1777.625 | -180942848.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108490 |     466 |  389973 |            0 |    +4.7% | -1777.625 | -180942848.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108500 |     466 |  389974 |            0 |    +4.7% | -1777.625 | -180942848.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108510 |     466 |  390029 |            0 |    +4.7% | -1777.625 | -180915040.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108520 |     466 |  390033 |            0 |    +4.7% | -1777.625 | -180909904.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108530 |     466 |  390121 |            0 |    +4.7% | -1777.625 | -180863472.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108540 |     466 |  390170 |            0 |    +4.7% | -1777.625 | -180834848.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108550 |     466 |  390247 |            0 |    +4.7% | -1777.625 | -180791712.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108560 |     466 |  390248 |            0 |    +4.7% | -1777.625 | -180791712.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108570 |     466 |  390254 |            0 |    +4.7% | -1777.625 | -180784144.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108580 |     466 |  390274 |            0 |    +4.7% | -1777.625 | -180766112.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n   108590 |     466 |  390310 |            0 |    +4.7% | -1777.625 | -180742112.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n    final |     466 |  390354 |            0 |    +4.7% | -1777.625 | -180709456.000 | on.u_ids.wbin[0]$_DFF_PN0_/D\n--------------------------------------------------------------------------------------\n[WARNING RSZ-0064] Unable to repair all hold checks within margin.\n[INFO RSZ-0132] Resized 466 instances.\n[INFO RSZ-0032] Inserted 390354 hold buffers.\n[ERROR RSZ-0060] Max buffer count reached.\nError: cts.tcl, 83 RSZ-0060\n\nElapsed time: 0:00.24[h:]min:sec. CPU time: user 0.02 sys 0.05 (27%). Peak memory: 25968KB.\nElapsed time: 0:00.23[h:]min:sec. CPU time: user 0.02 sys 0.04 (26%). Peak memory: 26988KB.\nElapsed time: 0:32.68[h:]min:sec. CPU time: user 31.83 sys 0.85 (99%). Peak memory: 3957572KB.\nElapsed time: 18:31.07[h:]min:sec. CPU time: user 1237.37 sys 188.30 (128%). Peak memory: 8517636KB.\nElapsed time: 15:48.10[h:]min:sec. CPU time: user 1261.38 sys 50.62 (138%). Peak memory: 7097648KB.\nElapsed time: 0:08.33[h:]min:sec. CPU time: user 7.43 sys 0.90 (100%). Peak memory: 2999968KB.\nElapsed time: 0:30.10[h:]min:sec. CPU time: user 28.92 sys 1.18 (100%). Peak memory: 4057692KB.\nElapsed time: 3:49.03[h:]min:sec. CPU time: user 869.62 sys 2.51 (380%). Peak memory: 6429472KB.\nElapsed time: 0:08.52[h:]min:sec. CPU time: user 7.57 sys 0.96 (100%). Peak memory: 3263480KB.\nElapsed time: 1:48:41.46[h:]min:sec. CPU time: user 12362.36 sys 1205.41 (208%). Peak memory: 25958712KB.\nElapsed time: 1:11:45.66[h:]min:sec. CPU time: user 4731.60 sys 233.94 (115%). Peak memory: 13088484KB.\nElapsed time: 1:03:14.13[h:]min:sec. CPU time: user 4180.15 sys 349.39 (119%). Peak memory: 20019652KB.\nElapsed time: 3:59:30.81[h:]min:sec. CPU time: user 19907.57 sys 803.71 (144%). Peak memory: 28518740KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_hbm_accel_expert_fetch_stream_sram_asap7_r5a_e11_toolfix/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T05:23:01.703286+00:00",
+  "git": {
+    "commit": "1d8895147271fe6fdb816df2604c37d07e227608",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_accel_expert_fetch_stream_sram",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_rf.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv",
+      "--source",
+      "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_sram.sv",
+      "--source",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+      "--macro-view",
+      "ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/hbm_accel/r5a_macro_grid.tcl",
+      "--param",
+      "ENABLE=1",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--sdc-append",
+      "physical/hbm_accel/r5a_fetch_two_clock.sdc",
+      "--false-path-from",
+      "rst_n",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "pnr",
+      "--core-utilization",
+      "35",
+      "--place-density",
+      "0.55",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--max-transition-ns",
+      "0.32",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "r5a_e11_toolfix",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/hbm-r5a-physical/routes/e11_toolfix/work",
+      "--force",
+      "--output",
+      "/srv/opentallas-scratch/codex/hbm-r5a-physical/routes/e11_toolfix/physical.json",
+      "--orfs-var",
+      "SYNTH_NETLIST_FILES=/work/e10_completed_yosys.v",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl"
+    ],
+    "driver": {
+      "commit": "1d8895147271fe6fdb816df2604c37d07e227608",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/hbm-r5a-physical/wt11-argv-fixed/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas-scratch/codex/hbm-r5a-physical/wt11-argv-fixed"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/hbm-r5a-physical/wt11-argv-fixed"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

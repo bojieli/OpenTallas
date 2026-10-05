@@ -8,8 +8,8 @@
 |---|---:|---:|---:|
 | AR token | 432.33 us | **460.05 us** | 603.75 us |
 | AR rate | 2,313.0 tok/s | **2,173.7 tok/s** | **1,656.3 tok/s** |
-| MTP (DSpark block 5, verify P=6 + measured draft) | 5,225.8 (tau 4.159) | **4,377.9** (tau 3.8879, third-party) | 3,436.1 |
-| MTP at the superseded tau 4.159 | | 4,683.2 | |
+| MTP (DSpark block 5, verify P=6 + measured draft), tau 4.159 (owner 6-class blend, adopted 2026-10-05) | 5,225.8 | **4,683.2** | 3,675.7 |
+| MTP sensitivity at the published V4.1 tau 3.8879 (range 3.43-4.32) | | 4,377.9 (3,862.3-4,861.6) | 3,436.1 |
 
 The fully measured AR is 6.0 % slower than the base. Measured share of the AR token: **91.4 %** counting the labelled
 Tomahawk vendor budget as measured-path (the DS-ROM convention), **66.3 %** without it.
@@ -43,7 +43,7 @@ select were already RTL-measured and are unchanged. The SM weight stream never s
 - Striping tail 0.15 us per collective (39.75 us): the RTL stripes over 8 equal-latency ports, so inter-chip skew is
   not captured.
 - MTP: routed-expert union increments (+47.74 SM / +28.45 fetch us, W19 composer), LOCAL_REPEAT issue fraction,
-  the DSpark draft record (its collectives are the TU model), seed commit; tau is the published third-party value.
+  the DSpark draft record (its collectives are the TU model), seed commit; tau is the owner 6-class workload blend 4.159 (owner decision 2026-10-05; the published 3.8879 is the sensitivity in `tau_sensitivity`).
 - HBM path constants inside the stream bench (PHY cmd 5, rsp 10, NoC 5 ns); the CKV stack mapping (i // 8 // 96) % 4.
 
 **Sensitivities.** Notice on every HBM load (adds CKV gather + embedding): 2,183.8 tok/s; no notice anywhere (the superseded default): 2,156.0 tok/s. Port-matched endpoint hub

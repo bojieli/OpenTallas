@@ -1,0 +1,16 @@
+{
+  "source": "0ba7b2ac3",
+  "status": "PASS_COMPONENT_ONLY",
+  "partitions": [
+    {
+      "chains": 32,
+      "channels": 4,
+      "channel_ratio": 8.0,
+      "cases": "RTL decompression/compaction/defaultoff/disabled/reset/X; GF2 dense-valid/sparsecare/replay/UNSAT/alias; actual CLI pass/fail",
+      "status": "PASS_COMPONENT_ONLY"
+    }
+  ],
+  "integrated_atpg": "UNVALIDATED",
+  "corrected_chain_binding": "PENDING_CONFUCIUS",
+  "physical": "UNVALIDATED"
+}

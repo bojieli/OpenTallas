@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include "s81_source_caller_hooks.hpp"
+#include "s81_wavefront_c8_port_join.hpp"
 
 // The existing source preparation process binds its StageProgramJoin entries
 // and retained producers here. No context or activation is synthesized by the
@@ -33,6 +34,33 @@ struct DsromS81SourceGroup {
 struct DsromS81SourcePlan {
     std::vector<DsromS81SourceGroup> groups;
 };
+
+// Resolve ONLY the owner's already-bound plan. Physical die IDs come from
+// its explicit endpoint association, not the logical serial stage. This is
+// request association, never C8 acceptance, publication or endpoint admission.
+inline DsromC8SourceOffer dsrom_s81_resolve_source_offer(
+    const DsromS81SourcePlan& plan,const DsromS81WaveRequest& request) {
+    if(plan.groups.empty())throw std::runtime_error("WAVE source plan is empty");
+    const auto& first=plan.groups.front().ranks[0].offer;
+    if(first.token!=request.token||first.position!=request.position||first.user!=request.user)
+        throw std::runtime_error("WAVE request differs from bound source plan");
+    for(const auto& group:plan.groups) {
+        const int endpoint=group.ranks[0].offer.die_id/4;
+        for(unsigned r=0;r<4;r++) {
+            const auto& rank=group.ranks[r];const auto& offer=rank.offer;
+            DsromC8SourceDispatch checked(offer);
+            if(offer.die_id<0||offer.die_id/4!=endpoint||offer.die_id%4!=int(r)||
+               offer.identity!=first.identity||offer.token!=first.token||
+               offer.position!=first.position||offer.user!=first.user||offer.epoch!=first.epoch)
+                throw std::runtime_error("WAVE source plan endpoint/context association differs");
+            if(rank.source_node.empty()||!rank.input_visible||!rank.remote_drained||
+               !rank.all_copies_drained||(!rank.restore_inputs&&rank.saved.empty())||
+               (!rank.saved.empty()&&!rank.retained_source_span))
+                throw std::runtime_error("WAVE source plan native provider association missing");
+        }
+    }
+    return first;
+}
 
 // Implemented in the owner's actual producer translation unit, linked into
 // the same caller SO. A missing producer is a link error, never a dummy ACK.

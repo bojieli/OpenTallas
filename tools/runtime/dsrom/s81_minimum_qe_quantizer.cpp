@@ -13,7 +13,7 @@ struct NativeQuant {
  size_t fetched=0;unsigned mode=0,nb=0;uint32_t xb=0,ob=0;
  bool admitted=false,stopped=false,old_go=false,old_read=false,old_write=false;
  uint32_t old_read_address=0,old_write_address=0,old_write_mask=0;
- std::array<uint32_t,32> old_write_data{};
+ std::array<uint32_t,32> old_write_data{},old_read_data{};
  struct Out {S81EmbeddingOutput value{};bool offered=false;};std::deque<Out> outputs;
  static void require(bool ok,const char*s){if(!ok)throw std::runtime_error(s);}
  NativeQuant(DsromS81MinimumRuntime&runtime,uint64_t identity,dsrom_s81_minimum::PrefixPublication&p,
@@ -72,7 +72,7 @@ struct NativeQuant {
   if(old_read){
    require(admitted&&old_read_address>=xb&&uint64_t(old_read_address)+32<=uint64_t(xb)+staged.size()&&
     io.span_lease(id,xb,32*nb),"QE native staged read unowned/lost-version");
-   for(unsigned j=0;j<32;j++)leaf.xr_q[j]=staged.at(old_read_address-xb+j);
+   for(unsigned j=0;j<32;j++)old_read_data[j]=staged.at(old_read_address-xb+j);
   }
   if(!outputs.empty()){
    auto&h=outputs.front();if(!h.offered)h.offered=io.offer(h.value,1);
@@ -95,6 +95,10 @@ struct NativeQuant {
    // service. No host encoding/publication or synthetic w_done callback here.
   }
   leaf.clk=1;leaf.rst_n=rn;leaf.eval();
+  // Match the existing synchronous VM read: the edge consumes the PREVIOUS
+  // response with OLD x_v, then the OLD xr_re request installs the next block.
+  // Supplying this in prepare shifts each block forward while x_v is delayed.
+  if(rn&&old_read)for(unsigned j=0;j<32;j++)leaf.xr_q[j]=old_read_data[j];
  }
  void falling(bool rn){leaf.clk=0;leaf.rst_n=rn;leaf.eval();}
 };

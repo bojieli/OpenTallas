@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.qme.port-route-context.v1",
+  "source": "ot_qwen_me_spport_w12; unchanged v3 kept prefix/ring source",
+  "params": {
+    "W": 16,
+    "IL": 8,
+    "AW": 24,
+    "NW": 18,
+    "GT": 6144,
+    "SMIN": 6,
+    "PQ": 4,
+    "TREE_LAT": 7,
+    "SCALE_LAT": 6
+  },
+  "replicas": 24,
+  "result_groups": 96,
+  "postscale_muls_per_port_edge": 64,
+  "MACs_per_cycle": 0,
+  "raw_result_bytes_per_port_edge": 256,
+  "scale_bytes_per_port_edge": 128,
+  "output_bytes_per_port_edge": 256,
+  "added_memory_ports": 0,
+  "added_external_boundary_bits": 0,
+  "boundary": {
+    "input_bits_per_edge": 3202,
+    "output_bits_per_edge": 2264,
+    "parent_registered": true,
+    "pt_id": "static port-instance index in enclosing g_pt; never dynamic owner allocation"
+  },
+  "address_cone": {
+    "ots_bits": 24,
+    "qrows": 16,
+    "port_offset_sums": 4,
+    "unbuffered_ots_bit_destination_upper_bound": 64,
+    "registered_partials": false,
+    "measured_SS_ps": -262.587738,
+    "measured_FF_ps": -0.387551
+  },
+  "ports_and_tracks": {
+    "top_signal_pins": 5468,
+    "external_track_demand_upper_bound": 5466,
+    "channel_capacity_and_loaded_cut_fit": null,
+    "new_mux_demux_or_fanout": 0
+  },
+  "area": {
+    "actual_t4_cell_um2": 56431.7,
+    "actual_t4_core_um2": 146210,
+    "gross_cell_reservation_um2": 64896.454999999994,
+    "planned_utilization_percent": 25,
+    "minimum_core_for_reserved_cells_um2": 259585.81999999998,
+    "all24_port_cell_reservation_um2": 1557514.92,
+    "parent_slot_fit": null,
+    "additional_15_percent_is_reserve": true
+  },
+  "latency": {
+    "added_edges": 0,
+    "changed_II": 0,
+    "changed_token_edges": 0,
+    "result_pipeline": "existing E/A, SCALE_LAT6, two output captures; original golden tree/argmax order unchanged"
+  },
+  "clock": {
+    "period_ps": 833,
+    "SS_setup_ps": 60,
+    "FF_hold_ps": 25,
+    "relaxed": false
+  },
+  "adoption": false,
+  "SSFF_qualified": false,
+  "physical_scope": "one full64-lane port, not a whole-SM or whole-token qualification",
+  "source_sha256": "af266fe6c1dbf1f4b287caae55ec32045ee185a0fa933e42f04217c2ada5b7da",
+  "predecessor_record": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/spport_tp2_t4/corner_sta.json",
+  "variant": "spport_tp2_u25_r1; placement-only, no RTL/latency/constraint change"
+}

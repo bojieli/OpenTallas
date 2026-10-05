@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.rtl.dsrom_wf_close.stage_failure.v1",
+  "recorded_at": "2026-10-05T02:46:18.590911+00:00",
+  "verdict": "FAIL_ESCALATED_TO_CLAUDE",
+  "owner": "Codex:dsrom-wf-ctrl",
+  "handoff_item": 1,
+  "source_commit": "9f4dfd7be6842611a6f58662d7ec4c4b98a6adcc",
+  "source_worktree": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-9f4dfd7be",
+  "host": "ot-epyc2",
+  "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/stage9_w1",
+  "prepared_input": "/mnt/epyc1-scratch/claude/dsrom-wavefront/stage",
+  "admission": {
+    "script": "/srv/opentallas-scratch/admit.sh",
+    "unchanged": true,
+    "expected_peak_gib": 12,
+    "basis": "prior stage/admit_w1.log peak_bytes=12884901888"
+  },
+  "command": [
+    "python3",
+    "tools/dsrom_wf_close.py",
+    "stage",
+    "--from",
+    "/mnt/epyc1-scratch/claude/dsrom-wavefront/stage",
+    "--scratch",
+    "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/stage9_w1",
+    "--wave",
+    "1"
+  ],
+  "environment": {
+    "OT_WF_JOBS": "16",
+    "tool_environment": "~/.opentallas-env"
+  },
+  "build_seconds": 76.0,
+  "run_seconds": 7.2,
+  "runtime_returncode": 1,
+  "failure": "At simulation time 2000, ot_chip_v41x_kv_prefetch.sv:315 asserted KV sector 262144 outside [262144, 278528). Aborted before any job or PASS.",
+  "interpretation": "Stage exactness acceptance failed. No token or arithmetic mismatch was observed before this assertion. No retry, reference rebuild, controller change, or structural diagnosis was performed.",
+  "variants_used_after_handoff": 0,
+  "physical_routes": {
+    "R11_stg": {
+      "host": "ot-epyc1tb",
+      "pid": 248061,
+      "status": "live at escalation"
+    },
+    "R11_src": {
+      "host": "ot-epyc1tb",
+      "pid": 248062,
+      "status": "live at escalation"
+    }
+  },
+  "source_changes": false,
+  "build_log_sha256": "71f83d89e2b325491a9465be1d0605a09ef4ab5f80400e590074d33c688c7633",
+  "artifacts_sha256": {
+    "build_cmd.json": "d1ab945aa51cee233d0ce8f3f352c5a932f0bce6b464fed48fe57f86de14e55d",
+    "build_seconds.txt": "172c704a42ba4f23defcd86732502bd1d2048b36e05ba20bca30a1140085606e",
+    "launcher.log": "6acd8f002d4fb11127552968b3e78be64503fd70ad46ed97c3637fd26ed209c1",
+    "out_stage_w1.txt": "845220a9aa637ac4125ba635e1a5fc0abdbcfedc0d6de7fca02d302680fb4d9f",
+    "prepare_stage.json": "4b56d2c72c0bf43df25462a08e1308ef58dbc9dc0bc9aa289dc63992dff22459",
+    "run_stage_w1.rc": "8098ad7ef847d9d893ae2daefe3dedcfeb97646a28fe76e80d614841c17ca821",
+    "stage_cfg.svh": "ca7b532c4f8fb82b2d8daf0a6d2f0e2983f596c103a77e4cb029f2b5a0f34ba1",
+    "stage_w1.json": "5b78a020c7a5ab40aacb5877577af1656203e337d4fd46af41860dfc177d0565"
+  }
+}

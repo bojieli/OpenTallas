@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "scope": "completed L6 X only; current-token KV/finalHEAD pending",
+  "position": 8191,
+  "token": 24,
+  "stage": "cycles=5282 start_cyc=32467 end_cyc=37749 me_busy=3253/3253 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=6719s",
+  "checks": {
+    "die0": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732",
+      "expected_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732"
+    },
+    "die1": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732",
+      "expected_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732"
+    },
+    "die2": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732",
+      "expected_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732"
+    },
+    "die3": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732",
+      "expected_sha256": "9a541515efd66085ca80faf617f92a5980e16592c5ecb97930a61381630f3732"
+    }
+  }
+}

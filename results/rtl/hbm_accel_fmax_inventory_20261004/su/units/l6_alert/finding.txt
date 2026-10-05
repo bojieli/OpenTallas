@@ -1,0 +1,12 @@
+2026-10-05 mul_f12_l6 correctness alert (DS ROM su_hcpost m6a4/m6a5 lanes mismatched the golden): RESOLVED, integration bug, unit correct.
+(a) unit: the fixed tops as integrations instantiate them (tb_su_fp32_f12_tops), 2 x 5,000,000 pairs in six stress classes
+    (signed zeros, exact cancellation x/-x, wide exponents 1..40 vs 200..253, subnormal products, subnormal sums, random):
+    add_f12_l4 0, add_f12_l5x 0, mul_f12_l5 0, mul_f12_l6 0 mismatches vs the fast units delayed to the declared LAT
+    (5 / 6 cycles for the multipliers). ot_hdc_fp32_f12.sv sha256 79d7ef8c... (= main bd935b346).
+(b) integration: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv (main f5da9a05d) switches m0..m3 to mul_f12_l6 when ML = 6 but
+    instantiates u_m4 (y * post) as a FIXED mul_f12_l5, while u_d4 aligns m4 as if it had latency ML: at ML = 6 the
+    fifth product arrives one cycle early.  Lockstep (tb_hcpost_ml_lockstep, 399,885 outputs, random operands): the
+    main ML6 lane mismatches the exact ML5 lane (one cycle later) on 195,546 outputs; with u_m4 following ML
+    (ot_dsrom_su_hcpost_m4fix_for_test.sv, test copy only) 0 mismatches.  Fix belongs to the su_hcpost owner.
+HBM SU at MLAT 6 (mul_f12_l6 through ot_hdc_fastfp_lat_f12.sv qmul LAT 6): N64 bit-level RTL == DPI on every word and
+every op's emit / write / result cycle, 27 / 27 chains (su_equiv_N64_m6a5_f12_v6.json); N1024 dpi_beh P1 36/36, P6 36/36.

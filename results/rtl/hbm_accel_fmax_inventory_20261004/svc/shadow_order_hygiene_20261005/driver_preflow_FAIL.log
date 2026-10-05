@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas/repos/euclid-hbm-fmax-svc-order-20261005/tools/run_abi3_physical.py", line 3840, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas/repos/euclid-hbm-fmax-svc-order-20261005/tools/run_abi3_physical.py", line 3275, in main
+    return _main(args)
+  File "/srv/opentallas/repos/euclid-hbm-fmax-svc-order-20261005/tools/run_abi3_physical.py", line 3564, in _main
+    "argv": ["tools/run_abi3_physical.py", *(argv if argv is not None else sys.argv[1:])],
+                                                     ^^^^
+NameError: name 'argv' is not defined. Did you mean: 'args'?

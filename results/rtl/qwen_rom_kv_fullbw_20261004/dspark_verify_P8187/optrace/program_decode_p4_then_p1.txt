@@ -1,0 +1,131 @@
+0 SU  nout=1 nin=4096 dst=0 sfu=0 pos 0
+1 SU  nout=1 nin=4096 dst=0 sfu=0 pos 1
+2 SU  nout=1 nin=4096 dst=0 sfu=0 pos 2
+3 SU  nout=1 nin=4096 dst=0 sfu=0 pos 3
+4 ME  nout=1536 k=8 tiles=1 wsrc=0 pos 0
+5 ME  nout=1536 k=8 tiles=1 wsrc=0 pos 1
+6 ME  nout=1536 k=8 tiles=1 wsrc=0 pos 2
+7 ME  nout=1536 k=8 tiles=1 wsrc=0 pos 3
+8 SU  nout=1 nin=1 dst=1 sfu=3 pos 0
+9 SU  nout=1 nin=1 dst=1 sfu=3 pos 1
+10 SU  nout=1 nin=1 dst=1 sfu=3 pos 2
+11 SU  nout=1 nin=1 dst=1 sfu=3 pos 3
+12 SU b nout=2 nin=128 dst=2 sfu=0 pos 0
+13 SU  nout=2 nin=128 dst=2 sfu=0 pos 1
+14 SU  nout=2 nin=128 dst=2 sfu=0 pos 2
+15 SU  nout=2 nin=128 dst=2 sfu=0 pos 3
+16 SU  nout=10 nin=128 dst=1 sfu=0 pos 0
+17 SU  nout=10 nin=128 dst=1 sfu=0 pos 1
+18 SU  nout=10 nin=128 dst=1 sfu=0 pos 2
+19 SU  nout=10 nin=128 dst=1 sfu=0 pos 3
+20 SU  nout=1 nin=10 dst=1 sfu=3 pos 0
+21 SU  nout=1 nin=10 dst=1 sfu=3 pos 1
+22 SU  nout=1 nin=10 dst=1 sfu=3 pos 2
+23 SU  nout=1 nin=10 dst=1 sfu=3 pos 3
+24 SU  nout=10 nin=128 dst=1 sfu=0 pos 0
+25 SU  nout=10 nin=128 dst=1 sfu=0 pos 1
+26 SU  nout=10 nin=128 dst=1 sfu=0 pos 2
+27 SU  nout=10 nin=128 dst=1 sfu=0 pos 3
+28 SU  nout=8 nin=64 dst=1 sfu=0 pos 0
+29 SU  nout=8 nin=64 dst=1 sfu=0 pos 1
+30 SU  nout=8 nin=64 dst=1 sfu=0 pos 2
+31 SU  nout=8 nin=64 dst=1 sfu=0 pos 3
+32 SU  nout=2 nin=64 dst=2 sfu=0 pos 0
+33 SU  nout=2 nin=64 dst=2 sfu=0 pos 1
+34 SU  nout=2 nin=64 dst=2 sfu=0 pos 2
+35 SU  nout=2 nin=64 dst=2 sfu=0 pos 3
+36 SU  nout=8 nin=64 dst=1 sfu=0 pos 0
+37 SU  nout=8 nin=64 dst=1 sfu=0 pos 1
+38 SU  nout=8 nin=64 dst=1 sfu=0 pos 2
+39 SU  nout=8 nin=64 dst=1 sfu=0 pos 3
+40 SU  nout=2 nin=64 dst=2 sfu=0 pos 0
+41 SU  nout=2 nin=64 dst=2 sfu=0 pos 1
+42 SU  nout=2 nin=64 dst=2 sfu=0 pos 2
+43 SU  nout=2 nin=64 dst=2 sfu=0 pos 3
+44 ME  nout=0 k=128 tiles=0 wsrc=1 pos 0
+45 ME  nout=0 k=128 tiles=0 wsrc=1 pos 1
+46 ME  nout=0 k=128 tiles=0 wsrc=1 pos 2
+47 ME  nout=0 k=128 tiles=0 wsrc=1 pos 3
+48 SU  nout=8 nin=0 dst=1 sfu=1 pos 0
+49 SU  nout=8 nin=0 dst=1 sfu=1 pos 1
+50 SU  nout=8 nin=0 dst=1 sfu=1 pos 2
+51 SU  nout=8 nin=0 dst=1 sfu=1 pos 3
+52 ME  nout=128 k=0 tiles=1 wsrc=1 pos 0
+53 ME  nout=128 k=0 tiles=1 wsrc=1 pos 1
+54 ME  nout=128 k=0 tiles=1 wsrc=1 pos 2
+55 ME  nout=128 k=0 tiles=1 wsrc=1 pos 3
+56 SU  nout=1 nin=8 dst=1 sfu=2 pos 0
+57 SU  nout=1 nin=8 dst=1 sfu=2 pos 1
+58 SU  nout=1 nin=8 dst=1 sfu=2 pos 2
+59 SU  nout=1 nin=8 dst=1 sfu=2 pos 3
+60 SU b nout=8 nin=128 dst=1 sfu=0 pos 0
+61 SU  nout=8 nin=128 dst=1 sfu=0 pos 1
+62 SU  nout=8 nin=128 dst=1 sfu=0 pos 2
+63 SU  nout=8 nin=128 dst=1 sfu=0 pos 3
+64 ME  nout=4096 k=2 tiles=3 wsrc=0 pos 0
+65 ME  nout=4096 k=2 tiles=3 wsrc=0 pos 1
+66 ME  nout=4096 k=2 tiles=3 wsrc=0 pos 2
+67 ME  nout=4096 k=2 tiles=3 wsrc=0 pos 3
+68 END b  pos 0
+69 SU b nout=4 nin=4096 dst=1 sfu=0 pos 0
+70 SU  nout=1 nin=4096 dst=1 sfu=0 pos 0
+71 SU  nout=1 nin=4096 dst=1 sfu=0 pos 1
+72 SU  nout=1 nin=4096 dst=1 sfu=0 pos 2
+73 SU  nout=1 nin=4096 dst=1 sfu=0 pos 3
+74 ME  nout=6144 k=32 tiles=1 wsrc=0 pos 0
+75 ME  nout=6144 k=32 tiles=1 wsrc=0 pos 1
+76 ME  nout=6144 k=32 tiles=1 wsrc=0 pos 2
+77 ME  nout=6144 k=32 tiles=1 wsrc=0 pos 3
+78 SU  nout=1 nin=1 dst=1 sfu=3 pos 0
+79 SU  nout=1 nin=1 dst=1 sfu=3 pos 1
+80 SU  nout=1 nin=1 dst=1 sfu=3 pos 2
+81 SU  nout=1 nin=1 dst=1 sfu=3 pos 3
+82 SU b nout=1 nin=6144 dst=1 sfu=0 pos 0
+83 SU  nout=1 nin=6144 dst=1 sfu=0 pos 1
+84 SU  nout=1 nin=6144 dst=1 sfu=0 pos 2
+85 SU  nout=1 nin=6144 dst=1 sfu=0 pos 3
+86 SU  nout=24 nin=128 dst=1 sfu=4 pos 0
+87 SU  nout=24 nin=128 dst=1 sfu=4 pos 1
+88 SU  nout=24 nin=128 dst=1 sfu=4 pos 2
+89 SU  nout=24 nin=128 dst=1 sfu=4 pos 3
+90 ME  nout=4096 k=6 tiles=3 wsrc=0 pos 0
+91 ME  nout=4096 k=6 tiles=3 wsrc=0 pos 1
+92 ME  nout=4096 k=6 tiles=3 wsrc=0 pos 2
+93 ME  nout=4096 k=6 tiles=3 wsrc=0 pos 3
+94 END b  pos 0
+95 SU b nout=4 nin=4096 dst=1 sfu=0 pos 0
+96 SU  nout=1 nin=4096 dst=1 sfu=0 pos 0
+97 SU  nout=1 nin=4096 dst=1 sfu=0 pos 1
+98 SU  nout=1 nin=4096 dst=1 sfu=0 pos 2
+99 SU  nout=1 nin=4096 dst=1 sfu=0 pos 3
+100 END b  pos 0
+---
+0 SU  nout=1 nin=4096 dst=0 sfu=0 pos 0
+1 ME  nout=1536 k=8 tiles=1 wsrc=0 pos 0
+2 SU  nout=1 nin=1 dst=1 sfu=3 pos 0
+3 SU b nout=2 nin=128 dst=2 sfu=0 pos 0
+4 SU  nout=10 nin=128 dst=1 sfu=0 pos 0
+5 SU  nout=1 nin=10 dst=1 sfu=3 pos 0
+6 SU  nout=10 nin=128 dst=1 sfu=0 pos 0
+7 SU  nout=8 nin=64 dst=1 sfu=0 pos 0
+8 SU  nout=2 nin=64 dst=2 sfu=0 pos 0
+9 SU  nout=8 nin=64 dst=1 sfu=0 pos 0
+10 SU  nout=2 nin=64 dst=2 sfu=0 pos 0
+11 ME  nout=0 k=128 tiles=0 wsrc=1 pos 0
+12 SU  nout=8 nin=0 dst=1 sfu=1 pos 0
+13 ME  nout=128 k=0 tiles=1 wsrc=1 pos 0
+14 SU  nout=1 nin=8 dst=1 sfu=2 pos 0
+15 SU b nout=8 nin=128 dst=1 sfu=0 pos 0
+16 ME  nout=4096 k=2 tiles=3 wsrc=0 pos 0
+17 END b  pos 0
+18 SU b nout=1 nin=4096 dst=1 sfu=0 pos 0
+19 SU  nout=1 nin=4096 dst=1 sfu=0 pos 0
+20 ME  nout=6144 k=32 tiles=1 wsrc=0 pos 0
+21 SU  nout=1 nin=1 dst=1 sfu=3 pos 0
+22 SU b nout=1 nin=6144 dst=1 sfu=0 pos 0
+23 SU  nout=24 nin=128 dst=1 sfu=4 pos 0
+24 ME  nout=4096 k=6 tiles=3 wsrc=0 pos 0
+25 END b  pos 0
+26 SU b nout=1 nin=4096 dst=1 sfu=0 pos 0
+27 SU  nout=1 nin=4096 dst=1 sfu=0 pos 0
+28 END b  pos 0

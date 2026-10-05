@@ -1,0 +1,3 @@
+EQUIV STATS source=1 lockstep=0 maxu=40 users=40 cycles=43568 fin=24429/43517 issues=1615/1438 rejects=108/79 squashed=375/198 committed_ok=1240/1240 err=0/0 fault_cyc=0/0 mism=0
+EQUIV PASS
+/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0/rtl/test/dsrom_wavefront/tb_wf_ctrl_equiv_reset_admission.sv:295: $finish called at 43568500 (1ps)

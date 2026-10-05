@@ -1,0 +1,141 @@
+{
+  "tested_source": "65c28c175",
+  "functional_verdict": "PASS",
+  "clock_verdict": "PENDING",
+  "adopted": false,
+  "clean_added_cycles": 0,
+  "cycle_deltas": [
+    {
+      "name": "rom_via_missing",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "rom_via_extra",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "rom_wordline_open",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "rom_bitline_short",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "rom_decoder_no_row",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "rom_decoder_alias",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "rom_decoder_multi",
+      "baseline": 21545,
+      "pipeline": 21545,
+      "delta": 0
+    },
+    {
+      "name": "kv0_SA0",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv1_SA1",
+      "baseline": 24573,
+      "pipeline": 24701,
+      "delta": 128
+    },
+    {
+      "name": "kv0_TF_UP",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv1_TF_DOWN",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv0_CFIN",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv1_CFID",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv0_CFST",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv1_AF_NONE",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv0_AF_ALIAS",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv1_AF_MULTI",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv0_ROW_SA0",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv1_COL_SA1",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    },
+    {
+      "name": "kv0_two_rows_two_cols",
+      "baseline": 24577,
+      "pipeline": 24705,
+      "delta": 128
+    },
+    {
+      "name": "kv1_unrepairable_three_rows",
+      "baseline": 21548,
+      "pipeline": 21548,
+      "delta": 0
+    },
+    {
+      "name": "mixed_rom_and_kv",
+      "baseline": 24570,
+      "pipeline": 24698,
+      "delta": 128
+    }
+  ]
+}

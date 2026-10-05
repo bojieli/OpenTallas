@@ -1,0 +1,28 @@
+{
+  "default_off": true,
+  "originals_unchanged": true,
+  "source": {
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806",
+    "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": "0b0cfbd03b715f1d3b318911f1fc8d9a8aa7036a147377aec61a3fd6071eeaf1",
+    "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": "574b617644d4eaf00714ca6b74adb485538c753da2b3dbf08b8d1002a23a941c",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": "1ad53dd9d2245fea0cabadcd13d2613d6ec6964e26500b90b61c829da03e89f0",
+    "rtl/test/hbm_accel/tb_hbm_accel_expert_fetch_wg.sv": "fb35fe80376a6423a1d656f78fb7e5f98568358176965ca6c1b6ecd23a2c65ee",
+    "tools/dshbm_expert_workgroup_interleave.py": "e423065ff214f5c2250adbe6f2d6e8e2e9dabc307594ad1abae7a0086478fc66",
+    "tools/uarch_model.py": "9e972b8c9206f6d898d9d2526aa0c4eef857c570c7052712ee3a4136abd75151"
+  },
+  "actual_inputs": "retained released L20/L3 cached1M seed-state; not prompt-prefill",
+  "native_minimum": "new dispatcher/landing/gearbox + ONE original full NC8 SM; needed boundary not present in r2",
+  "build_peak_GiB": 32,
+  "build_peak_basis": "existing identical NC8 SM frontend measured16.7GB; 32PC landing 0.5MiB ring and 64x265 CDC storage plus new TB; conservative doubled headroom estimate, not cap",
+  "NUM_CORES": 16,
+  "make_jobs": 16,
+  "TMPDIR": "EPYC1 /srv/opentallas/jobs-overflow/hubble-expert-interleave-r1/tmp",
+  "wall_cap": null,
+  "AS_cap": null,
+  "file_cap": null,
+  "memory_cap": null,
+  "start_delay_estimate_NOT_CREDITED_us": 1.8,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "ss_ff_closed": false
+}

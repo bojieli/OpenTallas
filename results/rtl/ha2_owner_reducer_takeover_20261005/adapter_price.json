@@ -1,0 +1,139 @@
+{
+  "NC1_gather": "original implementation selected; no reducer adaptation",
+  "added_arrival_cycles": 0,
+  "adoption": false,
+  "area_composed_context_tracks_mux_fanout_protection": null,
+  "area_estimate_label": "ESTIMATE: old PF64 synth plus incremental operand DFF floor; runtime mux/decoder/buffering and enclosing queues excluded",
+  "area_estimate_um2": 230775.744,
+  "array_area_replacement_not_addition": true,
+  "authority": "tools/dshbm_1m_coll.py::HUBS/cmd_campaign and rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv defaults",
+  "channel_capacity": null,
+  "comparator_bits": 8,
+  "composed_token_gain_fraction": null,
+  "context_lifetime": "Bound tuple drives all queues/reduction until real positive local quiet; shared8 alone grants next go after matching fabric release and publication. go rearms pres/rptr/transaction counters; never resets FIFO/CDC pointers or credits.",
+  "current_authority_sha256": {
+    "rtl/hbm_accel/integration/ot_hbm_tu_shared8.sv": "ccb99ba15698537dae682c6f1a717df3672aed75ab7fcd8141fafa5fb7444d4e",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv": "b96be44ecfe9bb2148aa88131169894229f9b1a60432b4bb0477fb28dbddd877",
+    "tools/dshbm_1m_coll.py": "aa96b2bfeb69653d1b67362a30dce1348530c0fc821f3b7692e4181c82e4beb0",
+    "tools/hbm_accel_shared_join_model.py": "5111625febdd26a2c20d90f84d5af9f692af4a57a7a4706ea824bcc02fdb10c8"
+  },
+  "ff_cell_area_floor_um2": 1241.9244,
+  "floorplan_slot_fit": null,
+  "fp32_adds_per_issue": 112,
+  "golden_tree": "three levels adjacent rank pairs, FP32 rounding at every node, final BF16 RNE",
+  "historical_matched_hub": {
+    "BF16": 1,
+    "DEL": 10,
+    "INJ": 8,
+    "LAT": 7,
+    "NC": 8,
+    "NOG": 8,
+    "NPT": 8,
+    "PFMAX": 384,
+    "RXAW": 8
+  },
+  "identity_pf_rank_bound_ff": 122,
+  "logical_write_sources": 10,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "operand_read": 512,
+    "own_payload_write_max": 128,
+    "peer_payload_write_max": 512,
+    "result_payload": 64
+  },
+  "new_cdc": 1,
+  "new_control_cdc": "one PHY-quiet bit through two core-domain synchronizer FF; drain latency phase-dependent, unmeasured",
+  "new_control_ports": "operation64/phase32 heldtuple inputs and quiet_core/quiet_phy/rearm_ready outputs; metadata retained by122FF, no payload widening",
+  "new_external_ports": 5,
+  "new_lease_publication_api": false,
+  "new_memory_ports": 0,
+  "new_payload_cdc": 0,
+  "new_presence_bits": 384,
+  "new_storage_bits": 196608,
+  "old_presence_bits": 384,
+  "old_storage_bits": 196608,
+  "operand_presence_shape": [
+    8,
+    48
+  ],
+  "operand_registers_bits": 196608,
+  "parent_area_scope": "replaces embedded array/tree, not a second reducer",
+  "peer_validation_comparators": 8,
+  "ports_bits_per_cycle": {
+    "ha2hub_own": 1088,
+    "matched_own": 4352,
+    "operand_read": 4096,
+    "peer": 4360,
+    "peer_internal_stripped": 4296
+  },
+  "prebuild_quiet_ff_reservation": 93,
+  "publication_reset": "cold POR unchanged; GO only rearms transaction counters after actual localquiet; shared8 matchedfabricrelease/publication permits nextGO; no FIFO/credit/debt reset",
+  "qualification": "UNVALIDATED; component exactness and parent physical/context gates pending",
+  "qualified_physical_scope": "NONE for PFMAX384; PF64 standalone r4 still pending",
+  "quiet_monitor_counter_ff": 24,
+  "quiet_observation": "Explicit delay-valid OR and AFIFO write-empty outputs; no private hierarchy taps, added payload registers, or change to pointer advancement.",
+  "quiet_price_detail": "6 pending FF +16 delivered-word FF +2 PHY-quiet sync FF; expected count combinational; conservative prebuild reserve93 retained separately",
+  "rank_contract": "shared8 rank<96; AR rank64..95 receive only, never inject/reduce",
+  "reducer_cycles": 23,
+  "replicated_adder_nodes": 112,
+  "reset_delegated": "unchanged parent rst_n/prst_n; no new automatic reset or credit release",
+  "route_variants": [
+    {
+      "INJ": 2,
+      "NC": 8,
+      "NPT": 8,
+      "PFMAX": 384,
+      "utilization": 25
+    },
+    {
+      "INJ": 2,
+      "NC": 8,
+      "NPT": 8,
+      "PFMAX": 384,
+      "utilization": 30
+    },
+    {
+      "INJ": 2,
+      "NC": 8,
+      "NPT": 8,
+      "PFMAX": 384,
+      "utilization": 35
+    }
+  ],
+  "routing_tracks_needed": null,
+  "runtime_capacity_checks": "pf>0,pf<=PFMAX,pf%NC==0,paired BF16 OF even; rank<NOG*NC",
+  "runtime_pf_cases": [
+    64,
+    384
+  ],
+  "selection": {
+    "BF16": 1,
+    "DEL": 4,
+    "HUBW": 35,
+    "INJ": 2,
+    "LANES": 16,
+    "LAT": 7,
+    "NC": 8,
+    "NOG": 8,
+    "NPT": 8,
+    "PFMAX": 384,
+    "QAW": 6,
+    "RXAW": 8,
+    "SLOTREG": 1,
+    "SWCRED": 256,
+    "TXAW": 6,
+    "WSTG": 14
+  },
+  "serial_critical_path_including_wire_CDC_credit_refresh_ns": null,
+  "slotreg_added_cycles_per_flit": 1,
+  "slotreg_added_data_ff": 4096,
+  "slotreg_added_index_valid_ff": 17,
+  "source_authority_sha256": {
+    "rtl/hbm_accel/integration/ot_hbm_tu_shared8.sv": "ccb99ba15698537dae682c6f1a717df3672aed75ab7fcd8141fafa5fb7444d4e",
+    "tools/dshbm_1m_coll.py": "aa96b2bfeb69653d1b67362a30dce1348530c0fc821f3b7692e4181c82e4beb0",
+    "tools/hbm_accel_shared_join_model.py": "5111625febdd26a2c20d90f84d5af9f692af4a57a7a4706ea824bcc02fdb10c8"
+  },
+  "steady_issue_interval_cycles": 1,
+  "strip_and_ordinal_slice_cost": "wiring only; actual ordinal remains unchanged in original TX dispatch",
+  "total_added_ff": 4259
+}
