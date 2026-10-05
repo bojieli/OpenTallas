@@ -33,7 +33,9 @@ module ot_v41_field_w17w10 #(
     parameter integer RST = 1,
     parameter integer RD = 64,
     parameter integer ROOTD = 128,
-    parameter integer PHW = 6
+    parameter integer PHW = 6,
+    parameter integer QELEM = 0,        // 1: the FP8/FP4 pairs are the DS q-element (ot_v41_pair_w17w10 QELEM)
+    parameter integer QXV = 9
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -91,7 +93,8 @@ module ot_v41_field_w17w10 #(
         wire [9:0] pseg, pnseg;
         wire [5:0] ppos;
         ot_v41_pair_w17w10 #(.NSEG(NSEG), .NCH(NCH), .XF(is_bf(g) ? XFB : XFQ), .LV(LV), .BF16(is_bf(g) ? 1 : 0),
-                      .FAST(FAST), .PP(PP), .BP(BP), .MTP(MTP), .EARLY(EARLY), .PHW(PHW), .INSTANCE($sformatf("e%0d", g))) u_p (
+                      .FAST(FAST), .PP(PP), .BP(BP), .MTP(MTP), .EARLY(EARLY), .PHW(PHW), .QELEM(QELEM), .QXV(QXV),
+                      .INSTANCE($sformatf("e%0d", g))) u_p (
             .clk(clk), .rst_n(rst_n), .cfg_go(cfg_go), .cfg_ph(cfg_ph), .cfg_np(cfg_np), .go(go), .go_bf(go_bf),
             .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1),
             .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(xb_pos), .xb_v(xb_v), .xb_b(xb_b), .xb_sv(xb_sv),

@@ -33,6 +33,14 @@ module ot_v41_pair_w17w10 #(
     parameter integer PP = 0,
     parameter integer BP = 0,
     parameter integer PHW = 6,          // phase id bits: 2^PHW phases per die
+    // QELEM (default 0 = the pinned W10 element): 1 instantiates the DS-V4.1 ROM q-element the S81 die's FP8/FP4
+    // pairs are built from, ot_v41_rom_elem_q_qx_w10 at its routed parameters (QPIPE boundary registers, QZ / QY,
+    // QX = QXV), on a pair without BF16 lanes (BF16 = 0; BF16-capable pairs keep the W10 element).  The q-element
+    // registers go / configuration / beats at its boundary (QP_XS = 1) and its outputs leave L = 2 cycles later,
+    // so the spine's broadcast is unchanged (it waits for the rows, rows_left).  A BF16 go (go_bf) never starts a
+    // q-element: it has no BF16 family (the W10 element with BF16 = 0 finds no class of that family: a no-op).
+    parameter integer QELEM = 0,
+    parameter integer QXV = 9,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -138,6 +146,15 @@ module ot_v41_pair_w17w10 #(
     wire e_busy;
     assign busy = e_busy;
     assign quiet = !e_busy && !ld_run && !c_v && !cfg_go && !(go && act);
+    if (QELEM != 0 && BF16 == 0) begin : g_q
+        ot_v41_rom_elem_q_qx_w10 #(.NB(2), .MTP(MTP), .EARLY(EARLY), .FAST(1), .PP(1), .FRONT_PAR(0), .QTIMING_FIX(1),
+                                   .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8),
+                                   .QZ_NE(4), .QY(1), .QX(QXV), .INSTANCE(INSTANCE)) u_e (
+            .clk(clk), .rst_n(rst_n), .cfg_v(c_v), .cfg_a(c_a), .cfg_d(c_d), .go(go_e && !go_bf),
+            .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0),
+            .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .pv(pv), .pval(pval), .prow(prow), .pseg(pseg),
+            .pnseg(pnseg), .perr(perr), .ppos(ppos), .busy(e_busy), .fault(fault));
+    end else begin : g_w
     ot_v41_rom_elem_w10 #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NB(2), .MTP(MTP), .EARLY(EARLY),
                       .FAST(FAST), .PP(PP), .BP(BP), .FRONT_PAR(0), .INSTANCE(INSTANCE)) u_e (
         .clk(clk), .rst_n(rst_n), .cfg_v(c_v), .cfg_a(c_a), .cfg_d(c_d),
@@ -146,4 +163,5 @@ module ot_v41_pair_w17w10 #(
         .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(xb_pos), .ppos(ppos),
         .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr),
         .busy(e_busy), .fault(fault));
+    end
 endmodule
