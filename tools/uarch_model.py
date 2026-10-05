@@ -10001,3 +10001,12 @@ def dsrom_window_pipeline_measured_latency_price(root=None):
         source_priced=True, parent_clock_load_slot_qualified=False,
         physical_adoption=False, headline_changed=False)
 
+
+
+def hbm_existing_cp_cts_allocation_model():
+    """Measured inserted-cell census and finite ancestry-based CP CTS allocation."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/physical/hbm_cp_cts_allocation_20261005/model.json').read_text())
+
