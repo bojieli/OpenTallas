@@ -1,3 +1,4 @@
+# v3 (2026-10-04): v2 plus no flank within one half-track of any M5 pin box.
 # v2 (dsrom_q_pin_keepout2.tcl, 2026-10-04): M5 flanks only, 0.096 um deep.  v1 (M4 / M6 over the pin, 0.288 um) left
 # ~136 of ~200 detail-route violations against its own obstructions in every route (Z5a / Z6 / Z7): the element router
 # escapes the 0.096 um-pitch pins on M4.  The S81 blocker was the M5 jog alone (the abstract has M4 / M6 OBS over every
@@ -42,8 +43,14 @@ foreach p $ot_pins {
     foreach d [list -$ot_p $ot_p] {
         set tc [expr {$xc + $d}]
         if {[info exists ot_occ($side,$tc)]} continue
+        # v3: skip a flank that would touch any M5 pin box (a pin wider than one track, e.g. clk: Z10e left 4 M5
+        # spacing violations between flanks and the clk pin)
+        set fx0 [expr {$tc - $ot_hw - $ot_hw}]; set fx1 [expr {$tc + $ot_hw + $ot_hw}]
+        set hit 0
+        foreach q $ot_pins { lassign $q qs qc qx0 qx1; if {$qs eq $side && $qx0 < $fx1 && $qx1 > $fx0} { set hit 1; break } }
+        if {$hit} continue
         odb::dbObstruction_create $ot_blk $ot_m5 [expr {$tc - $ot_hw}] $by0 [expr {$tc + $ot_hw}] $by1
         incr ot_n5
     }
 }
-puts "OT_PIN_KEEPOUT pins=[llength $ot_pins] m5_flank=$ot_n5 m4m6=$ot_n46 depth_um=0.096 version=2"
+puts "OT_PIN_KEEPOUT pins=[llength $ot_pins] m5_flank=$ot_n5 m4m6=$ot_n46 depth_um=0.096 version=3"

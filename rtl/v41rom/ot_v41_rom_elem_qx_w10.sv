@@ -1167,23 +1167,31 @@ module ot_v41_rom_elem_qx_w10 #(
     wire       qx_swr = cfg_v_e && {27'd0, cfg_a_e} < NSEG;               // a segment configuration write
     wire [SW-1:0] qx_sa = cfg_a_e[SW-1:0];
     wire [3:0] qx_swd = {cfg_d_e[26], cfg_d_e[42], cfg_d_e[28], cfg_d_e[27]};
-    reg  [3:0] qx_sf_nx;
-    reg        qx_sw_nx;                                                    // the write hits the next class's s0
+    // per class: the flags of its first segment c_s0[k] and whether the write hits it; the go / restart / step
+    // candidates are AND-OR selects of these by the one-hot first class of the go / running family or the one-hot
+    // next class (Z10e: c_bf -> base_live -> encode -> c_s0[c_live] -> s_x[] -11.9 ps)
+    wire [NSEG-1:0] qx_sf_ohf = qx_low(base_go), qx_sf_ohl = qx_low(base_live);
+    reg  [3:0] qx_sf_nx, qx_sf_f, qx_sf_l;
+    reg        qx_sw_nx, qx_sw_f, qx_sw_l;                                  // the write hits that class's s0
     always @* begin
-        qx_sf_nx = 4'd0; qx_sw_nx = 1'b0;
+        qx_sf_nx = 4'd0; qx_sw_nx = 1'b0; qx_sf_f = 4'd0; qx_sw_f = 1'b0; qx_sf_l = 4'd0; qx_sw_l = 1'b0;
         for (int k = 0; k < NSEG; k++) begin
             qx_sf_nx = qx_sf_nx | ({4{qx_nxoh[k]}} & qx_sfl(c_s0[k]));
             qx_sw_nx = qx_sw_nx | (qx_nxoh[k] && qx_sa == c_s0[k]);
+            qx_sf_f  = qx_sf_f  | ({4{qx_sf_ohf[k]}} & qx_sfl(c_s0[k]));
+            qx_sw_f  = qx_sw_f  | (qx_sf_ohf[k] && qx_sa == c_s0[k]);
+            qx_sf_l  = qx_sf_l  | ({4{qx_sf_ohl[k]}} & qx_sfl(c_s0[k]));
+            qx_sw_l  = qx_sw_l  | (qx_sf_ohl[k] && qx_sa == c_s0[k]);
         end
     end
     wire qx_sld = go_e || issue && w_seg_last;                              // the walker loads w_s
-    wire [3:0] qx_sf_ld = go_e ? qx_sfl(s0_first) : !w_cl ? qx_sfl(s_next) : w_restart ? qx_sfl(s0_live) :
+    wire [3:0] qx_sf_ld = go_e ? qx_sf_f : !w_cl ? qx_sfl(s_next) : w_restart ? qx_sf_l :
 `ifdef QX_MUTANT_SF
                           qx_sfl(s_next);                                   // negative control: next class as s + 1
 `else
                           qx_sf_nx;
 `endif
-    wire qx_sw_ld = go_e ? qx_sa == s0_first : !w_cl ? qx_sa == s_next : w_restart ? qx_sa == s0_live : qx_sw_nx;
+    wire qx_sw_ld = go_e ? qx_sw_f : !w_cl ? qx_sa == s_next : w_restart ? qx_sw_l : qx_sw_nx;
     wire qx_sw_hit = qx_swr && (qx_sld ? qx_sw_ld : qx_sa == w_s);
     // in reset w_s holds (the walker does not load) but the configuration may still be written
     always @(posedge gclk)
