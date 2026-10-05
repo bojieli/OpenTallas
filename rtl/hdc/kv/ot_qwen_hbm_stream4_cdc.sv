@@ -109,11 +109,11 @@ module ot_qwen_hbm_stream4_cdc #(
     wire [NPC-1:0] h_wcon = col_v & col_we;
     for (genvar q = 0; q < NPC; q = q + 1) begin : pc
         ot_qwen_stream4_cdc_pc #(.TAGW(TAGW), .LD(LR), .WB(WBUF), .AD(LR), .SYNC(SYNC)) u_cdc (
-            .clk(clk), .c_rst_n(c_rst_n),
+            .clk(clk), .c_arst_n(rst_n),
             .l_v(l_v[q]), .l_sec(l_sec[q*17 +: 17]), .l_row(l_row[q*8 +: 8]), .l_data(l_data[q*256 +: 256]), .l_pop(l_pop[q]),
             .w_v(w_v[q]), .w_sec(w_sec[q*24 +: 24]), .w_data(w_data[q*256 +: 256]), .w_tag(w_tag[q*TAGW +: TAGW]),
             .w_room(w_room[q]), .wd_v(wd_v[q]), .wd_tag(wd_tag[q*TAGW +: TAGW]), .c_fault(c_fault_p[q]),
-            .hclk(hclk), .h_rst_n(h_rst_n),
+            .hclk(hclk), .h_arst_n(rst_n),
             .h_lv(lp_v[q]), .h_lsec(lp_sec[q]), .h_lrow(lp_row[q]), .h_ldata(lp_dat[q]), .h_cred(cred_ret[q*3 +: 3]),
             .h_wv(wr_v[q]), .h_wsec(wr_sec[q*24 +: 24]), .h_hand(wr_v[q] && wr_r[q]), .h_wcon(h_wcon[q]),
             .h_cv(h_cv[q]), .h_csec(h_csec[q*24 +: 24]), .h_cdata(h_cdata[q*256 +: 256]), .h_ctag(h_ctag[q*TAGW +: TAGW]),

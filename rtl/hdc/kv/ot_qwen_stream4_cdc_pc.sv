@@ -18,8 +18,10 @@
 // Every crossing is a binary-reflected Gray pointer through SYNC (>= 2) flops; storage is not
 // reset (validity is carried by the pointers); the storage read mux is in the reading domain and
 // is a constrained datapath arc (slot stable for >= SYNC destination edges after the pointer moves).
-// Resets: c_rst_n / h_rst_n are the per-domain synchronized releases of ONE common reset epoch
-// (ot_reset_sync at the parent); no traffic before the descriptor, so no rendezvous is needed.
+// Resets: c_arst_n / h_arst_n are the raw common reset epoch (asynchronous assertion); each domain
+// releases it through its own local two-flop synchronizer inside the element, so every recovery
+// path starts at a local flop (route r1: the port-driven reset tree missed recovery by 12.9 ps).
+// No traffic before the descriptor, so no rendezvous is needed.
 // ---------------------------------------------------------------------------
 module ot_qwen_stream4_cdc_pc #(
     parameter integer TAGW = 9,
@@ -30,7 +32,7 @@ module ot_qwen_stream4_cdc_pc #(
 ) (
     // ---- CLK (core) domain ----
     input  wire             clk,
-    input  wire             c_rst_n,
+    input  wire             c_arst_n,
     output reg              l_v,
     output reg  [16:0]      l_sec,
     output reg  [7:0]       l_row,
@@ -46,7 +48,7 @@ module ot_qwen_stream4_cdc_pc #(
     output reg              c_fault,        // write pushed into a full queue
     // ---- HCLK (controller) domain ----
     input  wire             hclk,
-    input  wire             h_rst_n,
+    input  wire             h_arst_n,
     input  wire             h_lv,           // landing push (a returned RD beat)
     input  wire [16:0]      h_lsec,
     input  wire [7:0]       h_lrow,
@@ -65,6 +67,12 @@ module ot_qwen_stream4_cdc_pc #(
     output reg              h_fault         // landing / write-done push into a full FIFO, or WR with empty queue
 );
     localparam integer LA = $clog2(LD), WA = $clog2(WB), AA = $clog2(AD);
+
+    // local reset release, one synchronizer per domain
+    (* async_reg = "true" *) reg [1:0] c_rs, h_rs;
+    always @(posedge clk or negedge c_arst_n)  if (!c_arst_n) c_rs <= 2'b00; else c_rs <= {c_rs[0], 1'b1};
+    always @(posedge hclk or negedge h_arst_n) if (!h_arst_n) h_rs <= 2'b00; else h_rs <= {h_rs[0], 1'b1};
+    wire c_rst_n = c_rs[1], h_rst_n = h_rs[1];
 
     function automatic [LA:0] g2b_l(input [LA:0] g);
         integer i; begin g2b_l[LA] = g[LA]; for (i = LA - 1; i >= 0; i = i - 1) g2b_l[i] = g2b_l[i+1] ^ g[i]; end
