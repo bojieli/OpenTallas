@@ -10,7 +10,9 @@ module ot_hbm_accel_gu_metadata #(parameter integer WIDTH=192)(
  localparam integer NW=(WIDTH+63)/64,PAD=NW*64;
  reg [71:0] code[0:NW-1];
  wire [65:0] decoded[0:NW-1];
- wire [PAD-1:0] value,padded={{(PAD-WIDTH){1'b0}},next_data};
+ wire [PAD-1:0] value;
+ wire [PAD-1:0] padded;
+ assign padded={{(PAD-WIDTH){1'b0}},next_data};
  wire [NW-1:0] ces,ues;
  for(genvar k=0;k<NW;k=k+1)begin:rows
   assign decoded[k]=ot_gpu_w6_secded_pkg::decode64(code[k]);
