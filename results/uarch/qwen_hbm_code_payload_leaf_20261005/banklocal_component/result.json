@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS_COMPONENT_ONLY",
+  "source_pin": "5468dc0a3",
+  "model_before_RTL": "f607971df",
+  "implementation": "2ee8cc2c1",
+  "host": "ot-epyc2",
+  "supervisor_pid": 3152880,
+  "compile_exit": 0,
+  "run_exit": 0,
+  "checks": 79,
+  "read_edges": 2,
+  "II": 1,
+  "actual_fixture": "original fixture body plus five-bank/two-column continuous read alignment",
+  "original_leaf_byte_identical": true,
+  "source_sha256": {
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
+    "rtl/test/qwen_hbm_code_payload_leaf/tb_code_payload_pair_banklocal.sv": "d578e8ce53fcaac0fc4e9bbaf7c65e2134d10c050e621b9f90f507ca73fad9ab",
+    "tools/hbm_payload/run_code_payload_pair_banklocal.sh": "890cb2c21094c0e3ae6ac01c9a912fc324151f532e657682f2a2229d2b84ff2b",
+    "results/uarch/qwen_hbm_code_payload_leaf_20261005/banklocal_model.json": "99c646e57a3eb59ecf3d55705ded6f09f44498884652333aa584045ca21a202e"
+  },
+  "physical_SSFF_qualified": false,
+  "fulltile_qualified": false,
+  "remote_job": "/srv/opentallas-scratch/jobs/erdos-qwen-code-banklocal-r1",
+  "retained_compiled_worktree": "/srv/opentallas/repos/erdos-qwen-code-banklocal-5468dc0a3"
+}

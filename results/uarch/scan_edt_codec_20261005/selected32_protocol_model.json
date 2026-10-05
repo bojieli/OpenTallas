@@ -1,0 +1,56 @@
+{
+  "status": "ESTIMATE_NOT_ADOPTED",
+  "before_rtl": true,
+  "candidate_partitions": [
+    {
+      "chains": 64,
+      "channels": 8,
+      "ratio": 8,
+      "max_chain_length_if_two_clk_chains_62_gclk_chains": 500
+    },
+    {
+      "chains": 32,
+      "channels": 4,
+      "ratio": 8,
+      "partition_requires_owner_scan_inventory": true
+    }
+  ],
+  "retained_inventory": {
+    "chains": 31,
+    "flops": 31606,
+    "max_length": 1032,
+    "min_length": 654,
+    "source": "results/dft/tapeout_20261004/dsrom_q_element/scan_chains.json.gz"
+  },
+  "state_bits": 64,
+  "dff_body_proxy_um2": 18.6624,
+  "feedback_xor2_count": "3*channels",
+  "phase_xor2_count": "3*chains",
+  "compact_xor2_count": "chains-channels",
+  "state_hold_mux_bits": 64,
+  "enabled_output_and_bits": "chains+channels",
+  "clock_reset_fanout": 64,
+  "scan_stream_bits_per_edge": "channels in + channels out; chains internal input/output",
+  "mac_per_cycle": 0,
+  "functional_latency_delta": 0,
+  "scan_latency": "L+1 shift edges per pattern + actual capture; no test response capture on reset. Response starts at reset-shift old outputs and continues L-1 encoded edges, final load edge not credited as captured observation.",
+  "routing_area": "ESTIMATE unknown XOR/mux/buffer/wire/CTS area; no physical fit or SSFF credit",
+  "acceptance": "Every care bit exact after GF2 encoding; reject UNSAT; fault responses must retain observable mismatches after XOR compaction under known masks; unknown/alias cannot be credited; integrated ATPG FC95/TC99.5 required by owner",
+  "ss_setup_uncertainty_ps": 60,
+  "ff_hold_uncertainty_ps": 25,
+  "actual_selected_partition": "Confucius restitch32/4; actual L pending owner restitch, original31 immutable",
+  "owner_actual_corrected_inventory_sha256": "e59ab96ef3a93b00619a4c7558e18bd14c9972765ccf84a2337b12313c215347",
+  "selected_codec_parameters": {
+    "CHAIN_COUNT": 32,
+    "CHANNELS": 4,
+    "ENABLE": 0
+  },
+  "edge_protocol": "1 real reset-SHIFT edge (scan_en1/zero chain input/OLD compacted response retained), L encoded SHIFT edges, existing capture edges; no codec-only functional edge",
+  "extra_controls": [
+    "pattern_reset one input",
+    "scan_en existing",
+    "rst_n existing"
+  ],
+  "xor2_estimate_selected": 136,
+  "observation": "No mask hardware. XOR unknowns propagate; response known mask is tester compare mask only, never replaces hardware values; alias/X must reject detection. Unequal shorter chains are physically shifted; caller supplies real response/padding values, no software suppression credit."
+}

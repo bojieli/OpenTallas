@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.dshbm.matched.su_m6a5_lane_clock.v1",
+ "mhz": 999.2,
+ "basis": "SU domain at its slowest on-path m6a5 block by SS reg-to-reg slack at 0.833 ns (SS +60 / FF +25), the same basis as the inherited composition (its SU 638.6 MHz is the m4a3 light lane r2r screen); KR40 lane excluded (the kr lever is not used)",
+ "evidence": "side_v6 r2r -167.45 ps -> 999.2 MHz; no m6a5 lane closes signoff (routes by the hbm-fmax-su owner, ot-epyc1tb:/srv/opentallas-scratch/claude/hbm-fmax-su/routes/<label>/corner_sta.json, copied here)",
+ "conservative_register_d_basis_mhz": 635.0,
+ "lanes": [
+  {
+   "route": "kr40_v6",
+   "ss_r2r_ps": -46.21,
+   "ss_worst_register_d_ps": -46.21,
+   "ss_worst_ps": -167.85,
+   "ff_hold_ps": 0.3,
+   "closes_signoff": false,
+   "fmax_r2r_mhz": 1137.0,
+   "fmax_register_d_mhz": 1137.0,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/kr40_v6.corner_sta.json"
+  },
+  {
+   "route": "ll_v6",
+   "ss_r2r_ps": -4.76,
+   "ss_worst_register_d_ps": -4.76,
+   "ss_worst_ps": -53.53,
+   "ff_hold_ps": 2.67,
+   "closes_signoff": false,
+   "fmax_r2r_mhz": 1193.2,
+   "fmax_register_d_mhz": 1193.2,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/ll_v6.corner_sta.json"
+  },
+  {
+   "route": "s_exp_v6",
+   "ss_r2r_ps": 12.26,
+   "ss_worst_register_d_ps": -119.44,
+   "ss_worst_ps": -124.12,
+   "ff_hold_ps": 4.07,
+   "closes_signoff": false,
+   "fmax_r2r_mhz": 1200.0,
+   "fmax_register_d_mhz": 1049.6,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/s_exp_v6.corner_sta.json"
+  },
+  {
+   "route": "s_fdiv_v4",
+   "ss_r2r_ps": 17.1,
+   "ss_worst_register_d_ps": 17.1,
+   "ss_worst_ps": 17.1,
+   "ff_hold_ps": 2.35,
+   "closes_signoff": true,
+   "fmax_r2r_mhz": 1200.0,
+   "fmax_register_d_mhz": 1200.0,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/s_fdiv_v4.corner_sta.json"
+  },
+  {
+   "route": "s_fsqrt",
+   "ss_r2r_ps": 19.4,
+   "ss_worst_register_d_ps": 19.4,
+   "ss_worst_ps": 19.4,
+   "ff_hold_ps": 5.84,
+   "closes_signoff": true,
+   "fmax_r2r_mhz": 1200.0,
+   "fmax_register_d_mhz": 1200.0,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/s_fsqrt.corner_sta.json"
+  },
+  {
+   "route": "s_rsqrt_v6",
+   "ss_r2r_ps": 20.17,
+   "ss_worst_register_d_ps": -124.96,
+   "ss_worst_ps": -135.51,
+   "ff_hold_ps": 1.24,
+   "closes_signoff": false,
+   "fmax_r2r_mhz": 1200.0,
+   "fmax_register_d_mhz": 1043.5,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/s_rsqrt_v6.corner_sta.json"
+  },
+  {
+   "route": "s_softplus_v6",
+   "ss_r2r_ps": -112.85,
+   "ss_worst_register_d_ps": -431.96,
+   "ss_worst_ps": -431.96,
+   "ff_hold_ps": -0.4,
+   "closes_signoff": false,
+   "fmax_r2r_mhz": 1056.9,
+   "fmax_register_d_mhz": 790.3,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/s_softplus_v6.corner_sta.json"
+  },
+  {
+   "route": "side_v6",
+   "ss_r2r_ps": -167.45,
+   "ss_worst_register_d_ps": -741.47,
+   "ss_worst_ps": -742.73,
+   "ff_hold_ps": -0.62,
+   "closes_signoff": false,
+   "fmax_r2r_mhz": 999.2,
+   "fmax_register_d_mhz": 635.0,
+   "record": "results/rtl/dshbm_matched_reference_20261005/su_m6a5/lane_routes/side_v6.corner_sta.json"
+  }
+ ],
+ "sfu_blocks_without_corner_result": [
+  "sfu_v6",
+  "red1024_v6"
+ ]
+}

@@ -220,9 +220,15 @@ class Local:
 
 class Hbm:
     """hbm_streams.json (tools/dshbm_1m_hbm.py: ot_hbm_accel_expert_stream_pc on one HBM3E stack, 32 PCs, corrected
-    REFpb, 64 refresh phases, data-checked) -> on-path load times (worst phase), as BUILT (no notice); the notice /
-    prefetch variants are reported as sensitivities."""
-    MODE = "as_built"
+    REFpb, 64 refresh phases, data-checked) -> on-path load times (worst phase).
+
+    DEFAULT (owner >= 90 % bandwidth rule, 2026-10-04): the index-key scans and the window rows are issued with the
+    stream PC's static-schedule NOTICE (the program is static, so the next scan / window descriptor and its notice
+    are posted ahead of the query; measured 1.0 of peak steady at the worst of 64 refresh phases, 0 violations on
+    the per-PC DRAM checker).  Token-dependent loads (CKV gather, embedding row) stay as built.  MODE = "as_built"
+    gives the earlier everything-as-built walk (a sensitivity); MODE = "notice" puts notice on every load."""
+    MODE = "default"
+    NOTICE_KINDS = ("window_rows", "index_keys")
 
     def __init__(self, rec):
         self.rec = rec
@@ -238,6 +244,8 @@ class Hbm:
         if self.rec is None:
             return None
         m = self.MODE
+        if m == "default":
+            m = "notice" if name.startswith(self.NOTICE_KINDS) else "as_built"
         if name == "window_rows":
             return self._s(f"window_{m}")
         if name.startswith("index_keys"):
@@ -265,9 +273,14 @@ class Hbm:
 TAU_REC = ROOT / "results/speculative/third_party_acceptance_20261004"
 
 
+def _tau_sens(step_us):
+    import third_party_tau as TP
+    return TP.mtp_sensitivity(step_us)
+
+
 def tau_source():
-    """Owner rule (2026-10-04): acceptance tau from published third-party sources (tools/third_party_tau.py,
-    results/speculative/third_party_acceptance_20261004); DSpark block 5 for DeepSeek-V4.1."""
+    """Acceptance tau from tools/third_party_tau.py, DSpark block 5 for DeepSeek-V4.1: default the owner 6-class
+    workload blend 4.159 (owner decision 2026-10-05); the published V4.1 3.8879 is the sensitivity."""
     import third_party_tau as TP
     return TP.tau_ds_v41(5), TP.tau_src("deepseek_v41", 5)
 
@@ -515,7 +528,7 @@ def by_term(rows):
 
 def mtp(prog, sm, su6, coll, local, hbm, clk, ar, use, tau_override=None):
     """verify(P = 6) on the same walk + the union increments the walk does not carry (model, listed) + the measured
-    DSpark draft + seed commit; tau 4.159."""
+    DSpark draft + seed commit; tau from tau_source()."""
     from hbm_accelerator_model import _load_study
     mstudy, _, _, _ = _load_study(ROOT)
     V1, V6 = mstudy.VERIFY_PARTS[1], mstudy.VERIFY_PARTS[6]
@@ -528,7 +541,7 @@ def mtp(prog, sm, su6, coll, local, hbm, clk, ar, use, tau_override=None):
     if tau_override is None:
         tau, tsrc = tau_source()
     else:
-        tau, tsrc = tau_override, "superseded self-measured 4.159 (base reproduction only)"
+        tau, tsrc = tau_override, f"tau {tau_override:g} fixed (base reproduction only)"
     verify = t6 + union["sm"] + union["fetch"]
     step = verify + draft + seed
     return dict(tau_source=tsrc, verify_p6_us=round(verify, 3), walk_p6_us=t6, union_model_us=union, draft_us=draft,
@@ -569,8 +582,14 @@ def main():
     Hbm.MODE = "notice"
     ts, _ = walk(prog, sm, su1, coll, local, hbm, use=use)
     sens["hbm_loads_with_notice"] = dict(AR_us=round(ts, 3), AR_tok_s=round(1e6 / ts, 1),
-                                         note="stream PC notice mode on the index-key / window / CKV / embedding loads")
+                                         note="stream PC notice mode on every load (index keys, window, CKV gather, "
+                                              "embedding); the headline already has it on the index keys and window")
     Hbm.MODE = "as_built"
+    ts, _ = walk(prog, sm, su1, coll, local, hbm, use=use)
+    sens["hbm_loads_as_built_no_notice"] = dict(AR_us=round(ts, 3), AR_tok_s=round(1e6 / ts, 1),
+                                                note="index keys and window WITHOUT notice (scans 0.617 / 0.506, window "
+                                                     "0.198 of peak at the worst refresh phase): the superseded default")
+    Hbm.MODE = "default"
     Coll.HUB = "matched"
     ts, _ = walk(prog, sm, su1, coll, local, hbm, use=use)
     sens["collective_hub_port_matched"] = dict(AR_us=round(ts, 3), AR_tok_s=round(1e6 / ts, 1),
@@ -604,7 +623,7 @@ def main():
                                AR_by_term=by_term(rows_t), MTP_tok_s=m_today["mtp_tok_s"], MTP=m_today),
         option_su_n2048=n2048, sensitivities=sens,
         still_modelled_ar=still,
-        tau_superseded=dict(tau=4.159, mtp_tok_s=mtp(prog, sm, su6, coll, local, hbm, TARGET, None, use, tau_override=4.159)['mtp_tok_s'], note='own 6-class mix tau (superseded by the owner rule)'),
+        tau_sensitivity=_tau_sens(m["step_us"]),
         still_modelled_other=[
             dict(term="Tomahawk-Ultra PHY + switch + cable per crossing", us=ar["tu_budget_us"],
                  why="VENDOR BUDGET (Broadcom SUE RM104 App. A); inside the measured_tu_budget collective rows"),
@@ -615,7 +634,8 @@ def main():
             dict(term="DSpark draft", us=m["draft_us"], why="results/rtl/dshbm_dspark_draft_20261004 (RTL chain + "
                                                             "full-shape; its collectives are the TU model)"),
             dict(term="seed commit", us=m["seed_commit_us"], why="draft record"),
-            dict(term="acceptance tau", us=None, why="published third-party (DSpark block 5, vLLM PR 57432), not an RTL quantity"),
+            dict(term="acceptance tau", us=None, why=f"{m['tau_source']}; not an RTL quantity (published V4.1 3.8879 "
+                                                     "and range 3.43-4.32 in tau_sensitivity)"),
             dict(term="hc_mixes, compressor, cand_apply, Engram/candidate-merge collectives", us=0.0,
                  why="off the critical path in the program's dependency order (model judgement, unchanged)")],
         path=rows,

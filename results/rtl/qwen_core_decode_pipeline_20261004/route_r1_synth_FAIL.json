@@ -1,0 +1,174 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-04T20:29:46.440948+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "decode_component",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "DECODE_PIPE": 1,
+      "VPOS": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/test/qwen_decode_pipe_20261004/component.sv",
+        "sha256": "a5dfae8a8a4626d5564415fb9f3a11cd9db4e65bf40305850704f414792d19f6",
+        "size_bytes": 19177
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+        "sha256": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+        "size_bytes": 1099
+      }
+    ],
+    "top": "decode_component"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\nee /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:298\n\n4.1. Analyzing design hierarchy..\nTop module:  \\decode_component\nUsed module:     \\ot_hdc_dyn_ttiles\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\n\n4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nGenerating RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nParameter \\W = 16\nParameter \\G = 6144\nParameter \\NW = 18\nFound cached RTLIL representation for module `$paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles'.\nReprocessing module decode_component because instantiated module $paramod$bedf9a25d85cbfbc79ba5baf55bc74feab053e4b\\ot_hdc_dyn_ttiles has become available.\nGenerating RTLIL representation for module `$paramod$beae2756a33f97e84efbd3f2dbc8d5962647f4c1\\decode_component'.\nWarning: Replacing memory \\dp_dyn with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:365\nWarning: Replacing memory \\dynp with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:329\nWarning: Replacing memory \\dyn with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:316\nWarning: Replacing memory \\fq with list of registers. See /home/ubuntu/hubble-qwen-decode-source-c4a38d193/rtl/test/qwen_decode_pipe_20261004/component.sv:298\n\nERROR: Assert `modules_.count(module->name) == 0' failed in /home/ubuntu/.cache/opentallas-build/yosys-0.68/kernel/rtlil.cc:1231.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-04T20:29:45.604923+00:00",
+  "git": {
+    "commit": "f49509826df6f41347fd1659df3a9c8fe6facf71",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "decode_component",
+      "--source",
+      "rtl/test/qwen_decode_pipe_20261004/component.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+      "--param",
+      "DECODE_PIPE=1",
+      "--param",
+      "VPOS=1",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--core-utilization",
+      "30",
+      "--place-density",
+      "0.5",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "hubble_qwen_decode_pipe_r1",
+      "--keep-workdir",
+      "/home/ubuntu/hubble-qwen-decode-route-20261004-r1/work",
+      "--output",
+      "/home/ubuntu/hubble-qwen-decode-route-20261004-r1/physical.json"
+    ],
+    "driver": {
+      "commit": "f49509826df6f41347fd1659df3a9c8fe6facf71",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/hubble-qwen-decode-source-c4a38d193/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "21bd7dd863f2c394d8487e89d07a3fe15e331b05b2e94224fda0c41d671be578",
+      "tree": "/home/ubuntu/hubble-qwen-decode-source-c4a38d193"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/hubble-qwen-decode-source-c4a38d193"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

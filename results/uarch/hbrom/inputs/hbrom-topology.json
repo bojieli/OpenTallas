@@ -1,0 +1,1103 @@
+{
+  "schema": "hbrom-topology-exploration-v1",
+  "sources_sha256": {
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "docs/DEEPSEEK_V41_CSA2_SHARED_CACHE_EVIDENCE.md": "f92ff47663d6181cde72a9930de29f170d71f0b801a6a3d296a51b0a63401eec",
+    "results/rtl/dsrom_1m_allmeasured_20261004/links.json": "13757346b2039c2794c00996871b98fbcd5747783a81f501a0eb140404824a4b"
+  },
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "payload_B": {
+    "vision_unused": 970536960,
+    "embed": 1323827200,
+    "head": 1323827200,
+    "other": 10240,
+    "mtp": 7932874632,
+    "engram_table_L1": 101377628352,
+    "engram_table_L14": 101380404048,
+    "layers_total": 295976914368
+  },
+  "capacity_equations": [
+    "Nmac=floor(Arom_pure/A_macro)",
+    "Crole=sum_format(Nmac_format*payload_per_macro_format*packing_efficiency_format), after bounded routing/read/compute/SRAM/PHY reserves",
+    "D_min_storage=ceil(W_total/Cdie), lower bound only; use actual per-role capacities and indivisible rows",
+    "D_layer=TP*number_of_capacity_feasible_contiguous_layer_groups; Dhead=TP*ceil(Whead/(TP*Chead)); Dtable=ceil(Wtable/Ctable)",
+    "Do not inherit legacy 188 or368 die count; 510286023000 B includes vision_unused and other; preserve payload inventory even if decode-inactive"
+  ],
+  "options": [
+    {
+      "name": "whole_layer_row_split",
+      "preference": "first candidate",
+      "tp": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "placement": "Contiguous layers per storage group; matrices row partitioned, complete exact K chain in local shared compute; neighbor stage gets full residual. Weight streams stay on die.",
+      "advantages": [
+        "shared compute across all resident bank rows/experts/layers",
+        "no arbitrary cross-die K reduction",
+        "minimizes stage boundaries without requiring all layers in one group"
+      ],
+      "costs": [
+        "allgather full activations between producer-row and consumer-row matrices",
+        "TP8 requires unqualified four-package topology or new larger package",
+        "routing and macro-port bandwidth must feed shared compute"
+      ]
+    },
+    {
+      "name": "canonical_K_split",
+      "preference": "alternative only with explicit frontier",
+      "placement": "Partition contiguous canonical golden reduction subtrees and send tagged frontier partials; owner completes same tree.",
+      "costs": [
+        "multiple frontier values may replace one partial per rank",
+        "format-specific QE block reductions differ from BF16 chunk8",
+        "non-power-of-two dimensions make naive equal splits illegal"
+      ]
+    },
+    {
+      "name": "expert_parallel",
+      "preference": "sensitivity",
+      "placement": "Whole experts distributed over group; broadcast x then selected experts run locally and return separate outputs in ascending expert ID.",
+      "costs": [
+        "adversarial six experts may share a die",
+        "mean uniform routing cannot establish latency target",
+        "final selected-expert accumulation must preserve golden order"
+      ]
+    },
+    {
+      "name": "fractional_layer_stages",
+      "preference": "fallback capacity option",
+      "placement": "Split a layer only when whole-layer grouping cannot fit adequate compute/bandwidth; explicitly price each state packet",
+      "costs": [
+        "extra serial inter-stage hops",
+        "intermediate live state may exceed residual alone",
+        "legacy equal-byte layout not sufficient numerical schedule"
+      ]
+    }
+  ],
+  "tensor_bytes": {
+    "hidden_bf16": 10240,
+    "hidden_fp32": 20480,
+    "hc_residual_bf16": 40960,
+    "hc_residual_packet": 40976,
+    "q_low_rank_bf16": 2560,
+    "query_all_heads_bf16": 65536,
+    "grouped_output_bf16": 16384,
+    "router_fp32": 1536,
+    "shared_plus_six_expert_intermediate_bf16": 32256,
+    "shared_plus_six_expert_intermediate_fp8_scale32": 16632,
+    "selected_ckv_packed": 147456,
+    "window_packed": 67584,
+    "index_top512_score_id_per_rank": 4096
+  },
+  "exact_rules": [
+    "64 heads /8 output groups split naturally at TP1/2/4/8; TP>8 crosses wo_a output-group K and adds exact combine",
+    "BF16 csum: contiguous groups8 sequential adds then padded power2 tree; complete-K row partition avoids reassociation",
+    "BF16 K5120 has640 chunks; frontier512+128. QE K5120 has160 block dots /8=>20 leaves; frontier16+4. QE K2304 has72 blocks /8=>9 leaves; frontier8+1. Equal partitions are not automatically canonical subtrees.",
+    "The six selected expert outputs remain individually identifiable until ordered combination; generic sum across expert owners is not exact by assumption"
+  ],
+  "kv_locality": {
+    "owners": [
+      2,
+      8,
+      14,
+      20
+    ],
+    "source_ranges": [
+      [
+        2,
+        7
+      ],
+      [
+        8,
+        13
+      ],
+      [
+        14,
+        19
+      ],
+      [
+        20,
+        39
+      ]
+    ],
+    "selection_sources": [
+      2,
+      8,
+      14,
+      20,
+      24,
+      28,
+      32,
+      36
+    ],
+    "unique_context_B": 933232640,
+    "preferred": "HBM near source attention/index service groups; retain active windows and selected row sets; forward selected sets down consecutive consumer groups with immutable source/selection identity.",
+    "cost": "selected set147456B at76.8GB/s requires1.92us serialization alone; cannot assume free across stages. Prefetch after source selection may hide later stage transfers; schedule against actual dependencies and contention.",
+    "candidate": "L20 candidate cache1114112B; forwarding four copies or query-to-owner roundtrips must be priced, candidate-only scoring remains gated"
+  },
+  "link": {
+    "source_artifact": "/tmp/hbrom-links.json",
+    "qualified_topology": "Existing synthetic TP4 two packages of two dies; SS link baseline fails and must be repaired before adoption",
+    "endpoint_Bps": 76800000000,
+    "stage_old_geometry_us": 0.7575,
+    "formula": "Tpacket=(ceil(B/64)+11+vendor_phy_cycles+source_wire_cycles+destination_wire_cycles)/1.2e9; full store-forward unless cut-through proven",
+    "bandwidth_warning": "171.29GB/s board PHY is not 76.8GB/s endpoint. 4.2TB/s old package aggregate is not individual consumer service.",
+    "placement": "Nearest-neighbor linear stage chain plus dedicated last-head-to-first token return; local TP package links; separate switched Engram sparse lookup network. Price pins, power and flow control on every path."
+  },
+  "illustrative_integer_capacity_sweep": [
+    {
+      "illustrative_payload_capacity_B": 4000000000,
+      "tp": 2,
+      "layer_groups": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ],
+        [
+          8
+        ],
+        [
+          9
+        ],
+        [
+          10
+        ],
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ],
+        [
+          14
+        ],
+        [
+          15
+        ],
+        [
+          16
+        ],
+        [
+          17
+        ],
+        [
+          18
+        ],
+        [
+          19
+        ],
+        [
+          20
+        ],
+        [
+          21
+        ],
+        [
+          22
+        ],
+        [
+          23
+        ],
+        [
+          24
+        ],
+        [
+          25
+        ],
+        [
+          26
+        ],
+        [
+          27
+        ],
+        [
+          28
+        ],
+        [
+          29
+        ],
+        [
+          30
+        ],
+        [
+          31
+        ],
+        [
+          32
+        ],
+        [
+          33
+        ],
+        [
+          34
+        ],
+        [
+          35
+        ],
+        [
+          36
+        ],
+        [
+          37
+        ],
+        [
+          38
+        ],
+        [
+          39
+        ]
+      ],
+      "layer_dies": 80,
+      "head_dies": 4,
+      "table_dies": 51,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 136,
+      "stage_boundary_hops": 40,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 4000000000,
+      "tp": 4,
+      "layer_groups": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ]
+      ],
+      "layer_dies": 80,
+      "head_dies": 4,
+      "table_dies": 51,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 136,
+      "stage_boundary_hops": 20,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 4000000000,
+      "tp": 8,
+      "layer_groups": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10,
+          11
+        ],
+        [
+          12,
+          13,
+          14,
+          15
+        ],
+        [
+          16,
+          17,
+          18,
+          19
+        ],
+        [
+          20,
+          21,
+          22,
+          23
+        ],
+        [
+          24,
+          25,
+          26,
+          27
+        ],
+        [
+          28,
+          29,
+          30,
+          31
+        ],
+        [
+          32,
+          33,
+          34,
+          35
+        ],
+        [
+          36,
+          37,
+          38,
+          39
+        ]
+      ],
+      "layer_dies": 80,
+      "head_dies": 8,
+      "table_dies": 51,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 140,
+      "stage_boundary_hops": 10,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 6000000000,
+      "tp": 2,
+      "layer_groups": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ],
+        [
+          8
+        ],
+        [
+          9
+        ],
+        [
+          10
+        ],
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ],
+        [
+          14
+        ],
+        [
+          15
+        ],
+        [
+          16
+        ],
+        [
+          17
+        ],
+        [
+          18
+        ],
+        [
+          19
+        ],
+        [
+          20
+        ],
+        [
+          21
+        ],
+        [
+          22
+        ],
+        [
+          23
+        ],
+        [
+          24
+        ],
+        [
+          25
+        ],
+        [
+          26
+        ],
+        [
+          27
+        ],
+        [
+          28
+        ],
+        [
+          29
+        ],
+        [
+          30
+        ],
+        [
+          31
+        ],
+        [
+          32
+        ],
+        [
+          33
+        ],
+        [
+          34
+        ],
+        [
+          35
+        ],
+        [
+          36
+        ],
+        [
+          37
+        ],
+        [
+          38
+        ],
+        [
+          39
+        ]
+      ],
+      "layer_dies": 80,
+      "head_dies": 2,
+      "table_dies": 34,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 117,
+      "stage_boundary_hops": 40,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 6000000000,
+      "tp": 4,
+      "layer_groups": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3,
+          4,
+          5
+        ],
+        [
+          6,
+          7,
+          8
+        ],
+        [
+          9,
+          10,
+          11
+        ],
+        [
+          12,
+          13,
+          14
+        ],
+        [
+          15,
+          16,
+          17
+        ],
+        [
+          18,
+          19,
+          20
+        ],
+        [
+          21,
+          22,
+          23
+        ],
+        [
+          24,
+          25,
+          26
+        ],
+        [
+          27,
+          28,
+          29
+        ],
+        [
+          30,
+          31,
+          32
+        ],
+        [
+          33,
+          34,
+          35
+        ],
+        [
+          36,
+          37,
+          38
+        ],
+        [
+          39
+        ]
+      ],
+      "layer_dies": 56,
+      "head_dies": 4,
+      "table_dies": 34,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 95,
+      "stage_boundary_hops": 14,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 6000000000,
+      "tp": 8,
+      "layer_groups": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        [
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29
+        ],
+        [
+          30,
+          31,
+          32,
+          33,
+          34,
+          35
+        ],
+        [
+          36,
+          37,
+          38,
+          39
+        ]
+      ],
+      "layer_dies": 56,
+      "head_dies": 8,
+      "table_dies": 34,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 99,
+      "stage_boundary_hops": 7,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 8000000000,
+      "tp": 1,
+      "layer_groups": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ],
+        [
+          8
+        ],
+        [
+          9
+        ],
+        [
+          10
+        ],
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ],
+        [
+          14
+        ],
+        [
+          15
+        ],
+        [
+          16
+        ],
+        [
+          17
+        ],
+        [
+          18
+        ],
+        [
+          19
+        ],
+        [
+          20
+        ],
+        [
+          21
+        ],
+        [
+          22
+        ],
+        [
+          23
+        ],
+        [
+          24
+        ],
+        [
+          25
+        ],
+        [
+          26
+        ],
+        [
+          27
+        ],
+        [
+          28
+        ],
+        [
+          29
+        ],
+        [
+          30
+        ],
+        [
+          31
+        ],
+        [
+          32
+        ],
+        [
+          33
+        ],
+        [
+          34
+        ],
+        [
+          35
+        ],
+        [
+          36
+        ],
+        [
+          37
+        ],
+        [
+          38
+        ],
+        [
+          39
+        ]
+      ],
+      "layer_dies": 40,
+      "head_dies": 2,
+      "table_dies": 26,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 69,
+      "stage_boundary_hops": 40,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 8000000000,
+      "tp": 2,
+      "layer_groups": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ]
+      ],
+      "layer_dies": 40,
+      "head_dies": 2,
+      "table_dies": 26,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 69,
+      "stage_boundary_hops": 20,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 8000000000,
+      "tp": 4,
+      "layer_groups": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10,
+          11
+        ],
+        [
+          12,
+          13,
+          14,
+          15
+        ],
+        [
+          16,
+          17,
+          18,
+          19
+        ],
+        [
+          20,
+          21,
+          22,
+          23
+        ],
+        [
+          24,
+          25,
+          26,
+          27
+        ],
+        [
+          28,
+          29,
+          30,
+          31
+        ],
+        [
+          32,
+          33,
+          34,
+          35
+        ],
+        [
+          36,
+          37,
+          38,
+          39
+        ]
+      ],
+      "layer_dies": 40,
+      "head_dies": 4,
+      "table_dies": 26,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 71,
+      "stage_boundary_hops": 10,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    },
+    {
+      "illustrative_payload_capacity_B": 8000000000,
+      "tp": 8,
+      "layer_groups": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        [
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39
+        ]
+      ],
+      "layer_dies": 40,
+      "head_dies": 8,
+      "table_dies": 26,
+      "residual_payload_die_reserve": 1,
+      "total_dies": 75,
+      "stage_boundary_hops": 5,
+      "qualification": "Capacity illustration only; same role capacity assumption, no local compute/bandwidth/physical gate. Separate residual reserve is conservative; co-packing may remove it."
+    }
+  ],
+  "not_claimed": [
+    "chosen die count",
+    "TP8 exact RTL or physical link qualification",
+    "floorplan fit",
+    "new end-to-end TPOT",
+    "performance of row-split allgathers without finite-buffer consumer tests"
+  ]
+}

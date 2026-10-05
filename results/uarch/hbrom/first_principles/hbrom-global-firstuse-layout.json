@@ -1,0 +1,415 @@
+{
+  "schema": "opentallas.hbrom.global_firstuse_layout.v1",
+  "architecture_only": true,
+  "qualified": false,
+  "source_pins": {
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/results/uarch/hbrom/g0_inputs.json.gz": "4dbbc20435d928167b9ee024e737a25b1ba0cfc094be8a227cb52a824acb64ce",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/tools/hbrom_global_screen.py": "3e683837b48aca732ac513a6423505e93ecfca39441b1020a501e4b52090e5f4",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/tools/w19_sm_real_ops.py": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "/tmp/hbrom_global_firstuse_layout.py": "469841d36af9b94d3c74e6d426ecfb0ec28d88ae70d0fe3f18f561a8975c3da5"
+  },
+  "mapped_matrix_count": 46460,
+  "cases": [
+    {
+      "tp": 96,
+      "sms_per_rank": 16,
+      "rotation": false,
+      "compact_records": 2198896640,
+      "allocated_pairs_total": 1076224,
+      "max_pairs_per_sm": 904,
+      "max_raw_rom_mm2_per_rank": 178.966061512704,
+      "min_raw_rom_mm2_per_rank": 173.791443373056,
+      "max_mux_inputs_per_stream": 226,
+      "uniform_exact_pool_raw_rom_mm2_per_rank": 228.188038938624,
+      "uniform_power2_pool_raw_rom_mm2_per_rank": 258.478486585344,
+      "pool_end_unused_records": 5210112,
+      "whole_row_pool_boundary_required": false,
+      "tensor_alignment_records": 1,
+      "qualified": false
+    },
+    {
+      "tp": 96,
+      "sms_per_rank": 16,
+      "rotation": true,
+      "compact_records": 2198896640,
+      "allocated_pairs_total": 1076096,
+      "max_pairs_per_sm": 712,
+      "max_raw_rom_mm2_per_rank": 178.90295641344,
+      "min_raw_rom_mm2_per_rank": 173.791443373056,
+      "max_mux_inputs_per_stream": 178,
+      "uniform_exact_pool_raw_rom_mm2_per_rank": 179.72332270387201,
+      "uniform_power2_pool_raw_rom_mm2_per_rank": 258.478486585344,
+      "pool_end_unused_records": 4947968,
+      "whole_row_pool_boundary_required": false,
+      "tensor_alignment_records": 1,
+      "qualified": false
+    },
+    {
+      "tp": 96,
+      "sms_per_rank": 32,
+      "rotation": false,
+      "compact_records": 2198896640,
+      "allocated_pairs_total": 1078784,
+      "max_pairs_per_sm": 456,
+      "max_raw_rom_mm2_per_rank": 179.344692108288,
+      "min_raw_rom_mm2_per_rank": 174.233179067904,
+      "max_mux_inputs_per_stream": 114,
+      "uniform_exact_pool_raw_rom_mm2_per_rank": 230.207402115072,
+      "uniform_power2_pool_raw_rom_mm2_per_rank": 258.478486585344,
+      "pool_end_unused_records": 10452992,
+      "whole_row_pool_boundary_required": false,
+      "tensor_alignment_records": 1,
+      "qualified": false
+    },
+    {
+      "tp": 96,
+      "sms_per_rank": 32,
+      "rotation": true,
+      "compact_records": 2198896640,
+      "allocated_pairs_total": 1079212,
+      "max_pairs_per_sm": 356,
+      "max_raw_rom_mm2_per_rank": 179.72332270387201,
+      "min_raw_rom_mm2_per_rank": 174.106968869376,
+      "max_mux_inputs_per_stream": 89,
+      "uniform_exact_pool_raw_rom_mm2_per_rank": 179.72332270387201,
+      "uniform_power2_pool_raw_rom_mm2_per_rank": 258.478486585344,
+      "pool_end_unused_records": 11329536,
+      "whole_row_pool_boundary_required": false,
+      "tensor_alignment_records": 1,
+      "qualified": false
+    }
+  ],
+  "symbolic_mapping_checks": [
+    {
+      "format": "bf16",
+      "K": 512,
+      "rows_checked_inclusive": [
+        1,
+        64
+      ],
+      "groups": 1,
+      "valid_lanes_per_group": [
+        64
+      ],
+      "responses_per_compact_record": [
+        1
+      ],
+      "native_records_per_row": 8,
+      "compact_records_per_row": 8,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 0
+    },
+    {
+      "format": "bf16",
+      "K": 5120,
+      "rows_checked_inclusive": [
+        1,
+        85
+      ],
+      "groups": 10,
+      "valid_lanes_per_group": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "responses_per_compact_record": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native_records_per_row": 80,
+      "compact_records_per_row": 80,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 0
+    },
+    {
+      "format": "fp4",
+      "K": 2304,
+      "rows_checked_inclusive": [
+        1,
+        4
+      ],
+      "groups": 2,
+      "valid_lanes_per_group": [
+        8,
+        1
+      ],
+      "responses_per_compact_record": [
+        1,
+        8
+      ],
+      "native_records_per_row": 16,
+      "compact_records_per_row": 9,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 4
+    },
+    {
+      "format": "fp4",
+      "K": 5120,
+      "rows_checked_inclusive": [
+        1,
+        2
+      ],
+      "groups": 3,
+      "valid_lanes_per_group": [
+        8,
+        8,
+        4
+      ],
+      "responses_per_compact_record": [
+        1,
+        1,
+        2
+      ],
+      "native_records_per_row": 24,
+      "compact_records_per_row": 20,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 2
+    },
+    {
+      "format": "fp8",
+      "K": 1280,
+      "rows_checked_inclusive": [
+        1,
+        32
+      ],
+      "groups": 2,
+      "valid_lanes_per_group": [
+        4,
+        1
+      ],
+      "responses_per_compact_record": [
+        1,
+        4
+      ],
+      "native_records_per_row": 16,
+      "compact_records_per_row": 10,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 4
+    },
+    {
+      "format": "fp8",
+      "K": 2304,
+      "rows_checked_inclusive": [
+        1,
+        4
+      ],
+      "groups": 3,
+      "valid_lanes_per_group": [
+        4,
+        4,
+        1
+      ],
+      "responses_per_compact_record": [
+        1,
+        1,
+        4
+      ],
+      "native_records_per_row": 24,
+      "compact_records_per_row": 18,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 2
+    },
+    {
+      "format": "fp8",
+      "K": 5120,
+      "rows_checked_inclusive": [
+        1,
+        2
+      ],
+      "groups": 5,
+      "valid_lanes_per_group": [
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "responses_per_compact_record": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native_records_per_row": 40,
+      "compact_records_per_row": 40,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 0
+    },
+    {
+      "format": "fp8",
+      "K": 6144,
+      "rows_checked_inclusive": [
+        1,
+        17
+      ],
+      "groups": 6,
+      "valid_lanes_per_group": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "responses_per_compact_record": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native_records_per_row": 48,
+      "compact_records_per_row": 48,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 0
+    },
+    {
+      "format": "fp8",
+      "K": 8192,
+      "rows_checked_inclusive": [
+        1,
+        4
+      ],
+      "groups": 8,
+      "valid_lanes_per_group": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "responses_per_compact_record": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "native_records_per_row": 64,
+      "compact_records_per_row": 64,
+      "symbolic_expansion_equal": true,
+      "firstuse_keys_unique": true,
+      "all_payload_atoms_covered": true,
+      "last_test_tail_context_highwater": 0
+    }
+  ],
+  "symbolic_native_lines_checked": 326064,
+  "symbolic_unique_reads_checked": 322754,
+  "bijection": {
+    "domain": "Unique compact keys(row,group,floor(t/fanout[group])) over the actual native wave,t,slot traversal.",
+    "construction": "Visit valid native requests in wave,t,slot order. At t%fanout[group]==0 assign next consecutive physical-record ordinal and store exactlyL validatoms in t-major/lane-major order. Later fanout-1 responses read the slot context, never a new immutable copy.",
+    "injectivity": "Each row/group item belongs to exactlyonewave/slot; firstmiss t values0,fanout,...7 are distinct packedrecord keys.",
+    "surjectivity": "Everyreal atom belongs to exactlyonegroup,t,lane and therefore exactlyone packedrecord; eachrecordfirstmiss is visited by native schedule.",
+    "exactness": "Expand selected t slice into original active code/scale lanes; fill inactive lanes with literalzero. This matches w19_sm_real_ops line construction bitwise without modifying reductions or computeissueorder.",
+    "immutable_replication_factor": 1,
+    "scope": "Mapped matrixshapes only, all have timeuniform validlanes and integral fanout dividing8. Source scales and executionwo_a obligations unchanged."
+  },
+  "address_generation": {
+    "physical_address": "descriptor_compact_base + global_firstmiss_ordinal",
+    "pool": "physical_record_address >>13 selects fourstream pool; address[12:0] chooses8192logical records. Parity address[0] picks alternating macro; remaining12bits macro row.",
+    "no_per_record_LUT": true,
+    "arbitrary_native_seek": "Must reconstruct waveprefix+prior t firstmiss popcounts+current slotprefix; simple sequential generator avoids randomseek cost.",
+    "wave_prefix": "Sum over earlier waves and their active slots of8/fanout; equivalently complete rows compactrecords plus partialgroup prefix.",
+    "pattern": "For slot s assigned groupg, fanout is1,2,4,8. firstmissmask[t][s]=valid[s] and(t&(fanout[s]-1))==0. 8t\u00d78slots mask64bits; optional prefixcounts fit8\u00d77bits; total120bits percurrent wave pattern.",
+    "retained_control": "8slots\u00d7(valid1+fanout_log2_2+group8+row16)=216rawbits; compact32bitbase+32bitordinal;128bitpatternregister allowance.",
+    "pool_crossing": "A row/tensor/wave may cross8192record boundaries; keys remain consecutive. Storage records remain whole1096bitfourword records. Existing whole-row allocator restriction removed analytically, not a golden arithmetic change."
+  },
+  "bank_proof": {
+    "assumptions": [
+      "Successive firstmiss reads launch in assigned ordinal order, at mostone percycle.",
+      "Pool address arithmetic correctly selects physical macros; no unrelated read client steals port.",
+      "No new descriptor reuses an inflight context; descriptor transition respects bankrecurrence."
+    ],
+    "within_pool": "Successive firstmissordinals alternate bankparity. Same physical macro is revisited only afteratleasttwo readlaunches; atmostone launch/cycle ensures>=2cycles recurrence. Nativehits addidle time and cannot shorten recurrence.",
+    "pool_boundary": "Next ordinal crosses to a different physicalpair; oldmacro recurrence cannot conflict.",
+    "descriptor_boundary": "If samepool/sameparity as precedingdescriptor, insertone launchbubble or wait alreadyrequired completion/epochdrain. Charge atmostone launchcycle perdescriptor unless actualdrainproves it hidden.",
+    "guarantee": "Eliminates samebank consecutivefirstmiss launchconflicts for serializedfirstuse schedule. Does not prove contextavailability or native no-bubble delivery.",
+    "descriptor_transition_bubble": "At mostone additional physical launchcycle when baseparity repeats in samepool; actual descriptordrain can subsume it only when measured."
+  },
+  "finite_context_contract": {
+    "tail_contexts": 8,
+    "protected_bits_per_context": 1296,
+    "native_response_output_max_bytes_per_cycle": 136,
+    "lifetime": "Reserve slotcontext before issuing its firstmiss; retain until last associatednative line has been expanded and copied into protectedresponse staging. Consumer neednot alreadyexecute it.",
+    "do_not_overwrite": "Wavew+1 same slot can launch onlyafterwavew last expansioncopied and allolderinflight writes for slotretired. Storewave/epoch tag with context and inflight destination.",
+    "single_wave_restriction": "Simplest8contextpolicy forbidsnextwave firstreads until allcurrentwave outputsare materialized. Payscoldrefill latency everywave; do not claimonlyone startuppertensor.",
+    "latency_hiding_candidate": "Morewave contextbanks or earlynextwaveprefetch into a distinctresponse/read buffer can hide refill; everybit, credit and staleepochcheck mustbe priced. Existingbulk ring canholdexpandedpreviouswave, but cannotreplace futurecompactcontexts beforeexpansion.",
+    "physical_read_pipeline_latency_sweep_cycles": [
+      17,
+      24,
+      30
+    ],
+    "context_capacity_bytes": 1296.0,
+    "wave_native_output_max_records": 64,
+    "pipeline_metadata": "At leastL inflight destinations at1read/cycle, eachincludingepoch,wave,slot,packedoffset,requestidentity. No reuse untilassociated destinationcredit free.",
+    "multiple_inflight_same_slot": "Do not claim one exclusive context reservation per launched read: L30 and8contexts would cap read rate. Full-group records can bypass tailcache. Multiple future tail writes must remain in launch-ordered elastic return storage until older nativehits retire. Context ownership changes only at ordered response expansion.",
+    "uninterruptible_pipeline_return_obligation": "Every launched read needs capture capacity even after downstream stops. If existing pool transport is not elastic, provision L complete protected record entries plus identity; metadata alone is insufficient."
+  },
+  "analytical_cost_allowance": {
+    "base_compact_decoder_and_16request_queue_mm2_per_sm": 0.0232389376,
+    "extra_firstuse_generator_raw_state_bits": 408,
+    "extra_firstuse_generator_protected_register_bits_allowance": 504,
+    "extra_firstuse_logic_footprint_mm2_assumed": 0.003,
+    "generator_total_extra_mm2_assumed": 0.0032939328,
+    "inflight_metadata_bits_each_assumed": 72,
+    "L30_inflight_bits": 2160,
+    "L30_inflight_register_footprint_mm2": 0.0012597120000000003,
+    "two_wave_context_extra_bits_if_selected": 10368,
+    "two_wave_context_extra_register_footprint_mm2": 0.006046617600000001,
+    "caution": "Area is analyticalregister/mux allowance, notphysicalmeasurement; protect mutablemetadata. Do notdoublecountpipelinequeue statealreadyin sourcepath. Full contextualrouting, clocktree, reset/control and ECClogic needpricing.",
+    "L30_extra_protected_return_record_bits_if_transport_not_elastic": 38880,
+    "L30_extra_return_register_footprint_mm2_if_transport_not_elastic": 0.022674816000000004,
+    "extra_return_queue_mux_control_mm2_assumed": 0.012,
+    "L30_extra_return_queue_total_mm2_assumed": 0.034674816000000004
+  },
+  "startup_model": {
+    "cold_first_response_cycles": "ActualROM/pool pipelineL + localexpansionstages(ifnotalreadyinL) + responseprotocol. Nativephasealignment0..7 additional cycles.",
+    "single_wave_extra_bubbles_upper_bound": "Perwave refillL plusphasealignment unless actual overlapproved; numberwaves=ceil(rows*groups/8).",
+    "conditional_firstuse_reads_per_cycle": 1,
+    "native_output_records_per_cycle_max": 1,
+    "TPOT_credit": null,
+    "why_not_done": "Bijective layoutandbankrecurrenceproved analytically; finitecontext and pipeline scheduling remains mapping contributor obligation."
+  },
+  "storage_scope": "Onlymappedexecutabletensors. Deferred/sourcearchive,derivedtables,config,anddedicatedservicecapacityremain unchanged."
+}

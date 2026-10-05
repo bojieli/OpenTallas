@@ -1,6 +1,10 @@
 # Codex handoff: route the Qwen ROM decode core with DEC_LA in context
 
 ## State
+- NOTE: main's earlier copy of the emitter (d4fc8c0dc, used by results/rtl/qwen_rom_core_takeover_20261005:
+  version "g", screens -64/-80 ps) is superseded by the final version merged here (bc6f91862 "h": one-hot registered
+  FIFO write strobes, kept issue copy for the argmax update; screens -45.6/-66.6 ps; proof/h exact). Re-run the takeover
+  route on this version.
 - The design is final for zero-latency techniques: tools/qwen_rom_core_dec_emit_w12.py (DEC_LA=1). Use it with
   SEQ_LA=1 (rtl/rom/ot_qwen_tp_seq_w12_vp.sv, routed and closed in results/rtl/qwen_dspark_closure_20261004).
 - Repaired SS screens: reg-to-reg -45.6 ps with VPOS=0 and -66.6 ps with VPOS=1. The screen is about 150 ps

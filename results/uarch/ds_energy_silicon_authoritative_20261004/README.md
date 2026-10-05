@@ -5,7 +5,7 @@
 > "ROM wins energy 1.6-2.3x" verdict is withdrawn. The regenerable replacement for both targets is
 > `results/arch/energy_silicon_measured/` (`tools/energy_silicon_measured.py`). Kept unchanged below as history.
 
-> **TAU SUPERSEDED (owner rule 2026-10-04).** `model.json`/the record is now composed at the third-party published tau (3.8879, `tools/third_party_tau.py`, `results/speculative/third_party_acceptance_20261004/`). Hand-written figures below that quote tau 4.159 are the superseded self-measured composition: scale MTP tok/s by 3.8879/4.159 = 0.9348 (and MTP J/token by its inverse); AR figures and ROM:HBM ratios are unchanged.
+> **TAU (owner decision 2026-10-05).** `model.json` is composed at tau 4.159, the owner 6-class workload blend (`results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json`, via `tools/third_party_tau.py`); the published V4.1 3.8879 is a sensitivity (`OT_TAU_SOURCE=third_party`). Hand-written figures below that quote tau 4.159 use the current default tau (other inputs may have moved since; `model.json` is authoritative); the 2026-10-04 note that scaled them to 3.8879 is withdrawn.
 
 Owner-requested model study. Replay: `python3 tools/ds_energy_silicon_authoritative.py` (writes `model.json`); `--check` prints the cross-checks.
 

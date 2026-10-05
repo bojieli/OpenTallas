@@ -31,7 +31,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/arch/energy_silicon_measured"
 SB_PATH = "results/arch/measured_scoreboard/scoreboard.json"
 PG_PATH = "results/rtl/rom_stage_power_gating_20261004/verdict.json"
-SPINE_PATH = "results/rtl/rom_stage_spine_gate_20261004/verdict.json"
+SPINE_PATH = "results/rtl/rom_stage_spine_gate_20261004/verdict.json"         # rejected (no CDC), history
+CDC_PATH = "results/rtl/rom_stage_spine_cdc_20261004/verdict.json"            # successor: synchronised crossings
 REG_PATH = "results/external/registry.json"
 INTEG_PATH = "results/uarch/hbm_accelerator_integration_20261004/model.json"
 RECHECK_PATH = "results/uarch/dsrom_c_recheck_20261004/model.json"
@@ -85,8 +86,25 @@ def element_power():
                residual=Term(pw["residual"], "measured", f"{PG_PATH} power_w.residual"),
                wake_ns=Term(v["wake"]["wake_ns"], "measured", f"{PG_PATH} wake.wake_ns"),
                exact=v["exactness"]["pass_"])
+    cp = ROOT / CDC_PATH
     sp = ROOT / SPINE_PATH
-    if sp.exists():
+    if cp.exists():
+        c = json.loads(cp.read_text())
+        ok = c.get("verdict", "").startswith("ADOPT")
+        st = "measured" if ok else "unvalidated"
+        k1 = c["power_w"]["stage_k1"]
+        n = c["power_w"]["decomposition"]["per_element_at_n"]["2417"]
+        out["spine"] = dict(
+            pg_idle=Term(k1["pg_idle"], st, f"{CDC_PATH} power_w.stage_k1.pg_idle (one-element stage, routed, gate level)"),
+            residual=Term(k1["residual"], st, f"{CDC_PATH} power_w.stage_k1.residual"),
+            pg_idle_ctl_shared=Term(n["pg_idle_w"], st, f"{CDC_PATH} power_w.decomposition.per_element_at_n['2417'].pg_idle_w",
+                                    "per element of a 2,417-element stage from the measured 1- and 4-element stages"),
+            residual_ctl_shared=Term(n["residual"], st, f"{CDC_PATH} power_w.decomposition.per_element_at_n['2417'].residual"),
+            pg_idle_ctl_aon_shared=Term(None, st, "superseded by the measured stage decomposition"),
+            residual_ctl_aon_shared=Term(None, st, "superseded by the measured stage decomposition"),
+            wake_ns=Term(c["wake"]["wake_ns"], st, f"{CDC_PATH} wake.wake_ns"),
+            verdict=c.get("verdict"))
+    elif sp.exists():
         s = json.loads(sp.read_text())
         ok = s.get("verdict", "").startswith("ADOPT")
         st = "measured" if ok else "unvalidated"
@@ -98,6 +116,13 @@ def element_power():
                                     "measured controller power divided over the stage's elements (one controller per stage)"),
             residual_ctl_shared=Term(s["power_w"].get("residual_spine_gated_controller_shared"), worst(st, "modelled"),
                                      f"{SPINE_PATH} power_w.residual_spine_gated_controller_shared"),
+            pg_idle_ctl_aon_shared=Term(s["power_w"].get("pg_idle_spine_gated_controller_and_aon_shared"),
+                                        worst(st, "modelled"),
+                                        f"{SPINE_PATH} power_w.pg_idle_spine_gated_controller_and_aon_shared",
+                                        "controller AND its always-on clock branch divided over the stage's elements"),
+            residual_ctl_aon_shared=Term(s["power_w"].get("residual_spine_gated_controller_and_aon_shared"),
+                                         worst(st, "modelled"),
+                                         f"{SPINE_PATH} power_w.residual_spine_gated_controller_and_aon_shared"),
             wake_ns=Term(s["wake"]["wake_ns"], st, f"{SPINE_PATH} wake.wake_ns"),
             verdict=s.get("verdict"))
     else:
@@ -190,6 +215,9 @@ def ds(get, reg, el, dram):
         if el["spine"]["pg_idle_ctl_shared"].value is not None:
             variants.append(("pg_spine_ctl_shared", el["spine"]["pg_idle_ctl_shared"], el["spine"]["residual_ctl_shared"],
                              el["spine"]["wake_ns"]))
+        if el["spine"]["pg_idle_ctl_aon_shared"].value is not None:
+            variants.append(("pg_spine_ctl_aon_shared", el["spine"]["pg_idle_ctl_aon_shared"],
+                             el["spine"]["residual_ctl_aon_shared"], el["spine"]["wake_ns"]))
     for name, ppg, res, wk in variants:
         fa = min(1.0, 1.0 / S + wk.value * 1e-3 / t_ar_us)
         unv = unv_common + [f"element residual {res.value:.4f} applied to the hub logic (ASSUMED transfer)",
@@ -260,14 +288,15 @@ def ds(get, reg, el, dram):
 # ---------------------------------------------------------------------------------------------------------------------
 def qwen(F, get, reg, dram):
     econ = load(ECON_PATH)["qwen_rom"]["energy"]
-    q_ar, q_ds = get("qwen_rom.ar_tok_s_8k_realmem"), get("qwen_rom.dspark_tok_s_8k")
+    q_ar, q_ds = get("qwen_rom.ar_tok_s_8k_stream4"), get("qwen_rom.dspark_tok_s_8k_stream4")
     q_static = Term(econ["static_w_total"], "modelled", f"{ECON_PATH} qwen_rom.energy.static_w_total (4 dies; ungated clock)")
     q_dyn = Term(round(econ["dynamic_mJ_per_token"] * 1e-3, 5), "modelled", f"{ECON_PATH} qwen_rom.energy.dynamic_mJ_per_token")
     integ = load(INTEG_PATH)["fairness"]
     qc = integ["qwen_ROM_option_C_area"]["central"]
     unv_q = ["Qwen ROM static 200 W and dynamic 76.6 mJ/token are the uarch model (no gate-level power of the Qwen ROM "
              "tile; the DS element measurement does not transfer: KV SRAM slice + split-tree node)",
-             "AR rate is the REAL_MEM one-stack KV path (STREAM4 not composed into a token)"]
+             "AR rate is the measured STREAM4 component composition; full36+head token remains separately required",
+             "Operating mode is plain AR; DSpark rows are off-mode sensitivity, not the selected operating mode"]
     rom = dict(design="Qwen3-8B ROM, TP4: 4 reticle dies, 4 HBM stacks a die (KV)",
                rates=dict(ar=q_ar.d(), dspark=q_ds.d()),
                silicon=silicon(4, get("qwen_rom.die_area_mm2"), qc["stacks"], dram),
@@ -341,7 +370,8 @@ def qwen(F, get, reg, dram):
 # ---------------------------------------------------------------------------------------------------------------------
 def iso(ref_name, ref_total, designs):
     """Every design replicated to the reference's total silicon (logic + DRAM + switches): batch-1 per-user rate is
-    unchanged, concurrent batch-1 users = replicas; per-user tok/s per 1,000 mm2 and per logic reticle."""
+    unchanged, concurrent batch-1 users = replicas. This is an independent batch-1 replication lower bound,
+    not a saturated large-batch throughput result; per-user tok/s per 1,000 mm2 and per logic reticle."""
     out = {}
     for name, (sil, rate, label) in designs.items():
         rep = ref_total / sil["total_mm2"]
@@ -350,7 +380,9 @@ def iso(ref_name, ref_total, designs):
                          replicas_at_ref_silicon=round(rep, 3), batch1_users_at_ref_silicon=round(rep, 2),
                          aggregate_b1_tok_s_integer_replicas=round(int(rep) * rate, 1),
                          aggregate_b1_tok_s_fractional=round(rep * rate, 1))
-    return dict(reference=ref_name, reference_total_mm2=ref_total, rows=out)
+    return dict(reference=ref_name, reference_total_mm2=ref_total,
+                aggregate_scope="Independent batch-1 replication lower bound; not saturated large-batch throughput",
+                rows=out)
 
 
 def ledger_fix():
@@ -379,8 +411,11 @@ def build():
     D = ds(get, reg, el, dram)
     Q = qwen(F, get, reg, dram)
     r, h, g = D["rom"], D["hbm_accel"], D["b200x8"]
-    best = "ar_b1_pg_spine_ctl_shared" if "ar_b1_pg_spine_ctl_shared" in r["power"] else (
-        "ar_b1_pg_spine" if "ar_b1_pg_spine" in r["power"] else "ar_b1_pg_measured")
+    sp_ok = bool(el["spine"]) and str(el["spine"]["verdict"]).startswith("ADOPT")
+    best = "ar_b1_pg_measured"
+    for k in ("ar_b1_pg_spine", "ar_b1_pg_spine_ctl_shared", "ar_b1_pg_spine_ctl_aon_shared"):
+        if sp_ok and k in r["power"]:
+            best = k                                      # only an adopted spine may determine the energy verdict
     bestm = best.replace("ar_b1", "mtp_b1")
     ds_cmp = dict(
         per_user_ar_rom_over_hbm=round(r["rates"]["ar"]["value"] / h["rates"]["ar"]["value"], 4),
@@ -392,7 +427,7 @@ def build():
         J_per_token_ar_hbm_no_switch_over_rom=dict(
             (k, round(h["power"]["ar_b1_no_switch"]["J_per_token"] / r["power"][k]["J_per_token"], 4))
             for k in r["power"] if k.startswith("ar_b1")),
-        best_rom_policy=best,
+        best_rom_policy=best, spine_adopted=sp_ok,
         iso_silicon=iso("DS ROM", r["silicon"]["total_mm2"], dict(
             rom_ar=(r["silicon"], r["rates"]["ar"]["value"], "AR"), rom_mtp=(r["silicon"], r["rates"]["mtp"]["value"], "MTP"),
             hbm_ar=(h["silicon"], h["rates"]["ar"]["value"], "AR"), hbm_mtp=(h["silicon"], h["rates"]["mtp"]["value"], "MTP"),
@@ -415,11 +450,20 @@ def build():
             h100_tp1_ar=(qg["h100_tp1"]["silicon"], qg["h100_tp1"]["rates"]["ar"]["value"], "AR"),
             h100_tp8_ar=(qg["h100_tp8"]["silicon"], qg["h100_tp8"]["rates"]["ar"]["value"], "AR"),
             b200_dflash=(qg["b200_dflash"]["silicon"], qg["b200_dflash"]["rates"]["spec"]["value"], "DFlash (published)"))))
+    failure_path = "results/rtl/rom_stage_spine_cdc_20261004/failure_E1/terminal.json"
+    current_spine = dict(status="pending", residual=None, energy_win_claim=False)
+    if (ROOT / failure_path).exists() and not (ROOT / CDC_PATH).exists():
+        current_spine.update(status="unknown: E1 global route failed; no final ODB or measured power",
+                             source=failure_path)
+    elif (ROOT / CDC_PATH).exists():
+        current_spine.update(status="adopted" if sp_ok else "unvalidated", source=CDC_PATH)
     return dict(schema="opentallas.arch.energy_silicon_measured.v1",
+                current_spine_measurement=current_spine,
                 supersedes="results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM "
                            "rate, ASSUMED 10% power-gating residual)",
                 inputs=dict(scoreboard=SB_PATH, scoreboard_commit=load(SB_PATH).get("generated_from_commit"),
-                            element_power=PG_PATH, spine=SPINE_PATH if (ROOT / SPINE_PATH).exists() else "pending",
+                            element_power=PG_PATH, spine=CDC_PATH if (ROOT / CDC_PATH).exists() else
+                            (SPINE_PATH if (ROOT / SPINE_PATH).exists() else "pending"),
                             registry=REG_PATH, integration=INTEG_PATH, recheck=RECHECK_PATH, economics=ECON_PATH),
                 status_rank=RANK, ledger_fix=ledger_fix(), deepseek_1m=D, deepseek_compare=ds_cmp, qwen_8k=Q, qwen_compare=q_cmp)
 
@@ -441,6 +485,8 @@ def readme(d):
          f"spine record `{d['inputs']['spine']}` and `{d['inputs']['registry']}`. Re-run it whenever the scoreboard "
          "or those records change; `--check` fails if this record is stale.", "",
          f"**Supersedes** {d['supersedes']}. Its \"ROM wins energy 1.6-2.3x\" verdict is withdrawn.", "",
+         "**Current spine PG:** " + d["current_spine_measurement"]["status"] +
+         ". No measured residual or energy-win credit is assigned to failed E1. Earlier PG/spine rows retain their historical provenance.", "",
          "Status of every row = its weakest term (measured < composed_from_measured < published < partial < modelled < "
          "assumed). The `unvalidated` list in the JSON names the terms that are not measured.", "",
          "## DeepSeek-V4.1 at 1M (batch 1)", "",
@@ -458,7 +504,8 @@ def readme(d):
           f"{el['wake_ns']['value']:.1f} ns." + (
               f" Gated spine: PG idle {sp['pg_idle']['value'] * 1e3:.3f} mW, residual {sp['residual']['value'] * 100:.2f}% "
               f"({sp['residual']['status']}; verdict {sp['verdict']})" + (
-                  f"; with one controller a stage {sp['residual_ctl_shared']['value'] * 100:.2f}%"
+                  f"; per element of a 2,417-element stage sharing one controller {sp['residual_ctl_shared']['value'] * 100:.2f}% "
+                  f"({sp['residual_ctl_shared']['src']})"
                   if sp.get('residual_ctl_shared') and sp['residual_ctl_shared']['value'] is not None else "") + "."
               if sp else " Gated spine: pending (results/rtl/rom_stage_spine_gate_20261004)."),
           f"Idle window at 1M: token {fmt(r['idle_window_1m']['token_us'], 1)} us, stage window "
@@ -471,6 +518,7 @@ def readme(d):
     for k, v in dc["J_per_token_mtp_hbm_over_rom"].items():
         L.append(f"- MTP, ROM {k}: {v:.3f}")
     L += ["", "### Equal total silicon (logic + HBM DRAM at 1,089 mm2 a stack + switch chips), DS ROM as reference", "",
+          dc["iso_silicon"]["aggregate_scope"] + ".", "",
           "| Design | Rate | Per-user tok/s | Total mm2 | Per-user tok/s per 1,000 mm2 | Replicas at ROM silicon | Batch-1 aggregate (integer replicas) |",
           "|---|---|---:|---:|---:|---:|---:|"]
     for k, v in dc["iso_silicon"]["rows"].items():
@@ -495,6 +543,7 @@ def readme(d):
     L += ["", f"Per-user AR: ROM / HBM TP4 = {qc['per_user_ar_rom_over_hbm_tp4']:.3f}; ROM / 1x H100 = "
           f"{qc['per_user_ar_rom_over_h100_tp1']:.2f}; ROM / 8x H100 TP8 = {qc['per_user_ar_rom_over_h100_tp8']:.2f}.", "",
           "### Equal total silicon, Qwen ROM as reference", "",
+          qc["iso_silicon"]["aggregate_scope"] + ".", "",
           "| Design | Rate | Per-user tok/s | Logic dies (reticles) | Total mm2 | Per-user tok/s per 1,000 mm2 | Replicas at ROM silicon | Batch-1 aggregate (integer replicas) |",
           "|---|---|---:|---:|---:|---:|---:|---:|"]
     for k, v in qc["iso_silicon"]["rows"].items():
@@ -538,7 +587,8 @@ def verdict_lines(d):
     out.append(f"- **DS, energy at batch 1 (AR):** ROM with the measured {r['element']['residual']['value'] * 100:.1f}% residual {pm['J_per_token']:.2f} J/token "
                f"against HBM {h['power']['ar_b1']['J_per_token']:.2f} (switch charged): HBM/ROM = {ratio_m:.2f} ({win(ratio_m)})"
                + ("" if best == "ar_b1_pg_measured" else
-                  f"; with the gated spine ({best}) ROM {rb['J_per_token']:.2f} J/token, HBM/ROM = {ratio_b:.2f} ({win(ratio_b)})")
+                  f"; with the gated spine ({best}, " + ("ADOPTED" if dc["spine_adopted"] else "UNVALIDATED: spine REJECTED physically")
+                  + f") ROM {rb['J_per_token']:.2f} J/token, HBM/ROM = {ratio_b:.2f} ({win(ratio_b)})")
                + f". Without the switch charge HBM/ROM = {dc['J_per_token_ar_hbm_no_switch_over_rom']['ar_b1_pg_measured']:.2f}.")
     out.append(f"- **DS, energy MTP:** HBM/ROM = {dc['J_per_token_mtp_hbm_over_rom']['mtp_b1_pg_measured']:.2f} (measured "
                "residual)" + ("" if best == "ar_b1_pg_measured" else

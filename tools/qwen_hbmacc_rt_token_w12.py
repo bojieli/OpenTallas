@@ -42,10 +42,11 @@ DIE_SV = RR / "ot_qwen_hbmacc_rt_die_w12.sv"
 HOST = RR / "qwen_hbmacc_rt_w12.cpp"
 WST_RTL = [ROOT / "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv", ROOT / "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv"]
 DIE_RTL = [p for p in BASE.DIE_RTL if p.name != "ot_qwen_rom_rt_die_w12.sv"] + [DIE_SV]
+SPINE_H = ROOT / "rtl/hdc/ot_qwen_me_spine_h_w12.sv"   # --spine-h: the hierarchical spine successor
 SOURCES = sorted(set([*DIE_RTL, *BASE.TILE_RTL, *BASE.COLL_RTL, *WST_RTL, C.ISA_SVH, ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv",
                       HOST, BASE.RT / "qwen_rt_matvec.hpp", BASE.RT / "qwen_rt_memory.hpp", Path(__file__),
                       ROOT / "tools/qwen_rom_rt_token_w12.py", ROOT / "tools/qwen_rom_rt_core_emit_w12.py",
-                      ROOT / "tools/qwen_rom_arithmetic_contract_w12.py"]))
+                      ROOT / "tools/qwen_rom_arithmetic_contract_w12.py", SPINE_H]))
 WORD_BYTES = 6144 * 16          # one engine code word = one stream word
 MIB = 1 << 20
 
@@ -75,10 +76,13 @@ def stage_segments(name: str, layout: list, head_words: int, kv_words: int):
     return segs
 
 
-def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_words=0):
+def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_words=0, spread=False):
     """Returns (plan text, summary).  Kinds: 1 HBM code, 2 SRAM code, 3 KV (HBM).  sram_words: per-die budget
     for code words beyond the lm_head, given to the token's leading code words in order (layer 0 first) --
-    the layer index decides, so a single-stage job of layer n reproduces the full token's assignment."""
+    the layer index decides, so a single-stage job of layer n reproduces the full token's assignment.
+    spread=True (opt-in, --sram-spread): the same budget split evenly over the 36 layers instead (layer n gets
+    sram_words // 36, plus one for n < sram_words % 36), each layer's share being its leading code words, so every
+    layer streams most of its words and its SRAM part overlaps the stream."""
     lines, summary = [], []
     sidx = 0
     # SRAM assignment by absolute token order: layers 0..35 x code words
@@ -92,6 +96,8 @@ def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_wor
             n = int(name[1:])
             before = n * per_layer            # code words of earlier layers in token order
             left = max(0, sram_words - before)
+            if spread:
+                left = min(per_layer, sram_words // 36 + (1 if n < sram_words % 36 else 0))
             for nm, base, ln in stage_segments(name, layout, head_words, kv_words):
                 if nm == "KV":
                     segs.append((0, ln, sidx, 3)); sidx += ln; hbm_w += ln
@@ -112,7 +118,7 @@ def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_wor
 def build(args, out: Path, steps: list):
     G, NW = args.groups, args.count_width
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([args.verilator, "-V"], text=True)).group(1)
-    arithmetic = arithmetic_flags(False)
+    arithmetic = arithmetic_flags(args.arith_target)
 
     def run(name, cmd):
         t0 = time.monotonic()
@@ -126,7 +132,12 @@ def build(args, out: Path, steps: list):
     gen = out / "gen"
     gen.mkdir(exist_ok=True)
     core_sv = gen / "ot_qwen_rom_core.sv"
-    core_sv.write_text(qwen_rom_rt_core_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text()))
+    core_text = qwen_rom_rt_core_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text())
+    if args.spine_h:
+        if core_text.count("ot_qwen_me_spine_w12 #(") != 1:
+            raise SystemExit("spine instance anchor")
+        core_text = core_text.replace("ot_qwen_me_spine_w12 #(", f"ot_qwen_me_spine_h_w12 #(.SCALE_LAT({args.scale_lat}), ")
+    core_sv.write_text(core_text)
     vs_sv = gen / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))
     hier = gen / "hier.vlt"
@@ -135,10 +146,12 @@ def build(args, out: Path, steps: list):
     spine = [f"-GSMIN={args.smin}", f"-GSMAX={args.smax}", f"-GTCUT={args.tcut}", f"-GBD={args.bd}",
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     models = [
-        ("die", "ot_qwen_hbmacc_rt_die_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
+        ("die", "ot_qwen_hbmacc_rt_die_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL),
+                                              *([str(SPINE_H), str(ROOT / "rtl/hdc/ot_hdc_fp32_mul_lat.sv")] if args.spine_h else [])],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}",
-          f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GLAGW={args.lagw}", *spine, *arithmetic]),
+          f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GLAGW={args.lagw}", *spine, *arithmetic,
+          *([f"-DOT_SPINE_H_SCALE_LAT={args.scale_lat}"] if args.spine_h else [])]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, BASE.COLL_RTL), *map(str, C.PIPES), *map(str, BASE.TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic_w12", [*map(str, BASE.TILE_RTL)],
@@ -204,6 +217,13 @@ def main() -> None:
     ap.add_argument("--coll-lat", type=int, default=11)
     ap.add_argument("--coll-depth", type=int, default=16)
     ap.add_argument("--enable-ar256", action="store_true")
+    ap.add_argument("--arith-target", action="store_true",
+                    help="1.2 GHz ME arithmetic (tools/qwen_rom_arithmetic_contract_w12.py TARGET: ACC/TREE_LAT 7, MUL_LAT 6, "
+                         "FAST_ISSUE 1, KV_PREP 3) on the die and tile models; default off")
+    ap.add_argument("--spine-h", action="store_true",
+                    help="the die core's ME spine is ot_qwen_me_spine_h_w12 (hierarchical successor); default off")
+    ap.add_argument("--scale-lat", type=int, choices=(5, 6), default=6,
+                    help="--spine-h post-scale multiplier latency (6: ot_hdc_fp32_mul_lat, closes at SS)")
     # HA8 memory system
     ap.add_argument("--stacks", type=int, default=4, help="HBM stacks per die")
     ap.add_argument("--ref-mode", type=int, choices=(0, 1), default=1)
@@ -212,6 +232,8 @@ def main() -> None:
     ap.add_argument("--cred", type=int, default=32)
     ap.add_argument("--sram-mib", type=float, default=None,
                     help="die SRAM for weights (MiB per die); default: design point (a) 842 MiB / 2 dies, (b) 1,686 / 4")
+    ap.add_argument("--sram-spread", action="store_true",
+                    help="opt-in: split the layer SRAM budget evenly over the 36 layers (default: leading layers)")
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--threads", type=int, default=8)
     ap.add_argument("--build-only", action="store_true")
@@ -248,7 +270,8 @@ def main() -> None:
     sram_mib = args.sram_mib if args.sram_mib is not None else (842.0 / 2 if args.tp == 2 else 1686.0 / 4)
     head_bytes = head_words * WORD_BYTES
     sram_words = max(0, int((sram_mib * MIB - head_bytes - args.winw * WORD_BYTES) // WORD_BYTES))
-    plan_text, plan_summary, total = make_plan([s[0] for s in stages], layout, head_words, kv_words, sram_words)
+    plan_text, plan_summary, total = make_plan([s[0] for s in stages], layout, head_words, kv_words, sram_words,
+                                                spread=args.sram_spread)
     (out / "plan.txt").write_text(plan_text)
     env = dict(os.environ, RT_THREADS=str(args.threads))
     cmd = [str(binary), "--stages", str(args.stages), str(out), str(args.preload), "--plan", str(out / "plan.txt"),
@@ -296,10 +319,11 @@ def main() -> None:
                          "smin": args.smin, "smax": args.smax, "tcut": args.tcut, "bd": args.bd, "xvm": args.xvm,
                          "nws": args.nws, "tws": args.tws, "ord": args.ord, "mem_extra": args.mem_extra,
                          "code_banks": args.code_banks, "coll_lat": args.coll_lat, "coll_depth": args.coll_depth,
-                         "ar256": bool(args.enable_ar256)},
+                         "ar256": bool(args.enable_ar256), "arith_target": bool(args.arith_target),
+                         "spine_h": bool(args.spine_h), "scale_lat": args.scale_lat if args.spine_h else 5},
         "memory_system": {"stacks_per_die": args.stacks, "ref_mode": args.ref_mode, "window_words": args.winw,
                           "window_mib": round(args.winw * WORD_BYTES / MIB, 2), "lag_words": args.lagw, "cred": args.cred,
-                          "sram_mib_per_die": sram_mib, "sram_code_words_beyond_head": sram_words, "head_words": head_words,
+                          "sram_mib_per_die": sram_mib, "sram_code_words_beyond_head": sram_words, "sram_spread": args.sram_spread, "head_words": head_words,
                           "kv_words_per_layer": kv_words, "stream_words": total, "preroll_ctl_cycles": args.preroll,
                           "core_clock_ps": 833.333, "hbm_ctl_clock_ps": 1024},
         "position": args.pos, "token_in": args.token, "stages_run": [s[0] for s in stages], "plan": plan_summary,

@@ -1,0 +1,168 @@
+{
+  "schema": "opentallas.pcwb.actual_parent_prebuild.v1",
+  "sources": {
+    "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv": "baeca01c84a454ab5c819d2c5612877a3bf257cb38c398a54059243059733009",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+    "tools/uarch_model.py": "dbad8bf8acad9a4979072aaaf577828a5d05c104d231be00dc475c74b6ab1451"
+  },
+  "selected_top": "ot_hbm_accel_pcwb_service_stack",
+  "ENABLE_default": 0,
+  "CMD_MATCH_CUT_default": 0,
+  "owners": {
+    "parent": "Euclid",
+    "controller_leaf": "Bacon",
+    "model_and_CA": "Sagan",
+    "prepaid_column_visibility_adapter": "Euclid",
+    "source_list_helper": "Rawls"
+  },
+  "clocks": {
+    "service_input": "service_clk",
+    "service_period_ps": 1024,
+    "core_input": "core_clk",
+    "core_period_ps": 833.333,
+    "service_source": "Explicit uniform clock input; donor DS functional master uses hclk #512. Physical PLL/distribution is not installed/qualified.",
+    "prohibited": "Do not use Qwen fractional ~clk & tick or average1024. No live P0 edit.",
+    "source_model": "tools/hbm_accel_service_context_model.py already prices 1024/833 domains",
+    "logic_route_target_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "whole_service_1p2GHz_closed": false
+  },
+  "CA": {
+    "channels": 16,
+    "PCs": 32,
+    "requests_per_channel_per_service_edge": 1,
+    "arbitration": "Existing paired-PC parity schedule, actual ca_ready[channel] and request; suppress/fault simultaneous or wrong-parity requests.",
+    "command_bits_per_channel": 28,
+    "total_command_bits_per_edge": 448,
+    "queue_bits": 0,
+    "extra_pipeline_edges": 0,
+    "stall_cost": "Each rejected slot costs at least2 service edges until that PC next owns slot; refresh refusal is a real fault, not hidden/retried PASS."
+  },
+  "column": {
+    "record_fields": {
+      "write": 1,
+      "write_slot": 3,
+      "bank": 5,
+      "row": 19,
+      "column": 5,
+      "data": 256
+    },
+    "record_bits": 289,
+    "queue_depth_per_PC": 72,
+    "reserved_read_slots_per_PC": 64,
+    "reserved_write_slots_per_PC": 8,
+    "issued_per_PC_per_edge_max": 1,
+    "bytes_per_service_edge_peak": 1024,
+    "peak_Bps": 1000000000000.0,
+    "PHY_output": "col_valid/ready FIFO; data pop only actualPHYacceptance; controller col_valid cannot be gated after internal issue.",
+    "read_prepaid": "CRED64 credits cover queued+PHYinflight+landing64+consumer. Return only CDC rd_freed after actual core consumption.",
+    "write_prepaid": "8 total write leases/PC cover controller WQ8+column queued+PHYinflight+visible-not-returned. Forward wq only after free lease reservation.",
+    "bytes_per_command_boundary": 36.125,
+    "queue_area_included": true,
+    "installed_FIFO_macros": null,
+    "partial_target_only": "No full rank/source-native read identity qualification from this raw stream parent."
+  },
+  "write": {
+    "context_fields": {
+      "operation": 64,
+      "phase": 32,
+      "physical_rank": 7,
+      "stack": 2
+    },
+    "receipt_fields": {
+      "operation": 64,
+      "phase": 32,
+      "sector": 34,
+      "generation": 32,
+      "slot": 3,
+      "pc": 5,
+      "bank": 5,
+      "row": 19,
+      "column": 5
+    },
+    "receipt_bits": 199,
+    "pending_fields": {
+      "receipt": 199,
+      "data": 256,
+      "state": 3
+    },
+    "pending_bits": 458,
+    "coded_shadow_bits": 576,
+    "controller_WQ8_order": "Bind oldest not-issued retained write at actual WRissue; validate PC/bank/row/col/data before marking issued.",
+    "visibility": "Real PHY/CWL/burst/backing-store commit returns entire held tuple. Validate statePHYaccepted and complete tuple; state3 encodes FREE/QUEUED/CONTROLLERissued/PHYaccepted/VISIBLE. No age timer/WRissue ACK.",
+    "retirement": "Release lease only matched visible receipt actually accepted by writer. Keep posted debt during output stalls.",
+    "fences": "writer row emission idle AND all posted writes visible/accepted AND allPC WQempty AND no queued/inflight output; real readback descriptor held until fence.",
+    "reset": "Cold POR only; no local reset that clears externally accepted PHY debt.",
+    "generation": "Actual provider/frame irs_serial32; no synthetic/local/default generation. Missing owner/generation refuses admission; no slot reuse until matched return.",
+    "reserved_lease_capacity": 256,
+    "metadata_comparison_bits_per_stack": 50944
+  },
+  "costs": {
+    "added_FF_inventory": {
+      "ca_phase_and_sticky": 2,
+      "stack_context": 105,
+      "phy_column_payload": 665856,
+      "phy_column_control": 672,
+      "retained_write_raw": 117248,
+      "retained_write_coded_shadow": 147456,
+      "write_order_controls": 320,
+      "parent_sticky": 1
+    },
+    "added_FF_bits": 931660,
+    "FF_cell_um2": 271672.05600000004,
+    "mux_onebit_2to1_equivalents": 701632,
+    "compare_bits": 50944,
+    "logic_NAND2_equivalents_estimate": 3117696,
+    "logic_area_estimate_um2": 272736.04608,
+    "cell_area_estimate_um2": 544408.1020800001,
+    "placement_reservation_um2_50pct": 1088816.2041600002,
+    "reused_read_landing_payload_bits": 524288,
+    "reused_read_landing_control_bits": 2016,
+    "clock_tree_power_grid_protection_decode_route_extra_um2": null,
+    "tracks_CA": 448,
+    "tracks_column": 9248,
+    "tracks_matched_visibility": 6368,
+    "actual_channel_capacity": null,
+    "slot_fit": null,
+    "no_physical_FIFO_or_fullarray_instantiation_authorized": true
+  },
+  "calendar": {
+    "no_new_CMD1_leaf_edges": true,
+    "CA_added_edges": 0,
+    "prepaid_PHY_FIFO_min_edges": 1,
+    "command_queue_wait_upper_if_PHY_blackout_ns": null,
+    "read_added_parent_lower_ns": 1.024,
+    "return_CDC_lower_ns": 4.547999,
+    "donor_WRITE_issue_to_real_visibility_ns": 27.274,
+    "fence_lower_after_last_WRissue_ns": 28.298000000000002,
+    "readback_ready_edge": "Only after visibility accepted and fence registered; no inter-op free overlap.",
+    "DS_writer_actual_source_bound": {
+      "window_rows40_sectors_each17": 680,
+      "compressed_rows8_sectors_each9": 72,
+      "index_keys8_max_sectors_each3": 24,
+      "total_die_sectors_upper": 776,
+      "writer_rows_upper": 56,
+      "serialized_row_mapper_minimum_service_edges": 112,
+      "write_emit_only_lower_ns": 794.624,
+      "die_serial_writer_envelope_ns": 937.61,
+      "scope": "Conservative die sum; stack filter/rank ownership excludes some sectors. Not composed token latency."
+    },
+    "Qwen_full_token_count": null,
+    "DS_full_token_stall_exposure": null,
+    "full_token_native_calendar": "MANDATORY_OPEN; no transfer from per-stack lower bounds to measured headline."
+  },
+  "MACs_per_cycle": 0,
+  "replicas": {
+    "per_stack": 32,
+    "per_DS_rank_stacks": 4,
+    "full_target_binding_not_adopted": true
+  },
+  "build_selection": "Bounded C/A and finite per-PC adapter source are sized. Full stack hardware growth requires installed physical queue/slot and actual clock-source context.",
+  "current_memory_composition": "MANDATORY_OPEN",
+  "adopted": false,
+  "exactness": false,
+  "SS_FF_in_context": false
+}

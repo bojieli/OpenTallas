@@ -1,0 +1,118 @@
+{
+  "verdict": "PHYSICAL_ATTEMPT_FAILED",
+  "reason": "GPL-0305 gradient descent invalid step length (Inf or NaN)",
+  "adopted": false,
+  "architecture_or_frame_impossibility": false,
+  "SS_FF_status": "NOT_RUN_FLOW_FAILED",
+  "route_exit": 2,
+  "failed_stage": "3_3_place_gp",
+  "error_location": "global_place.tcl:69",
+  "elapsed_stage_seconds": 2809.72,
+  "peak_memory_reported_KB": 4508972,
+  "final_iteration": 8490,
+  "last_overflow": 0.1559,
+  "last_phi": 8.61e+31,
+  "area": {
+    "original_um2": 4236.66,
+    "routability_artificial_inflation_um2": 18165.52,
+    "routability_artificial_inflation_percent": 428.77,
+    "timing_driven_delta_um2": -982.36,
+    "timing_driven_delta_percent": -23.19,
+    "final_placement_um2": 21419.82,
+    "final_placement_delta_percent": 405.58
+  },
+  "constraints": {
+    "period_ps": 833.333333,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "isolated_IO_max_ps": 120,
+    "isolated_IO_min_ps": 0,
+    "output_load_fF": 0.558822,
+    "die_um": [
+      864,
+      673.92
+    ],
+    "core_um": [
+      8.64,
+      8.64,
+      855.36,
+      665.28
+    ],
+    "place_density": 0.55,
+    "NUM_CORES": 16,
+    "wall_time_cap": null,
+    "address_space_cap": null
+  },
+  "source": {
+    "wrapper_main": "3379692178c522e452d7d7e484ef95361b013978",
+    "physical_helper_main": "d61f0f796797d02a01ddd94949fa4d13bd968af0",
+    "remote_source_snapshot": "eace0fe70dc9f5af14acdc4aac96d5a74f5522a0",
+    "snapshot_lineage": "Explicit copy of frozen wrapper, leaf/pipeline, macro views and Kant hooks; not Git ancestry",
+    "banklocal_leaf_sha256": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
+    "pipeline_sha256": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",
+    "mapped_netlist_sha256": "f3384e57ec7fc23182b3ec59d017b6d6cbee2783626ddea91d935088ca1596b3",
+    "Kant_slot_main": "759205d6acbef7a723bea8b80d45f351fa9b5085",
+    "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+  },
+  "actual_completed": [
+    "20 macro placements",
+    "3439 boundary pin placement",
+    "ten exclusive regions of 288 actual capture FFs",
+    "tapcell",
+    "PDN",
+    "3_2_place_iop.odb"
+  ],
+  "not_produced": [
+    "CTS",
+    "global routing",
+    "detailed routing",
+    "6_final.odb",
+    "SPEF",
+    "extracted SS/FF closure"
+  ],
+  "live_workers": [],
+  "supervisor_last": 1027781,
+  "OpenROAD_last": 1157373,
+  "host": "ot-epyc1tb",
+  "job": "/srv/opentallas-scratch/codex/pauli-code-banklocal-route-337969217-r1",
+  "failed_odb": {
+    "path": "/srv/opentallas-scratch/codex/pauli-code-banklocal-route-337969217-r1/orfs/results/asap7/pauli_code_banklocal_ascending_337969_r1/base/3_3_place_gp-failed.odb",
+    "sha256": "4f8400abe675e7131ff80d61fa61980a534c915d4d67c29c79661abd040b0a01",
+    "retained_remote": true
+  },
+  "retained_objects": [
+    "mapped.v",
+    "mapped.json",
+    "1_synth.odb",
+    "2_1_floorplan.odb",
+    "2_2_floorplan_macro.odb",
+    "2_4_floorplan_pdn.odb",
+    "3_2_place_iop.odb",
+    "3_3_place_gp-failed.odb"
+  ],
+  "initial_tool_failures_preserved": [
+    "prelaunch_bind_error.log",
+    "orfs/prelaunch_make_dependency.log",
+    "orfs/floorplan_region_api_failure.log",
+    "orfs/route_make_sdc_failure.log"
+  ],
+  "working_API_patch": {
+    "before": "$group setRegion $region",
+    "after": "$region addGroup $group",
+    "helper": "/srv/opentallas-scratch/codex/pauli-code-banklocal-route-337969217-r1/launcher_side_effect_compat.py",
+    "helper_sha256": "eef0e7dced84ea7b0c4740deed137580fb25536d5e06f9112eea87e03f1151bb",
+    "actual_region_and_macro_stage_completed": true
+  },
+  "peer_comparison": "Kant reverse-bank attempt: same GPL-0305 failure family, main9717c90f75bdc2d180af2d72391b0bfcad563d46; not architectural impossibility",
+  "next_owner": "Claude physical owner",
+  "next_action": "Diagnose actual numerical cone/geometry using retained failed placement and completed ODBs. No blind density/frame/clock rescue or new RTL.",
+  "cleanup": "Remove only clean finished local Pauli WT after merge; remote source/helper/mapped/ODB dependencies retained for Erdos/Claude.",
+  "collected_at": "2026-10-05T08:41:06.006251+00:00",
+  "evidence_sha256": {
+    "config.mk": "cb73bbbd9ffb332966def82a93447d428987fb24e0283cf073e7ee73bae5928e",
+    "route.log": "0e029d578363f1578a0d7f2127ab723c21f01a2456f77cd33a5e5b08fdab1dd0",
+    "route.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "constraint.sdc": "c9ec0b920fedf2d9f6c5e18ef4c91c81c39d4fc0400d15b1118ea86c1cf0d6ca",
+    "route_manifest.json": "3f79ced05cdd9941f62686f262ee1b11306df5f8405aef58aed36e0581262fdf"
+  }
+}
