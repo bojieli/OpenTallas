@@ -2,7 +2,7 @@
 """Writes inventory.json: every HBM-accelerator RTL block on the token path, its measured fmax evidence at
 the 1.2 GHz sign-off (0.833 ns, SS setup +60 ps, FF hold +25 ps) and closed / open / never-measured status.
 Rows are transcribed from committed records (paths given per row); status is re-derived from the numbers."""
-import json, pathlib
+import hashlib, json, pathlib
 P = 0.833
 def r(module, design, family, status, evidence, ss_r2r=None, ff=None, period=None, kind=None, note="", owner=None):
     d = dict(module=module, design=design, family=family, status=status, evidence=evidence,
@@ -103,6 +103,35 @@ if spec_path.exists():
                source_pins=spec["source_pins"], ss_worst_slack_ps=spec["SS_worst_ps"],
                cycle_delta=0, complete_accelerator_qualified=False)
     rows.append(row)
+
+# Actual source-selected Qwen tile routes: terminal completion is not sign-off.
+# Keep original baseline rows and all historical failures; enroll these variants
+# from Nash's committed summary without a new route, replay or source change.
+tile_path = pathlib.Path(__file__).parent / "qwen_me/tile_failures_r1.json"
+if tile_path.exists():
+    tile_book = json.loads(tile_path.read_text())
+    evidence = "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/tile_failures_r1.json"
+    for item in tile_book["records"]:
+        row = r("ot_qwen_rom_tile_logic_w12 " + item["case"] + " (source-selected)",
+                "Q", "qwen-me", "failed_variant", evidence,
+                item["setup_ss"]["worst_register_d_slack_ps"],
+                item["hold_ff"]["worst_register_d_slack_ps"], P, "routed",
+                "Terminal FAIL/NOADOPT under SS60/FF25; standalone false-path IO, "
+                "enclosing boundary unqualified. No new source cut or clock/latency credit. "
+                + item["worst_cone_source_semantics"], owner="Claude (source-cone diagnosis); Nash (qme)")
+        row.update(canonical_module="ot_qwen_rom_tile_logic_w12", case=item["case"],
+                   parameters=item["parameters"], source_pins=item["source_pins"],
+                   evidence_sha256=hashlib.sha256(tile_path.read_bytes()).hexdigest(),
+                   route_exit=item["process_exit"], corner_exit=item["corner_exit"],
+                   closes_signoff=item["closes_signoff"], adopted=False,
+                   DRV=item["DRV"], drc=item["drc"], antenna=item["antenna"],
+                   mapped_area=item["mapped_area"], context_latency=item["context_latency"],
+                   worst_cones=item["worst_cones"], standalone_false_path_io=True,
+                   complete_accelerator_qualified=False,
+                   correctness_binding="Nash reports tile ot_qwen_w12_bmul, port ot_hdc_fp32_mul_lat; "
+                   "neither is suspect ot_hdc_fp32_mul_f12_l6. Correctness hold remains; "
+                   "no new dispatch/reproof or confirmed affected owned heavy job.")
+        rows.append(row)
 
 limiter = {
  "as_built_sm_clock_ghz": 0.5897,

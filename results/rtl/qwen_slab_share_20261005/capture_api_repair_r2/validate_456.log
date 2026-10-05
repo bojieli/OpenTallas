@@ -1,0 +1,27 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO MPL-0035] Macro g_col\[0\].g_bank\[0\].u_rom placed. Bounding box (37.800um, 30.240um), (159.624um, 93.150um). Orientation R0
+[INFO MPL-0035] Macro g_col\[0\].g_bank\[1\].u_rom placed. Bounding box (37.800um, 123.120um), (159.624um, 186.030um). Orientation R0
+[INFO MPL-0035] Macro g_col\[0\].g_bank\[2\].u_rom placed. Bounding box (37.800um, 267.840um), (159.624um, 330.750um). Orientation R0
+[INFO MPL-0035] Macro g_col\[0\].g_bank\[3\].u_rom placed. Bounding box (37.800um, 360.720um), (159.624um, 423.630um). Orientation R0
+[INFO MPL-0035] Macro g_col\[1\].g_bank\[0\].u_rom placed. Bounding box (231.120um, 30.240um), (352.944um, 93.150um). Orientation R0
+[INFO MPL-0035] Macro g_col\[1\].g_bank\[1\].u_rom placed. Bounding box (231.120um, 123.120um), (352.944um, 186.030um). Orientation R0
+[INFO MPL-0035] Macro g_col\[1\].g_bank\[2\].u_rom placed. Bounding box (231.120um, 267.840um), (352.944um, 330.750um). Orientation R0
+[INFO MPL-0035] Macro g_col\[1\].g_bank\[3\].u_rom placed. Bounding box (231.120um, 360.720um), (352.944um, 423.630um). Orientation R0
+[INFO MPL-0035] Macro g_col\[2\].g_bank\[0\].u_rom placed. Bounding box (424.440um, 30.240um), (546.264um, 93.150um). Orientation R0
+[INFO MPL-0035] Macro g_col\[2\].g_bank\[1\].u_rom placed. Bounding box (424.440um, 123.120um), (546.264um, 186.030um). Orientation R0
+[INFO MPL-0035] Macro g_col\[2\].g_bank\[2\].u_rom placed. Bounding box (424.440um, 267.840um), (546.264um, 330.750um). Orientation R0
+[INFO MPL-0035] Macro g_col\[2\].g_bank\[3\].u_rom placed. Bounding box (424.440um, 360.720um), (546.264um, 423.630um). Orientation R0
+[INFO MPL-0035] Macro g_col\[3\].g_bank\[0\].u_rom placed. Bounding box (617.760um, 30.240um), (739.584um, 93.150um). Orientation R0
+[INFO MPL-0035] Macro g_col\[3\].g_bank\[1\].u_rom placed. Bounding box (617.760um, 123.120um), (739.584um, 186.030um). Orientation R0
+[INFO MPL-0035] Macro g_col\[3\].g_bank\[2\].u_rom placed. Bounding box (617.760um, 267.840um), (739.584um, 330.750um). Orientation R0
+[INFO MPL-0035] Macro g_col\[3\].g_bank\[3\].u_rom placed. Bounding box (617.760um, 360.720um), (739.584um, 423.630um). Orientation R0
+ITEM7_CAPTURE_GROUPS 4 FF_ENDPOINTS 512
+CAPTURE_API_GROUP 0 TYPE EXCLUSIVE FF 128
+CAPTURE_API_GROUP 1 TYPE EXCLUSIVE FF 128
+CAPTURE_API_GROUP 2 TYPE EXCLUSIVE FF 128
+CAPTURE_API_GROUP 3 TYPE EXCLUSIVE FF 128
+CAPTURE_API_MEMBERSHIP_PASS 4 EXCLUSIVE_GROUPS 512 UNIQUE_FF

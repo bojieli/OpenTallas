@@ -1075,6 +1075,57 @@ def dsrom_reindex_kc7_model():
         admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
 
 
+def dsrom_reindex_kc8_model():
+    """Claude's cycle-identical structural repair, priced before its sole route."""
+    # 6 kept WB128 copies plus 8 grouped room flags. No removed-cell credit:
+    # the old room_all flop may disappear, but mapping determines that debit.
+    copies, room = 6 * 128, 8
+    ff = copies + room
+    nand2 = copies * 4 + room * 4 + (8 * 7 + 7) * 2 + 64
+    gross = round(ff * 0.37908 + nand2 * 0.08748, 8)
+    parent, cap = 35166.3, 37452.2
+    return dict(
+        schema="opentallas.dsrom-reindex.kc8-model.v1", selected=False,
+        default_enabled=False, source_commit="0b598c6dbf8136463dc11b65373b5f84039fe4c0",
+        parent="kc7 terminal FAIL; measured same-context cells, not a die net debit",
+        dimensions=dsrom_reindex_kc7_model()["dimensions"],
+        mechanism=["8 registered local AND8 room groups; AND8 dispatch join at same edge",
+                   "3 kept write-enable copies per lane: metadata31/code32/scale32 loads"],
+        compute=dict(new_macs_per_cycle=0, new_rounding_points=0),
+        state=dict(gross_added_ff=ff, kept_copy_ff=copies, grouped_room_ff=room,
+                   gross_added_clock_sinks=ff, removed_room_all_credit=0,
+                   room_reset_set_loads=8, copied_enable_reset="rst_n in synchronous D predicate",
+                   accepted_debt_reset_semantics="unchanged"),
+        timing=dict(new_edges=0, new_cdc=0, per_user_latency_delta_cycles=0,
+                    actual_existing_gate_cases=20, actual_worst_cycles=738,
+                    conditional_833ps_us=0.614754, period_ps=833,
+                    SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+                    ready_external_budget_ps=166.6, original_max_and_min_groups_required=True,
+                    dispatch_added_combinational_AND_inputs=8, SS_FF_closed=False,
+                    slew_margin_percent=20, acceptance_slew_limit_ps=320, hold_margin_ps=8),
+        ports=dsrom_reindex_kc7_model()["ports"],
+        replicas=dict(controls_per_stack=1, stacks_per_rank=4, ranks=4,
+                      kept_enable_copies_per_lane=3, lanes=2, room_groups=8,
+                      FIFOs_per_room_group=8, no_new_memory_ports=True),
+        construction=dict(gross_ff_um2=round(ff*0.37908,8),
+                          decode_D_reset_allowance_nand2=copies*4+room*4+64,
+                          local_AND_and_join_nand2=(8*7+7)*2,
+                          gross_nand2_equivalents=nand2, gross_extra_um2=gross,
+                          footprint_basis="0.37908um2 FF and 0.08748um2 NAND2; footprint only, no TT delay transfer",
+                          conservative_decode_allowance="4 NAND2 per copied bit, no shared-decode or removed-logic credit",
+                          mapped_buffers_clock_tree_and_net_delta_um2=None),
+        slot=dict(core_um2=93630.5, max_cell_fraction=0.40, max_cells_um2=cap,
+                  measured_kc7_cells_um2=parent, construction_total_um2=round(parent+gross,8),
+                  remaining_mapping_CTS_repair_budget_um2=round(cap-parent-gross,8),
+                  fit_verified=False, parent_die_reservation=False),
+        routing=dict(new_internal_copy_Q_nets=copies, new_room_Q_nets=room,
+                     copy_Q_select_loads=[31,32,32], same_D_copy_loads=3,
+                     clock_reset_wire_sites_and_loaded_delay_unknown=True,
+                     additional_tracks=None, available_tracks=None,
+                     acceptance="same fixed core; mapped occupancy within cap and zero DRC/antenna/slew/cap/fanout"),
+        admission="consume completed20case gate; one OPT_KC8=1 route with slew margin20; new failing cone escalates to Claude, no blind rescue")
+
+
 def dsrom_reindex_kc7_parallel_model():
     """Owner-directed named fanout; contexts are measured, never die admission."""
     lib = "SEQ_RVT_TT_nldm_220123.lib footprint only, no TT timing transfer"
@@ -1151,6 +1202,7 @@ DEDICATED = dict(
         reindex_control_closure_successor=dsrom_reindex_kc6_model(),
         reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
         reindex_parallel_closure=dsrom_reindex_kc7_parallel_model(),
+        reindex_grouped_room_write_enable_successor=dsrom_reindex_kc8_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
@@ -8287,6 +8339,33 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+def dsrom_wfc_reset_release_gate_price():
+    """Owner-supplied reset-release qualifiers, not a clock-domain change.
+
+    The existing rst_q register still releases one edge after rst_n. Suppress
+    all link admission/write and core-start terms during that existing edge;
+    no new state or steady-state response edge is added.
+    """
+    signals = ['in_ready', 'rx_hdr', 'rx_res', 'rx_side', 'vm_we',
+               'st_rx', 'st_new', 'st_q', 'st_fb', 'st_wk', 'core_start']
+    nand2, buffers = 2*len(signals), 3*len(signals)
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(new_FF_bits=0, new_clock_pin_cap_fF_SS=0, new_memory_ports=0,
+                new_memory_bytes_per_cycle=0, MACs_per_cycle=0, replicas=1,
+                reset_qualified_terms=signals, added_pipeline_edges=0,
+                reset_release_edges_after_rst_n=1, steady_state_cycle_delta=0,
+                model_reference_cycle_contract='Existing registered-root +1 reset edge; SOURCE1 serial engine +3.7 cycles/issue historical until remeasured. Golden rounding and reductions unchanged.',
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                original_clock_and_reset_register_unchanged=True,
+                full_shape=dict(WIN=6,FLIT=512,NW=21,AW=30,VWA=15,USER_W=10,MAXU=866,KVW=32768),
+                target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+                utilizations=[0.40,0.45,0.50], actual_route_fit_unknown=True,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                prior_r12_source_sha256='26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba',
+                physical_adopted=False)
+
+
 def dsrom_wfc_typed_completion_price(idw=47, paw=14, nw=21):
     """Add one retained terminal kind to the finite END/result join.
 
@@ -9397,6 +9476,11 @@ def qwen_rom_registered_issue_commit_price():
     return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/prebuild.json").read_text())
 
 
+def qwen_rom_receiver_fault_base_price():
+    """No-cost definition of absent PART2 local fault levels; not timing credit."""
+    return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/receiver_fault_base/prebuild.json").read_text())
+
+
 def hbm_stream_aq_period_bound_candidate(*, exposed_service_cycles=None):
     """Unadopted slower-service bound from the failed two-PC extracted path.
 
@@ -9584,3 +9668,120 @@ def ha2_tu_owner_adapter_model():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.model()
+
+
+def dshbm_expert_workgroup_model():
+    """Actual matched-reference 12-matrix source layout, not a new SM datapath.
+
+    Software loader/dispatch implementation uses existing per-SM descriptor and
+    activation/weight ports. Dynamic hardware steering has not been synthesized.
+    """
+    return dict(dies=96, SM_per_die=32, active_SM_per_die=24, idle_SM_per_die=8,
+        released_expert_count=384, routed_experts=6, matrices_per_expert=2, K=5120, matrix_rows=2304,
+        rows_per_matrix_per_die=24, rows_per_active_SM=12, k32_blocks=160,
+        exact_MACs_per_issued_line_active_column=8*32, native_columns=8,
+        hardware_MACs_per_full_issued_line=8*32*8, line_payload_bits=1088,
+        line_bytes_per_accepted_edge=136, simultaneous_weight_bits_per_die=24*1088,
+        simultaneous_weight_bytes_per_die=24*136, per_SM_lines=12*3*8, per_SM_valid_row_blocks=12*160,
+        per_SM_native_issue_groups=3, per_SM_issue_span_cycles=316,
+        activation_port_bits=2048, activation_AR_beats_per_address=2,
+        activation_AR_load_cycles_measured=49,
+        AR_start_to_done_measured_shape_cycles=396,
+        AR_start_to_done_actual_source_cycles=None,
+        source_row_order='each matrix, ascending rows; original k32 block and csum order',
+        existing_state_changed_bits=0, extra_payload_storage_bytes=0,
+        descriptor_count_per_die=24, descriptor_hardware_area_mm2=None,
+        activation_multicast_pipeline_cycles=None, boundary_routing_tracks=None,
+        new_hardware=False, hardware_steering_implemented=False,
+        physical_slot_fit=None, actual_1M_L20_exact=False, actual_1M_L3_exact=False,
+        actual_composed_token_latency_ns=None, adopted=False)
+
+
+def hbm_su_fused_endpoint_model():
+    """Default-off actual fused-SU endpoint pre-build sizing; unqualified."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_fused_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()
+
+
+def hbm_su_sqrt_prefix_round_model():
+    """Same-cut opt-in repair of the measured side/softplus rounding ripple.
+
+    Pricing precedes RTL. No exponent retiming, reset exception, or II change.
+    Cell budget is a conservative prebuild reservation, not mapped area.
+    """
+    width = 24
+    levels = (width + 1).bit_length() - 1
+    if (1 << levels) < width + 1:
+        levels += 1
+    pairs = sum(width + 1 - (1 << level) for level in range(levels))
+    return dict(schema='hbm_su_sqrt_prefix_round.v1',
+                source='rtl/hdc/v41/ot_hdc_fsqrt.sv',
+                baseline_SS_r2r_ps=dict(side=-167.446838, softplus=-112.847954),
+                repair='24-bit kept prefix increment; carry becomes rounded[24]',
+                AND2_nodes=pairs, XOR2_nodes=width, prefix_levels=levels,
+                new_FF_bits=0, new_clock_reset_sinks=0,
+                conservative_gross_logic_reservation_um2_per_sqrt=250,
+                mapped_net_area_delta_um2=None,
+                side_sqrt_replicas=3, standalone_softplus_sqrt_replicas=1,
+                side_gross_reservation_um2=750, softplus_gross_reservation_um2=250,
+                primitive_MACs_per_cycle=0, primitive_words_per_cycle=1,
+                operand_port_bytes_per_cycle=4, result_port_bytes_per_cycle=4,
+                boundary_bits_per_cycle=32, new_boundary_bits_per_cycle=0,
+                prefix_local_fanout_bound=6,
+                fanout_basis="Includes alias-collapsed pass-through levels plus final XOR; buffers remain physical cost",
+                internal_prefix_node_tracks=pairs, routing_capacity_pass=None,
+                carry_encode_fanout_and_loaded_wire_delay='unchanged downstream; route must measure',
+                latency_edges=31, issue_interval_edges=1, added_chain_edges=0,
+                single_user_latency_delta_ns=0,
+                critical_cone='finish-1 f_trunc -> prefix/RNE -> exponent/select -> finish-2 y',
+                exponent_encode='original signed 12-bit arithmetic unchanged',
+                reset_recovery='original timed rst_n/vline; retained recovery FAIL remains blocking',
+                exactness_required='same original code/fault/valid edge including bubbles and refusals',
+                context_clock_ns=.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                area_slot_fit=None, SSFF_closed=False, adopted=False)
+
+
+
+def hbm_su_kr_capture_split_model(lanes=1024):
+    """Pre-mux BF16 metadata repair; physical KR40 witness is one lane."""
+    return dict(schema='hbm_su_kr_capture_split.v1',
+                source='rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_f12.sv',
+                measured_SS_capture_slack_ps=-46.211811,
+                baseline='select 32-bit source then increment/reduce to X metadata',
+                candidate='increment and guard/sticky each actual source, then select 17 metadata bits',
+                kept_prefix_levels=5, AND2_nodes_gross=108, XOR2_nodes_gross=32,
+                OR4_nodes_gross=10, AND2_guard_nodes=2, metadata_mux_bits=17,
+                gross_logic_reservation_um2_per_lane=200,
+                whole_lanes=lanes, gross_logic_reservation_um2=lanes*200,
+                new_FF_bits=0, new_reset_clock_sinks=0,
+                MACs_per_cycle=0, helper_input_bytes_per_cycle=8,
+                helper_metadata_bits_per_cycle=17, new_external_port_bits=0,
+                source_selector_metadata_fanout=17,
+                selected_word_capture='original x_a source mux retained',
+                internal_prefix_local_fanout_bound=6,
+                fanout_basis="Includes alias-collapsed pass-through levels plus final XOR; buffers remain physical cost",
+                internal_prefix_node_tracks_gross=108, routing_capacity_pass=None,
+                latency_edges_added=0, issue_interval_edges=1,
+                single_user_latency_delta_ns=0,
+                BF16_semantics='same original unsigned upper-half increment and RNE decision for all 32-bit patterns; no new NaN policy',
+                mutable_KR_owner='unchanged ck_r/kr_q association, no new reads or leases',
+                clock_ns=.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                reset_exception_added=False, area_slot_fit=None,
+                actual_area_delta_um2=None, SSFF_closed=False, adopted=False)
+
+
+
+def hbm_su_command_bridge_model():
+    """Pre-hardware actual command/scalar producer boundary sizing."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_command_bridge_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.command_bridge_model()

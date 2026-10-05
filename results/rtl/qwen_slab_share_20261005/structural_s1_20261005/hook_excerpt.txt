@@ -1,0 +1,15 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 166.6670 -max -clock [get_clocks {bw_clk}] -reference_pin [get_pins {g_bw.u_bw.active.rs_s1\[0\]$_DFF_P_/CLK}] -add_delay [get_ports {bw_d[0]}]
+set_input_delay 0 -min -clock [get_clocks {bw_clk}] -reference_pin [get_pins {g_bw.u_bw.active.rs_s1\[0\]$_DFF_P_/CLK}] -add_delay [get_ports {bw_d[0]}]
+set_input_delay 166.6670 -max -clock [get_clocks {bw_clk}] -reference_pin [get_pins {g_bw.u_bw.active.rs_s1\[0\]$_DFF_P_/CLK}] -add_delay [get_ports {bw_d[100]}]
+set_input_delay 0 -min -clock [get_clocks {bw_clk}] -reference_pin [get_pins {g_bw.u_bw.active.rs_s1\[0\]$_DFF_P_/CLK}] -add_delay [get_ports {bw_d[100]}]
+...
+# after CTS, re-reference every boundary delay to this block propagated tree (die context), then ORFS repairs
+rename clock_tree_synthesis ::qss_cts_orig
+proc clock_tree_synthesis {args} {
+  ::qss_cts_orig {*}$args
+  puts "QSS reading post-CTS boundary SDC"
+  read_sdc /work/post_cts.sdc
+  puts "QSS boundary SDC applied"
+}

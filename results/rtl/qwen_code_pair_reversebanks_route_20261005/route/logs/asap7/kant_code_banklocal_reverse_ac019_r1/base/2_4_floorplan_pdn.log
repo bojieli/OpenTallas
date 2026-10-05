@@ -1,0 +1,316 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/kant_code_banklocal_reverse_ac019_r1/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/kant_code_banklocal_reverse_ac019_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_2).
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[0\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[1\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[2\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[3\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[4\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[0\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[1\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[2\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[3\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[4\].data_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[0\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[1\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[2\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[3\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[0\].bank\[4\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[0\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[1\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[2\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[3\].check_store
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - u_leaf.on.column\[1\].bank\[4\].check_store
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 396.0960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 396.8640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 397.6320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 398.4000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 399.1680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 399.9360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 400.7040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 401.4720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 402.2400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 403.0080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 403.7760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 404.5440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 405.3120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 406.0800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 406.8480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 407.6160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 408.3840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 409.1520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 409.9200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 410.6880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 411.4560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 412.2240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 412.9920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 413.7600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 414.5280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 415.2960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 416.0640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 416.8320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 417.6000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 418.3680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 419.1360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 419.9040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 420.6720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 421.4400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 422.2080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 422.9760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 423.7440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 424.5120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 425.2800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 426.0480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 426.8160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 427.5840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 428.3520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 429.1200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 429.8880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 430.6560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 431.4240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 432.1920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 432.9600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 433.7280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 434.4960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 435.2640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 436.0320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 299.4720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 300.2400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 301.0080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 301.7760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 302.5440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 303.3120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 304.0800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 304.8480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 305.6160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 306.3840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 307.1520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 307.9200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 308.6880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 309.4560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 310.2240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 310.9920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 311.7600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 312.5280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 313.2960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 314.0640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 314.8320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 315.6000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 316.3680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 317.1360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 317.9040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 318.6720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 319.4400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 320.2080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 320.9760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 321.7440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 322.5120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 323.2800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 324.0480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 324.8160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 325.5840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 326.3520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 327.1200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 327.8880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 328.6560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 329.4240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 330.1920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 330.9600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 331.7280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 332.4960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 333.2640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 334.0320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 334.8000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 335.5680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 336.3360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 337.1040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 337.8720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 338.6400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 339.4080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 202.8000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 203.5680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 204.3360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 205.1040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 205.8720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 206.6400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 207.4080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 208.1760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 208.9440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 209.7120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 210.4800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 211.2480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 212.0160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 212.7840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 213.5520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 214.3200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 215.0880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 215.8560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 216.6240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 217.3920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 218.1600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 218.9280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 219.6960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 220.4640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 221.2320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 222.0000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 222.7680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 223.5360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 224.3040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 225.0720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 225.8400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 226.6080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 227.3760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 228.1440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 228.9120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 229.6800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 230.4480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 231.2160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 231.9840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 232.7520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 233.5200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 234.2880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 235.0560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 235.8240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 236.5920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 237.3600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 238.1280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 238.8960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 239.6640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 240.4320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 241.2000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 241.9680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 242.7360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 106.1280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 106.8960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 107.6640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 108.4320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 109.2000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 109.9680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 110.7360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 111.5040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 112.2720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 113.0400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 113.8080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 114.5760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 115.3440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 116.1120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 116.8800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 117.6480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 118.4160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 119.1840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 119.9520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 120.7200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 121.4880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 122.2560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 123.0240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 123.7920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 124.5600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 125.3280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 126.0960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 126.8640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 127.6320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 128.4000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 129.1680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 129.9360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 130.7040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 131.4720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 132.2400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 133.0080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 133.7760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 134.5440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 135.3120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 136.0800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 136.8480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 137.6160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 138.3840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 139.1520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 139.9200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 140.6880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 141.4560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 142.2240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 142.9920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 143.7600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 144.5280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 145.2960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 146.0640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 9.4560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 10.2240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 10.9920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 11.7600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 12.5280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 13.2960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 14.0640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 14.8320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 15.6000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 16.3680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 17.1360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 17.9040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 18.6720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 19.4400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 20.2080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 20.9760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 21.7440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 22.5120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 23.2800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 24.0480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 24.8160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 25.5840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 26.3520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 27.1200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 27.8880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 28.6560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 29.4240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 30.1920 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 30.9600 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 31.7280 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 32.4960 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 33.2640 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 34.0320 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 34.8000 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 35.5680 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 36.3360 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 37.1040 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 37.8720 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 38.6400 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 39.4080 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 40.1760 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 40.9440 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 41.7120 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 42.4800 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 43.2480 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 44.0160 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 44.7840 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 45.5520 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 46.3200 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 47.0880 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 47.8560 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 48.6240 um) for VSS
+[WARNING PDN-0195] Removing 2 via(s) between M4 and M5 at (381.5340 um, 49.3920 um) for VSS
+[INFO PDN-0500] Runtime: 7.50s
+Design area 166627 um^2 30% utilization.
+write_db /work/results/asap7/kant_code_banklocal_reverse_ac019_r1/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:11.72[h:]min:sec. CPU time: user 11.02 sys 0.70 (99%). Peak memory: 550336KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb           11            537 9929b200681acbc96c5e

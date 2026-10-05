@@ -22,6 +22,8 @@ def main():
         ap.add_argument('--' + flag, type=Path, required=True)
     ap.add_argument('--nickname', required=True)
     ap.add_argument('--image', default='openroad/orfs:asap7lock')
+    ap.add_argument('--td-diamond', action='store_true',
+                    help='TD-only GPL and classic diamond DPL; retain original geometry and timing')
     a = ap.parse_args()
     src, mapped, slot, work = [p.resolve() for p in (a.source_dir, a.mapped_dir, a.slot_dir, a.work)]
     work.mkdir(parents=True, exist_ok=False)
@@ -42,7 +44,10 @@ def main():
             expr = expr.strip()
             connections[pin] = ([signal(x) for x in expr[1:-1].split(',')][::-1]
                                 if expr.startswith('{') else [signal(expr)])
-        outputs = {'rd_out'} if kind.startswith('ot_sram_') else {'QN'} if kind.startswith('DFF') else {'Y'}
+        outputs = ({'rd_out'} if kind.startswith('ot_sram_') else
+                   {'QN'} if kind.startswith('DFF') else
+                   {'H'} if kind.startswith('TIEHI') else
+                   {'L'} if kind.startswith('TIELO') else {'Y'})
         cells[name.lstrip('\\')] = dict(type=kind, connections=connections,
             port_directions={p: 'output' if p in outputs else 'input' for p in connections})
     for i, (dest, origin) in enumerate(re.findall(r'^\s*assign\s+(\S+)\s*=\s*(.*?);', v, re.M)):
@@ -150,6 +155,10 @@ set_false_path -from [get_ports por_n]
               'export TNS_END_PERCENT = 100', 'export LEC_CHECK = 0',
               'export NUM_CORES = 16', 'export SKIP_REPORT_METRICS = 0']
     (work / 'config.mk').write_text('\n'.join(config) + '\n')
+    if a.td_diamond:
+        with (work / 'config.mk').open('a') as f:
+            f.write('export GPL_ROUTABILITY_DRIVEN = 0\n'
+                    'export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer\n')
     # ORFS scripts write SDC alongside ODB, but this pinned Makefile omits
     # some side-effect dependencies. Order the producer and require its real
     # SDC output; never manufacture a constraint/checkpoint file.
@@ -162,6 +171,7 @@ set_false_path -from [get_ports por_n]
                     source_files={str(p.relative_to(src)): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in src.rglob('*') if p.is_file() and '.git' not in p.parts},
                     abc_repeated=False, rtl_changes=False)
+    manifest['td_diamond'] = a.td_diamond
     (work / 'route_manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     make = 'make -f Makefile -f /work/side_effects.mk DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 '
     result = f'/work/results/asap7/{a.nickname}/base/'
