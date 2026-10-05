@@ -127,7 +127,7 @@ ROUTES = {  # the UCIe leg uses the same hardened endpoint (pacer off)
 
 def cmd_route(a):
     rc = ROUTES[a.config]
-    work = Path(a.work) / f"route_{a.config}"
+    work = Path(a.work) / (f"route_{a.config}" + (f"_{a.variant}" if a.variant else ""))
     work.mkdir(parents=True, exist_ok=True)
     args = [sys.executable, "tools/run_abi3_physical.py", "--view", "asap7", "--top", "ot_dsrom_link_cl"]
     for s in ENDPOINT:
@@ -144,6 +144,9 @@ def cmd_route(a):
              "--slew-margin-percent", "30", "--purpose", "signoff_target",
              "--nickname-tag", f"claude_hopcl_{a.config}_{a.tag}", "--keep-workdir", str(work / "work"), "--force",
              "--output", str(work / "physical.json")]
+    if a.extra:                       # non-RTL knobs (floorplan, CTS, placement), passed to run_abi3_physical as is;
+        import shlex                  # later options override earlier ones there
+        args += shlex.split(a.extra)
     subprocess.run(args, cwd=ROOT)
     subprocess.run([sys.executable, "tools/w18/corner_sta.py", "--orfs-dir", str(work / "work/orfs"),
                     *(["--macro", MACRO] if rc["mem"] else []), "--output", str(work / "corner_sta.json")], cwd=ROOT)
@@ -360,7 +363,9 @@ def cmd_record(a):
                                                       "rtl/test/dsrom_sys/tb_dsrom_1m_hop_ct.sv")})
     (REC / "hop_closed").mkdir(parents=True, exist_ok=True)
     (REC / "hop_closed/hop_cl.json").write_text(json.dumps(detail, indent=1, default=str) + "\n")
-    verdict = "ADOPT" if exact and closes else "FAIL_NOT_CLOSED"
+    # MANDATORY block: an open route is not a failure verdict; it stays PENDING_ROUTE until the routed in-context
+    # check closes (hand-off: /tmp/claude-review-20261003/handoff_to_codex_20261004/dsrom_hop_closed.md)
+    verdict = "ADOPT" if exact and closes else ("PENDING_ROUTE" if exact else "FAIL_NOT_EXACT")
     lever = dict(
         schema="opentallas.dsrom-recovery.lever.v1", lever="hop_closed", verdict=verdict, exact=exact,
         class_="MANDATORY baseline block: the stage-hop endpoint must close; replaces the unclosed as-built hop",
@@ -417,7 +422,11 @@ def main():
     ap.add_argument("--density", type=float, default=0.55)
     ap.add_argument("--tag", default="r1")
     ap.add_argument("--halo", type=float, default=5, help="macro placement halo (um)")
+    ap.add_argument("--extra", default="", help="extra run_abi3_physical arguments (route only), e.g. "
+                    "\"--die-area 0 0 400 280 --core-area 5 5 395 275 --orfs-var GPL_TIMING_DRIVEN=1\"")
     ap.add_argument("--config", default="hard", choices=sorted(ROUTES))
+    ap.add_argument("--variant", default="", help="route only: write to route_<config>_<variant> (record reads "
+                    "route_<config>; copy/rename the selected variant there)")
     a = ap.parse_args()
     {"sim": cmd_sim, "screen": cmd_screen, "route": cmd_route, "congestion": cmd_congestion,
      "record": cmd_record}[a.cmd](a)
