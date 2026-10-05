@@ -273,7 +273,7 @@ def parse(out: str) -> dict:
 
 def run(scratch: Path, bira_pop_pipe: bool = False) -> dict:
     if bira_pop_pipe:
-        selected = scratch / "ot_mbist_ctrl_selected.sv"
+        selected = scratch / "ot_mbist_ctrl.sv"
         text = (ROOT / "rtl/dft/ot_mbist_ctrl_bira_pipe.sv").read_text()
         selected.write_text(text.replace("module ot_mbist_ctrl_bira_pipe #(", "module ot_mbist_ctrl #(", 1)
                            .replace("parameter integer POP_PIPE = 0", "parameter integer POP_PIPE = 1", 1))

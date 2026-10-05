@@ -150,13 +150,12 @@ def main() -> int:
     die_sig = rom_gen.die_signature(recs)
 
     if a.bira_pop_pipe:
-        selected = a.work / "ot_mbist_ctrl_selected.sv"
+        selected = a.work / "ot_mbist_ctrl.sv"
         text = (ROOT / "rtl/dft/ot_mbist_ctrl_bira_pipe.sv").read_text()
         selected.write_text(text.replace("module ot_mbist_ctrl_bira_pipe #(", "module ot_mbist_ctrl #(", 1)
                            .replace("parameter integer POP_PIPE = 0", "parameter integer POP_PIPE = 1", 1))
         RTL[RTL.index("rtl/dft/ot_mbist_ctrl.sv")] = str(selected)
         RTL[RTL.index("rtl/dft/ot_mbist_bira.sv")] = "rtl/dft/ot_mbist_bira_pipe.sv"
-        RTL[RTL.index("rtl/dft/ot_mbist_rom_collar.sv")] = "rtl/dft/ot_mbist_rom_collar_par.sv"
 
     build = a.work / "obj"
     cmd = [a.verilator, "--binary", "--timing", "-j", "16", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-PINMISSING",
