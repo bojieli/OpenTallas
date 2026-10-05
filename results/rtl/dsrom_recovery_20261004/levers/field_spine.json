@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dsrom-recovery.lever.v1",
  "lever": "field_spine",
- "verdict": "ADOPT",
+ "verdict": "PENDING_SSFF",
  "exact": true,
  "ss_ff": {
   "basis": "routed ORFS (detail route, RCX spef), OpenSTA corner_sta SS 60 ps / FF 25 ps at 0.833 ns; screen top physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv (registered neighbours, 2-cycle ROM models); RTL v8 = this commit",
@@ -26,7 +26,9 @@
    "PQ1_R16": -722.82,
    "PQ1_R128": -905.9
   },
-  "route_loop": "Codex: /tmp/claude-review-20261003/handoff_to_codex_20261004/dsrom_field_spine_route.md"
+  "route_loop": "Codex: /tmp/claude-review-20261003/handoff_to_codex_20261004/dsrom_field_spine_route.md",
+  "closes_signoff": false,
+  "acceptance": "Mandatory sourcea721 baseline requires actual R16 AND R128 nonnegative SS60/FF25, zero SI/DRC/antenna and retained replicas. flow.closed does not waive corner hold -0.18ps."
  },
  "nodes": {
   "E1.wkv": {
@@ -2365,5 +2367,5 @@
    "rtl/v41rom/ot_v41_segtree2.sv"
   ]
  },
- "note": "MANDATORY baseline: the as-built pinned spine fails 1.2 GHz SS by 684 ps; this is the timing-closed successor at PQ=0 (RTL final; R16 routed SS +18.74 ps, residual 0.18 ps hold on one pin; R128 and residuals in Codex's route loop). Replaces every as-built field node."
+ "note": "MANDATORY baseline successor; functional exactness retained, physical adoption pending. Sourcea721 R16 actual SS+18.74ps/FF-0.18ps is FAIL_HOLD; existing R128 continues unchanged. Codex owns physical-only margin route loop; no tiny-negative tolerance or qualified rate claim."
 }
