@@ -13,16 +13,20 @@
         "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv"
       ],
       "default_enabled": false,
-      "candidate_exact_selected": false,
-      "parameters": null,
+      "candidate_exact_selected": true,
+      "parameters": {
+        "ENABLE": 1,
+        "PQ_ENABLE": 1
+      },
       "physical_holds": [
-        "physical binding absent"
+        "Selected loaded SS60/FF25 context unbound"
       ],
       "implementation_holds": [
-        "Production cursor-fold and selected combined bench source/fixture binding pending."
+        "Combined PQ+PACK+XMAP interaction unmeasured"
       ],
       "source_replacements": {},
-      "slot_macro_channel_binding": null
+      "slot_macro_channel_binding": null,
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
     },
     {
       "lever": "format_masked_activation",
@@ -51,18 +55,28 @@
     {
       "lever": "partial_wave_packing",
       "owner": "Erdos",
-      "source_paths": [],
+      "source_paths": [
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv"
+      ],
       "default_enabled": false,
-      "candidate_exact_selected": false,
-      "parameters": null,
+      "candidate_exact_selected": true,
+      "parameters": {
+        "PACK_W2": 1
+      },
       "physical_holds": [
-        "physical binding absent"
+        "Selected loaded SS60/FF25 context unbound"
       ],
       "implementation_holds": [
-        "Optional: >=1% measured incremental gain over PQ; source/ABI not landed."
+        "Combined PQ+PACK+XMAP interaction unmeasured"
       ],
       "source_replacements": {},
-      "slot_macro_channel_binding": null
+      "slot_macro_channel_binding": null,
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
     },
     {
       "lever": "expert_workgroup",

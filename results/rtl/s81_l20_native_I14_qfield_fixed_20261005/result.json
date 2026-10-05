@@ -1,0 +1,81 @@
+{
+  "verdict": "PASS_COMPONENT_EXACT",
+  "scope": "Native I14 two ordered fragments in all four ranks on actual native I13 QR. Initial I0-I6 prefix SIM_ONLY; no complete S81 token or SS/FF clock claim.",
+  "position": 1048575,
+  "token": 16754,
+  "stage": 37,
+  "producer": 2485,
+  "identity": 2147483648,
+  "words": 32768,
+  "bit_mismatches": 0,
+  "expected_outputs_used_by_native": false,
+  "source_change": "External native PP weight-word issue-order mapping, MAIN80ef8fda4 implementation13c989e19, 3 Python sources only. No matrix/quantizer/arithmetic edits.",
+  "archive_enrollment_change": "R4 stale affected57e3 PQ/PB libraries replaced by existing corrected be155 strictO2 libraries in R5. This is explicitly not an unchanged-compiled-RTL full successor comparison. See source_changes.json for both library and provider pins.",
+  "model_or_CXX_generation": "NONE; existing host/qfield/field/control/cut/nativeVM/root/retn objects reused; two archive-only links0.",
+  "actual_input_QR_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+  "fragment_geometry": [
+    {
+      "phase": 20,
+      "output_base": 55744,
+      "words": 4608,
+      "complete_cycle": 61433
+    },
+    {
+      "phase": 21,
+      "output_base": 60352,
+      "words": 3584,
+      "complete_cycle": 50166
+    }
+  ],
+  "QR_ACK_cycle": 1520,
+  "actor_accept_cycle": 10479,
+  "timing_scope": "Per-fragment native tick counts include source loading, publication and full readback. Host elapsed seconds are separately recorded; no pure matvec-latency or physical clock qualification.",
+  "ranks": [
+    {
+      "rank": 0,
+      "native_exit": 0,
+      "compared": 8192,
+      "bit_mismatches": 0,
+      "elapsed_host_seconds": 599.626467205002,
+      "fragment_output_sha256": [
+        "edcd84f14b9db2f328b97afdd72054261c529e1d3e02f064f6b6a21ac79450fb",
+        "9f8e10fb0122a88a4c8cd38d0ee8d3eb947db33498dd6f4c46f91dd6c2519982"
+      ]
+    },
+    {
+      "rank": 1,
+      "native_exit": 0,
+      "compared": 8192,
+      "bit_mismatches": 0,
+      "elapsed_host_seconds": 600.2797818460094,
+      "fragment_output_sha256": [
+        "021fa8f6e3dae2ac6826c403b011138cb1012c4d056dc2037dd09846c5ac4ece",
+        "4aed99a36c5e00eca715077313e02b547babb81debdc3279784ec5a8b7d6a635"
+      ]
+    },
+    {
+      "rank": 2,
+      "native_exit": 0,
+      "compared": 8192,
+      "bit_mismatches": 0,
+      "elapsed_host_seconds": 610.6668465560069,
+      "fragment_output_sha256": [
+        "fcdeaa8c31affb759913343f6e21de7818f8ecf65b7651ebc00341176a2a445b",
+        "c5d4dd32bc583a703599f5585b990a82b2bd8a4bd9625e88ea5be81f1b3dd6a5"
+      ]
+    },
+    {
+      "rank": 3,
+      "native_exit": 0,
+      "compared": 8192,
+      "bit_mismatches": 0,
+      "elapsed_host_seconds": 595.371190564998,
+      "fragment_output_sha256": [
+        "d3b25d5a3bfd58c436d155bcd4c092b03bed8c211735c0b5eaff166be62b7f59",
+        "ac7004406c399c465d0270a075947064bc14e1d69df2a59aa5ec0fb06ab36208"
+      ]
+    }
+  ],
+  "failed_predecessor": "../s81_l20_native_I14_qfield_20261005/result.json (FAIL_NUMERICAL, unchanged)",
+  "carry_handoff": "Lossless ordered f0+f1 concatenation. AGI /home/ubuntu/cicero-s81-L20-native-I14-r5-produced/native_L20_I14_rankR.u32. Consumer must import through fresh matched native VM ACKs; no surviving live lease implied."
+}
