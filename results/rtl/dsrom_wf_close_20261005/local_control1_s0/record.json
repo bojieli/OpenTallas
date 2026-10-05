@@ -1,0 +1,37 @@
+{
+  "verdict": "PASS_CHANGED_STAGE_CONTROLLER_COMPONENT_ONLY",
+  "source_commit": "115e40246df1a0bd8a707aba645fde9cfd1233e6",
+  "opt_in": "OT_WFC_LOCAL_CONTROL=1 -> LOCAL_CONTROL=1",
+  "host": "ot-epyc2",
+  "owner": "Codex:dsrom-wf-ctrl",
+  "reference_recipe_commit": "c1e6ed36e68489d96d7ea818b23d5acd044b440e",
+  "checker_unchanged": true,
+  "source": 0,
+  "lockstep": 1,
+  "MAXU": 866,
+  "users": 866,
+  "XWORDS": 46,
+  "RXWORDS": 41,
+  "seed": 13,
+  "messages": 20000,
+  "cycles": 1583387,
+  "mismatches": 0,
+  "errors": [
+    0,
+    0
+  ],
+  "reference_fault_cycle": 1580031,
+  "dut_fault_cycle": 1580035,
+  "added_cycle_edges": 0,
+  "existing_stage_and_14case_records_unchanged": true,
+  "physical_closed": false,
+  "adopted": false,
+  "model": "results/uarch/dsrom_wfc_local_control_20261005/model.json",
+  "raw_sha256": {
+    "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "launch.log": "c20c91a374639df601bb29e34c4d198658ce3a344e5192ab58aa59cb01ebc949",
+    "run.sh": "0755f9c9628973d0dfeeaa7bfad5aefbc4db8740557fd78dc22554d895039b8a",
+    "case/build.log": "d0ca8ade347358a250f6b36b03987ca4468ac770450064970ca27cdad332cd4c",
+    "case/run.log": "c20c91a374639df601bb29e34c4d198658ce3a344e5192ab58aa59cb01ebc949"
+  }
+}

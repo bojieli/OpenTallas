@@ -1,0 +1,21 @@
+{
+  "schema": "qwen.rom.controller_cut.v1",
+  "method": "remove only module ports with no bit connected to any retained synthesized cell; preserve every cell and every cell connection identically; no optimize pass",
+  "source": "context2 pinned a8b4ecbd8f5d5623e720e0321b41419f76d8f875/control_context.v",
+  "model_before_build": true,
+  "state_delta_bits": 0,
+  "MACs_delta": 0,
+  "latency_delta_cycles": 0,
+  "program_port_bytes_per_cycle": 128,
+  "decoded_bits_per_cycle": 878,
+  "argmax_result_bits_per_cycle": 51,
+  "passive_legacy_port_removal": "input/output buses between blackboxed units and parent fabric; no controller sampling path or sink removed",
+  "graph_equality_required": true,
+  "unknown_physical_load": "real arithmetic receiver/parent loading still requires integration; same retained screen controller assumptions only",
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "adoption": false,
+  "slot_fit": null,
+  "track_floor": "connected boundary pins measured after extraction; external legacy passthrough tracks remain parent-fabric responsibility"
+}

@@ -1,0 +1,617 @@
+// 1.2 GHz successor of rtl/hdc/ot_hdc_core_vector_weight.sv (HA8 fmax closure, 2026-10-04): ME_ISSUE_RE (default 0 =
+// the original core, line for line).
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// Hardwired decode core (HDC): decodes one token of a fixed model.
+//
+// A static program (tools/hdc_program.py, format tools/hdc_isa.py) of
+// macro-operations drives two units, the matrix-vector engine (ot_hdc_matvec)
+// and the stream unit (ot_hdc_stream).  The sequencer fetches an instruction,
+// adds the per-token DYN offsets (token row, RoPE row, KV write slot, context
+// length) and issues it when the unit is ready; an instruction marked `barrier`
+// first waits for both units to drain.  There is no descriptor queue, no
+// admission and no interpretation: the program is the schedule.
+//
+// ISSUE PIPELINE.  Fetch runs ahead of issue: program words stream from the
+// program ROM (a read every cycle while fewer than NFQ words are held or in
+// flight) into a small word FIFO; the head is decoded (DYN offsets added) into
+// the NEXT register set whenever it is empty or being issued.  An instruction
+// issues from NEXT in the cycle its conditions hold: `me_go` / `su_go` are
+// combinational and the unit latches NEXT's fields on that edge, the same edge
+// that decodes the following instruction into NEXT -- so independent
+// instructions issue on consecutive cycles (the issue gap is 1, was 5).
+//
+// Memories sit outside the core behind synchronous-read ports: program ROM,
+// BF16 stream/embedding ROM, optional signed INT8 matrix ROM and per-row BF16
+// scale ROM, constant ROM (FP32 pairs), KV SRAM (W x FP32 per word, element
+// write) and vector memory (FP32 elements).
+// ---------------------------------------------------------------------------
+module ot_hdc_core_vector_weight_f12 #(
+    parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
+    parameter integer W    = 16,
+    parameter integer G    = 4,
+    parameter integer IL   = 8,
+    parameter integer AW   = 24,
+    parameter integer NW   = 16,
+    parameter integer PAW  = 12,      // program address bits
+    // model constants for the DYN offsets
+    parameter integer HID  = 128,
+    parameter integer HALF = 8,
+    parameter integer HD   = 16,
+    // KV_HBM = 1: the KV cache lives in HBM behind ot_hdc_kv_stream.  A
+    // KV-sourced matrix op then announces its descriptor (kvd_*) when the
+    // sequencer reaches it and issues only once the streamer raises kv_ok
+    // (its prefetch window covers the op; the engine never stalls).  With
+    // KV_HBM = 0 the kvd_* outputs are unused and kv_ok is ignored.
+    parameter integer KV_HBM = 0,
+    // The stream unit.  SU_VEC = 1: the vector stream unit (ot_hdc_vstream) of
+    // SW lanes (a multiple of 8) with the R-ARITH reducer (segments of up to
+    // 2^LV vectors); every stream port is SW elements wide.  SU_VEC = 0: the
+    // scalar stream unit (ot_hdc_stream, SW must be 1) and its P=8 reducer --
+    // the configurations not yet moved (the KV-in-HBM streamer).
+    parameter integer SU_VEC = 0,
+    parameter integer SW     = 1,
+    parameter integer LV     = 4,
+    parameter integer KV_FP8 = (SU_VEC != 0),
+    parameter integer KV_VEC_WRITE_BRIDGE = 0,
+    parameter integer W_HBM = 0,
+    // INT8_WEIGHT replaces only matrix ROM products. The embedding stream
+    // still reads BF16 until its own INT8 dequantisation path is integrated.
+    parameter integer INT8_WEIGHT = 0,
+    parameter integer INT8_SCALE_WCS_BASE = 0,
+    parameter integer INT8_EMBED = 0,
+    // Opt-in Qwen full-vocabulary encoding: two ME row-offset bits live just
+    // above the legacy 16-bit field in the otherwise unused ISA tail.
+    parameter integer QWEN_FULLSHAPE = 0,
+    // ME_STALL = 1: an HBM weight supply may hold the matrix engine for a
+    // cycle (bounded within-round continuation).  The engine and its memory
+    // write enables are clocked only on edges where me_mem_ok was high during
+    // the preceding low phase (ot_hdc_cg), so a held cycle is an exact pause:
+    // no element, product or sum order changes.  The supply must hold its
+    // engine read-response registers on the same edges (me_clk_en).
+    // ME_STALL = 0 ties the enable high: the ROM core is unchanged.
+    parameter integer ME_STALL = 0,
+    // ME_IDLE_GATE = 1: also stop the engine clock while it is idle and no
+    // engine instruction waits in NEXT (unit clock gating).  An idle engine
+    // holds only registered, drained outputs; it is re-enabled on the edge an
+    // engine instruction reaches NEXT, before its go, so issue timing is
+    // unchanged.  0 keeps the engine clock free-running.
+    parameter integer ME_IDLE_GATE = 0,
+    // ME_ISSUE_RE = 1 (1.2 GHz successor, HA8 fmax closure 2026-10-04): an engine instruction issues only on a
+    // cycle the engine presents no matrix-ROM read (its registered wrom_re low), where the supply's me_mem_ok is
+    // high by construction, instead of on any cycle me_en is high.  Issue then never waits on the supply's
+    // combinational stall decision (spine read address -> segment decode -> HBM arrival compare), which was the
+    // core's critical path.  An engine instruction can be delayed by the cycles its predecessor's last read is
+    // still presented; no instruction ever issues earlier, and every unit sees the same instruction sequence.
+    parameter integer ME_ISSUE_RE = 0,
+    // DEC_FAST = 1 (1.2 GHz successor): the decode's DYN adds are keep-prefix adders (ot_hdc_kadd K=1; ABC re-ripples
+    // plain adders in context), and DYN_TTILES = (pos >> s) / ODD + 1 is formed as (pos / ODD) >> s + 1 from a
+    // registered pos / ODD (three pipeline registers behind pos_r: a reciprocal multiply, exact for NW <= 18, checked in
+    // the lockstep bench) instead of a divider in the decode cycle; the DYN table is refreshed every cycle of a token
+    // (its inputs are constant for the token), valid from the fourth cycle after start, before the first decode (the fifth).
+    // Same values on every decode; no cycle added.
+    parameter integer DEC_FAST = 0,
+    parameter integer EMB_CODE_LANES = 64,
+    parameter integer EMB_ADDR_BASE = 0 // element address of embedding row 0 in the program
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              start,
+    input  wire [NW-1:0]     token,
+    input  wire [NW-1:0]     pos,
+    output reg               done,
+    output reg  [NW-1:0]     next_token,
+    output reg  [31:0]       next_val,        // its logit (for an argmax combined across packages)
+    output reg  [31:0]       cycles,
+    output reg               fault,
+    // program ROM
+    output reg               prog_re,
+    output reg  [PAW-1:0]    prog_addr,
+    input  wire [INSTR_BITS-1:0] prog_q,
+    // weight ROM
+    output wire              wrom_re,
+    output wire [AW-1:0]     wrom_addr,
+    input  wire [G*W*16-1:0] wrom_q,
+    // Separate matrix code and scale banks avoid aliasing the stream's BF16
+    // embedding reads. Both are synchronous, with one-cycle read latency.
+    output wire              int8_wrom_re,
+    output wire [AW-1:0]     int8_wrom_addr,
+    input  wire [G*W*8-1:0] int8_wrom_q,
+    output wire              scale_re,
+    output wire [G-1:0]      scale_gre,
+    output wire [G*AW-1:0]   scale_addr,
+    input  wire [G*W*16-1:0] scale_q,
+    // Independent 8-bit embedding bank and one BF16 scale per token row.
+    output wire              embed_code_re,
+    output wire [AW-1:0]     embed_code_addr,
+    input  wire [EMB_CODE_LANES*8-1:0] embed_code_q,
+    output wire              embed_scale_re,
+    output wire [NW-1:0]     embed_scale_addr,
+    input  wire [15:0]       embed_scale_q,
+    // constant ROM
+    output wire [SW-1:0]     crom_re,
+    output wire [SW*AW-1:0]  crom_addr,
+    input  wire [SW*64-1:0]  crom_q,
+    // KV SRAM
+    output wire              kv_re,
+    output wire [G*AW-1:0]   kv_raddr,        // one read port per lane group
+    input  wire [G*W*32-1:0] kv_q,
+    output wire [SW-1:0]     kv_we,
+    output wire [SW*AW-1:0]  kv_waddr,
+    output wire [SW*32-1:0]  kv_wdata,
+    // Optional vector KV bridge drain. The vector stream cannot stall once
+    // issued, so the bridge buffers one whole KV-write op and drains before
+    // the sequencer starts another stream op or retires the token.
+    input  wire              kv_write_drained,
+    output wire              kv_write_flush, // finish a partial V sector while SU is idle
+    // vector memory: G + 3 element read ports, G + 2 write ports
+    output wire [G-1:0]      vx_re,
+    output wire [G*AW-1:0]   vx_addr,
+    input  wire [G*32-1:0]   vx_q,
+    output wire [SW-1:0]     va_re,
+    output wire [SW*AW-1:0]  va_addr,
+    input  wire [SW*32-1:0]  va_q,
+    output wire [SW-1:0]     vb_re,
+    output wire [SW*AW-1:0]  vb_addr,
+    input  wire [SW*32-1:0]  vb_q,
+    output wire [SW-1:0]     vc_re,
+    output wire [SW*AW-1:0]  vc_addr,
+    input  wire [SW*32-1:0]  vc_q,
+    output wire [G-1:0]      vw_me_we,
+    output wire [G*AW-1:0]   vw_me_addr,       // words
+    output wire [G*W-1:0]    vw_me_mask,
+    output wire [G*W*32-1:0] vw_me_data,
+    output wire [SW-1:0]     vw_su_we,
+    output wire [SW*AW-1:0]  vw_su_addr,
+    output wire [SW*32-1:0]  vw_su_data,
+    output wire              vw_rd_we,
+    output wire [AW-1:0]     vw_rd_addr,
+    output wire [31:0]       vw_rd_data,
+    // the engine's per-slot maxima (one masked word; me_rmax)
+    output wire              vw_mx_we,
+    output wire [AW-1:0]     vw_mx_addr,
+    output wire [W-1:0]      vw_mx_mask,
+    output wire [W*32-1:0]   vw_mx_data,
+    // observation: every matrix-vector result word
+    output wire              me_ov,
+    output wire [G*AW-1:0]   me_oaddr,
+    output wire [G*W-1:0]    me_omask,
+    output wire [G*W*32-1:0] me_odata,
+    // KV-streaming handshake (KV_HBM = 1 only)
+    output reg               kvd_v,           // descriptor of the KV op now waiting to issue
+    output wire [AW-1:0]     kvd_wbase, kvd_ts, kvd_ks, kvd_js,
+    output wire [AW-1:0]     kvd_wcs,
+    output wire [3:0]        kvd_split,
+    output wire [2:0]        kvd_jsh,
+    output wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout,
+    output wire              kvd_kindk,       // positions tile the lanes (scores); else positions are k (weighted sum)
+    output wire [NW-1:0]     kvd_pos,
+    input  wire              kv_ok,
+    // Weight supply handshake. Both comparator modes use this same FIFO/vector
+    // controller and chunked program; W_HBM selects only the weight source.
+    output wire              wrom_su,
+    output reg               wd_v,
+    output wire [AW-1:0]     wd_wbase,
+    output wire [AW-1:0]     wd_sbase,
+    output wire [NW-1:0]     wd_tiles, wd_k, wd_nout,
+    input  wire              w_ok, emb_ok,
+    input  wire              me_mem_ok,      // ME_STALL: every engine read presented now is served at the next edge
+    output wire              me_clk_en       // ME_STALL: this edge clocks the engine (pre-edge value)
+);
+    `include "ot_hdc_isa.svh"
+    localparam integer LW = $clog2(W);
+    localparam integer LT = $clog2(W * IL);
+
+    // -- sequencer ----------------------------------------------------------------
+    localparam [1:0] S_IDLE = 0, S_DYN = 1, S_RUN = 2;
+    localparam integer NFQ = 4;           // program words held or in flight
+    reg [1:0]  st;
+    reg [PAW-1:0] pc;                     // index of the instruction in NEXT
+    reg [PAW-1:0] fpc;                    // next word to fetch
+    reg [NW-1:0] tok_r, pos_r;
+    reg [AW-1:0] dyn [0:7];
+    wire [NW-1:0] dyn_tiles_zero, dyn_tiles_split;
+    wire dyn_tiles_invalid;
+    reg [INSTR_BITS-1:0] fq [0:NFQ-1];
+    reg [1:0]  fq_rd, fq_wr;
+    reg [2:0]  fq_n;
+    reg        pend1;                     // a program read whose word arrives this cycle
+    wire [INSTR_BITS-1:0] ir = fq[fq_rd]; // FIFO head: the word decode reads
+    reg        nx_v;                      // NEXT holds a decoded instruction
+    wire       me_go, su_go;
+    wire       me_ready, me_idle, su_ready, su_idle;
+    wire       me_fault, su_fault;
+    wire [NW-1:0] am_idx;
+    wire [31:0] am_val;
+    wire       am_any;
+
+    `define F(name) ir[O_``name +: W_``name]
+    ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_zero (
+        .pos(pos_r),.split_log2(4'd0),.rounds(dyn_tiles_zero),.invalid_split());
+    ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_split (
+        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split),
+        .invalid_split(dyn_tiles_invalid));
+    wire dyn_tiles_bad_instruction = load && `F(ME_D_TILES) == 3'd6 && dyn_tiles_invalid;
+
+    // decoded, DYN-adjusted fields
+    reg [1:0]    d_unit;
+    reg          d_barrier;
+    reg [NW-1:0] me_nout, me_tiles, me_k;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, d_wait_me, d_wait_su, me_rmax, me_amc;
+    reg [NW-1:0] me_row0;
+    reg [AW-1:0] me_mbase;
+    reg [15:0]   d_chase_n;
+    reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs;
+    reg [2:0]    me_jsh;
+    reg [3:0]    me_split;
+    reg [AW-1:0] me_xcs, me_wcs;
+    reg [NW-1:0] su_nout, su_nin;
+    reg          a_src, b_src, c_src, mc;
+    reg [AW-1:0] a_base, a_so, a_si, b_base, b_so, b_si, c_base, c_so, c_si;
+    reg [AW-1:0] d_base, d_so, d_si, r_base, r_so;
+    reg [1:0]    ma, mb, dst, red;
+    reg [2:0]    sfu;
+    reg          redsq, md;
+    reg [2:0]    ad;
+    reg [31:0]   imm1, imm2;
+
+    wire [15:0] su_progress, me_progress, su_rows;
+    reg          d_chase_rows;
+    reg          me_kindk;
+    wire me_en;
+    wire me_rd_presented;                //: the engine's registered matrix-ROM read (ME_ISSUE_RE)
+    wire me_issue_ok = (ME_ISSUE_RE != 0) ? !me_rd_presented : me_en;
+    wire unit_ready = (d_unit == 2'd1) ? (me_ready && me_issue_ok) :
+                      (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+    //: KV_HBM: a KV op waits for the streamer; never on the cycle its
+    //: descriptor is announced, when kv_ok may still describe the previous op.
+    wire kv_gate = (KV_HBM == 0) || !(d_unit == 2'd1 && me_wsrc) || (kv_ok && !kvd_v);
+    wire w_gate = (W_HBM == 0) || ((d_unit == 2'd1) ?
+                  (me_wsrc || (w_ok && !wd_v)) : (!a_src || emb_ok));
+    //: the units' idle and progress are registered and cleared on the edge
+    //: that accepts an op, so a go needs no guard term here
+    wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+    assign kv_write_flush = su_idle && !(|kv_we);
+    //: A chasing op waits only until the OTHER unit's latest op has made
+    //: chase_n progress.
+    wire chased_ref = ((d_unit == 2'd1) ? (d_chase_rows ? su_rows : su_progress) : me_progress) >= d_chase_n;
+    //: DEC_FAST: the three progress compares in parallel (keep-prefix), then the select
+    wire ch_sr, ch_sp, ch_me;
+    ot_hdc_kge #(.W(16), .K(1)) u_ch_sr (.a(su_rows), .b(d_chase_n), .ge(ch_sr));
+    ot_hdc_kge #(.W(16), .K(1)) u_ch_sp (.a(su_progress), .b(d_chase_n), .ge(ch_sp));
+    ot_hdc_kge #(.W(16), .K(1)) u_ch_me (.a(me_progress), .b(d_chase_n), .ge(ch_me));
+    wire chased = (DEC_FAST == 0) ? chased_ref : ((d_unit == 2'd1) ? (d_chase_rows ? ch_sr : ch_sp) : ch_me);
+    //: issue NEXT this cycle; the unit latches its fields on this edge
+    wire issue = (st == S_RUN) && nx_v && (d_unit != 2'd0) &&
+                 (d_barrier ? drained : ((!d_chase || chased) && (!d_wait_me || me_idle) && (!d_wait_su || su_idle)))
+                 && unit_ready && kv_gate && w_gate;
+    assign me_go = issue && (d_unit == 2'd1);
+    assign su_go = issue && (d_unit == 2'd2);
+    wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && drained;
+    //: decode the FIFO head into NEXT when NEXT is empty or issuing
+    wire load = (st == S_RUN) && (fq_n != 0) && (!nx_v || issue);
+    wire push = (st == S_RUN) && pend1;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            st <= S_IDLE; pc <= 0; fpc <= 0; done <= 1'b0; prog_re <= 1'b0; pend1 <= 1'b0;
+            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0;
+            cycles <= 0; next_token <= 0;
+        end else begin
+            if (st != S_IDLE) cycles <= cycles + 1;
+            pend1 <= prog_re && (st != S_IDLE);
+            prog_re <= 1'b0;
+            case (st)
+                S_IDLE: if (start) begin
+                    tok_r <= token; pos_r <= pos; pc <= 0; fpc <= 0; done <= 1'b0; cycles <= 0;
+                    fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; pend1 <= 1'b0;
+                    st <= S_DYN;
+                end
+                S_DYN: st <= S_RUN;
+                S_RUN: begin
+                    // fetch: one word a cycle while fewer than NFQ are held or in flight
+                    if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+                        prog_re <= 1'b1; prog_addr <= fpc; fpc <= fpc + 1'b1;
+                    end
+                    if (push) begin fq[fq_wr] <= prog_q; fq_wr <= fq_wr + 1'b1; end
+                    if (load) fq_rd <= fq_rd + 1'b1;
+                    fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (load ? 3'd1 : 3'd0);
+                    if (issue) pc <= pc + 1'b1;
+                    if (load) nx_v <= 1'b1;
+                    else if (issue) nx_v <= 1'b0;
+                    if (fin) begin
+                        done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; st <= S_IDLE; nx_v <= 1'b0;
+                        prog_re <= 1'b0;
+                    end
+                end
+                default: st <= S_IDLE;
+            endcase
+        end
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin kvd_v <= 1'b0; wd_v <= 1'b0; end
+        else begin
+            kvd_v <= load && ir[O_UNIT +: W_UNIT] == 2'd1 && ir[O_ME_WSRC];
+            wd_v <= (W_HBM != 0) && load && ir[O_UNIT +: W_UNIT] == 2'd1 && !ir[O_ME_WSRC];
+        end
+    end
+    assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
+    assign kvd_wcs = me_wcs; assign kvd_split = me_split;
+    assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
+    assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
+    assign wd_wbase = me_wbase; assign wd_tiles = me_tiles; assign wd_k = me_k;
+    assign wd_sbase = (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? me_wcs : me_wbase;
+    assign wd_nout = me_nout; // useful BF16 row scales to preload from HBM
+
+    // The chunked weight program divides lm_head into bounded streams. Fold
+    // each completed chunk's argmax before issuing the next one. The final
+    // chunk remains in u_me and is included exactly once at END.
+    function automatic [31:0] okey(input [31:0] v);
+        okey = v[31] ? ~v : {1'b1, v[30:0]};
+    endfunction
+    reg run_any;
+    reg [31:0] run_key,run_val;
+    reg [NW-1:0] run_idx,last_row0;
+    wire am_wins = am_any && (!run_any || okey(am_val) > run_key);
+    wire [NW-1:0] fin_idx = am_wins ? am_idx + last_row0 : run_idx;
+    wire [31:0] fin_val = am_wins ? am_val : run_val;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin run_any<=1'b0; last_row0<=0; end
+        else if (start && st==S_IDLE) begin run_any<=1'b0; last_row0<=0; end
+        else if (me_go && me_amax) begin
+            last_row0<=me_row0;
+            if (!me_amc) run_any<=1'b0;
+            else if (am_wins) begin
+                run_any<=1'b1; run_key<=okey(am_val);
+                run_idx<=am_idx+last_row0; run_val<=am_val;
+            end
+        end
+    end
+
+    // DYN offsets derived once per token.
+    always @(posedge clk) if (st == S_DYN || (DEC_FAST != 0 && st != S_IDLE)) begin
+        dyn[0] <= 0;
+        dyn[1] <= tok_r * HID;
+        dyn[2] <= pos_r * HALF;
+        dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+        dyn[4] <= pos_r * HD;
+        dyn[5] <= pos_r + 1;
+        dyn[6] <= (DEC_FAST != 0) ? (tt_p3 >> (TT_WT + TT_GT)) + 1'b1 : dyn_tiles_zero;   // rounds of G position tiles (split 0)
+        dyn[7] <= 0;
+    end
+
+    // -- DEC_FAST: registered pos / ODD and keep-prefix decode adders ------------------
+    localparam integer TT_WT = $clog2(W);                     // W, G = ODD * 2^GT as ot_hdc_dyn_ttiles
+    localparam integer TT_GT = (G % 4096 == 0) ? 12 : (G % 2048 == 0) ? 11 : (G % 1024 == 0) ? 10 : (G % 512 == 0) ? 9 :
+                               (G % 256 == 0) ? 8 : (G % 128 == 0) ? 7 : (G % 64 == 0) ? 6 : (G % 32 == 0) ? 5 :
+                               (G % 16 == 0) ? 4 : (G % 8 == 0) ? 3 : (G % 4 == 0) ? 2 : (G % 2 == 0) ? 1 : 0;
+    localparam integer TT_ODD = G >> TT_GT;
+    localparam integer TT_K = NW + 2;
+    localparam [NW+TT_K:0] TT_M = ((1 << TT_K) + TT_ODD - 1) / TT_ODD;   // ceil(2^K / ODD)
+    // pos_r * M in two registered halves (pos_r is constant for the token): lo / hi partial products, then their sum
+    localparam integer TT_MH = (NW + TT_K + 1) / 2;
+    localparam [NW+TT_K:0] TT_ML = TT_M & ((1 << TT_MH) - 1), TT_MU = TT_M >> TT_MH;
+    reg  [2*NW+TT_K:0] tt_pl, tt_pu, tt_pm;
+    reg  [NW-1:0]      tt_p3;                                  // pos_r / ODD
+    always @(posedge clk) begin
+        tt_pl <= pos_r * TT_ML; tt_pu <= pos_r * TT_MU;
+        tt_pm <= tt_pl + (tt_pu << TT_MH);
+        tt_p3 <= tt_pm >> TT_K;
+    end
+    wire [4:0]    tt_sa  = TT_WT + TT_GT - `F(ME_SPLIT);
+    wire          tt_sel = (`F(ME_D_TILES) == 3'd6);
+    wire [AW-1:0] tt_b   = tt_sel ? (dyn_tiles_invalid ? {AW{1'b0}} : AW'(tt_p3 >> tt_sa)) : dyn[`F(ME_D_TILES)];
+    wire          tt_cin = tt_sel && !dyn_tiles_invalid;
+    wire [AW-1:0] k_nout, k_tiles, k_k, k_wbase, k_xbase, k_obase, k_nin, k_a, k_b, k_c, k_d;
+    wire [10:0]   k_co;
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_nout  (.a(AW'(`F(ME_NOUT))),  .b(dyn[`F(ME_D_NOUT)]),  .cin(1'b0), .s(k_nout),  .cout(k_co[0]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_tiles (.a(AW'(`F(ME_TILES))), .b(tt_b),                 .cin(tt_cin), .s(k_tiles), .cout(k_co[1]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_k     (.a(AW'(`F(ME_K))),     .b(dyn[`F(ME_D_K)]),     .cin(1'b0), .s(k_k),     .cout(k_co[2]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_wbase (.a(AW'(`F(ME_WBASE))), .b(dyn[`F(ME_D_WBASE)]), .cin(1'b0), .s(k_wbase), .cout(k_co[3]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_xbase (.a(AW'(`F(ME_XBASE))), .b(dyn[`F(ME_D_XBASE)]), .cin(1'b0), .s(k_xbase), .cout(k_co[4]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_obase (.a(AW'(`F(ME_OBASE))), .b(dyn[`F(ME_D_OBASE)]), .cin(1'b0), .s(k_obase), .cout(k_co[5]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_nin   (.a(AW'(`F(SU_NIN))),   .b(dyn[`F(SU_D_NIN)]),   .cin(1'b0), .s(k_nin),   .cout(k_co[6]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_a     (.a(AW'(`F(A_BASE))),   .b(dyn[`F(A_D)]),        .cin(1'b0), .s(k_a),     .cout(k_co[7]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_b     (.a(AW'(`F(B_BASE))),   .b(dyn[`F(B_D)]),        .cin(1'b0), .s(k_b),     .cout(k_co[8]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_c     (.a(AW'(`F(C_BASE))),   .b(dyn[`F(C_D)]),        .cin(1'b0), .s(k_c),     .cout(k_co[9]));
+    ot_hdc_kadd #(.W(AW), .K(1)) u_k_d     (.a(AW'(`F(D_BASE))),   .b(dyn[`F(D_D)]),        .cin(1'b0), .s(k_d),     .cout(k_co[10]));
+    localparam integer DF = (DEC_FAST != 0);
+
+    // Decode: every base and count may add one DYN value.
+    always @(posedge clk) if (load) begin
+        d_unit <= `F(UNIT); d_barrier <= `F(BARRIER);
+        me_nout <= DF ? k_nout[NW-1:0] : `F(ME_NOUT) + dyn[`F(ME_D_NOUT)];
+        //: DYN_TTILES counts exact rounds of G/S position tiles (S = 2^split)
+        me_tiles <= DF ? k_tiles[NW-1:0] : `F(ME_TILES) + ((`F(ME_D_TILES) == 3'd6) ? dyn_tiles_split
+                                                               : dyn[`F(ME_D_TILES)]);
+        me_k <= DF ? k_k[NW-1:0] : `F(ME_K) + dyn[`F(ME_D_K)];
+        me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
+        me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
+        me_amc <= `F(ME_AMC);
+        me_row0 <= `F(ME_ROW0) |
+                   ((QWEN_FULLSHAPE != 0) ?
+                    ({{(NW-2){1'b0}}, ir[O_ME_ROW0+W_ME_ROW0+W_ME_AMC +: 2]} << 16) : '0);
+        me_wbase <= DF ? k_wbase : `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
+        me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
+        me_xbase <= DF ? k_xbase : `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
+        me_obase <= DF ? k_obase : `F(ME_OBASE) + dyn[`F(ME_D_OBASE)];
+        me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
+        me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
+        d_chase <= `F(CHASE); d_chase_n <= `F(CHASE_N); d_wait_me <= `F(WAIT_ME); d_wait_su <= `F(WAIT_SU);
+        d_chase_rows <= `F(CHASE_ROWS);
+        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_wcs <= `F(ME_WCS);
+        me_rmax <= `F(ME_RMAX); me_mbase <= `F(ME_MBASE);
+        su_nout <= `F(SU_NOUT);
+        su_nin <= DF ? k_nin[NW-1:0] : `F(SU_NIN) + dyn[`F(SU_D_NIN)];
+        a_src <= `F(A_SRC); a_base <= DF ? k_a : `F(A_BASE) + dyn[`F(A_D)]; a_so <= `F(A_SO); a_si <= `F(A_SI);
+        b_src <= `F(B_SRC); b_base <= DF ? k_b : `F(B_BASE) + dyn[`F(B_D)]; b_so <= `F(B_SO); b_si <= `F(B_SI);
+        c_src <= `F(C_SRC); c_base <= DF ? k_c : `F(C_BASE) + dyn[`F(C_D)]; c_so <= `F(C_SO); c_si <= `F(C_SI);
+        ma <= `F(MA); mb <= `F(MB); ad <= `F(AD); sfu <= `F(SFU); mc <= `F(MC); md <= `F(MD);
+        dst <= `F(DST); d_base <= DF ? k_d : `F(D_BASE) + dyn[`F(D_D)]; d_so <= `F(D_SO); d_si <= `F(D_SI);
+        red <= `F(RED); redsq <= `F(RED_SQ); r_base <= `F(R_BASE); r_so <= `F(R_SO);
+        imm1 <= `F(IMM1); imm2 <= `F(IMM2);
+    end
+    `undef F
+
+    // -- units ----------------------------------------------------------------------
+    wire me_wrom_re, su_wrom_re;
+    wire [AW-1:0] me_wrom_addr, su_wrom_addr;
+    wire [SW-1:0] su_va_re;
+    wire [SW*AW-1:0] su_va_addr;
+    wire [SW*32-1:0] su_va_q;
+    reg embed_active, embed_scale_pending;
+    reg [15:0] embed_scale_hold;
+    reg [SW-1:0] embed_sel;
+    reg [SW*$clog2(EMB_CODE_LANES)-1:0] embed_lanes;
+    wire [SW-1:0] embed_faults;
+    assign embed_scale_re = (INT8_EMBED != 0) && start && st == S_IDLE;
+    assign embed_scale_addr = token;
+    assign embed_code_re = (INT8_EMBED != 0) && (|(su_va_re & {SW{embed_active}}));
+    // The stream's element address is AW bits; token*HID wraps for vocab
+    // rows >= 2^(AW-log2(HID)). Recover the in-row offset from those low
+    // bits, then form the code-word address from the full NW-bit token.
+    assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+        ((tok_r * (HID / EMB_CODE_LANES)) +
+         (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+          EMB_CODE_LANES)) :
+        ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+    assign va_re = su_va_re & ~({SW{(INT8_EMBED != 0) && embed_active}});
+    assign va_addr = su_va_addr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            embed_active <= 1'b0;
+            embed_scale_pending <= 1'b0;
+            embed_sel <= 0;
+        end else begin
+            if (su_go) embed_active <= (INT8_EMBED != 0) && a_src;
+            embed_scale_pending <= embed_scale_re;
+            embed_sel <= su_va_re & {SW{(INT8_EMBED != 0) && embed_active}};
+        end
+    end
+    always @(posedge clk) begin
+        if (embed_scale_pending) embed_scale_hold <= embed_scale_q;
+    end
+    genvar el;
+    generate if (INT8_EMBED != 0) begin : g_int8_embed
+    for (el = 0; el < SW; el = el + 1) begin : g_embed_decode
+        localparam integer ELI = $clog2(EMB_CODE_LANES);
+        always @(posedge clk) embed_lanes[el*ELI +: ELI] <= su_va_addr[el*AW +: ELI];
+        wire [31:0] decoded;
+        wire bad;
+        ot_hdc_qwen_int8_embed_decode u_decode (
+            .code(embed_code_q[8*embed_lanes[el*ELI +: ELI] +: 8]),
+            .scale(embed_scale_hold), .value(decoded), .fault(bad));
+        assign su_va_q[el*32 +: 32] = embed_sel[el] ? decoded : va_q[el*32 +: 32];
+        assign embed_faults[el] = embed_sel[el] && bad;
+    end
+    end else begin : g_plain_embed
+        assign su_va_q = va_q;
+        assign embed_faults = 0;
+    end endgenerate
+    wire [G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] me_wrom_q;
+    generate if (INT8_WEIGHT != 0) begin : g_int8_matrix_word
+        assign me_wrom_q = int8_wrom_q;
+    end else begin : g_bf16_matrix_word
+        assign me_wrom_q = wrom_q;
+    end endgenerate
+    // -- engine clock enable (ME_STALL) ------------------------------------------
+    //: rst_n forces the enable so the gated registers see reset edges (see
+    //: ot_hdc_cg).  The enable is combinational from the supply's view of the
+    //: engine's registered requests; it never depends on me_go.
+    wire me_wake = (st == S_RUN) && nx_v && (d_unit == 2'd1);
+    assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&
+                              ((ME_IDLE_GATE == 0) || !me_idle || me_wake));
+    assign me_clk_en = me_en;
+    wire me_clk;
+    generate if (ME_STALL != 0 || ME_IDLE_GATE != 0) begin : g_me_cg
+        ot_hdc_cg u_me_cg (.clk(clk), .en(me_en), .gclk(me_clk));
+    end else begin : g_me_clk
+        assign me_clk = clk;
+    end endgenerate
+    wire [G-1:0] me_o_we;
+    wire         me_mx_we;
+    //: a held engine keeps its write strobes high; write once per engine edge
+    assign vw_me_we = me_o_we & {G{me_en}};
+    assign vw_mx_we = me_mx_we & me_en;
+    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW),
+                    .INT8_WEIGHT(INT8_WEIGHT), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE)) u_me (
+        .clk(me_clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
+        .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
+        .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
+        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_wcs(me_wcs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
+        .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_rmax(me_rmax), .i_mbase(me_mbase),
+        .mx_we(me_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
+        .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(me_wrom_q),
+        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
+        .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
+        .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
+        .ov(me_ov), .o_we(me_o_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
+        .am_idx(am_idx), .am_val(am_val), .am_any(am_any), .progress(me_progress), .fault(me_fault));
+    assign me_oaddr = vw_me_addr;
+    assign me_omask = vw_me_mask;
+    assign me_odata = vw_me_data;
+
+    wire       su_active;             // observation (test benches)
+    wire [7:0] su_inflight;
+    generate if (SU_VEC != 0) begin : g_vsu
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+        .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
+        .i_nout(su_nout), .i_nin(su_nin),
+        .i_asrc((INT8_EMBED != 0) ? 1'b0 : a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
+        .i_bsrc(b_src), .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si),
+        .i_csrc(c_src), .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si),
+        .i_ma(ma), .i_mb(mb), .i_ad(ad), .i_sfu(sfu), .i_mc(mc), .i_md(md),
+        .i_dst(dst), .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
+        .i_red(red), .i_redsq(redsq), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
+        .va_re(su_va_re), .va_addr(su_va_addr), .va_q(su_va_q),
+        .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
+        .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
+        .wrom_re(su_wrom_re), .wrom_addr(su_wrom_addr), .wrom_q(wrom_q),
+        .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
+        .vm_we(vw_su_we), .vm_waddr(vw_su_addr), .vm_wdata(vw_su_data),
+        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
+        .progress(su_progress), .progress_rows(su_rows), .fault(su_fault));
+    assign su_active = u_su.active;
+    assign su_inflight = u_su.inflight;
+    end else begin : g_ssu
+    ot_hdc_stream #(.W(W), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+        .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
+        .i_nout(su_nout), .i_nin(su_nin),
+        .i_asrc((INT8_EMBED != 0) ? 1'b0 : a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
+        .i_bsrc(b_src), .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si),
+        .i_csrc(c_src), .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si),
+        .i_ma(ma), .i_mb(mb), .i_ad(ad), .i_sfu(sfu), .i_mc(mc), .i_md(md),
+        .i_dst(dst), .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
+        .i_red(red), .i_redsq(redsq), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
+        .va_re(su_va_re), .va_addr(su_va_addr), .va_q(su_va_q),
+        .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
+        .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
+        .wrom_re(su_wrom_re), .wrom_addr(su_wrom_addr), .wrom_q(wrom_q),
+        .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
+        .vm_we(vw_su_we), .vm_waddr(vw_su_addr), .vm_wdata(vw_su_data),
+        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
+        .progress(su_progress), .fault(su_fault));
+    assign su_rows = 16'd0;
+    assign su_active = u_su.active;
+    assign su_inflight = u_su.inflight;
+    end endgenerate
+
+    // The embedding read is the only stream use of the weight ROM; a barrier
+    // keeps it apart from matrix-vector reads.
+    assign wrom_re = ((INT8_WEIGHT != 0) ? 1'b0 : me_wrom_re) |
+                     ((INT8_EMBED != 0) ? 1'b0 : su_wrom_re);
+    assign int8_wrom_re = (INT8_WEIGHT != 0) ? me_wrom_re : 1'b0;
+    assign me_rd_presented = me_wrom_re;
+    assign int8_wrom_addr = me_wrom_addr;
+    assign wrom_su = su_wrom_re;
+    assign wrom_addr = su_wrom_re ? su_wrom_addr : me_wrom_addr;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) fault <= 1'b0;
+        else if (start && st == S_IDLE) fault <= 1'b0;
+        else if (me_fault || su_fault || (|embed_faults) || dyn_tiles_bad_instruction) fault <= 1'b1;
+    end
+endmodule

@@ -54,8 +54,8 @@ Dies: **qwen_rom** = Qwen3-8B ROM die (single reticle, 1.2 GHz streaming / 0.9 G
 
 | die | status | effort | gap | evidence |
 |---|---|---|---|---|
-| qwen_rom | **partial** | XL | 792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. GRT k16 NOT closed (b2 36.4k overflow; b3r2 variants worse). No die-level detailed route, timing budgets or STA. Die top for synthesis does not exist at full shape (tile fabric is host-composed). | `results/rtl/qwen_rom_fulldie_20261003/STATUS.md`<br>`results/rtl/qwen_rom_fulldie_20261003/README.md`<br>`results/rtl/qwen_rom_fulldie_20261003/feasibility.json` |
-| dsrom_s81 | **partial** | L | Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. Open: q element pin xs_q1[151] access; die top lint OOM at 81 GB (elaborate.json killed_oom, not a verdict); no detailed route or die STA; q element pair route p8 not met (setup -88 ps, 3,531 paths). | `results/rtl/dsrom_s81_fulldie_20261004/STATUS.md`<br>`results/rtl/dsrom_integration_20261004/elaborate.json` |
+| qwen_rom | **partial** | XL | 792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. Die global route CLOSED at b3r16B40 (50-iteration GRT, 0 overflow; scoreboard f1df64409). No die-level detailed route, timing budgets or STA. Die top for synthesis does not exist at full shape (tile fabric is host-composed). | `results/rtl/qwen_rom_fulldie_20261003/STATUS.md`<br>`results/rtl/qwen_rom_fulldie_20261003/README.md`<br>`results/rtl/qwen_rom_fulldie_20261003/b3r3/grt/b3r16B40_k16_banded_i50/summary.json` |
+| dsrom_s81 | **partial** | L | Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. The all-flags S81 die top (die_c2_allon) lints with 0 errors at 33.5 GB peak (elaborate.json; the c0/c1 configs were OOM-killed at 81-84 GB, not verdicts). Open: q element pin xs_q1[151] access; no detailed route or die STA; q element pair route p8 not met (setup -88 ps, 3,531 paths). | `results/rtl/dsrom_s81_fulldie_20261004/STATUS.md`<br>`results/rtl/dsrom_integration_20261004/elaborate.json` |
 | hbm_accel | **missing** | XL | No accelerator die floorplan. Block fmax inventory: many SM/service/NoC blocks open or never measured at 0.833 ns; whole SM element never routed. Only the retired comparator die GRT exists. | `results/rtl/hbm_accel_fmax_inventory_20261004/inventory.json`<br>`results/physical_abi3/asap7/chip/dies/v41_hbm_a2cc_grt.json` |
 
 ## I/O and package (pads/bumps, PHYs, ESD, package, thermal)
@@ -87,7 +87,7 @@ Dies: **qwen_rom** = Qwen3-8B ROM die (single reticle, 1.2 GHz streaming / 0.9 G
 | die | status | effort | gap | evidence |
 |---|---|---|---|---|
 | qwen_rom | **partial** | L | Package controller, reset/power-up sequencer, fault CSR RTL+tested at reduced shape. Full-shape die parent replacing the C++ host (A10) missing. | `rtl/qwen_sys/ot_qwen_sys_pkg_ctl.sv`<br>`rtl/qwen_sys/ot_qwen_sys_rst_seq.sv`<br>`rtl/qwen_sys/ot_qwen_sys_csr.sv` |
-| dsrom_s81 | **partial** | M | Stage guards, stall export, wavefront package controller RTL; power/reset sequencing NOT built (Qwen's ot_qwen_sys_rst_seq is reusable); S81 die top cannot be linted on 81 GB. | `results/rtl/dsrom_system_rtl_20261003/STATUS.md`<br>`rtl/dsrom_sys/ot_dsrom_stage_guard.sv` |
+| dsrom_s81 | **partial** | M | Stage guards, stall export, wavefront package controller RTL; power/reset sequencing NOT built (Qwen's ot_qwen_sys_rst_seq is reusable); the all-flags S81 die top lints (33.5 GB) but has never been simulated. | `results/rtl/dsrom_system_rtl_20261003/STATUS.md`<br>`rtl/dsrom_sys/ot_dsrom_stage_guard.sv` |
 | hbm_accel | **partial** | L | Reset controller, command processor, causal command provider exist at reduced shape; full-shape static schedule is C++/ISA-composed (HA8 per-layer jobs). | `rtl/gpu_sys/ot_gpu_reset_ctrl.sv`<br>`rtl/gpu_sys/ot_gpu_cmdproc.sv`<br>`rtl/hbm_accel/service/ot_hbm_accel_causal_command_provider.sv` |
 
 ## Full-system RTL: inter-die communication
@@ -103,7 +103,7 @@ Dies: **qwen_rom** = Qwen3-8B ROM die (single reticle, 1.2 GHz streaming / 0.9 G
 | die | status | effort | gap | evidence |
 |---|---|---|---|---|
 | qwen_rom | **partial** | M | DSpark verify/head/accept components exact at ctx 8K; the drafter layer D0 component FAULTS at ctx 8K (core_fault at cycle 4,657; exact=false, ctx8k/drafter_fault). Not a passing full-system MTP step. | `results/rtl/qwen_dspark_system_20261004/step_composed.json`<br>`results/rtl/qwen_dspark_system_20261004/REPLAY.md` |
-| dsrom_s81 | **partial** | M | DSpark drafter + accept RTL exact on the reduced vehicle and as measured step slices at 1M; fused draft head adopted. Not run inside the S81 system top (die top too large to elaborate). | `results/rtl/dsrom_dspark_rtl_20261003/REPLAY.md`<br>`results/rtl/dsrom_dspark_step_slices_20261004/composition.json`<br>`results/rtl/ds_mtp_accept_20261003` |
+| dsrom_s81 | **partial** | M | DSpark drafter + accept RTL exact on the reduced vehicle and as measured step slices at 1M; fused draft head adopted. Not run inside the S81 system top (the die top lints at 33.5 GB but has no system simulation). | `results/rtl/dsrom_dspark_rtl_20261003/REPLAY.md`<br>`results/rtl/dsrom_dspark_step_slices_20261004/composition.json`<br>`results/rtl/ds_mtp_accept_20261003` |
 | hbm_accel | **partial** | M | DS draft measured on SM elements (chain + full shape exact); DSpark lowering exact on the functional machine; ctl->cmdproc bridge and RTL e2e of the MTP step not done; Qwen DFlash/DSpark on the accelerator not built. | `results/rtl/dshbm_dspark_draft_20261004/README.md`<br>`results/rtl/hbm_system_rtl_20261003/STATUS.md` |
 
 ## Highest-risk items, ranked
@@ -114,7 +114,7 @@ Dies: **qwen_rom** = Qwen3-8B ROM die (single reticle, 1.2 GHz streaming / 0.9 G
 4. qwen_rom fsr_mtp: drafter D0 fault at ctx 8K: headline MTP step not exact in RTL at target context.
 5. all dies: clock -- meso FIFO / forwarded links not instantiated in any die top: single tree proven infeasible; die clocking is a sign-off blocker.
 6. all dies: power intent (UPF) and DS PG route closure: PG measured but intent not in a standard format; R4 route -228 ps.
-7. qwen_rom / hbm_accel fullchip: Qwen GRT not closed; no accelerator die floorplan.
+7. qwen_rom / hbm_accel fullchip: Qwen die GRT closed (b3r16B40) but no detailed route/STA; no accelerator die floorplan.
 
 ## Started in this stream
 

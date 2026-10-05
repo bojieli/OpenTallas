@@ -1,0 +1,1511 @@
+{
+  "schema": "opentallas.dsrom-su-fusion.join.v1",
+  "verdict": "UNVALIDATED_COMPONENT_COMPARISON",
+  "adoption": false,
+  "token_gain": null,
+  "measurements": [
+    {
+      "variant": "hc",
+      "full_shape_sha256": "8ec7c547935b8fd01d9185c412269171a27c9bbf31efdca77918b3647a714bd7",
+      "rtl_N64_sha256": "93ee4f0ebe780c877a78a77a8979295156b6683a5e6db8bc22afe5b0a4fb09b6",
+      "cost": {
+        "replicas_per_die": 1,
+        "lanes": 1024,
+        "input_bits_per_cycle": 131072,
+        "gain_load_bytes_per_cycle": 4096,
+        "normalised_output_bits_per_cycle": 32768,
+        "quant_output_bits_per_cycle": 24896,
+        "retained_x_bits": 163840,
+        "retained_gain_bits": 163840,
+        "gain_load_cycles_per_row_if_cold": 5,
+        "gain_load_overlap_measured": false,
+        "coefficient_fanout": 1024,
+        "x_gain_read_selection": {
+          "banks": 1024,
+          "words_per_bank": 5,
+          "word_bits": 32,
+          "selectors_per_bank": 2
+        },
+        "area_um2": null,
+        "routing_tracks": null,
+        "floorplan_fit": null,
+        "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced"
+      }
+    },
+    {
+      "variant": "q",
+      "full_shape_sha256": "a3467e98aca6381f33c2ef2a5ab84f698e6afeadf9b381e3f91ee15ed4662dea",
+      "rtl_N64_sha256": "91f88a819083d5c127a67b5aac4d10dab92d6ff125838aef8fa2301d705b6eb7",
+      "cost": {
+        "replicas_per_die": 1,
+        "lanes": 256,
+        "input_bits_per_cycle": 8192,
+        "gain_load_bytes_per_cycle": 1024,
+        "normalised_output_bits_per_cycle": 8192,
+        "quant_output_bits_per_cycle": 6224,
+        "retained_x_bits": 40960,
+        "retained_gain_bits": 40960,
+        "gain_load_cycles_per_row_if_cold": 5,
+        "gain_load_overlap_measured": false,
+        "coefficient_fanout": 256,
+        "x_gain_read_selection": {
+          "banks": 256,
+          "words_per_bank": 5,
+          "word_bits": 32,
+          "selectors_per_bank": 2
+        },
+        "area_um2": null,
+        "routing_tracks": null,
+        "floorplan_fit": null,
+        "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced"
+      }
+    },
+    {
+      "variant": "kv",
+      "full_shape_sha256": "3180dd0ff6dd80f6c42d94e053b6cf1cd54dc9863bd8e7f2882bbb19977b3419",
+      "rtl_N64_sha256": "d97be9fb8d26f8cc62e5f2ca6eeb96b8b875097f212b98ee8245d3f4aa0a786e",
+      "cost": {
+        "replicas_per_die": 1,
+        "lanes": 512,
+        "input_bits_per_cycle": 16384,
+        "gain_load_bytes_per_cycle": 2048,
+        "normalised_output_bits_per_cycle": 16384,
+        "quant_output_bits_per_cycle": 12448,
+        "retained_x_bits": 16384,
+        "retained_gain_bits": 16384,
+        "gain_load_cycles_per_row_if_cold": 1,
+        "gain_load_overlap_measured": false,
+        "coefficient_fanout": 512,
+        "x_gain_read_selection": {
+          "banks": 512,
+          "words_per_bank": 1,
+          "word_bits": 32,
+          "selectors_per_bank": 2
+        },
+        "area_um2": null,
+        "routing_tracks": null,
+        "floorplan_fit": null,
+        "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "chain": "L20.attn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L20.attn.hc_pre",
+        "L20.attn.norm.sumsq",
+        "L20.attn.norm.rsqrt",
+        "L20.attn.norm.scale",
+        "L20.attn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0,
+        "with_saved_cdc_us": 0.75,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23166666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L20.ffn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L20.ffn.hc_pre",
+        "L20.ffn.norm.sumsq",
+        "L20.ffn.norm.rsqrt",
+        "L20.ffn.norm.scale",
+        "L20.ffn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.7555,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23716666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L0.attn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L0.attn.hc_pre",
+        "L0.attn.norm.sumsq",
+        "L0.attn.norm.rsqrt",
+        "L0.attn.norm.scale",
+        "L0.attn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.7555,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23716666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L0.ffn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L0.ffn.hc_pre",
+        "L0.ffn.norm.sumsq",
+        "L0.ffn.norm.rsqrt",
+        "L0.ffn.norm.scale",
+        "L0.ffn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.7555,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23716666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L3.attn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L3.attn.hc_pre",
+        "L3.attn.norm.sumsq",
+        "L3.attn.norm.rsqrt",
+        "L3.attn.norm.scale",
+        "L3.attn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0,
+        "with_saved_cdc_us": 0.75,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23166666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L3.ffn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L3.ffn.hc_pre",
+        "L3.ffn.norm.sumsq",
+        "L3.ffn.norm.rsqrt",
+        "L3.ffn.norm.scale",
+        "L3.ffn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.7555,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23716666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L24.attn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L24.attn.hc_pre",
+        "L24.attn.norm.sumsq",
+        "L24.attn.norm.rsqrt",
+        "L24.attn.norm.scale",
+        "L24.attn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0,
+        "with_saved_cdc_us": 0.75,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23166666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L24.ffn.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L24.ffn.hc_pre",
+        "L24.ffn.norm.sumsq",
+        "L24.ffn.norm.rsqrt",
+        "L24.ffn.norm.scale",
+        "L24.ffn.quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 675,
+        "component_us": 0.75,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.7555,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 278,
+        "actual_observer_cycles": 255,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.23166666666666666,
+        "with_retained_saved_cdc_us": 0.23716666666666666,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.5183333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "head.hc_pre_norm",
+      "shape": {
+        "elements": 5120,
+        "quant_blocks": 160
+      },
+      "compared_endpoint": "normalised output (no head quant baseline)",
+      "covers": [
+        "head.hc_pre",
+        "head.norm.sumsq",
+        "head.norm.rsqrt",
+        "head.norm.scale"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 465,
+        "component_us": 0.5166666666666667,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.5221666666666667,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 4,
+          "wire": 147,
+          "vm_round_trip": 32,
+          "arith": 128,
+          "passthrough": 69,
+          "reduction": 68
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 265,
+        "actual_observer_cycles": 242,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.22083333333333333,
+        "with_retained_saved_cdc_us": 0.22633333333333333,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.2958333333333334,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 2,
+        "lane_local_register_bypass_description": "HC mix op0->op1->op2",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L20.attn.q_norm",
+      "shape": {
+        "elements": 1280,
+        "quant_blocks": 40
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L20.attn.q_norm.sumsq",
+        "L20.attn.q_norm.rsqrt",
+        "L20.attn.q_norm.scale",
+        "L20.attn.q_quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 435,
+        "component_us": 0.48333333333333334,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.48883333333333334,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 1,
+          "wire": 98,
+          "vm_round_trip": 20,
+          "arith": 96,
+          "passthrough": 53,
+          "reduction": 60
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 252,
+        "actual_observer_cycles": 229,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.21,
+        "with_retained_saved_cdc_us": 0.2155,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.2733333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L0.attn.q_norm",
+      "shape": {
+        "elements": 1280,
+        "quant_blocks": 40
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L0.attn.q_norm.sumsq",
+        "L0.attn.q_norm.rsqrt",
+        "L0.attn.q_norm.scale",
+        "L0.attn.q_quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 435,
+        "component_us": 0.48333333333333334,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.48883333333333334,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 1,
+          "wire": 98,
+          "vm_round_trip": 20,
+          "arith": 96,
+          "passthrough": 53,
+          "reduction": 60
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 252,
+        "actual_observer_cycles": 229,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.21,
+        "with_retained_saved_cdc_us": 0.2155,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.2733333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L3.attn.q_norm",
+      "shape": {
+        "elements": 1280,
+        "quant_blocks": 40
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L3.attn.q_norm.sumsq",
+        "L3.attn.q_norm.rsqrt",
+        "L3.attn.q_norm.scale",
+        "L3.attn.q_quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 435,
+        "component_us": 0.48333333333333334,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.48883333333333334,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 1,
+          "wire": 98,
+          "vm_round_trip": 20,
+          "arith": 96,
+          "passthrough": 53,
+          "reduction": 60
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 252,
+        "actual_observer_cycles": 229,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.21,
+        "with_retained_saved_cdc_us": 0.2155,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.2733333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L24.attn.q_norm",
+      "shape": {
+        "elements": 1280,
+        "quant_blocks": 40
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L24.attn.q_norm.sumsq",
+        "L24.attn.q_norm.rsqrt",
+        "L24.attn.q_norm.scale",
+        "L24.attn.q_quant"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 435,
+        "component_us": 0.48333333333333334,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.48883333333333334,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "stream": 1,
+          "wire": 98,
+          "vm_round_trip": 20,
+          "arith": 96,
+          "passthrough": 53,
+          "reduction": 60
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 252,
+        "actual_observer_cycles": 229,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.21,
+        "with_retained_saved_cdc_us": 0.2155,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.2733333333333333,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "32-lane quantiser reduction",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 2,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L20.attn.kv_norm_rope",
+      "shape": {
+        "elements": 512,
+        "quant_blocks": 16
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L20.attn.kv_norm.sumsq",
+        "L20.attn.kv_norm.rsqrt",
+        "L20.attn.kv_norm.scale",
+        "L20.attn.kv_rope_qdq"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 454,
+        "component_us": 0.5044444444444445,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.5099444444444444,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "wire": 120,
+          "vm_round_trip": 26,
+          "arith": 110,
+          "passthrough": 63,
+          "reduction": 52
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 247,
+        "actual_observer_cycles": 224,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.20583333333333334,
+        "with_retained_saved_cdc_us": 0.21133333333333335,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.29861111111111116,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "cross-lane adjacent-pair rotation",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 3,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L0.attn.kv_norm_rope",
+      "shape": {
+        "elements": 512,
+        "quant_blocks": 16
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L0.attn.kv_norm.sumsq",
+        "L0.attn.kv_norm.rsqrt",
+        "L0.attn.kv_norm.scale",
+        "L0.attn.kv_rope_qdq"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 454,
+        "component_us": 0.5044444444444445,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.5099444444444444,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "wire": 120,
+          "vm_round_trip": 26,
+          "arith": 110,
+          "passthrough": 63,
+          "reduction": 52
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 247,
+        "actual_observer_cycles": 224,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.20583333333333334,
+        "with_retained_saved_cdc_us": 0.21133333333333335,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.29861111111111116,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "cross-lane adjacent-pair rotation",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 3,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L3.attn.kv_norm_rope",
+      "shape": {
+        "elements": 512,
+        "quant_blocks": 16
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L3.attn.kv_norm.sumsq",
+        "L3.attn.kv_norm.rsqrt",
+        "L3.attn.kv_norm.scale",
+        "L3.attn.kv_rope_qdq"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 454,
+        "component_us": 0.5044444444444445,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.5099444444444444,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "wire": 120,
+          "vm_round_trip": 26,
+          "arith": 110,
+          "passthrough": 63,
+          "reduction": 52
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 247,
+        "actual_observer_cycles": 224,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.20583333333333334,
+        "with_retained_saved_cdc_us": 0.21133333333333335,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.29861111111111116,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "cross-lane adjacent-pair rotation",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 3,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    },
+    {
+      "chain": "L24.attn.kv_norm_rope",
+      "shape": {
+        "elements": 512,
+        "quant_blocks": 16
+      },
+      "compared_endpoint": "quantised output",
+      "covers": [
+        "L24.attn.kv_norm.sumsq",
+        "L24.attn.kv_norm.rsqrt",
+        "L24.attn.kv_norm.scale",
+        "L24.attn.kv_rope_qdq"
+      ],
+      "exact_saved_operands": true,
+      "baseline": {
+        "wired_cycles": 454,
+        "component_us": 0.5044444444444445,
+        "cdc_us": 0.0055,
+        "with_saved_cdc_us": 0.5099444444444444,
+        "categories_cycles": {
+          "setup": 11,
+          "issue_barrier": 6,
+          "wire": 120,
+          "vm_round_trip": 26,
+          "arith": 110,
+          "passthrough": 63,
+          "reduction": 52
+        }
+      },
+      "candidate": {
+        "reported_landing_cycles": 247,
+        "actual_observer_cycles": 224,
+        "output_wire_budget_cycles": 23,
+        "component_plus_output_budget_us": 0.20583333333333334,
+        "with_retained_saved_cdc_us": 0.21133333333333335,
+        "cdc_removal_measured": false,
+        "gain_load_inside_interval": false
+      },
+      "conditional_component_delta_us": 0.29861111111111116,
+      "remaining_dependencies": [
+        "chunk8 sequential sums and golden pairwise tree",
+        "scalar divide/epsilon/rsqrt and result broadcast",
+        "retained lane x and gain reads after reduction",
+        "cross-lane adjacent-pair rotation",
+        "final VM publication/consumer lease and output credits unmeasured"
+      ],
+      "bypass": {
+        "lane_local_register_bypass_edges": 0,
+        "lane_local_register_bypass_description": "none: reduction and broadcast remain",
+        "retained_cross_lane_edges": 3,
+        "intermediate_VM_roundtrips_removed": "mix -> reduction -> scalar -> scale -> quant",
+        "replaced_by": "lane x registers and scalar result/broadcast; golden rounding unchanged",
+        "cross_lane_waits_removed": false
+      },
+      "adoption": "HOLD: output transport budget, cold gain load, finite credits, area/corridor/SSFF unqualified"
+    }
+  ],
+  "cases_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+  "timing_authority": "tools/dsrom_1m_allmeasured.py (Maxwell)",
+  "scope": "saved actual RTL comparisons only; no golden regeneration, no token result, no CDC removal claim",
+  "inputs_sha256": {
+    "results/rtl/dsrom_1m_allmeasured_20261004/su_runs/su_N1024_M256_b22r15m5a4_dpi_beh.json": "d983881dc46e49978aa09bdb3d2b0c022c5817d7b2f42b7ee2cabce4842226e6",
+    "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
+    "results/rtl/dsrom_recovery_20261004/su_chains/anatomy.json": "e290749835c748b5933b0fd8d9f33169e2a50d90ad76ba3d8063454085b64671",
+    "results/rtl/dsrom_recovery_20261004/composition.json": "6cef075ee8d265690f609ad727bcb13349f82572005abe1a0ab612ab29623306",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_result.json": "eeb70af58820e0e399b0c15170798ce1f1b4ea5d2abc85d3f924c2261fc01c6d",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/transport_cached_manifest.json": "be3d158443fdb9c75a94f9e56588b1d0594e09a7ffeea80f672ddf238a96adb7",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/hcpost_terminal/run_ng256_w33_23_m5a4_h.json": "d8a06ce5b52dea96a01acf1236f27e3ee7a5236d3ea9afc59c5374767f26d8f3",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/hcpost_terminal/cases.json": "458287baff9c66fb3ef24d96c41918b742c69941a6c27ae0b9256377f06730fc",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/hcpost_recovery.json": "1ed459c49407f3c4f920a37c78b69685b063f895396153fee30ea2a943b12951",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/run_rtl_W64_NB32_L0.swiglu+L0.shared_swiglu+L3.swiglu+L3.shared_swiglu+L20.swiglu+L20.shared_swiglu+L24.swiglu+L24.shared_swiglu+random.swiglu.json": "658469bd61e6e4d4935aaabc1a7869fb9d2bb6d8413db3c97265aefb459e3a8d",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/run_dpi_beh_W1024_NB32_L0.swiglu+L0.shared_swiglu+L3.swiglu+L3.shared_swiglu+L20.swiglu+L20.shared_swiglu+L24.swiglu+L24.shared_swiglu+random.swiglu.json": "e8145f17eb169cb306062c16a37b0bf2ca738860be9eda9c8f984101fb286b4c",
+    "results/rtl/dsrom_recovery_20261004/su_chains/takeover/swiglu/cases.json": "988f921371c9301d2e3d31e4ef446d106a901e8a9cd6096ba5b246dd73ec868d"
+  },
+  "tool_sha256": "a6d02ecb00a5c9a990e90748f97fc3d14fd37c9bf297763b9cc5bb3dc3a6b968",
+  "actual_registered_transport": {
+    "chain": "L20.attn.hc_pre_norm",
+    "nodes": [
+      {
+        "node": "L20.attn.hc_pre",
+        "baseline_cycles": 188,
+        "baseline_us": 0.2088888888888889,
+        "candidate_cycles": 56,
+        "candidate_us": 0.04666666666666667,
+        "candidate_boundary_cycle": 72,
+        "endpoint": "actual internal dependency edge"
+      },
+      {
+        "node": "L20.attn.norm.sumsq",
+        "baseline_cycles": 75,
+        "baseline_us": 0.08333333333333333,
+        "candidate_cycles": 72,
+        "candidate_us": 0.06,
+        "candidate_boundary_cycle": 144,
+        "endpoint": "actual internal dependency edge"
+      },
+      {
+        "node": "L20.attn.norm.rsqrt",
+        "baseline_cycles": 145,
+        "baseline_us": 0.16111111111111112,
+        "candidate_cycles": 90,
+        "candidate_us": 0.075,
+        "candidate_boundary_cycle": 234,
+        "endpoint": "actual internal dependency edge"
+      },
+      {
+        "node": "L20.attn.norm.scale",
+        "baseline_cycles": 57,
+        "baseline_us": 0.06333333333333334,
+        "candidate_cycles": 24,
+        "candidate_us": 0.02,
+        "candidate_boundary_cycle": 258,
+        "endpoint": "actual internal dependency edge"
+      },
+      {
+        "node": "L20.attn.quant",
+        "baseline_cycles": 210,
+        "baseline_us": 0.23333333333333334,
+        "candidate_cycles": 36,
+        "candidate_us": 0.03,
+        "candidate_boundary_cycle": 294,
+        "endpoint": "actual registered quant landing"
+      }
+    ],
+    "actual_transport_cycles": 23,
+    "gain_load_cycles": 5,
+    "gain_first_to_output_cycles": 288,
+    "gain_loaded_to_go_wait_cycles": 6,
+    "input_first_available_cycle": 50,
+    "input_last_available_cycle": 54,
+    "wall_us": {
+      "baseline_component": 0.75,
+      "candidate_go_to_output": 0.23166666666666666,
+      "candidate_first_gain_to_output": 0.24
+    },
+    "cdc": "not in component: use graph crossings once; no zero-CDC adoption",
+    "gate": "component functional/transport PASS; credits/VM lease/area/corridor/SSFF HOLD"
+  },
+  "hcpost": {
+    "full_shape_exact": true,
+    "rows": [
+      {
+        "chain": "L20.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L20.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L0.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L0.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L3.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L3.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L24.attn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      },
+      {
+        "chain": "L24.ffn.hc_post",
+        "baseline_wired_cycles": 256,
+        "baseline_component_us": 0.28444444444444444,
+        "baseline_final_result_cycle": 339,
+        "baseline_result_tail_after_write_cycles": 83,
+        "result_tail_note": "publication endpoint only; model required reducer/busy/lease dependencies separately, never remove them by assumption",
+        "candidate_registered_landing_cycles": 99,
+        "candidate_component_us": 0.0825,
+        "conditional_component_delta_us": 0.20194444444444443,
+        "golden_exact_words": 20480,
+        "sumsq_result_included": false,
+        "physical_verdict": "REJECT_SS",
+        "retained_dependencies": [
+          "final VM publication/credits/consumer lease",
+          "next HC mix sumsq reducer remains its own graph branch"
+        ],
+        "cdc": "outside component; graph edge charging once by Maxwell",
+        "adoption": false
+      }
+    ],
+    "cases": 40,
+    "verdict": "UNVALIDATED_COMPONENT_COMPARISON",
+    "cost": {
+      "NG": 256,
+      "output_lanes": 1024,
+      "input_bits_per_cycle": 40960,
+      "output_bits_per_cycle": 32768,
+      "coefficients_bits": 640,
+      "lane_multipliers": 5120,
+      "lane_adders": 4096,
+      "register_bypass_edges": 3,
+      "necessary_output_VM_waits": true,
+      "fused_sumsq_included": false,
+      "area_um2": null,
+      "routing_fit": null,
+      "timing": null,
+      "adoption": false,
+      "counts_status": "ESTIMATE sourcecounts, not physicalcost/adoption",
+      "selected_physical_verdict": "REJECT_SS",
+      "selected_SS_ps": -52.47,
+      "selected_FF_ps": 5.7,
+      "measured_lane_standard_cell_area_um2": 5435.51,
+      "replicated_lane_area_mm2_ESTIMATE": 5.56596224,
+      "hub_data_and_coefficient_register_bits_ESTIMATE": 2168064,
+      "hub_valid_register_bits_ESTIMATE": 90,
+      "full_unit_area_um2": null,
+      "hub_area_um2": null,
+      "full_unit_routed_corridor": false
+    },
+    "gate": "REJECT_SS; functional component only; no area/corridor/SSFF/composed-rate adoption"
+  },
+  "swiglu": {
+    "rows": [
+      {
+        "chain": "L0.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L0.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L3.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L3.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L20.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L20.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L24.ffn.swiglu",
+        "golden_exact_elements": 3456,
+        "baseline_component_cycles": 347,
+        "baseline_component_us": 0.38555555555555554,
+        "candidate_component_cycles": 178,
+        "candidate_component_us": 0.14833333333333334,
+        "candidate_activation_cycles": 142,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.2372222222222222,
+        "baseline_route_weight_already_fused_as_E2": true,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      },
+      {
+        "chain": "L24.ffn.shared_swiglu",
+        "golden_exact_elements": 576,
+        "baseline_component_cycles": 242,
+        "baseline_component_us": 0.2688888888888889,
+        "candidate_component_cycles": 170,
+        "candidate_component_us": 0.14166666666666666,
+        "candidate_activation_cycles": 134,
+        "candidate_quant_transport_cycles": 36,
+        "conditional_component_delta_us": 0.12722222222222224,
+        "baseline_route_weight_already_fused_as_E2": false,
+        "extra_route_w_latency_added": false,
+        "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+        "remaining_dependencies": [
+          "silu FP32 dependency chain",
+          "32-lane quantiser reduction",
+          "finite final VM/consumer credits and graph CDC"
+        ],
+        "adoption": false
+      }
+    ],
+    "full_shape_exact": true,
+    "token_gain": null,
+    "ss_ff": null,
+    "verdict": "UNVALIDATED_COMPONENT_COMPARISON"
+  }
+}

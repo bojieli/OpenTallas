@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qss_bench_preflow_terminal.v1",
+  "passed_source_commit": "0419a951bce071dcde3aea490aa8549dfc0ccab6",
+  "bench_rc": 0,
+  "bench_requests": 1505,
+  "bench_bitexact_results": 1505,
+  "bench_argmax_tops": 751,
+  "physical_rc": 1,
+  "physical_verdict": "FAIL_PRELAUNCH_ARGV_NAMEERROR",
+  "yosys_or_orfs_started": false,
+  "raw_sha256": {
+    "model.json": "81d49f907887a6e6d5f16b9b7b09bc30517b52792abb23c5253466ab7f49d4dd",
+    "bench_build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "driver.log": "3fb0d77c896616fac3b8be0a1b3432e163df80ef5194fcb8db9e9c10d40dec85",
+    "bench.log": "1db1cee07b7fb06b703d3a7e9cf2e836c537795db528cf3bdd2a0ae7df5be126",
+    "bench.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bench_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_commit.txt": "2650cab2438dc3253b9d491903b1df989805eb4a27431bb0f9abaeb1af77e8e0",
+    "reuse.json": "5e9274a6179f796ebd505426b158cfb7c17e9f287a28a1f77d2cf49ff6668506",
+    "driver.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "launch.json": "82f7522ef871dace65410ef4d785ae1fdb09456ced5e3e63083bd3b704535499"
+  },
+  "continuation_source": "d2a24e9d2c7a0e8561361baea08c1c5dd06384f4",
+  "continuation_root": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-l7-fixedtool-20261004",
+  "hardware_recipe_failure_count": 1,
+  "functional_repeat": false,
+  "hardware_admission": false
+}
