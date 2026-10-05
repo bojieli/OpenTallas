@@ -1,0 +1,261 @@
+{
+  "ss": {
+    "reported_paths": 13374,
+    "classes": [
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.dat[*]$_SDFFCE_PP0P_/D",
+        "count": 4048,
+        "worst_ps": -328.81,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.dat[3420]$_SDFFCE_PP0P_/D",
+          "slack_ps": -328.81
+        }
+      },
+      {
+        "cone": "u_ep.g_on.nrec[*]$_DFFE_PN0P_/QN -> u_ep.g_on.u_tx_cdc.g_on.u_fifo.mem[*][*]$_DFFE_PP_/D",
+        "count": 3720,
+        "worst_ps": -328.27,
+        "example": {
+          "start": "u_ep.g_on.nrec[0]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.mem[6][329]$_DFFE_PP_/D",
+          "slack_ps": -328.27
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.asmb[*]$_DFFE_PN0P_/D",
+        "count": 3960,
+        "worst_ps": -286.02,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.asmb[2392]$_DFFE_PN0P_/D",
+          "slack_ps": -286.02
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[*]$_DFFE_PN0P_/QN -> u_ep.g_on.u_tx_cdc.g_on.u_fifo.mem[*][*]$_DFFE_PP_/D",
+        "count": 497,
+        "worst_ps": -284.43,
+        "example": {
+          "start": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[2]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.mem[0][240]$_DFFE_PP_/D",
+          "slack_ps": -284.43
+        }
+      },
+      {
+        "cone": "u_ep.g_on.nrec[*]$_DFFE_PN0P_/QN -> u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[*]$_DFFE_PN0P_/D",
+        "count": 1,
+        "worst_ps": -270.55,
+        "example": {
+          "start": "u_ep.g_on.nrec[0]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[3]$_DFFE_PN0P_/D",
+          "slack_ps": -270.55
+        }
+      },
+      {
+        "cone": "u_ep.g_on.nrec[*]$_DFFE_PN0P_/QN -> u_ep.g_on.g_txs[*].g_on.u_sw/q[*]$_DFF_PN0_/D",
+        "count": 38,
+        "worst_ps": -258.16,
+        "example": {
+          "start": "u_ep.g_on.nrec[0]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.g_txs[4].g_on.u_sw/q[1]$_DFF_PN0_/D",
+          "slack_ps": -258.16
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[*]$_DFFE_PN0P_/QN -> u_ep.g_on.g_txs[*].g_on.u_sw/q[*]$_DFF_PN1_/D",
+        "count": 3,
+        "worst_ps": -179.25,
+        "example": {
+          "start": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[2]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.g_txs[4].g_on.u_sw/q[0]$_DFF_PN1_/D",
+          "slack_ps": -179.25
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wbin[*]$_DFFE_PN0P_/QN -> u_ep.g_on.u_tx_cdc.g_on.u_fifo.mem[*][*]$_DFFE_PP_/D",
+        "count": 2,
+        "worst_ps": -175.22,
+        "example": {
+          "start": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wbin[1]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.mem[0][288]$_DFFE_PP_/D",
+          "slack_ps": -175.22
+        }
+      },
+      {
+        "cone": "u_ep.g_on.st[*]$_DFF_PN0_/QN -> u_ep.g_on.asmb[*]$_DFFE_PN0P_/D",
+        "count": 107,
+        "worst_ps": -168.95,
+        "example": {
+          "start": "u_ep.g_on.st[2]$_DFF_PN0_/QN",
+          "end": "u_ep.g_on.asmb[3711]$_DFFE_PN0P_/D",
+          "slack_ps": -168.95
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.seq[*]$_DFFE_PN0P_/D",
+        "count": 6,
+        "worst_ps": -114.84,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.seq[7]$_DFFE_PN0P_/D",
+          "slack_ps": -114.84
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.nrec[*]$_DFFE_PN0P_/D",
+        "count": 4,
+        "worst_ps": -63.68,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.nrec[2]$_DFFE_PN0P_/D",
+          "slack_ps": -63.68
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.nexp[*]$_DFFE_PN0P_/D",
+        "count": 5,
+        "worst_ps": -63.17,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.nexp[3]$_DFFE_PN0P_/D",
+          "slack_ps": -63.17
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.flt_sm$_DFFE_PN0P_/D",
+        "count": 1,
+        "worst_ps": -62.22,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.flt_sm$_DFFE_PN0P_/D",
+          "slack_ps": -62.22
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[*].g_on.u_sel/q[*]$_DFF_PN0_/QN -> u_ep.g_on.g_xreg.xkm[*]$_DFF_P_/D",
+        "count": 16,
+        "worst_ps": -54.25,
+        "example": {
+          "start": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[7].g_on.u_sel/q[15]$_DFF_PN0_/QN",
+          "end": "u_ep.g_on.g_xreg.xkm[5]$_DFF_P_/D",
+          "slack_ps": -54.25
+        }
+      },
+      {
+        "cone": "u_ep.g_on.qa_idx[*]$_DFF_P_/QN -> u_ep.g_on.asmb[*]$_DFFE_PN0P_/D",
+        "count": 11,
+        "worst_ps": -47.66,
+        "example": {
+          "start": "u_ep.g_on.qa_idx[509]$_DFF_P_/QN",
+          "end": "u_ep.g_on.asmb[873]$_DFFE_PN0P_/D",
+          "slack_ps": -47.66
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.st[*]$_DFF_PN0_/D",
+        "count": 2,
+        "worst_ps": -47.21,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.st[2]$_DFF_PN0_/D",
+          "slack_ps": -47.21
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[*].g_on.u_sel/q[*]$_DFF_PN1_/QN -> u_ep.g_on.g_xreg.xbad$_DFF_P_/D",
+        "count": 1,
+        "worst_ps": -46.57,
+        "example": {
+          "start": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.g_sl[7].g_on.u_sel/q[0]$_DFF_PN1_/QN",
+          "end": "u_ep.g_on.g_xreg.xbad$_DFF_P_/D",
+          "slack_ps": -46.57
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.wgray[*]$_DFFE_PN0P_/QN -> u_ep.g_on.u_rx_cdc.g_on.u_fifo.mem[*][*]$_DFFE_PP_/D",
+        "count": 944,
+        "worst_ps": -43.13,
+        "example": {
+          "start": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.wgray[3]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.u_rx_cdc.g_on.u_fifo.mem[11][425]$_DFFE_PP_/D",
+          "slack_ps": -43.13
+        }
+      },
+      {
+        "cone": "u_ep.g_on.g_xreg.xd[*]$_DFF_P_/QN -> u_ep.g_on.g_rxs[*].g_on.u_d/q[*]$_DFF_PN0_/D",
+        "count": 3,
+        "worst_ps": -41.55,
+        "example": {
+          "start": "u_ep.g_on.g_xreg.xd[309]$_DFF_P_/QN",
+          "end": "u_ep.g_on.g_rxs[7].g_on.u_d/q[309]$_DFF_PN0_/D",
+          "slack_ps": -41.55
+        }
+      },
+      {
+        "cone": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[*]$_DFFE_PN0P_/QN -> u_ep.g_on.g_txs[*].g_on.u_sw/q[*]$_DFF_PN0_/D",
+        "count": 3,
+        "worst_ps": -40.27,
+        "example": {
+          "start": "u_ep.g_on.u_tx_cdc.g_on.u_fifo.wgray[2]$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.g_txs[0].g_on.u_sw/q[5]$_DFF_PN0_/D",
+          "slack_ps": -40.27
+        }
+      },
+      {
+        "cone": "u_mux.g_on.own$_DFFE_PN0P_/QN -> u_ep.g_on.g_txs[*].g_on.u_sw/q[*]$_DFF_PN1_/D",
+        "count": 2,
+        "worst_ps": -21.64,
+        "example": {
+          "start": "u_mux.g_on.own$_DFFE_PN0P_/QN",
+          "end": "u_ep.g_on.g_txs[1].g_on.u_sw/q[0]$_DFF_PN1_/D",
+          "slack_ps": -21.64
+        }
+      }
+    ],
+    "original_failing_d_pins": 13442,
+    "all_failing_pins_covered": false
+  },
+  "ff": {
+    "reported_paths": 6,
+    "classes": [
+      {
+        "cone": "u_ep.g_on.asmb[*]$_DFFE_PN0P_/QN -> o_rsp_data[*]$_DFF_P_/D",
+        "count": 5,
+        "worst_ps": -8.85,
+        "example": {
+          "start": "u_ep.g_on.asmb[3841]$_DFFE_PN0P_/QN",
+          "end": "o_rsp_data[3841]$_DFF_P_/D",
+          "slack_ps": -8.85
+        }
+      },
+      {
+        "cone": "u_ep.g_on.g_xreg.xd[*]$_DFF_P_/QN -> u_ep.g_on.g_rxs[*].g_on.u_d/q[*]$_DFF_PN0_/D",
+        "count": 1,
+        "worst_ps": -2.62,
+        "example": {
+          "start": "u_ep.g_on.g_xreg.xd[3]$_DFF_P_/QN",
+          "end": "u_ep.g_on.g_rxs[6].g_on.u_d/q[3]$_DFF_PN0_/D",
+          "slack_ps": -2.62
+        }
+      }
+    ],
+    "original_failing_d_pins": 6,
+    "all_failing_pins_covered": true
+  },
+  "vehicle": "collctx_f12x_r2",
+  "host": "ot-epyc1tb",
+  "original_root": "/srv/opentallas-scratch/claude/hbm-fmax-noc/routes/collctx_f12x_r2",
+  "qualification": "historical two-SM registered context with false IO; NOT current32SM loaded parent",
+  "SS_setup_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "adoption": false,
+  "artifacts": {
+    "paths_ff.log": "227885161a85f690ce4629413793b9295b15fa6239a9f221468699631a52895f",
+    "paths_ff.tcl": "3c858922c96bf2dc0679a7725a4761563c656165c8433d52dd0486bba1435f09",
+    "paths_ss.tcl": "264d0202a30d6f62e055b5257dae58e682f0948170f97af998416e47fe55add1",
+    "paths_ss.log": "968ee1a9cedce5db796c2aaa8e7905c64caf916c259ded6aabef92e05e7f8d48",
+    "preload_ss_FAIL.log": "955f0dbf5f45fcc816300037ee389441f719a719567a0d0b27d1a2ffb97a8948"
+  }
+}

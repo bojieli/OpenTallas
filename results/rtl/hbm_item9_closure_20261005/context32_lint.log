@@ -1,0 +1,9 @@
+%Warning-WIDTHEXPAND: rtl/gpu_sys/ot_gpu_reset_ctrl.sv:82:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'n' generates 4 bits.
+                                                            : ... note: In instance 'ot_gpu_coll_item9_context32.g_on.u_rst.g_on.u_host'
+   82 |             if (n == HOLD) rst_n <= 1'b1;
+      |                   ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.251 MB sources in 12 modules, into 19.580 MB in 8 C++ files needing 0.000 MB
+- Verilator: Walltime 1.373 s (elab=0.110, cvt=1.123, bld=0.000); cpu 1.373 s on 1 threads; allocated 179.148 MB
