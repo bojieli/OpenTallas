@@ -44,6 +44,7 @@ module ot_hbm_accel_index_candidate #(
     input  wire [Q-1:0]                 out_ready,
     output wire [Q-1:0]                 out_last,
     output wire [Q*(SL/8)-1:0]          out_lv,
+    output wire [Q*(SL/8)*16-1:0]       out_val,
     output wire [Q*(SL/8)*(IWP-3)-1:0]  out_blk,
     output wire [Q-1:0]                 mem_we,
     output wire [Q*AW-1:0]              mem_waddr,
@@ -112,10 +113,13 @@ module ot_hbm_accel_index_candidate #(
         .mem_we(mem_we), .mem_waddr(mem_waddr), .mem_wdata(mem_wdata), .mem_re(mem_re), .mem_raddr(mem_raddr),
         .mem_rdata(mem_rdata), .rep_req(rep_req), .ovf(ovf), .busy(busy), .stats(stats));
     assign out_lv = o_lv & ~o_ninf;
+    // Real selected maxima for the candidate collective; never reconstruct
+    // scores from host/oracle values or silently publish a false local pin.
+    assign out_val = o_val;
     end else begin : disabled
         assign in_ready = '0;
         assign out_valid = '0; assign out_last = '0;
-        assign out_lv = '0; assign out_blk = '0;
+        assign out_lv = '0; assign out_blk = '0; assign out_val = '0;
         assign mem_we = '0; assign mem_waddr = '0; assign mem_wdata = '0;
         assign mem_re = '0; assign mem_raddr = '0;
         assign rep_req = 1'b0; assign ovf = 1'b0; assign busy = 1'b0;

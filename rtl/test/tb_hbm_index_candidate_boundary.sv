@@ -10,6 +10,7 @@ module tb_hbm_index_candidate_boundary;
     wire [3:0] ready, ov, ol, we, re;
     wire [7:0] olv;
     wire [135:0] oblk;
+    wire [127:0] oval;
     wire [39:0] wa,ra;
     wire [271:0] wd;
     reg [271:0] rd=0;
@@ -27,7 +28,7 @@ module tb_hbm_index_candidate_boundary;
         .held_gen(4'hd),.held_pos(20'hfffff),.held_rank(rank),
         .out_job(job),.out_gen(gen),.out_pos(pos),.out_rank(out_rank),
         .in_valid(iv),.in_ready(ready),.in_last(il),.in_lv(lv),.in_val(val),.in_idx(idx),.in_k(12'd2048),
-        .out_valid(ov),.out_ready(4'hf),.out_last(ol),.out_lv(olv),.out_blk(oblk),
+        .out_valid(ov),.out_ready(4'hf),.out_last(ol),.out_lv(olv),.out_blk(oblk),.out_val(oval),
         .mem_we(we),.mem_waddr(wa),.mem_wdata(wd),.mem_re(re),.mem_raddr(ra),.mem_rdata(rd),
         .rep_req(rep),.ovf(overflow),.busy(busy),.stats(stats));
     wire [3:0] disabled_ready, disabled_valid, disabled_we, disabled_re;
@@ -59,6 +60,8 @@ module tb_hbm_index_candidate_boundary;
                         count=count+1;
                         if(oblk[17*(2*quarter+lane)+:17]!==17'd131071)
                             $fatal(1,"candidate output lost literal global newest ID");
+                        if(oval[16*(2*quarter+lane)+:16]!==16'h7f80)
+                            $fatal(1,"candidate collective did not receive actual pinned maximum");
                     end
                 end
                 if(rep||overflow) $fatal(1,"unexpected retained-input replay/overflow");

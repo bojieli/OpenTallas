@@ -63,6 +63,7 @@ def price():
             score_input_bits_per_cycle=1024, global_id_input_bits_per_cycle=1280,
             lane_valid_bits_per_cycle=64, quarter_valid_last_bits=8,
             scalar_frame_bits=64, block_output_bits_per_cycle=8*17,
+            actual_selected_maxima_output_bits_per_cycle=8*16,
             sram_read_bits_per_cycle=272, sram_write_bits_per_cycle=272,
             sram_read_ports=4, sram_write_ports=4,
             line_storage_bits=4*1024*2*34,
