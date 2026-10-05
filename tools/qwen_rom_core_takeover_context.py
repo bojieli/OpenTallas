@@ -3,7 +3,7 @@
 import argparse,hashlib,json,re
 from pathlib import Path
 import qwen_rom_core_dec_emit_w12 as E
-p=argparse.ArgumentParser();p.add_argument('--retained',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--bounded',action='store_true');p.add_argument('--chaseq',action='store_true');p.add_argument('--counter-la',action='store_true');p.add_argument('--am-commit',action='store_true');a=p.parse_args();a.out.mkdir(exist_ok=False)
+p=argparse.ArgumentParser();p.add_argument('--retained',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--bounded',action='store_true');p.add_argument('--chaseq',action='store_true');p.add_argument('--counter-la',action='store_true');p.add_argument('--am-commit',action='store_true');p.add_argument('--retain-receivers',action='store_true');a=p.parse_args();a.out.mkdir(exist_ok=False)
 root=Path(__file__).resolve().parents[1]
 s=E.emit(E.V.E.CORE.read_text())
 if a.bounded or a.chaseq or a.counter_la or a.am_commit:
@@ -26,7 +26,24 @@ for old,new in [('    wire [NW-1:0] dynp_tiles_zero [0:7];\n','    wire [8*NW-1:
 oldroot='/srv/opentallas-scratch/claude/qwen-core-decode/src/'
 old=(root/'results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys').read_text()
 lines=[]
+# Physical receiver context retains the selected original ROM engine RTL, not
+# a donor controller or invented input flops. Same core/clock/parameters.
+if a.retain_receivers:
+    import qwen_rom_rt_verify_w12 as runtime
+    already={Path(line.split()[-1]).name for line in old.splitlines() if line.startswith('read_verilog ')}
+    seen=set(already)
+    for source in runtime.DIE_RTL:
+        if source.name in seen or source.suffix != '.sv':
+            continue
+        if not source.is_file():
+            raise FileNotFoundError(source)
+        seen.add(source.name)
+        lines.append(f'read_verilog -sv -I{root}/rtl/hdc {source}')
 for line in old.splitlines():
+    if a.retain_receivers and line.startswith(('blackbox ', 'expose ')):
+        # These operations removed the genuine ME/SU capture endpoints.
+        # Do not recreate them as an externally timed/ideal port.
+        continue
     if line.startswith(('dfflibmap','abc ','setundef','splitnets','tee ','write_verilog')):continue
     if line.startswith('read_verilog '):
         f=line.split()[-1].removeprefix(oldroot)
@@ -42,4 +59,8 @@ lines.append(f'write_verilog -noattr {a.out}/control_context.v')
 (a.out/'inputs.json').write_text(json.dumps(dict(source_sha256=hashlib.sha256(s.encode()).hexdigest(),
     parameter_source='retained AR core_d1v0g; DEC_LA1 VPOS0; no timing exceptions',
     emitted_source='unmapped actual control after same expose-evert spine/stream boundaries; argmax/chase/run_val retained',
-    clock_ps=833,setup_uncertainty_ps=60,hold_uncertainty_ps=25,arithmetic_engines_qualified=False),indent=2)+'\n')
+    clock_ps=833,setup_uncertainty_ps=60,hold_uncertainty_ps=25,arithmetic_engines_qualified=False,
+    actual_receivers_retained=a.retain_receivers,
+    receiver_source='original ROM u_me.u_top and g_vsu.u_su; no native696a5 arithmetic substitution',
+    receiver_clocks='actual me_clk ICG + coreclk SU, no timing exceptions',
+    physical_scope='full actual receiver/control RTL' if a.retain_receivers else 'legacy exposed controller cut'),indent=2)+'\n')
