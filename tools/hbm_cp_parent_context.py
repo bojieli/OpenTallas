@@ -58,23 +58,24 @@ def prepare():
     for name,bbox in regions:
         dbbox=[f'[expr {{round({v:.9f}*$ot_dbu)}}]' for v in bbox]
         lines += [f'set ot_region [odb::dbRegion_create $ot_block {name}]',
-                  '$ot_region setType EXCLUSIVE',
+                  '$ot_region setRegionType EXCLUSIVE',
                   f'odb::dbBox_create $ot_region {" ".join(dbbox)}',
-                  f'set ot_group_{name} [odb::dbGroup_create $ot_block {name}]',
-                  f'$ot_group_{name} setRegion $ot_region']
+                  f'set ot_group_{name} [odb::dbGroup_create $ot_region {name}]']
     # Yosys/ABC may give cells anonymous names. Use source-held/output nets;
     # never infer the cell's ownership from an anonymous generated instance ID.
     lines += ['set ot_assoc_members 0','set ot_cp_members 0',
               'foreach ot_inst [$ot_block getInsts] {',
               ' if {[[$ot_inst getMaster] isBlock]} {error "Unexpected macro in CP-only context"}',
-              ' set ot_association_cell 0',
+              ' set ot_association_cell 0; set ot_signal_outputs 0',
               ' foreach ot_iterm [$ot_inst getITerms] {',
               '  if {[[$ot_iterm getMTerm] getIoType] ne "OUTPUT"} {continue}',
+              '  incr ot_signal_outputs',
               '  set ot_net [$ot_iterm getNet]; if {$ot_net eq "NULL"} {continue}',
               '  set ot_name [$ot_net getName]',
               '  if {[string match {u_su_association.on.*} $ot_name] ||',
               '      $ot_name in {exec_owned new_request_permit association_fault}} {set ot_association_cell 1}',
               ' }',
+              ' if {$ot_signal_outputs==0} {continue} ;# Physical-only tap/endcap cells have no source cone.',
               ' if {$ot_association_cell} {',
               '  $ot_group_cp_association addInst $ot_inst; incr ot_assoc_members',
               ' } else {',
