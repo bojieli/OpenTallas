@@ -413,7 +413,9 @@ template <class DIE> struct Die : DieBase {
         Verilated::threadContextp(&ctx);
         d->clk = 0; d->rst_n = 0;
 #if DSROM_S81_CAPTURE
-        d->capture_reset_request=0; for(auto& word:d->capture_root_rows)word=0;
+        d->capture_reset_request=0;
+        for(size_t word=0;word<sizeof(d->capture_root_rows)/sizeof(d->capture_root_rows[0]);++word)
+            d->capture_root_rows[word]=0;
 #endif
         d->eval();
 #ifndef DSROM_S81_MINIMUM_FIELD_COMPONENT
