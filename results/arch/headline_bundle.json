@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 476,
+   "current": 474,
    "path-only": 3,
-   "stale": 159
+   "stale": 161
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 159
+   "stale-pin": 161
   }
  },
  "headlines": [
@@ -6581,14 +6581,14 @@
      "key": "rtl/test/tb_hdc_fastfp_equiv.sv",
      "path": "rtl/test/tb_hdc_fastfp_equiv.sv",
      "pinned": "86fff7542767007261b1b4a600349309c604293712d2fe7bbbb174d3f7897549",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
      "key": "rtl/test/tb_hdc_mul_equiv.sv",
      "path": "rtl/test/tb_hdc_mul_equiv.sv",
      "pinned": "ffab4add0e3ec50686ab05f28bc2b3e5fe8aacbb3db43d72eb789040ac1eaa53",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -6627,8 +6627,8 @@
     }
    ],
    "pin_counts": {
-    "current": 24,
-    "stale": 4
+    "current": 22,
+    "stale": 6
    },
    "commits": []
   },
@@ -11158,6 +11158,18 @@
    "detail": "input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/test/tb_hdc_fastfp_equiv.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_decode_campaign.json",
+   "detail": "input_sha256[rtl/test/tb_hdc_fastfp_equiv.sv] -> rtl/test/tb_hdc_fastfp_equiv.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/test/tb_hdc_mul_equiv.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_decode_campaign.json",
+   "detail": "input_sha256[rtl/test/tb_hdc_mul_equiv.sv] -> rtl/test/tb_hdc_mul_equiv.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_golden.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_decode_campaign.json",
@@ -12097,6 +12109,8 @@
   "stale-pin:results/arch/sync_cost_table.json:results/arch/v41_rack.json",
   "stale-pin:results/quality/qwen3_8b_deployment_arithmetic.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/hdc/ot_hdc_matvec.sv",
+  "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/test/tb_hdc_fastfp_equiv.sv",
+  "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/test/tb_hdc_mul_equiv.sv",
   "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_program.py",
