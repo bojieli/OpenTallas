@@ -229,10 +229,18 @@ def selected_calendar(allocation, names, il=8):
             key=(own['rank'],own['tile']);work[key]=work.get(key,0)+own['rows']
         for key,rows in work.items():
             g=t['geometry']; cycles=ceildiv(rows*g['groups'],il)*il*8 if g else rows
-            value=tiles.setdefault(key,dict(cycles=0,records=0,matrices=[]))
+            value=tiles.setdefault(key,dict(cycles=0,records=0,source_request_cycles_upper=0,matrices=[]))
             records=rows*g['records_per_row'] if g else rows
-            value['cycles']+=cycles;value['records']+=records
-            value['matrices'].append(dict(name=t['name'],rows=rows,cycles=cycles,records=records))
+            # Only final partial IL wave can have odd record count. Each
+            # of seven timestep boundaries may then need one macro-busy wait.
+            # Storage-group boundaries can remove waits, so this is an upper bound.
+            recurrence_stalls=7 if g and (rows*g['groups'])%2 else 0
+            source_upper=records+recurrence_stalls
+            value['cycles']+=max(cycles,source_upper);value['records']+=records
+            value['source_request_cycles_upper']+=source_upper
+            value['matrices'].append(dict(name=t['name'],rows=rows,cycles=max(cycles,source_upper),issue_cycles=cycles,
+                                          records=records,source_request_cycles_upper=source_upper,
+                                          macro_busy_stalls_upper=recurrence_stalls))
     if selected-seen: raise ValueError('unmapped selected tensors: '+str(sorted(selected-seen)))
     return dict(max_cycles=max((v['cycles'] for v in tiles.values()),default=0),
                 tiles=[dict(rank=k[0],tile=k[1],**v) for k,v in sorted(tiles.items())],
@@ -264,6 +272,26 @@ def access_calendar(allocation, name, rank, tile, il=8):
                     addresses=[physical_address(run,source_row,8*group+step,s,allocation['rows_per_macro']) for s in range(4)]
                     yield dict(cycle=cycle,bubble=False,source_row=source_row,group=group,step=step,addresses=addresses)
                 cycle+=1
+
+
+def source_request_calendar(allocation, name, rank, tile, il=8):
+    """Dense bulk-copy requests in issue order, with actual macro busy stalls.
+
+    Bulk copy omits IL bubble slots. Odd final waves can revisit a macro at the
+    next timestep immediately; req_ready must stall until its two-cycle read
+    service permits capture. This generator prices that wait, without a lookup
+    table or changing immutable addresses. Transport/staging credit stalls are
+    separate additional constraints.
+    """
+    last={}; cycle=0; sequence=0
+    for event in access_calendar(allocation,name,rank,tile,il):
+        if event['bubble']: continue
+        earliest=max([cycle]+[last.get(a['macro'],-2)+2 for a in event['addresses']])
+        stalled=earliest-cycle
+        yield dict(event,cycle=earliest,issue_cycle=event['cycle'],request_index=sequence,
+                   macro_busy_stall_cycles=stalled)
+        for a in event['addresses']: last[a['macro']]=earliest
+        cycle=earliest+1;sequence+=1
 
 
 def main():
