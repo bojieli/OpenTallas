@@ -4,16 +4,16 @@
  "position": 1048575,
  "baseline": "recovery",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
- "AR_us": 713.09,
- "AR_tok_s": 1402.3,
+ "AR_us": 611.047,
+ "AR_tok_s": 1636.5,
  "critical_path_us_by_class": {
   "zero": 0.0,
-  "measured": 650.347,
+  "measured": 548.303,
   "measured+vendor_phy": 45.096,
   "inside_measured": 0.19,
   "extra_S81_hops": 17.422
  },
- "measured_share": 1.0,
+ "measured_share": 0.9999,
  "modelled_on_path_us": 0,
  "modelled_on_path_by_family": {},
  "modelled_inside_measured_nodes_us": 0,
@@ -23,11 +23,6 @@
  "MTP": {
   "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
   "stage_busy_top": [
-   {
-    "first": "head.hc_pre",
-    "hop": "token.return",
-    "busy_us": 74.3285888888889
-   },
    {
     "first": "L19.ffn.hc_pre",
     "hop": "L20.substage_hop0",
@@ -52,28 +47,33 @@
     "first": "L27.ffn.hc_pre",
     "hop": "L28.substage_hop0",
     "busy_us": 14.7611
+   },
+   {
+    "first": "L31.ffn.hc_pre",
+    "hop": "L32.substage_hop0",
+    "busy_us": 14.7611
    }
   ],
   "worst_stage": {
-   "first": "head.hc_pre",
-   "hop": "token.return",
-   "busy_us": 74.3285888888889
+   "first": "L19.ffn.hc_pre",
+   "hop": "L20.substage_hop0",
+   "busy_us": 24.9027
   },
-  "II_us": 75.389,
-  "verify_us": 1090.037,
-  "draft_us": 485.843,
+  "II_us": 25.762,
+  "verify_us": 739.856,
+  "draft_us": 119.211,
   "draft_terms": {
    "block5_us": 38.3718,
-   "blocks_us": 115.115,
+   "blocks_us": 83.992,
    "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
-   "head_occ_us": 73.571,
+   "head_occ_us": 6.9892,
    "r_markov": 0.00781
   },
   "seed_commit_us": 3.217,
-  "step_us": 1579.097,
-  "MTP_tok_s": 2462.1,
+  "step_us": 862.284,
+  "MTP_tok_s": 4508.8,
   "tau": 3.8879,
-  "mtp_over_ar": 1.756
+  "mtp_over_ar": 2.755
  },
  "still_modelled": [
   {
@@ -149,7 +149,7 @@
   {
    "term": "MTP draft: three DSpark blocks at full shape",
    "record": "draft_blocks.json",
-   "us": 115.115,
+   "us": 83.992,
    "exact": true,
    "was": "43.215 us reduced-vehicle"
   }
@@ -165,8 +165,8 @@
   },
   "head": {
    "lm_head_us": 73.571,
-   "argmax_drain_us": 35.47111111111111,
-   "stage_occupancy_us": 73.571
+   "argmax_drain_us": 0.01,
+   "stage_occupancy_us": 6.9892
   },
   "window": {
    "per_layer_us": 0.6616666666666666,
@@ -190,8 +190,25 @@
    "exact": true
   },
   "qdq_wired_simulated_nodes": 32,
+  "draft_blocks": {
+   "us": 83.992,
+   "lever": "draft",
+   "source": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json (DP1-EP5 placement; tools/dsrom_1m_draft_blocks.py recovery)"
+  },
   "levers": {
    "applied": [
+    {
+     "lever": "draft",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/draft.json",
+     "sha256": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
+     "verdict": "ADOPT"
+    },
+    {
+     "lever": "head",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
+     "sha256": "a64474c0944ad7cbc52120f1961c7da97e94a5b524d88c1a1d6c705a792c1c41",
+     "verdict": "ADOPT"
+    },
     {
      "lever": "router",
      "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
@@ -2433,19 +2450,19 @@
   },
   {
    "node": "head.lm_head",
-   "model_us": 12.39,
-   "measured_us": 73.571,
+   "model_us": 73.571,
+   "measured_us": 6.9892,
    "cls": "measured",
-   "source": "one S81 head return group (8 BP=2 element pairs, 408 real rows, packed), scaled 409.6/408, +34 wire cyc",
+   "source": "head: ot_dsrom_head_bundle (5 logical macros, 16 BF16 mult/macro, skewed ROM, streaming tree, join) go->last logit 8353 cyc measured + 34 labelled wire cyc @1.2 GHz; every bundle of the rank runs in lockstep (252.5 bundles = 2,525 ROM4096)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "head.argmax",
-   "model_us": 0.1808,
-   "measured_us": 35.4711,
+   "model_us": 35.4711,
+   "measured_us": 0.01,
    "cls": "measured",
-   "source": "S81 native ordered-root terminal, as built: rows contiguous per group, so 31,912 rows drain after the sweep at 1 row / 0.9 GHz cycle + 12-cycle tail (all 32,320 exact)",
+   "source": "head: in-element lowest-id first-max + 2-level bundle compare tree measured (4 cyc after the last logit) + 8 labelled rank compare levels (1 cyc each, same node)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
@@ -31161,12 +31178,12 @@
   },
   {
    "node": "head.lm_head",
-   "us": 73.5759,
+   "us": 6.9941,
    "cls": "measured"
   },
   {
    "node": "head.argmax",
-   "us": 35.4766,
+   "us": 0.0155,
    "cls": "measured"
   },
   {
@@ -31191,6 +31208,8 @@
   "results/rtl/dsrom_1m_allmeasured_20261004/su_cdc.json": "641395e891d004439cdd0ede1d9ceca8a6011391ebb79d63d3e7fe31b3a2d6df",
   "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
   "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json": "3d4837a6cbdffce831ab48dc8a7677ff7e8eae2ef03cf7e84f985129e5d01775",
+  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
+  "results/rtl/dsrom_recovery_20261004/levers/head.json": "a64474c0944ad7cbc52120f1961c7da97e94a5b524d88c1a1d6c705a792c1c41",
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
   "results/rtl/dsrom_recovery_20261004/levers/router.json": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",

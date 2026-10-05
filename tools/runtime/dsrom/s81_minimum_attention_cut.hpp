@@ -33,7 +33,19 @@ class DsromS81MinimumAttentionCut : public std::enable_shared_from_this<
     template<class To,class From> static bool copy(To& to,unsigned a,
         const From& from,unsigned b,unsigned n) {
         bool changed=false;
-        for(unsigned i=0;i<n;++i) {
+        unsigned i=0;
+        // HOST-only exact copy of aligned wide-bus portions. Model input
+        // values, changed detection, settle calls and all clock edges stay
+        // identical. propagate() copies between distinct borrowed models.
+        if constexpr(!std::is_integral<To>::value && !std::is_integral<From>::value) {
+            if((a%32)==0 && (b%32)==0) {
+                for(;n-i>=32;i+=32) {
+                    const uint32_t value=from[(b+i)/32];
+                    changed|=value!=to[(a+i)/32];to[(a+i)/32]=value;
+                }
+            }
+        }
+        for(;i<n;++i) {
             bool value=bit(from,b+i);changed|=value!=bit(to,a+i);bit(to,a+i,value);
         }
         return changed;

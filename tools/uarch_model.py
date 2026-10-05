@@ -69,6 +69,76 @@ NODE_REGION = {
 }
 
 
+
+def dsrom_baseline_link_clock_repair(flit_bytes=64, credits=512, seqw=10,
+                                     channel_cycles=156, traversals=81):
+    """Default-off baseline reliability repair, not the rejected cut-through lever.
+
+    Source: ot_dsrom_link_rt.sv; screen_base_rt SS -417.3ps/FF +4.2ps,
+    rr_f[37] -> reverse CRC/ACK/rewind -> st_replays[27]. Retain the
+    baseline payload, lane/PHY budgets, cumulative credits and replay storage.
+    One registered launch payload cuts window/replay-select from forward CRC.
+    Receive CRC flags align with existing frame registers (zero added edges).
+    """
+    if min(flit_bytes, credits, seqw, channel_cycles, traversals) < 1:
+        raise ValueError("positive link dimensions required")
+    if credits > 2 ** (seqw - 1):
+        raise ValueError("ambiguous sequence window")
+    w = 8 * flit_bytes
+    cw = math.ceil(math.log2(credits + 1))
+    fpw = w + seqw + 1
+    baseline_loop = 2 * channel_cycles + 2 + 2 + 6
+    repaired_loop = baseline_loop + 1
+    # Payload+valid head and two aligned CRC flags. Status counters retain
+    # their cycle-visible values: bounded 8-bit parallel increment segments.
+    ff = fpw + 1 + 2
+    return dict(candidate="DSROM_BASELINE_LINK_RT_CLOCK1", default_enabled=False,
+        baseline_source_sha256=hashlib.sha256((ROOT / "rtl/dsrom_sys/ot_dsrom_link_rt.sv").read_bytes()).hexdigest(),
+        baseline_ss_setup_ps=-417.3, baseline_ff_hold_ps=4.2,
+        period_ps=1000/1.2, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        macs_per_cycle=0, memory_bytes_per_port_edge=flit_bytes,
+        replay_write_ports=1, replay_read_ports=1, fifo_write_ports=1, fifo_read_ports=1,
+        forward_bits_per_edge=fpw+32, reverse_bits_per_edge=1+seqw+cw+32,
+        replicas=dict(launch_head=1, aligned_crc_flags=2, status_counters=9,
+                      status_counter_8bit_segments=36),
+        added_ff_bits=ff, added_ff_body_um2_proxy=ff*DFF_UM2,
+        added_ff_50pct_reservation_um2_proxy=2*ff*DFF_UM2,
+        added_comb_area_um2=None, actual_slot_fit=None,
+        added_packet_edges=1, added_ack_generation_edges=0,
+        added_ack_credit_roundtrip_edges=1,
+        diagnostic_observation_delay_edges=0,
+        baseline_credit_loop_edges=baseline_loop, repaired_credit_loop_edges=repaired_loop,
+        credits=credits, sequence_bits=seqw,
+        ideal_credit_bound_flits_per_edge=min(1, credits/repaired_loop),
+        bytes_per_edge_bound=flit_bytes*min(1, credits/repaired_loop),
+        selected_stage_hops=traversals,
+        added_single_user_stage_chain_us=traversals/1.2e3,
+        baseline_hop_cycles=909, candidate_hop_cycles_lower_bound=911,
+        hop_two_endpoint_added_edges=2,
+        # Board then package fanout: one extra launch edge in each endpoint.
+        added_single_user_two_endpoint_chain_us=2*traversals/1.2e3,
+        token_return_8_traversals_added_us=8/1.2e3,
+        token_latency_not_measured=True, error_replay_latency_not_measured=True,
+        routing_tracks_needed=fpw+32+1+seqw+cw+32,
+        channel_tracks_available=None, routing_fit=False,
+        minimum_context=dict(credits=16, seqw=5, flit_bytes=64,
+            queue_depth_not_selected_512=True, die_um=[240,180], core_um=[236,176],
+            baseline_mapped_cell_um2=13622.28354,
+            positive_logic_buffer_reserve_um2_proxy=5000,
+            reserved_cell_um2_proxy=13622.28354+ff*DFF_UM2+5000,
+            cell_area_capacity_um2_at_50pct=236*176*.5,
+            source_grid="ORFS asap7_tech_1x_201209.lef M4 H/M5 V pitch0.048um",
+            gross_directional_tracks=dict(horizontal=math.floor(176/.048),vertical=math.floor(236/.048)),
+            tracks_after_50pct_clock_PG_policy_reserve=dict(horizontal=math.floor(176/.048/2),vertical=math.floor(236/.048/2)),
+            physical_obstruction_union_measured=False,
+            boundary_target=dict(input_max_ps=100,input_min_ps=30,output_max_ps=60,output_min_ps=25,load_fF=.6),
+            boundary_basis="Candidate registered parent: SS measured launch92.8ps +7.2ps route budget; setup34.1ps +25.9ps output budget; actual routes/corner closure pending.",
+            prebuild_reserved_capacity_pass=(13622.28354+ff*DFF_UM2+5000<=236*176*.5),
+            context_route_allowed=True, full_queue_clock_qualified=False),
+        ss_ff_qualified=False, physical_admitted=False,
+        limits="FF price is a source proxy; comb/CTS/PG/routes/loaded SSFF must be measured. No PHY or cut-through gain.")
+
+
 def node_key(name: str) -> str:
     tail = name.split(".", 1)[1] if "." in name else name
     for k in sorted(NODE_K, key=len, reverse=True):
@@ -7693,3 +7763,91 @@ def hbm_dspark_ctl_fast_prefix_candidate():
                 area_basis="assumed0.5um2/gate; mapped/routed area not measured",
                 required_leaf_area_growth_um2=210, physical_fit=False,
                 SS_FF_closed=False, measured_gain=False)
+
+
+def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, instructions=1, replicas=1):
+    """Held FIFO word -> position -> selectors/shift -> /ODD -> NEXT.
+
+    Upper additive latency: four edges per decoded instruction, including END.
+    Preparation overlaps existing unit execution, but no overlap credit is taken.
+    This is a clock-repair candidate, not an adopted performance lever.
+    """
+    state_bits = instruction_bits + 11*aw + 3*nw + 1 + 3
+    return dict(default_enabled=False, MACs_per_cycle=0, new_memory_ports=0,
+                new_boundary_bits=0, replicas=replicas,
+                added_register_bits_per_core=state_bits,
+                register_HQN_cell_area_um2=0.2916,
+                added_register_cell_area_floor_um2=state_bits*0.2916,
+                enable_mux_clock_reset_buffer_area_um2=None, mapped_area_um2=None,
+                routing_tracks=None, channel_capacity=None, floorplan_fit=False,
+                fifo_word_select_inputs=4, dynamic_selects=11,
+                dynamic_select_fanin_baseline=8, dynamic_select_fanin_VPOS=64,
+                additional_decode_edges=4, minimum_decode_initiation_interval=5,
+                token_latency_delta_upper_cycles=4*instructions,
+                token_latency_delta_upper_ns=4*instructions/1.2,
+                latency_overlap_credit_cycles=0, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                clock_closed=False, adopted=False,
+                source='rtl/hdc/ot_hdc_core_vector_weight.sv',
+                area_obligation='All held word, 11 DYN operands, position, shifted position, rounds, invalid and phase flops; map before slot fit',
+                physical_obligation='Register /ODD alone still requires SS/FF measurement; no clock relaxation')
+
+
+def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
+    """Port of the adopted zero-edge ROM-VP LA controls to combined VP.
+
+    Queues, ports, descriptors, tags, near service and arithmetic unchanged.
+    This sizes source additions; routed ROM-VP closure is not combined closure.
+    """
+    cw = 13
+    bits = fw + vwa + ntok + 2*cw + 7 + 32
+    return dict(default_enabled=False, added_register_bits_per_die=bits,
+                replicas=replicas, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='enable muxes, prefix logic, key trees, clock/reset/routing',
+                MACs_per_cycle=0, extra_memory_ports=0,
+                existing_VM_read_bytes_per_edge=fw//8,
+                existing_collective_payload_bits_per_edge=fw,
+                existing_collective_tag_bits=44, new_boundary_bits=0,
+                added_instruction_or_collective_edges=0,
+                composed_token_latency_delta_cycles=0,
+                queue_depth_unchanged=4, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                combined_context_clock_closed=False, floorplan_fit=False,
+                adopted=False,
+                source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
+                physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
+
+
+def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
+                                   service_period_fs=833333, ack_tail_edges=0):
+    """Additional alignment around the existing canonical MP commit element.
+
+    A raw lane sampled E0 is decoded after E1 and enters service at E2.
+    Compose the final lane's actual ACK tail with pipeline empty, never sum
+    two edges onto every FILL stage or assume they are unhidden token delay.
+    Canonical decoder/state area belongs to the existing element model.
+    """
+    bits=2*sw*aw+2
+    old_empty=fill_lat+3
+    new_empty=fill_lat+5
+    before=max(old_empty,ack_tail_edges)
+    after=max(new_empty,ack_tail_edges)
+    return dict(default_enabled=False, replicas=replicas, MACs_per_cycle=0,
+                added_register_bits_per_die=bits, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='canonical decoder/state, enable muxes, clock/reset/routing',
+                initiation_interval_service_edges=1, added_lane_service_edges=2,
+                existing_lane_address_bits_per_edge=sw*aw,
+                existing_lane_data_bits_per_edge=sw*32,
+                added_memory_ports=0, new_boundary_bits=0, routing_tracks_added=0,
+                existing_lane_input_bytes_per_edge=sw*4,
+                empty_pipeline_tail_service_edges=new_empty,
+                actual_ack_tail_service_edges=ack_tail_edges,
+                composed_tail_service_edges=after,
+                composed_tail_delta_service_edges=after-before,
+                composed_tail_delta_fs=(after-before)*service_period_fs,
+                token_composition='per-layer max(actual native ACK tail, FILL_LAT+5); serialize only exposed fence tail',
+                service_period_fs=service_period_fs,
+                combined_context_clock_closed=False, floorplan_fit=False, adopted=False,
+                source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')

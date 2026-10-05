@@ -32,6 +32,9 @@
 #define DSROM_S81_CAPTURE 0
 #endif
 #include "Vattn.h"
+#ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+#include "s81_minimum_source_plan.hpp"
+#endif
 #include "svdpi.h"
 #include "qwen_rt_matvec.hpp"   // RtPool
 #include <array>
@@ -382,6 +385,24 @@ template <class DIE> struct Die : DieBase {
     std::unique_ptr<Vattn> a;
     std::unique_ptr<Field<DIE>> f;
     int id;
+#ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+    // Typed native destination is retained here BEFORE DieBase erasure. This
+    // adds no DieBase virtual method or replacement result/ownership ledger.
+    std::shared_ptr<DsromS81NativeHeadWinnerBinding<DIE>> native_head_result;
+    bool native_head_sampled=false,native_owner_rising=false;
+    DsromS81MinimumRuntime* native_head_owner=nullptr;
+    auto bind_native_head_result(DsromS81MinimumRuntime& owner,
+        DsromS81NativeResultTerminal terminal,uint64_t accepted_sequence,
+        const std::array<dsrom_s81_minimum::PrefixPublication*,4>& publications,
+        const std::array<DsromS81MinimumSourceIo,4>& io) {
+        if(native_head_result||owner.context!=&ctx||!owner.result||d->clk||d->rst_n)
+            throw std::runtime_error("native head binding requires actual cold typed Top/context");
+        native_head_result=dsrom_s81_join_minimum_head_result_source(
+            owner,*d,std::move(terminal),accepted_sequence,publications,io);
+        native_head_owner=&owner;
+        return native_head_result; // same object for poller accepted(result,binding)
+    }
+#endif
     Die(RtPool& pool, const std::string& dir, int id_, int argc, const char** argv) : id(id_) {
         ctx.randReset(0); ctx.commandArgs(argc, argv);
         actx.randReset(0); actx.commandArgs(argc, argv);
@@ -392,17 +413,73 @@ template <class DIE> struct Die : DieBase {
         Verilated::threadContextp(&ctx);
         d->clk = 0; d->rst_n = 0;
 #if DSROM_S81_CAPTURE
-        d->capture_reset_request=0; for(auto& word:d->capture_root_rows)word=0;
+        d->capture_reset_request=0;
+        for(size_t word=0;word<sizeof(d->capture_root_rows)/sizeof(d->capture_root_rows[0]);++word)
+            d->capture_root_rows[word]=0;
 #endif
         d->eval();
+#ifndef DSROM_S81_MINIMUM_FIELD_COMPONENT
         f.reset(new Field<DIE>(*d, pool, dir, id));
         if (const char* e = getenv("RT_SKIP")) f->skip_on = atoi(e) != 0;
+#else
+#ifndef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+#error "minimum native head requires actual typed source binding, not an empty field"
+#endif
+        // Selected source owns the existing minimum field participant / exact
+        // SIM_ONLY unfinished service. No all-element Field array is built;
+        // no ready/idle/result/capture signal is fabricated here.
+#endif
     }
-    void set_inputs(uint8_t clk, uint8_t rst) override { d->clk = clk; d->rst_n = rst; a->clk = clk; a->rst_n = rst; }
-    void eval() override { d->eval(); }
-    void field_eval(size_t i, uint8_t clk, uint8_t rst) override { f->model_at(i, clk, rst); }
-    size_t field_models() override { return f->nmodels(); }
-    void field_propagate() override { f->propagate(); }
+    void set_inputs(uint8_t clk, uint8_t rst) override {
+#ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+        if(native_head_owner&&clk) {
+            if(native_owner_rising)throw std::runtime_error("native head participants repeated rising edge");
+            const auto old=native_head_owner->result();
+            for(auto& p:native_head_owner->participants) {
+                if(p.fault())throw std::runtime_error("native head source participant fault");
+                p.prepare(old);
+            }
+        }
+        if(native_head_result&&clk&&rst) {
+            if(native_head_sampled||d->clk)
+                throw std::runtime_error("native head edge reused or reset not settled");
+            if(!d->rst_n) {d->rst_n=1;d->eval();} // release while clock still LOW
+            native_head_result->drive_before_edge();
+            // Clock remains LOW: settle the actual destination's final_ready
+            // before sampling. This is not a private clock edge or done shim.
+            d->eval();
+            native_head_result->sample_before_edge();native_head_sampled=true;
+        } else if(native_head_result&&!rst&&d->rst_n) {
+            native_head_result->warm_quarantine();
+            throw std::runtime_error("native head warm reset quarantines accepted debt");
+        }
+#endif
+        d->clk = clk; d->rst_n = rst; a->clk = clk; a->rst_n = rst;
+    }
+    void eval() override {
+        d->eval();
+#ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+        if(native_head_owner) {
+            if(d->clk&&!native_owner_rising) {
+                for(auto& p:native_head_owner->participants)p.rising(bool(d->rst_n));
+                native_owner_rising=true;
+            } else if(!d->clk&&native_owner_rising) {
+                for(auto& p:native_head_owner->participants)p.falling(bool(d->rst_n));
+                native_owner_rising=false;
+            }
+        }
+        if(native_head_sampled) {
+            if(!d->clk||!d->rst_n)throw std::runtime_error("native head rising edge lost");
+            native_head_result->after_edge();native_head_sampled=false;
+        }
+#endif
+    }
+    void field_eval(size_t i, uint8_t clk, uint8_t rst) override {
+        if(!f)throw std::runtime_error("minimum field is caller-owned, not array-owned");
+        f->model_at(i, clk, rst);
+    }
+    size_t field_models() override { return f?f->nmodels():0; }
+    void field_propagate() override { if(f)f->propagate(); }
     void att_eval(uint8_t clk, uint8_t rst) override { a->clk = clk; a->rst_n = rst; a->eval(); }
     bool att_propagate() override {
         // att_to = {job_v, T16, q_v, q_w, kv_v, kv_m, kv_w, sc_cr, p_v, p_w, pv_cr} (MSB first)
@@ -585,10 +662,22 @@ int main(int argc, char** argv) {
     }
     { static const char* pav[] = {"v41_die_rt"}; for (int w = 0; w < pool.size(); w++) pool.ctx(w)->commandArgs(1, pav); }
     auto t0 = std::chrono::steady_clock::now();
-    dies.emplace_back(new Die<Vdie0>(pool, root + "/r0", 0, 3, av[0].data()));
-    dies.emplace_back(new Die<Vdie1>(pool, root + "/r1", 1, 3, av[1].data()));
-    dies.emplace_back(new Die<Vdie2>(pool, root + "/r2", 2, 3, av[2].data()));
-    dies.emplace_back(new Die<Vdie3>(pool, root + "/r3", 3, 3, av[3].data()));
+    auto native_rank0=std::make_unique<Die<Vdie0>>(pool, root + "/r0", 0, 3, av[0].data());
+    auto native_rank1=std::make_unique<Die<Vdie1>>(pool, root + "/r1", 1, 3, av[1].data());
+    auto native_rank2=std::make_unique<Die<Vdie2>>(pool, root + "/r2", 2, 3, av[2].data());
+    auto native_rank3=std::make_unique<Die<Vdie3>>(pool, root + "/r3", 3, 3, av[3].data());
+#ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+    // Actual source factory binds its existing pub/SourceIo/context objects
+    // through these concrete handles before they are erased. No default binder.
+#ifndef DSROM_S81_BIND_TYPED_HEAD_CALLER
+#error "selected native head caller must bind actual four rank homes before erasure"
+#endif
+    DSROM_S81_BIND_TYPED_HEAD_CALLER(*native_rank0,*native_rank1,*native_rank2,*native_rank3);
+#endif
+    dies.emplace_back(std::move(native_rank0));
+    dies.emplace_back(std::move(native_rank1));
+    dies.emplace_back(std::move(native_rank2));
+    dies.emplace_back(std::move(native_rank3));
     uint32_t tok = 0, pos = 0, user = 0;
     for (int d = 0; d < 4; d++) {
         std::ifstream f(root + "/r" + std::to_string(d) + "/cfg.txt"); std::string line;
