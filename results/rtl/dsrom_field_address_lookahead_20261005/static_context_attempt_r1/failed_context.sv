@@ -38,8 +38,8 @@ module ot_v41_static_provider_context # (parameter integer CONTROL_STAGE=37)(
        active_fam<=s_pw[issue_tag][0];active_nbeat<=s_pw[issue_tag][29:14];
        active_base<=s_pw[issue_tag][45:30];active_addr<=14'(s_pw[issue_tag][45:30]);
      end else if(sm_run&&(!sw_v||s_ok)) begin
-       if(!sw_v||s_last) active_addr<=14'(active_base)+14'(active_nbeat == 16'd1 ? 16'd0 : 16'd1);
-       else active_addr<=14'(active_base)+14'(ahead_i == active_nbeat ? 16'd0 : ahead_i);
+       if(!sw_v||s_last) active_addr<=14'(active_base)+14'(active_nbeat==16'd1?16'd0:16'd1);
+       else active_addr<=14'(active_base)+14'(ahead_i==active_nbeat?16'd0:ahead_i);
      end
      if(sm_run&&!sw_v) sw<=st_q;
      else if(sm_run&&sw_v&&s_ok) sw<=st_q;
