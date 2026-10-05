@@ -53,7 +53,10 @@ def w2_parent_source_model(fixture):
         source_image_bound=False,parent_slot_fit=None,channel_capacity=None,
         composer_owner='Maxwell',canonical_composed_latency=None,
         engine_build_admitted=False,physical_build_admitted=False,adopted=False,
-        verdict='SINGLE_MREQ_BINDING_REQUIRES_OWNER_DECISION',
+        verdict='REJECTED_SINGLE_MREQ_RATE_BINDING',
+        rejected_binding_not_numeric_verdict=True,
+        original_opt2_component_result_unchanged=True,
+        required_next_selection='Existing native stream/formatter source and actual compiled DS20 W2 spans, with Maxwell canonical model pricing; no new memory architecture implied',
         reason='Weight traffic alone exceeds old 425/609-cycle procedural provider intervals; installed-source/actual-provider composition must replace that credit, not inherit it')
 
 
