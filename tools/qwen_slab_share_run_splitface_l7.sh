@@ -11,6 +11,21 @@ test -z "$(git status --porcelain)" || { echo dirty > "$res/driver.exit"; exit 4
 git rev-parse HEAD > "$res/source_commit.txt"
 python3 tools/qwen_slab_share_splitface_l7.py model > "$res/model.json"
 eval "GEO=($(python3 tools/qwen_slab_share_splitface_l7.py args))"
+# This parameter changes result latency: gate the selected LAT7 against the
+# existing source oracle before physical work; no LAT6 replay or host math.
+iverilog -g2012 -s tb_qwen_slab_port_group -P tb_qwen_slab_port_group.MUL_LAT=7 \
+  -o "$res/bench.vvp" rtl/test/tb_qwen_slab_port_group.sv \
+  rtl/physical/ot_qwen_slab_port_group.sv rtl/common/ot_meso_fifo.sv \
+  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv \
+  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv \
+  rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv > "$res/bench_build.log" 2>&1
+rc=$?; echo "$rc" > "$res/bench_build.exit"
+if [ "$rc" != 0 ]; then echo "$rc" > "$res/driver.exit"; exit "$rc"; fi
+vvp "$res/bench.vvp" > "$res/bench.log" 2>&1
+rc=$?; echo "$rc" > "$res/bench.exit"
+if [ "$rc" != 0 ] || grep -q 'FAIL' "$res/bench.log" || ! grep -q 'PASS' "$res/bench.log"; then
+  echo 86 > "$res/driver.exit"; exit 86
+fi
 python3 tools/run_abi3_physical_persistent.py --persistent-workdir "$res/work" --launch-receipt "$res/launch.json" \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --view asap7 --top ot_qwen_slab_port_group \
