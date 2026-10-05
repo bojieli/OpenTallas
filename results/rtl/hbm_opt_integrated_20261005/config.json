@@ -47,7 +47,7 @@
       "binding": {
         "source_sha256": {
           "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
-          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "55350c5919b2cc14620e7cc3b252a3841ed839a91d572c35ae55e5737ade2ed5"
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606"
         },
         "parameters": {
           "ENABLE": 1,
@@ -55,21 +55,19 @@
         },
         "exact_receipts": [
           {
-            "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/summary.json",
-            "sha256": "d322bfb3e71ef5e8555b6a4a96be1596caf7982c359f246528cfbb6eeb3de48b",
+            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
             "pass_path": [
-              "verdict"
+              "candidate_exact"
             ],
-            "pass_value": "PASS_PQ_XMAP_8_POSITIVES_EXPECTED_NEGATIVE",
+            "pass_value": true,
             "source_pins_path": [
               "source_pins"
             ]
           }
         ],
         "physical": null,
-        "scope": "Cached DS minimum SM component sequences; 1ns simulation only. Not full token or loaded SS/FF clock admission.",
-        "reuse_executable": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/work/build_xmap1/Vtb_hbm_accel_sm_pq_xmap_seq",
-        "reuse_only_no_standalone_rerun": true
+        "scope": "Current production parent exact under PQ+PACK, XMAP0; earlier XMAP1 joint record preserved separately."
       },
       "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound."
     },
@@ -133,17 +131,53 @@
       "owner": "Erdos",
       "default_enabled": false,
       "source_paths": [
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv",
         "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv",
         "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv",
-        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv"
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv"
       ],
       "hooks": [
-        "PQ dependency",
-        "PAIR requests",
-        "op parity and distinct reducer identity"
+        "PACK_W2=0 hardware default; candidate1 after literal paired receipt and negatives",
+        "8bits same posted queue tuple, capture at h_pop",
+        "Erdos caller request/result joins, original operation identity restored",
+        "XMAP forwarded by caller, actual paired gate XMAP0; combined XMAP1 remains unmeasured"
       ],
-      "binding": null,
-      "missing": "Actual Erdos module source ready; Euclid atomic PACK_W2 production hook and Erdos paired-SM exact gate pending. Optional remains OFF until incremental measured gain is priced."
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv": "07e87f99a40303729051e483a4fe08d5d912d67b00ebfd4d44cf840c009dcad1",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv": "0eafaa6fccde0e5add1c40926f50482d87a4fe292882df124ba6bbe5b4473416",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv": "f9e7c02771419210282e63c1de8a8d1fc5c9882428ff0df674268c3f20765644"
+        },
+        "parameters": {
+          "PACK_W2": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "pass_path": [
+              "candidate_exact"
+            ],
+            "pass_value": true,
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Actual PQ+PACK component, XMAP0. Joint XMAP1 interaction unmeasured; no whole token/physical admission.",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Exact PQ+PACK and literal negatives consumed; PQ+PACK+XMAP interaction and physical admission remain unmeasured.",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
     },
     "expert_workgroup": {
       "owner": "Hubble",
