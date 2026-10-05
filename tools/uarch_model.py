@@ -8933,3 +8933,48 @@ def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
                   qualified_route_count_allowed=1,
                   failure_policy='stop and report actual limiting cone; no rescue')
     return record
+
+
+def hbm_topk_balanced_compare_model():
+    """Second mandatory CTL repair, priced against retained route_r1 context.
+
+    Gross count for each 42-bit balanced unsigned comparison: 42 generate
+    ANDs +42 equality XNORs +41 internal nodes*(AND/OR/AND)=207 gates.
+    No credit is taken for the existing 300 comparison cones removed.
+    """
+    logic = 300*207*0.2
+    route = logic*0.20
+    hold = 8*336*2*0.25
+    total = 28519.8 + logic + route + hold + 0.2 + 55*2*0.25
+    return dict(default_enabled=False, variant=2, N=384,P=16,K=6,IW=9,
+                MACs_per_cycle=0, memory_bytes_per_cycle=0, replicas=1,
+                input_bits_per_cycle=512, output_bits_per_result=54,
+                extra_boundary_bits=0, added_register_bits=0,
+                comparison_count=300, comparison_width=42,
+                unsigned_compare_gross_gate_equivalents=300*207,
+                logic_gross_proxy_um2=logic,
+                local_route_buffer_reserve_um2=route,
+                independent_hold_reserve_um2=hold,
+                hold_reserve_basis='up to 2 assumed 0.25um2 buffers per 2688 leaf s0 destination bits',
+                area_basis='ASSUMED0.2um2/gate and0.25um2/buffer; no removed-cone credit',
+                routed_predecessor_stdcell_um2=28519.8,
+                candidate_stdcell_upper_screen_um2=total,
+                component_slot='CTL.TOPK_CTX384 retained component; parent slot binding pending Sagan',
+                die_area_um=[0,0,290.54,290.54],
+                core_area_um=[2.052,2.160,288.522,288.360],
+                core_area_um2=81987.714,
+                placement_density=0.55,
+                cell_occupancy_screen=total/81987.714,
+                fixed_component_screen_pass=total/81987.714<0.55,
+                parent_slot_fit=False,
+                compare_tree_internal_signal_bound=300*2*41,
+                compare_tree_local_fanout_bound=3,
+                compare_result_payload_fanout_max=84,
+                added_clock_sinks=0,
+                valid_pipeline_encoding='complemented; same logical reset and pulse edge',
+                added_latency_cycles=0, initiation_interval_cycles=1,
+                composed_token_latency_delta_cycles=0,
+                setup_period_ps=833,setup_uncertainty_ps=60,
+                hold_uncertainty_ps=25,io_delay_fraction=0.2,
+                hold_repair_margin_ps=20, predecessor_hold_repair_margin_ps=10,
+                SSFF_closed=False, adopted=False)
