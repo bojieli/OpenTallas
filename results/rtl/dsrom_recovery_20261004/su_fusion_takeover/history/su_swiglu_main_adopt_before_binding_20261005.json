@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.dsrom-recovery.lever.v1",
  "lever": "su_swiglu",
- "verdict": "PENDING_BINDING",
+ "verdict": "ADOPT",
  "exact": true,
  "ss_ff": {
   "period_ps": 833.0,
-  "closes": false,
+  "closes": true,
   "basis": "routed ORFS asap7 0.833 ns, IO false-pathed (registered boundaries), tools/w18/corner_sta.py SS setup 60 ps / FF hold 25 ps",
   "lane": {
    "top": "ot_dsrom_su_swiglu_lane (ROUTED 1, LM5/LA4, exp range-reduction adds on the 6-cut f12 adder)",
@@ -37,8 +37,7 @@
    "quantisers_32": 0.358,
    "z_quant_bank_32": 0.358,
    "note": "standard-cell area of the routed minimum components x replication; slot, corridor and hub storage not priced (die count is not scarce: owner)"
-  },
-  "component_timing_measured": true
+  }
  },
  "nodes": {
   "*.ffn.swiglu": {
@@ -91,7 +90,5 @@
   ],
   "idx_q": "exact (87 cyc = 0.0725 us vs 0.291 us); NOT adopted until its RoPE front routes (runs open)"
  },
- "default": "opt-in: applied only in the recovery baseline; new files only, nothing existing swapped",
- "binding_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/swiglu_current_binding.json",
- "note": "Active adoption withheld: quantiser aq_q5 physical pins for ot_dsrom_su_swiglu.sv and ot_dsrom_su_f12.sv differ from current source. Historical ADOPT retained separately. Lane current pins match. Parent boundary setup/hold remains required; idx_q excluded until current RoPE routes terminal."
+ "default": "opt-in: applied only in the recovery baseline; new files only, nothing existing swapped"
 }
