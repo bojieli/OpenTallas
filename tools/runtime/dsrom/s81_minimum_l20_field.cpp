@@ -17,7 +17,7 @@ void require(bool yes,const char* why){if(!yes)throw std::runtime_error(why);}
 }
 extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& r,const char* output) {
     using namespace dsrom_s81_minimum;
-    require(r.stage==37&&r.rank==0&&r.context,"selected L20 field stage/rank/context");
+    require(r.stage==37&&r.rank>=0&&r.rank<4&&r.context,"selected L20 field stage/rank/context");
     constexpr uint64_t id=1ull<<31;
     std::ifstream input(required("DSROM_S81_FIELD_XN"),std::ios::binary);
     std::array<uint32_t,5120> xn{};
@@ -41,8 +41,8 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& r,const cha
     std::weak_ptr<DsromS81MinimumL20Bank> prior_bank=actualbank;
     std::weak_ptr<std::vector<std::shared_ptr<DsromS81NativeQe>>> prior_actors=actualactors;
     for(unsigned n=0;n<2;n++) {
-        const auto dir=std::string(required("DSROM_S81_FIELD_CONTROLS"))+"/I"+std::to_string(7+n);
-        auto bindings=n?s81_native_field_i8_bindings(id):s81_native_field_i7_bindings(id);
+        const auto dir=std::string(required("DSROM_S81_FIELD_CONTROLS"))+"/rank"+std::to_string(r.rank)+"/I"+std::to_string(7+n);
+        auto bindings=n?s81_native_field_i8_bindings(id,r.rank):s81_native_field_i7_bindings(id,r.rank);
         auto phase=dsrom_s81_qe_load_controls(ops[n],bindings,s81_l20_field_bf_sites(),dir,46464,32768);
         auto reader=dsrom_s81_qe_word_reader(std::stoi(required(n?"DSROM_S81_FIELD_I8_FD":"DSROM_S81_FIELD_I7_FD")));
         actors.push_back(std::make_shared<DsromS81NativeQe>(r,id,pub,io,*cut,std::move(phase),reader,
@@ -64,7 +64,7 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& r,const cha
             if(next<2&&!inflight){go=engine.inputs_ready(ops[next])&&engine.ready();engine.drive(ops[next],go);}
         },
         [&,dispatch,actualbank](bool rn){if(rn&&go){pub.begin(id,ops[next].index);inflight=true;
-            printf("FIELD_ACCEPT I%u cycle=%ld producer=%u\n",7+next,r.cycle(),ops[next].index);fflush(stdout);}},
+            printf("FIELD_ACCEPT rank=%d I%u cycle=%ld producer=%u\n",r.rank,7+next,r.cycle(),ops[next].index);fflush(stdout);}},
         [](bool){},[actualbank](){return actualbank->fault();}});
     r.participants.push_back(engine.participant);
     r.participants.push_back({"sole static cut shared clock",
@@ -90,7 +90,7 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& r,const cha
         while(!io.visible(held,16))r.tick();
     }
     require(pub.complete(2476)&&io.span_lease(id,46464,5120),"I6 import lacks full native ACK lease");
-    printf("FIELD_XN_ACK cycle=%ld words=5120 producer=2476\n",r.cycle());fflush(stdout);
+    printf("FIELD_XN_ACK rank=%d cycle=%ld words=5120 producer=2476\n",r.rank,r.cycle());fflush(stdout);
     while(next<2)r.tick();
     for(unsigned n=0;n<2;n++){
         auto path=std::filesystem::path(output)/(n?"native_L20_I8.u32":"native_L20_I7.u32");
@@ -105,6 +105,6 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& r,const cha
         require(bool(out),"native field readback output write");
     }
     require(actors[0]->complete()&&actors[1]->complete()&&r.publication_drained(id),"native full field terminal drain");
-    printf("FIELD_COMPLETE cycle=%ld I7=320 I8=128 prefix=SIM_ONLY native_readback=448\n",r.cycle());fflush(stdout);
+    printf("FIELD_COMPLETE rank=%d cycle=%ld I7=320 I8=128 prefix=SIM_ONLY native_readback=448\n",r.rank,r.cycle());fflush(stdout);
     return 0;
 }
