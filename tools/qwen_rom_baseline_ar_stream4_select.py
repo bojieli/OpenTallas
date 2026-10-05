@@ -112,13 +112,17 @@ def access(output):
     subprocess.run(command, check=True)
 
 
-def link(output, verilator_root, cxx):
+def link(output, verilator_root, cxx, host_source=None):
     output, verilator_root = Path(output), Path(verilator_root)
     book = json.loads((output/'selection.json').read_text())
     for path, digest in book['source_sha256'].items():
         if sha(path) != digest:
             raise ValueError('selected source/archive changed: '+path)
     source = Path(book['source_root'])
+    host_source = Path(host_source) if host_source else source/HOST
+    host_text = host_source.read_text()
+    if 'create_directories' not in host_text or 'fflush(stdout)' not in host_text:
+        raise ValueError('fulltoken caller requires the actual output-directory/flush repair')
     includes = {verilator_root/'include', verilator_root/'include/vltstd',
                 source/'rtl/test/qwen_runtime', source/'rtl/test/qwen_rom_runtime',
                 output/'reuse/gen'}
@@ -132,13 +136,16 @@ def link(output, verilator_root, cxx):
     command = [cxx, '-std=c++20', '-O2', '-pthread', '-DGROUPS=6144', '-DCOUNTWIDTH=18',
                '-DSWIDTH=64', '-DSMAXB=11', '-DTCUTL=7', '-DNWSD=5', '-DXVMD=1',
                '-DTPD=4', '-DCBANKS=5', '-DSMINV=7',
-               *('-I'+str(p) for p in sorted(includes)), str(source/HOST),
+               *('-I'+str(p) for p in sorted(includes)), str(host_source),
                '-Wl,--start-group', *map(str, archives), '-Wl,--end-group',
                *(str(verilator_root/'include'/p) for p in
                  ('verilated.cpp', 'verilated_threads.cpp', 'verilated_dpi.cpp')),
                '-o', str(output/'qwen_plain_ar_stream4')]
     (output/'link.command.json').write_text(json.dumps(command, indent=2)+'\n')
     subprocess.run(command, check=True)
+    (output/'link.json').write_text(json.dumps(dict(host_source=str(host_source),
+        host_sha256=sha(host_source), executable_sha256=sha(output/'qwen_plain_ar_stream4'),
+        returncode=0), indent=2)+'\n')
 
 
 if __name__ == '__main__':
@@ -149,6 +156,7 @@ if __name__ == '__main__':
     p.add_argument('--native', type=Path)
     p.add_argument('--verilator-root', type=Path)
     p.add_argument('--cxx', default='g++-15')
+    p.add_argument('--host-source', type=Path, help='Explicit corrected caller; the frozen model sources remain unchanged')
     a = p.parse_args()
     if a.phase == 'prepare':
         if a.measured is None or a.native is None:
@@ -159,4 +167,4 @@ if __name__ == '__main__':
     else:
         if a.verilator_root is None:
             p.error('link requires --verilator-root')
-        link(a.output, a.verilator_root, a.cxx)
+        link(a.output, a.verilator_root, a.cxx, a.host_source)
