@@ -10507,7 +10507,7 @@ def qwen_rom_stream4_periodic_provider_model():
     return model(Path(__file__).resolve().parents[1])
 
 
-def hbm_cp_balanced_veto_model():
+def hbm_cp_balanced_veto_model(measurement=None):
     """One CP component successor, priced before RTL; no clock/rate credit."""
     import hashlib
     import json
@@ -10523,7 +10523,7 @@ def hbm_cp_balanced_veto_model():
     final_nand2 = 8 * 6
     control_nand2 = 64
     allowance = (xor_nand2 + tree_nand2 + final_nand2 + control_nand2) * .08748
-    return dict(schema='hbm.cp.balanced-veto.pre-rtl.v1', default_off=True,
+    result = dict(schema='hbm.cp.balanced-veto.pre-rtl.v1', default_off=True,
         reference='best serial REGISTERED_BOUNDARY, grouped71533 rejected',
         prior_physical_sha256=hashlib.sha256((root/prior).read_bytes()).hexdigest(),
         replicas=1, capacity_transactions=1, MACs_per_cycle=0,
@@ -10552,3 +10552,14 @@ def hbm_cp_balanced_veto_model():
         context_route='same original full ports,IO20/u25/density.5; only after exact8713 and fresh Kant admission',
         measured_gain=None,clock_qualified=False,adopted=False,
         adoption='exact changed gate and SS/FF context required; timing-failed successor rejected without tuning')
+
+    if measurement is not None:
+        measured = json.loads((root / measurement).read_text())
+        if measured['verdict'] != 'PASS_EXACT_ONLY' or measured['checks'] != 8713:
+            raise ValueError('CP successor requires its single full mechanism gate')
+        result['measured_successor_edges'] = {k: measured[k] for k in
+            ('prelease_edges','grant_edges','rearm_edges','added_edges')}
+        result['measurement_sha256'] = hashlib.sha256((root/measurement).read_bytes()).hexdigest()
+        result['composed_latency_delta_ns_at_target'] = measured['added_edges'] * .833333
+        result['clock_qualified'] = False
+    return result
