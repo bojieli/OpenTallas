@@ -1,0 +1,212 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-04T21:04:41.494095+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_head_elem",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/abi3/v41_w10_elem_pp_multicycle.sdc",
+          "sha256": "e29aab97de40ea9d6687997f9929ae8a72e6b3dac6e81343fc9d6361fbed72fd"
+        }
+      ],
+      "lines": [
+        "set_multicycle_path -setup 2 -from [get_cells -hierarchical *u_rom?]",
+        "set_multicycle_path -hold 1 -from [get_cells -hierarchical *u_rom?]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "JOIN": 0,
+      "LV": 6,
+      "PAD": 2,
+      "ROWS": 128
+    },
+    "sources": [
+      {
+        "path": "rtl/v41rom/ot_dsrom_head_elem.sv",
+        "sha256": "2fab8cd1cd9dc6512ecf8587ed188e6835ad51c6e9832e59cf1f0dd70445b993",
+        "size_bytes": 14059
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_fadd.sv",
+        "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+        "size_bytes": 11535
+      },
+      {
+        "path": "rtl/common/ot_prefix.sv",
+        "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+        "size_bytes": 2757
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bmul2.sv",
+        "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+        "size_bytes": 4494
+      },
+      {
+        "path": "rtl/v41rom/ot_dsrom_bmul3.sv",
+        "sha256": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+        "size_bytes": 4919
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+        "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "size_bytes": 409
+      }
+    ],
+    "top": "ot_dsrom_head_elem"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n252 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10920 |       0 |   19262 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10930 |       0 |   19271 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10940 |       0 |   19281 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10950 |       0 |   19291 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10960 |       0 |   19301 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10970 |       0 |   19311 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10980 |       0 |   19320 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    10990 |       0 |   19331 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11000 |       0 |   19341 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11010 |       0 |   19351 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11020 |       0 |   19359 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11030 |       0 |   19369 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11040 |       0 |   19379 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11050 |       0 |   19389 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11060 |       0 |   19398 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11070 |       0 |   19407 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11080 |       0 |   19417 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11090 |       0 |   19428 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11100 |       0 |   19438 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11110 |       0 |   19448 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11120 |       0 |   19458 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11130 |       0 |   19467 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11140 |       0 |   19477 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    11150 |       0 |   19487 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n    final |       0 |   19493 |            0 |    +4.9% |   0.537 |   0.000 | g_m[5].u_m.y[0]$_DFF_PN0_/D\n--------------------------------------------------------------------------------------\n[WARNING RSZ-0064] Unable to repair all hold checks within margin.\n[INFO RSZ-0032] Inserted 19493 hold buffers.\n[ERROR RSZ-0060] Max buffer count reached.\nError: cts.tcl, 83 RSZ-0060\n\nElapsed time: 0:06.01[h:]min:sec. CPU time: user 5.58 sys 0.43 (100%). Peak memory: 561596KB.\nElapsed time: 0:33.91[h:]min:sec. CPU time: user 41.88 sys 13.38 (162%). Peak memory: 718156KB.\nElapsed time: 1:07.62[h:]min:sec. CPU time: user 82.51 sys 74.56 (232%). Peak memory: 747056KB.\nElapsed time: 0:03.89[h:]min:sec. CPU time: user 3.55 sys 0.34 (99%). Peak memory: 401096KB.\nElapsed time: 0:05.83[h:]min:sec. CPU time: user 5.45 sys 0.38 (99%). Peak memory: 515796KB.\nElapsed time: 0:21.62[h:]min:sec. CPU time: user 198.87 sys 0.74 (923%). Peak memory: 646936KB.\nElapsed time: 0:03.99[h:]min:sec. CPU time: user 3.66 sys 0.33 (100%). Peak memory: 472616KB.\nElapsed time: 2:46.77[h:]min:sec. CPU time: user 462.87 sys 97.04 (335%). Peak memory: 1695652KB.\nElapsed time: 1:10.10[h:]min:sec. CPU time: user 98.23 sys 39.85 (196%). Peak memory: 856244KB.\nElapsed time: 1:29.88[h:]min:sec. CPU time: user 118.82 sys 35.90 (172%). Peak memory: 1247984KB.\nElapsed time: 1:15.94[h:]min:sec. CPU time: user 113.69 sys 25.43 (183%). Peak memory: 1463188KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_dsrom_head_elem_asap7_hdB3/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-04T20:52:36.124548+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_head_elem",
+      "--source",
+      "rtl/v41rom/ot_dsrom_head_elem.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_fadd.sv",
+      "--source",
+      "rtl/common/ot_prefix.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bmul2.sv",
+      "--source",
+      "rtl/v41rom/ot_dsrom_bmul3.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "--param",
+      "LV=6",
+      "--param",
+      "PAD=2",
+      "--param",
+      "JOIN=0",
+      "--param",
+      "ROWS=128",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--max-transition-ns",
+      "--max-fanout",
+      "32",
+      "--stages",
+      "pnr",
+      "--false-path-io",
+      "--core-utilization",
+      "40",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--hold-margin-ns",
+      "0.02",
+      "--sdc-append",
+      "physical/abi3/v41_w10_elem_pp_multicycle.sdc",
+      "--macro-view",
+      "ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8",
+      "--nickname-tag",
+      "hdB3",
+      "--keep-workdir",
+      "/home/ubuntu/claude-scratch/dsrom-recovery-head/r3/B/work",
+      "--output",
+      "/home/ubuntu/claude-scratch/dsrom-recovery-head/r3/B/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/claude-scratch/dsrom-recovery-head/src_r3/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "21bd7dd863f2c394d8487e89d07a3fe15e331b05b2e94224fda0c41d671be578",
+      "tree": "/home/ubuntu/claude-scratch/dsrom-recovery-head/src_r3"
+    },
+    "orfs_num_cores": 20,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/claude-scratch/dsrom-recovery-head/src_r3"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

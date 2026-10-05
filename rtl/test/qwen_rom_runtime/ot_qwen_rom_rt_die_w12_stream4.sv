@@ -85,6 +85,7 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     parameter integer LKA = 512,              // unused (fill-service parameter, kept for the driver)
     parameter integer WBW = 1,                // token write-backs a cycle (distinct PCs)
     parameter integer HBM_PHASE = 0,          // refresh phase of the stack's REFpb schedule
+    parameter integer HBM_PULLIN = 0,         // controller refresh pull-in (ot_hbm_r14_stream_pc PULLIN)
     parameter integer EMBED_ROM = 1         // the token's X from the INT8 embedding ROM (stage E); 0: X preloaded
 ) (
     input  wire              clk,
@@ -346,10 +347,18 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
     //: a later segment of the same layer starts: the previous segment (QK/PV, the O projection and its
     //: all-reduce) is complete, so the core is done with this layer's KV slices
     wire kv_free = core_start && !kv_arm && rm_layer != 8'hff;
+    //: the notice names the layer that runs AFTER the current one: before the first KV layer of a run has
+    //: started, the next layer to run is that stage's own layer, so no notice is given then (a non-KV
+    //: stage, e.g. the embedding, may announce the first KV layer)
+    reg kv_started;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) kv_started <= 1'b0;
+        else if (kv_layer_start) kv_started <= 1'b1;
+    wire [7:0] kv_notice = (kv_started || rm_layer == 8'hff) ? rm_next_layer : 8'hff;
     ot_qwen_rt_kv_stream4_service #(.G(G), .SW(SW), .AW(AW), .NW(NW), .NSTK(NSTK), .NPC(NPC), .FILL_LAT(FILL_LAT), .KV_IDEAL(0),
                                    .WBW(WBW)) u_kv (
         .clk(clk), .rst_n(rst_n), .start(kv_layer_start), .ideal_in(rm_kv_ideal), .pos(core_pos[NW-1:0]), .layer(rm_layer),
-        .nx_layer(rm_next_layer), .pos_hint(tp_pos[NW-1:0]),
+        .nx_layer(kv_notice), .pos_hint(tp_pos[NW-1:0]),
         .kv_free(kv_free), .early_go_in(rm_early_go), .posted_wb_in(rm_posted_wb), .wb_busy(kv_wb_busy),
         .kvd_v(kvd_v), .kvd_pos(kvd_pos), .kvd_kindk(kvd_kindk), .kv_ok(kv_ok),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .kv_write_drained(kv_write_drained),
@@ -360,7 +369,7 @@ module ot_qwen_rom_rt_die_w12_stream4 #(
         .fault(svc_fault), .fault_code(svc_code), .st_fill_cycles(st_fill_cycles), .st_fill_sectors(st_fill_sectors),
         .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
         .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
-    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(HBM_LAYERS * 131072), .TAGW(TGWK), .PHASE(HBM_PHASE)) u_hbm (
+    ot_qwen_hbm_stream4_ack #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(HBM_LAYERS * 131072), .TAGW(TGWK), .PHASE(HBM_PHASE), .PULLIN(HBM_PULLIN)) u_hbm (
         .clk(clk), .rst_n(rst_n), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),

@@ -69,6 +69,76 @@ NODE_REGION = {
 }
 
 
+
+def dsrom_baseline_link_clock_repair(flit_bytes=64, credits=512, seqw=10,
+                                     channel_cycles=156, traversals=81):
+    """Default-off baseline reliability repair, not the rejected cut-through lever.
+
+    Source: ot_dsrom_link_rt.sv; screen_base_rt SS -417.3ps/FF +4.2ps,
+    rr_f[37] -> reverse CRC/ACK/rewind -> st_replays[27]. Retain the
+    baseline payload, lane/PHY budgets, cumulative credits and replay storage.
+    One registered launch payload cuts window/replay-select from forward CRC.
+    Receive CRC flags align with existing frame registers (zero added edges).
+    """
+    if min(flit_bytes, credits, seqw, channel_cycles, traversals) < 1:
+        raise ValueError("positive link dimensions required")
+    if credits > 2 ** (seqw - 1):
+        raise ValueError("ambiguous sequence window")
+    w = 8 * flit_bytes
+    cw = math.ceil(math.log2(credits + 1))
+    fpw = w + seqw + 1
+    baseline_loop = 2 * channel_cycles + 2 + 2 + 6
+    repaired_loop = baseline_loop + 1
+    # Payload+valid head and two aligned CRC flags. Status counters retain
+    # their cycle-visible values: bounded 8-bit parallel increment segments.
+    ff = fpw + 1 + 2
+    return dict(candidate="DSROM_BASELINE_LINK_RT_CLOCK1", default_enabled=False,
+        baseline_source_sha256=hashlib.sha256((ROOT / "rtl/dsrom_sys/ot_dsrom_link_rt.sv").read_bytes()).hexdigest(),
+        baseline_ss_setup_ps=-417.3, baseline_ff_hold_ps=4.2,
+        period_ps=1000/1.2, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+        macs_per_cycle=0, memory_bytes_per_port_edge=flit_bytes,
+        replay_write_ports=1, replay_read_ports=1, fifo_write_ports=1, fifo_read_ports=1,
+        forward_bits_per_edge=fpw+32, reverse_bits_per_edge=1+seqw+cw+32,
+        replicas=dict(launch_head=1, aligned_crc_flags=2, status_counters=9,
+                      status_counter_8bit_segments=36),
+        added_ff_bits=ff, added_ff_body_um2_proxy=ff*DFF_UM2,
+        added_ff_50pct_reservation_um2_proxy=2*ff*DFF_UM2,
+        added_comb_area_um2=None, actual_slot_fit=None,
+        added_packet_edges=1, added_ack_generation_edges=0,
+        added_ack_credit_roundtrip_edges=1,
+        diagnostic_observation_delay_edges=0,
+        baseline_credit_loop_edges=baseline_loop, repaired_credit_loop_edges=repaired_loop,
+        credits=credits, sequence_bits=seqw,
+        ideal_credit_bound_flits_per_edge=min(1, credits/repaired_loop),
+        bytes_per_edge_bound=flit_bytes*min(1, credits/repaired_loop),
+        selected_stage_hops=traversals,
+        added_single_user_stage_chain_us=traversals/1.2e3,
+        baseline_hop_cycles=909, candidate_hop_cycles_lower_bound=911,
+        hop_two_endpoint_added_edges=2,
+        # Board then package fanout: one extra launch edge in each endpoint.
+        added_single_user_two_endpoint_chain_us=2*traversals/1.2e3,
+        token_return_8_traversals_added_us=8/1.2e3,
+        token_latency_not_measured=True, error_replay_latency_not_measured=True,
+        routing_tracks_needed=fpw+32+1+seqw+cw+32,
+        channel_tracks_available=None, routing_fit=False,
+        minimum_context=dict(credits=16, seqw=5, flit_bytes=64,
+            queue_depth_not_selected_512=True, die_um=[240,180], core_um=[236,176],
+            baseline_mapped_cell_um2=13622.28354,
+            positive_logic_buffer_reserve_um2_proxy=5000,
+            reserved_cell_um2_proxy=13622.28354+ff*DFF_UM2+5000,
+            cell_area_capacity_um2_at_50pct=236*176*.5,
+            source_grid="ORFS asap7_tech_1x_201209.lef M4 H/M5 V pitch0.048um",
+            gross_directional_tracks=dict(horizontal=math.floor(176/.048),vertical=math.floor(236/.048)),
+            tracks_after_50pct_clock_PG_policy_reserve=dict(horizontal=math.floor(176/.048/2),vertical=math.floor(236/.048/2)),
+            physical_obstruction_union_measured=False,
+            boundary_target=dict(input_max_ps=100,input_min_ps=30,output_max_ps=60,output_min_ps=25,load_fF=.6),
+            boundary_basis="Candidate registered parent: SS measured launch92.8ps +7.2ps route budget; setup34.1ps +25.9ps output budget; actual routes/corner closure pending.",
+            prebuild_reserved_capacity_pass=(13622.28354+ff*DFF_UM2+5000<=236*176*.5),
+            context_route_allowed=True, full_queue_clock_qualified=False),
+        ss_ff_qualified=False, physical_admitted=False,
+        limits="FF price is a source proxy; comb/CTS/PG/routes/loaded SSFF must be measured. No PHY or cut-through gain.")
+
+
 def node_key(name: str) -> str:
     tail = name.split(".", 1)[1] if "." in name else name
     for k in sorted(NODE_K, key=len, reverse=True):
@@ -925,9 +995,12 @@ QWEN_WIRE_W12 = dict(
     bd=31,                    # instruction broadcast + x network, incl. the tile input register and XVM
     xvm=1,                    # registered VM conflict stage (inside bd)
     nws=4, tree_levels=4,     # four upper tree levels (3..6) inside a 16-tile block, 4 stages each
-    tws=30,                   # level-6 words -> spine top
+    tws=64,                   # level-6 words -> spine top: worst block word at the b3r12/b3r13 die floorplan, 430.56 um
+                              # link-stage pitch (results/rtl/qwen_rom_fulldie_20261003/b3r3/latency_b3r12.json; was 30)
     ord=4,                    # result write -> VM
-    me_lat_extra=31 + 4 * 4 + 30 + 4,   # 81 cycles on every ME op's result
+    me_lat_extra=31 + 4 * 4 + 64 + 4,   # 115 cycles on every ME op's result
+    hub_stack_stages=53,      # hub <-> stack link at the same floorplan (r2 entry priced 46): +2 x 36 x 7 cycles a token
+    two_beat_bound=1,         # F2 two-beat instruction: +1 cycle a ME op until RTL prefetch is measured (bound)
 )
 # Vector-memory x read (W12 gap): the engine's x chunk port reads S distinct elements at every K step (IL cycles,
 # x held across the slots) or every cycle (x varies with the slot, xjs != 0: the attention ops).  The W5 VM
@@ -3009,6 +3082,25 @@ PG = dict(
 )
 
 
+# MEASURED clock-gated idle of one ROM element pair (2026-10-04, results/rtl/rom_stage_power_gating_20261004,
+# route R3, OpenSTA TT on routed SPEF + gate-level SAIF at 1.2 GHz): 3.005 mW per pair (0.243 mW of it leakage).  The
+# ledger used to charge PG["cg_residual"] (10%, ASSUMED) of the ungated pair clock (79.2 mW at 1.034 GHz) + 0.22 mW
+# leakage = 8.14 mW per clock-gated idle pair.  The ROM field's idle clock now uses the measured residual clock
+# (scaled linearly with the clock, as pair_power does); the hub keeps the ASSUMED 10% (not measured).
+def _pair_cg_idle_measured():
+    v = json.loads((ROOT / "results/rtl/rom_stage_power_gating_20261004/verdict.json").read_text())["power_w"]["cg_idle"]
+    return dict(total_w=v["total"], leak_w=v["leakage"], clock_w=v["total"] - v["leakage"], clock_hz=1.2e9,
+                src="results/rtl/rom_stage_power_gating_20261004/verdict.json power_w.cg_idle (route R3, TT)")
+
+
+PAIR_CG_IDLE = _pair_cg_idle_measured()
+
+
+def field_cg_residual(clock):
+    """The ROM field's clock-gated idle clock as a fraction of the ungated pair clock at `clock` (MEASURED numerator)."""
+    return PAIR_CG_IDLE["clock_w"] * clock / PAIR_CG_IDLE["clock_hz"] / pair_power(clock)["clock"]
+
+
 def _stage_windows(g):
     """Per-stage time on the single-user critical path (the stage's active window at batch 1; the head stage
     carries the embed and argmax), and each stage's start time on the path."""
@@ -3056,6 +3148,7 @@ def v41_die_static_parts(d):
     return dict(
         # ROM field MEASURED per pair (PAIR_W); hub from its area, UNCALIBRATED
         field=dict(clock=N * pair_power(clock)["clock"], leak_logic=N * PAIR_W["leak_cell"], leak_rom=N * PAIR_W["leak_rom"]),
+        field_cg_residual=field_cg_residual(clock),     # MEASURED pair clock-gated idle (PAIR_CG_IDLE)
         hub=dict(clock=cl * (a["hub_logic_mm2"] + 0.15 * a["vm_ports"]),
                  leak_logic=a["hub_logic_mm2"] * LEAK["logic"], leak_sram=a["vm_ports"] * LEAK["sram_array"]),
         hbm_if=4 * HBM_IDLE_W_STACK, serdes=rack["serdes_always_on"], ucie=rack["ucie_idle"])
@@ -3067,18 +3160,19 @@ def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
     policies: 0 ungated; 1 stage clock gating; 2 + region clock gating inside the window; 3 + power gating of the
     idle stage (retention SRAM, gated logic and ROM, HBM PHY power-down, SerDes / UCIe low-power idle) when the
     idle gap fits the wake-up and the break-even time."""
-    r = PG["cg_residual"]
+    rk = dict(field=p.get("field_cg_residual", PG["cg_residual"]), hub=PG["cg_residual"])
     idle = max(0.0, period - window)
     clk = p["field"]["clock"] + p["hub"]["clock"]
+    clk_r = rk["field"] * p["field"]["clock"] + rk["hub"] * p["hub"]["clock"]     # clock left with the ICGs closed
     leak = p["field"]["leak_logic"] + p["field"]["leak_rom"] + p["hub"]["leak_logic"] + p["hub"]["leak_sram"]
     io = p["hbm_if"] + p["serdes"] + p["ucie"]
     if policy == 0:
         return (clk + leak + io) * period
     if policy == 1:
-        e_clk = clk * (window + r * idle)
+        e_clk = clk * window + clk_r * idle
     else:
-        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + r * (window - min(busy[k], window))) for k in ("field", "hub")) \
-            + r * clk * idle
+        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + rk[k] * (window - min(busy[k], window))) for k in ("field", "hub")) \
+            + clk_r * idle
     if policy < 3 or not pg_ok:
         return e_clk + (leak + io) * period
     on = window + wake_s                      # the wake-up runs with the stage leaking at its ON level
@@ -3089,7 +3183,7 @@ def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
     serdes_on = min(period, window + PG["serdes_wake_s"])
     e_io = p["hbm_if"] * on + p["hbm_if"] * PG["hbm_if_residual"] * off \
         + (p["serdes"] + p["ucie"]) * (serdes_on + PG["serdes_lpi_residual"] * (period - serdes_on))
-    e_clk -= r * clk * off                    # a power-gated stage has no clock at all
+    e_clk -= clk_r * off                      # a power-gated stage has no clock at all
     return e_clk + leak * on + leak_off * off + leak * PG["stage_bet_s"] + e_io
 
 
@@ -4417,9 +4511,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     # ADOPTED per-pair ICG (W18 / power-cal): an idle pair keeps only its 0.22 mW leakage; a busy pair's clock is
     # dynamic (pair-seconds x its clock power).  The ungated form (every idle pair clocked, 0.092 W at 1.2 GHz) is
     # kept as `cooling_ungated` for the waterfall only.
+    # 2026-10-04: the idle pair's ICG does not stop its whole clock: the MEASURED clock-gated idle pair keeps
+    # PAIR_CG_IDLE clock_w (2.76 mW at 1.2 GHz) besides its leakage, so that residual stays static.
     field_clock_ungated = pw["field"]["clock_w"]
+    field_cg_w = PAIR_W["placed_pairs"] * field_cg_residual(r1["clock_hz"]) * pp["clock"]
     die_static_ungated = pw["clock_w"] + pw["leakage_w"] + pw["hbm_idle_w"] + link_die
-    die_static = die_static_ungated - field_clock_ungated
+    die_static = die_static_ungated - field_clock_ungated + field_cg_w
     head_w = rack["static"]["head_dies"] / V41_ROM_SYSTEM["head_dies"]
     tl = rack["per_die"]["table_leakage_w"] * V41_ROM_SYSTEM["table_dies"] * table_leak_scale
     to = (rack["per_die"]["table_static_w"] - rack["per_die"]["table_leakage_w"]) * n_table
@@ -4438,7 +4535,8 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     dyn_m = (e_pass + V41_DRAFT_FRACTION * dyn) / V41_TAU
     # gated (the adopted stage power gating, 1 us wake): v41_static_power's rule on this plan's stages
     p = v41_die_static_parts(d)
-    p["field"]["clock"] = 0.0          # per-pair ICG: the field clock is in the dynamic energy (cats field_clock_busy)
+    p["field"]["clock"] = field_cg_w   # per-pair ICG: the busy clock is dynamic (cats field_clock_busy); the MEASURED
+    p["field_cg_residual"] = 1.0       # clock-gated idle clock stays (and goes with the stage when it is power gated)
     ungated_die = sum(p["field"].values()) + sum(p["hub"].values()) + p["hbm_if"] + p["serdes"] + p["ucie"]
     table_leak_die, table_other_die = tl / max(1, n_table), to / max(1, n_table)
     wake = PG["stage_wake_s"]
@@ -6660,14 +6758,18 @@ def dsrom_wavefront_mtp_tok_s(rom, rk):
     return ctx[V41_ROM_DRAFT_VARIANTS[V41_ROM_DRAFT]]["wavefront_occupancy"]["mtp_tok_s"]
 
 
-TAU_OWNER6 = 4.159      # equal 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
-                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic)
+TAU_OWNER6 = 4.159      # SUPERSEDED 2026-10-04 (owner rule: tau from published third-party sources only). Our equal
+                        # 6-class blend, gamma 5 (results/speculative/v41_mtp_acceptance_qualified_20261003/
+                        # blend_owner6.json blends."owner 6-class equal".greedy.tau_blend_harmonic); kept for reproduction.
+import third_party_tau as _TPT                                                     # noqa: E402
+TAU_DS = _TPT.tau_ds_v41(5)               # DEFAULT: published third-party DSpark gamma-5 tau (OT_TAU_SOURCE=self_measured -> 4.159)
+TAU_DS_SRC = _TPT.tau_src("deepseek_v41", 5)
 NVLS_SCEN = ("push_optimistic", "nvls_measured", "gpu_fenced")
 TU_SCEN = ("tomahawk_ultra_protocol", "tomahawk_ultra_inc")
 
 
 def hbm_switch_latency_authoritative():
-    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau 4.159, gamma 5) at 1M and 200K under every switch scenario, for
+    """AUTHORITATIVE DS-V4.1 HBM per-user AR / MTP (tau TAU_DS = third-party published, gamma 5) at 1M and 200K under every switch scenario, for
     the W19 GPU-organised ablation, the accelerator (frozen HA firm ladder without R2 -- the switch tier is retained --
     and, under a replaced transport, without R3a, whose endpoint cut-through the replacement already contains), the
     measured composition and the GPU-faithful R0 row (every boundary a MEASURED H100 1.097 us grid sync); ROM:HBM
@@ -6766,7 +6868,7 @@ def hbm_switch_latency_authoritative():
                 d1, d6 = delta(sc, P=1, **kw), delta(sc, P=6, **kw)
                 ar = dd["ar"] * k + d1
                 step = (dd["ver"] + dd["draft"]) * k + d6 + d1 * n_draft / n["total"]
-                ar_r, mtp_r = 1e6 / ar, TAU_OWNER6 * 1e6 / step
+                ar_r, mtp_r = 1e6 / ar, TAU_DS * 1e6 / step
                 primary = kw.get("fec", "board") == "board" and kw.get("gathers", "measured_ag") == "measured_ag" \
                     and kw.get("msg", "small") == "small" and kw.get("cable", "twinax_3m") == "twinax_3m"
                 rows.append(dict(ctx=ctx, design=name, scenario=sc, **kw, primary=primary,
@@ -6854,7 +6956,7 @@ def hbm_switch_latency_authoritative():
                 collective_counts=dict(w19_pass=n, draft_assumed=round(n_draft, 2),
                                        draft_basis="W19 per-collective mix at P = 1 bytes x DRAFT_PARTS.collective / "
                                                    "W19 collective"),
-                tau=TAU_OWNER6, gamma=5, tau_src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
+                tau=TAU_DS, gamma=5, tau_src=TAU_DS_SRC, tau_superseded=dict(tau=TAU_OWNER6, src="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (self-measured)"),
                 rom_records=dict(ar=DSROM_WAVEFRONT, mtp=DSROM_DRAFT_MEASURED, l1l2=DSROM_DRAFT_L1L2), rom_fec="light (130 ns board link)",
                 rom=romv, rom_projections_note="L1 fused head = the measured-draft record's fused_head (= L1, 7,186 at "
                                                "1M); L2 batched head and L1+L2 = EXPECTED projections (no lever "
@@ -7640,3 +7742,112 @@ def dsrom_s81_native_bf_head_producer():
         'token_latency_ns': None, 'headline_or_rate_credit': False,
         'default_enabled': False,
     }
+
+
+def hbm_dspark_ctl_fast_prefix_candidate():
+    """FAST-only W16 carry repair, model before RTL; no clock/rate adoption.
+
+    Existing control accepts the same commands and emits the same values on
+    the same edges. Retain ctl_f1 output SS miss and full spec_f1 setup fail.
+    """
+    return dict(model_record="results/uarch/hbm_accel_fmax_ctl_20261004/prebuild_model.json",
+                adopted=False, target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, replicas=1, MACs_per_cycle=0,
+                new_memory_ports=0, new_boundary_bits=0, new_latency_cycles=0,
+                single_user_token_latency_delta_cycles=0, FAST_default=0,
+                retained_fast_fbase_FF_bits=16, repair_additional_FF_bits=0,
+                carry_width=16, carry_levels=5, carry_prefix_nodes=54,
+                local_kept_wire_bits=204, local_prefix_fanout_bound=2,
+                gate_equivalent_upper=210, added_logic_proxy_um2=105,
+                added_50pct_reservation_proxy_um2=210,
+                area_basis="assumed0.5um2/gate; mapped/routed area not measured",
+                required_leaf_area_growth_um2=210, physical_fit=False,
+                SS_FF_closed=False, measured_gain=False)
+
+
+def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, instructions=1, replicas=1):
+    """Held FIFO word -> position -> selectors/shift -> /ODD -> NEXT.
+
+    Upper additive latency: four edges per decoded instruction, including END.
+    Preparation overlaps existing unit execution, but no overlap credit is taken.
+    This is a clock-repair candidate, not an adopted performance lever.
+    """
+    state_bits = instruction_bits + 11*aw + 3*nw + 1 + 3
+    return dict(default_enabled=False, MACs_per_cycle=0, new_memory_ports=0,
+                new_boundary_bits=0, replicas=replicas,
+                added_register_bits_per_core=state_bits,
+                register_HQN_cell_area_um2=0.2916,
+                added_register_cell_area_floor_um2=state_bits*0.2916,
+                enable_mux_clock_reset_buffer_area_um2=None, mapped_area_um2=None,
+                routing_tracks=None, channel_capacity=None, floorplan_fit=False,
+                fifo_word_select_inputs=4, dynamic_selects=11,
+                dynamic_select_fanin_baseline=8, dynamic_select_fanin_VPOS=64,
+                additional_decode_edges=4, minimum_decode_initiation_interval=5,
+                token_latency_delta_upper_cycles=4*instructions,
+                token_latency_delta_upper_ns=4*instructions/1.2,
+                latency_overlap_credit_cycles=0, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                clock_closed=False, adopted=False,
+                source='rtl/hdc/ot_hdc_core_vector_weight.sv',
+                area_obligation='All held word, 11 DYN operands, position, shifted position, rounds, invalid and phase flops; map before slot fit',
+                physical_obligation='Register /ODD alone still requires SS/FF measurement; no clock relaxation')
+
+
+def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
+    """Port of the adopted zero-edge ROM-VP LA controls to combined VP.
+
+    Queues, ports, descriptors, tags, near service and arithmetic unchanged.
+    This sizes source additions; routed ROM-VP closure is not combined closure.
+    """
+    cw = 13
+    bits = fw + vwa + ntok + 2*cw + 7 + 32
+    return dict(default_enabled=False, added_register_bits_per_die=bits,
+                replicas=replicas, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='enable muxes, prefix logic, key trees, clock/reset/routing',
+                MACs_per_cycle=0, extra_memory_ports=0,
+                existing_VM_read_bytes_per_edge=fw//8,
+                existing_collective_payload_bits_per_edge=fw,
+                existing_collective_tag_bits=44, new_boundary_bits=0,
+                added_instruction_or_collective_edges=0,
+                composed_token_latency_delta_cycles=0,
+                queue_depth_unchanged=4, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                combined_context_clock_closed=False, floorplan_fit=False,
+                adopted=False,
+                source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
+                physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
+
+
+def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
+                                   service_period_fs=833333, ack_tail_edges=0):
+    """Additional alignment around the existing canonical MP commit element.
+
+    A raw lane sampled E0 is decoded after E1 and enters service at E2.
+    Compose the final lane's actual ACK tail with pipeline empty, never sum
+    two edges onto every FILL stage or assume they are unhidden token delay.
+    Canonical decoder/state area belongs to the existing element model.
+    """
+    bits=2*sw*aw+2
+    old_empty=fill_lat+3
+    new_empty=fill_lat+5
+    before=max(old_empty,ack_tail_edges)
+    after=max(new_empty,ack_tail_edges)
+    return dict(default_enabled=False, replicas=replicas, MACs_per_cycle=0,
+                added_register_bits_per_die=bits, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='canonical decoder/state, enable muxes, clock/reset/routing',
+                initiation_interval_service_edges=1, added_lane_service_edges=2,
+                existing_lane_address_bits_per_edge=sw*aw,
+                existing_lane_data_bits_per_edge=sw*32,
+                added_memory_ports=0, new_boundary_bits=0, routing_tracks_added=0,
+                existing_lane_input_bytes_per_edge=sw*4,
+                empty_pipeline_tail_service_edges=new_empty,
+                actual_ack_tail_service_edges=ack_tail_edges,
+                composed_tail_service_edges=after,
+                composed_tail_delta_service_edges=after-before,
+                composed_tail_delta_fs=(after-before)*service_period_fs,
+                token_composition='per-layer max(actual native ACK tail, FILL_LAT+5); serialize only exposed fence tail',
+                service_period_fs=service_period_fs,
+                combined_context_clock_closed=False, floorplan_fit=False, adopted=False,
+                source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')

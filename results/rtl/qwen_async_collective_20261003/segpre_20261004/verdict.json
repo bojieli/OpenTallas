@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.lever-verdict.v1",
+ "lever": "qwen3-8b-rom-async-collective SB_PIPE=4 (precomputed segment end + registered 2:1 ready select + absolute-index scoreboard)",
+ "class": "OPTIONAL",
+ "source": "837d9900a4a74c6c152fd9a9de9965ffbade5d0c",
+ "verdict": "FINAL_REJECT",
+ "reason": "no physical closure in context: GRT SS WNS -2.2 ps (2 endpoints, head argmax, repair stalled) and detailed route did not converge (2,610 DRC at iter 16, 9,993 at iter 17, 6 h timeout at iter 18); no SS/FF signoff possible",
+ "exactness": {"verilator_gate_sbpipe4": "pass (56 cases, cycle/write/fault-identical to SB_PIPE=2; overflow cases fault)",
+               "full_token_layer_parallel": {"composed_full_token_exact": true, "poison_check": "pass", "cycles": 134730},
+               "real_mem_E_L0_L2": {"P0": {"status": "pass", "cycles": 12246}, "P255": {"status": "pass", "cycles": 12708}}},
+ "gain": {"one_stream_token_cycles": 144522, "sb_pipe4_token_cycles": 134730, "per_user_gain_pct": 7.27, "tok_s_at_1p2ghz": 8907},
+ "physical": {"cts_setup": "no violations", "ss_setup_wns_ps_after_grt": -2.238, "failing_endpoints_after_grt": 2,
+              "worst_endpoint": "seq.next_token[12] (best_v okey compare; pre-existing head argmax, +29 ps with placement parasitics)",
+              "utilization": 0.45, "drt_violations_by_iter": [66156, 40011, 36078, 17981, 12272, 9956, 8016, 6593, 5710, 5081, 4042, 3581, 3053, 2920, 2740, 2698, 2610, 9993],
+              "ff_hold": "not signed off (no 6_final)"},
+ "baseline_kept": "one-stream AR, 144,522 cycles/token ideal memory"
+}

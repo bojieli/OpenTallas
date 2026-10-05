@@ -1,0 +1,326 @@
+{
+ "E_cycles_from_P255": 98,
+ "clock_ghz": 1.2,
+ "head_cycles_from_P255": 2999,
+ "method": "Owner rules: simulate the minimum component, measure at the target context only (P = 8,191, one layer per type),\npublish only measured compositions.  Inputs (each a tools/qwen_rom_rt_token_stream4_w12.py result, exact vs the GPU\nISA golden realmem-ctx8k/gold/P8191):\n  * iso      L0 isolated (HBM from reset, no notice: the whole window fill is exposed);\n  * chained  L0,L1,L2 chained with the straps (--early-go --posted-wb): L1/L2 are the steady layer, their window is\n             streamed during the previous layer's MLP (cross-layer prefetch);\n  * base     (optional) L0,L1,L2 chained without the straps (the notice only), for the A/B;\nplus references: the REAL_MEM one-stack job and the KV_IDEAL job at P8191 (compute-only bound, same golden), and E /\nhead cycles from the P255 full-token record (they carry no KV term).  The token is composed as the P255 and the\nrealmem-ctx8k records compose it:\n    7 + E + (L0_iso - 1) + 35 x chained_steady + (head - 1) + 37 stage switches\nwith chained_steady the mean of the chained L1/L2 (max as the bound).  The achieved HBM bandwidth of a layer is its\nwindow (MEMSTAT fill_sectors x 32 B) over its fill time (fill_cycles at 1.2 GHz), against the 4-stack peak\n4 x 32 PCs x 32 B / 1.024 ns = 4.000 TB/s.",
+ "peak_TBps_per_die": 4.0,
+ "position": 8191,
+ "references": {
+  "kv_ideal_isolated_L0": {
+   "cycles": 5283,
+   "dir": "/srv/opentallas-scratch/claude/realmem-ctx8k/runs/P8191/L0_ideal",
+   "exact": true,
+   "result_sha256": "afa301b900d80d85deac36fa7198d9bea1226364736947b04900f3d6fa28027a"
+  },
+  "realmem_one_stack_chained": {
+   "cycles": {
+    "L0": 14574,
+    "L1": 16268,
+    "L2": 15918
+   },
+   "dir": "/srv/opentallas-scratch/claude/realmem-ctx8k/runs/P8191/L0+L1+L2",
+   "exact": true,
+   "tok_per_s": 2065.5,
+   "token_cycles": 580968
+  },
+  "realmem_one_stack_isolated_L0": {
+   "cycles": 14574,
+   "dir": "/srv/opentallas-scratch/claude/realmem-ctx8k/runs/P8191/L0",
+   "exact": true,
+   "fill": {
+    "drain_low": 3849,
+    "fill_cycles": 9893,
+    "fill_sectors": 131064,
+    "kvok_low_with_desc": 5611,
+    "rsp_tile_stall": 8,
+    "stall_bridge": 425,
+    "stall_drain": 3712,
+    "stall_kv": 5613,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "tile_edges": 12387,
+    "wr_lat_max": 96,
+    "wr_sectors": 136
+   },
+   "fill_TBps": 0.509,
+   "fill_pct_of_4stack_peak": 12.7,
+   "result_sha256": "2795fcc7cc5745037033c33886d93acd33cd94762dcf937a2f72057ed5003317"
+  }
+ },
+ "schema": "opentallas.qwen-rom-kv-fullbw.v1",
+ "stream4": {
+  "chained_straps": {
+   "binary_sha256": "9cb710fe83e2b40b099dd2591d696248fec163348c64151ff3fbe0864d57c00a",
+   "configuration": "REAL_MEM STREAM4",
+   "dir": "runs/rt/L012_ep_p16",
+   "exact": false,
+   "kv_writeback_checks": {
+    "L0_die0": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L0_die1": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L0_die2": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L0_die3": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L1_die0": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L1_die1": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L1_die2": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L1_die3": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L2_die0": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L2_die1": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L2_die2": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L2_die3": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    }
+   },
+   "result_sha256": "e917b5a6c790bd6df4ba4ecd6b316d46f9351e01660ca0fb4e311b819f4da113",
+   "stages": {
+    "L0": {
+     "cycles": 6044,
+     "fill_TBps": 7.702,
+     "fill_pct_of_peak": 192.5,
+     "memory_die0": {
+      "drain_low": 0,
+      "fill_cycles": 1307,
+      "fill_exposed": 1363,
+      "fill_sectors": 262144,
+      "kvok_low_with_desc": 793,
+      "rsp_tile_stall": 30270,
+      "stall_bridge": 425,
+      "stall_drain": 0,
+      "stall_kv": 795,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 4603,
+      "wr_lat_max": 57,
+      "wr_sectors": 136
+     },
+     "memory_dies_identical": true
+    },
+    "L1": {
+     "cycles": 5282,
+     "fill_TBps": 3.839,
+     "fill_pct_of_peak": 96.0,
+     "memory_die0": {
+      "drain_low": 0,
+      "fill_cycles": 1311,
+      "fill_exposed": 0,
+      "fill_sectors": 131072,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 15293,
+      "stall_bridge": 425,
+      "stall_drain": 0,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 8131,
+      "wr_lat_max": 64,
+      "wr_sectors": 136
+     },
+     "memory_dies_identical": true
+    },
+    "L2": {
+     "cycles": 5282,
+     "fill_TBps": 0.0,
+     "fill_pct_of_peak": 0.0,
+     "memory_die0": {
+      "drain_low": 0,
+      "fill_cycles": 1311,
+      "fill_exposed": 0,
+      "fill_sectors": 0,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 0,
+      "stall_bridge": 425,
+      "stall_drain": 0,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 11392,
+      "wr_lat_max": 334,
+      "wr_sectors": 136
+     },
+     "memory_dies_identical": true
+    }
+   },
+   "status": "fail",
+   "straps": {
+    "early_go": true,
+    "posted_wb": true
+   },
+   "writeback_drain": {
+    "cycles_after_last_stage": 0,
+    "drained": true
+   },
+   "x_checks": {
+    "L0_die0_x": 0,
+    "L0_die1_x": 0,
+    "L0_die2_x": 0,
+    "L0_die3_x": 0,
+    "L1_die0_x": 0,
+    "L1_die1_x": 0,
+    "L1_die2_x": 0,
+    "L1_die3_x": 0,
+    "L2_die0_x": 0,
+    "L2_die1_x": 0,
+    "L2_die2_x": 0,
+    "L2_die3_x": 0
+   }
+  },
+  "exact": false,
+  "isolated_L0": {
+   "binary_sha256": "9cb710fe83e2b40b099dd2591d696248fec163348c64151ff3fbe0864d57c00a",
+   "configuration": "REAL_MEM STREAM4",
+   "dir": "runs/rt/L0_iso_p16",
+   "exact": true,
+   "kv_writeback_checks": {
+    "L0_die0": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L0_die1": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L0_die2": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    },
+    "L0_die3": {
+     "k_codes": 256,
+     "k_mismatches": 0,
+     "v_codes": 256,
+     "v_mismatches": 0
+    }
+   },
+   "result_sha256": "34c0254064658837e0c0485089f375b1b0f3543e8f818913eff0d3c7f2b0597c",
+   "stages": {
+    "L0": {
+     "cycles": 6489,
+     "fill_TBps": 3.695,
+     "fill_pct_of_peak": 92.4,
+     "memory_die0": {
+      "drain_low": 1274,
+      "fill_cycles": 1362,
+      "fill_exposed": 1362,
+      "fill_sectors": 131072,
+      "kvok_low_with_desc": 0,
+      "rsp_tile_stall": 14509,
+      "stall_bridge": 425,
+      "stall_drain": 1252,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 4375,
+      "wr_lat_max": 57,
+      "wr_sectors": 136
+     },
+     "memory_dies_identical": true
+    }
+   },
+   "status": "pass",
+   "straps": {
+    "early_go": false,
+    "posted_wb": false
+   },
+   "writeback_drain": {
+    "cycles_after_last_stage": 0,
+    "drained": true
+   },
+   "x_checks": {
+    "L0_die0_x": 0,
+    "L0_die1_x": 0,
+    "L0_die2_x": 0,
+    "L0_die3_x": 0
+   }
+  },
+  "isolated_L0_speedup_vs_realmem": 2.246,
+  "memory_term_chained_steady_mean": -1.0,
+  "memory_term_isolated_L0": 1206,
+  "numerics_exact": true,
+  "per_layer_cycles": {
+   "chained": {
+    "L0": 6044,
+    "L1": 5282,
+    "L2": 5282
+   },
+   "chained_steady_max": 5282,
+   "chained_steady_mean": 5282.0,
+   "isolated_L0": 6489
+  },
+  "status_note": "chained job status=fail ONLY because the driver source-pin check tripped: rtl/hdc/kv/ot_qwen_hbm_stream4_ack.sv, ot_hbm_r14_stream_{pc,stack}.sv in the run tree were overwritten (rsync of the default-off AQ_RD successor, AQ_RD=0 terms constant) after the binary build_rt4/qwen_rom_rt_rm (sha in the record) was compiled; every X and token K/V check is 0 mismatches",
+  "tok_per_s": 6169.7,
+  "tok_per_s_max_bound": 6169.7,
+  "token_cycles": 194498,
+  "token_cycles_max": 194498,
+  "token_speedup_vs_realmem": 2.987,
+  "token_us": 162.08
+ },
+ "wire_bound": {
+  "bound_cycles": 200861,
+  "bound_tok_s": 5974.3,
+  "penalty_cycles": 6363,
+  "source": "results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json (deltas: 176 a layer pass, 27 a head; ME-op and hub-link stages, independent of the KV path)",
+  "status": "bound: floorplan stage counts, no routed-path STA (as the source record)"
+ }
+}
