@@ -1,0 +1,14 @@
+{
+  "status": "PASS_EXACT_SOURCE_BRANCH_MAPPING",
+  "source_sha256": "08a3185fd50316145ce1145e7719eca3bf46f7e30b116acbb71710884b5966a2",
+  "original_slot_source_sha256": "4b1fc50a599072467a26cfe4e1e26d89b98f230b79ec643b13c9eb1ceb609bc2",
+  "scalar_branch_transformation": {
+    "hold": "OR(old_blk) maps to old_q under invariant",
+    "onehot_set": "32b1<<bsel maps to1; bsel declared5bits",
+    "clear": "32b0 maps to0",
+    "branches": "guard/order byte-identical including finalREFPBoverride"
+  },
+  "unchanged_surrounding_logic": true,
+  "scope": "source-derived one-step induction argument, not HDL runtime coverage for simultaneous override or four-state equivalence",
+  "gate_coverage": "Actual200k everyedge original/off/on gate; final_clear_overrides0 and reset_debt0 instrumented counters, no positive coverage claim for those counters"
+}

@@ -1,0 +1,220 @@
+{
+ "collective_term": {
+  "published": "results/rtl/dshbm_baseline_measured_20261004/measured.json: collective 201.92 us of 449.3 us (2,225.7 tok/s), TU-protocol switch; 265 on-path collectives per token (40 all-reduce)",
+  "endpoint_cycles_added": "ot_gpu_coll_endpoint_f12 XREG=1: +2 clk_sm cycles per collective (measured mean +2.13 over 24 latency cases, tb_gpu_coll 3 seeds, CDC phase jitter -1..+4), 0 per record",
+  "priced": "+2 x 0.8333 ns x 265 = +0.44 us per token: collective 201.92 -> 202.36 us (+0.22 %), total 449.3 -> 449.74 us, 2,225.7 -> 2,223.5 tok/s; as W15 leg constants: leg_delta_ns = +0.833 ns per leg (2 legs / collective) in tools/dshbm_baseline_measure.compose_program",
+  "reducer": "TU reduce_ns = 22 cycles at 1.2 GHz (HA2 reducer, uarch_model TU['reducer_cycles']); ot_ha2_owner_reduce SLOTREG=1 adds 1 cycle -> 23 cycles = 19.17 ns (+0.83 ns per all-reduce, x40 = +0.033 us per token) IF adopted; closure route not finished (see row)"
+ },
+ "rows": [
+  {
+   "module": "ot_gpu_coll_endpoint + ot_gpu_coll_mux (successors ot_gpu_coll_endpoint_f12, ot_gpu_coll_mux_f12, ot_gpu_cdc_fifo_oh)",
+   "file": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv (r6 on main, XREG default 0), rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv (Codex continuation, TX_MASK_LA), rtl/gpu_sys/ot_gpu_coll_mux_f12.sv, rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+   "params": "NL 128, LANES 16, R 2, RANK 0, NSM 2, RDUP 8, XREG 1 (the DS cluster vehicle, rtl/gpu_sys/ds_hbm_full20)",
+   "on_token_path": "yes: every collective of the DS GPU-organised baseline goes SM -> coll_mux -> coll_endpoint (clk_sm, 1.2 GHz) -> link (rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv u_coll); same block as HA3's A/B baseline (rtl/hbm_accel/collective/ot_hbm_accel_coll_port_ctx.sv HA3=0)",
+   "before": {
+    "evidence": "results/rtl/hbm_accel_ha3_20261004/phys3/sta_h0.json (HA3 in-context route of the as-built endpoint)",
+    "period_ns": 0.833,
+    "ss_r2r_ps": -1700,
+    "ff_hold_ps": -9,
+    "note": "TNS -12,220 ns, 18,344/43,201 endpoints; worst RX FIFO rbin -> asmb"
+   },
+   "revisions": [
+    {
+     "label": "collctx_f12_r0",
+     "route_label": "collctx_f12_r0",
+     "fix": "RX record register + offset table + barrel merge, one-hot FIFO read select"
+    },
+    {
+     "label": "collctx_f12_r2",
+     "route_label": "collctx_f12_r2",
+     "fix": "+ per-lane registered select, slice copies of record data, unconditional record loads"
+    },
+    {
+     "label": "collctx_f12x_r2",
+     "route_label": "collctx_f12x_r2",
+     "fix": "same, XREG=1"
+    },
+    {
+     "label": "collctx_f12_r6",
+     "route_label": "collctx_f12_r6",
+     "fix": "+ mux own x16, idle-replicated capture, TX FIFO look-ahead write enables (WDUP), per-slice asmb clear/merge"
+    },
+    {
+     "label": "collctx_f12x_r6",
+     "route_label": "collctx_f12x_r6",
+     "fix": "same, XREG=1: SS -4.23 ps (6 pins: dmask -> TX FIFO write data)"
+    },
+    {
+     "label": "collctx_f12x_r7",
+     "route_label": "collctx_f12x_r7",
+     "fix": "Claude registered look-ahead per-word lane mask; retained comparison only, not selected parent successor",
+     "terminal": "FAIL SS-20.47ps/FF+5.24ps/2slew, despite flow and corner runner exit0",
+     "latency_record": "bench/coll_f12_r7.json:492cases/0mismatch,24phase-sampled deltas mean2.125; model +2clk_sm/collective"
+    }
+   ],
+   "after": {
+    "route_label": "collctx_f12x_r6",
+    "status": "NOT CLOSED: best routed SS -4.23 ps r2r (6 pins: TX lane mask dmask -> TX FIFO write data), FF +4.13 ps (XREG=1)",
+    "false_path_io": "yes: the ctx wrapper registers every port on both sides exactly as HA3's ot_hbm_accel_coll_port_ctx does (SM coll_* registers, link-pipe first stage); clk_link tied to clk_sm (pessimistic for the Gray pointers)",
+    "continuation": "handed to Codex (GOODALL, main 43eb3f728): ot_gpu_coll_endpoint_f12_txmask TX_MASK_LA=1 XREG=1 route; Claude's equivalent r7 (registered look-ahead per-word lane mask, source snapshot routes/collctx_f12x_r7_src/, exact on tb_gpu_coll bench/coll_f12_r7.json) was routing on agidock128 (collctx_f12x_r7) and EPYC (colldie_f12_r8) at handoff",
+    "selected_successor": {
+     "module": "ot_gpu_coll_endpoint_f12_txmask",
+     "parameters": {
+      "TX_MASK_LA": 1,
+      "XREG": 1,
+      "NL": 128,
+      "LANES": 16,
+      "R": 2,
+      "RDUP": 8
+     },
+     "frozen_source_commit": "0b545b7b9",
+     "source_sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+     "installed": false,
+     "selection": "sole intended legacy parent successor, conditional on actual contextual SS/FF verdict; do not also install Claude tm_q snapshot",
+     "physical_job": "hbm-collective-txmask-full128-route-20261005-r2.service",
+     "physical_output": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2",
+     "io_context": "all IO timed, no false-path IO; explicit registered context, 540um square",
+     "clock_policy": "0.833ns SS setup60ps / FF hold25ps, tied clk_sm and clk_link in this physical context only",
+     "added_clk_sm_per_collective": 2,
+     "added_cycles_per_record": 0,
+     "token_price_ns_at_265_collectives": 441.6666666666667,
+     "price_scope": "prospective legacy collective replacement; no TU or HA8 measured clock/rate substitution",
+     "retained_comparison_routes": [
+      "collctx_f12x_r7 on ot-agidock128: Claude tm_q, registered context with IO false paths",
+      "colldie_f12_r8 on ot-epyc1tb: Claude tm_q, standalone all IO timed"
+     ],
+     "next_action": "collect all retained terminal results/critical cones; install only the selected successor through actual legacy parent and its matched owner mux after contextual acceptance; do not update closing_clocks without installed-parent evidence",
+     "variant_policy": "no new candidate or route during retained jobs; apply three-variant escalation limit to actual failed internal cone, not unrelated IO/clock contexts"
+    }
+   },
+   "fix_summary": "zero-latency: replicated one-hot FIFO read/write selects (keep_hierarchy), look-ahead write enables, owner select x16, idle-replicated capture, registered per-word lane mask, per-slice asmb strobes; pipelining: RX record register (+1) and XREG select register (+1)",
+   "cycles_added": "+2 clk_sm per collective (RX), 0 per record, 0 on TX",
+   "exactness": {
+    "bench": "rtl/test/gpu_sys/tb_gpu_coll.sv via results/rtl/hbm_accel_fmax_inventory_20261004/noc/coll/run_coll_f12.py (both endpoints swapped, numpy golden + rank agreement); coll mux lockstep tb_coll_mux_ls (200k cycles NSM 2/4)",
+    "cases": "3 seeds x 164 collectives (ALL_REDUCE / ALL_GATHER, edge counts, cancellations, random backpressure), XREG 0 and 1",
+    "mismatches": 0,
+    "records": "bench/coll_f12_r7.json (final RTL, XREG 1), earlier revisions bench/coll_f12_x0.json, bench/coll_f12_r6x.json, bench/coll_mux_ls_sim.log"
+   }
+  },
+  {
+   "module": "ot_gpu_mreq_cdc (successor ot_gpu_mreq_cdc_oh)",
+   "file": "rtl/gpu_sys/ot_gpu_mreq_cdc_oh.sv, rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+   "params": "AW 3, RDUP 8, WDUP 0",
+   "on_token_path": "yes: the SM side of every memory client crossing (clk_sm half) in the DS cluster (u_x per client)",
+   "before": {
+    "route_label": "mreq_r0",
+    "note": "r2r closes; output port s_rsp_data -110.75 ps: rbin -> 3-deep buffer tree -> 8:1 read mux"
+   },
+   "after": {
+    "route_label": "mreq_oh_r0",
+    "false_path_io": "no (20 % IO budget, standalone)",
+    "fix": "one-hot replicated read select"
+   },
+   "cycles_added": 0,
+   "exactness": {
+    "bench": "rtl/test/gpu_sys/tb_gpu_cdc_fifo.sv via noc/coll/run_cdc_fifo_oh.py (both ENABLE=1 FIFOs swapped)",
+    "cases": "integrity 20,000 entries per clock pair x depth 4/8/16, rate vs sizing model, overflow fault; WDUP 0 and 8",
+    "mismatches": 0,
+    "records": "bench/cdc_fifo_oh.json, bench/cdc_fifo_oh_w8.json (bench PASS; the tool's verdict FAIL is lint DECLFILENAME only: two modules share the file)"
+   }
+  },
+  {
+   "module": "ot_gpu_cdc_fifo / ot_link_afifo",
+   "file": "rtl/gpu_sys/ot_gpu_cdc_fifo.sv",
+   "params": "inside the endpoint (W 546) and mreq (W 337/273)",
+   "on_token_path": "yes (inside the two rows above)",
+   "before": {
+    "note": "closed only through the successor; see the endpoint and mreq rows"
+   },
+   "after": {
+    "note": "ot_gpu_cdc_fifo_oh in both routed contexts"
+   },
+   "cycles_added": 0
+  },
+  {
+   "module": "ot_gpu_bd_line",
+   "file": "rtl/gpu_sys/ot_gpu_bd_line.sv",
+   "params": "ENABLE 1, LB 8",
+   "on_token_path": "yes: x-broadcast weight-line assembly of every DS SM (HAS_BD=1)",
+   "before": {
+    "note": "never measured"
+   },
+   "after": {
+    "route_label": "bdline_r0",
+    "false_path_io": "no"
+   },
+   "fix_summary": "none needed (as built)",
+   "cycles_added": 0,
+   "exactness": {
+    "note": "unchanged RTL"
+   }
+  },
+  {
+   "module": "ot_ha2_owner_reduce (extracted HA2 owner reducer)",
+   "file": "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce.sv",
+   "params": "NC 8, E 1024, LANES 16, INJ 2, NP 20, LAT 7, SLOTREG 1",
+   "on_token_path": "yes (priced): tools/uarch_model.py TU['reducer_cycles'] = 7*3+1 at 1.2 GHz is the owner reduction of the published TU-protocol all-reduce",
+   "before": {
+    "note": "results/rtl/hbm_accel_ha2_ar_20261004: G-timing NOT RUN"
+   },
+   "after": {
+    "note": "NOT CLOSED YET: flat route at full shape (183,000 um2 synthesised, 112 LAT7 adders + 64 x 512-bit slot array with 22 write sources) in placement on EPYC (routes/ha2red_sr1_r4); yosys 0.68 needs > 2 h (default timeout); 4-lane vehicles stuck > 9 h in yosys (cancelled). Handed to Codex."
+   },
+   "cycles_added": "SLOTREG=1: +1 per reduced flit latency (22 -> 23 cycles per all-reduce), 0 throughput",
+   "exactness": {
+    "bench": "rtl/hbm_accel/ha2_ar/tb_ha2_ar.sv (DS shape, 96 dies) with noc/ha2/tb_ha2_ep_ls.sv beside every unmodified endpoint, compared every cycle",
+    "cases": "3 seeds x 64 contributors x 4 packed results (768) + tiny shape 2 seeds SLOTREG 0/1",
+    "mismatches": 0,
+    "records": "ha2/runs/*.summary.txt; HA2 latencies identical to the pinned campaign (625.112/625.169/624.484 ns)"
+   }
+  },
+  {
+   "module": "ot_ha2_ar_endpoint (HA2 direct-link fabric)",
+   "file": "rtl/hbm_accel/ha2_ar/ot_ha2_ar_endpoint.sv",
+   "on_token_path": "no: HA2 direct links are not adopted (the published collectives use the TU-protocol tier, uarch_model.tu_transport_us: stock Tomahawk Ultra crossing + endpoint bridge vendor budget); only its reducer is priced (row above)",
+   "before": {
+    "note": "G-timing NOT RUN; at DS shape 20 ports x 3 TX + 1 RX 32 x 537-bit flop FIFOs (~1.4 M flops), a simulation-grade fabric"
+   },
+   "after": {
+    "note": "not closed (off path)"
+   }
+  },
+  {
+   "module": "ot_link_nvls_switch (W15 NVLS switch)",
+   "file": "rtl/link/ot_link_nvls_switch.sv",
+   "params": "P 48, LANES 1, DEPTH 16, SW_PIPE 2",
+   "on_token_path": "no: an off-die switch chip; the published row uses the stock TU switch (HEADLINE_SWITCH tomahawk_ultra_protocol_board); w15_rtl_switch is a sensitivity row; also ot_hdc_fp32_add_fast LAT3 inside (fails SS at 0.833)",
+   "before": {
+    "evidence": "screens/nvls_833.json, screens/nvls_967.json (risk_clock_loops screen, repaired)",
+    "period_ns": 0.833,
+    "ss_r2r_ps": -2492,
+    "note": "301 MHz; 307.6 MHz at 0.967 ns: the 48-port gather rotation pick rp -> head mode -> select -> pop"
+   },
+   "after": {
+    "note": "not closed (off path)"
+   }
+  },
+  {
+   "module": "ot_gpu_coll_fabric",
+   "file": "rtl/gpu_sys/ot_gpu_coll_fabric.sv",
+   "on_token_path": "no on-die logic: LINK_PIPE register stages standing for package/board wires plus the switch above (simulation stand-in)",
+   "after": {
+    "note": "off path"
+   }
+  },
+  {
+   "module": "ot_gpu_xbar / ot_gpu_l2_slice / ot_gpu_hbm_partition (gpu_sys memsys)",
+   "file": "rtl/gpu_sys/ot_gpu_{xbar,l2_slice,hbm_partition,memsys}.sv",
+   "on_token_path": "not on the collective path; structurally on the reduced system vehicle's weight path, but the published composition prices the SM bulk copy against a behavioural memory (tools/dshbm_baseline_measure.py hbm_traffic note) and the DS HBM service is the svc family's ot_hbm_r14 stream",
+   "before": {
+    "evidence": "screens/xbar_833.json",
+    "period_ns": 0.833,
+    "ss_r2r_ps": -1087,
+    "note": "raw screen (repaired phase failed); l2_slice screen did not finish (262,144-flop data array; physically an SRAM macro, clk->q ~707 ps at SS => needs a 2-cycle read); hbm_partition wraps the behavioural ot_hdc_hbm_model with $readmemh/hierarchical init (not synthesisable as is)"
+   },
+   "after": {
+    "note": "NOT CLOSED: blocker = L2 data array as SRAM macro with registered 2-cycle read + synthesisable partition front end (successor RTL), xbar combinational rotating-priority arbiter needs registered grants; handed to Codex with the memory-side service owner"
+   }
+  }
+ ]
+}

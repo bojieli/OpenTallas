@@ -10,6 +10,8 @@ Do not start this backend alongside the preserved live Icarus gate.
 
     python3 tools/hbm_accel_sm_v_gate.py synth --out R.json [--cols 1 2 8]          # rtl_gpu_sm_exact smv vectors
     python3 tools/hbm_accel_sm_v_gate.py synth --simulator verilator --cols 8 --out R.json
+    python3 tools/hbm_accel_sm_v_gate.py shapes --out R.json                         # every measured DS token shape
+    python3 tools/hbm_accel_sm_v_gate.py edges --out R.json                          # FP edge operands
     python3 tools/hbm_accel_sm_v_gate.py real --dump sm_dump.pkl --out R.json       # w19_sm_real_ops real operands
 """
 from __future__ import annotations
@@ -36,7 +38,7 @@ import rtl_gpu_sm_exact as S  # noqa: E402
 SRC = ["rtl/hdc/ot_hdc_prefix.sv"] + [s for s in S.SMV_SRC if s != "rtl/test/tb_gpu_sm_v.sv"] + [
     "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
     "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
-    "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv", "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv", "rtl/test/tb_hbm_accel_sm_v.sv"]
+    "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv", "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv", "rtl/test/tb_hbm_accel_sm_v.sv"]
 TB = "tb_hbm_accel_sm_v"
 _lock = __import__("threading").RLock()
 _exe = {}
@@ -159,6 +161,104 @@ def _compile(en, params):
 _klocks = {}
 
 
+def cmd_shapes(a):
+    """Every matvec shape of the measured DS token (results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json:
+    format, K, rows on the busiest SM, one column) on seeded operands, original and successor in lockstep.  The SM's
+    cycles depend on the shape only (the bench's HBM latency is seeded), so the original's cycles must reproduce the
+    record's; the successor's are the measured per-op element cycles of the 1.2 GHz element."""
+    import hdc_golden_v41 as V
+    V.set_arith("chunk8")
+    rec = json.loads((ROOT / a.record).read_text())
+    shapes, seen = [], set()
+    for c in rec["cases"]["ar"]:
+        key = (c["fmt"], c["K"], c["sm_rows"][1] - c["sm_rows"][0])
+        if key not in seen:
+            seen.add(key)
+            shapes.append((key, c))
+    list(ThreadPoolExecutor(2).map(lambda en: _cache_for(en, 1), (0, 1)))
+
+    def one(i_item):
+        i, ((fmt, K, R), c) = i_item
+        name = f"{fmt}_k{K}_r{R}"
+        res = [S.smv_case(name, fmt, R, K, 1, rng=np.random.default_rng(20261004 + i), gs=True, workdir=a.workdir,
+                          exe_cache=_cache_for(en, 1)) for en in (0, 1)]
+        out = compare(name, res[0], res[1])
+        rr = c["rtl"]
+        out.update(fmt=fmt, K=K, rows=R, ops=[x["op"] for x in rec["cases"]["ar"]
+                                             if (x["fmt"], x["K"], x["sm_rows"][1] - x["sm_rows"][0]) == (fmt, K, R)],
+                   record_original=dict(cycles_start_to_done=rr["cycles_start_to_done"], lines=rr["lines"],
+                                        drain=rr["drain_last_line_to_last_result"]),
+                   original_reproduces_record=(res[0]["rtl"].get("cycles_start_to_done") == rr["cycles_start_to_done"]
+                                               and res[0]["rtl"].get("drain_last_line_to_last_result")
+                                               == rr["drain_last_line_to_last_result"]),
+                   drain=[res[0]["rtl"].get("drain_last_line_to_last_result"),
+                          res[1]["rtl"].get("drain_last_line_to_last_result")])
+        return out
+    return list(ThreadPoolExecutor(a.jobs).map(one, enumerate(shapes)))
+
+
+def edge_operands(fmt, R, K, rng):
+    """Floating-point edge operands: zeros and signed zeros, subnormal inputs, the format's largest magnitudes,
+    extreme (finite-result) block scales, and large-exponent cancellation (pairs of equal and opposite large terms
+    leaving a small remainder), mixed with random values.  Non-finite inputs are excluded: the SM fails closed on
+    them (fault) in both the original and the successor."""
+    import hdc_golden_v41 as V
+    import hdc_golden as G
+    F = np.float32
+    x = rng.standard_normal(K).astype(F)
+    x[0:32] = 0.0
+    x[32:64] = -0.0
+    x[64:96] = np.float32(1.2e-39) * np.sign(rng.standard_normal(32)).astype(F)     # FP32 subnormal inputs
+    x[96:128] = np.float32(3.0e30) * np.sign(rng.standard_normal(32)).astype(F)     # max-scale block
+    x[128:160:2], x[129:160:2] = np.float32(1.0e20), np.float32(1.0e20)            # cancellation partner block
+    if fmt == "v41_bf16":
+        w = (rng.standard_normal((R, K)) * 0.02).astype(F)
+        w[:, 160:192] = 0.0
+        w[:, 192:224] = -0.0
+        w[:, 64:96] = 1.5                                   # subnormal x times O(1): exact subnormal products
+        w[:, 96:128] = np.float32(2.0e-31)                  # large x times small w: finite
+        w[:, 128:160:2], w[:, 129:160:2] = 1.0, -1.0       # 1e20 - 1e20 + ... cancellation
+        w[0, 224:256] = np.float32(2.0e-36)                 # weight-side near-underflow values (x ~ N(0,1))
+        return G.to_bf16(w), [x]
+    fp4 = fmt == "v41_fp4"
+    grid = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0]) if fp4 else \
+        np.array([0.0, 2.0 ** -9, 2.0 ** -7, 2.0 ** -6, 0.5, 1.0, 1.75, 2.0, 15.0, 240.0, 448.0])
+    q = rng.choice(grid, size=(R, K)) * np.where(rng.random((R, K)) < 0.5, -1.0, 1.0)
+    q[:, 160:192] = 0.0
+    q[:, 192:224] = -0.0
+    q[:, 128:160:2], q[:, 129:160:2] = grid[-1], -grid[-1]                 # largest magnitude, cancelling pairs
+    nb = K // 32
+    e = rng.integers(-8, 3, size=(R, nb)).astype(np.int64)
+    e[:, 3] = -60                                           # tiny block scale against the 3e30 x block
+    e[:, 4] = 40                                            # huge block scale against the 1e20 cancellation block
+    e[:, 5] = -100
+    return V.Q8(q, e), [x]
+
+
+def cmd_edges(a):
+    import hdc_golden_v41 as V
+    import hdc_golden as G
+    import w19_sm_real_ops as SM
+    V.set_arith("chunk8")
+    specs = [("v41_fp8", 2, 5120), ("v41_fp4", 2, 5120), ("v41_bf16", 2, 5120), ("v41_fp8", 3, 2304),
+             ("v41_fp4", 1, 2304), ("v41_bf16", 1, 1024)]
+
+    def one(i_spec):
+        i, (fmt, R, K) = i_spec
+        w, X = edge_operands(fmt, R, K, np.random.default_rng(777 + i))
+        res = []
+        for en in (0, 1):
+            acc, gold, meta = SM.smv_real(f"edge_{fmt}_{R}_{K}", fmt, w, X, workdir=a.workdir,
+                                          sim_runner=runner(en, a.workdir))
+            mism = int(np.sum(G.bits(acc[0]) != G.bits(gold[0]))) + int(np.isnan(acc[0]).sum())
+            res.append(dict(exact=(mism == 0 and not meta.get("timeout") and meta.get("fault", 1) == 0),
+                            mismatches=mism, rtl=meta, acc_bits=[int(v) for v in G.bits(acc[0])]))
+        out = compare(f"edge_{fmt}_r{R}_k{K}", res[0], res[1])
+        out["successor_equals_original_bits"] = res[0]["acc_bits"] == res[1]["acc_bits"]
+        return out
+    return list(ThreadPoolExecutor(a.jobs).map(one, enumerate(specs)))
+
+
 def cmd_real(a):
     import w19_sm_real_ops as SM
     import rtl_v41_fullshape_layer_campaign as LC
@@ -191,7 +291,8 @@ ARGS = None
 def main(argv=None):
     global ARGS
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("mode", choices=["synth", "real"])
+    ap.add_argument("mode", choices=["synth", "real", "shapes", "edges"])
+    ap.add_argument("--record", default="results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json")
     ap.add_argument("--dump")
     ap.add_argument("--simulator", choices=("iverilog", "verilator"), default="iverilog")
     ap.add_argument("--verilator", default="verilator")
@@ -211,7 +312,7 @@ def main(argv=None):
         ap.error("real mode requires the retained actual operand dump")
     if a.simulator == "verilator":
         S.run_sim = run_sim  # smv_case consumes the SAME native result protocol.
-    cases = cmd_synth(a) if a.mode == "synth" else cmd_real(a)
+    cases = {"synth": cmd_synth, "real": cmd_real, "shapes": cmd_shapes, "edges": cmd_edges}[a.mode](a)
     for c in cases:
         print(f"{c['case']:34s} exact {c['exact_original']}/{c['exact_successor']} done {c['cycles_start_to_done']} "
               f"d_done {c['delta_done']:+d} d_first {c['delta_first']:+d} d_last {c['delta_last']:+d}", flush=True)

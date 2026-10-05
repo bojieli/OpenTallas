@@ -1,0 +1,154 @@
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+QASTA setup
+worst slack max 7.6434
+QASTA hold
+worst slack min 44.7229
+QASTA tns
+tns max 0.0000
+QASTA failing setup 0 hold 0 of 53822
+QASTA path worst_setup
+Startpoint: u_dut.g_cp[0].g_l[0].u_c/q[2]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.room_all$_SDFFE_PN1P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  48.4897   48.4897 ^ wire29110/Y (BUFx12f_ASAP7_75t_R)
+  65.2117  113.7014 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.0749  152.7763 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.6281  191.4044 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.2412  229.6456 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  38.5494  268.1950 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  42.3572  310.5522 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  45.0681  355.6203 ^ clkbuf_6_15_0_clk/Y (BUFx24_ASAP7_75t_R)
+  46.4719  402.0922 ^ clkbuf_8_61__f_clk/Y (BUFx24_ASAP7_75t_R)
+  45.5924  447.6846 ^ clkbuf_leaf_2480_clk/Y (BUFx24_ASAP7_75t_R)
+   0.3326  448.0172 ^ u_dut.g_cp[0].g_l[0].u_c/q[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  85.5878  533.6050 v u_dut.g_cp[0].g_l[0].u_c/q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  35.9868  569.5919 ^ u_dut.g_cp[0].g_l[0].u_c/_131_/Y (INVx3_ASAP7_75t_R)
+  34.5222  604.1141 v _284710_/Y (INVx2_ASAP7_75t_R)
+  55.9949  660.1089 v _396583_/Y (OR3x1_ASAP7_75t_R)
+  49.1043  709.2133 v _396585_/Y (AO21x1_ASAP7_75t_R)
+  83.9735  793.1868 v _396586_/Y (AO32x2_ASAP7_75t_R)
+ 101.7195  894.9062 v _396594_/Y (OR5x1_ASAP7_75t_R)
+  85.6395  980.5458 v _396625_/Y (OR5x1_ASAP7_75t_R)
+  65.1623 1045.7081 v _396667_/Y (OR5x1_ASAP7_75t_R)
+  77.3314 1123.0394 v _396668_/Y (OR5x1_ASAP7_75t_R)
+  47.3288 1170.3683 ^ _396670_/Y (OAI21x1_ASAP7_75t_R)
+   1.6065 1171.9747 ^ u_dut.room_all$_SDFFE_PN1P_/D (DFFHQNx1_ASAP7_75t_R)
+          1171.9747   data arrival time
+
+ 833.0000  833.0000   clock core_clk (rise edge)
+   0.0000  833.0000   clock source latency
+   0.0000  833.0000 ^ clk (in)
+  46.9743  879.9743 ^ wire29110/Y (BUFx12f_ASAP7_75t_R)
+  63.2006  943.1749 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.8414  981.0163 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.2473 1018.2636 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.2309 1055.4945 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  37.3305 1092.8250 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.6750 1133.5000 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.7135 1175.2135 ^ clkbuf_6_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  42.1654 1217.3789 ^ clkbuf_8_51__f_clk/Y (BUFx24_ASAP7_75t_R)
+  41.4068 1258.7856 ^ clkbuf_leaf_254_clk/Y (BUFx24_ASAP7_75t_R)
+   1.4967 1260.2823 ^ u_dut.room_all$_SDFFE_PN1P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.0000 1200.2823   clock uncertainty
+  10.0523 1210.3346   clock reconvergence pessimism
+ -30.7164 1179.6182   library setup time
+          1179.6182   data required time
+-------------------------------------------------------------
+          1179.6182   data required time
+          -1171.9747   data arrival time
+-------------------------------------------------------------
+             7.6434   slack (MET)
+
+
+QASTA path worst_hold
+Startpoint: u_dut.dr_f0[6]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_c.q[34]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  46.9743   46.9743 ^ wire29110/Y (BUFx12f_ASAP7_75t_R)
+  63.2005  110.1748 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.8340  148.0089 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.0721  185.0809 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.5788  222.6598 ^ clkbuf_2_3_1_clk/Y (BUFx24_ASAP7_75t_R)
+  36.0710  258.7307 ^ clkbuf_3_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.1895  297.9202 ^ clkbuf_4_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  43.4399  341.3600 ^ clkbuf_6_49_0_clk/Y (BUFx24_ASAP7_75t_R)
+  42.5597  383.9197 ^ clkbuf_8_198__f_clk/Y (BUFx24_ASAP7_75t_R)
+  43.1565  427.0762 ^ clkbuf_leaf_1820_clk/Y (BUFx24_ASAP7_75t_R)
+   0.3438  427.4200 ^ u_dut.dr_f0[6]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+  79.9753  507.3954 ^ u_dut.dr_f0[6]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)
+  15.8868  523.2822 v _224592_/Y (INVx1_ASAP7_75t_R)
+   0.0527  523.3350 v u_c.q[34]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+           523.3350   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  48.4897   48.4897 ^ wire29110/Y (BUFx12f_ASAP7_75t_R)
+  65.2117  113.7014 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.0739  152.7753 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.3690  191.1443 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.6067  229.7511 ^ clkbuf_2_3_1_clk/Y (BUFx24_ASAP7_75t_R)
+  37.1570  266.9081 ^ clkbuf_3_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.8250  307.7330 ^ clkbuf_4_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  46.3430  354.0760 ^ clkbuf_6_49_0_clk/Y (BUFx24_ASAP7_75t_R)
+  45.7670  399.8430 ^ clkbuf_8_198__f_clk/Y (BUFx24_ASAP7_75t_R)
+  47.3484  447.1914 ^ clkbuf_leaf_1784_clk/Y (BUFx24_ASAP7_75t_R)
+   2.4803  449.6717 ^ u_c.q[34]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.0000  474.6716   clock uncertainty
+ -15.9232  458.7484   clock reconvergence pessimism
+  19.8636  478.6120   library hold time
+           478.6120   data required time
+-------------------------------------------------------------
+           478.6120   data required time
+          -523.3350   data arrival time
+-------------------------------------------------------------
+            44.7229   slack (MET)
+
+
+QASTA tap_sources 0
+QASTA lw_cells 0
+QASTA end

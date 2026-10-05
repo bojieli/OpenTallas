@@ -1,0 +1,44 @@
+{
+  "pid": 903011,
+  "host": "ot-epyc2",
+  "source_commit": "973696daea77f546dc8030a08afff379ace950d1",
+  "source_pins": {
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_pc_aq_head_ready_cut.sv": "7be5be3f78d7081430544ab22a6cef71c03091364b14e267ab7ae034e3f68819",
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_stack_aq_head_ready_cut.sv": "a70b662c8c9497cb2f658c718f8745c9b4dd7355a6f275ec5f808143ceafa680",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_head_ready_lockstep.sv": "31c1e65e8550db078d29901435068f0a6d8048699b7fe5d04378411104c3fb96",
+    "tools/svc_aq_head_ready_lockstep.sh": "615d851668c32f9fb7ef0030b5e8dec8729d4116719ba13a889188aae19b8ce1",
+    "results/uarch/hbm_stream_aq_head_ready_cut_20261005/model.json": "1c0dabb0d018a41bf9395f344675a0ee0acbb99c2ab98eac394de4d6d72e32f1",
+    "tools/uarch_model.py": "69eb394160a7247c4ba0582847ec7a7e13004d200dc9770f94f2f17251dac734"
+  },
+  "tool_sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+  "worktree": "/srv/opentallas/repos/euclid-svc-aq-head-ready-973696-20261005",
+  "output": "/srv/opentallas-scratch/jobs/euclid-svc-aq-head-ready-route-r1",
+  "gate_logs": {
+    "/srv/opentallas-scratch/jobs/euclid-svc-aq-head-ready-semantic-r1/exact/pc0_seed1.log": "c138e3d05350aada102375e585b2776709d2ee38717f3e072b17aac453557e6e",
+    "/srv/opentallas-scratch/jobs/euclid-svc-aq-head-ready-semantic-r1/exact/pc1_seed2.log": "a6a299cf5a03b5954c23893ea2234cd8fa91e4b4bb7f5a801c3f765ac49d58e6"
+  },
+  "gate_status": "200000 cycles zero mismatches zero faults PASS",
+  "gate_replayed": false,
+  "admission_GiB": 16,
+  "make_jobs": 16,
+  "timeouts": "explicit unlimited synth and flow CLI+env",
+  "constraints": {
+    "period_ns": 0.833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "io_delay_fraction": 0,
+    "core_utilization": 40,
+    "place_density": 0.6,
+    "hold_margin_ns": 0.01
+  },
+  "scope": "NCH1/twoPC IO0; allbodyoutputs retained; no parentclock credit",
+  "known_separate_path": "retained last1->c_oh28 -16.29ps not claimed fixed",
+  "MemAvailable": "MemAvailable:   972561540 kB",
+  "disk_free_bytes": 455903272960,
+  "load": [
+    62.6298828125,
+    56.3994140625,
+    52.52490234375
+  ],
+  "timestamp": "2026-10-05T04:42:04.098969+00:00"
+}

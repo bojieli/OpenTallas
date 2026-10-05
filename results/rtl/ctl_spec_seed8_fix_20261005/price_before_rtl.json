@@ -1,0 +1,33 @@
+{
+  "MACs_per_cycle": 0,
+  "added_seed_bits": 16,
+  "adopt": false,
+  "area_ESTIMATE": {
+    "NAND2_allowance": 5760,
+    "added_register_body_um2": 29.451600000000003,
+    "combinational_address_logic": "Two 32-bit token-relative subtract/add/wrap cones plus seed update. Existing dn_c reused; conservatively reserve 6 keep-prefix adders of32bits (ceil5 levels), 3signedwrap/compare/mux units.",
+    "logic_allowance_um2": 503.88480000000004,
+    "mux_per_TRword_input_upper_um2": 83.28096000000001,
+    "power_W": null,
+    "removed_write_register_body_um2": 86.89680000000001,
+    "slot_fit": null
+  },
+  "before_RTL": true,
+  "boundary_wire": "No new external port; snapshot17 across4localstageboundaries, seed16 totoken-addresscones. Span/loadedwiretiming unknown, not zero; physical owner must charge any staging and token gain.",
+  "cause": "Token write accepted at source edge but not yet retired through w0..w4 is discarded by rst_n; ring memory persists. Both mismatches read same stale position8 after committed baseline write1a277 was lost.",
+  "cycle_delta_vs_failed_f3": 0,
+  "default_off": true,
+  "existing_token_read_bits_per_cycle": 17,
+  "existing_token_write_bits_per_cycle": 49,
+  "local_snapshot_bits_per_stage": 17,
+  "new_data_boundary_bits_per_cycle": 0,
+  "new_memory_bits": 0,
+  "original_source_sha256": "d1bd8377283349e619fdd13dc53a9ab644178e898ff8745f273fedada8e82f33",
+  "response_delay_vs_baseline_cycles": 5,
+  "scope": "Independent token semantic fix only; address walker/committedn/requestready/addresspipeline and parent engine/ACK/reverse unchanged.",
+  "source_semantics": "Token ring single source-edge write/read, read-before-write on same edge, memory persists reset; n and token-origin reset/commit behavior unchanged. Store captured TOK read payload through existing five response stages. No new ready/grant or parent rollback event.",
+  "storage_delta_enabled_vs_f3_bits": -197,
+  "storage_derivation": "Remove 192 address bits +16 slot bits +85 token payload bits +5 valid bits (=298); add independent current token-origin16 +five17-bit source token snapshots (=101). Enabled synthesis must prune unused write-pipeline regs; net -197 raw FF bits.",
+  "timing": "Existing spec_f3 SS/FF rows DO NOT qualify changed token cone. Same clock/uncertainty target, no timing exception/relaxation. Sagan owns route; candidate not adopted without actual SS60/FF25.",
+  "token_ring_bits": "TR*TW unchanged, one copy"
+}

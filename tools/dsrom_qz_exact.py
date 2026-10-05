@@ -60,7 +60,11 @@ def main() -> None:
     ap.add_argument("--jobs", type=int, default=12)
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--verilator", default=str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
+    ap.add_argument("--build-workers", type=int, default=10)
+    ap.add_argument("--build-jobs", type=int, default=8)
     a = ap.parse_args()
+    if not 1 <= a.build_jobs <= 16 or a.build_workers < 1:
+        raise SystemExit("build jobs must be 1..16 and build workers positive")
     dirty = subprocess.check_output(["git", "status", "--porcelain", "--", *RTL, TB, "tools/dsrom_qz_exact.py"],
                                     cwd=ROOT, text=True).strip()
     if dirty and not a.allow_dirty:
@@ -69,7 +73,7 @@ def main() -> None:
 
     def build(name):
         cmd = [a.verilator, "--binary", "--timing", "-Wno-fatal", "-Wno-lint", "-Wno-style", "--top-module",
-               "tb_dsrom_qz_exact", "--Mdir", str(a.work / name), "-j", "8", "-CFLAGS", "-O1"]
+               "tb_dsrom_qz_exact", "--Mdir", str(a.work / name), "-j", str(a.build_jobs), "-CFLAGS", "-O1"]
         cmd += BUILDS[name] + [str(ROOT / p) for p in RTL] + [str(ROOT / TB)]
         with (a.work / f"{name}.build.log").open("w") as f:
             if subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode:
@@ -100,7 +104,7 @@ def main() -> None:
                   source_sha256={p: sha(ROOT / p) for p in RTL + [TB, "tools/dsrom_qz_exact.py"]},
                   tool_version=subprocess.check_output([a.verilator, "--version"], text=True).strip(), runs=[])
     try:
-        with cf.ThreadPoolExecutor(len(BUILDS)) as ex:
+        with cf.ThreadPoolExecutor(a.build_workers) as ex:
             record["build_commands"] = dict(zip(BUILDS, ex.map(build, BUILDS)))
         jobs = [("pos", s) for s in range(1, a.seeds + 1)] + [("qz0", 100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("xs0", 200 + s) for s in range(1, max(2, a.seeds // 2) + 1)]

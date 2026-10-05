@@ -1,0 +1,5 @@
+PASS_HBM_QUERY_NATIVE_PACKING heads=64 frames=2 cycles=432 malformed_refused=1 source_SU_qualified=0
+- /srv/opentallas/repos/sagan-hbm-index-a09c79047/rtl/test/hbm_accel/tb_hbm_index_query.sv:75: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.002 s; speed 1.898 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

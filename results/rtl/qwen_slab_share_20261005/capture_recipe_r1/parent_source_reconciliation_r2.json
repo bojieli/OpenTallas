@@ -1,0 +1,15 @@
+{
+  "changed_scope": "g_kv_addr_prep: same three-stage KV offset arithmetic, carry-save quarters/bit-width bound in the LANES branch; no slab capture/FIFO/tree boundary change",
+  "compiled_gate_sources_affected_by_parent_delta": false,
+  "current_parent_sha256": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e",
+  "delta_patch_sha256": "0a1f5e576903fb05474efab5a54ccb4b618e53b45fe14116f295fe4b327f3b69",
+  "full_parent_exactness_or_timing_transfer": false,
+  "historical_model": "model.json",
+  "historical_parent_sha256": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+  "historical_source_commit": "c246a0f9d",
+  "old_model_and_failures_preserved": true,
+  "schema": "opentallas.qwen_slab_parent_source_reconciliation.v1",
+  "selected_model": "model_parent_current_r2.json",
+  "source_tree_boundary_byteidentical": true,
+  "source_tree_boundary_sha256": "9794602080b7f3da3e0119eb09eb0708c0a65a8a6ce073914fbffc7e17c49c37"
+}
