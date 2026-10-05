@@ -1,0 +1,264 @@
+{
+  "owner": "Euclid (Codex item9 svc)",
+  "clock_period_ns": 0.833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "records": [
+    {
+      "route": "strwr1_r9e_0833",
+      "module": "ot_hbm_r14_stream_stack",
+      "parameters": {
+        "ENABLE": 1,
+        "NCH": 1,
+        "REF_MODE": 1,
+        "WQ": 4,
+        "WR_EN": 1
+      },
+      "SS_r2r_ps": 2.05,
+      "SS_worst_ps": 2.05,
+      "FF_worst_ps": 10.35,
+      "closes_signoff": true,
+      "physical_acceptance": "pass",
+      "DRC": 0,
+      "io_delay_fraction": 0.0,
+      "area_um2": 3787.26,
+      "source_snapshots": [
+        {
+          "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+          "sha256": "bd70563033665eb846306a8804db50dbb35b484552f0093a0d406c8bccbb5107",
+          "snapshot": "NOT_RECOVERED; historical mapped receipt only"
+        },
+        {
+          "record_path": "source_snapshots/7aee35d51910_ot_hbm_r14_stream_stack.sv",
+          "git_revision": "27ebd51864f0ac1a1b99fde09c8d4228bf59e644",
+          "sha256": "7aee35d5191098e03a7218eb751ccf1f3b3394fd7d8134247524bd24f78a57e1",
+          "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv"
+        }
+      ],
+      "additional_cycles": 0,
+      "cycle_scope": "retained cycle-identical representation changes; WA_LATE=1 changes candidate availability and requires separate service calendar; no full-token rate claim",
+      "qualification": "routed single service instance at recorded IO arrivals; does not prove die clock/reset/parent IO or full token",
+      "target_status": "HISTORICAL_RETIRED_HBM_STREAM; no current STREAM4 credit"
+    },
+    {
+      "route": "s4r9b_noaq_0833",
+      "module": "ot_hbm_r14_stream_stack",
+      "parameters": {
+        "AQ_RD": 0,
+        "ENABLE": 1,
+        "NCH": 1,
+        "PULLIN": 16,
+        "REF_MODE": 1,
+        "WQ": 4,
+        "WR_EN": 1
+      },
+      "SS_r2r_ps": 2.71,
+      "SS_worst_ps": 2.49,
+      "FF_worst_ps": 10.6,
+      "closes_signoff": true,
+      "physical_acceptance": "pass",
+      "DRC": 0,
+      "io_delay_fraction": 0.0,
+      "area_um2": 3835.36,
+      "source_snapshots": [
+        {
+          "record_path": "source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv",
+          "git_revision": "d826bbd3b",
+          "sha256": "49fa1b0886e4e9c69f3f36ef9531806f2f069854ccc3027a87bb654f531fb0d8",
+          "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv"
+        },
+        {
+          "record_path": "source_snapshots/43b21ddb2a2a_ot_hbm_r14_stream_stack.sv",
+          "git_revision": "d826bbd3b",
+          "sha256": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+          "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv"
+        }
+      ],
+      "additional_cycles": 0,
+      "cycle_scope": "retained cycle-identical representation changes; WA_LATE=1 changes candidate availability and requires separate service calendar; no full-token rate claim",
+      "qualification": "routed single service instance at recorded IO arrivals; does not prove die clock/reset/parent IO or full token"
+    },
+    {
+      "route": "cdc256_r2b_0833",
+      "module": "ot_hbm_accel_cdc_fifo_r2",
+      "parameters": {
+        "AW": 6,
+        "W": 256
+      },
+      "SS_r2r_ps": 25.27,
+      "SS_worst_ps": 14.48,
+      "FF_worst_ps": 15.21,
+      "closes_signoff": true,
+      "physical_acceptance": "pass",
+      "DRC": 0,
+      "io_delay_fraction": 0.2,
+      "area_um2": 12281.5,
+      "source_snapshots": [
+        {
+          "record_path": "source_snapshots/30c14b7b84e2_ot_hbm_accel_cdc_fifo_r2.sv",
+          "git_revision": "d826bbd3b",
+          "sha256": "30c14b7b84e22a6e18bd3be530aaf17dbd6fd7152623c72134f2008890fe9079",
+          "source_path": "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_r2.sv"
+        }
+      ],
+      "additional_cycles": 0,
+      "cycle_scope": "retained cycle-identical representation changes; WA_LATE=1 changes candidate availability and requires separate service calendar; no full-token rate claim",
+      "qualification": "routed single service instance at recorded IO arrivals; does not prove die clock/reset/parent IO or full token"
+    },
+    {
+      "route": "s4r9b_aq_0833",
+      "module": "ot_hbm_r14_stream_stack",
+      "parameters": {
+        "AQ_RD": 1,
+        "ENABLE": 1,
+        "NCH": 1,
+        "PULLIN": 16,
+        "REF_MODE": 1,
+        "WQ": 4,
+        "WR_EN": 1
+      },
+      "SS_r2r_ps": -37.67,
+      "SS_worst_ps": -37.67,
+      "FF_worst_ps": 10.49,
+      "closes_signoff": false,
+      "physical_acceptance": "not_met",
+      "DRC": 0,
+      "io_delay_fraction": 0.0,
+      "area_um2": 3879.08,
+      "source_snapshots": [
+        {
+          "record_path": "source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv",
+          "git_revision": "d826bbd3b",
+          "sha256": "49fa1b0886e4e9c69f3f36ef9531806f2f069854ccc3027a87bb654f531fb0d8",
+          "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv"
+        },
+        {
+          "record_path": "source_snapshots/43b21ddb2a2a_ot_hbm_r14_stream_stack.sv",
+          "git_revision": "d826bbd3b",
+          "sha256": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+          "source_path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv"
+        }
+      ],
+      "additional_cycles": 0,
+      "cycle_scope": "retained cycle-identical representation changes; WA_LATE=1 changes candidate availability and requires separate service calendar; no full-token rate claim",
+      "qualification": "routed single service instance at recorded IO arrivals; does not prove die clock/reset/parent IO or full token"
+    },
+    {
+      "route": "pcwb_r9d_late_0833",
+      "module": "ot_hbm_accel_stream_pc_wb",
+      "parameters": {
+        "CRED": 64,
+        "ENABLE": 1,
+        "PC": 0,
+        "REF_MODE": 1,
+        "WA_LATE": 1,
+        "WB_EN": 1
+      },
+      "SS_r2r_ps": -34.28,
+      "SS_worst_ps": -34.28,
+      "FF_worst_ps": 7.44,
+      "closes_signoff": false,
+      "physical_acceptance": "not_met",
+      "DRC": 0,
+      "io_delay_fraction": 0.0,
+      "area_um2": 5322.33,
+      "source_snapshots": [
+        {
+          "record_path": "source_snapshots/9b1d561d10fd_ot_hbm_accel_stream_pc_wb.sv",
+          "git_revision": "d826bbd3b",
+          "sha256": "9b1d561d10fd6feee452df10dc87d173b90f17f5d6284af823240f6418935f20",
+          "source_path": "rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb.sv"
+        }
+      ],
+      "additional_cycles": null,
+      "cycle_scope": "WA_LATE write-ACT timing differs; directed writeback byte identity retained but complete token/calendar delta unknown",
+      "qualification": "routed single service instance at recorded IO arrivals; does not prove die clock/reset/parent IO or full token"
+    }
+  ],
+  "escalations": {
+    "AQ_RD": "registered per-bank readiness already implemented; actual worst wq_pv[1] -> c_oh[27] -37.67ps; require Claude designed arbitration fix",
+    "pcwb": "WA_LATE candidate already registered; actual worst c_oh[26] -> wnro_q[10] -34.28ps; require Claude designed digest fix"
+  },
+  "DS_KV": {
+    "source_commit": "47ecf2d2cb19960af0d13e2722ab34d27c771cb2",
+    "source_sha256": "08ce5514a19215974fe942e617d706df2c563f84e2585116e480a908b167e158",
+    "status": "EXACT_LOCKSTEP_PASS_SYNTHESIS_FAIL",
+    "lockstep_cycles": 1000000,
+    "mismatches": 0,
+    "scope": "STACK1 RP2 POSMODE0; random all row kinds/slots/ratio/shadow loads; existing r0 qualified-valid comparison unchanged",
+    "attempts": 3,
+    "actual_route_status": "Yosys0.68 fails shadow width lookup before mapping; no SSFF evidence",
+    "diagnostic": "shadow declared below combinational read; frontend declaration-order issue suspected, not proven",
+    "next": "CLAUDE design/escalation; no fourth variant launched",
+    "live_handles": []
+  },
+  "adoption": false,
+  "artifact_sha256": {
+    "tb_dskv_wb_flat_lockstep.sv": "e5ac0a3d28b96e20b26bbf195a85e635d920637f48fa33ddef7525de7293df8e",
+    "ot_hbm_accel_dskv_wb_r0_ref.sv": "bcc9bd22ad783ab726c07316bfbac566199057ea2aeccf3436cdc3c0a73bf6ca",
+    "dskv_flat_preedit_model.json": "71d50d70f70420eed1c53053324f9fa6a3000d9b56f14c0e7ea400018ff48185",
+    "epyc2_executions/euclid-hbm-fmax-svc-r2/physical.json": "33420f534a11a9f5671c578eb62ab81c3a8ef111aebbd8e285930700fcc56deb",
+    "epyc2_executions/euclid-hbm-fmax-svc-r2/route.log": "ec218c2771a23ab084c8d83b816bc83e1017f7f13036cbcf796caf443ac13efc",
+    "epyc2_executions/euclid-hbm-fmax-svc-r2/launch.json": "4bdf6060c25ca60226ec48ed39d3b0841758d955c8b7228c9fb7a487c55d72d1",
+    "epyc2_executions/euclid-hbm-fmax-svc-r2/exit": "91d957f8f2748a950526d4d21e0d5cd3bf5518e6c60b1beb470a13be1f978b1d",
+    "epyc2_executions/euclid-hbm-fmax-svc-r2/route.sh": "cfc619dbabb544f2abf0b116076a8d2fd8504188cb7a6636f1177526afa9f2d0",
+    "epyc2_executions/euclid-hbm-fmax-svc-r1/route.log": "29fadb57cce264234ebd3d74d43134a31ae2460201f06da9db6744e953409b00",
+    "epyc2_executions/euclid-hbm-fmax-svc-r1/launch.json": "44411c8831980100487a3b4a0ca795ef06ef3f4548bdf66d8d84a5dce7663c64",
+    "epyc2_executions/euclid-hbm-fmax-svc-r1/exit": "9830ce9d409097e8147e1ce53d55c9b0539a7344c241bd2caad75ca441f08355",
+    "epyc2_executions/euclid-hbm-fmax-svc-r1/route.sh": "38ce0cea77f579c9cdc8f33debc0f37251853cf1eb6fe3826fbc44634143a8f5",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/exactness.exit": "d3d0c733c3ec51fe6ef18e39e35f57ad5644c218db02b8392d722048f31ab54e",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/lockstep_seed1.log": "49505115bd7fc45c9cc1d7ab985f5e685bcd6f1e0ff53b9e2764c8aa393f7edb",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/lockstep_seed2.log": "f7719bb6bde3cac471e5eac254705d43473b6cb205a2fba80356a2a50c1efc99",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/compile.log": "83fd95912650ad9fae8d797ad73b7895e62d741ed2dc4315e26f65b8c1cf1411",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/physical.json": "f4f3558dfc17bbe23baad71b12c630b0a5922933e907b1fecfd1057e0ee5c7d6",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/route.log": "9cdfb325670c00ecd1af921633804a241bef9ac5917e92283d3d5b37472ad6cf",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/launch.json": "6f8a645a576d1821d311643f839462680fb76ef7afe02e4dd9001f1045eb2689",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/exit": "eccc7200ef6de7864e1cb07d952193cfa68f4a6776dd396291ac49745737b80f",
+    "epyc2_executions/euclid-hbm-fmax-svc-r3/run.sh": "1e7f50fefa7c98be95712b78d9cafb67328c7dd64908950dfa2fd7778a528082",
+    "routes/s4r9b_aq_0833/physical.json": "9c7e6672d642fdf7b2e2941d7fb344c8e6dadc87abb8b71e9fbb5a5bf37a63d8",
+    "routes/s4r9b_aq_0833/corner_sta.json": "a44f7b40576e7b056ae3e8eb76f3d38108c8a75cec624a27dcbb687868f88fe4",
+    "routes/s4r9b_aq_0833/work/orfs/w18_sta_ss.log": "ccf14228d7c8a6028c0139e262b65baca7e6755c36012df49d76b89363421e25",
+    "routes/s4r9b_noaq_0833/physical.json": "3a8da3851cc21bb489e839bfe7299415cbf0dca7e474b06f8b95243ed9d5bdac",
+    "routes/s4r9b_noaq_0833/exit": "a89a10e988260c6a8ce993dd05893f41d050e2be9c42056a749139cafc9f9117",
+    "routes/s4r9b_noaq_0833/corner_sta.json": "0e52e02bf27924fdd4592f56a4ddaa504d14bb606e9fb192f68930dde7a10b75",
+    "routes/strwr1_r9e_0833/physical.json": "a8b0b367da5085d20af6419056308f22d075fe09ab4fe7b98a75244a94ec9b85",
+    "routes/strwr1_r9e_0833/exit": "a89a10e988260c6a8ce993dd05893f41d050e2be9c42056a749139cafc9f9117",
+    "routes/strwr1_r9e_0833/corner_sta.json": "f4173eda844699ab3d81f23e48eff18c8b2fddae00b57873049dfdefe4b1a58f",
+    "routes/pcwb_r9d_late_0833/physical.json": "b0d4e4b0fb7acfe86911ee06d9ca06f42ded8df11f41705b814133dfec17e730",
+    "routes/pcwb_r9d_late_0833/corner_sta.json": "efde11044281fa7638e7f23a2352110e75300f85b168a7e69d8001dfee1980fe",
+    "routes/pcwb_r9d_late_0833/work/orfs/w18_sta_ss.log": "e439a885bb5041cb37d8c15061e1074a104a26015c28b7aa44a26dceaa19f977",
+    "routes/cdc256_r2b_0833/physical.json": "14caa021020acbd5f1ba49ac22e7006b94b30aa3ef9a563ffe11e30d1c512eaa",
+    "routes/cdc256_r2b_0833/exit": "a89a10e988260c6a8ce993dd05893f41d050e2be9c42056a749139cafc9f9117",
+    "routes/cdc256_r2b_0833/corner_sta.json": "e2ee016c835c972cefc04a7afbc77f058c02104a9443c73622981a28bcd4fd5e",
+    "routes/dskvwb_r1b_0833/route.log": "29fadb57cce264234ebd3d74d43134a31ae2460201f06da9db6744e953409b00",
+    "routes/dskvwb_r1b_0833/exit": "96107898d1d81340c9f51d0255b3999b1bac5ac86050dfa116abbe52cd141096",
+    "retained_lockstep/cdc_r2.txt": "869cdbebd9d3d1ee57a86825690e5bfd8d24eec11bb6ed1d8f7c407c7b7058fc",
+    "retained_lockstep/STREAM4_wr1.txt": "9ab92280f41be276647a8aae6a031e4726d4d55b97d990616bb41ecd80250b26",
+    "source_snapshots/43b21ddb2a2a_ot_hbm_r14_stream_stack.sv": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+    "source_snapshots/9b1d561d10fd_ot_hbm_accel_stream_pc_wb.sv": "9b1d561d10fd6feee452df10dc87d173b90f17f5d6284af823240f6418935f20",
+    "source_snapshots/30c14b7b84e2_ot_hbm_accel_cdc_fifo_r2.sv": "30c14b7b84e22a6e18bd3be530aaf17dbd6fd7152623c72134f2008890fe9079",
+    "source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv": "49fa1b0886e4e9c69f3f36ef9531806f2f069854ccc3027a87bb654f531fb0d8",
+    "source_snapshots/7aee35d51910_ot_hbm_r14_stream_stack.sv": "7aee35d5191098e03a7218eb751ccf1f3b3394fd7d8134247524bd24f78a57e1"
+  },
+  "plan": "61b75d854 docs/PROGRAM_PLAN_2026_10_05.md; scoreboard authoritative",
+  "timeout_policy": {
+    "historical_attempts": "shell CPU/AS/FSIZE limits unlimited, retained driver legacy timeout defaults unchanged; all failed before map on arguments/frontend, no timeout verdict",
+    "future_physical_jobs": "freeze main1e5b6c651 tool; explicit --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited; no tool checks rerun"
+  },
+  "retained_lockstep": {
+    "STREAM4_wr1.txt": {
+      "source_sha256": "49fa1b0886e4e9c69f3f36ef9531806f2f069854ccc3027a87bb654f531fb0d8",
+      "cases": 192,
+      "cycles": 76800000,
+      "mismatches": 0,
+      "raw_status": "retained PASS; no rerun"
+    },
+    "cdc_r2.txt": {
+      "source_sha256": "30c14b7b84e22a6e18bd3be530aaf17dbd6fd7152623c72134f2008890fe9079",
+      "cases": 64,
+      "cycles": 12800000,
+      "mismatches": 0,
+      "raw_status": "retained PASS; no rerun"
+    }
+  }
+}
