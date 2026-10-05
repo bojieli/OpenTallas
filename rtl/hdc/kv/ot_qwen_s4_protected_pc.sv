@@ -51,7 +51,9 @@ module ot_qwen_s4_protected_pc #(
     wire [LP-1:0] credit_delta=synced_ret-credit[LP-1:0];
     // Fewer than eight core consumptions can occur per HCLK edge at 3:4.
     // Never truncate an invalid larger advance into a false credit.
-    assign h_cred=credit_bad||h_fault||!synced_ret_valid ? 3'b0 : credit[LP+:3];
+    // This checked registered credit belongs to an earlier valid pointer pair.
+    // A newer transient receiving-rail disagreement must not erase that debt.
+    assign h_cred=credit_bad||h_fault ? 3'b0 : credit[LP+:3];
     ot_qwen_s4_checked_state #(.W(LP+3)) u_credit(.clk(hclk),.por_n(por_n),
         .en(!credit_bad&&!h_fault),
         .d({synced_ret_valid?3'(credit_delta):3'b0,synced_ret_valid?synced_ret:credit[LP-1:0]}),.q(credit),.bad(credit_bad));
