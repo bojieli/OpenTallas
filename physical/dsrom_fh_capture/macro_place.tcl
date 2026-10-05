@@ -37,9 +37,17 @@ foreach inst [$block getInsts] {
     $group addInst $inst
     foreach cell [$block getInsts] {
         set cn [string map [list "\\" ""] [$cell getName]]
-        if {[string first "g_bank\[$b\].u_lane" $cn]>=0 || [string first "g_bank\[$b\]/u_lane" $cn]>=0} {
-            if {$cell ne $inst} {$group addInst $cell}
+        set local [expr {[string first "g_bank\[$b\].u_lane" $cn]>=0 || [string first "g_bank\[$b\]/u_lane" $cn]>=0}]
+        foreach stem {g_fadd g_fused_select g_leaf g_iwg} {
+            if {[string first "$stem\[$b\]" $cn]>=0} {set local 1}
         }
+        if {[regexp {u_head.*(res_u|o_data1|o_data)\[(\d+)\]} $cn -> kind bit]} {
+            if {$bit/32==$b} {set local 1}
+        }
+        if {[regexp {u_head.*u_rh.*line\[(\d+)\]} $cn -> bit]} {
+            if {($bit%2048)/32==$b} {set local 1}
+        }
+        if {$local && $cell ne $inst} {$group addInst $cell}
     }
     puts "FH_CAPTURE_MACRO bank=$b at $xx $yy group=[llength [$group getInsts]]"
     incr n
