@@ -1,8 +1,0 @@
-{
-  "verdict": "HARNESS_DEPENDENCY_FAILURE_BEFORE_SIMULATION",
-  "source_commit": "34223b7b0",
-  "controller_sha256": "601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099",
-  "cause": "Sparse checkout omitted pinned third_party_tau acceptance.json dependency imported before run_stage; no HDL build or simulation executed",
-  "missing_path": "results/speculative/third_party_acceptance_20261004/acceptance.json",
-  "recovery": "Restore only missing committed fixture at same source pin; rerun only stage with unique new output; preserve original failed case and campaign summary"
-}

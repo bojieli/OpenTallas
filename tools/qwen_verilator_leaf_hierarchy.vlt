@@ -1,5 +1,0 @@
-`verilator_config
-// Compile repeated arithmetic leaf modules as reusable hierarchy blocks.
-// This changes Verilator's compilation boundary, not the RTL arithmetic.
-hier_block -module "ot_hdc_fmul"
-hier_block -module "ot_hdc_qadd"

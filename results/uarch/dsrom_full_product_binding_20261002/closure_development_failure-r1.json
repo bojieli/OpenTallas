@@ -1,7 +1,0 @@
-{
-  "scope": "development hardware-ledger cross-check",
-  "tests_failed": 4,
-  "cause": "incorrect helper result key declared_storage_bits; actual key declared_lower_bits",
-  "resolution": "corrected exact return key; prior successful and failure evidence retained",
-  "product_or_hardware_verdict": false
-}

@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/home/ubuntu/dsrom-I66-standalone-calibration-20261002/tools/dsrom_I66_provider_clock_contract.py", line 91, in <module>
-    print(json.dumps(bind_program_origin(S.rows(a.trace),prov) if a.trace else enrollment_gate(prov),indent=2,sort_keys=True))
-  File "/home/ubuntu/dsrom-I66-standalone-calibration-20261002/tools/dsrom_I66_provider_clock_contract.py", line 24, in enrollment_gate
-    if any(provenance['parameters'].get(k)!=v for k,v in expected.items()):raise ValueError('source/geometry mismatch; PHW6 historical observer cannot bind PHW10')
-ValueError: source/geometry mismatch; PHW6 historical observer cannot bind PHW10

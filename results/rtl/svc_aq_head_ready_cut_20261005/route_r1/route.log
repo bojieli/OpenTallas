@@ -1,7 +1,0 @@
-view=asap7 corner=TT block=ot_hbm_r14_stream_stack_aq_head_ready_cut top=ot_hbm_r14_stream_stack_aq_head_ready_cut purpose=signoff_target
-  synth: cells=20435 area=3116.165 um2 seq_area=1536.640 um2 macros=0
-  pnr:   wirelength=126132 um vias=287092 DRC=0 antenna_nets=0 Fmax=1164.37 MHz
-  drv:   max_slew=0 max_cap=0 max_fanout=0
-  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
-  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
-  wrote /srv/opentallas-scratch/jobs/euclid-svc-aq-head-ready-route-r1/physical.json
