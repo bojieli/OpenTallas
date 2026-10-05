@@ -87,21 +87,9 @@ def prepare():
     lines+=['orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb',
             'write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl']
     (OUT/'pins_and_regions.tcl').write_text('\n'.join(lines)+'\n')
-    # Existing selected service PDN, retaining M8/M9 straps over the child.
-    fp=json.loads((ROOT/'results/rtl/hbm_child_contract_20261005/floorplan_revision.json').read_text())
-    pitch=fp['pdn']['strap_pitch_um']['svc'];width=.48
-    pdn='''add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
-add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
-global_connect
-set_voltage_domain -name CORE -power VDD -ground VSS
-define_pdn_grid -name cp_service -voltage_domains {CORE} -pins {M8 M9}
-add_pdn_stripe -grid cp_service -layer M1 -width 0.018 -pitch 0.54 -offset 0 -followpins
-add_pdn_stripe -grid cp_service -layer M2 -width 0.018 -pitch 0.54 -offset 0 -followpins
-'''
-    for layer in ('M8','M9'):
-        pdn+=f'add_pdn_stripe -grid cp_service -layer {layer} -width {width} -spacing {pitch/2-width:.9f} -pitch {pitch:.9f} -offset {pitch/2:.9f}\n'
-    pdn+='add_pdn_connect -grid cp_service -layers {M1 M2}\nadd_pdn_connect -grid cp_service -layers {M2 M8}\nadd_pdn_connect -grid cp_service -layers {M8 M9}\n'
-    (OUT/'pdn.tcl').write_text(pdn)
+    # Native local bridge contract; preserve the tested hook when regenerating pins/SDC.
+    from hbm_cp_local_pg import cp_local_pdn_tcl
+    (OUT/'pdn.tcl').write_text(cp_local_pdn_tcl())
     record=dict(schema='hbm.cp.parent-context.physical-inputs.v1',contract=CONTRACT,
         contract_sha256=hashlib.sha256((ROOT/CONTRACT).read_bytes()).hexdigest(),
         checked_sources=checked_sources,
@@ -110,7 +98,7 @@ add_pdn_stripe -grid cp_service -layer M2 -width 0.018 -pitch 0.54 -offset 0 -fo
         signal_ports=234,power_clock_reset_ports_excluded_from_signal_count=True,
         reserved_signal_tracks=236,available_signal_tracks=577,
         physical_pin_placement_may_snap_to_translated_native_grid=True,
-        clock=clock,PG_source='existing selected service M8/M9 width.48 and svc pitch',
+        clock=clock,PG_source='native M1/M2 rails -> M3/M4 local bridge -> M7 -> retained M8/M9; hbm_cp_local_pg model',
         measured_load_or_CTS=False,adopted=False,
         parameters={k:1 for k in ['ENABLE','SU_ENABLE','SU_REGISTERED_OUTPUTS','SU_REGISTERED_STATUS','SU_REGISTERED_BOUNDARY','SU_BALANCED_OWNER_BOUNDARY']},
         source_faithful_top='ot_hbm_integrated_su_cp_context',joint_W2_parent_repeat=False)
