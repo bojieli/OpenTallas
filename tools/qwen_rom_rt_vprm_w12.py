@@ -88,7 +88,7 @@ def main() -> None:
     ap.add_argument("--vm-elems", type=int, default=1 << 20)
     ap.add_argument("--vpmax", type=int, default=4)
     ap.add_argument("--enable-ar256", type=int, default=1)
-    ap.add_argument("--dec-la", type=int, choices=(0, 1), default=0,
+    ap.add_argument("--dec-la", type=int, choices=(0, 1), default=1,
                     help="core decode restructure DEC_LA (results/rtl/qwen_core_decode_closure_20261004)")
     ap.add_argument("--seq-la", type=int, choices=(0, 1), default=1,
                     help="sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA; results/rtl/qwen_dspark_closure_20261004)")

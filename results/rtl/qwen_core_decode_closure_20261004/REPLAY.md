@@ -40,10 +40,17 @@ It is within the screen's calibrated pessimism. The authority is an in-context r
 the core alone exposes 1.87 M black-box unit ports and cannot be routed standalone.
 
 ## Exactness (8K benches, same plans/goldens as results/rtl/qwen_dspark_system_20261004)
-`proof/b` (86a06603b, EPYC) and `proof/h` (final, PVE1): see the table in `proof/`. Each run has to be bit- and
-cycle-identical to the committed records: k_L0 49,582 cycles (40 checks), k_AR0 14,581, c_H1/c_H2 12,000 (a=0/98951,
-a=3/1958), k_D0r 30,618 (16 checks).
+| job | committed | proof/b (86a06603b, EPYC) | proof/h (final bc6f91862, ot-agidock128) |
+|---|---|---|---|
+| k_L0: verify L0, P8187 np4, commit 1, rollback, then P8188 np4 | 49,582 cyc | pass 49,582, 40 checks 0 mismatches | pass 49,582, 40 checks 0 mismatches |
+| k_AR0: AR L0 at P8187 | 14,581 | pass 14,581, 8 checks 0 | pass 14,581, 8 checks 0 |
+| c_H1: head p=4 + accept | 12,000, a=0 bonus 98951 | pass, same | pass 12,000, a=0 bonus 98951 |
+| c_H2: head p=4 + accept | 12,000, a=3 bonus 1958 | pass, same | pass 12,000, a=3 bonus 1958 |
+| k_D0r: drafter L0 at 8188 | 30,618 | pass 30,618, 16 checks 0 | pass 30,618, 16 checks 0 |
+
+All runs use SEQ_LA=1 and DEC_LA=1. They are bit- and cycle-identical to the adopted records, so the driver
+default is now `--dec-la 1`.
 
 ## Replay
 jobs/core_screen.sh LABEL VPOS DEC_LA (EPYC; the Yosys 0.68 screen-copy workarounds of the VPOS block are in the
-script, logic identical); jobs/proof.sh (EPYC) / jobs/proof_pve1.sh (PVE1, bench inputs mirrored at the same /srv paths).
+script, logic identical); jobs/proof.sh (EPYC) / jobs/proof_pve1.sh (PVE1 / ot-agidock128, bench inputs mirrored at the same /srv paths).
