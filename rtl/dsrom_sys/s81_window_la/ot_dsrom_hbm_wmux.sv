@@ -164,11 +164,18 @@ module ot_dsrom_hbm_wmux #(
             end
         end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin fault <= 1'b0; w_grants <= 0; a_held <= 0; end
+            if (!rst_n) fault <= 1'b0;
+            else if (|a_bad) fault <= 1'b1;
+        // status counters: simulation statistics only (not silicon)
+`ifndef SYNTHESIS
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin w_grants <= 0; a_held <= 0; end
             else begin
-                if (|a_bad) fault <= 1'b1;
                 w_grants <= w_grants + 32'($countones(g_take));
                 a_held <= a_held + 32'($countones(a_v & ~a_rdy & h_rdy));
             end
+`else
+        always @(posedge clk) begin w_grants <= 0; a_held <= 0; end
+`endif
     end endgenerate
 endmodule
