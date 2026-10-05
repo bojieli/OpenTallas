@@ -1,0 +1,132 @@
+{
+  "status": "proposed source-bound interface; no implementation, simulation or physical qualification",
+  "sources": [
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "sha256": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_sm_v.sv",
+      "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_issue.sv",
+      "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6"
+    },
+    {
+      "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "sha256": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784"
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_weight_pc_adapter.sv",
+      "sha256": "4f3c46b340fed66494d1284655bbe06c303c7367257e7d5678aae0a0a7bab922"
+    }
+  ],
+  "reuse_boundary": {
+    "module": "ot_hbm_accel_sm_v",
+    "ENABLE": 1,
+    "unchanged_arithmetic": true,
+    "ports": {
+      "descriptor": "d_valid/d_ready, d_base[31:0] LINE ADDRESS not byte address, d_lines[23:0]",
+      "operation": "start pulse while !busy; rows[clog2(RMAX):0], c[15:0], g[7:0], gs, fmt[1:0]",
+      "read_request": "req_v/req_ready, req_addr[31:0], req_tag[9:0]",
+      "read_response": "rsp_v, rsp_tag[9:0], rsp_data[1087:0]; NO READY",
+      "activation_write": "xw_en, xw_addr[clog2(XD)-1:0], xw_grp[6:0], xw_data[2047:0]; NO READY",
+      "result": "rv, rrow[clog2(RMAX)-1:0], rdata[NC*32-1:0]; NO READY",
+      "completion": "busy, fault, arrive toggle, release_in matching toggle, released"
+    }
+  },
+  "descriptor_wrapper": {
+    "proposed_fields": {
+      "valid_ready": 2,
+      "descriptor_id": 32,
+      "model_layout_id": 32,
+      "tensor_id": 32,
+      "epoch": 16,
+      "sm_id": "max(1,ceil(log2(SM_COUNT)))",
+      "rom_region_base_line": 32,
+      "rom_region_length_lines": 32,
+      "stream_base_line": 32,
+      "stream_line_count": 24,
+      "rows": "clog2(RMAX)+1",
+      "c": 16,
+      "g": 8,
+      "gs": 1,
+      "fmt": 2,
+      "global_row_base": 32,
+      "logical_K": 32
+    },
+    "width_status": "new wrapper widths are explicit proposals, not existing ABI; epoch reuse requires a proven drain, not probabilistic wrap protection",
+    "validation": [
+      "immutable published descriptor until retirement",
+      "rows in 1..RMAX; c,g nonzero; g*c<=XD, format in {0,1,2}",
+      "stream_line_count == rows*g*c checked in widened arithmetic",
+      "base+length and region end checked at >=33 bits, no wrap; entire descriptor contained within authorized immutable tensor region",
+      "format/layout/K and scale plane identities match source-pinned manifest",
+      "output-row range and row mapping bounds checked",
+      "all required x fragments written and pipeline visibility satisfied before start",
+      "only one op active per SM, no reuse until all weight reads and results retired",
+      "g<=2^LEV; use minimumceil(chunks/active_lanes), not artificial power2group count; existing stack completes padded golden tree"
+    ],
+    "zero_length": "reject before SM start; bulk copy accepts zero descriptor but issue sequencer does not define useful zero-row work",
+    "ownership": "scheduler owns descriptor publication and completion; ROM service owns accepted request until returned or drained cancellation; SM owns arithmetic state; output collector owns result after rv capture"
+  },
+  "line_format": {
+    "payload": "bits 1023:0 weight codes, bits 1087:1024 eight E8M0 scale bytes",
+    "FP4": "8 blocks of32 E2M1 nibbles; block j codes at [128*j +:128], scale at [1024+8*j +:8]",
+    "FP8": "4 blocks of32 E4M3 bytes; j<4 codes at [256*j +:256], scale at [1024+8*j +:8]; upper inactive lanes inject zero; use neutral unused exponents",
+    "BF16": "64 BF16 weights packed in low1024bits; exponent plane ignored",
+    "rom_assembly": "S82 interleaved physical FP4word:codes0[127:0],scale0[135:128],codes1[263:136],scale1[271:264],zero[273:272]; fourwords regroup code lanes into1024bits and scale bytes into64bitplane. FP8wordcodes[255:0],scale[263:256],zero[273:264]. BF16wordcodes[255:0],zero[273:256].",
+    "order_row_slot": "rb,g,t,s; omit s where rb+s>=rows; no line consumed for bubble",
+    "order_group_slot": "wave,t,s; wave items are row-major/group-minor; omit slots beyond rows*g",
+    "tail": "No runtime keep mask exists. Layout generator must produce exact golden padding at block/chunk/tree boundaries, not merely arbitrary zero extension. Partial output-row slots are omitted. Exact full-K arithmetic proof required for any K padding; preserve E8M0 alignment and exceptional arithmetic."
+  },
+  "request_response_contract": {
+    "accept": "req_v && req_ready reserves all four source reads, assembly slot and eventual return slot atomically",
+    "source_tag": "{epoch16, sm_id, ring_slot10, subword2}; descriptor ownership held separately per active SM",
+    "scoreboard": "1024 live-slot bits per SM plus identity/epoch state and four completion bits per assembled outstanding line; reject response when not live, duplicate subword, wrong epoch/SM or range",
+    "delivery": "at most one1088bit line per SM per cycle; only complete matching four-part payload can assert rsp_v; arbitrary line order allowed because existing SM ring restores stream order",
+    "retire": "clear external live slot only upon pulse delivery to SM boundary; SM itself delays ring-slot reuse until consumption",
+    "hold": "any valid/ready channel holds complete identity and payload stable during stall",
+    "no_ready_consequence": "Once rsp_v is asserted, SM captures unconditionally. Congestion must stop ROM requests using credits; cannot stall pulse or lose payload downstream.",
+    "fault": "latch sticky fault and stop new admission; malformed response never forwarded into SM ring"
+  },
+  "finite_buffers": {
+    "existing_SM_ring": "DEPTH1024 x1088 useful bits =139264B; macro implementation ceil(1088/256)=5 lanes x two512deep groups =10 SRAM macros (163840 physical bytes), plus output queue and boundary pipes",
+    "existing_MAX_OUT": 512,
+    "existing_descriptor_queue": 4,
+    "boundary_channel": "CHD=2*PIO+3; with PIO2,7 records each descriptor and request channel",
+    "SM_boundary_pipeline": "PIO2 response pipe adds2cycles and1098bits per stage; included source roundtrip model must avoid double count",
+    "source_credit_formula": "C_source >= ceil(rate_lines_per_cycle * bounded_reservation_release_latency_cycles)+burst_margin; C_source also >= all in-flight nonstallable reads+queued complete responses. Backpressure may be indefinite; stop admission at C_source occupancy.",
+    "throughput_credit_floor_from_network": "conservative2*L_first+2 =30/36/44 slots for64/128/256pairs; justify roundtrip versus actual release point during integration",
+    "source_FIFO_proposal": "128 assembled lines in5 parallel128x256 SRAM macros:139264 useful bits total (17408B) and163840 physical bits total (20480B). Count in addition to existing SM ring unless eliminated by proven handshake equivalence.",
+    "minimum_service_rate": "min(1line/cycle, four-bank supply, return arbitration, MAX_OUT/request-to-return latency, actual issue demand)",
+    "result_credit_formula": "For arbitrary downstream stalls and unchanged SM with no rv_ready, reserve op_rows records before start. Each record NC*32 + ceil(log2(RMAX)) bits plus external identity/epoch. For NC8/RMAX4096,268bits/record before owner; full4096rows1097728bits useful.",
+    "smaller_result_FIFO": "legal only with proven finite downstream stall bound and stop-issue propagation: depth >= max outputs in nonstallable arithmetic pipelines + outputs during credit roundtrip + admitted burst; no such general backpressure exists in current reused SM so whole-op reservation is conservative baseline.",
+    "activation_fragments": "XC=(SUB*LBS)*266+(SUB*LSB)*16; FRAGW=NC*XC; beats_per_fragment=ceil(FRAGW/2048). With4,2,16,8 parameters:FRAGW25216bits and13beats. Physical leaf SRAM and write distribution counted separately."
+  },
+  "reset_cancellation": {
+    "reset": "coordinated reset of scheduler, service, SM ring and collector clears valids/credits; external fabric must discard old epoch responses before SM restart",
+    "cancel": "stop new descriptors/requests, drain accepted ROM reads into a discard sink while preserving reservations; do not recycle owner/epoch/slot until drain acknowledgment; reset or flush entire SM operation because no cancel input exists",
+    "output": "hold collector valid/data/identity until ready; completion is outputs consumed and requests drained, not busy falling alone",
+    "epoch_wrap": "never reuse epoch until all possible old responses have been acknowledged drained;16bits does not itself prove safety"
+  },
+  "required_tests": [
+    "stalled request acceptance and return arbitration",
+    "all four subword permutations and wrong-tag rejection",
+    "duplicate late and out-of-range response rejection",
+    "zero length, overflow and descriptor crossing region end",
+    "both issue orders incl rows not multiple8",
+    "FP4,FP8,BF16 payload and scale lane identity",
+    "max legal descriptor, full ring and MAX_OUT exhaustion",
+    "output ready held low entire operation with no loss then retirement",
+    "cancellation/reset with all stages nonempty; old epoch responses",
+    "bit-exact full-K source-pinned golden comparisons incl nonpower chunk trees"
+  ],
+  "integration_gates": [
+    "model must price both source FIFO and existing SM ring unless a measured replacement removes one",
+    "physical SS/FF closure with actual mux/capture/macros, all clocks and fanout",
+    "no-ECC applies ROM only; mutable queues/identity/control retain priced protection",
+    "new wrapper opt-in off by default until exactness and contextual physical gates"
+  ]
+}
