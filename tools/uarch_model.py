@@ -8030,3 +8030,36 @@ def hbm_loader_crc_literal_matrix_price(*, state_masks, word_masks, dies=2):
                 floorplan_fit=None, routed_SS_FF=None,
                 composed_gain_percent=None,
                 select_only_if='current installed route final critical path implicates CRC; never infer selection from preliminary floorplan repair')
+
+
+def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
+        retained_vehicle_cell_area_um2, vehicle_core_area_um2,
+        reserved_slot_area_um2=None, corridor_capacity_tracks=None):
+    """Conservative pre-build cell/cross-cut requirement, never assume a slot.
+
+    Add all matrix cells without credit for removing the installed loop.
+    Clock/repair area is unknown. Twice each XOR plus CRC output sinks bounds
+    the edges across ANY cut; conservative, not an expected wire demand.
+    Actual consumer region assignment/available tracks are required to select.
+    """
+    folds=price['folds_per_die']
+    cells=price['unshared_XOR2_equivalents_per_fold_ESTIMATE']
+    added=cells*folds*xor2_max_area_um2
+    area=retained_vehicle_cell_area_um2+added
+    tracks=folds*(2*cells+32)
+    slot_ok=reserved_slot_area_um2 is not None and area<=reserved_slot_area_um2
+    corridor_ok=corridor_capacity_tracks is not None and tracks<=corridor_capacity_tracks
+    return dict(added_matrix_cell_area_no_removal_credit_um2_ESTIMATE=added,
+                retained_plus_matrix_cell_area_um2_ESTIMATE=area,
+                repair_clock_buffer_area_um2=None,
+                vehicle_core_area_um2=vehicle_core_area_um2,
+                cell_utilization_before_additional_repair_ESTIMATE=area/vehicle_core_area_um2,
+                vehicle_is_actual_top_slot=False,
+                reserved_actual_top_slot_area_um2=reserved_slot_area_um2,
+                all_cut_edge_upper_bound_tracks=tracks,
+                bound_basis='two input sinks per unshared XOR2 plus32 CRC outputs per fold; all four cones could span cut without region map',
+                actual_corridor_capacity_tracks=corridor_capacity_tracks,
+                slot_cell_bound_pass=slot_ok, corridor_bound_pass=corridor_ok,
+                build_gate_pass=slot_ok and corridor_ok,
+                routed_area_fit=False, adopted=False,
+                unresolved='actual top reserved slot and CRC locality/corridor map; additional clock/buffer repair cannot be priced as zero')
