@@ -315,5 +315,12 @@
   "token_cycles_max": 194498,
   "token_speedup_vs_realmem": 2.987,
   "token_us": 162.08
+ },
+ "wire_bound": {
+  "bound_cycles": 200861,
+  "bound_tok_s": 5974.3,
+  "penalty_cycles": 6363,
+  "source": "results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json (deltas: 176 a layer pass, 27 a head; ME-op and hub-link stages, independent of the KV path)",
+  "status": "bound: floorplan stage counts, no routed-path STA (as the source record)"
  }
 }
