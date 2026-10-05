@@ -90,7 +90,7 @@
   "seed_commit_over_verify": 0.00347
  },
  "full_shape": {
-  "tau": 4.159,
+  "tau": 3.8879,
   "head_occ_us": 12.37,
   "ctx": {
    "1048576": {
@@ -101,7 +101,7 @@
     "seed_commit_us": 3.217,
     "old": {
      "draft_us": 47.56,
-     "mtp_tok_s": 8036.0
+     "mtp_tok_s": 7512.2
     },
     "fused_head": {
      "draft_chain5_us": 62.33,
@@ -110,13 +110,13 @@
      "wavefront_occupancy": {
       "verify_us": 469.98,
       "step_us": 578.75,
-      "mtp_tok_s": 7186.2,
+      "mtp_tok_s": 6717.8,
       "vs_old": -0.1057
      },
      "wavefront_window": {
       "verify_us": 504.47,
       "step_us": 613.24,
-      "mtp_tok_s": 6782.1,
+      "mtp_tok_s": 6340.0,
       "vs_old": -0.0998
      }
     },
@@ -127,13 +127,13 @@
      "wavefront_occupancy": {
       "verify_us": 469.98,
       "step_us": 617.64,
-      "mtp_tok_s": 6733.7,
+      "mtp_tok_s": 6294.8,
       "vs_old": -0.1621
      },
      "wavefront_window": {
       "verify_us": 504.47,
       "step_us": 652.13,
-      "mtp_tok_s": 6377.6,
+      "mtp_tok_s": 5961.9,
       "vs_old": -0.1535
      }
     }
@@ -146,7 +146,7 @@
     "seed_commit_us": 2.932,
     "old": {
      "draft_us": 45.57,
-     "mtp_tok_s": 8342.1
+     "mtp_tok_s": 7798.3
     },
     "fused_head": {
      "draft_chain5_us": 62.33,
@@ -155,13 +155,13 @@
      "wavefront_occupancy": {
       "verify_us": 452.99,
       "step_us": 561.47,
-      "mtp_tok_s": 7407.3,
-      "vs_old": -0.1121
+      "mtp_tok_s": 6924.5,
+      "vs_old": -0.112
      },
      "wavefront_window": {
       "verify_us": 468.3,
       "step_us": 576.78,
-      "mtp_tok_s": 7210.7,
+      "mtp_tok_s": 6740.7,
       "vs_old": -0.1091
      }
     },
@@ -172,29 +172,29 @@
      "wavefront_occupancy": {
       "verify_us": 452.99,
       "step_us": 600.36,
-      "mtp_tok_s": 6927.5,
+      "mtp_tok_s": 6475.9,
       "vs_old": -0.1696
      },
      "wavefront_window": {
       "verify_us": 468.3,
       "step_us": 615.67,
-      "mtp_tok_s": 6755.2,
+      "mtp_tok_s": 6314.9,
       "vs_old": -0.1654
      }
     }
    }
   },
-  "note": "draft is context-independent (head dies); verify from the adopted wavefront record; tau 4.159 inherited from it"
+  "note": "draft is context-independent (head dies); verify from the adopted wavefront record; tau inherited from it"
  },
  "replaces": {
   "draft_over_ar": 0.1173,
   "source": "tools/dsrom_wavefront_rtl_campaign.py DRAFT_OVER_AR (main 025d24e3b)"
  },
  "basis": "Measured (tools/dsrom_dspark_step_slices_rtl.py, one speculative step on the as-built V4.1 core, gamma 5, every\nsection bit-exact): the draft = embed + three DSpark blocks over the 5 draft positions + the draft head, a SERIAL\nsampling chain (row i needs row i-1's token: lm_head matvec, Markov matvec on the previous draft token, vocab bias\nadd, vocab argmax select); verify = prologue + 40 layers x 6 positions + 6 heads; DSpark seeding; ACCEPT (commit).",
- "source_commit": "4de034ca442410e8fc850f851cb0a3c97f6a6b4e",
+ "source_commit": "f23c56908ec468c5362cc76be23937ebb74695d5",
  "input_sha256": {
-  "tools/dsrom_dspark_mtp_step_compose.py": "be34d8e87ec514029c57c21f952048ad79bad51b171af8acae27e5d6fb8528db",
-  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "4d7aeff663fb7e9c6264d9c5d184dd1e6dfdef5bfca18d1c615b14aff8f4aad1",
+  "tools/dsrom_dspark_mtp_step_compose.py": "823f185f7530d8da563bcaea5dd5941ddab73f022e13b837a5d3d5a1c54329e5",
+  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
   "results/rtl/dsrom_dspark_step_slices_20261004/plain/plain-on2.json": "2ea2a5cf134e72f50abdefce48b8aadef643a75476ba10a12a176203f6a55e52",
   "results/rtl/dsrom_dspark_step_slices_20261004/dspark/result.json": "5c6cf5b47a98e2220602fea225735c489709df8151b882d03178e0ba035da43a",
   "results/rtl/dsrom_dspark_step_slices_20261004/forced/result.json": "9462f14c8361cecc3d456be1aedfafd29cf846866bf8de7ae51739881c956fcd"

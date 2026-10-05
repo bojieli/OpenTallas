@@ -76,10 +76,13 @@ def stage_segments(name: str, layout: list, head_words: int, kv_words: int):
     return segs
 
 
-def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_words=0):
+def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_words=0, spread=False):
     """Returns (plan text, summary).  Kinds: 1 HBM code, 2 SRAM code, 3 KV (HBM).  sram_words: per-die budget
     for code words beyond the lm_head, given to the token's leading code words in order (layer 0 first) --
-    the layer index decides, so a single-stage job of layer n reproduces the full token's assignment."""
+    the layer index decides, so a single-stage job of layer n reproduces the full token's assignment.
+    spread=True (opt-in, --sram-spread): the same budget split evenly over the 36 layers instead (layer n gets
+    sram_words // 36, plus one for n < sram_words % 36), each layer's share being its leading code words, so every
+    layer streams most of its words and its SRAM part overlaps the stream."""
     lines, summary = [], []
     sidx = 0
     # SRAM assignment by absolute token order: layers 0..35 x code words
@@ -93,6 +96,8 @@ def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_wor
             n = int(name[1:])
             before = n * per_layer            # code words of earlier layers in token order
             left = max(0, sram_words - before)
+            if spread:
+                left = min(per_layer, sram_words // 36 + (1 if n < sram_words % 36 else 0))
             for nm, base, ln in stage_segments(name, layout, head_words, kv_words):
                 if nm == "KV":
                     segs.append((0, ln, sidx, 3)); sidx += ln; hbm_w += ln
@@ -227,6 +232,8 @@ def main() -> None:
     ap.add_argument("--cred", type=int, default=32)
     ap.add_argument("--sram-mib", type=float, default=None,
                     help="die SRAM for weights (MiB per die); default: design point (a) 842 MiB / 2 dies, (b) 1,686 / 4")
+    ap.add_argument("--sram-spread", action="store_true",
+                    help="opt-in: split the layer SRAM budget evenly over the 36 layers (default: leading layers)")
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--threads", type=int, default=8)
     ap.add_argument("--build-only", action="store_true")
@@ -263,7 +270,8 @@ def main() -> None:
     sram_mib = args.sram_mib if args.sram_mib is not None else (842.0 / 2 if args.tp == 2 else 1686.0 / 4)
     head_bytes = head_words * WORD_BYTES
     sram_words = max(0, int((sram_mib * MIB - head_bytes - args.winw * WORD_BYTES) // WORD_BYTES))
-    plan_text, plan_summary, total = make_plan([s[0] for s in stages], layout, head_words, kv_words, sram_words)
+    plan_text, plan_summary, total = make_plan([s[0] for s in stages], layout, head_words, kv_words, sram_words,
+                                                spread=args.sram_spread)
     (out / "plan.txt").write_text(plan_text)
     env = dict(os.environ, RT_THREADS=str(args.threads))
     cmd = [str(binary), "--stages", str(args.stages), str(out), str(args.preload), "--plan", str(out / "plan.txt"),
@@ -315,7 +323,7 @@ def main() -> None:
                          "spine_h": bool(args.spine_h), "scale_lat": args.scale_lat if args.spine_h else 5},
         "memory_system": {"stacks_per_die": args.stacks, "ref_mode": args.ref_mode, "window_words": args.winw,
                           "window_mib": round(args.winw * WORD_BYTES / MIB, 2), "lag_words": args.lagw, "cred": args.cred,
-                          "sram_mib_per_die": sram_mib, "sram_code_words_beyond_head": sram_words, "head_words": head_words,
+                          "sram_mib_per_die": sram_mib, "sram_code_words_beyond_head": sram_words, "sram_spread": args.sram_spread, "head_words": head_words,
                           "kv_words_per_layer": kv_words, "stream_words": total, "preroll_ctl_cycles": args.preroll,
                           "core_clock_ps": 833.333, "hbm_ctl_clock_ps": 1024},
         "position": args.pos, "token_in": args.token, "stages_run": [s[0] for s in stages], "plan": plan_summary,

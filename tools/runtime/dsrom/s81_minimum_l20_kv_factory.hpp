@@ -6,9 +6,20 @@
 #include <memory>
 #include <variant>
 class VDsromAttention;
+#ifdef DSROM_S81_SIM_ONLY_ATT_ENDPOINT
+#include "s81_sim_only_attention_endpoint.hpp"
+using DsromS81AttentionEndpoint=DsromS81SimOnlyAttentionEndpoint;
+#else
 class VDsromAttEngine;
+using DsromS81AttentionEndpoint=VDsromAttEngine;
+#endif
 class VDsromWindowBlocks;
+#ifdef DSROM_S81_NATIVE_WINDOW_LA
+class VDsromS81WindowLa;
+using VDsromPackedWindow=VDsromS81WindowLa;
+#else
 class VDsromPackedWindow;
+#endif
 class VDsromS81CkvRank0;
 class VDsromS81CkvRank1;
 class VDsromS81CkvRank2;
@@ -26,7 +37,7 @@ struct L20KvRankBinding {
     DsromS81NativeSuPorts* su=nullptr;
     DsromS81NativeQeQuantizerPorts* quantizer=nullptr;
     std::shared_ptr<VDsromAttention> adapter;
-    std::shared_ptr<VDsromAttEngine> endpoint;
+    std::shared_ptr<DsromS81AttentionEndpoint> endpoint;
     // Existing native descriptor authority; never a generated host lease.
     DsromS81PrefixNativeEngine descriptor;
     std::function<uint16_t()> native_generation;
@@ -61,4 +72,6 @@ public:
     bool drained()const;
     const std::array<L20NativeCkv,4>& services()const;
 };
+// Existing minimum caller dispatches this actual four-rank component run.
+int run_minimum_l20_kv(DsromS81MinimumRuntime&,const char* output);
 } // namespace dsrom_s81_minimum
