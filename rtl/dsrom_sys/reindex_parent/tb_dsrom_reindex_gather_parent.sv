@@ -88,7 +88,7 @@ module tb_hdc_v41x_idx_kgather #(
             .cnt_keys_streamed(s_keys[s*48 +:48]),
             .cnt_hbm_beats(s_beats[s*48 +:48]));
         always @(posedge clk) if(rst_n && s_fault[s]) begin
-            $display("PARENT_FAULT stack=%0d core=%b list=%b command=%b bad_command=%b req=%h drain=%b rd_seq=%0d list_v=%b count=%0d reserved=%0d",s,kg.u_control.u_control.cfault,kg.u_control.u_control.mfault,kg.u_control.u_control.command_fault,kg.u_control.u_control.bad_command,kg.u_control.u_control.qfault,kg.dfault,kg.u_control.u_c.rd_seq,kg.u_control.u_c.list_v,kg.u_control.list_count,kg.u_d.u_queue.reserved);
+            $display("PARENT_FAULT stack=%0d core=%b list=%b command=%b bad_command=%b req=%h drain=%b rd_seq=%0d list_v=%b count=%0d reserved=%0d",s,kg.u_control.cfault,kg.u_control.mfault,kg.u_control.command_fault,kg.u_control.bad_command,kg.u_control.qfault,kg.dfault,kg.u_control.u_c.rd_seq,kg.u_control.u_c.list_v,kg.u_control.list_count,kg.u_d.u_queue.reserved);
             $fatal(1,"production parent fault");
         end
     end endgenerate
