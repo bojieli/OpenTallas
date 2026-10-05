@@ -55,7 +55,7 @@ def command(a, out):
              *pins(h), "--routing-layers", "M2", "M7",
              "--clock-port", "clk", "--clock-period-ns", "0.833333", "--clock-uncertainty-ns", "0.06",
              "--clock-uncertainty-hold-ns", "0.025", "--orfs-corner", "WC", "--hold-corners", "WC,BC",
-             "--io-delay-fraction", "0.2", "--stages", "pnr", "--hold-margin-ns", "0.01",
+             "--io-delay-fraction", "0.2", "--stages", "pnr", "--hold-margin-ns", f"{a.hold_margin_ns:g}",
              "--synth-timeout-seconds", "unlimited", "--flow-timeout-seconds", "unlimited",
              "--orfs-var", "ADDER_MAP_FILE=", "--orfs-var", f"NUM_CORES={a.cores}",
              "--orfs-var", f"SDC_FILE=/src/{S}/port_group_s2.sdc", "--orfs-var", f"QSS_SDC_DIR=/src/{S}",
@@ -88,6 +88,7 @@ def main():
     p.add_argument("--diamond", action="store_true")
     p.add_argument("--td-only", action="store_true")
     p.add_argument("--orfs-var", action="append", default=[])
+    p.add_argument("--hold-margin-ns", type=float, default=0.01, help="ORFS hold repair margin (flow only, stricter)")
     p.add_argument("--cts-derate", type=float, default=None,
                    help="tuned CTS: -no_obstruction_aware and -delay_buffer_derate D (macro clock leads)")
     p.add_argument("--param", action="append", default=[], help="extra RTL parameter NAME=VALUE (IN_STAGE, AM_SPLIT, S5_CTL)")

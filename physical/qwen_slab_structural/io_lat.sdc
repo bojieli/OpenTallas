@@ -8,6 +8,7 @@
 # Exact only in a single-corner STA (one scalar arrival): used for sign-off (tools/w18/corner_sta.py --post-sdc, one
 # corner per run) and endpoint grouping.  The multi-corner ORFS stages keep io_ref.sdc and run GRT with
 # -critical_nets_percentage 0, the slack callback that crashed.
+sta::worst_slack_cmd max   ;# builds the timing graph first: get_property arrival on an unbuilt graph segfaults
 set qss_ref [get_pins {res_q\[0\]$_DFF_P_/CLK}]
 set qss_amax [get_property $qss_ref arrival_max_rise]
 set qss_amin [get_property $qss_ref arrival_min_rise]
