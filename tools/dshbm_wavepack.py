@@ -67,6 +67,8 @@ def pair_refusal(a: Op, b: Op):
     bb = {(b.xb + i) % 128 for i in range(b.groups * b.c)}
     if aa & bb:
         return 'P1 overlapping installed x spans'
+    if b.rows > 8 - len({r % 8 for r in range(a.rows)}):
+        return 'reducer keys remain owned by A'
     return None
 
 
