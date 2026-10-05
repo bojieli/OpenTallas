@@ -1,6 +1,35 @@
 # DeepSeek ROM accelerator: progress and architecture review
 
-**Status:** Architecture exploration. No successor selected; hardware implementation remains stopped.
+## Update after expert review — recommendation changed
+
+**The 725 µs ROM reference used below was stale. I should have refreshed main before publishing the brief. The separate wide-TP successor is no longer recommended for development.**
+
+I read the [recovery owner's reply at `42a326e4a`](https://github.com/bojieli/OpenTallas/blob/42a326e4a/reports/DeepSeek_ROM_Architecture_Review_Reply.md) and inspected its pinned composition and lever records.
+
+| Configuration | AR µs/token | MTP step µs | Evidence status |
+|---|---:|---:|---|
+| S81 recovery at the reply revision | **620.078** | **871.315** | Adopted-lever component composition; not whole-system physical sign-off |
+| S81 with field-phase overlap | **514.6** | **746.1** | Reported counterfactual; field lever remains `REJECT` pending spine timing closure |
+| HBM comparison at the same revision | **460.053** | **888.077** | Conditional component composition; common-cost corrections still required |
+
+At matched τ = 3.8879, current S81 already satisfies the numerical MTP-step comparison by about 17 µs. The 1,303 µs and 708 µs adapted designs are slower than current S81. The proposed direct fabric adds substantial power, wiring and qualification risk without an established full-system advantage.
+
+**Revised recommendation:** retain S81's pipeline and local TP4 organization; apply operand forwarding, lane-local fusion, phase overlap and exact workgroups inside it. Prioritize the recovery owner's existing spine, vector-chain and integration work; do not duplicate those streams or launch the separate architecture.
+
+Important qualifications:
+
+- The field-phase lever is exact, but its record explicitly reports SS failures of approximately −723 to −906 ps and an R128 FF hold failure. The roughly 515 µs result is not adopted performance; a successor spine must close and its added cycles must be recomposed.
+- Approximately 183 µs of vector-chain path is an optimization target, **not** a demonstrated 183 µs saving. The review's 430–480 µs AR range remains a projection.
+- Component compositions, routed element passes and whole-die qualification are different evidence levels. Spine, IR/power, draft placement/link capacity and all-on integration remain gates. The adopted draft placement adds 52 dies and must be counted in the matched silicon/power comparison.
+- Apply HBM accounting corrections and shared improvements before the final AR/MTP decision. Do not compare one design's target clock with the other's slower closure sensitivity as if they were matched.
+
+The earlier analysis is retained below as history. Its useful findings can inform S81, but its baseline and recommendation are superseded by this update. [Pinned correction evidence](deepseek_rom_review_evidence/recovery_correction.json).
+
+---
+
+## Historical exploration brief — superseded recommendation
+
+**Historical status:** Architecture exploration before the recovery review. No successor was selected or physically qualified.
 
 ## Objective and decision rule
 

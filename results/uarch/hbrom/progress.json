@@ -4,9 +4,9 @@
   "base_revision": "55ba24fdc32cda16de602f5ec5d758d176e96d1a",
   "default_off": true,
   "requirements": {
-    "analytical_model": "First-principles storage/compute/state/traffic alternatives under comparison; G0 rejected and no successor admitted",
+    "analytical_model": "Separate 707.858 us adaptation rejected; newer 620.078 us S81 supersedes the original 725.057 us baseline. Wide TP fabric not selected.",
     "whole_model_storage_and_mapping": "checkpoint inventory and whole-row executable allocator implemented; codec tests pass",
-    "cluster_die_and_network_selection": "G0 rejected as rescue direction; new globally reused TP96 organization under architecture-only capacity/ownership/latency screening",
+    "cluster_die_and_network_selection": "Separate G0 and wide TP successor exploration stopped; retain findings as history and recommend improvements inside S81.",
     "RTL_implementation": "stopped; partial sources preserved; no full connected pass",
     "full_shape_exact_component_validation": "connected build stopped before simulation; no qualification",
     "synthesis": "baseline NC1 completed before stop; intrinsic timing failed; all hardware jobs terminal or stopped, checkpoints retained",
@@ -21,10 +21,9 @@
     "ROM no ECC; mutable protection retained."
   ],
   "next_actions": [
-    "Validate actual single-user1M mutable state and SRAM/HBM placement tradeoffs",
-    "Compare colocated ROM/compute with separate ROMstorage dies using useful weight and activation traffic",
-    "Evaluate global rankcount, compute utilization and capacity frontier beforechoosingmicroarchitecture",
-    "Compose fair HBM and ROM costs including common omissions; no candidateadmission from partialsubtotal"
+    "Preserve wide TP analysis as history and publish the baseline correction.",
+    "Use existing S81 recovery ownership and physical/integration gates.",
+    "Keep HBM corrections and shared improvements matched before the final comparison."
   ],
   "current_findings": [
     "ExistingHBMcomposition omits nativeIL8holes and individualoperationdrains; theseare commoncompute costs, notROMpenalties.",
@@ -38,6 +37,6 @@
     "ExpertGU workgroup concatenation preservesrow arithmetic andoffers37.3us illustrative saving atTP96withoutlaunchcredit; applies to bothHBM andROM faircomparators.",
     "SeparateROMstorage muststream12.879GBmainweights/token; keeping157.286MB HCweights localperrank avoids15.099GBadditionalreplicatedtraffic."
   ],
-  "owner_steering": "First principles architecture before implementation detail. Prove complete matched performance advantage over currentROM before any hardware work.",
+  "owner_steering": "Expert review identifies 620.078 us AR / 871.315 us MTP S81 recovery. Stop separate wide TP exploration; recommend dataflow improvements inside S81 and a matched comparison. Do not launch duplicate hardware streams.",
   "hardware_authorization": "STOPPED: no RTL edits, synthesis, simulation or physical jobs authorized for G0"
 }
