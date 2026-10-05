@@ -8357,3 +8357,61 @@ def dsrom_s81_native_port_hc_pair():
             exact_component_measured=False, SS_FF_closed=False,
             headline_unchanged=True,
             next_owner_action='Maxwell map native-port calendar onto real critical-chain exposure; Einstein review same-lane bank/packet binding; no RTL/build authorized by this model.'))
+
+
+def qwen_me_bypass_capture_price(*, gt=6144, smin=6, tcut=6, tree_lat=7):
+    """Default-off A1 bypass redistribution; source-counted, no timing claim.
+
+    Same binary32 rounding/tree/cut order. Only the first capture's bypass
+    payload changes from32 bits to two zero flags. Receiving-stage logic and
+    load must close in the same selected tree; saved FF are not area credit.
+    """
+    if (gt, smin, tcut, tree_lat) != (6144, 6, 6, 7):
+        raise ValueError('Only the frozen t3 source context is enrolled')
+    lg = (gt - 1).bit_length()
+    counts = [gt >> lv for lv in range(tcut + 1, lg)]
+    n = sum(counts)
+    nand2 = .08748  # installed ASAP7 footprint proxy, not SS delay
+    and2_or2 = 2 * nand2
+    mux2 = 4 * nand2
+    shifted = 64 * and2_or2 + 32 * and2_or2 + 16 * mux2
+    predicates = 5 * and2_or2
+    # Gross local allowance: one BUF equivalent per selector bit destination.
+    buffer_allowance = 64 * nand2
+    gross = shifted + predicates + buffer_allowance
+    return dict(
+        schema='opentallas.qme.bypass-capture.v1', default_enabled=False,
+        source='ot_hdc_fp32_add_lat A1 bypass_code -> existing u_ca -> A2 s1_code',
+        source_context=dict(gt=gt,smin=smin,tcut=tcut,tree_lat=tree_lat,
+                            tinreg=1,adders_per_level=counts,adders=n),
+        arithmetic=dict(rounding_changed=False,reduction_order_changed=False,
+                        macs_per_cycle=0,fp32_adds_per_adder_cycle=1),
+        stages=dict(first_capture_before_bits=120,first_capture_after_bits=90,
+                    unchanged_second_and_later_capture_bits=True,
+                    latency_edges_planned=7,II_edges_planned=1,
+                    added_token_edges_planned=0,latency_II_verified=False,
+                    receiving_stage='Existing A2 alignment and s1 capture; no extra cut',
+                    SS_setup_ps=60,FF_hold_ps=25,period_ps=833,
+                    setup_hold_qualified=False),
+        storage=dict(delta_raw_reset_ff_per_adder=-30,delta_tree_raw_ff=-30*n,
+                     saved_FF_area_credit_um2=0,mutable_protection_changed=False),
+        logic=dict(shifted_and2=64,shifted_or2=32,exponent_mux2=16,
+                   predicate_gate_allowance=5,selector_buffer_allowance=64,
+                   removed_first_stage_nested_mux2_upper_bound=96,
+                   removed_mux_area_credit_um2=0,
+                   selector_fanout_per_take=32,exponent_selector_fanout=8,
+                   mantissa_exponent_additional_load=True),
+        ports=dict(operand_bits=64,result_bits=32,error_bits=2,valid_bits=1,
+                   memory_bytes_per_cycle=0,external_boundary_delta_bits=0,
+                   first_internal_boundary_delta_bits_per_edge=-30,
+                   CDC_added=0,routing_tracks_added_external=0,
+                   local_tracks_and_capacitance_qualified=False),
+        area=dict(basis='Gross NAND footprint allowances; no removed FF/mux credit',
+                  nand2_um2=nand2,DFF_proxy_um2=DFF_UM2,
+                  added_logic_gross_per_adder_um2=gross,
+                  added_logic_tree_um2=gross*n,
+                  additional_tree_reservation_um2=gross*n/.5,
+                  utilization=.5,measured_predecessor_cell_um2=121989.113,
+                  contextual_area_slot_fit=None,net_mapped_delta_um2=None),
+        adoption=False,
+        next_gate='Minimum same-adder old/off/on arithmetic and edge gate, then ONE frozen tree context SS/FF route; never timeout-only rerun')
