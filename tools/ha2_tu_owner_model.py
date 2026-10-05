@@ -18,6 +18,13 @@ def model():
         'go rearms pres/rptr/transaction counters; never resets FIFO/CDC pointers or credits.')
     price['quiet_observation'] = ('Explicit delay-valid OR and AFIFO write-empty outputs; '
         'no private hierarchy taps, added payload registers, or change to pointer advancement.')
+    price['memory_bytes_per_cycle'] = dict(own_payload_write_max=128, peer_payload_write_max=512, operand_read=512, result_payload=64)
+    price['logical_write_sources'] = 10
+    price['operand_presence_shape'] = [8,48]
+    price['operand_registers_bits'] = 196608
+    price['replicated_adder_nodes'] = 112
+    price['area_estimate_um2'] = 183000 + (196608-32768)*.2916
+    price['area_estimate_label'] = 'ESTIMATE: old PF64 synth plus incremental operand DFF floor; runtime mux/decoder/buffering and enclosing queues excluded'
     price['parent_area_scope'] = 'replaces embedded array/tree, not a second reducer'
     price['rank_contract'] = 'shared8 rank<96; AR rank64..95 receive only, never inject/reduce'
     price['macs_per_cycle'] = 0

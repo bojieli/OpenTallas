@@ -3,6 +3,8 @@
   "added_arrival_cycles": 0,
   "adoption": false,
   "area_composed_context_tracks_mux_fanout_protection": null,
+  "area_estimate_label": "ESTIMATE: old PF64 synth plus incremental operand DFF floor; runtime mux/decoder/buffering and enclosing queues excluded",
+  "area_estimate_um2": 230775.744,
   "array_area_replacement_not_addition": true,
   "authority": "tools/dshbm_1m_coll.py::HUBS/cmd_campaign and rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv defaults",
   "channel_capacity": null,
@@ -31,7 +33,14 @@
     "RXAW": 8
   },
   "identity_pf_rank_bound_ff": 122,
+  "logical_write_sources": 10,
   "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "operand_read": 512,
+    "own_payload_write_max": 128,
+    "peer_payload_write_max": 512,
+    "result_payload": 64
+  },
   "new_cdc": 0,
   "new_control_ports": "operation64/phase32 heldtuple inputs and quiet_core/quiet_phy/rearm_ready outputs; metadata retained by122FF, no payload widening",
   "new_external_ports": 5,
@@ -41,6 +50,11 @@
   "new_storage_bits": 196608,
   "old_presence_bits": 384,
   "old_storage_bits": 196608,
+  "operand_presence_shape": [
+    8,
+    48
+  ],
+  "operand_registers_bits": 196608,
   "parent_area_scope": "replaces embedded array/tree, not a second reducer",
   "peer_validation_comparators": 8,
   "ports_bits_per_cycle": {
@@ -58,6 +72,7 @@
   "quiet_price_detail": "core reducer pending6 + core expected/actual-delivery counters16x2 +2 PHYquiet synchronizers + fault/handshake counters; conservative93 reserve; synth area UNKNOWN",
   "rank_contract": "shared8 rank<96; AR rank64..95 receive only, never inject/reduce",
   "reducer_cycles": 23,
+  "replicated_adder_nodes": 112,
   "reset_delegated": "unchanged parent rst_n/prst_n; no new automatic reset or credit release",
   "route_variants": [
     {
