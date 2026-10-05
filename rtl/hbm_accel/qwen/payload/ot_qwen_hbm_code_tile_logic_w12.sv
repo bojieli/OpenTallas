@@ -249,9 +249,15 @@ end else begin:on
         wire [KV_HB-4:0] pv = w[KV_HB-1:3];
         wire [KV_AW-1:0] lk = (tk / PRK) * KV_NH + a[KV_HB+1:KV_HB];
         wire [KV_AW-1:0] lv = KV_KL + (pv >> KV_SV) * KV_NH + w[KV_HB+1:KV_HB];
-        wire [TG*W*8-1:0] kvs_rd_m;
-        ot_hdc_delay #(.W(TG*W*8),.D(MEM_EXTRA+1)) kv_match_code(
-          .clk(clk),.rst_n(rst_n),.d(kvs_rd),.q(kvs_rd_m));
+        wire [TG*W*8-1:0] kvs_rd_m,kvs_original;
+        if(MEM_EXTRA!=0)begin:original_kv_capture
+          reg kv_rd_q;reg[TG*W*8-1:0] cap;
+          always @(posedge clk or negedge rst_n)if(!rst_n)kv_rd_q<=0;else kv_rd_q<=me_kv_re;
+          always @(posedge clk)if(kv_rd_q)cap<=kvs_rd;
+          assign kvs_original=cap;
+        end else assign kvs_original=kvs_rd;
+        ot_hdc_delay #(.W(TG*W*8),.D(1)) kv_match_code(
+          .clk(clk),.rst_n(rst_n),.d(kvs_original),.q(kvs_rd_m));
         assign kvs_r_ce = me_kv_re;
         assign kvs_r_addr = is_v ? lv : lk;
         genvar e;
@@ -265,9 +271,17 @@ end else begin:on
         assign kvs_r_addr = {KV_AW{1'b0}};
         assign kv_re = me_kv_re;
         assign kv_addr = me_kv_addr;
-        // Actual global KV C+1 response, delayed exactly like X/CODE tags.
-        ot_hdc_delay #(.W(TG*W*32),.D(MEM_EXTRA+1)) kv_match_code(
-          .clk(clk),.rst_n(rst_n),.d(kv_q),.q(me_kv_q));
+        // Preserve original request-qualified capture and HOLD across bubbles.
+        // Only then add the same one edge as protected CODE/tag/X.
+        wire[TG*W*32-1:0] kv_original;
+        if(MEM_EXTRA!=0)begin:original_kv_capture
+          reg kv_rd_q;reg[TG*W*32-1:0] cap;
+          always @(posedge clk or negedge rst_n)if(!rst_n)kv_rd_q<=0;else kv_rd_q<=me_kv_re;
+          always @(posedge clk)if(kv_rd_q)cap<=kv_q;
+          assign kv_original=cap;
+        end else assign kv_original=kv_q;
+        ot_hdc_delay #(.W(TG*W*32),.D(1)) kv_match_code(
+          .clk(clk),.rst_n(rst_n),.d(kv_original),.q(me_kv_q));
     end
 end endgenerate
 endmodule

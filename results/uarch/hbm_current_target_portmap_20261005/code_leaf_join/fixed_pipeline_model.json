@@ -52,7 +52,7 @@
     "codec_route_loaded_SSFF": false,
     "bank_comparators": 10
   },
-  "MEM_EXTRA_policy": "PIPE adapter always0; successor tile owns original optional extra capture exactly once. CODEselector delayed2, MEM_EXTRA capture E+2; X D(MEM_EXTRA+1); KV actual C+1 input D(MEM_EXTRA+1); matvec MEM_EXTRA+1 all tags/round/gm/first/wsrc/valid.",
+  "MEM_EXTRA_policy": "PIPE adapter always0; tile owns original optional CODE capture once. Original local/global KV request-qualified capture AND HOLD unchanged, followed by D1. X D(MEM_EXTRA+1). All matvec tag/valid/round/gm/first/wsrc originalMEM_EXTRA+1. No unconditional replacement of held KV capture.",
   "clock": "same actual core clock for leaf+tile pipeline, no private clocks or active clockskip. GO admission fullselectedspan residency/publication; any external wholeengine stall requires complete pipeline drain or holding ALL memory/tag participants, not assumed.",
   "single_user_price": {
     "resident_selected_stage_added_tail_edges": 1,
