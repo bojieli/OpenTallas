@@ -47,6 +47,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import dsrom_1m_measure as M  # noqa: E402
+import third_party_tau as TP  # noqa: E402
 
 REC = ROOT / "results/rtl/dsrom_1m_allmeasured_20261004"
 BASE = ROOT / "results/rtl/dsrom_1m_measured_20261004"
@@ -55,6 +56,7 @@ WINDOW = ROOT / "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load
 WAVE = ROOT / "results/rtl/dsrom_wavefront_verify_20261004/record.json"
 DRAFT_REC = ROOT / "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json"
 RECOVERY = ROOT / "results/rtl/dsrom_recovery_20261004"     # microarchitecture-recovery levers (baseline "recovery")
+WAVE_PHYSICAL = ROOT / "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json"
 CLK = 1.2e9
 SLOW = 0.9e9
 EXTRA_HOPS = M.S81_EXTRA_HOPS
@@ -62,6 +64,31 @@ EXTRA_HOPS = M.S81_EXTRA_HOPS
 
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def bind_wavefront_physical_verdict(rec):
+    """Preserve modeled wavefront timing without granting failed hardware credit."""
+    if not WAVE_PHYSICAL.exists():
+        return rec
+    decision = json.loads(WAVE_PHYSICAL.read_text())
+    assert not decision['physical_adopted']
+    assert decision['three_failed_variants_threshold_met']
+    assert not decision['fourth_unchanged_recipe_allowed']
+    rec['MTP']['physical_qualified'] = False
+    rec['MTP']['qualified_headline_rate'] = None
+    rec['MTP']['wavefront_implementation'] = dict(
+        decision_record=rel(WAVE_PHYSICAL), decision_sha256=sha(WAVE_PHYSICAL),
+        source_commit=decision['source_commit'], verdict=decision['verdict'],
+        variants=[dict(utilization=v['utilization'], ss_incontext_ps=v['ss_incontext_ps'],
+                       ss_internal_ps=v['ss_internal_ps'], ff_hold_ps=v['ff_hold_ps'],
+                       drc=v['drc'], drv=v['drv']) for v in decision['variants']],
+        modeled_interval_retained=True, implementation_adopted=False,
+        reset_recovery_is_causal=False,
+        reason=decision['reason'], redesign_owner='CLAUDE',
+        additional_capture_edge_calendar_price=None,
+        rule='MTP interval/rate remains modeled composition; any redesign capture edge must be explicitly priced before adoption. No fourth recipe or reset-recovery credit.')
+    rec['inputs'][rel(WAVE_PHYSICAL)] = sha(WAVE_PHYSICAL)
+    return rec
 
 
 def rel(p):
@@ -256,6 +283,8 @@ def apply_levers(P, info, lever_dir, excluded=()):
     applied, skipped = [], []
     for f in sorted((lever_dir / "levers").glob("*.json")):
         r = json.loads(f.read_text())
+        if r.get("schema") != "opentallas.dsrom-recovery.lever.v1":      # an analysis record kept beside the levers
+            continue
         row = dict(lever=r["lever"], record=rel(f), sha256=sha(f), verdict=r.get("verdict"))
         if r["lever"] in excluded or r.get("verdict") != "ADOPT" or r.get("exact") is not True:
             skipped.append(row)
@@ -563,7 +592,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         still.append(dict(term="MTP draft block5 (3 DSpark blocks)", us=round(3 * dr["block5_us"], 3),
                           why="reduced-vehicle slice x transfer ratio (dsrom_dspark_step_slices_20261004), not full shape"))
     still.append(dict(term=f"tau {M.DRAFT['tau']:g}", us=None,
-                      why="published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"))
+                      why=f"acceptance, not an RTL quantity: {TP.tau_src('deepseek_v41', 5)}; published V4.1 3.8879 "
+                          "and range 3.43-4.32 kept as MTP.tau_sensitivity"))
     rec = dict(
         schema="opentallas.dsrom-1m.allmeasured.composition.v1", context=M.CTX, position=M.POS,
         baseline=a.baseline,
@@ -578,7 +608,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         cdc_on_path_us=round(sum(cdc_nodes.get(p["node"], 0.0) for p in path) * 1e6, 3),
         still_modelled_total_us=round(sum(p["us"] for p in modelled) + sub_us, 3),
         MTP=dict(rule="II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; "
-                      "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} (third-party published)",
+                      "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} ({TP.tau_src('deepseek_v41', 5)})",
                  stage_busy_top=sorted(segs, key=lambda s: -s["busy_us"])[:6], worst_stage=worst,
                  II_us=round(ii, 3), verify_us=round(verify, 3), draft_us=round(draft, 3),
                  draft_terms=dict(block5_us=db["block5_us"] if db else dr["block5_us"], blocks_us=round(blocks_us, 3),
@@ -586,7 +616,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
                                                 "(results/rtl/dsrom_dspark_step_slices_20261004) -- NOT full shape"),
                                   head_occ_us=head_occ, r_markov=r_markov),
                  seed_commit_us=M.DRAFT["seed_commit_us"], step_us=round(step, 3), MTP_tok_s=round(mtp, 1),
-                 tau=M.DRAFT["tau"], mtp_over_ar=round(mtp * ar / 1e6, 3)),
+                 tau=M.DRAFT["tau"], tau_source=TP.tau_src("deepseek_v41", 5), mtp_over_ar=round(mtp * ar / 1e6, 3),
+                 tau_sensitivity=TP.mtp_sensitivity(step)),
         still_modelled=still,
         measured_formerly_modelled=done,
         requires_binding=([] if a.window == "s81" else
@@ -598,6 +629,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
                                                              RC / "select.json"] if Path(p).exists()},
         tool_sha256={rel(ROOT / "tools/dsrom_1m_allmeasured.py"): sha(ROOT / "tools/dsrom_1m_allmeasured.py"),
                      rel(ROOT / "tools/dsrom_1m_measure.py"): sha(ROOT / "tools/dsrom_1m_measure.py")})
+    bind_wavefront_physical_verdict(rec)
     if write_output:
         a.out.write_text(json.dumps(rec, indent=1, default=str) + "\n")
         print(json.dumps(dict(AR_us=rec["AR_us"], AR_tok_s=rec["AR_tok_s"], by=by, share=rec["measured_share"],

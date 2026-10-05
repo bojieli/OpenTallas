@@ -21,7 +21,7 @@
  "cdc_on_path_us": 4.293,
  "still_modelled_total_us": 0,
  "MTP": {
-  "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
+  "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 4.159 (results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5))",
   "stage_busy_top": [
    {
     "first": "head.hc_pre",
@@ -71,9 +71,80 @@
   },
   "seed_commit_us": 3.217,
   "step_us": 1600.094,
-  "MTP_tok_s": 2429.8,
-  "tau": 3.8879,
-  "mtp_over_ar": 1.784
+  "MTP_tok_s": 2599.2,
+  "tau": 4.159,
+  "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
+  "mtp_over_ar": 1.908,
+  "tau_sensitivity": {
+   "published": {
+    "tau": 3.8879,
+    "MTP_tok_s": 2429.8,
+    "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
+   },
+   "published_low": {
+    "tau": 3.43,
+    "MTP_tok_s": 2143.6,
+    "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
+   },
+   "published_high": {
+    "tau": 4.31748,
+    "MTP_tok_s": 2698.3,
+    "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
+   }
+  },
+  "physical_qualified": false,
+  "qualified_headline_rate": null,
+  "wavefront_implementation": {
+   "decision_record": "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json",
+   "decision_sha256": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9",
+   "source_commit": "34223b7b0",
+   "verdict": "REJECT_THREE_STAGE_VARIANTS_ESCALATE_CLAUDE_STRUCTURAL_CONTROL_REDESIGN",
+   "variants": [
+    {
+     "utilization": 0.4,
+     "ss_incontext_ps": -150.8,
+     "ss_internal_ps": -62.4,
+     "ff_hold_ps": 11.0,
+     "drc": 0,
+     "drv": {
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 5
+     }
+    },
+    {
+     "utilization": 0.45,
+     "ss_incontext_ps": -105.4,
+     "ss_internal_ps": -29.8,
+     "ff_hold_ps": 10.5,
+     "drc": 0,
+     "drv": {
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 24
+     }
+    },
+    {
+     "utilization": 0.5,
+     "ss_incontext_ps": -65.0,
+     "ss_internal_ps": -1.5,
+     "ff_hold_ps": 11.1,
+     "drc": 0,
+     "drv": {
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 4
+     }
+    }
+   ],
+   "modeled_interval_retained": true,
+   "implementation_adopted": false,
+   "reset_recovery_is_causal": false,
+   "reason": "Same-edge core_done/job_done decode drives TXQ4 x FLIT512 payload capture; internal user-position or TX occupancy/write-select control remains failing. MAXU866 user position21bits =18186 statebits plus866 validbits in28 groups. Source cone rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:296,398-400,628-645,681-707. No actual reset recovery failure: raw u50 asynchronous recovery +188.1ps. Actual parent producer clock/arrival/load remains unbound; virtual incontext is surrogate, not fulltop qualification.",
+   "redesign_owner": "CLAUDE",
+   "additional_capture_edge_calendar_price": null,
+   "rule": "MTP interval/rate remains modeled composition; any redesign capture edge must be explicitly priced before adoption. No fourth recipe or reset-recovery credit."
+  }
  },
  "still_modelled": [
   {
@@ -112,9 +183,9 @@
    "why": "synthetic format-consistent (as the w17 1M state); timing is data-independent"
   },
   {
-   "term": "tau 3.8879",
+   "term": "tau 4.159",
    "us": null,
-   "why": "published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"
+   "why": "acceptance, not an RTL quantity: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5); published V4.1 3.8879 and range 3.43-4.32 kept as MTP.tau_sensitivity"
   }
  ],
  "measured_formerly_modelled": [
@@ -31511,10 +31582,13 @@
   "results/rtl/dsrom_1m_allmeasured_20261004/su_cdc.json": "641395e891d004439cdd0ede1d9ceca8a6011391ebb79d63d3e7fe31b3a2d6df",
   "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
   "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json": "3d4837a6cbdffce831ab48dc8a7677ff7e8eae2ef03cf7e84f985129e5d01775",
-  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
-  "results/rtl/dsrom_recovery_20261004/levers/head.json": "a64474c0944ad7cbc52120f1961c7da97e94a5b524d88c1a1d6c705a792c1c41",
+  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+  "results/rtl/dsrom_recovery_20261004/levers/draft_sweep.json": "fbe1a6a49ba9ad0f62054c04a9edcfe4de79f03ec8a3b9916610c40e151028c2",
+  "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+  "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
-  "results/rtl/dsrom_recovery_20261004/levers/router.json": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+  "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
+  "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
   "results/rtl/dsrom_s81_window_bind_20261004/window_load.json": "afe2d8443098eff0b7fe7cd5418e3b5660dc705e3b4f16b4cb9d4518d7ccd6f2",
   "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
@@ -31522,10 +31596,11 @@
   "results/rtl/dsrom_1m_measured_20261004/reader.json": "580267417a12eb4873a7e611757a9745557255009eab8cfd126c00468c36f26e",
   "results/rtl/dsrom_1m_measured_20261004/ckv_lat259.json": "b0c2fc5669ea796735053b841486da31224ba56b1c286625a723a4ec3f42d0cf",
   "results/rtl/dsrom_reindex_candidates_20261004/gather.json": "95fa544764160d4a7a665796c2ca9c543374672ed3971bb37ab78ad09dc3ba9c",
-  "results/rtl/dsrom_reindex_candidates_20261004/select.json": "1b6fc6822b9f211af799335153f1b4a952ce35fc62ff0342a3929e791fcdf315"
+  "results/rtl/dsrom_reindex_candidates_20261004/select.json": "1b6fc6822b9f211af799335153f1b4a952ce35fc62ff0342a3929e791fcdf315",
+  "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "635b89b0c06e43d3f5fbbb4af3dc64a88cdb7d214df883c4afbb3b3dd6ad24b3",
-  "tools/dsrom_1m_measure.py": "76ad2faed9f8a4683d350b7aa91548e0b78468261c88b416e377c94937757bff"
+  "tools/dsrom_1m_allmeasured.py": "c7aeb690326f6167bea94c6caebebd980cc60fcd3be7be7bc17cc1e64e66ada5",
+  "tools/dsrom_1m_measure.py": "bf3feec72e3211c22cc9d08616ecac10a50b2a43a2035e15676a91c3ee056a67"
  }
 }

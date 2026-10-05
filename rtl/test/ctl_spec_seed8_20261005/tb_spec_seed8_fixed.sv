@@ -4,7 +4,7 @@
 // arbitrary n jumps, n_set edges >= 3 apart).  The successor's a_* outputs must equal the original's
 // delayed by LAT cycles, every cycle; req_ready and n must be equal in the same cycle.
 module tb_spec_state_lockstep;
-    parameter integer NREQ = 20000, SEED = 1, LAT = 5;
+    parameter integer NREQ = 20000, SEED = 1, LAT = 5, DRAIN = 1;
     parameter integer W = 128, PMAX = 8, WR = 136, SR = 136, TR = 16, NG = 4, NL = 40, NST = 3, NSRC = 4;
     parameter [15:0] RLOG = 16'h7272;
     parameter integer CKMAX = 262144, TW = 17, AW = 32;
@@ -25,7 +25,7 @@ module tb_spec_state_lockstep;
     localparam integer OW = 1 + AW + TW + 3;
     wire [OW-1:0] o0 = {v0, ad0, t0, p0, l0, e0}, o1 = {v1, ad1, t1, p1, l1, e1};
     reg [OW-1:0] hist [0:LAT];
-    integer resets = 0, k, cyc = 0, bad = 0, beats = 0, errs = 0, toks = 0, seed, q, last_set = -10, nreq = 0;
+    integer last_tw = -100, resets = 0, k, cyc = 0, bad = 0, beats = 0, errs = 0, toks = 0, seed, q, last_set = -10, nreq = 0;
     always @(posedge clk) if (rst_n) begin
         for (k = LAT; k > 0; k = k - 1) hist[k] = hist[k-1];
         hist[0] = o0;
@@ -55,6 +55,9 @@ module tb_spec_state_lockstep;
             @(negedge clk);
             n_set = 0; tw_v = 0; req_v = 0;
             if (nreq % 150 == 149 && r0) begin              // re-arm the sticky a_err: reset both, drain history
+                // Scoped sticky-fault re-arm: inputs are already inactive.
+                if (DRAIN) begin repeat (LAT + 1) @(negedge clk); end
+                if (cyc - last_tw <= LAT + 1) $display("DIAG reset at cyc %0d, last token write cyc %0d (in flight)", cyc, last_tw);
                 rst_n = 0; nreq = nreq + 1; @(negedge clk); rst_n = 1; for (k = 0; k <= LAT; k = k + 1) hist[k] = 0; cyc = 0;
                 resets = resets + 1;
             end
@@ -67,7 +70,7 @@ module tb_spec_state_lockstep;
                     default: n_val = n0 + 1 + ($unsigned($random(seed)) % PMAX);
                 endcase
             end
-            if (q < 4) begin tw_v = 1; tw_pos = n0 + ($unsigned($random(seed)) % PMAX) - (q == 3 ? 3 : 0); tw_tok = $random(seed); end
+            if (q < 4) begin tw_v = 1; last_tw = cyc; tw_pos = n0 + ($unsigned($random(seed)) % PMAX) - (q == 3 ? 3 : 0); tw_tok = $random(seed); end
             if (r0 && q >= 6) begin
                 req_v = 1; nreq = nreq + 1;
                 req_kind = ($unsigned($random(seed)) % 20 == 0) ? $random(seed) : 1 + $unsigned($random(seed)) % 10;
@@ -84,6 +87,7 @@ module tb_spec_state_lockstep;
         @(negedge clk); n_set = 0; tw_v = 0; req_v = 0;
         repeat (400) @(negedge clk);
         $display("LOCKSTEP spec_state requests=%0d beats=%0d token_beats=%0d cycles=%0d lat=%0d resets=%0d mismatches=%0d", NREQ, beats, toks, cyc, LAT, resets, bad);
+        if (bad != 0) $fatal(1, "LOCKSTEP FAIL mismatches=%0d", bad);
         $finish;
     end
 endmodule

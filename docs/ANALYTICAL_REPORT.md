@@ -528,6 +528,203 @@ and none measures an agentic workload.
   run here). It would be routine on one 8×H200/B200 node.
 - **Record:** `results/speculative/v41_flash_dspark_feasibility.json`.
 
+### Speculative decoding on the Qwen3-8B ROM at 8K: why it does not pay
+
+**Finding.** On the Qwen3-8B ROM at its target context (TP-4, position 8,191,
+FP8 KV on four HBM3E stacks a die, the STREAM4 path) speculative decoding with
+DSpark is slower than plain autoregressive decoding. The Qwen ROM therefore
+runs in plain decoding (AR) mode at 8K. DSpark remains built and bit-exact in
+RTL, but it is switched off. Every figure below is a measured RTL stage, exact
+against the GPU golden, unless it is marked otherwise. Records:
+`results/rtl/qwen_rom_kv_fullbw_20261004/` (`compose_P8191_token.json`,
+`dspark_step_stream4.json`, `dspark_verdict.json`).
+
+#### The two rates
+
+**Plain decoding.** One token is 194,498 cycles <!-- figure: 194498 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.token_cycles" tol="exact" name="STREAM4 AR token cycles" -->
+at 1.2 GHz, which is **6,169.7** tok/s per user. <!-- figure: 6169.7 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.tok_per_s" name="STREAM4 AR tok/s" -->
+The token is composed from measured layers:
+
+    T_AR = 7 + E + (L0_iso - 1) + 35 x L_chained + (H1 - 1) + 37
+
+- `L0_iso` = 6,489 is layer 0 with the whole KV fill exposed.
+- `L_chained` = 5,282 is the steady layer. <!-- figure: 5282 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.per_layer_cycles.chained_steady_max" tol="exact" name="STREAM4 chained layer" -->
+  Its 8K window (4 MiB a die) is streamed during the previous layer's MLP, at
+  3.72 TB/s, which is 93% of the four-stack peak.
+- `E` = 98 and `H1` = 2,999 come from the P255 full-token record. They carry
+  no KV term.
+
+The chained layer (5,282) equals the compute-only bound measured with ideal KV, 5,283 cycles. <!-- figure: 5283 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#references.kv_ideal_isolated_L0.cycles" tol="exact" name="KV_IDEAL layer" -->
+**At 8K the ROM is compute-bound, and prefetch hides the KV fill completely.**
+With the die-floorplan wire-stage bound added, the rate is 5,974.3 tok/s. <!-- figure: 5974.3 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#wire_bound.bound_tok_s" name="STREAM4 AR wire-bound tok/s" -->
+That bound uses floorplan stage counts, with no routed-path STA.
+
+**DSpark.** A step drafts three tokens, verifies a block of p = 4 positions,
+and commits. The three phases are in series:
+
+    S = 36 x V + H_4 + D + C
+
+| Term | Cycles | Source |
+|---|---:|---|
+| Verify layer `V`, p = 4, P8187..8190 on STREAM4 (exact; commit 1, rollback 8188..8190) | 17,197 | `dspark_step_stream4.json` `verify_layer_stream4.step1_P8187_np4` |
+| Verify head `H_4`, p = 4 | 11,993 | ROM DSpark 8K record (`c_H1`) |
+| Draft `D`, S = 3: five drafter layers 153,055 (RTL, REAL_MEM path), draft heads 8,995, context ingest 70,032 and Markov epilogue 4,968 (RTL, `fac4b889e`; argmax and gather priced) | 237,050 | `dspark_verdict.json` `draft_terms_s3` |
+| Commit `C` | 65 | `dspark_step_stream4.json` |
+| **Step `S`** | **868,200** | `dspark_verdict.json` `variants.baseline_np4.step_upper` |
+
+The verify layer is 3.26× the AR layer (17,197 / 5,282). <!-- figure: 17197 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_layer_stream4.step1_P8187_np4" tol="exact" name="STREAM4 verify layer p4" -->
+The acceptance length is τ = 3.1445 accepted tokens a step. <!-- figure: 3.1445 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#tau" name="DSpark tau third-party" -->
+τ is the published DSpark Qwen3-8B figure, truncated to three drafts
+(`results/speculative/third_party_acceptance_20261004/acceptance.json`); it is
+not measured here. The per-user rate is τ · f / S = **4,346.2** tok/s, <!-- figure: 4346.2 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.tok_s_upper" name="DSpark STREAM4 tok/s" -->
+which is **0.704×** of AR. <!-- figure: 0.704 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.speedup_vs_ar_upper" name="DSpark STREAM4 vs AR" -->
+With the drafter ingest and Markov epilogue priced instead of measured (7,875
+cycles), the step was 801,075 cycles: 4,710.4 tok/s, 0.763× of AR. With a free
+draft (`D` = 0) the bound is still **0.969×** of AR. <!-- figure: 0.969 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#bound_if_draft_free.speedup_vs_ar_chained" name="DSpark free-draft bound" -->
+
+#### Where the verify excess goes
+
+An instruction-fetch trace of die 0 at P8187 compares the verify layer (p = 4,
+17,197 cycles) with an AR layer at the same position (p = 1, 6,479 cycles; both
+exact; `dspark_verify_P8187/optrace`). The excess is 10,718 cycles a layer.
+
+| Component | Excess (cycles a layer) | Why it scales with p |
+|---|---:|---|
+| Attention | +3,490 <!-- figure: 3490 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.attention_kv_passes.excess" tol="exact" name="verify attention excess" --> | The softmax stream op is issued once per position: 8 heads × 8,188 scores ÷ 64 stream-unit lanes = 1,023 cycles of work (measured about 1,161) |
+| All-reduces | +1,295 <!-- figure: 1295 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.all_reduces.excess" tol="exact" name="verify all-reduce excess" --> | Four times the payload on the same link |
+| Other per-position work | +5,933 <!-- figure: 5933 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.remaining_excess" tol="exact" name="verify other excess" --> | Stream-unit ops issued once per position, latency-bound; weight matvecs re-streamed once per position |
+
+The per-cycle sequencer trace gives the same picture from the weight engines'
+side. They are busy 1.47× (attention block) and 2.09× (MLP) of AR for four
+positions, so each weight word is not applied to all four positions in one
+pass. **Nothing in the verify layer is shared across positions except the
+weight read itself, and on this ROM the weight read was never the bottleneck.**
+
+#### The break-even algebra
+
+Let `f` be the clock, `n` = 36 the number of layers, `L` the AR layer and
+`T_AR` the AR token. DSpark pays when
+
+    tau x f / S > f / T_AR   <=>   S < tau x T_AR
+                             <=>   V < V* = (tau x T_AR - H_4 - D - C) / n
+
+Write the verify layer as `V = L (1 + (p - 1) rho)`. Here `rho` is the share
+of a layer's cost that is paid again for each extra position. Ignoring the
+head, draft and commit, the speed-up is
+
+    s ~ tau / (1 + (p - 1) rho)        and break-even needs  rho < (tau - 1) / (p - 1)
+
+At τ = 3.1445 and p = 4 the break-even share is `rho*` = 0.715, before any
+draft cost. The measured verify layers place the three machines on either side
+of it:
+
+| Machine and path | AR layer | Verify layer (positions) | `V / L` | `rho` | DSpark or MTP vs AR | Record |
+|---|---:|---:|---:|---:|---:|---|
+| Qwen ROM, STREAM4 (this) | 5,282 | 17,197 (4) | 3.26 | 0.75 | 0.70× | `qwen_rom_kv_fullbw_20261004` |
+| Qwen ROM, one-stack REAL_MEM | 14,574 | 24,320 (4) | 1.67 | 0.22 | 1.57× | `qwen_dspark_system_20261004/ctx8k` |
+| Qwen ROM, P255 | 4,338 | 12,520 (4) | 2.89 | 0.63 | 0.83× (τ 3.04) | `qwen_dspark_system_20261004/step_composed.json` |
+| Qwen HBM accelerator, TP4, 8K | 17,237 | 16,044 (4) | 0.93 | ~0 | 2.28× (τ 3.04) | `hbm_accel_qwen_chains_20261004` (main `2f4a6af49`) |
+| DS ROM array, 1M | 620.1 µs token | 748.9 µs (6) | 1.21 (token) | 0.04 | 2.77× (τ 3.89) | `dsrom_recovery_20261004/composition.json` |
+
+With the STREAM4 numbers:
+
+- `tau x T_AR` = 3.1445 × 194,498 = 611,599 cycles.
+- With the measured draft, `V*` = (611,599 − 11,993 − 237,050 − 65) / 36 = **10,069** cycles, 1.91× the AR layer. <!-- figure: 10069.1 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.break_even_verify_layer_draft_upper" name="break-even verify layer" -->
+- With a free draft, `V*` = (611,599 − 11,993 − 65) / 36 = 16,654 cycles (3.15× the AR layer). The measured 17,197 is above even that.
+
+The verify layer would have to fall from 3.26× to about 1.91× the AR layer. That is a 41% cut of a layer whose
+excess is per-position by construction.
+
+#### The principle
+
+**Speculation trades an idle resource for fewer serial steps.** A verify pass
+computes p positions in one step. It pays only when the step's dominant cost is
+shared by the p positions, so that the extra positions ride on a resource that
+would otherwise sit idle.
+
+- **GPU and the HBM accelerator: weight bandwidth is shared.** A decode step
+  streams every weight once. Four positions use the same stream, and the MACs
+  that sit idle at batch 1 absorb the extra products. The verify layer costs
+  0.93× an AR layer, and DSpark gives 2.28×.
+- **DeepSeek ROM array: pipeline latency is shared.** The token is latency- and
+  fill-bound across a ring of stages, most of them idle at any moment. A
+  wavefront of six positions fills idle stages: verify = AR + 5 × the initiation
+  interval, 1.21× one token. MTP gives 2.77×.
+- **Qwen ROM at 8K: nothing is shared.** The ROM read rate equals the MAC rate,
+  so a weight word read once can feed only one position's MACs. The softmax,
+  the all-reduce payload and stream-unit work all scale with p, and with
+  STREAM4 hiding the KV fill there is no stall left for the extra positions to
+  fill. Verify costs 3.26× and DSpark loses.
+
+The history of this verdict follows the same rule. At P255 the layer was
+compute-bound and DSpark was rejected (0.83×). On the one-stack REAL_MEM path at
+8K, every layer stalled on a 9,893-cycle KV fill. A verify layer shares that fill
+across four positions, so DSpark appeared to pay 1.57×. STREAM4 removed the
+stall: the AR layer fell 2.76× (14,574 → 5,282) and the verify layer only 1.41×
+(24,320 → 17,197). Speculation had been paying for idle MACs during a memory
+stall that the full-bandwidth path no longer has.
+
+**Break-even is not a gain.** A lever that only brings the verify layer to
+`V*` gives the same rate as AR, while adding a drafter, a drafter ROM on
+every die and the commit/rollback machinery. Under the owner rule a lever must
+deliver at least 1% per user after composition.
+
+#### Levers evaluated
+
+Each lever was measured on the same STREAM4 verify vehicle at P8187, exact,
+or is an area estimate where it is marked as one (`dspark_verdict.json`).
+
+| Lever | Verify layer | Positions (τ) | Step | DSpark ÷ AR | Verdict |
+|---|---:|---:|---:|---:|---|
+| Baseline verify program | 17,197 | 4 (3.1445) | 868,200 | 0.704× | AR wins |
+| Per-position work reduction: stream-unit ops merged across positions (MERGE_SU) | 15,971 <!-- figure: 15971 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np4.verify_layer" tol="exact" name="MERGE_SU np4 verify" --> | 4 (3.1445) | 824,064 | 0.742× <!-- figure: 0.742 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np4.speedup_vs_ar_upper" name="MERGE_SU np4 vs AR" --> | AR wins |
+| Shorter draft, with MERGE_SU | 13,104 <!-- figure: 13104 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np3.verify_layer" tol="exact" name="MERGE_SU np3 verify" --> | 3 (2.5441) | 665,179–716,198 | 0.691–0.744× <!-- figure: 0.744 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np3.speedup_vs_ar_lower" name="MERGE_SU np3 vs AR lower draft" --> | AR wins |
+| Sharing K/V passes between positions (analysed, not built) | no change | 4 | — | — | no gain |
+| MAC area for single-pass weight reuse (estimate, not built) | removes at most 2,144 a layer | 4 | — | — | does not fit |
+
+- **Per-position work reduction.** The stream ops with no position-dependent
+  term (norms, rsqrt, reciprocal, residuals, SiLU scale) are issued once for
+  all four positions. That cuts the SU ops from 74 to 47 and removes 1,226
+  cycles a layer. That is 7% of the verify layer, and the layer needs a 41%
+  cut. The softmax and the all-reduce payload stay per-position.
+- **Sharing K/V passes.** This gives no gain. The KV-sourced matvec puts
+  context positions on the lanes and the query heads on the 8 interleave slots,
+  so its time is slots × K steps whatever the KV reads. One position's scores
+  already fill all 8 slots, and two positions in one op take the time of two
+  ops. The attention excess is the per-position softmax, and it scales with the
+  stream-unit width (`dspark_levers.json`).
+- **Shorter draft.** At p = 3 the verify layer is 13,104 cycles, but τ falls to
+  2.5441. The break-even layer falls with it, to 6,955–8,372 cycles (13,410
+  with a free draft). The drafter layers were measured only at S = 3, so the
+  range brackets the S = 2 draft, from the S = 3 value down to the S = 3 value
+  scaled by S / 3. Both ends lose.
+- **MAC area for single-pass reuse.** To apply one weight word to four
+  positions in the same cycle, every lane needs four products, four
+  accumulators and four result trees. That adds an estimated 103–165 mm² a die,
+  2.2–3.6× the 46 mm² reticle margin. A 2-position pass adds 34–55 mm², about
+  the whole margin. Widening the ROM read 4× instead adds about 1,350 mm². Even
+  if the area fitted, single-pass reuse removes only the weight re-stream share
+  of the excess, at most 2,144 cycles a layer (measured ME-busy bound). Without
+  the attention and all-reduce terms it cannot reach `V*`.
+
+No variant reaches break-even with the measured draft. The best exact p = 4
+verify layer (15,971) is below the free-draft break-even (16,654), so it would
+pay only if the 237,050-cycle draft cost nothing. Break-even would not be a
+gain in any case. The
+verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#verdict" name="Qwen ROM 8K mode verdict" -->
+
+#### Decision and scope
+
+- **The Qwen3-8B ROM operates in AR mode at 8K: 194,498 cycles = 6,169.7 tok/s
+  per user on STREAM4** (5,974.3 with the wire-stage bound).
+- DSpark is built and exact on this datapath: verify, commit and rollback, KV
+  multi-position commit, drafter layers, and ingest/Markov. It is switched off
+  by default. It is not a headline.
+- The verdict is scoped to the Qwen ROM at 8K. MTP/DSpark remains required, and
+  pays, where the step's dominant cost is shared: on the DeepSeek-V4.1 ROM array
+  (2.77× at 1M) and on the HBM accelerators (2.28× on the Qwen HBM accelerator
+  at 8K).
+
 ## 9. Implementation status: the three mechanisms in RTL
 
 The report credits the ROM machine with three specialisations. Each now has a

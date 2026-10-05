@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-source-fa7e45395/tools/dshbm_hbm_opt_compose.py", line 281, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-source-fa7e45395/tools/dshbm_hbm_opt_compose.py", line 242, in main
+    S = setup()
+  File "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-source-fa7e45395/tools/dshbm_hbm_opt_compose.py", line 68, in setup
+    prog = json.loads((A.BASE / "program.json").read_text())
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas/jobs-overflow/euclid-hbm-opt1-source-fa7e45395/results/rtl/dshbm_baseline_measured_20261004/program.json'

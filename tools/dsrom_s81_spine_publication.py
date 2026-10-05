@@ -23,6 +23,10 @@ def bind_spine(text):
         body = re.sub(r'(?<![\w.])'+name+r'(?!\w)', 'pub_'+name, body)
     body = one(body, '.reset_request(capture_reset_request)',
                '.reset_request(capture_reset_request | publication_quarantine)')
+    body = one(body, '.phase_live(capture_live)',
+               '.phase_live(retained_capture_live)')
+    body = one(body, '.phase_drained(capture_drained)',
+               '.phase_drained(retained_capture_drained)')
     body = one(body, 'assign ready = st == S_IDLE && (!CAPTURE_ENABLE || cap_ready);',
                'assign ready = st == S_IDLE && (!CAPTURE_ENABLE || cap_ready) && publication_quiet;')
     body = one(body, 'assign idle = st == S_IDLE && (!CAPTURE_ENABLE || cap_idle);',
@@ -33,6 +37,7 @@ def bind_spine(text):
     wire [3*R-1:0] pub_r_pos;
     wire [32*R-1:0] pub_r_fp32;
     wire pub_f_fault;
+    wire retained_capture_live, retained_capture_drained;
     ot_v41_rom_publication_capture #(.ENABLE(CAPTURE_PUBLICATION),.WIDTH(69*R+1)) u_publication (
       .clk(clk),.rst_n(rst_n),
       .publication_in({f_fault,r_v,r_row,r_pos,r_fp32,r_bf16,r_e}),
@@ -44,6 +49,14 @@ def bind_spine(text):
       (pub_f_fault || (|(pub_r_v & pub_r_e)));
     wire publication_quiet = CAPTURE_PUBLICATION == 0 ||
       (!(|r_v) && !(|pub_r_v) && !f_fault && !pub_f_fault);
+    // Export ALL owned copies through the existing parent interface. A raw
+    // fault at the final receipt/retirement boundary is pending publication,
+    // not a quiet drained phase while the paired fault waits its capture edge.
+    // No new register/ledger, ACK, rollback or warm-reset release authority.
+    assign capture_live = retained_capture_live ||
+      (CAPTURE_PUBLICATION != 0 && (!publication_quiet || capture_fault));
+    assign capture_drained = retained_capture_drained &&
+      (CAPTURE_PUBLICATION == 0 || (publication_quiet && !capture_fault));
     initial if (CAPTURE_PUBLICATION != 0 && CAPTURE_ENABLE == 0)
       $fatal(1,"paired publication requires actual finite capture/VM acceptance");
 '''

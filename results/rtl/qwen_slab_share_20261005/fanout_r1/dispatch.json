@@ -1,0 +1,74 @@
+[
+  {
+    "name": "qss_fanout_twoface_456_l7",
+    "supervisor_pid": 754780,
+    "source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005",
+    "variant_root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_456_l7",
+    "launcher": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_456_l7.sh",
+    "peak_GB": 24,
+    "num_cores": 16,
+    "started_epoch": 1791182992.456293
+  },
+  {
+    "name": "qss_fanout_twoface_570_l7",
+    "supervisor_pid": 754781,
+    "source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005",
+    "variant_root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_570_l7",
+    "launcher": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_570_l7.sh",
+    "peak_GB": 24,
+    "num_cores": 16,
+    "started_epoch": 1791182992.4570932
+  },
+  {
+    "name": "qss_fanout_twoface_685_l7",
+    "supervisor_pid": 754783,
+    "source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005",
+    "variant_root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_685_l7",
+    "launcher": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_twoface_685_l7.sh",
+    "peak_GB": 24,
+    "num_cores": 16,
+    "started_epoch": 1791182992.4575405
+  },
+  {
+    "name": "qss_fanout_capture_456_l7",
+    "supervisor_pid": 754784,
+    "source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005",
+    "variant_root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_capture_456_l7",
+    "launcher": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_capture_456_l7.sh",
+    "peak_GB": 24,
+    "num_cores": 16,
+    "started_epoch": 1791182992.45815
+  },
+  {
+    "name": "qss_fanout_capture_570_l7",
+    "supervisor_pid": 754788,
+    "source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005",
+    "variant_root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_capture_570_l7",
+    "launcher": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_capture_570_l7.sh",
+    "peak_GB": 24,
+    "num_cores": 16,
+    "started_epoch": 1791182992.4585533
+  },
+  {
+    "name": "qss_fanout_capture_685_l7",
+    "supervisor_pid": 754789,
+    "source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005",
+    "variant_root": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_capture_685_l7",
+    "launcher": "/srv/opentallas-scratch/codex/ampere-qwen-slab-fanout-20261005/qss_fanout_capture_685_l7.sh",
+    "peak_GB": 24,
+    "num_cores": 16,
+    "started_epoch": 1791182992.458982
+  }
+]

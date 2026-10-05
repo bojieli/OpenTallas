@@ -1,0 +1,45 @@
+{
+  "verdict": "FAIL_PHYSICAL_PLACEMENT",
+  "adopted": false,
+  "exit_code": 2,
+  "stage": "3_5_place_dp",
+  "failure": "DPL-0033 detailed placement checks failed",
+  "rtl_pin": "a59187cd5293f7003f5bd5f2468d8bea6ce9e86c",
+  "CRC_engine_pin": "94cc829e1ad89d9241bf4f3fad4b0b7f91caea83",
+  "Kant_slot_pin": "67add9d8b633a504f2f3ba3127acab6621ab83ec",
+  "hook_fix_pin": "b456eac39",
+  "die_um": [
+    576.288,
+    576.288
+  ],
+  "core_um": [
+    8.64,
+    8.64,
+    567.648,
+    567.648
+  ],
+  "signal_pin_census": 1410,
+  "supply_BTerms": 2,
+  "initial_legalizer_stuck_cells": 3218,
+  "final_check_overlap_pairs": 14,
+  "final_padding_check_failures": 14,
+  "final_site_alignment_failures": 2515,
+  "wrong_region_cells": 0,
+  "before_DPL_movable_area_um2": 21840.33,
+  "before_DPL_fixed_area_um2": 785.34,
+  "resizer_slack_ps": -1624.5881,
+  "resizer_slack_qualification": "pre-CTS/pre-route/illegal-placement estimate, NOT finalSS result",
+  "routed": false,
+  "SS60_setup_slack_ps": null,
+  "FF25_hold_slack_ps": null,
+  "final_clock_qualified": false,
+  "context_fit_qualified": false,
+  "retry": false,
+  "policy": "Physical recipe rejected; no slot/density/corner/uncertainty/engine/II relaxation or new synthesis/component test.",
+  "remote_failed_ODB": "ot-epyc2:/srv/opentallas-scratch/codex/item8-hbm-loader-20261004/crc_slot_r1/work/orfs/results/asap7/opentallas_ot_hbm_accel_loader_host_addr_crc_asap7_loader_crc_slot_r1/base/3_5_place_dp-failed.odb",
+  "files_sha256": {
+    "3_resizer.rpt": "c71a965ea4be3bbbb5ce191cf10cdee9cf46afee025fb42b093fee8e7f863106",
+    "3_5_place_dp.json": "ecdd9f4985026f41bb52de1dc7cdf4b1abb36336f474389da9406e9753a37d07",
+    "run.log": "dd961dd24930c75d2284cb57be59a8ace8129cc36cdaf2a4b65e2ea8d4f59d4a"
+  }
+}
