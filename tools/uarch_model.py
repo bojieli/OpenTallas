@@ -48,6 +48,54 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_field_spine_route_price(r=16, pq=0):
+    """Immutable a721 spine, physical-only hold/slew repair budget.
+
+    Rates and replicas come from the actual screen ports/kept source loops.
+    The registered die wires and quantiser are outside this local screen.
+    Physical buffering changes no architectural state, port or cycle edge.
+    """
+    if r not in (16, 128) or pq not in (0, 1):
+        raise ValueError('Only the four handed-off source-bound screens')
+    bw = sum([1,6,3,1,1,2,1,8,3,2,256,10,256,10,3,3,1,3,4,32,1024])
+    r16_area = 39039.0 if pq == 0 else 39226.3
+    return dict(schema='opentallas.dsrom.field_spine.route_price.v1',
+        source_commit='a721a0448', RTL_immutable=True, new_RTL=False,
+        source_sha256='1b1ca9190db389c4e93addbb5f73e2179cb914d51c649de19225683fd822baa7',
+        replicas=1, regions=r, PQ=pq, MACs_per_cycle=0,
+        memory_bytes_per_cycle=dict(VM_read=64*4, VM_write=r*4,
+                                   stream_ROM=6, phase_ROM_two_ports=16),
+        boundary_bits_per_cycle=dict(VM_read_payload=2048,
+            return_payload_and_identity=69*r, VM_write_data_address_enable=52*r,
+            broadcast=bw),
+        required_logical_boundary_tracks=2048+69*r+52*r+bw,
+        actual_channel_capacity_tracks=None,
+        routing_capacity_proven=False,
+        kept_instances=dict(g_ixb=32, g_ixq=8, g_sel=4*r,
+            u_oh0=r, u_oh1=r, u_oh2=r, u_oh3=r, u_oh4=r,
+            u_rsfm=r, u_cc=1, g_aqi=4, g_bwb=4, g_grp=r//16),
+        kept_state_and_mux_cost='Existing source onehot/read/select/return replicas retained; no removed-state or mux credit',
+        existing_R16_measured_screen_cell_area_um2=r16_area,
+        actual_R128_screen_cell_area_um2=None,
+        fixed_R128_core_area_um2=(477.84-2.16)**2 if r == 128 else None,
+        repair_buffer_reservation_cells=1024,
+        repair_buffer_cell_area_budget_um2=1024*0.10206,
+        buffer_budget_is_not_measured_growth=True,
+        slot_fit_after_repair='Require actual routed screen area/geometry and retained replicas; no full-die slot claim',
+        new_architectural_FF_bits=0, new_memory_ports=0,
+        added_pipeline_edges=0, added_single_user_token_cycles=0,
+        inherited_measured_cycle_cost=dict(go=2, broadcast=1, return_stages=3,
+            last_row_write=6, node=6, stream_length_delta=0, op_pair_spacing_delta=0),
+        cycle_cost_source='results/rtl/dsrom_field_spine_20261004/DESIGN_NOTE.md and field_baseline/field_pq.json',
+        inherited_registered_field_crossing_cycles=80,
+        target_period_ns=0.833333, SS_setup_uncertainty_ps=60,
+        FF_hold_uncertainty_ps=25, hold_corners=['WC','BC'],
+        admission_GB=32 if r == 16 else 64, NUM_CORES=16,
+        physical_adopted=False, actual_repair_gain_measured=False,
+        screen_scope='Registered neighbours, two-cycle ROM models; quantiser stub and full die routes not qualified',
+        adoption_requirement='Both baseline screens and both PQ screens require nonnegative SS/FF, zero SI/DRC/antenna, exact source and kept replicas; no tiny-negative tolerance')
+
+
 def dsrom_source_program_inventory(words_by_home, *, tp=4, instruction_bits=2048, address_bits=14):
     """Finite compiler inventory; active content does not shrink physical ROM."""
     if tp != 4 or instruction_bits != 2048 or address_bits != 14:
@@ -8624,6 +8672,89 @@ def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
                 physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
 
 
+def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
+                                  tcut=7, smin=7, tg=4, bd=41, nws=5,
+                                  tws=38, mem_extra=1, mul_lat=5, acc_lat=5,
+                                  tree_lat=3, depth=4, replicas=4):
+    """Source-sized PART2 clock-cut input to the joint pre-RTL model.
+
+    No arbitration, landing implementation, slot or schedule is assumed free.
+    Defaults bind lp_build's retained geometry; the selected generated core's
+    top.args must still match before authoring the wrapper. Existing e_v is
+    active on EVERY source edge, including non-last iterations.
+    """
+    if depth != 4 or tcut != 7 or smin != 7:
+        raise ValueError("This source carveout binds lvl7 / DEPTH4 only")
+    if gt % (1 << tcut) or tg & (tg-1):
+        raise ValueError("Integral groups and power-of-two tile groups required")
+    groups = gt >> tcut
+    tag = 5 + 4 + 4*aw + 3*(nw+1) + 1 + 3 + 1
+    data = groups*lanes*32
+    beat = data + tag + 2  # valid and fault; split is already inside e_tag
+    xd = bd + (tcut - (tg.bit_length()-1))*nws + tws + mem_extra
+    flight = mem_extra + 4 + mul_lat + acc_lat + (tree_lat+1)*tcut + xd
+    aw_fifo = 2
+    # wp/rp + peer samples, state + peer samples, HOLD2 counters + seen-down
+    fifo_control = 4*(aw_fifo+1) + 8 + 4 + 2
+    fifo_storage = 2*depth*beat
+    return dict(
+        status="PRE_RTL_SOURCE_INPUT_NOT_COMPOSED_ADMISSION", default_enabled=False,
+        selected_cut="PART2 g_tin/lvl[7]", data_bits=data, canonical_tag_bits=tag,
+        valid_bits=1, fault_bits=1, held_beat_bits=beat,
+        groups_at_cut=groups, replicas=replicas, MACs_added_per_cycle=0,
+        new_external_memory_ports=0, upper_tree_levels=list(range(tcut+1, (gt-1).bit_length()+1)),
+        original_rounding_and_adjacent_pair_order_preserved=True,
+        clock=dict(source_hz=1200000000, destination_hz=900000000,
+                   VCO_hz=3600000000, related=True, false_paths_allowed=False,
+                   setup_uncertainty_ps=60, hold_uncertainty_ps=25),
+        boundary=dict(source_bits_per_active_cycle=beat, source_bytes_per_active_cycle=beat/8,
+                      consumer_bits_per_accept_cycle=beat, consumer_bytes_per_accept_cycle=beat/8,
+                      maximum_service_entries_per_second=900000000,
+                      sustained_source_exceeds_service=True),
+        crossing=dict(source="rtl/common/ot_ratio_cdc_fifo.sv", depth=depth, hold=2,
+                      payload_and_shadow_ff=fifo_storage, control_ff=fifo_control,
+                      total_ff=fifo_storage+fifo_control,
+                      fifo_data_mux_fanin=depth, fifo_data_mux_output_bits=beat,
+                      shadow_storage_entries=depth, shadow_copies_per_stored_bit=1,
+                      crossing_data_tracks_per_entry=beat,
+                      protected_route_channel_capacity_tracks=None,
+                      forward_no_backpressure_ns=[5/3.6, 8/3.6],
+                      reverse_no_backpressure_ns=[4/3.6, 6/3.6],
+                      pipeline_backpressure_bound_ns=None),
+        issue=dict(existing_release="e_v <= active every fast edge",
+                   tile_issue="independent PART1 loops after delayed tgo",
+                   xd_logical_fast_edges=xd, issue_to_cut_logical_fast_edges=flight,
+                   reservation_required_before_irrevocable_issue=True,
+                   depth4_alone_covers_flight=False,
+                   full_rate_minimum_flight_reservations=flight,
+                   additional_return_credit_and_edge_guard_reservations=None,
+                   full_rate_flight_payload_bits_lower_bound=flight*beat,
+                   full_rate_flight_storage_ff_delta=None,
+                   selected_common_advance_requires_all_tiles_and_IL8_feedback_phase=True,
+                   full_flight_alternate_selected=False,
+                   ungated_service_capture_partition_required=True,
+                   existing_tile_me_or_kv_active_enable_safe=False,
+                   reservation_state_bits=None, accepted_tag_alignment_ff_delta=None),
+        reset=dict(peer_down_wait_existing=True, producer_pipeline_quiescence_required=True,
+                   discard_old_inflight_payload_and_tag_together=True,
+                   accepted_write_debt_must_drain_before_new_epoch=True,
+                   extra_quarantine_edges=None, extra_state_ff=None),
+        area=dict(fifo_register_cell_floor_um2=(fifo_storage+fifo_control)*0.2916,
+                  register_area_basis="DFFHQN 0.2916um2 proxy; not physical fit",
+                  fifo_mux_clock_reset_wire_area_um2=None,
+                  reservation_and_flight_landing_area_um2=None,
+                  per_die_slot_um2=None, floorplan_fit=False),
+        token=dict(selected_program_schedule=None, upper_tree_serial_edges_per_beat=(tree_lat+1)*((gt-1).bit_length()-tcut),
+                   crossing_entries=None, credit_stall_ns=None, final_write_ack_ns=None,
+                   composed_latency_delta_ns=None, headline_rate_credit=False),
+        implementation_dependencies=["selected top.args verified; retain source-bound flight148",
+                                     "Maxwell complete landing/credit/alignment/reset/mux/wire and literal schedule price",
+                                     "owner-selected COMMON logical advance across PART1 tiles and PART2 tags",
+                                     "actual serial result/scale grants and consumed write ACK",
+                                     "source-sized slot and related-clock loaded SS/FF gate"],
+        wrapper_rtl_admitted=False, physical_launch_admitted=False)
+
+
 def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
                                    service_period_fs=833333, ack_tail_edges=0):
     """Additional alignment around the existing canonical MP commit element.
@@ -10304,6 +10435,16 @@ def hbm_index_ds20_gather_bridge_model():
         'rtl/gpu_sys/ot_gpu_mreq_cdc.sv','rtl/gpu_sys/ot_gpu_cdc_fifo.sv',
         'rtl/gpu_sys/ot_gpu_memsys.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv']
     return dict(schema='hbm.index.ds20.normal-gather.minimum.v1',default_enabled=False,
+        reported_source_construction=dict(owner='Rawls15:30/15:31 EXEC-only integration',
+            protected_bridge_CP_shared_rows=49,protected_prior_native_rows=36,
+            bridge_CP_shared_FF=3528,prior_native_FF=2592,total_FF=6120,
+            existing_model_ceiling_FF=ff,within_existing_budget=6120<=ff,
+            additional_coding_permission=True,duplicate_borrower_allowed=False,
+            actual_prior_accept_to_original_response_consume_required=True,
+            quiet_edges=3,grant_edges=1,captured_release_edges=2,
+            placement_ceiling_mm2=placement,parent_slot_reserved=False,
+            counts_basis='owner source-construction report; not mapped physical proof',
+            rate_credit=False),
         source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths},
         source_owner='Rawls enclosing bridges/lease; Sagan plane-major formatter/adapter; Confucius selector unchanged',
         selected_scope='correctness-only, no419cycle or acceleration credit',
@@ -10352,3 +10493,15 @@ def hbm_index_ds20_gather_bridge_model():
         static_source_implementation_permitted=True,functional_integration_permitted_after_layout_and_real_lease=True,
         physical_build_admitted=False,adopted=False,token_gain_us=None,
         next='Rawls implements priced opt-in loadedbook/lease+bridges; Sagan plane-major actual formatter. Missing installer must fail closed; no free arena/base or port. Compose actual accepted service after implementation, not model rate adoption.')
+
+
+def qwen_w12_common_advance_composition():
+    """Literal selected-program clock cut and finite publication pre-RTL budget."""
+    from qwen_w12_clock_composition import model
+    return model(Path(__file__).resolve().parents[1])
+
+
+def qwen_rom_stream4_periodic_provider_model():
+    """Periodic controller causal paths and protected finite-ring sizing."""
+    from qwen_rom_periodic_provider_registration import model
+    return model(Path(__file__).resolve().parents[1])

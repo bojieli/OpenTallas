@@ -550,7 +550,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   <p>The energy argument is supported by a common-KV cross-check: on the same reduced decode step, routed logic activity and modeled HBM bytes give 5.7× lower energy with ROM weights. The two machines pay the same KV HBM energy and interface idle (§8.4, Figure 8-2).</p>
 
   <h3 id="s5-3">5.3 Design principles</h3>
-  <p>The architecture follows ten principles tied to the bottlenecks in §4. Table 5-2 shows their consequences for the implemented designs. The last three are implementation-method principles adopted on 2026-09-29, after composing independently verified components exposed latency and resource gaps that a design-time model should have found.</p>
+  <p>The architecture follows eleven principles tied to the bottlenecks in §4. Table 5-2 shows their consequences for the implemented designs. The last three are implementation-method principles adopted on 2026-09-29, after composing independently verified components exposed latency and resource gaps that a design-time model should have found.</p>
   <div class="tablebox"><table class="data">
     <caption>Table 5-2. Architectural principles and the bottlenecks they address</caption>
     <thead><tr><th>Principle</th><th>Statement</th><th>Answers</th><th>Consequence in the design</th></tr></thead>
@@ -564,6 +564,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td class="req">Streamed per-user state</td><td>Per-user state streams from attached HBM at close to raw bandwidth</td><td class="m">Ch 1</td><td>KV and index keys in HBM beside the ROM die, prefetched a layer ahead; a refresh-aware controller with deep per-channel queues and no head-of-line blocking (§6.7).</td></tr>
       <tr><td class="req">Microarchitecture model before build</td><td>Size every block with a microarchitecture-level analytical model before writing RTL or running place and route</td><td class="m">Ch 2, Ch 3</td><td>For each block of each design: MACs per cycle, compute and communication intensity, bytes per cycle at every memory port, bits per cycle across every boundary, routing tracks against channel capacity, replica count and the multiplexer/fanout cost those replicas imply, and floorplan slot fit. Place and route validates this model; it must not be where the architecture is discovered.</td></tr>
       <tr><td class="req">Replicated hardened elements</td><td>Floorplan first, then one hardened array element sized to the full goal, replicated</td><td class="m">Ch 1, Ch 2</td><td>Transformers are regular (layers, experts, heads), so each die is a symmetric array of one element with a real macro abstract, replicated to the count the budget requires. No undersized instance is called a design. Irregular operators (Sinkhorn/mHC, indexer, specialised attention) keep dedicated units where they beat general compute on latency.</td></tr>
+      <tr><td class="req">Fused dependent chains</td><td>A chain of small dependent vector operations runs as one streaming pipeline in the consumer's clock domain, never as a sequence of operations on a shared vector unit</td><td class="m">Ch 2</td><td>Once weights are free, a norm, mix or activation chain costs almost nothing in arithmetic but about 70 ns per dependent operation in overhead: a vector-memory round trip, a cross-lane reduction tree, wire stages to the far lanes and two clock-domain crossings. A fused pipeline pays one fill and runs at its cycle floor, with the golden's rounding and reduction order kept, so it stays bit-exact. Constant operands get constant units (a divider by a fixed vector length, not a general divider). Applied to both the ROM and the HBM accelerator, so the comparison stays matched (§8.5).</td></tr>
       <tr><td class="req">Established organisation for HBM comparators</td><td>HBM-weight comparators replicate a GPU organisation; only the ROM designs are novel</td><td class="m">Ch 1</td><td>HBM comparators use SM-like elements with Tensor-Core-style matrix units, register files and shared memory, L2 and shoreline HBM controllers. Another established organisation (e.g. a systolic array) is used only where it is shown better. ROM designs place compute beside the weight banks.</td></tr>
     </tbody>
   </table></div>
@@ -1033,6 +1034,456 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   </div>
   <p>The reduced Qwen3 gates run the same decode core with weights and KV in HBM: <code>ot_hdc_kv_stream</code> prefetches KV so the engine never stalls, and the reduced Qwen3 token stays bit-exact (<code>results/rtl/hdc_kv_stream_campaign.json</code>); the per-pseudo-channel weight streamer (<code>rtl/hdc/hbm/ot_hdc_wstream.sv</code>) passes a one-token and a 16-prompt / 3-generated reduced gate from an empty cache and the matched vector-core ROM/HBM weight gate (§8.2, §8.4); these are reduced-vehicle results, not full-scale bandwidth. For V4.1 the HBM-only comparator is a model: the 99-die comparator below has no die or array RTL yet. The existing V4.1x array bench with W_HBM = 1 fetches only the QE weights from HBM; its ME, expert and head weights still come from ROM, so it is not a comparator run. The best V4.1 comparator carries the ROM die's block specification on every die and spans a 96-die tensor group in one NVL72-class switched domain, a single pipeline stage; its extra logic area is headroom that the MTP lane multiplier uses (m = 6). At 1M its 279 µs token is 126 µs of collective latency, 112 µs of compute chain and 37 µs of weight sweep.</p>
   <div class="callout hbm">The comparator gets the same hardwired dataflow and the same specification discipline, so the measured difference is the memory technology, not the control path.</div>
+  <h4 id="s6-10-die">6.10.1 HBM accelerator die floorplan (DeepSeek-V4.1 organisation)</h4>
+  <p class="finding"><b>Finding: floorplanning the HBM accelerator die priced its on-die wire for the first time and added 6.4–21.6% to its DeepSeek-V4.1 1M token.</b> The ROM compositions already charge every registered wire stage on their floorplans (504 µm per stage at the SS corner, §6.9). The HBM accelerator's matched reference did not, so the ROM-versus-HBM comparison was unbalanced in the HBM accelerator's favour until this floorplan existed.</p>
+  <p>The die is 25,538 × 19,723 µm (503.7 mm², 321.8 mm² of blocks), within the 858 mm² reticle. Each long edge carries two HBM3E PHY macros (four stacks). Each PHY has its stream service (32 pseudo-channels) and then that stack's group of eight SM elements (four columns × two rows); there are 32 SMs in all. A 7.2 mm hub band between the north and south groups holds the SU, SFU and HC split into four quarters, one per stack. Beside each quarter sits a per-stack quadrant of 16 attention tiles and a quarter of the index path. A centre spine holds the collective endpoint, the command processor with pipelined issue, the activation-multicast root, the barrier root, the router with expert workgroup, the quantisers and the loader. The nine SerDes macros sit at the centre of the north and south edges; moving them there from the east and west edges cut the endpoint-to-farthest-macro path from 56 to about 22 stages. The SM area (4.566 mm²) and the SU lane array are measured. SFU, HC and the index path come from the model ledger. Attention tiles, TU endpoint, command processor, VM and stream service are labelled estimates in the record.</p>
+  <figure>
+    <div class="svgbox"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HBM accelerator die floorplan, round 8" viewBox="0 0 766.1 591.7">
+<rect width="766.1" height="591.7" fill="#fff" stroke="#000"/>
+<rect x="11.0" y="403.8" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="35.1" y="547.7" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="391.9" y="403.8" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="416.1" y="547.7" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="11.0" y="47.9" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="35.1" y="36.2" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="391.9" y="47.9" width="303.2" height="140.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="416.1" y="36.2" width="255.0" height="7.8" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="11.0" y="187.9" width="684.2" height="216.0" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="189.5" y="198.2" width="327.2" height="195.2" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="29.9" y="301.1" width="149.2" height="92.4" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="527.0" y="301.1" width="149.2" height="92.4" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="29.9" y="198.2" width="149.2" height="92.4" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="527.0" y="198.2" width="149.2" height="92.4" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="316.1" y="412.5" width="73.9" height="178.5" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="316.1" y="0.6" width="73.9" height="178.5" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="705.5" y="0.6" width="60.0" height="590.5" fill="none" stroke="#e6550d" stroke-dasharray="4 2" stroke-width="0.6"/>
+<rect x="35.08" y="555.72" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="560.5" font-size="4">phy_SW</text>
+<rect x="35.08" y="547.69" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="552.5" font-size="4">svc_SW</text>
+<rect x="18.75" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<text x="19.7" y="486.4" font-size="4">sm0</text>
+<rect x="92.61" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="18.75" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="92.61" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="416.05" y="555.72" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="560.5" font-size="4">phy_SE</text>
+<rect x="416.05" y="547.69" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="552.5" font-size="4">svc_SE</text>
+<rect x="399.73" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="481.59" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="399.73" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="403.83" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="35.08" y="0.65" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="5.4" font-size="4">phy_NW</text>
+<rect x="35.08" y="36.22" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="36.0" y="41.0" font-size="4">svc_NW</text>
+<rect x="18.75" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="92.61" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="18.75" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="92.61" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="166.47" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="240.33" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="416.05" y="0.65" width="255.00" height="35.32" fill="#756bb1" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="5.4" font-size="4">phy_NE</text>
+<rect x="416.05" y="36.22" width="255.00" height="7.78" fill="#fdd0a2" stroke="#555" stroke-width="0.05"/>
+<text x="417.0" y="41.0" font-size="4">svc_NE</text>
+<rect x="399.73" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="47.89" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="399.73" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="473.58" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="547.44" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="621.30" y="125.65" width="66.08" height="62.21" fill="#9ecae1" stroke="#555" stroke-width="0.05"/>
+<rect x="325.85" y="274.82" width="54.43" height="42.12" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="279.6" font-size="4">hb_coll</text>
+<rect x="325.85" y="383.62" width="54.43" height="5.51" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="388.4" font-size="4">hb_loader</text>
+<rect x="325.85" y="371.95" width="54.43" height="3.11" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="376.8" font-size="4">hb_router</text>
+<rect x="325.85" y="321.21" width="54.43" height="42.12" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="326.0" font-size="4">hb_cmdproc</text>
+<rect x="325.85" y="228.42" width="54.43" height="42.12" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="233.2" font-size="4">hb_vm</text>
+<rect x="325.85" y="219.15" width="54.43" height="0.84" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="224.0" font-size="4">hb_barrier</text>
+<rect x="325.85" y="202.44" width="54.43" height="8.29" fill="#31a354" stroke="#555" stroke-width="0.05"/>
+<text x="326.8" y="207.2" font-size="4">hb_quant</text>
+<rect x="246.51" y="301.06" width="37.87" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="247.4" y="305.9" font-size="4">hb_su_SW</text>
+<rect x="421.76" y="301.06" width="37.87" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="422.7" y="305.9" font-size="4">hb_su_SE</text>
+<rect x="246.51" y="198.22" width="37.87" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="247.4" y="203.0" font-size="4">hb_su_NW</text>
+<rect x="421.76" y="198.22" width="37.87" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="422.7" y="203.0" font-size="4">hb_su_NE</text>
+<rect x="214.67" y="301.06" width="21.47" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="215.6" y="305.9" font-size="4">hb_sfu_SW</text>
+<rect x="469.99" y="301.06" width="21.47" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="470.9" y="305.9" font-size="4">hb_sfu_SE</text>
+<rect x="214.67" y="198.22" width="21.47" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="215.6" y="203.0" font-size="4">hb_sfu_NW</text>
+<rect x="469.99" y="198.22" width="21.47" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="470.9" y="203.0" font-size="4">hb_sfu_NE</text>
+<rect x="189.48" y="301.06" width="14.83" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="190.4" y="305.9" font-size="4">hb_hc_SW</text>
+<rect x="501.84" y="301.06" width="14.83" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="502.7" y="305.9" font-size="4">hb_hc_SE</text>
+<rect x="189.48" y="198.22" width="14.83" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="190.4" y="203.0" font-size="4">hb_hc_NW</text>
+<rect x="501.84" y="198.22" width="14.83" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="502.7" y="203.0" font-size="4">hb_hc_NE</text>
+<rect x="129.02" y="301.06" width="50.09" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="129.9" y="305.9" font-size="4">hb_index_SW</text>
+<rect x="29.90" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="29.90" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="29.90" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="29.90" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="527.03" y="301.06" width="50.09" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="527.9" y="305.9" font-size="4">hb_index_SE</text>
+<rect x="587.49" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="370.46" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="587.49" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="347.91" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="587.49" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="325.36" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="587.49" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="302.81" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="129.02" y="198.22" width="50.09" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="129.9" y="203.0" font-size="4">hb_index_NW</text>
+<rect x="29.90" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="29.90" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="29.90" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="29.90" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="52.41" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="74.92" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="97.43" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="527.03" y="198.22" width="50.09" height="92.40" fill="#74c476" stroke="#555" stroke-width="0.05"/>
+<text x="527.9" y="203.0" font-size="4">hb_index_NE</text>
+<rect x="587.49" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="267.62" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="587.49" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="245.07" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="587.49" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="222.52" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="587.49" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.00" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="632.51" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="655.02" y="199.97" width="21.21" height="21.25" fill="#fd8d3c" stroke="#555" stroke-width="0.05"/>
+<rect x="316.13" y="481.34" width="73.87" height="109.71" fill="#fff7bc" stroke="#555" stroke-width="0.05"/>
+<rect x="326.54" y="412.53" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="337.15" y="412.53" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="347.77" y="412.53" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="358.38" y="412.53" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="369.00" y="412.53" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="316.13" y="0.65" width="73.87" height="109.71" fill="#fff7bc" stroke="#555" stroke-width="0.05"/>
+<rect x="331.85" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="342.47" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="353.08" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="363.70" y="111.67" width="7.50" height="67.51" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="705.53" y="271.06" width="7.82" height="49.57" fill="#fee391" stroke="#555" stroke-width="0.05"/>
+<rect x="713.62" y="209.11" width="51.92" height="173.40" fill="#fec44f" stroke="#555" stroke-width="0.05"/>
+<rect x="13.80" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="47.33" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.66" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="121.19" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="161.52" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="195.05" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="235.38" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="268.91" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="303.30" y="288.10" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="303.30" y="339.75" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="303.30" y="391.46" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="258.62" y="396.32" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="206.96" y="396.32" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.16" y="403.32" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.16" y="454.96" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="158.95" y="474.08" width="7.26" height="7.26" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="86.73" y="475.89" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="12.87" y="475.89" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="234.45" y="475.89" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.51" y="446.21" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="309.08" y="446.21" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.94" y="445.76" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="233.94" y="444.92" width="5.00" height="5.05" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="184.03" y="470.06" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="161.88" y="416.08" width="3.78" height="1.49" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="197.83" y="398.00" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="249.51" y="398.00" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="301.64" y="377.33" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="267.46" y="396.45" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="215.80" y="396.45" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.13" y="396.45" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.44" y="398.65" width="1.87" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.72" y="468.96" width="1.30" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="294.63" y="395.41" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="242.96" y="395.41" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="191.30" y="395.41" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="421.40" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="461.57" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="520.86" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="12.36" y="493.06" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="12.36" y="443.49" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="17.28" y="396.51" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="493.06" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="443.49" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="96.53" y="398.91" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="148.20" y="398.91" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.77" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="428.30" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.63" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="502.16" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.49" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="576.02" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="616.35" y="495.14" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="649.88" y="476.67" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="399.19" y="288.10" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="399.19" y="339.75" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="399.19" y="391.46" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="446.01" y="396.32" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="497.66" y="396.32" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.13" y="404.48" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.13" y="456.13" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="539.93" y="474.08" width="7.26" height="7.26" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="467.70" y="475.89" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="393.84" y="475.89" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="615.42" y="475.89" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.48" y="446.21" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="690.06" y="446.21" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.91" y="445.76" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="614.91" y="444.92" width="5.00" height="5.05" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="565.00" y="470.06" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.86" y="416.08" width="3.78" height="1.49" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="509.22" y="398.00" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="457.55" y="398.00" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="403.55" y="377.33" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="436.16" y="396.45" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="487.83" y="396.45" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="539.50" y="396.45" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.41" y="398.65" width="1.87" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.70" y="468.96" width="1.30" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="408.02" y="395.41" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="459.69" y="395.41" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="511.35" y="395.41" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="408.95" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="464.42" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="516.07" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="688.77" y="495.14" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="688.77" y="443.49" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="684.07" y="396.51" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="617.92" y="493.06" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="617.92" y="441.42" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.80" y="398.91" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="559.13" y="398.91" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="13.80" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="47.33" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.66" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="121.19" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="161.52" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="195.05" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="235.38" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="268.91" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="301.50" y="211.18" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="269.23" y="191.81" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="217.56" y="191.81" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="165.89" y="191.81" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.16" y="145.87" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="158.95" y="110.36" width="7.26" height="7.26" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="86.73" y="112.17" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="12.87" y="112.17" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="234.45" y="112.17" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="87.51" y="143.14" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="309.08" y="143.14" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="160.94" y="139.13" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="233.94" y="141.85" width="5.00" height="5.05" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="184.03" y="118.00" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="161.88" y="174.31" width="3.78" height="1.49" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="197.98" y="189.93" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="249.64" y="189.93" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="299.84" y="306.44" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="299.84" y="254.73" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="299.84" y="203.08" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="256.98" y="194.34" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="205.33" y="194.34" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.44" y="190.45" width="1.87" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="163.72" y="105.24" width="1.30" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="298.83" y="346.81" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="298.83" y="295.16" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="298.83" y="243.52" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="294.96" y="195.76" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="243.29" y="195.76" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="191.63" y="195.76" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="167.12" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="119.30" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="164.70" y="67.65" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="12.36" y="92.73" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="12.36" y="146.45" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="17.28" y="193.23" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="92.73" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="89.23" y="146.45" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="96.54" y="190.84" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="148.20" y="190.84" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="394.77" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="428.30" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.63" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="502.16" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.49" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="576.02" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="616.35" y="94.80" width="2.11" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="649.88" y="112.95" width="1.75" height="2.14" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="401.00" y="211.18" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="435.39" y="191.81" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="487.06" y="191.81" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="538.73" y="191.81" width="1.50" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.13" y="144.63" width="3.63" height="1.55" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="539.93" y="110.36" width="7.26" height="7.26" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="467.70" y="112.17" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="393.84" y="112.17" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="615.42" y="112.17" width="3.99" height="3.63" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="468.48" y="143.14" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="690.06" y="143.14" width="2.44" height="2.46" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="541.91" y="139.13" width="3.29" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="614.91" y="141.85" width="5.00" height="5.05" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="565.00" y="118.00" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="542.86" y="174.31" width="3.78" height="1.49" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="509.09" y="189.93" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="457.42" y="189.93" width="1.46" height="3.82" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="405.35" y="306.44" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="405.35" y="254.73" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="405.35" y="203.08" width="0.93" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="446.64" y="194.34" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="498.30" y="194.34" width="2.50" height="0.97" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.41" y="190.45" width="1.87" height="2.66" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="544.70" y="105.24" width="1.30" height="3.30" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="406.72" y="346.81" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="406.72" y="295.16" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="406.72" y="243.52" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="407.70" y="195.76" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="459.37" y="195.76" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="511.03" y="195.76" width="3.47" height="0.58" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="179.56" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="124.09" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="545.67" y="72.45" width="0.57" height="3.56" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="688.77" y="94.80" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="688.77" y="146.45" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="684.07" y="193.23" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="617.92" y="92.73" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="617.92" y="148.52" width="1.98" height="1.81" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="610.80" y="190.84" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="559.13" y="190.84" width="1.79" height="2.01" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.76" y="344.22" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.76" y="395.93" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="334.64" y="420.68" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="305.96" y="336.57" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="305.96" y="388.22" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="345.25" y="400.59" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="304.16" y="328.86" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="304.16" y="380.51" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="335.60" y="400.79" width="1.80" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="355.87" y="432.15" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="401.86" y="321.15" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="401.86" y="372.80" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="379.42" y="401.96" width="1.80" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="366.48" y="440.77" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="403.67" y="313.44" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="403.67" y="365.15" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="390.11" y="403.19" width="1.80" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="377.10" y="441.87" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.76" y="272.23" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="307.76" y="220.58" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="330.40" y="191.42" width="1.80" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="339.95" y="149.43" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="305.96" y="268.14" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="305.96" y="216.50" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="333.55" y="190.25" width="1.80" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="350.57" y="157.72" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="400.06" y="264.06" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="400.06" y="214.49" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="371.73" y="189.02" width="1.80" height="1.94" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="361.18" y="147.94" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="401.86" y="259.91" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="401.86" y="208.27" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="371.80" y="186.69" width="1.90" height="1.88" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="420.32" y="396.32" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="471.99" y="396.32" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="523.66" y="396.32" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="575.32" y="396.32" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="626.99" y="396.32" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="678.66" y="396.32" width="2.19" height="1.23" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="699.75" y="364.70" width="1.18" height="2.33" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+<rect x="699.75" y="312.98" width="1.18" height="2.33" fill="#08519c" stroke="#555" stroke-width="0.05"/>
+</svg></div>
+    <figcaption><b>Figure 6-11a.</b> HBM accelerator die, round 8 (results/rtl/hbm_accel_die_floorplan_20261005/floorplan.svg; main 2ad3d733a).</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17a. HBM accelerator die: physical checks, round 8, OpenROAD (results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json, which keeps every round including failures: round 1 failed IR at 41.45 mV; round 4 worsened congestion and was reverted)</caption>
+    <thead><tr><th>Check</th><th>Result</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Legality</td><td class="m">369 instances, 0 overlaps, 0 outside the die</td><td>pass</td></tr>
+      <tr><td>On-track pins</td><td class="m">0 of 1,208,318 off track</td><td>pass</td></tr>
+      <tr><td>Pin access</td><td>every pin has an access point</td><td>pass</td></tr>
+      <tr><td>Global route, 5 / 50 iterations</td><td class="m">overflow 218 / 128; no 4×4 window over capacity</td><td><b>open</b> (route iterations in progress)</td></tr>
+      <tr><td>Static IR drop, 92 windows</td><td class="m">worst 25.41 mV over the 85 loaded windows (budget 35 mV)</td><td>pass</td></tr>
+      <tr><td>Power grid, clocks</td><td>M8/M9 strap coverage 0.0878 over compute and hub, 0.1639 over stream services; clock regions ≤5 mm with FIFO crossings; 307 W peak in-phase load</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-17b. On-die wire stages priced into the HBM accelerator's compositions at 1.2 GHz. Stages per path are Σ ceil(routed length ÷ 430.56 µm), plus a 2-cycle crossing between hub and SM groups. They are bounds from routed length, not timing sign-off. The floor uses straight-line distance; the bound uses the longest routed bundle (results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json). DeepSeek is the matched reference (results/rtl/dshbm_matched_reference_20261005/composition.json); Qwen applies this die's collective and stream-service distances only (its own tile die is not yet floorplanned).</caption>
+    <thead><tr><th>Basis</th><th class="r">Added to DS AR token</th><th class="r">DS AR</th><th class="r">DS MTP (tok/s)</th><th class="r">Qwen TP4 / TP2 AR (tok/s)</th></tr></thead>
+    <tbody>
+      <tr><td>Unpriced (previous matched reference)</td><td class="r m">—</td><td class="r m">474.8 µs</td><td class="r m">3,700.5</td><td class="r m">2,154.2 / 1,032.8</td></tr>
+      <tr><td>Floor: straight-line distance</td><td class="r m">+30.6 µs (+6.4%)</td><td class="r m">505.4 µs</td><td class="r m">3,595.8</td><td class="r m">2,140.5 / 1,029.6</td></tr>
+      <tr><td>Median routed bundle</td><td class="r m">+67.6 µs</td><td class="r m">542.4 µs</td><td class="r m">3,477.0</td><td class="r m">2,122.9 / 1,025.5</td></tr>
+      <tr class="sel"><td>Bound: longest routed bundle</td><td class="r m">+102.4 µs (+21.6%)</td><td class="r m">577.2 µs</td><td class="r m">3,371.8</td><td class="r m">2,108.9 / 1,022.3</td></tr>
+    </tbody>
+  </table></div>
+  <p>At the bound, four terms dominate: the activation multicast from the hub to the farthest SM (135 cycles one way, 291 serial loads, 32.7 µs), the barrier over the routed control tree (343 barriers, 29.7 µs; previously priced on an 815 mm² GPU floorplan), SU ↔ collective endpoint (22.7 µs) and endpoint ↔ SerDes (12.7 µs). The bound and the floor differ because the 50-iteration router detours a few wires to remove overflow. The worst case is the north-east SU-to-endpoint link: 53 stages routed against 4 by straight-line distance. A clean global route is expected to move the HBM accelerator toward the floor, which this comparison will then treat as its fair figure. Qwen is barely affected (1.0–2.1%): the priced stages add 11,961 cycles to a token of 557,056 (TP4) or 1,161,915 (TP2) cycles.</p>
   <h3 id="s6-11">6.11 Host interface and runtime</h3>
   <p class="finding">A descriptor-ring host interface, DMA and an OpenAI-compatible endpoint have been exercised with reduced RTL vehicles. Binding them to the adopted Qwen HBM-KV tile and V41x die remains a system integration gate.</p>
 
@@ -1427,6 +1878,24 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   <p>On the Qwen3-8B design, the KV stream from eight stacks takes 92,161 cycles and the calibrated dependent chain takes 101,037, 1,419 of them in the die-to-die exchanges and 1,085 in the INT8 scale multiply. The chain is therefore 10% above the stream floor, and its exposed dependencies set the rate at every context: at 2K the calibrated chain takes 84,469 cycles against a 23,040-cycle KV stream. The FP8 K-split HBM path still needs integrated RTL verification.</p>
   <p>For V4.1, separate weight, attention and index engines and vector-credit chaining keep long sequential operations off the token path (§6.4). At 1M, 31.1 µs of the 142.7 µs modeled token is synchronization, 4.8 µs of it collective bytes that remain exposed under the bench-measured tails of the adopted levers (§8.9), and 21.1 µs is the on-die wire of the layer die's registered traversals, every one of them on the critical path (§8.4). The 7,049-token/s rate carries those tails and that wire and assumes a 1.087 GHz system clock, which has not closed in an integrated route. A reduced pooled V4.1x core with joined QE weight HBM and timed index-key HBM now passes a ten-step empty-state functional gate (3 generated tokens exact, DPI arithmetic, no production rate), and a two-package point-to-point array passes three exact tokens both with the X_HE unit alone and with all units on timed behavioural HBM (no production clock or rate), while switched-array timing and whole-core clock closure remain decisive tests.</p>
 
+  <h4 id="s8-5-fusion">Ablation: fusing serial vector chains (measured, DeepSeek-V4.1 ROM at 1M)</h4>
+  <p class="finding"><b>Finding: on a machine whose weights are free, the token's serial vector chains cost overhead, not arithmetic, and fusing each chain into one pipeline removes 60–75% of its latency at no loss of exactness.</b> In the DeepSeek-V4.1 ROM, every RMSNorm, hyper-connection mix, SwiGLU and activation quantise ran as separate operations on the serial vector unit (SU) at 0.9 GHz. Each operation read its vector from vector memory, reduced it across 1,024 lanes through a ten-level tree and 4–8 wire stages, wrote it back and crossed the clock domain twice. Four such chains sit in every layer, so ×43 layers the overhead is a large share of the token: the serial SU chains were about 26% of the 1M token before recovery.</p>
+  <p>Each fused unit streams the vector once through the whole chain (for RMSNorm: sum of squares → reduction → mean → reciprocal square root → scale → optional RoPE → FP8 quantise) at 1.2 GHz, with no vector-memory round trip and no clock crossing inside the chain. It keeps the golden's rounding points and its chunks-of-eight pairwise reduction order (§6.5), so every result is bit-exact against the golden on real 1M-context operands. Two units were rebuilt to reach 1.2 GHz: the FP8 activation quantiser (the original reaches 745 MHz pre-layout; the re-staged <code>ot_dsrom_aq12</code> routes at SS +27.0 ps / FF +2.5 ps) and the divider, replaced by a constant divider <code>ot_dsrom_divc</code> because the divisor is always the fixed vector length (5,120, 1,280 or 512). It is checked against every positive finite input with zero errors and routes at SS +22.0 ps / FF +7.7 ps, where the general divider misses by 357 ps.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-14b. Serial vector chains before and after fusion, latency per occurrence on the token path, DeepSeek-V4.1 ROM at 1M. "Before" is the wired SU at 0.9 GHz plus the measured clock-domain crossings; "after" is the fused unit at 1.2 GHz, from the vector-memory read to the last result landing at its consumer, hub and wire stages included. Every "after" row is bit-exact on the L0/L3/L20/L24 golden 1M operands plus stress rows. Signoff is SS 60 ps / FF 25 ps at 0.833 ns on the routed minimum component. Records: results/rtl/dsrom_recovery_20261004/levers/{su_hcpost, su_norm, su_swiglu, su_routeract}.json; su_norm on branch claude/dsrom-su-norm-20261004 (commit e7dea0004).</caption>
+    <thead><tr><th>Chain (dependent steps)</th><th class="r">Before (µs)</th><th class="r">After (µs)</th><th class="r">After (cycles)</th><th class="r">Saving</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Post-attention / post-FFN hyper-connection mix (4 dependent mul-add steps)</td><td class="r m">0.290</td><td class="r m">0.086</td><td class="r m">103</td><td class="r m">70%</td><td>Adopted; routed lane SS +0.23 / FF +1.69 ps; 6 cycles over its 97-cycle floor</td></tr>
+      <tr><td>Attention pre-norm: hc_pre → RMSNorm → FP8 quantise</td><td class="r m">0.755</td><td class="r m">0.230</td><td class="r m">276</td><td class="r m">70%</td><td rowspan="4">At floor, exact. Quantiser and divider routed closed; lane and RoPE routes pending, adopted when both close</td></tr>
+      <tr><td>FFN pre-norm: hc_pre → RMSNorm</td><td class="r m">0.522</td><td class="r m">0.215</td><td class="r m">258</td><td class="r m">59%</td></tr>
+      <tr><td>Query: q-norm → quantise</td><td class="r m">0.489</td><td class="r m">0.208</td><td class="r m">250</td><td class="r m">57%</td></tr>
+      <tr><td>Key/value: kv-norm → RoPE → quantise-dequantise</td><td class="r m">0.510</td><td class="r m">0.203</td><td class="r m">244</td><td class="r m">60%</td></tr>
+      <tr><td>SwiGLU → route-weight multiply → FP8 quantise</td><td class="r m">0.483</td><td class="r m">0.155</td><td class="r m">186</td><td class="r m">68%</td><td>Exact; reopened as mandatory recovery after the first routes missed (lane −51.7 ps); re-staged quantiser now routes closed</td></tr>
+      <tr><td>Router activation: softplus → √ (already one fused correctly rounded unit)</td><td class="r m">0.152</td><td class="r m">0.147</td><td class="r m">132 at 0.9 GHz</td><td class="r m">4%</td><td>Adopted; routed SS +17.0 / FF +3.74 ps. Control case: little to gain where the chain was already one unit</td></tr>
+    </tbody>
+  </table></div>
+  <p>The router-activation row is the control: that chain was already one fused, correctly rounded unit, so moving it gains only the clock crossing. The gain comes from removing per-operation overhead, not from faster arithmetic. At the token level, the norm fusion alone takes the 1M rate on current main (1,710.8 tok/s plain decoding, 5,005.9 tok/s with speculation at τ 4.159; results/rtl/dsrom_recovery_20261004/composition.json) by +8.38% and +6.52% in a trial composition against the same baseline. Every unit is opt-in: the shared SU (<code>ot_hdc_v41x_vec</code>) and its lowering are unchanged, and a fused unit is adopted only once it is exact and its routed minimum component closes.</p>
+  <p><b>Matched comparison.</b> The HBM accelerator receives the same fusion (fused SU chains with the SU at 1.2 GHz), credited in its matched reference, so the ROM-versus-HBM comparison does not credit one side with an optimisation the other lacks. One physical caveat applies to both: the fused units' routes sign off register to register at full margins but defer data-input hold repair to the parent's clock balance, which the full-die route must check at each block boundary.</p>
   <h3 id="s8-6">8.6 Speculative decoding: it pays where the step's cost is shared</h3>
   <h4 id="s8-6-ablation">Ablation: speculation on a compute-balanced ROM (measured, Qwen3-8B at 8K)</h4>
   <p class="finding"><b>Finding: speculation trades an idle resource for fewer serial steps, and the Qwen3-8B ROM at 8K has no idle resource to trade.</b> A verify pass pays only when the step's dominant cost is shared by the positions it verifies. On GPUs and the HBM accelerator the shared cost is the weight stream. On the DeepSeek-V4.1 ROM array it is pipeline latency: a wavefront of positions fills idle stages. On the Qwen3-8B ROM the code ROM reads exactly as fast as the lanes multiply, and the STREAM4 path hides the 8K KV fill behind prefetch. The AR layer (5,282 cycles) therefore sits at its compute-only bound (5,283), and every extra position adds its own softmax, all-reduce payload and stream-unit work. The measured verify layer costs 3.26× an AR layer for four positions, so DSpark at τ = 3.14 runs at 0.70× of plain decoding, and 0.97× even with a free drafter. <b>The Qwen3-8B ROM therefore runs in plain decoding (AR) mode at 8K: 194,498 cycles a token, 6,169.7 tok/s per user.</b> DSpark stays built and bit-exact in RTL, and it is switched off. MTP remains required, and pays, on the DeepSeek-V4.1 ROM array and on the HBM accelerators.</p>

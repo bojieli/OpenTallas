@@ -1,0 +1,18 @@
+{
+  "exit": 1,
+  "stages": [
+    {
+      "stage": "factory_compile",
+      "exit": 0,
+      "seconds": 11.371580275997985
+    },
+    {
+      "stage": "check_compile",
+      "exit": 1,
+      "seconds": 0.9346041679964401
+    }
+  ],
+  "header_sha256": "ec88f978ee214fdb2b1af66688f21204ab9fb9e99d7f9e77a1979ab9bcbf9273",
+  "factory_source": "/home/ubuntu/arch-s81-native-rope-kv-consumer-r3/src/s81_minimum_l20_kv_factory.cpp",
+  "scope": "HOST opt-in LOW repeated-eval cache only; all native rising/falling evals preserved; no runtime1193626 changes/no model or library rebuild"
+}

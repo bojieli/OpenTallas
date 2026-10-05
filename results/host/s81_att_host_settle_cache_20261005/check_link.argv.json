@@ -1,0 +1,18 @@
+[
+  "g++",
+  "-O2",
+  "-pthread",
+  "/home/ubuntu/arch-s81-att-low-settle-cache-r1/check.o",
+  "-Wl,--start-group",
+  "/home/ubuntu/cicero-s81-L20-native-att-sourcefix-o2-r1/att-o2/out/adapter/VDsromAttention__ALL.a",
+  "/home/ubuntu/cicero-s81-L20-native-att-sourcefix-o2-r1/att-o2/out/engine/VDsromAttEngine__ALL.a",
+  "/home/ubuntu/cicero-s81-L20-native-att-sourcefix-o2-r1/att-o2/out/engine/Vot_hdc_qadd/libot_hdc_qadd.a",
+  "/home/ubuntu/cicero-s81-L20-native-att-sourcefix-o2-r1/att-o2/out/engine/Vot_hdc_v41x_attn_merge_6/libot_hdc_v41x_attn_merge_6.a",
+  "/home/ubuntu/cicero-s81-L20-native-att-sourcefix-o2-r1/att-o2/out/engine/Vot_hdc_v41x_attn_staging_3/libot_hdc_v41x_attn_staging_3.a",
+  "/home/ubuntu/cicero-s81-L20-native-att-sourcefix-o2-r1/att-o2/out/engine/Vot_hdc_v41x_attn_tile_e/libot_hdc_v41x_attn_tile_e.a",
+  "-Wl,--end-group",
+  "/home/ubuntu/cicero-s81-l20-attention-remote-r1/staged/tmp/arch-s81-pair-header-check/pq/libverilated.a",
+  "-ldl",
+  "-o",
+  "/home/ubuntu/arch-s81-att-low-settle-cache-r1/check"
+]
