@@ -12,7 +12,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 
-def native_stream(matrix, *, fp32_output=False):
+def native_stream(matrix, *, fp32_output=False, stream_base=0):
     import v41_die_images_w17w10 as fast
     source = inspect.getsource(fast.add_phase)
     body = ast.parse(source).body[0].body
@@ -38,13 +38,122 @@ def native_stream(matrix, *, fp32_output=False):
     exec(compile(ast.Module(body=body[start:stop],type_ignores=[]),
                  inspect.getsourcefile(fast.add_phase),'exec'),ns)
     beats = ns['beats']
-    phrom = fast.phase_words(dict(bf=bf,K=matrix['K'],nbeat=len(beats),sbase=0,
+    phrom = fast.phase_words(dict(bf=bf,K=matrix['K'],nbeat=len(beats),sbase=stream_base,
         nrows=matrix['rows'],fmt_fp32=[fp32_output,fp32_output],rsplit=0))
     return phrom,beats,hashlib.sha256(source.encode()).hexdigest()
 
 
+def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
+    """Link ALL resident canonical phases using byte-identical stream bodies.
+
+    No weights/activations, CFG remap or arithmetic change. Canonical key/phase
+    order is authoritative; only PHROM SBASE is relocated. Original per-actor
+    controls and software update path remain available with stream_base=0.
+    """
+    import re
+    from dsrom_stage_program_join import digest
+    if stage not in (37,38) or (phw,saw)!=(10,14):
+        raise ValueError('current selected stages37/38 PHW10 SAW14 required')
+    if execution.stage_join.stage_map['PHW_required_by_stage'][stage]!=phw:
+        raise ValueError('canonical PHW/source mismatch')
+    source={}
+    for node,b in execution.source.bindings.items():
+        if not b.get('address_bound'):
+            continue
+        f=execution.source.nodes[node]['instruction']
+        fp32=not f.get('me_round',0) if f['unit']==1 else bool(f.get('qe_unrounded',0))
+        source.setdefault((b['layer'],b['alias']),[]).append((node,fp32))
+    phrom=[0]*(2<<phw); stream=[]; bodies={}; catalog=[]; phases=[]; original_words=0
+    rows=execution.stage_join.by_stage[stage]
+    if len(rows)>1<<phw:
+        raise ValueError('canonical phase namespace overflow')
+    for row in rows:
+        m=row['matrix']; alias=re.sub(r'exp\d+\.', 'exp0.',row['original_alias'])
+        bound=source.get((m['layer'],alias),[])
+        if not bound or len({v for n,v in bound})!=1:
+            raise ValueError((stage,row['phase'],'missing/conflicting source rounding'))
+        fp32=bound[0][1]
+        original,beats,pin=native_stream(m,fp32_output=fp32)
+        if not beats or any(v<0 or v>=1<<40 for v in beats):
+            raise ValueError('existing codec no longer zero extends into48bit carrier')
+        # Dictionary equality compares COMPLETE encoded bodies, not hash-only
+        # shape/class equivalence. Include all48 bits of every emitted word.
+        body=b''.join(v.to_bytes(6,'little') for v in beats)
+        if body not in bodies:
+            if len(stream)+len(beats)>1<<saw:
+                raise ValueError('exact interned catalog exceeds SAW14')
+            bodies[body]=(len(catalog),len(stream))
+            catalog.append(dict(body=len(catalog),base=len(stream),words=len(beats),
+                                sha256=hashlib.sha256(body).hexdigest()))
+            stream.extend(beats)
+        body_id,base=bodies[body]
+        if body!=b''.join(v.to_bytes(6,'little') for v in stream[base:base+len(beats)]):
+            raise ValueError('interned source body is not byte-identical')
+        # Existing PHROM codec; retain all fields except its existing SBASE.
+        fields=dict(bf=m['format']=='bf16',K=m['K'],nbeat=len(beats),sbase=base,
+                    nrows=m['rows'],fmt_fp32=[fp32,fp32],rsplit=0)
+        import v41_die_images_w17w10 as fast
+        linked=fast.phase_words(fields)
+        mask=((1<<16)-1)<<30
+        if (linked[0]&~mask,linked[1])!=(original[0]&~mask,original[1]):
+            raise ValueError('relocation changed arithmetic/rounding/row controls')
+        phase=row['phase']; ME=m['format']=='bf16'
+        if execution.stage_join.lookup(stage,row['key'],ME=ME)!=phase:
+            raise ValueError('canonical key/phase changed')
+        phrom[2*phase:2*phase+2]=linked
+        phases.append(dict(phase=phase,key=row['key'],key_word=row['key_word'],layer=m['layer'],
+            alias=m['alias'],expert=m['expert'],source_nodes=[n for n,v in bound],
+            source_matrix_sha256=row['matrix_sha256'],ordered_physical_plan_sha256=digest(m['plans']),
+            physical_owner_ranks=row['owners'],rank_slices=m['rank_slices'],
+            cfg_word_range=[25*phase,25*(phase+1)],phrom_address=[2*phase,2*phase+1],
+            PHROM_words=linked,original_local_PHROM_words=original,
+            body=body_id,stream_base=base,stream_words=len(beats),stream_sha256=hashlib.sha256(body).hexdigest(),
+            fp32_output=fp32,stream_source_sha256=pin))
+        original_words+=len(beats)
+    out=Path(out);out.mkdir(parents=True,exist_ok=False)
+    (out/'spine_phase.hex').write_text(''.join(f'{w:016x}\n' for w in phrom))
+    padded=stream+[0]*((1<<saw)-len(stream))
+    (out/'spine_stream.hex').write_text(''.join(f'{w:012x}\n' for w in padded))
+    for rank in range(4):
+        keys=execution.stage_join.keys(stage,rank)
+        if len(keys)!=1<<phw:
+            raise ValueError('canonical key frame extent')
+        (out/f'spine_keys.rank{rank}.hex').write_text(''.join(f'{k:08x}\n' for k in keys))
+    record=dict(schema='opentallas.dsrom.canonical-interned-stage-controls.v1',stage=stage,
+        PHW=phw,SAW=saw,phase_count=len(rows),PHROM_words=len(phrom),stream_depth_words=len(padded),
+        original_append_stream_words=original_words,unique_stream_words=len(stream),catalog=catalog,
+        phases=phases,canonical_inputs=execution.input_sha256,
+        files_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.glob('*.hex'))},
+        stream_equality='complete48bit little-endian bodies compared byte-for-byte for EVERYphase',
+        high8_stream_bits_zero=True,only_PHROM_SBASE_changed=True,CFG_remapped=False,
+        all_resident_experts_bound=True,inactive_key_and_PHROM_slots_explicit_zero=True,
+        unused_stream_tail_explicit_zero=True,hardware_provider_adopted=False,
+        runtime_array_patching_removed=False,programming_service_priced=False)
+    (out/'binding.json').write_text(json.dumps(record,indent=2)+'\n')
+    return record
+
+
+def linked_native_stream(matrix, *, fp32_output, stage, phase, key, stage_image):
+    """Existing local control bundle using source-bound immutable stage offsets."""
+    image=Path(stage_image); bound=json.loads((image/'binding.json').read_text())
+    if bound['stage']!=stage or (bound['PHW'],bound['SAW'])!=(10,14):
+        raise ValueError('selected stage table binding mismatch')
+    row=next((r for r in bound['phases'] if r['phase']==phase),None)
+    from dsrom_stage_program_join import digest
+    if row is None or row['key']!=key or row['source_matrix_sha256']!=digest(matrix) or row['fp32_output']!=fp32_output:
+        raise ValueError('phase/key/matrix/rounding differs from immutable stage image')
+    for name,pin in bound['files_sha256'].items():
+        if hashlib.sha256((image/name).read_bytes()).hexdigest()!=pin:
+            raise ValueError('immutable stage image changed')
+    phrom,beats,pin=native_stream(matrix,fp32_output=fp32_output,stream_base=row['stream_base'])
+    loaded=[int(w,16) for w in (image/'spine_stream.hex').read_text().splitlines()]
+    if beats!=loaded[row['stream_base']:row['stream_base']+len(beats)] or list(phrom)!=row['PHROM_words']:
+        raise ValueError('linked local controls differ from actual stage image')
+    return phrom,beats,pin
+
+
 def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
-                               fragment_index=0,expert_ids=None):
+                               fragment_index=0,expert_ids=None,stage_image=None):
     """Source-exact controls for any selected QE/weight-ME fragment.
 
     Dynamic EIDs must be the caller's captured native tuple. This function
@@ -66,7 +175,11 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
     if not (me or qe) or (matrix['format']=='bf16')!=me:
         raise ValueError('actual weight ME or mode0 QE controls required')
     fp32=not instruction.get('me_round',0) if me else bool(instruction.get('qe_unrounded',0))
-    phrom,beats,stream_pin=native_stream(matrix,fp32_output=fp32)
+    if stage_image is None:
+        phrom,beats,stream_pin=native_stream(matrix,fp32_output=fp32)
+    else:
+        phrom,beats,stream_pin=linked_native_stream(matrix,fp32_output=fp32,
+            stage=fragment['stage'],phase=fragment['phase'],key=fragment['key'],stage_image=stage_image)
     profile=emitted_phase_profile(execution.stage_join,connectivity,
         stage=fragment['stage'],rank=rank,phase=fragment['phase'],positions=1,
         key=fragment['key'],ME=me)
@@ -91,7 +204,7 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
         actual_BF_site_IDs=execution.stage_join.stage_map['BF_site_IDs'],
         input_VM_base=instruction['me_xbase'] if me else instruction['qe_xbase'],
         ME=me,FP32_output=fp32,cfg_phase_must_not_be_relabelled=True,
-        native_execution_qualified=False)
+        native_execution_qualified=False,immutable_stage_image=str(stage_image) if stage_image is not None else None)
     (out/'binding.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
 
