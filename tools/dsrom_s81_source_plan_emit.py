@@ -156,7 +156,7 @@ def emit(dispatch, groups, stage, out):
 
 
 def emit_current_stage_candidate(execution, out, *, stage=37, layer=20,
-                                 expert_ids_by_node=None, context=None):
+                                 expert_ids_by_node=None, context=None, calendar_pricer=None):
     """Construct current-assignment source coverage without inventing SU homes.
 
     Existing CanonicalS81Execution/StageProgramJoin compile physical FIELD
@@ -165,7 +165,9 @@ def emit_current_stage_candidate(execution, out, *, stage=37, layer=20,
     """
     import hashlib
     import hdc_isa_v41 as ISA
-    from uarch_model import dsrom_source_fragment_calendar
+    if calendar_pricer is None:
+        from uarch_model import dsrom_source_fragment_calendar
+        calendar_pricer = dsrom_source_fragment_calendar
 
     if (stage, layer) != (37, 20):
         raise ValueError('bounded current stage37/L20 candidate only')
@@ -183,12 +185,14 @@ def emit_current_stage_candidate(execution, out, *, stage=37, layer=20,
     if layer not in resident_layers:
         raise ValueError('target layer absent from current selected physical stage')
     nodes = execution.target_source_nodes(resident_layers, position=1048575, include_head=False)
+    required = {r['node']:r['provider'] for r in execution.target_required_bindings(
+        resident_layers, position=1048575, include_head=False)}
     programs, offers, groups, events = {}, [], [], []
     end = ISA.encode(full_shape=True, unit=ISA.UNIT_END, wait=31)
     for ordinal, node in enumerate(nodes):
         n = execution.source.nodes[node]
         binding = execution.source.bindings[node]
-        event = dict(ordinal=ordinal, node=node, kind=n['kind'],
+        event = dict(ordinal=ordinal, node=node, kind=n['kind'], required_provider=required[node],
                      depends_on=[] if ordinal == 0 else [ordinal-1],
                      catalogue_producer_id=9+list(execution.source.nodes).index(node),
                      native_groups=[], required_ranks=[0,1,2,3], missing=[])
@@ -266,7 +270,7 @@ def emit_current_stage_candidate(execution, out, *, stage=37, layer=20,
         required_ranks=[0,1,2,3],native_END_is_whole_stage_or_head_completion=False,
         terminal=None,missing_terminal='HEAD/global_argmax is outside selected resident layer scopes; no token terminal assigned',
         source_input_sha256=execution.input_sha256,artifacts=artifacts,
-        calendar=dsrom_source_fragment_calendar(events))
+        calendar=calendar_pricer(events))
     (out/'parent_dispatch.json').write_text(json.dumps(result,indent=2)+'\n')
     (out/'ownerorderedgroups.json').write_text(json.dumps(selected,indent=2)+'\n')
     (out/'node_order.json').write_text(json.dumps(result['node_order_by_stage'],indent=2)+'\n')
