@@ -101,65 +101,70 @@
         "physical binding absent"
       ],
       "implementation_holds": [
-        "Hubble owns the existing coupled GU numerical gate; no duplicated bench.",
-        "Actual W2 cfg_lines, 136-entry cfg_lut, released payload ordering and W2 exact result remain unbound.",
-        "Mandatory eight-sector W2 interleave is not established: current dispatcher uses a 17-sector W2 tail (j0=32,n=17) per expert after the eight-sector GU schedule.",
-        "Combined PQ/XMAP response-tag credit and destination publication join has no measured interaction result.",
-        "Loaded SS60/FF25 clock, provider, macro, slot and channel bindings remain open.",
-        "Await actual Hubble corrected 8/8/1 dispatcher source/hash plus literal cfg_lut and actual W2 golden gate; no deadline waiver."
+        "Owner firstslot0 timeout28us evidence remains preserved; no deadline waiver",
+        "Corrected source needs actual GU prefix and original W2 numerical gate; source control is not exactness",
+        "Literal cfg_lut 132real+4invalidpad mapping/payload seam plus native postSwiGLU operand and K prefix must come from owner",
+        "Combined PQ/XMAP request-tag/credit/destination publication interaction remains unmeasured",
+        "Loaded SS60/FF25 provider/slot/channel context unbound"
       ],
       "source_replacements": {},
       "slot_macro_channel_binding": null,
       "source_candidates": {
         "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "0b0cfbd03b715f1d3b318911f1fc8d9a8aa7036a147377aec61a3fd6071eeaf1"
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
+          "sha256": "647285ec7bdcd6edcc4ce13a9e6807733b1e7a27b660250019513ecf8b13d6dc"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "1ad53dd9d2245fea0cabadcd13d2613d6ec6964e26500b90b61c829da03e89f0"
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
+          "sha256": "4972eb2f66858181c1ad33a6b701e7e555c6aab5e923c9cb9da2c7993071491a"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "574b617644d4eaf00714ca6b74adb485538c753da2b3dbf08b8d1002a23a941c"
         },
         "tools/dshbm_expert_workgroup_interleave.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "e423065ff214f5c2250adbe6f2d6e8e2e9dabc307594ad1abae7a0086478fc66"
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
+          "sha256": "1b871545858c6e588a0c48f0e4efd2de704ccd024341b9a519de262453cdbe55"
         },
         "tools/dshbm_expert_interleave_descriptor.py": {
-          "commit": "7658dbdc5df3f6922bfd5dee5cc76f194bf1b659",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "d736dfcaba6f4a390e31ae4ac8368fde382779b094559cb141ebf8a986aa3c8e"
         },
         "tools/dshbm_expert_workgroup_descriptor.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
           "sha256": "366f7f56e29053e7ddc487451d27b6eb1bb0538ebfd444275f8e952b5046c97c"
         },
         "tools/dshbm_expert_interleave_native.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "6811620851458f941295a971526fbc00bb8699190287c517c2a62e71da64de4c"
+          "commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
+          "sha256": "ece4dcf8a4039f3f2018d3a3e6e36f366e31ee1eb852a4610936375a2515e7f1"
         }
       },
       "eligible_workloads": [
         "ds_1m"
       ],
-      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json"
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json",
+      "current_candidate_commit": "07e7ffc8f051745147a2991375807ac3c3b525ad",
+      "W2_sector_schedule": [
+        8,
+        8,
+        1
+      ]
     },
     {
       "lever": "fused_su",
