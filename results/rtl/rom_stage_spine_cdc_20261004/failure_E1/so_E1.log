@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/signoff_analysis.py", line 2178, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/signoff_analysis.py", line 1425, in main
+    r = analyze(Path(args.routed), Path(args.work), label=args.label,
+                record=Path(args.record) if args.record else None,
+    ...<3 lines>...
+                cycles_per_token=None, activity_meta=None, stage=args.stage,
+                pdn_tcl=Path(args.pdn_tcl) if args.pdn_tcl else None)
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/signoff_analysis.py", line 829, in analyze
+    results_dir = find_results_dir(results_dir, stage).resolve()
+                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/signoff_analysis.py", line 614, in find_results_dir
+    raise FileNotFoundError(f"no {odb} under {path}")
+FileNotFoundError: no 6_final.odb under /srv/opentallas-scratch/claude/spine-cdc/jobs/E1/work
