@@ -15,3 +15,8 @@ set_clock_uncertainty -hold 25 -from [get_clocks aon_clk] -to [get_clocks core_c
 set_false_path -to [get_cells -hierarchical {*cdc_bs1* *cdc_rr1* *cdc_ak1* *cdc_ra1* *cdc_rq1* *cdc_rd1* *cdc_dr1* *cdc_dr2*}]
 set_max_delay 833 -ignore_clock_latency -from [get_cells -hierarchical {*cdc_rp_a* *cdc_rp_d*}]
 set_false_path -hold -from [get_cells -hierarchical {*cdc_rp_a* *cdc_rp_d*}]
+# The per-element isolation enable changes only at power transitions, when the domain is idle and every clamped output
+# is already 0 (go is not issued before ready; the scheduler sleeps only after the idle window): its value never
+# reaches a sampled output on the next edge.  Two-cycle setup (hold at the launch edge), as for a quasi-static enable.
+set_multicycle_path -setup 2 -from [get_cells -hierarchical *iso_q*]
+set_multicycle_path -hold 1 -from [get_cells -hierarchical *iso_q*]

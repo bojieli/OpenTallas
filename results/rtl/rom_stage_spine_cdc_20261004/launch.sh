@@ -25,7 +25,7 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --view asap7 --top ot_v41_rom_stage_q_pg_cdc_w10 $SRCS \
  --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --io-delay-fraction 0.2 --stages pnr \
  --die-area 0 0 $W $H --core-area 0 0.27 $W $CH --place-density 0.6 --macro-place-halo 2 2 \
- --pin-region "^(p|busy|fault|xs_q1|xs_e1|sw_).*=top:$XE-$XF" --pin-region "^(clk|aon_clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|sched|pg_).*=bottom:$XE-$XF" \
+ --pin-region "^(p|busy|fault|xs_q1|xs_e1|sw_).*=top:$XE-$XF" --pin-region "^(clk|aon_clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|sched).*=bottom:$XE-$XF" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns 0.0 \
  --step-tcl POST_MACRO_PLACE=physical/abi3/rom_stage_cdc_place_k$K.tcl --step-tcl POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl \
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag spine_cdc_${RUN}_20261004 \
