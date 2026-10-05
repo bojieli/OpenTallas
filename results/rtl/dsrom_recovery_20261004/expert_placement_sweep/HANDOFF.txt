@@ -57,3 +57,21 @@ python3 tools/dsrom_s81_expert_placement_sweep.py --source-commit $(git rev-pars
 The existing406 cases can be annotated via --finalize-from; no rerun is needed.
 Remote raw source/logs/result retained at:
 /srv/opentallas-scratch/codex/arendt-s81-expert-placement-sweep-r1/
+
+Transport intake update (Noether main91fe85bac; supersedes pending component terms above)
+Native raw32 GU4608B=340cycles (0.283333us), W2input9216B=412cycles
+(0.343333us), fieldinput20480B=588cycles (0.490000us), all source-pinned
+PASS_ENDPOINT_PAYLOAD_ONLY. Conditional packed GU2304B=304cycles; packed
+W2input4608B=340cycles. Actual pack/unpack remains unbound. Machine-consumable
+source/record hashes, direction/order and transfer counts: transport_terms.json.
+
+Every idle-message total ALREADY includes156board+11UCIe vendor cycles and90
+reference-wire cycles ONCE. For a k-expert group: one field-input packet, k GU
+return packets, k W2-input packets and k down-return packets. Across all groups:
+six GU/six W2/six down packets, with source order/identity preserved. Actual
+shared-port serialization, fanout/overlap, return-credit/lease/consumer calendar
+and loaded placement wire remain UNBOUND; multiplying idle totals by k is NOT
+an implemented group-service bound. Whole-chain latency remainsNULL. All406
+cases and field-only table unchanged; no enumeration replay/newRTL campaign.
+Noether measured against the original shape contract at7095e772a; that exact
+historical HANDOFF SHA remains available at that source-pinned commit.
