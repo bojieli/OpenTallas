@@ -1,0 +1,9 @@
+{
+  "classification": "OBSERVER_MEMBER_NAME_ERROR",
+  "original_exit": 1,
+  "no_placement_or_clock_route_completed": true,
+  "candidate_RTL_unchanged": true,
+  "actual_read_only_ODB_observation": "Mapped CRC DFFASRHQNx1_ASAP7_75t_R isSequential=1. OpenDB getName includes escaped bracket characters (g_on.g_die\\[0\\].u_load.g_on.crc_got\\[0\\]...) so literal unescaped prefix matched zero.",
+  "hook_fix": "Normalize backslash representation only before prefix comparison; keep die0/engine/state exact and fail unless32 sequential members per state.",
+  "resume": "Preserve original FAIL log/record/exit; reuse existing source-frozen synthesis and ORFS work, same named candidate/config/SDC/slot; no component/refCRC repeat, no alternate recipe"
+}
