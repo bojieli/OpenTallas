@@ -1,0 +1,16 @@
+diff --git a/rtl/test/tb_dsrom_qx_exact.sv b/rtl/test/tb_dsrom_qx_exact.sv
+index d83170544..ca5c65f99 100644
+--- a/rtl/test/tb_dsrom_qx_exact.sv
++++ b/rtl/test/tb_dsrom_qx_exact.sv
+@@ -313,6 +313,11 @@ module tb_dsrom_qx_exact;
+      end
+      if ($urandom%15==0) begin                                 // go with no walk (empty family) / double go
+        @(negedge clk); #0.01; go=1; tick(1+$urandom%2); @(negedge clk); #0.01; go=0; tick($urandom%140);
++       // SEQ configure waits for both walkers to stop. An accepted extra go
++       // needs its activation beats before that wait; an idle clock cannot
++       // finish a walker waiting for input. Keep the current configuration
++       // and all event comparisons until this extra walk has been serviced.
++       if (SEQ != 0) while (ref_dut.u_e.n_run) beat(0, 12);
+      end
+    end
+    tick(400);
