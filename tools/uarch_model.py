@@ -9607,3 +9607,9 @@ def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None,parent_c
             physical_characterization_admitted=result['parent_association_join']['measured'],
             adoption=False)
     return result
+
+
+def hbm_existing_cp_local_pg_model():
+    """Priced native bridge for the existing CP child; PDN connectivity only."""
+    from hbm_cp_local_pg import cp_local_pg_model
+    return cp_local_pg_model()
