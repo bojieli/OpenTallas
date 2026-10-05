@@ -46,7 +46,7 @@ def main():
     base = args.route_base.resolve()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
-    inputs = [base / f"6_final.{ext}" for ext in ("odb", "sdc", "spef")]
+    inputs = [base / f"6_final.{ext}" for ext in ("odb", "sdc", "spef", "v")]
     macro_dir = ROOT / "physical/asap7_memory_macros" / MACRO
     spec = json.loads((macro_dir / f"{MACRO}.json").read_text())
     original = args.context_sdc.read_text()
@@ -72,7 +72,8 @@ def main():
         tcl = f'''
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
 foreach f [lsort [glob $P/lib/NLDM/*_RVT_{corner.upper()}_*.lib*]] {{ read_liberty $f }}
-read_db /route/6_final.odb
+read_verilog /route/6_final.v
+link_design ot_hdc_v41_fh_ctx
 read_sdc /out/boundary.sdc
 read_spef /route/6_final.spef
 set_propagated_clock [all_clocks]
@@ -107,7 +108,7 @@ puts "FHBOUND end"
                    "-v", f"{base}:/route:ro", "-v", f"{out}:/out",
                    "openroad/orfs:latest", "bash", "-lc",
                    f"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
-                   f"openroad -exit -no_splash /out/{corner}.tcl"]
+                   f"sta -exit /out/{corner}.tcl"]
         proc = subprocess.run(command, capture_output=True, text=True)
         log = proc.stdout + proc.stderr
         (out / f"{corner}.log").write_text(log)
