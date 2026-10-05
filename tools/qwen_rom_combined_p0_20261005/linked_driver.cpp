@@ -66,6 +66,7 @@ struct Fixture {
 template<class M> constexpr bool linked_abi=requires(M& m) {
     m.warm_rst_n; m.hold_rows; m.bad_ack_tag; m.join_debt;
     m.join_desc_accepted; m.join_go; m.join_row_take; m.join_row_valid; m.join_bad_ack_seen;
+    m.join_desc_committed; m.join_go_committed;
 };
 template<class M> class Session {
     std::unique_ptr<M> top_;
@@ -73,6 +74,7 @@ template<class M> class Session {
     uint64_t tick_=0, descriptors_=0, go_=0, rows_=0,acks_=0;
     uint64_t bad_ack_seen_=0;
     unsigned bad_debt_before_=0;
+    uint64_t h_descriptors_=0,h_go_=0;
 public:
     M& m() {return *top_;}
     explicit Session():top_(new M) {
@@ -86,7 +88,10 @@ public:
         for(int i=0;i<8;++i) step();
     }
     void step(bool expect_fault=false) {
-        auto ctl=[&](bool hi){m().hclk=hi;};
+        auto ctl=[&](bool hi){
+            if constexpr(linked_abi<M>) if(hi) {h_descriptors_+=m().join_desc_committed;h_go_+=m().join_go_committed;}
+            m().hclk=hi;
+        };
         auto settle=[&]{m().eval();};
         clocks_.edge(tick_*833333,ctl,[&]{m().clk=0;},settle);
         if constexpr(linked_abi<M>) {
@@ -167,11 +172,12 @@ public:
             until([&]{return m().kv_ok&&m().kv_write_drained&&!m().wb_busy&&m().join_debt==0;});
             for(int i=0;i<3;++i)step(); // existing registered slice visibility
             need(descriptors_==1&&go_==1,"actual command/GO count differs");
+            need(h_descriptors_==1&&h_go_==1,"protected descriptor/GO did not commit once to real controllers");
             need(acks_==136,"actual K128/V8 ACK count differs");
             check_token(fixture);check_slices(fixture);
-            std::printf("PASS_RELEASED_P8191_LINKED_JOIN core_edges=%llu controller_edges=%llu descriptor=%llu go=%llu rows=%llu ACK=%llu debt=%u warm_held=1\n",
+            std::printf("PASS_RELEASED_P8191_LINKED_JOIN core_edges=%llu controller_edges=%llu descriptor=%llu go=%llu h_descriptor=%llu h_go=%llu rows=%llu ACK=%llu debt=%u warm_held=1\n",
                 (unsigned long long)tick_,(unsigned long long)clocks_.controller_rises(),
-                (unsigned long long)descriptors_,(unsigned long long)go_,(unsigned long long)rows_,(unsigned long long)acks_,unsigned(m().join_debt));
+                (unsigned long long)descriptors_,(unsigned long long)go_,(unsigned long long)h_descriptors_,(unsigned long long)h_go_,(unsigned long long)rows_,(unsigned long long)acks_,unsigned(m().join_debt));
         } else throw std::runtime_error("compiled producer ABI lacks real warm/held/ACK seam; no substitute run");
     }
     void bad_ack(const Fixture& fixture) {
