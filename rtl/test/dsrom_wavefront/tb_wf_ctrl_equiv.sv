@@ -46,7 +46,7 @@ module tb_wf_ctrl_equiv;
     parameter integer SEED     = 1;
     parameter integer MAXCYC   = 2000000;
     parameter integer NJOBS    = 3000;    // SOURCE = 0: HIDDEN messages to send
-    parameter integer FDLY     = 3;       // the DUT may latch a header-position fault this many cycles later
+    parameter integer FDLY     = 4;       // the DUT may latch a header-position fault this many cycles later
     parameter integer RSTD     = 1;       // the DUT releases reset this many cycles after rst_n (the reference is fed it delayed)
 
     reg clk = 1'b0, rst_n = 1'b0;

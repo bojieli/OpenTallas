@@ -16,8 +16,8 @@
 //   * RESULT_PARTS must be 1 (one chained-argmax RESULT per step).
 // Common to SOURCE 0 / 1: registered mirrors of the RX / SIDE / TX word
 // addresses (no adder before the word-free compares or on vm_*addr), and a
-// HIDDEN header's position check + upos update three cycles after the header
-// (32-user groups, registered): a position fault latches proto_fault THREE cycles
+// HIDDEN header's position check + upos update four cycles after the header
+// (32-user groups, registered): a position fault latches proto_fault FOUR cycles
 // later than the reference (RXWORDS >= 2); and a registered reset root (release one cycle
 // after rst_n_in).  With the reference's reset released one cycle later,
 // every other output is cycle-identical.
@@ -249,11 +249,12 @@ module ot_rom_pkg_ctrl_wfc #(
     (* keep *) reg rst_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
     // A HIDDEN header's position check, pipelined (header at t; hdr_user / hdr_pos hold until the next
-    // header, >= t + RXW + 1): t+1 each group reads its user's entry (registered), t+2 the group is
-    // selected (registered) and hdr_pos + 1 formed, t+3 compare -> proto_fault and write.  The next
-    // header's read (>= t + RXW + 2) sees the write when RXW >= 2.
-    reg          uchk, uchk2, uchk3;
-    reg [NW-1:0] upos_hr, hdr_pos1;
+    // header, >= t + RXW + 1): t+1 each group latches the user's low bits, t+2 reads its entry
+    // (registered), t+3 the group is selected (registered; hdr_pos, hdr_pos + 1 and the group copied),
+    // t+4 compare -> proto_fault and write.  The next header's read (>= t + RXW + 3) sees the write
+    // when RXW >= 2.
+    reg          uchk, uchk2, uchk3, uchk4;
+    reg [NW-1:0] upos_hr, hdr_pos1, pos_c;
 
     // -- core -------------------------------------------------------------------------
     reg          running;              // from the start edge until the job is handed to TX
@@ -385,14 +386,20 @@ module ot_rom_pkg_ctrl_wfc #(
     localparam integer UGS = 32, UNG = (MAXU + UGS - 1) / UGS;
     initial if (RXW < 2) $fatal(1, "ot_rom_pkg_ctrl_wfc: the pipelined position check needs RXWORDS >= 2");
     wire [NW-1:0] ug_part [0:UNG-1];
+    reg  [UNG-1:0] gsel_oh, gw_oh;      // the header user's group (t+2), and for the write (t+3)
     genvar ugi;
     generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
         (* keep_hierarchy *)
         ot_rom_pkg_ctrl_wfc_upos #(.NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
-            .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk),
-            .wr(uchk3 && (hdr_user >> 5) == ugi), .wdata(hdr_pos1), .part(ug_part[ugi]));
+            .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk2),
+            .wr(uchk4 && gw_oh[ugi]), .wdata(hdr_pos1), .part(ug_part[ugi]));
     end endgenerate
-    wire [NW-1:0] upos_sel = ug_part[hdr_user >> 5];
+    reg [NW-1:0] upos_sel;
+    integer usg;
+    always @(*) begin
+        upos_sel = 0;
+        for (usg = 0; usg < UNG; usg = usg + 1) if (gsel_oh[usg]) upos_sel = upos_sel | ug_part[usg];
+    end
 
     // -- combinational port control -------------------------------------------------------
     reg rx_hdr, rx_res, rx_last_word, rx_side, rx_side_last;
@@ -456,7 +463,7 @@ module ot_rom_pkg_ctrl_wfc #(
             tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
-            rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0;
+            rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; uchk4 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; pos_c <= 0; gsel_oh <= 0; gw_oh <= 0;
             res_v <= 1'b0; res_u <= 0; res_p <= 0; res_i <= 0; res_val <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;
             pr_t0 <= 0; pr_t1 <= 0; pr_u0 <= 0; pr_u1 <= 0;
@@ -532,9 +539,10 @@ module ot_rom_pkg_ctrl_wfc #(
             // header at t: read at t+1 (registered), compare and write at t+2 (the next header of a
             // user is >= 2 cycles later: it carries >= 1 payload flit; its read at >= t+3 sees the write)
             if (uchk) uchk <= 1'b0;
-            uchk2 <= uchk; uchk3 <= uchk2;
-            if (uchk2) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos + 1'b1; end
-            if (uchk3 && (hdr_pos > upos_hr || hdr_pos + WIN < upos_hr)) proto_fault <= 1'b1;
+            uchk2 <= uchk; uchk3 <= uchk2; uchk4 <= uchk3;
+            gsel_oh <= {{(UNG-1){1'b0}}, 1'b1} << (hdr_user >> 5);
+            if (uchk3) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos + 1'b1; pos_c <= hdr_pos; gw_oh <= gsel_oh; end
+            if (uchk4 && (pos_c > upos_hr || pos_c + WIN < upos_hr)) proto_fault <= 1'b1;
             res_v <= 1'b0;
             if (rx_res) begin
                 if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
@@ -614,8 +622,9 @@ endmodule
 
 
 // ---------------------------------------------------------------------------
-// 32 users' expected HIDDEN positions (ot_rom_pkg_ctrl_wfc): a registered read
-// of entry `lo` (0 until written) and a write of entry `lo`; its own reset copy.
+// 32 users' expected HIDDEN positions (ot_rom_pkg_ctrl_wfc): `lo` is latched
+// locally; a registered read of that entry (0 until written) and a write of it;
+// its own reset copy (synchronous clear).
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_upos #(parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
@@ -626,12 +635,14 @@ module ot_rom_pkg_ctrl_wfc_upos #(parameter integer NW = 16, parameter integer N
 );
     reg          rq;
     always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+    reg [4:0]    lo_r;                  // local copy of the user's low bits (one cycle later)
     reg [NW-1:0] upos [0:N-1];
     reg [N-1:0]  uval;
-    always @(posedge clk or negedge rq) if (!rq) uval <= 0; else if (wr && lo < N) uval[lo] <= 1'b1;
     always @(posedge clk) begin
-        if (wr && lo < N) upos[lo] <= wdata;
-        if (rd) part <= (lo < N && uval[lo]) ? upos[lo] : {NW{1'b0}};
+        lo_r <= lo;
+        if (!rq) uval <= 0; else if (wr && lo_r < N) uval[lo_r] <= 1'b1;   // synchronous clear
+        if (wr && lo_r < N) upos[lo_r] <= wdata;
+        if (rd) part <= (lo_r < N && uval[lo_r]) ? upos[lo_r] : {NW{1'b0}};
     end
 endmodule
 
@@ -642,17 +653,18 @@ endmodule
 // back, up to WIN in flight; verify each result against the token issued at
 // q + 1; reject -> squash + re-issue; feed the argmax back), but every event
 // is a serial read-modify-write of ONE user's record, in 32-user groups:
-//   RD1  every group reads entry ou[4:0] (registered)
-//   RD2  the group ou >> 5 is selected (registered)
-//   EX   the record is updated and written back; a start / prompt read /
-//        committed token leaves on this cycle.
+//   RD0  every group latches ou[4:0]; the group of ou is decoded (registered)
+//   RD1  every group reads that entry (registered)
+//   RD2  the group is selected (registered)
+//   EX   the record is updated (written back on the next cycle, registered);
+//        a start / prompt read / committed token leaves on this cycle.
 // Events, in priority order when idle: a queued RESULT, a queued prompt-read
 // return, a new user's first position (single cycle, as the reference), the
 // lowest eligible user's known-token issue, the lowest user needing a prompt
 // read.  The lowest eligible user comes from per-group registered priority
 // encoders and a registered group select, valid 3 cycles after the last
 // record write (settle).  Cost against the reference: an issue, a commit or a
-// verify happens 3-6 cycles later; a stage's job is thousands of cycles.
+// verify happens a few cycles later (measured: +2.8 cycles an issue); a stage's job is thousands of cycles.
 // RESULT messages queue (4 deep; in_ready drops at 3 queued).
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_src #(
@@ -686,7 +698,7 @@ module ot_rom_pkg_ctrl_wfc_src #(
     // [13:11] k0, [17:14] wblk, then wnp, wkt, er (NW each)
     localparam integer O_WNP = 18, O_WKT = 18 + NW, O_ER = 18 + 2 * NW, RW = 18 + 3 * NW;
     localparam [1:0] K_RES = 0, K_PRET = 1, K_ISS = 2, K_RD = 3;
-    localparam [1:0] S_IDLE = 0, S_RD1 = 1, S_RD2 = 2, S_EX = 3;
+    localparam [2:0] S_IDLE = 0, S_RD0 = 4, S_RD1 = 1, S_RD2 = 2, S_EX = 3;
 
     // run configuration (held while users are in flight)
     reg [NW-1:0] steps, steps_m1, plen;
@@ -714,7 +726,8 @@ module ot_rom_pkg_ctrl_wfc_src #(
     reg [UCW-1:0] next_u; reg nu_ok, nu_pend; reg [NW-1:0] nu_tok;
 
     // ---- groups
-    reg  [1:0]        st, kind;
+    reg  [2:0]        st;
+    reg  [1:0]        kind;
     reg  [USER_W-1:0] ou;
     reg  [2:0]        oslot;
     reg  [NW-1:0]     o_p, o_i, o_q; reg [3:0] o_b; reg o_k;
@@ -724,15 +737,17 @@ module ot_rom_pkg_ctrl_wfc_src #(
     wire [4:0]        g_klo [0:NG-1];
     wire [4:0]        g_flo [0:NG-1];
     reg               w_en, w_ren; reg [USER_W-1:0] w_u; reg [RW-1:0] w_rec; reg [2:0] w_slot; reg [NW-1:0] w_data;
+    // write-back one cycle after EX (registered); the next event's read is >= 2 cycles later
+    reg               b_en, b_ren; reg [NG-1:0] b_oh; reg [4:0] b_lo; reg [RW-1:0] b_rec; reg [2:0] b_slot;
+    reg [NW-1:0]      b_data; reg b_ek, b_ef;
+    reg [NG-1:0]      o_oh;           // ou's group, one-hot (RD0 ->)
     genvar gi;
     generate for (gi = 0; gi < NG; gi = gi + 1) begin : g
         (* keep_hierarchy *)
         ot_rom_pkg_ctrl_wfc_grp #(.RW(RW), .NW(NW), .N((MAXU - gi * GS) < GS ? (MAXU - gi * GS) : GS)) grp (
             .clk(clk), .rst_n(rst_n), .rd_lo(ou[4:0]), .rd_slot(oslot), .rec_q(g_rec[gi]), .ring_q(g_ring[gi]),
-            .we(w_en && (w_u >> 5) == gi), .wlo(w_u[4:0]), .wrec(w_rec),
-            .wek(w_rec[0] && w_rec[2] && w_rec[7:5] < WIN && w_rec[1]),
-            .wef(w_rec[0] && !w_rec[2] && !w_rec[3] && !w_rec[4] && w_rec[1]),
-            .rwe(w_ren && (w_u >> 5) == gi), .rslot(w_slot), .rdata(w_data),
+            .we(b_en && b_oh[gi]), .wlo(b_lo), .wrec(b_rec), .wek(b_ek), .wef(b_ef),
+            .rwe(b_ren && b_oh[gi]), .rslot(b_slot), .rdata(b_data),
             .k_any(g_kany[gi]), .k_lo(g_klo[gi]), .f_any(g_fany[gi]), .f_lo(g_flo[gi]));
     end endgenerate
     // lowest eligible user: registered group select over the groups' registered encoders
@@ -747,7 +762,19 @@ module ot_rom_pkg_ctrl_wfc_src #(
     end
     // the record of ou (RD2 -> EX)
     reg [RW-1:0] rec; reg [NW-1:0] ring;
-    always @(posedge clk) begin rec <= g_rec[ou >> 5]; ring <= g_ring[ou >> 5]; end
+    reg [RW-1:0] rsel; reg [NW-1:0] rgsel;
+    integer sg;
+    always @(*) begin
+        rsel = 0; rgsel = 0;
+        for (sg = 0; sg < NG; sg = sg + 1) if (o_oh[sg]) begin rsel = rsel | g_rec[sg]; rgsel = rgsel | g_ring[sg]; end
+    end
+    always @(posedge clk) begin
+        rec <= rsel; ring <= rgsel; o_oh <= {{(NG-1){1'b0}}, 1'b1} << (ou >> 5);
+        b_en <= w_en; b_ren <= w_ren; b_oh <= {{(NG-1){1'b0}}, 1'b1} << (w_u >> 5); b_lo <= w_u[4:0];
+        b_rec <= w_rec; b_slot <= w_slot; b_data <= w_data;
+        b_ek <= w_rec[0] && w_rec[2] && w_rec[7:5] < WIN && w_rec[1];
+        b_ef <= w_rec[0] && !w_rec[2] && !w_rec[3] && !w_rec[4] && w_rec[1];
+    end
     wire          r_stv = rec[0], r_lt = rec[1], r_wkv = rec[2], r_wkp = rec[3], r_wkm = rec[4];
     wire [2:0]    r_wnf = rec[7:5], r_wsq = rec[10:8], r_k0 = rec[13:11];
     wire [3:0]    r_wblk = rec[17:14];
@@ -828,7 +855,7 @@ module ot_rom_pkg_ctrl_wfc_src #(
             t0 <= 0; t1 <= 0; u0 <= 0; u1 <= 0; p0 <= 0; p1 <= 0; b0 <= 0; b1 <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0; settle <= 0;
         end else begin
-            settle <= w_en ? 3'd0 : (settle == 3'd3 ? 3'd3 : settle + 1'b1);
+            settle <= (w_en || b_en) ? 3'd0 : (settle == 3'd3 ? 3'd3 : settle + 1'b1);
             // RESULT queue
             if (res_v) begin rq_u[rq_w] <= res_u; rq_p[rq_w] <= res_p; rq_i[rq_w] <= res_i; rq_w <= rq_w + 1'b1; end
             // prompt reads in flight
@@ -845,19 +872,20 @@ module ot_rom_pkg_ctrl_wfc_src #(
             case (st)
                 S_IDLE: begin
                     if (rq_n != 0) begin
-                        st <= S_RD1; kind <= K_RES; ou <= rq_u[rq_r]; o_p <= rq_p[rq_r]; o_i <= rq_i[rq_r];
+                        st <= S_RD0; kind <= K_RES; ou <= rq_u[rq_r]; o_p <= rq_p[rq_r]; o_i <= rq_i[rq_r];
                         oslot <= rq_p[rq_r][2:0] + 3'd1; rq_r <= rq_r + 1'b1;
                     end else if (pq_n != 0) begin
-                        st <= S_RD1; kind <= K_PRET; ou <= pq_u[pq_r]; o_p <= pq_pos[pq_r]; o_b <= pq_blk[pq_r];
+                        st <= S_RD0; kind <= K_PRET; ou <= pq_u[pq_r]; o_p <= pq_pos[pq_r]; o_b <= pq_blk[pq_r];
                         o_q <= pq_q[pq_r]; o_k <= pq_k[pq_r]; pq_r <= pq_r + 1'b1;
                     end else if (idle_new) begin
                         st <= S_IDLE;
                     end else if (!nu_ok && settle == 3'd3 && ck_v && core_free) begin
-                        st <= S_RD1; kind <= K_ISS; ou <= ck_u;
+                        st <= S_RD0; kind <= K_ISS; ou <= ck_u;
                     end else if (settle == 3'd3 && cf_v && !fetch) begin
-                        st <= S_RD1; kind <= K_RD; ou <= cf_u;
+                        st <= S_RD0; kind <= K_RD; ou <= cf_u;
                     end
                 end
+                S_RD0: st <= S_RD1;
                 S_RD1: st <= S_RD2;
                 S_RD2: st <= S_EX;
                 default: st <= S_IDLE;
@@ -870,10 +898,10 @@ endmodule
 
 // ---------------------------------------------------------------------------
 // 32 users' wavefront records + issued-token rings (ot_rom_pkg_ctrl_wfc_src):
-// one registered read port (record of rd_lo, ring entry rd_slot), one write
-// port, registered lowest-eligible encoders.  Only the started / eligibility
-// bits are reset (own reset copy); a record is written whole when its user
-// starts and read only after.
+// one read port (address latched locally, then a registered read of the record
+// and ring entry), one write port, registered lowest-eligible encoders.  Only
+// the started / eligibility bits are cleared (own reset copy, synchronous); a
+// record is written whole when its user starts and read only after.
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_grp #(parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
@@ -893,17 +921,18 @@ module ot_rom_pkg_ctrl_wfc_grp #(parameter integer RW = 64, parameter integer NW
 );
     reg          rq;
     always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+    reg [4:0]    lo_r; reg [2:0] slot_r;   // local copies of the read address (one cycle later)
     reg [RW-1:1] recm [0:N-1];
     reg [NW-1:0] ringm [0:N*8-1];
     reg [N-1:0]  stv, ek, ef;
-    always @(posedge clk or negedge rq)
-        if (!rq) begin stv <= 0; ek <= 0; ef <= 0; end
-        else if (we && wlo < N) begin stv[wlo] <= wrec[0]; ek[wlo] <= wek; ef[wlo] <= wef; end
     always @(posedge clk) begin
+        lo_r <= rd_lo; slot_r <= rd_slot;
+        if (!rq) begin stv <= 0; ek <= 0; ef <= 0; end                    // synchronous clear
+        else if (we && wlo < N) begin stv[wlo] <= wrec[0]; ek[wlo] <= wek; ef[wlo] <= wef; end
         if (we && wlo < N) recm[wlo] <= wrec[RW-1:1];
         if (rwe && wlo < N) ringm[{wlo, rslot}] <= rdata;
-        rec_q <= (rd_lo < N) ? {recm[rd_lo], stv[rd_lo]} : {RW{1'b0}};
-        ring_q <= (rd_lo < N) ? ringm[{rd_lo, rd_slot}] : {NW{1'b0}};
+        rec_q <= (lo_r < N) ? {recm[lo_r], stv[lo_r]} : {RW{1'b0}};
+        ring_q <= (lo_r < N) ? ringm[{lo_r, slot_r}] : {NW{1'b0}};
     end
     integer k;
     always @(posedge clk) begin
