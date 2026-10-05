@@ -2943,19 +2943,19 @@
    }
   },
   "candidate_gather.lat100.s81_window_la": {
-   "AR_us": 404.263,
-   "AR_tok_s": 2473.6,
+   "AR_us": 404.29,
+   "AR_tok_s": 2473.5,
    "II_us": 12.9,
-   "verify_us": 468.765,
+   "verify_us": 468.792,
    "stage_occupancy_us": {
     "head": 12.37,
     "L20": 11.791,
     "reindex": 4.164
    },
    "MTP_tok_s": {
-    "fused_us": 7201.3,
-    "as_built_us": 6747.0,
-    "l1l2_nv5_us": 7876.1
+    "fused_us": 7201.0,
+    "as_built_us": 6746.7,
+    "l1l2_nv5_us": 7875.7
    },
    "per_layer_type": {
     "swa": {
@@ -2970,7 +2970,7 @@
      "count": 1,
      "kind": "engram+sliding",
      "model_us": 8.841,
-     "measured_composed_us": 9.21
+     "measured_composed_us": 9.211
     },
     "csa2_full": {
      "representative": 2,
@@ -2984,7 +2984,7 @@
      "count": 15,
      "kind": "ratio2",
      "model_us": 8.327,
-     "measured_composed_us": 8.475
+     "measured_composed_us": 8.476
     },
     "csa1_full": {
      "representative": 20,
@@ -2998,7 +2998,7 @@
      "count": 15,
      "kind": "ratio1",
      "model_us": 8.327,
-     "measured_composed_us": 8.475
+     "measured_composed_us": 8.476
     },
     "csa1_reindex": {
      "representative": 24,
@@ -3793,8 +3793,8 @@
     {
      "node": "L0.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.245,
-     "measured_cycles": 294,
+     "measured_us": 0.2458,
+     "measured_cycles": 295,
      "source": "L0.lf: start -> rows delivered (la)"
     },
     {
@@ -3807,8 +3807,8 @@
     {
      "node": "L1.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.245,
-     "measured_cycles": 294,
+     "measured_us": 0.2458,
+     "measured_cycles": 295,
      "source": "L0.lf: start -> rows delivered (la)"
     },
     {
@@ -3821,8 +3821,8 @@
     {
      "node": "L2.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -3835,8 +3835,8 @@
     {
      "node": "L3.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3849,8 +3849,8 @@
     {
      "node": "L4.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3863,8 +3863,8 @@
     {
      "node": "L5.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3877,8 +3877,8 @@
     {
      "node": "L6.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3891,8 +3891,8 @@
     {
      "node": "L7.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3905,8 +3905,8 @@
     {
      "node": "L8.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -3919,8 +3919,8 @@
     {
      "node": "L9.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3933,8 +3933,8 @@
     {
      "node": "L10.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3947,8 +3947,8 @@
     {
      "node": "L11.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3961,8 +3961,8 @@
     {
      "node": "L12.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3975,8 +3975,8 @@
     {
      "node": "L13.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -3989,8 +3989,8 @@
     {
      "node": "L14.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -4003,8 +4003,8 @@
     {
      "node": "L15.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4017,8 +4017,8 @@
     {
      "node": "L16.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4031,8 +4031,8 @@
     {
      "node": "L17.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4045,8 +4045,8 @@
     {
      "node": "L18.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4059,8 +4059,8 @@
     {
      "node": "L19.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4073,8 +4073,8 @@
     {
      "node": "L20.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -4087,8 +4087,8 @@
     {
      "node": "L21.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4101,8 +4101,8 @@
     {
      "node": "L22.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4115,8 +4115,8 @@
     {
      "node": "L23.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4129,8 +4129,8 @@
     {
      "node": "L24.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -4143,8 +4143,8 @@
     {
      "node": "L25.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4157,8 +4157,8 @@
     {
      "node": "L26.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4171,8 +4171,8 @@
     {
      "node": "L27.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4185,8 +4185,8 @@
     {
      "node": "L28.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -4199,8 +4199,8 @@
     {
      "node": "L29.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4213,8 +4213,8 @@
     {
      "node": "L30.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4227,8 +4227,8 @@
     {
      "node": "L31.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4241,8 +4241,8 @@
     {
      "node": "L32.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -4255,8 +4255,8 @@
     {
      "node": "L33.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4269,8 +4269,8 @@
     {
      "node": "L34.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4283,8 +4283,8 @@
     {
      "node": "L35.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4297,8 +4297,8 @@
     {
      "node": "L36.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -4311,8 +4311,8 @@
     {
      "node": "L37.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4325,8 +4325,8 @@
     {
      "node": "L38.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -4339,13 +4339,13 @@
     {
      "node": "L39.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     }
    ],
    "still_modelled_context_terms": [],
-   "delta_vs_candidate_gather_AR_us": 10.495,
+   "delta_vs_candidate_gather_AR_us": 10.522,
    "window_record": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
    "gather_read": "s81_wmux_rank1_p1_t05340"
   },
@@ -8692,19 +8692,19 @@
    }
   },
   "candidate_gather.lat259.s81_window_la": {
-   "AR_us": 405.323,
-   "AR_tok_s": 2467.2,
+   "AR_us": 405.35,
+   "AR_tok_s": 2467.0,
    "II_us": 12.9,
-   "verify_us": 469.825,
+   "verify_us": 469.852,
    "stage_occupancy_us": {
     "head": 12.37,
     "L20": 11.791,
     "reindex": 4.164
    },
    "MTP_tok_s": {
-    "fused_us": 7188.1,
-    "as_built_us": 6735.4,
-    "l1l2_nv5_us": 7860.3
+    "fused_us": 7187.8,
+    "as_built_us": 6735.1,
+    "l1l2_nv5_us": 7859.9
    },
    "per_layer_type": {
     "swa": {
@@ -8719,7 +8719,7 @@
      "count": 1,
      "kind": "engram+sliding",
      "model_us": 8.841,
-     "measured_composed_us": 9.21
+     "measured_composed_us": 9.211
     },
     "csa2_full": {
      "representative": 2,
@@ -8733,7 +8733,7 @@
      "count": 15,
      "kind": "ratio2",
      "model_us": 8.327,
-     "measured_composed_us": 8.475
+     "measured_composed_us": 8.476
     },
     "csa1_full": {
      "representative": 20,
@@ -8747,7 +8747,7 @@
      "count": 15,
      "kind": "ratio1",
      "model_us": 8.327,
-     "measured_composed_us": 8.475
+     "measured_composed_us": 8.476
     },
     "csa1_reindex": {
      "representative": 24,
@@ -9542,8 +9542,8 @@
     {
      "node": "L0.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.245,
-     "measured_cycles": 294,
+     "measured_us": 0.2458,
+     "measured_cycles": 295,
      "source": "L0.lf: start -> rows delivered (la)"
     },
     {
@@ -9556,8 +9556,8 @@
     {
      "node": "L1.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.245,
-     "measured_cycles": 294,
+     "measured_us": 0.2458,
+     "measured_cycles": 295,
      "source": "L0.lf: start -> rows delivered (la)"
     },
     {
@@ -9570,8 +9570,8 @@
     {
      "node": "L2.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -9584,8 +9584,8 @@
     {
      "node": "L3.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9598,8 +9598,8 @@
     {
      "node": "L4.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9612,8 +9612,8 @@
     {
      "node": "L5.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9626,8 +9626,8 @@
     {
      "node": "L6.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9640,8 +9640,8 @@
     {
      "node": "L7.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9654,8 +9654,8 @@
     {
      "node": "L8.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -9668,8 +9668,8 @@
     {
      "node": "L9.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9682,8 +9682,8 @@
     {
      "node": "L10.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9696,8 +9696,8 @@
     {
      "node": "L11.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9710,8 +9710,8 @@
     {
      "node": "L12.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9724,8 +9724,8 @@
     {
      "node": "L13.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9738,8 +9738,8 @@
     {
      "node": "L14.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -9752,8 +9752,8 @@
     {
      "node": "L15.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9766,8 +9766,8 @@
     {
      "node": "L16.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9780,8 +9780,8 @@
     {
      "node": "L17.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9794,8 +9794,8 @@
     {
      "node": "L18.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9808,8 +9808,8 @@
     {
      "node": "L19.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9822,8 +9822,8 @@
     {
      "node": "L20.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.2161,
-     "measured_cycles": 259,
+     "measured_us": 0.2167,
+     "measured_cycles": 260,
      "source": "L20.lf_scan: write under scan, load after it (la)"
     },
     {
@@ -9836,8 +9836,8 @@
     {
      "node": "L21.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9850,8 +9850,8 @@
     {
      "node": "L22.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9864,8 +9864,8 @@
     {
      "node": "L23.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9878,8 +9878,8 @@
     {
      "node": "L24.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -9892,8 +9892,8 @@
     {
      "node": "L25.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9906,8 +9906,8 @@
     {
      "node": "L26.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9920,8 +9920,8 @@
     {
      "node": "L27.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9934,8 +9934,8 @@
     {
      "node": "L28.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -9948,8 +9948,8 @@
     {
      "node": "L29.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9962,8 +9962,8 @@
     {
      "node": "L30.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9976,8 +9976,8 @@
     {
      "node": "L31.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -9990,8 +9990,8 @@
     {
      "node": "L32.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -10004,8 +10004,8 @@
     {
      "node": "L33.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -10018,8 +10018,8 @@
     {
      "node": "L34.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -10032,8 +10032,8 @@
     {
      "node": "L35.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -10046,8 +10046,8 @@
     {
      "node": "L36.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.167,
-     "measured_cycles": 200,
+     "measured_us": 0.1677,
+     "measured_cycles": 201,
      "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (la)"
     },
     {
@@ -10060,8 +10060,8 @@
     {
      "node": "L37.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -10074,8 +10074,8 @@
     {
      "node": "L38.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     },
     {
@@ -10088,13 +10088,13 @@
     {
      "node": "L39.attn.window_load",
      "model_us": 0.0,
-     "measured_us": 0.1358,
-     "measured_cycles": 163,
+     "measured_us": 0.1367,
+     "measured_cycles": 164,
      "source": "L24.lf: no concurrent index traffic (la)"
     }
    ],
    "still_modelled_context_terms": [],
-   "delta_vs_candidate_gather_AR_us": 10.495,
+   "delta_vs_candidate_gather_AR_us": 10.522,
    "window_record": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
    "gather_read": "s81_wmux_rank1_p1_t05340"
   },
@@ -11617,9 +11617,9 @@
   },
   "s81_window": {
    "la": {
-    "AR_tok_s": 2467.2,
-    "MTP_fused_tok_s": 7188.1,
-    "AR_us": 405.323,
+    "AR_tok_s": 2467.0,
+    "MTP_fused_tok_s": 7187.8,
+    "AR_us": 405.35,
     "II_us": 12.9
    },
    "asbuilt_c8": {

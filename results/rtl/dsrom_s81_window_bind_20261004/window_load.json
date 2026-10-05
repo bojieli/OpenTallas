@@ -20,12 +20,12 @@
   "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a",
   "rtl/dsrom_sys/c8/ot_hdc_v41x_idx_hbm_c8.sv": "33e87494eb0d6d2c5d4bed54d3c4b224c94dbee09995873237ba9bd9e92ffadb",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_kgather.sv": "0d4b41add2e98afde8503d5393d642fdc6e3c367de299631ce9758d3473eb01c",
-  "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv": "cf171ef4f5d1e0214caef83f528fa499e0f990ab4136787ba80485f0bfdc0f51",
-  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv": "282db8ec8fa832a7f9676072880235435212fece091b9ffaa271c9d47c2c28d5",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv": "d5635cc7b5cda58bdaca68b9a5c16691c809fb8f9e3eb3384f583d4ec665be2d",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv": "8cd6fd564279a672d3648b8444387adf951a909c38173d3719432bbb23871ce0",
   "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv": "acb0239e7efe013a8b7de891abcf200963a83d8d997fa4cf950a521fb94d378f",
   "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv": "5c2d9b8f9166ac25d8682239059edf4f37f7aedc019a5296a03c71de2ff9fa61",
   "rtl/test/dsrom_sys/s81_window_la/tb_dsrom_s81_window_la.sv": "76a123ca0e796d6f1dad4d52d941c0071271d157860416522a8477c1377887af",
-  "tools/dsrom_s81_window_la.py": "fad82d881daa80498d7baea72943dcc603fe9fd0c5a212d7b99ea17fe1c52b81"
+  "tools/dsrom_s81_window_la.py": "ed456b6408f92003bc2fab6c460f5ecdf546b648468e0697288d2ffe668b80e2"
  },
  "vectors": {
   "position": 1048575,
@@ -233,11 +233,11 @@
    "pass_": 64,
    "load_cycles": {
     "n": 64,
-    "mean": 163.0,
-    "median": 156.0,
-    "p90": 156,
-    "max": 363,
-    "min": 156
+    "mean": 164.0,
+    "median": 157.0,
+    "p90": 157,
+    "max": 364,
+    "min": 157
    },
    "write_cycles": {
     "n": 64,
@@ -249,26 +249,26 @@
    },
    "stream_cycles": {
     "n": 64,
-    "mean": 294.0,
-    "median": 287.0,
-    "p90": 287,
-    "max": 494,
-    "min": 287
+    "mean": 295.0,
+    "median": 288.0,
+    "p90": 288,
+    "max": 495,
+    "min": 288
    },
-   "load_us_mean": 0.1358,
-   "load_us_max": 0.3024,
-   "TBps_mean_time": 0.5128,
-   "fraction_of_stack_peak_mean_time": 0.5128,
-   "TBps_best": 0.5358,
+   "load_us_mean": 0.1366,
+   "load_us_max": 0.3032,
+   "TBps_mean_time": 0.5097,
+   "fraction_of_stack_peak_mean_time": 0.5097,
+   "TBps_best": 0.5324,
    "sustained_after_first_access": {
     "median": 0.774,
-    "mean": 0.7535,
+    "mean": 0.7538,
     "min": 0.2645
    },
    "dram_check": {
     "cases": 64,
     "violations": 0,
-    "refpb": 402675,
+    "refpb": 402748,
     "ref_gap_max_ns": 2061.675
    }
   },
@@ -286,11 +286,11 @@
    "pass_": 64,
    "load_cycles": {
     "n": 64,
-    "mean": 166.5,
-    "median": 156.0,
-    "p90": 165,
-    "max": 361,
-    "min": 156
+    "mean": 167.4,
+    "median": 157.0,
+    "p90": 166,
+    "max": 362,
+    "min": 157
    },
    "write_cycles": {
     "n": 64,
@@ -302,26 +302,26 @@
    },
    "stream_cycles": {
     "n": 64,
-    "mean": 297.5,
-    "median": 287.0,
-    "p90": 296,
-    "max": 492,
-    "min": 287
+    "mean": 298.4,
+    "median": 288.0,
+    "p90": 297,
+    "max": 493,
+    "min": 288
    },
-   "load_us_mean": 0.1387,
-   "load_us_max": 0.3007,
-   "TBps_mean_time": 0.5021,
-   "fraction_of_stack_peak_mean_time": 0.5021,
-   "TBps_best": 0.5358,
+   "load_us_mean": 0.1394,
+   "load_us_max": 0.3015,
+   "TBps_mean_time": 0.4994,
+   "fraction_of_stack_peak_mean_time": 0.4994,
+   "TBps_best": 0.5324,
    "sustained_after_first_access": {
     "median": 0.9834,
-    "mean": 0.9387,
+    "mean": 0.939,
     "min": 0.2873
    },
    "dram_check": {
     "cases": 64,
     "violations": 0,
-    "refpb": 368827,
+    "refpb": 368865,
     "ref_gap_max_ns": 2052.512
    }
   },
@@ -391,7 +391,7 @@
    "pass_": 64,
    "load_cycles": {
     "n": 64,
-    "mean": 322.3,
+    "mean": 322.5,
     "median": 304.5,
     "p90": 440,
     "max": 827,
@@ -407,26 +407,26 @@
    },
    "stream_cycles": {
     "n": 64,
-    "mean": 453.3,
+    "mean": 453.5,
     "median": 435.5,
     "p90": 571,
     "max": 958,
     "min": 372
    },
-   "load_us_mean": 0.2685,
+   "load_us_mean": 0.2686,
    "load_us_max": 0.6889,
-   "TBps_mean_time": 0.2594,
-   "fraction_of_stack_peak_mean_time": 0.2594,
+   "TBps_mean_time": 0.2592,
+   "fraction_of_stack_peak_mean_time": 0.2592,
    "TBps_best": 0.3469,
    "sustained_after_first_access": {
-    "median": 0.4255,
-    "mean": 0.4628,
+    "median": 0.4276,
+    "mean": 0.4636,
     "min": 0.1166
    },
    "dram_check": {
     "cases": 64,
     "violations": 0,
-    "refpb": 506366,
+    "refpb": 506372,
     "ref_gap_max_ns": 2074.918
    }
   },
@@ -445,8 +445,8 @@
    "pass_": 64,
    "load_cycles": {
     "n": 64,
-    "mean": 259.3,
-    "median": 187.0,
+    "mean": 260.0,
+    "median": 188.0,
     "p90": 385,
     "max": 526,
     "min": 178
@@ -461,26 +461,26 @@
    },
    "stream_cycles": {
     "n": 64,
-    "mean": 390.3,
-    "median": 318.0,
+    "mean": 391.0,
+    "median": 319.0,
     "p90": 516,
     "max": 657,
     "min": 309
    },
-   "load_us_mean": 0.216,
+   "load_us_mean": 0.2166,
    "load_us_max": 0.4382,
-   "TBps_mean_time": 0.3224,
-   "fraction_of_stack_peak_mean_time": 0.3224,
+   "TBps_mean_time": 0.3215,
+   "fraction_of_stack_peak_mean_time": 0.3215,
    "TBps_best": 0.4696,
    "sustained_after_first_access": {
     "median": 0.5971,
-    "mean": 0.4664,
-    "min": 0.1745
+    "mean": 0.4669,
+    "min": 0.1749
    },
    "dram_check": {
     "cases": 64,
     "violations": 0,
-    "refpb": 615898,
+    "refpb": 615995,
     "ref_gap_max_ns": 2074.918
    }
   },
@@ -497,11 +497,11 @@
    "pass_": 64,
    "load_cycles": {
     "n": 64,
-    "mean": 163.0,
-    "median": 156.0,
-    "p90": 156,
-    "max": 363,
-    "min": 156
+    "mean": 164.0,
+    "median": 157.0,
+    "p90": 157,
+    "max": 364,
+    "min": 157
    },
    "write_cycles": {
     "n": 64,
@@ -513,26 +513,26 @@
    },
    "stream_cycles": {
     "n": 64,
-    "mean": 294.0,
-    "median": 287.0,
-    "p90": 287,
-    "max": 494,
-    "min": 287
+    "mean": 295.0,
+    "median": 288.0,
+    "p90": 288,
+    "max": 495,
+    "min": 288
    },
-   "load_us_mean": 0.1358,
-   "load_us_max": 0.3024,
-   "TBps_mean_time": 0.5128,
-   "fraction_of_stack_peak_mean_time": 0.5128,
-   "TBps_best": 0.5358,
+   "load_us_mean": 0.1366,
+   "load_us_max": 0.3032,
+   "TBps_mean_time": 0.5097,
+   "fraction_of_stack_peak_mean_time": 0.5097,
+   "TBps_best": 0.5324,
    "sustained_after_first_access": {
     "median": 0.774,
-    "mean": 0.7535,
+    "mean": 0.7538,
     "min": 0.2645
    },
    "dram_check": {
     "cases": 64,
     "violations": 0,
-    "refpb": 402675,
+    "refpb": 402748,
     "ref_gap_max_ns": 2061.675
    }
   },
@@ -552,11 +552,11 @@
    "pass_": 8,
    "load_cycles": {
     "n": 8,
-    "mean": 197.1,
-    "median": 175.0,
+    "mean": 198,
+    "median": 176.0,
     "p90": 352,
     "max": 352,
-    "min": 175
+    "min": 176
    },
    "write_cycles": {
     "n": 8,
@@ -568,26 +568,26 @@
    },
    "stream_cycles": {
     "n": 8,
-    "mean": 328.1,
-    "median": 306.0,
+    "mean": 329,
+    "median": 307.0,
     "p90": 483,
     "max": 483,
-    "min": 306
+    "min": 307
    },
-   "load_us_mean": 0.1642,
+   "load_us_mean": 0.1649,
    "load_us_max": 0.2932,
-   "TBps_mean_time": 0.4241,
-   "fraction_of_stack_peak_mean_time": 0.4241,
-   "TBps_best": 0.4777,
+   "TBps_mean_time": 0.4222,
+   "fraction_of_stack_peak_mean_time": 0.4222,
+   "TBps_best": 0.475,
    "sustained_after_first_access": {
     "median": 0.6531,
-    "mean": 0.6057,
-    "min": 0.2741
+    "mean": 0.6058,
+    "min": 0.275
    },
    "dram_check": {
     "cases": 8,
     "violations": 0,
-    "refpb": 52864,
+    "refpb": 52877,
     "ref_gap_max_ns": 2083.611
    },
    "kgather_cycles": {
@@ -616,11 +616,11 @@
    "pass_": 8,
    "load_cycles": {
     "n": 8,
-    "mean": 200.4,
-    "median": 178.0,
+    "mean": 201.2,
+    "median": 179.0,
     "p90": 357,
     "max": 357,
-    "min": 178
+    "min": 179
    },
    "write_cycles": {
     "n": 8,
@@ -632,26 +632,26 @@
    },
    "stream_cycles": {
     "n": 8,
-    "mean": 331.4,
-    "median": 309.0,
+    "mean": 332.2,
+    "median": 310.0,
     "p90": 488,
     "max": 488,
-    "min": 309
+    "min": 310
    },
-   "load_us_mean": 0.1669,
+   "load_us_mean": 0.1676,
    "load_us_max": 0.2974,
-   "TBps_mean_time": 0.4171,
-   "fraction_of_stack_peak_mean_time": 0.4171,
-   "TBps_best": 0.4696,
+   "TBps_mean_time": 0.4155,
+   "fraction_of_stack_peak_mean_time": 0.4155,
+   "TBps_best": 0.467,
    "sustained_after_first_access": {
     "median": 0.6381,
-    "mean": 0.592,
-    "min": 0.2697
+    "mean": 0.5921,
+    "min": 0.2705
    },
    "dram_check": {
     "cases": 8,
     "violations": 0,
-    "refpb": 52563,
+    "refpb": 52575,
     "ref_gap_max_ns": 2083.611
    },
    "kgather_cycles": {
@@ -679,11 +679,11 @@
    "pass_": 8,
    "load_cycles": {
     "n": 8,
-    "mean": 157.5,
-    "median": 156.0,
+    "mean": 158.4,
+    "median": 157.0,
     "p90": 168,
     "max": 168,
-    "min": 156
+    "min": 157
    },
    "write_cycles": {
     "n": 8,
@@ -695,26 +695,26 @@
    },
    "stream_cycles": {
     "n": 8,
-    "mean": 288.5,
-    "median": 287.0,
+    "mean": 289.4,
+    "median": 288.0,
     "p90": 299,
     "max": 299,
-    "min": 287
+    "min": 288
    },
-   "load_us_mean": 0.1312,
+   "load_us_mean": 0.1319,
    "load_us_max": 0.1399,
-   "TBps_mean_time": 0.5307,
-   "fraction_of_stack_peak_mean_time": 0.5307,
-   "TBps_best": 0.5358,
+   "TBps_mean_time": 0.5277,
+   "fraction_of_stack_peak_mean_time": 0.5277,
+   "TBps_best": 0.5324,
    "sustained_after_first_access": {
     "median": 0.774,
-    "mean": 0.7636,
-    "min": 0.6908
+    "mean": 0.7643,
+    "min": 0.6966
    },
    "dram_check": {
     "cases": 8,
     "violations": 0,
-    "refpb": 50153,
+    "refpb": 50145,
     "ref_gap_max_ns": 2093.559
    },
    "kgather_cycles": {
@@ -732,22 +732,22 @@
   "la": {
    "window_only": {
     "own_row_write_cycles": 649.8,
-    "window_cycles": 294.0,
+    "window_cycles": 295.0,
     "source": "L0.lf: start -> rows delivered"
    },
    "scan": {
     "own_row_write_cycles": 3220.6,
-    "window_cycles": 259.3,
+    "window_cycles": 260.0,
     "source": "L20.lf_scan: write under scan, load after it"
    },
    "reindex": {
     "own_row_write_cycles": 1129.9,
-    "window_cycles": 200.4,
+    "window_cycles": 201.2,
     "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it"
    },
    "reuse": {
     "own_row_write_cycles": 649.8,
-    "window_cycles": 163.0,
+    "window_cycles": 164.0,
     "source": "L24.lf: no concurrent index traffic"
    }
   },
