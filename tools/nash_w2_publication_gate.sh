@@ -26,7 +26,7 @@ Path('private_alloc.svh').write_text(f'localparam integer RAM_BYTES=8192;\nlocal
 print('ACTUAL_PROGRAM_PUT private RAM8192B A',base_a,'B',base_b,'each64B, guard64B')
 PY
 verilator --version > "$job/toolchain.log"
-verilator --binary --timing -j 2 -Wno-fatal --top-module tb_hbm_integrated_w2_publication_nash --Mdir "$job/obj" -I. \
+verilator --binary --timing -j 2 -Wno-fatal ${NASH_W2_REGISTERED_SUBBLOCKS:+-GREGISTERED_SUBBLOCKS=$NASH_W2_REGISTERED_SUBBLOCKS} --top-module tb_hbm_integrated_w2_publication_nash --Mdir "$job/obj" -I. \
  rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv \
  rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv \
  rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv \
