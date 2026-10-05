@@ -39,14 +39,14 @@ module ot_hbm_integrated_prior_debt #(parameter integer ENABLE=0,NC=4)(
  // feedback path without registering or manufacturing authorization.
  wire [NC-1:0] authorized;
  for(genvar ac=0;ac<NC;ac=ac+1)begin:authorization
-  wire [31:0] matches;
+  wire [31:0] slot_matches;
   for(genvar aslot=0;aslot<32;aslot=aslot+1)begin:slots
    assign live_slots[ac*32+aslot]=raw[ac*576+aslot*18+17];
-   assign matches[aslot]=raw[ac*576+aslot*18+17]&&
+   assign slot_matches[aslot]=raw[ac*576+aslot*18+17]&&
     raw[ac*576+aslot*18+:16]==observe_rsp_tag[ac*16+:16]&&
     raw[ac*576+aslot*18+16]==observe_rsp_we[ac];
   end
-  assign authorized[ac]=(|matches)&&frame_match;
+  assign authorized[ac]=(|slot_matches)&&frame_match;
  end
  integer c,s,found,free_slot,duplicates;
  always @*begin
