@@ -147,6 +147,9 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  always @*begin
   next_status=0;
   next_status[6]=!is_idle||(entry&&|launch_v);
+  // A corrupt phase must not erase an already selected held transaction,
+  // even if the corrupted rail transiently also asserts the IDLE bit.
+  if(REGISTERED_BOUNDARY&&control_bad&&checked_status[6])next_status[6]=1;
   next_status[3]=(is_idle||is_predecode||is_qualify||is_pending)&&!lease_granted;
   next_status[0]=is_pending&&!lease_granted;
   next_status[1]=is_pending&&checked_valid_q&&(&owner_match_q)&&shape_q&&!lease_granted;
