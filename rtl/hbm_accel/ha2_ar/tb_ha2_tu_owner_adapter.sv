@@ -47,11 +47,11 @@ module tb_ha2_tu_owner_adapter;
   endfunction
   task automatic run_phase(input integer ph);
     integer ofl;
-    phase=ph;pf=ph==0?64:384;ofl=pf/8;
+    phase=ph;ofl=(ph==0?64:384)/8;
     ref_rst=0;checking=0;results=0;first_issue=-1;first_result=-1;last_result=-1;
     repeat(3)@(negedge clk);
     if(!cquiet)$fatal(1,"arm before drained reducer");
-    arm=1;@(negedge clk);arm=0;active=1;ref_rst=1;checking=1;
+    arm=1;pf=ph==0?64:384;@(negedge clk);arm=0;active=1;ref_rst=1;checking=1;
     for(integer f=0;f<ofl;f=f+1)begin
       hv=1;hd[0+:64]={16'(100+f),16'(3*ofl+f),operand(3,f)};
       pv=8'hf7;
