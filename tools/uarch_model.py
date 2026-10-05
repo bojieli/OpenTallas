@@ -9424,6 +9424,11 @@ def qwen_rom_registered_issue_commit_price():
     return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/prebuild.json").read_text())
 
 
+def qwen_rom_receiver_fault_base_price():
+    """No-cost definition of absent PART2 local fault levels; not timing credit."""
+    return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/receiver_fault_base/prebuild.json").read_text())
+
+
 def hbm_stream_aq_period_bound_candidate(*, exposed_service_cycles=None):
     """Unadopted slower-service bound from the failed two-PC extracted path.
 
