@@ -1,0 +1,46 @@
+import sys,json,gzip,hashlib,math,collections
+from pathlib import Path
+import numpy as np
+root=Path('/home/ubuntu/OpenTallas-hbrom-cluster-20261005');sys.path.insert(0,str(root/'tools'))
+import hbrom_global_screen as S
+inp=root/'results/uarch/hbrom/g0_inputs.json.gz';prog=root/'results/rtl/w19_hbm_tp96_program_oreduce.json'
+I=json.load(gzip.open(inp,'rt'));P=json.load(open(prog));M,D=S.compile_matrices(I,P)
+def geom(fmt,k):
+ fmt=fmt.replace('v41_','');LA={'fp4':8,'fp8':4,'bf16':64}[fmt];U=32 if fmt!='bf16' else 1
+ assert k%U==0
+ units=k//U; chunks=(units+7)//8;groups=(chunks+LA-1)//LA
+ # each group is packed in native t-major then lane-major order, removing only out-of-range lanes.
+ group_sizes=[sum(max(0,min(LA,(units-t+7)//8-g*LA)) for t in range(8)) for g in range(groups)]
+ rec=sum((n+LA-1)//LA for n in group_sizes)
+ tail=chunks%LA or LA
+ contexts=min(8,math.ceil(8/groups)) if tail<LA else 0
+ return dict(format=fmt,K=k,lanes=LA,groups=groups,native_records=groups*8,compact_records=rec,real_units=units,tail_lanes=tail,physical_tail_reads=(group_sizes[-1]+LA-1)//LA,max_retained_tail_contexts_per_8slot_wave=contexts,group_unit_counts=group_sizes)
+def append_compact(cursor,count,records):
+ start=cursor
+ room=(8192-start%8192)//records
+ overflow=count>room
+ left=np.maximum(count-room,1)
+ end=np.where(overflow,(start//8192+1)*8192+((left-1)//(8192//records))*8192+((left-1)%(8192//records)+1)*records,start+count*records)
+ return np.where(count>0,end,cursor)
+cases=[]
+for tp,sm in [(96,32),(96,16)]:
+ for rotate in [False,True]:
+  cur=np.zeros((tp,sm),dtype=np.int64); native=compact=0;fmtcounts=collections.defaultdict(lambda:[0,0]);families={}
+  for t,o in M:
+   if tp==96:cnt=np.array([b-a for a,b in o['rows']],dtype=np.int64)
+   elif o['fn']=='wo_a_part':cnt=np.array([1024 if r<64 else 0 for r in range(tp)])
+   elif '.wq_b.weight' in t['name']:cnt=np.array([512 if r<64 else 0 for r in range(tp)])
+   else:cnt=np.array([(r+1)*o['n']//tp-r*o['n']//tp for r in range(tp)])
+   tile=cnt[:,None]//sm+(np.arange(sm)[None,:]<cnt[:,None]%sm)
+   if rotate:
+    key=S.re.sub(r'\.w[123]\.weight$','',t['name']);shift=int(hashlib.sha256(key.encode()).hexdigest()[:8],16)%sm;tile=np.roll(tile,shift,axis=1)
+   g=geom(o['fmt'],o['k']);n=int(tile.sum());native+=n*g['native_records'];compact+=n*g['compact_records'];fmtcounts[o['fmt']][0]+=n*g['native_records'];fmtcounts[o['fmt']][1]+=n*g['compact_records']
+   cur=append_compact(cur,tile,g['compact_records'])
+   families[(o['fmt'],o['k'])]=g
+  pairs=((cur+8191)//8192)*4; rankarea=pairs.sum(axis=1)*2*I['macro']['area_mm2']
+  cases.append(dict(tp=tp,sms_per_rank=sm,rotation=rotate,native_records=native,compact_records=compact,saved_records=native-compact,saved_native_record_fraction=(native-compact)/native,compact_fourword_record_physical_bytes=137,compact_raw_payload_bytes=compact*137,native_raw_payload_bytes=native*137,format_native_compact_records=dict(fmtcounts),allocated_pairs_total=int(pairs.sum()),max_pairs_per_sm=int(pairs.max()),max_raw_rom_mm2_per_rank=float(rankarea.max()),min_raw_rom_mm2_per_rank=float(rankarea.min()),uniform_pool_raw_rom_mm2_per_rank=int(pairs.max())*sm*2*I['macro']['area_mm2'],max_mux_inputs_per_stream=int(pairs.max())//4,allocation_holes_records=int(cur.sum())-compact,expanded_response_records=native,expanded_response_bytes=native*136,qualified=False))
+sources=[inp,prog,root/'tools/hbrom_global_screen.py',root/'tools/hbrom_allocator.py',root/'tools/w19_sm_real_ops.py',root/'rtl/gpu/ot_gpu_issue.sv',root/'rtl/gpu/ot_gpu_sm_v.sv',Path(__file__)]
+r={'schema':'opentallas.hbrom.global_compact_layout.v1','architecture_only':True,'qualified':False,'source_pins':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},'mapped_matrix_count':len(M),'cases':cases,'shape_geometries':list(families.values()),'layout':{'word_width':274,'physical_streams':4,'physical_record_bits':1096,'native_response_bits':1088,'rule':'Within each (row,group), pack valid atoms in t-major then lane-major order; no out-of-range atom stored. FP4 atom=128codes+8scale; FP8 atom=256codes+8scale; BF16 atom=16bits. Divide atom stream into LA atoms per four-word record, pad only final physical record. Each row is whole and cannot cross8192-record pool boundary; tensor starts retain8record alignment.','FP4_physical':'Each274bit word holds2 consecutive136bit atoms,2unusedbits. Fourword record holds8 atoms.','FP8_physical':'Each274bit word holds1 consecutive264bit atom,10unusedbits. Fourword record holds4 atoms.','BF16_physical':'Each274bit word holds16 consecutive16bit atoms,18unusedbits. Fourword record holds64 atoms.','decode':'Select relevant t atom interval, restore code lanes and high scale slots to native positions, initialize all out-of-range code/scale bits to zero exactly as source fixture. No numerical conversion.','partial_atom_tail':'Quantized K must be multiple32, as mapped corpus. Nonmultiple32 quantized tensors require a separately defined checkpoint block contract; not silently supported. BF16 K tail is expanded with k<K mask.','arbitrary_tail':'Mapped compact tails divideLA, so one physical read yields integer native records. Other tails require two-record reservoirs per slot, charged separately.'},'retention':{'generic_contexts':8,'context_identity':'descriptor_epoch, wave, physical_slot, row/group, compact_record_index, valid, atom_offset, remaining_atoms','exact_request_order':'wave,t,slot with8slots; response tags attached at native request acceptance, not physical-read issue count','K5120_FP4':{'groups':3,'tail_lanes':4,'native_tail_lines':8,'physical_tail_reads':4,'native_lines_per_tail_read':2,'max_tail_contexts':3,'reuse_distance_accepted_slots':8},'K2304_FP4':{'groups':2,'tail_lanes':1,'native_tail_lines':8,'physical_tail_reads':1,'native_lines_per_tail_read':8,'max_tail_contexts':4,'reuse_distance_accepted_slots':8,'last_reuse_distance_slots':56},'K1280_FP8':{'groups':2,'tail_lanes':1,'native_tail_lines':8,'physical_tail_reads':2,'native_lines_per_tail_read':4,'max_tail_contexts':4},'generic_arbitrary_tail_context_count':8,'generic_arbitrary_tail_record_storage_per_context':2,'stall_rule':'Retain every context until its last native output is accepted; do not advance offset or release/overwrite on downstream stall. Restrict one descriptor/wave ownership per context or provide more contexts.','response_credits':'One credit per expanded native response, not compact physical read. Physical inflight reservations additionally hold destination-context availability; epoch/tag/address validation survives compaction. Existing staging descriptors retain native d_lines.'},'service':{'rom_macro_read_recurrence_cycles':2,'two_alternating_macros_per_stream':True,'fourword_read_rate_max_per_cycle':1,'native_output_records_max_per_cycle':1,'native_output_bytes_per_cycle':136,'no_stall_native_issue_cycles_unchanged':True,'saved_compute_cycles':0,'saved_response_bytes':0,'new_register_stages_assumed':2,'new_startup_cycles_assumed':2,'slot_phase_first_issue_extra_upper_cycles':7,'startup_excludes':'ROM capture2,existing pool selection tree/wires,existing payload/SM stages; include those once in complete schedule.','prefetch_obligation':'Issue compact reads sufficiently early through finite request queue, reserve context before launch, and bypass hits. Sequential responses remain one per cycle, never count8expanded outputs in a single cycle.','critical_stalls':'A miss not prefetched before its native slot may incur full8cycle slot revolution. Capacity savings do not prove zero stalls.'},'area_allowance':{'mapped_shapes_contexts':8,'protected_payload_bits_per_context':1224,'protected_metadata_bits_per_context_assumed':72,'output_pipeline_records':2,'total_register_bits':12816,'mux2_equivalent_bits':15232,'mux_basis':'1088bit8:1 context select plus1088bit8:1 atom-position alignment upper estimate; zero masks/control additional','dff_um2':0.2916,'mux2_um2_assumed':0.2,'placement_utilization':0.5,'control_mask_protection_extra_footprint_mm2_assumed':0.006,'footprint_mm2_per_sm_assumed':(12816*.2916+15232*.2)/.5/1e6+.006,'arbitrary_tail_two_record_context_extra_register_bits':9792,'not_included':['pool-mux area already in storage network','actual clock tree and route closure','SECDED encode/decode gates beyond explicit control/protection allowance need synthesis pricing'],'immutable_ROM_ECC':False,'mutable_context_protection_required':True},'gates':['Bitcompare every expanded line against w19_sm_real_ops packing including tails, scalezero fields, and real source payload','Finite recurrence and pipeline service model with stalls,epochs,descriptor transitions and issue slot phase','Actual contextual SS/FF and power before adoption','No full token latency or area feasibility claim from capacity screen alone'],'scope':'Executable mapped matrices only. Deferred tensors, sourcearchive,FP32,dedicated services,MTP/vision and derived tables unchanged and must remain separately charged.'}
+Path('/tmp/hbrom-global-compact-layout-align1.json').write_text(json.dumps(r,indent=2)+'\n')
+for c in cases: print(c['tp'],c['sms_per_rank'],c['rotation'],c['max_pairs_per_sm'],round(c['max_raw_rom_mm2_per_rank'],3),round(c['saved_native_record_fraction']*100,3))
+print('decoder area/SM',r['area_allowance']['footprint_mm2_per_sm_assumed'])

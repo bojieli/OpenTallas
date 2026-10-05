@@ -4,13 +4,13 @@
   "base_revision": "55ba24fdc32cda16de602f5ec5d758d176e96d1a",
   "default_off": true,
   "requirements": {
-    "analytical_model": "implemented with source-pinned G0 TP4/TP8 feasible compositions; default-off latency refinements in progress",
+    "analytical_model": "G0 rejected: 1303.348us exceeds current ROM725.057us; global TP96 capacity and latency budgets are architecture-only, no admitted successor",
     "whole_model_storage_and_mapping": "checkpoint inventory and whole-row executable allocator implemented; codec tests pass",
-    "cluster_die_and_network_selection": "G0 prototype:128 ROM pairs/tile,4 NC1 tiles/cluster,26 clusters/die,TP4,190 logic dies,1303.348063us; rejected for architectural adoption, priced calibration vehicle",
-    "RTL_implementation": "ROM feed and connected full-shape tile bench in progress; protected SRAM successor in progress",
-    "full_shape_exact_component_validation": "pending_RTL",
-    "synthesis": "EPYC2 pinned ac1af6715 full-shape NC1 baseline synthesis live; not a protected cluster or physical signoff",
-    "contextual_SS_FF_physical": "pending_synthesis",
+    "cluster_die_and_network_selection": "G0 rejected as rescue direction; new globally reused TP96 organization under architecture-only capacity/ownership/latency screening",
+    "RTL_implementation": "stopped; partial sources preserved; no full connected pass",
+    "full_shape_exact_component_validation": "connected build stopped before simulation; no qualification",
+    "synthesis": "baseline NC1 completed before stop; intrinsic timing failed; all hardware jobs terminal or stopped, checkpoints retained",
+    "contextual_SS_FF_physical": "STOPPED pending analytically superior complete design",
     "model_calibration": "pending_measurements",
     "merge_and_push": "through83d781e27 integrated/pushed via a08adc6b4; G0 baseline record pending next commit"
   },
@@ -21,14 +21,17 @@
     "ROM no ECC; mutable protection retained."
   ],
   "next_actions": [
-    "Measure pinned NC1 baseline area and intrinsic timing",
-    "Validate real ROM feed with full selected tile rows across23 actual-checkpoint operations",
-    "Reprice selected-KV forwarding, expert operand residency/dispatch, and source-role HBM placement",
-    "Contextual component physical implementation and calibration after model selection"
+    "Preserve HBM global ownership and identify actual active engines per operation",
+    "Resolve worst ROM-pool capacity and local assignment imbalance",
+    "Price private compute/SRAM, ROM selection, service and fabric within die rectangles",
+    "Derive complete matched latency before any decision to resume hardware"
   ],
   "current_findings": [
-    "Compute sharing reduces matrix hardware replication but adds ROM selection and operand communication.",
-    "Old candidate sweeps explicitly invalidated by ownership, service-area, or expert-tail accounting corrections.",
-    "Current full colocated service role reservation209.533mm2; geometry must reserve hub and four PHYs separately."
-  ]
+    "Preserving HBM global rank ownership avoids G0 additional activation gathers and layer-owner KV paths.",
+    "TP96x16 with local row rotation needs984ROMpairs/engine before compact-layout study; scalar area804.930mm2 is not a geometric fit.",
+    "Current HBM460.053us nominal and603.754us clock sensitivity are conditional component compositions, not physical sign-off.",
+    "No successor TPOT claimed: actual16-engine schedule, ROM finite delivery, local rotation and complete service area remain unresolved."
+  ],
+  "owner_steering": "Stop implementation of slower candidate; first rethink architecture. Hardware work remains stopped until a complete matched analytical design shows a latency advantage.",
+  "hardware_authorization": "STOPPED: no RTL edits, synthesis, simulation or physical jobs authorized for G0"
 }
