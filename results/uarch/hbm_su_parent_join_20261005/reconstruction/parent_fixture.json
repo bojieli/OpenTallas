@@ -1,0 +1,232 @@
+{
+  "schema": "opentallas.ds20-su-parent-fixture.v1",
+  "case_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108",
+  "original_program_sha256": "0cfed448f54896266ce57d3a94826e4044cf47f8b09a22419fe16eb5e5a180d7",
+  "compiler": "hbm_accel_su_fused_compile.compile_saved",
+  "source_case": "L0.hc_post.attn",
+  "original_op_indexes": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "source_word_width": 690,
+  "loader_transport_width": 64,
+  "loader": [
+    {
+      "im_addr": 8192,
+      "im_data": "0000400014000004"
+    },
+    {
+      "im_addr": 8193,
+      "im_data": "0000000001000000"
+    },
+    {
+      "im_addr": 8194,
+      "im_data": "0000000401910000"
+    },
+    {
+      "im_addr": 8195,
+      "im_data": "00000000a2000000"
+    },
+    {
+      "im_addr": 8196,
+      "im_data": "0010064440000008"
+    },
+    {
+      "im_addr": 8197,
+      "im_data": "1001210000000000"
+    },
+    {
+      "im_addr": 8198,
+      "im_data": "0000400500001916"
+    },
+    {
+      "im_addr": 8199,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8200,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8201,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8202,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8208,
+      "im_data": "0028400014000004"
+    },
+    {
+      "im_addr": 8209,
+      "im_data": "0000000001000000"
+    },
+    {
+      "im_addr": 8210,
+      "im_data": "0000000401912000"
+    },
+    {
+      "im_addr": 8211,
+      "im_data": "00a0000322c00000"
+    },
+    {
+      "im_addr": 8212,
+      "im_data": "0000000000000008"
+    },
+    {
+      "im_addr": 8213,
+      "im_data": "1002010000000000"
+    },
+    {
+      "im_addr": 8214,
+      "im_data": "0000400500001916"
+    },
+    {
+      "im_addr": 8215,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8216,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8217,
+      "im_data": "4010000000000000"
+    },
+    {
+      "im_addr": 8218,
+      "im_data": "0000000000400000"
+    },
+    {
+      "im_addr": 8224,
+      "im_data": "003c400014000004"
+    },
+    {
+      "im_addr": 8225,
+      "im_data": "0000000001000000"
+    },
+    {
+      "im_addr": 8226,
+      "im_data": "0000000401913000"
+    },
+    {
+      "im_addr": 8227,
+      "im_data": "00a0000322c00000"
+    },
+    {
+      "im_addr": 8228,
+      "im_data": "0000000000000008"
+    },
+    {
+      "im_addr": 8229,
+      "im_data": "1002010000000000"
+    },
+    {
+      "im_addr": 8230,
+      "im_data": "0000400500001916"
+    },
+    {
+      "im_addr": 8231,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8232,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8233,
+      "im_data": "4050000000000000"
+    },
+    {
+      "im_addr": 8234,
+      "im_data": "0000000000400000"
+    },
+    {
+      "im_addr": 8240,
+      "im_data": "0050400014000004"
+    },
+    {
+      "im_addr": 8241,
+      "im_data": "0000000001000000"
+    },
+    {
+      "im_addr": 8242,
+      "im_data": "0000000401914000"
+    },
+    {
+      "im_addr": 8243,
+      "im_data": "00a0000322c00000"
+    },
+    {
+      "im_addr": 8244,
+      "im_data": "0000000000000008"
+    },
+    {
+      "im_addr": 8245,
+      "im_data": "1802010000000000"
+    },
+    {
+      "im_addr": 8246,
+      "im_data": "0000400500001916"
+    },
+    {
+      "im_addr": 8247,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8248,
+      "im_data": "0000000000000000"
+    },
+    {
+      "im_addr": 8249,
+      "im_data": "4090000000000000"
+    },
+    {
+      "im_addr": 8250,
+      "im_data": "0000000000400000"
+    }
+  ],
+  "namespace_byte_base": {
+    "VM": 0,
+    "KV": 1048576,
+    "CRlo": 3145728,
+    "CRhi": 3276800,
+    "WR": 3407872
+  },
+  "component_memory": {
+    "NS": 2,
+    "NPC": 2,
+    "MEM_WORDS": 65536,
+    "USE_W2": 0
+  },
+  "installed_parent_memory_unchanged": true,
+  "VM_operands": {
+    "residual_VM_word_address": 64,
+    "Y_VM_word_address": 20544,
+    "comb_VM_word_address": 25664,
+    "post_VM_word_address": 25680,
+    "output_VM_word_address": 25688,
+    "count": 5120,
+    "hc": 4
+  },
+  "expected_words": 20480,
+  "expected_used_only_for_comparison": true,
+  "parent_owner_hardware_required": true,
+  "original_schedule_preserved": true,
+  "adopted": false,
+  "files_sha256": {
+    "memory_p0.hex": "06e73ed4524df606711b0bc35149eeb300707635295d3b79e5126fedb97ca2f3",
+    "memory_p1.hex": "9246c9af2682fddae3b65955c148f42215a5cae45dec862aec62412efa31cef5",
+    "expected.mem": "5d5aba6af254fb545104be52b8b9b4fe276d516bfac70f5dda7d6361502e5807",
+    "cfg.mem": "7ed9e32fdc52923dd6630348c2e48c073745f96b68b814784e0fb5b040afda99",
+    "command.json": "f146e7810fa80d500a9661f1b3d25d88a0a596d6ada62563b4b4e2db97e468f0",
+    "cmd.mem": "33f30ae8f9712afe2c331fb7078267b14aea3e92cb5b65beeebcac21620ea948",
+    "cr_lo.mem": "de62cb8ba925453f7d3e9d2bb9cea50e9e9de4e51d703aa6b63fb7dbfadfe78a",
+    "prog.hex": "0cfed448f54896266ce57d3a94826e4044cf47f8b09a22419fe16eb5e5a180d7",
+    "vm.mem": "357d89156ba5423a41ee802adf67ec25caf66d164748d453d16c0f16fa7c4be1"
+  }
+}
