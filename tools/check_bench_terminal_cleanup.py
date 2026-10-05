@@ -29,7 +29,7 @@ def main():
     vars_=sorted(set(re.findall(r'\b[a-zA-Z_]\w*\b',' '.join(pred for _,pred in guards))))
     for fail in [False,True]:
         lines=['module terminal_fixture;']+[f'integer {v}=0;' for v in vars_]
-        lines+=['integer outside=17, refused=5, expected_faults=4;','initial begin','checked=1; n=1; expect_n=1; qw=2; qr=2;']
+        lines+=['integer outside=17, refused=5, expected_faults=4;','initial begin','checked=1; n=1; expect_n=1; qw=2; qr=2; near_steps=1; near_responses=1; n_wide=1; n_rec=1;']
         if fail:lines+=['bad=1; mism=1; mismatch=1; errors=1; failures=1; bada=1;']
         for p,pred in guards:
             pins[str(p.relative_to(ROOT))]=hashlib.sha256(p.read_bytes()).hexdigest()
