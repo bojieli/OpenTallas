@@ -1,0 +1,32 @@
+#!/bin/bash
+# Resume a terminal floorplan recipe failure from the SAME mapped source.
+# Invoke through unchanged admit.sh 48 after a fresh load<128 measurement.
+set -euo pipefail
+if [ "$#" -ne 1 ]; then echo 'Usage: resume.sh RUN_ROOT' >&2; exit 2; fi
+S=$(realpath "$(dirname "$0")/../..")
+R=$(realpath "$1")
+cd "$S"
+python3 - "$R" <<'PY'
+import hashlib,json,sys
+from pathlib import Path
+p=json.loads(Path('SOURCE_PIN.json').read_text())
+for f,h in p['sha256'].items():assert hashlib.sha256(Path(f).read_bytes()).hexdigest()==h,f
+assert float(Path('/proc/loadavg').read_text().split()[0])<128
+R=Path(sys.argv[1]);manifest=json.loads((R/'reuse.json').read_text())
+for f,h in manifest['reused_sha256'].items():assert hashlib.sha256((R/'work/orfs'/f).read_bytes()).hexdigest()==h,f
+cfg=R/'work/orfs/config.mk';text=cfg.read_text()
+# Geometry is unchanged. Explicit DIE_AREA/CORE_AREA is mutually exclusive
+# with CORE_UTILIZATION; remove only the conflicting initialization method.
+assert 'export DIE_AREA = 0 0 2000 660' in text
+assert 'export CORE_AREA = 2 2 1998 658' in text
+text='\n'.join(l for l in text.splitlines() if not l.startswith(('export CORE_UTILIZATION =','export CORE_ASPECT_RATIO =','export CORE_MARGIN =')))+'\n'
+cfg.write_text(text)
+print('SOURCE_PIN/reused objects verified',p['commit'],flush=True)
+PY
+uptime
+free -g
+df -h "$S" "$R"
+B=/work/results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C10_capture/base
+exec docker run --rm -e OMP_NUM_THREADS=16 -v "$S:/src:ro" -v "$R/work/orfs:/work" \
+ -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc \
+ "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 -o $B/1_synth.odb -o $B/1_synth.sdc finish metadata-generate"
