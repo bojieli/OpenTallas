@@ -28,6 +28,7 @@
       "lever": "format_masked_activation",
       "owner": "Pauli",
       "source_paths": [
+        "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv",
         "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
       ],
       "default_enabled": false,
@@ -37,7 +38,7 @@
         "physical binding absent"
       ],
       "implementation_holds": [
-        "Parent selects Euclid sole production SMtop/issuer, Pauli leaf/packer only. Actual exported leaf and production XMAP forwarding pending; no duplicate legacy issuer join."
+        "Owner leaf available; production XMAP forwarding/selected combined exact executable pending"
       ],
       "source_replacements": {},
       "slot_macro_channel_binding": null

@@ -51,10 +51,11 @@
       "owner": "Pauli",
       "default_enabled": false,
       "source_paths": [
+        "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv",
         "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
       ],
       "hooks": [
-        "Pauli-owned exported leaf: actual separate source path/module pending owner publication",
+        "Pauli exported standalone rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv::ot_hbm_accel_smpq_xmap_leaf, final absolute x_addr/b_addr, no xb input/add",
         "Euclid production top forwards XMAP; default 0, explicit candidate 1",
         "tools/hbm_accel_activation_layout.py::pack_fragment(original,fmt,active,nc=8)",
         "tools/hbm_accel_activation_layout.py::beat_groups(fmt,active,nc=8)",
@@ -62,7 +63,7 @@
         "Exclude Pauli legacy/prototype issuer and sm_pq_xmap top from selected production closure"
       ],
       "binding": null,
-      "missing": "Parent selects Euclid sole production SMtop/issuer, Pauli leaf/packer only. Actual exported leaf and production XMAP forwarding pending; no duplicate legacy issuer join."
+      "missing": "Standalone Pauli leaf positively available at owner source path; Euclid production XMAP forwarding and combined exact executable binding remain pending."
     },
     "partial_wave_packing": {
       "owner": "Erdos",

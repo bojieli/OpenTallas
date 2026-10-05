@@ -21,7 +21,7 @@
   ],
   "pauli_actual_packer": "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv; FORMAT0 BF16/1 FP8/2 FP4, XMAP0 bypass/XMAP1 staticpacking",
   "pauli_leaf_module": "ot_hbm_accel_smpq_xmap_leaf",
-  "pauli_leaf_only_file": null,
+  "pauli_leaf_only_file": "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv",
   "excluded": [
     "Pauli prototype SM top",
     "legacy/prototype PQ issuer when selecting production issuer",
@@ -30,11 +30,11 @@
   "actual_wip_source_hashes": {
     "/tmp/euclid-hbm-opt1-production-20261005/rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "126e66792431e9906b60a756bf5e502c5220cd917c0bcc49d792136c0c7bdadf",
     "/home/ubuntu/pauli-hbm-opt3-layout/tools/hbm_accel_activation_layout.py": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff",
-    "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": "6284aa2f24fe1cb5f6a1488304a38de33a9a2bfe06caaf4fe7ddd18c2f8da2c4"
+    "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": "6284aa2f24fe1cb5f6a1488304a38de33a9a2bfe06caaf4fe7ddd18c2f8da2c4",
+    "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv": "7f271a0f817c4b057dfc27d85b75821813da9851a73ae27a5ed70ad4d8bfaabb"
   },
   "source_ready": false,
   "remaining_actual_source_hooks": [
-    "Pauli separate committed leaf-only export path",
     "Euclid production default-off XMAP parameter and forwarding to that leaf",
     "Frozen combined source closure/driver/canonical minimum-component fixture cache and existing-executable compatibility binding"
   ],
@@ -62,5 +62,6 @@
   },
   "new_heavy_jobs": 0,
   "combined_exact_measurement": null,
-  "headline_clock_admitted": false
+  "headline_clock_admitted": false,
+  "pauli_leaf_file_available": true
 }
