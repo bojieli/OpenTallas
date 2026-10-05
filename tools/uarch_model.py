@@ -8405,3 +8405,35 @@ def dsrom_s81_native_port_hc_pair():
             exact_component_measured=False, SS_FF_closed=False,
             headline_unchanged=True,
             next_owner_action='Maxwell map native-port calendar onto real critical-chain exposure; Einstein review same-lane bank/packet binding; no RTL/build authorized by this model.'))
+
+
+def dsrom_field_address_lookahead_price():
+    """Current single S81 field issuer; new reservation, no existing-state credit.
+
+    Cell constructions are conservative analytical estimates, not mapped counts.
+    Named containment and loaded SS/FF remain physical requirements.
+    """
+    dff, nand, inv, xor, maj, buf = .2916, .08748, .04374, .16038, .13122, .11664
+    cells = {"payload_ff": 47*dff, "capture_and_hold_mux": 146*(3*nand+inv),
+             "address_add14": 14*(2*xor+maj), "index_add16": 16*(2*xor+maj),
+             "equal16": 16*xor+15*nand, "buffer_allowance47": 47*buf}
+    slot = 64.8*8.64
+    return {"named_slot": "sp_capture/sp_pq_issuer", "instances_per_field_die": 1,
+            "full_parameters": {"PHW":6,"SAW":14,"R":128,"VAW":19,"VRD":64,"KMAX":6144,"BST":2},
+            "added_state_bits":47,"added_cycles":0,"initiation_interval":1,
+            "added_macs_per_cycle":0,"added_memory_bytes_per_cycle":0,
+            "added_external_boundary_bits_per_cycle":0,"added_ports":0,"added_cdc":0,
+            "local_capture_bits":33,"local_address_bits":14,"existing_stream_bits":48,
+            "cell_construction_um2":cells,"estimated_cell_um2":sum(cells.values()),
+            "reservation_um2":slot,"reservation_mm2":slot/1e6,
+            "slot_xy_um":[15186.96,13476.24,15251.76,13484.88],
+            "placement_utilization_budget":.5,"cell_budget_um2":slot*.5,
+            "remaining_cell_budget_um2":slot*.5-sum(cells.values()),
+            "new_clock_sinks":47,"new_reset_sinks":0,
+            "payload_reset_contract":"Existing reset clears sm_run/sw_v; payload captured before qualification. No unreset payload may assert valid.",
+            "protection_contract":"All original fault/ownership predicates retained. Additional mandated protection/hold/clock/PG must fit remaining budget; not credited free.",
+            "fanout_contract":"Descriptor becomes one local captured copy; mapped fanout and local wire/track allocation unmeasured.",
+            "track_capacity_status":"Named 150 x 4 placement grid; occupied sites, routing tracks, PG and clock capacity require owner layout binding.",
+            "component_functional_admitted":True,"physical_admitted":False,
+            "clock_target_ns":.833333,"ss_setup_uncertainty_ns":.060,"ff_hold_uncertainty_ns":.025,
+            "token_latency_delta_cycles":0,"performance_adopted":False}
