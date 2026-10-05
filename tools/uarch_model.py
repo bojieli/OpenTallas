@@ -1156,6 +1156,43 @@ def vm_banking(read_elems):
                 capacity_elems=macros * VM_MACRO["words"] * VM_MACRO["elems_per_read"])
 
 
+def qwen_hbm_registered_admission_model(tp=2, engine_advances=None, replicas=None):
+    """Held current-command, two registered decision cuts; default-off candidate.
+
+    No next-address signal exists in the selected spine ABI. A grant therefore
+    expires on the engine edge, and a new request must be sampled before regrant.
+    These extra clocks are mandatory, not hidden as unchanged throughput.
+    """
+    if tp not in (2, 4):
+        raise ValueError("tp must be 2 or 4")
+    for value in (engine_advances, replicas):
+        if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+            raise ValueError("counts must be nonnegative integers or None")
+    nseg, width, groups = 8, 24, 96 if tp == 2 else 48
+    ff = 2*nseg + 4  # match/availability, no-read, phase[1:0], grant
+    return dict(schema="opentallas.qwen.hbm.registered_admission.v1",
+                parameter="ADMISSION_PIPE", default=0, tp=tp,
+                macs_per_active_engine_edge="unchanged selected W12 geometry",
+                engine_advance_ii=3, added_cycles_per_engine_advance=2,
+                added_token_cycles=None if engine_advances is None else 2*engine_advances,
+                added_token_ns=None if engine_advances is None else 2*engine_advances*0.833,
+                engine_advance_count=engine_advances, replicas=replicas,
+                added_ff_bits_per_die=ff, ff_area_floor_um2=ff*DFF_UM2,
+                combinational_cost="existing segment comparators; registered-match priority/reduce + phase decode",
+                mapped_cell_area_um2=None, slot_fit=None, physical_closed=False,
+                added_memory_ports=0, added_memory_bytes_per_cycle=0,
+                added_external_boundary_bits=0, retained_request_address_bits=width,
+                result_enable_fanout=groups, result_packet_pipeline_bits=0,
+                clock_reset_load_added_pins=ff,
+                local_registered_decision_tracks=2*nseg+4,
+                routing_track_capacity=None,
+                accepted_contract="one matching held request per one-edge grant; retire only on me_clk_en",
+                command_issue="me_go requires that same registered engine grant",
+                held_output_contract="address/data/mask held in existing spine; no delayed strobe-only packet",
+                prerequisite="segment table stable across held phase, monotonic same-token arrivals; reset cancels grant",
+                token_rate=None, adoption=False)
+
+
 def qwen_x_read_stall(G, su_width, ctx, read_elems):
     """Cycles a token adds when the engine's x reads are limited to `read_elems` a cycle (bandwidth bound,
     fully exposed: the engine never stalls in the RTL, so any shortfall delays its issue)."""
@@ -7176,6 +7213,7 @@ def hbm_accel_rows():
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--hbrom-inputs", help="default-off ROM-fed reusable-compute cluster model input JSON")
     ap.add_argument("--ctx", type=int, default=1048576)
     ap.add_argument("--v41-rom-draft", choices=("as_built", "l1", "assumed"), default="as_built",
                     help="V4.1 ROM MTP draft time: MEASURED DSpark step (as_built, or l1 fused head) or the legacy "
@@ -7220,6 +7258,16 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.hbrom_inputs:
+        import hbrom_model
+        inputs = json.loads(Path(a.hbrom_inputs).read_text())
+        result = hbrom_model.sweep(inputs)
+        payload = json.dumps(result, indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     global V41_ROM_DRAFT
     V41_ROM_DRAFT = a.v41_rom_draft
     global _HBM_SWITCH, _HBM_FEC
@@ -8415,3 +8463,35 @@ def qwen_me_bypass_capture_price(*, gt=6144, smin=6, tcut=6, tree_lat=7):
                   contextual_area_slot_fit=None,net_mapped_delta_um2=None),
         adoption=False,
         next_gate='Minimum same-adder old/off/on arithmetic and edge gate, then ONE frozen tree context SS/FF route; never timeout-only rerun')
+
+
+def dsrom_field_address_lookahead_price():
+    """Current single S81 field issuer; new reservation, no existing-state credit.
+
+    Cell constructions are conservative analytical estimates, not mapped counts.
+    Named containment and loaded SS/FF remain physical requirements.
+    """
+    dff, nand, inv, xor, maj, buf = .2916, .08748, .04374, .16038, .13122, .11664
+    cells = {"payload_ff": 47*dff, "capture_and_hold_mux": 146*(3*nand+inv),
+             "address_add14": 14*(2*xor+maj), "index_add16": 16*(2*xor+maj),
+             "equal16": 16*xor+15*nand, "buffer_allowance47": 47*buf}
+    slot = 64.8*8.64
+    return {"named_slot": "sp_capture/sp_pq_issuer", "instances_per_field_die": 1,
+            "full_parameters": {"PHW":6,"SAW":14,"R":128,"VAW":19,"VRD":64,"KMAX":6144,"BST":2},
+            "added_state_bits":47,"added_cycles":0,"initiation_interval":1,
+            "added_macs_per_cycle":0,"added_memory_bytes_per_cycle":0,
+            "added_external_boundary_bits_per_cycle":0,"added_ports":0,"added_cdc":0,
+            "local_capture_bits":33,"local_address_bits":14,"existing_stream_bits":48,
+            "cell_construction_um2":cells,"estimated_cell_um2":sum(cells.values()),
+            "reservation_um2":slot,"reservation_mm2":slot/1e6,
+            "slot_xy_um":[15186.96,13476.24,15251.76,13484.88],
+            "placement_utilization_budget":.5,"cell_budget_um2":slot*.5,
+            "remaining_cell_budget_um2":slot*.5-sum(cells.values()),
+            "new_clock_sinks":47,"new_reset_sinks":0,
+            "payload_reset_contract":"Existing reset clears sm_run/sw_v; payload captured before qualification. No unreset payload may assert valid.",
+            "protection_contract":"All original fault/ownership predicates retained. Additional mandated protection/hold/clock/PG must fit remaining budget; not credited free.",
+            "fanout_contract":"Descriptor becomes one local captured copy; mapped fanout and local wire/track allocation unmeasured.",
+            "track_capacity_status":"Named 150 x 4 placement grid; occupied sites, routing tracks, PG and clock capacity require owner layout binding.",
+            "component_functional_admitted":True,"physical_admitted":False,
+            "clock_target_ns":.833333,"ss_setup_uncertainty_ns":.060,"ff_hold_uncertainty_ns":.025,
+            "token_latency_delta_cycles":0,"performance_adopted":False}
