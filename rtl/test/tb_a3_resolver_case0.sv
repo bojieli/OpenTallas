@@ -339,11 +339,11 @@ module tb_a3_resolver_case0;
             identical_to_shipped[i] = 1;
         end
         if (!$value$plusargs("ntxn=%d", ntxn))
-            begin $display("FAIL: +ntxn is required"); $finish; end
+            begin $display("FAIL: +ntxn is required"); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
         if (!$value$plusargs("ndesc=%d", ndesc))
-            begin $display("FAIL: +ndesc is required"); $finish; end
+            begin $display("FAIL: +ndesc is required"); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
         if (ntxn > TXN_MAX || ndesc > DESC_MAX)
-            begin $display("FAIL: vector set is larger than this bench"); $finish; end
+            begin $display("FAIL: vector set is larger than this bench"); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
         $readmemh("resolver_case0_desc.hex", desc_mem, 0, ndesc - 1);
         $readmemh("resolver_case0_txn.hex", txn_mem, 0, ntxn*TXN_WORDS - 1);
         $readmemh("resolver_case0_sym.hex", sym_mem, 0, 32);
@@ -485,6 +485,7 @@ module tb_a3_resolver_case0;
         else
             $display("FAIL: mismatches=%0d golden_mismatches=%0d",
                      mismatches, golden_mismatches);
+        if (mismatches != 0 || golden_mismatches != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
