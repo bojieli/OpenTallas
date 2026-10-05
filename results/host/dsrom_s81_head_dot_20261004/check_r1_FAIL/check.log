@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/hubble-dsrom-native-xn-head-dot-component-20261004-r1/check.py", line 32, in <module>
+    exec(code,dict(M=SimpleNamespace(G=G,V=V),weights=w,rank=SimpleNamespace(r=0),
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   x=x.view('<f4'),logits=original,np=np))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "dsrom_s81_l20_sim_only.py", line 80, in <module>
+    reference[begin:end]=M.V.mv(w,ref_x)
+                                  ^^^^^
+NameError: name 'ref_x' is not defined

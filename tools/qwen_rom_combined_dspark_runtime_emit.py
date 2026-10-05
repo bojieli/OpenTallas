@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Enclosing one-layer host for the opt-in owner VPOS/KVmp/near successor.
+"""Enclosing reusable decoder host for the opt-in owner VPOS/KVmp/near successor.
 
 Actual program sidecar supplies slot bases; native RTL owns math, row service,
 ACK and drain. Compatible generated top/access headers are required. This does
@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TOP = 'ot_qwen_rom_combined_dspark_die'
 
 
-def emit(root=ROOT):
+def emit(root=ROOT, *, full_decoder=False):
     src = predecessor.emit(root)
     def replace(old, new):
         nonlocal src
@@ -26,6 +26,51 @@ def emit(root=ROOT):
     replace('static void load_images(DieMem& m, const std::string& p) {',
             'static void load_images(DieMem& m, const std::string& p, bool decoder) {')
     replace('struct DieMem {', 'struct DieMem {\n    std::vector<qwen_combined::NearPositionBases> near_slots;')
+    # The preparer already pins each slot's X address in the sparse preload.
+    # Observe those rows without assuming the single-position X_BASE layout.
+    replace('    auto x0 = QwenHex::load(preload, 1);', '''    auto x0 = QwenHex::load(preload, 1);
+    std::vector<size_t> readback_x_bases;
+    {
+        std::ifstream input(preload);std::string word;
+        while(input>>word)if(!word.empty() && word[0]=='@'){
+            size_t used=0;const auto base=std::stoull(word.substr(1),&used,16);
+            if(used!=word.size()-1 || base>VM_ELEMS-H)
+                fatal("actual slot X address outside VM");
+            readback_x_bases.push_back(size_t(base));
+        }
+    }
+    if(readback_x_bases.empty())readback_x_bases.push_back(X_BASE);
+    if(readback_x_bases.size()!=(accept_commit?acc_toks.size():1))
+        fatal("actual preload X slot count differs");''')
+    replace('                    fclose(fp);\n                    if (!kv_ideal && stages[cur].layer >= 0) {', '''                    fclose(fp);
+                    for(size_t slot=0;slot<readback_x_bases.size();++slot){
+                        fp=fopen((dir+"/"+stages[cur].name+"_die"+char('0'+d)+
+                            "_slot"+std::to_string(slot)+"_x.hex").c_str(),"w");
+                        for(int i=0;i<H;++i)fprintf(fp,"%08x\\n",rm_vm(v.rootp)[readback_x_bases[slot]+i]);
+                        fclose(fp);
+                    }
+                    if (!kv_ideal && stages[cur].layer >= 0) {''')
+    replace('                    // the token\'s K (lane P of the open tile) and V (row P) as written back to HBM', '''                    // Observe every executed position from the same actual shared HBM.
+                    for(size_t slot=0;slot<readback_x_bases.size();++slot){
+                        const unsigned position=unsigned(POS)+slot;
+                        fp=fopen((dir+"/"+stages[cur].name+"_die"+char('0'+d)+
+                            "_slot"+std::to_string(slot)+"_kv.hex").c_str(),"w");
+                        const size_t layer_base=size_t(stages[cur].layer)*131072;
+                        for(unsigned h=0;h<2;++h)for(unsigned dd=0;dd<128;++dd){
+                            const size_t a=(size_t(h)<<16)+(position>>4)*128+dd;
+                            const unsigned byte=(a&1)*16+(position&15);
+                            const auto word=hbm[d]->memory(layer_base+a/2)[byte/4];
+                            fprintf(fp,"K %u %u %02x\\n",h,dd,(word>>(8*(byte%4)))&255);
+                        }
+                        for(unsigned h=0;h<2;++h)for(unsigned dd=0;dd<128;++dd){
+                            const size_t a=131072+(size_t(h)<<16)+size_t(position)*8+dd/16;
+                            const unsigned byte=(a&1)*16+dd%16;
+                            const auto word=hbm[d]->memory(layer_base+a/2)[byte/4];
+                            fprintf(fp,"V %u %u %02x\\n",h,dd,(word>>(8*(byte%4)))&255);
+                        }
+                        fclose(fp);
+                    }
+                    // the token's K (lane P of the open tile) and V (row P) as written back to HBM''')
     replace('    m.prog = QwenHex::load(p + "/program.hex", 32);',
             '    if(decoder)m.near_slots=qwen_combined::load_near_position_bases(p+"/near_slot_bases.hex");\n    m.prog = QwenHex::load(p + "/program.hex", 32);')
     replace('if(m.desc.empty() || (m.desc[0]&3)!=3 || (m.desc[0]>>62)!=0)',
@@ -57,12 +102,20 @@ def emit(root=ROOT):
     if(accept_commit && (acc_toks.empty() || acc_toks[0]!=unsigned(TOKEN)))
         fatal("HEAD requires actual ACCEPT pending/draft inputs");
     if(!accept_commit && !acc_toks.empty())fatal("ACCEPT input without actual head");''')
+    if full_decoder:
+        replace('    if(stages[0].layer<0 || stages.size()>2 ||\n       (stages.size()==2 && stages[1].name!="head"))\n        fatal("DSpark requires one decoder optionally followed by actual head");\n    const bool accept_commit=(stages.size()==2);',
+                '''    if(stages.size()!=37 || stages.back().name!="head")
+        fatal("full decoder requires L0..L35 then actual HEAD");
+    for(unsigned layer=0;layer<36;++layer)
+        if(stages[layer].layer!=int(layer) || stages[layer].name!="L"+std::to_string(layer))
+            fatal("full decoder layer order differs");
+    const bool accept_commit=true;''')
     replace('    DieMem mem[D];', '''    if(accept_commit)for(int d=0;d<D;++d){
         for(const char* name:{"program.hex","segments.hex","matrix_int8.hex","matrix_scale_bf16.hex","crom.hex"}){
-            std::ifstream input(stages[1].dir[d]+"/"+name);
+            std::ifstream input(stages.back().dir[d]+"/"+name);
             if(!input.good())fatal("actual HEAD image missing before launch",d);
         }
-        const auto head_desc=QwenHex::load(stages[1].dir[d]+"/segments.hex",2);
+        const auto head_desc=QwenHex::load(stages.back().dir[d]+"/segments.hex",2);
         if(head_desc.empty())fatal("actual HEAD descriptor missing",d);
     }
     DieMem mem[D];''')
@@ -125,10 +178,12 @@ def emit(root=ROOT):
             ++acc_feed;
         }
         if(!booted&&clocks.core_rises()>=8&&clocks.service_rises()>=8){''')
-    replace('        if (next_stage) {', '        if (next_stage && clock_event.core_rise()) {')
+    # Slot rebinding requires LOW clock; assert start for the next real rise.
+    replace('        if (next_stage) {',
+            '        if (next_stage && clock_event.core_changed && !clock_event.core_high) {')
     # rm_layer must be updated before the decoder-only slot guard, and head
     # launch must wait for the final held draft load edge, not merely its drive.
-    replace('            auto tp = std::chrono::steady_clock::now();', '''            if(acc_feed!=acc_toks.size())fatal("HEAD before actual draft loader complete");
+    replace('            auto tp = std::chrono::steady_clock::now();', '''            if(accept_commit && stages[cur].layer<0 && acc_feed!=acc_toks.size())fatal("HEAD before actual draft loader complete");
             auto tp = std::chrono::steady_clock::now();''')
     replace('                load_images(mem[d], stages[cur].dir[d],stages[cur].layer>=0);', '''                die[d]->rm_layer=uint8_t(stages[cur].layer);
                 load_images(mem[d], stages[cur].dir[d],stages[cur].layer>=0);''')
@@ -144,5 +199,6 @@ def emit(root=ROOT):
 if __name__ == '__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--full-decoder',action='store_true')
     a=p.parse_args()
-    with a.out.open('x') as f:f.write(emit())
+    with a.out.open('x') as f:f.write(emit(full_decoder=a.full_decoder))

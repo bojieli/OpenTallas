@@ -17,12 +17,26 @@
 #include DSROM_S81_NATIVE_CONTINUATION_HEADER
 #endif
 #include <fstream>
+#include <cstdio>
 #include <cstdlib>
 #ifdef DSROM_S81_HEAD_WINNER_BINDING_HEADER
+#include <filesystem>
+#include <spawn.h>
+#include <sys/wait.h>
+#include <cerrno>
+extern char** environ;
 #include "s81_native_bf_head_factory.hpp"
 #include "s81_native_head_argmax.hpp"
 #include "VDsromS81CoreEnd.h"
 #include "VDsromS81CoreEnd___024root.h"
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+#include "VDsromHeadStreamR1.h"
+#include "VDsromHeadStreamR2.h"
+#include "VDsromHeadStreamR3.h"
+#define DSROM_S81_RETAINED_HEAD_STREAM_BIND_ONLY
+#include "../../../rtl/test/s81_native_bf_head_producer/retained_smoke.cpp"
+#undef DSROM_S81_RETAINED_HEAD_STREAM_BIND_ONLY
+#endif
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -343,8 +357,13 @@ struct HeadRank {
             [this](auto id,auto a,auto n){return target->source_span_lease(id,a,n);},
             [this](const auto& out,unsigned n){return target->offer_prefix(out,n);},
             [this](const auto& out,unsigned n){return target->visible_prefix(out,n);}};
-        h=raw(dir+"/H_rank"+std::to_string(rank)+".u32",20480);
-        pf=raw(dir+"/PF_rank"+std::to_string(rank)+".u32",4);
+        // Optional actual L20 END operands; normalization instructions and
+        // CROM stay in the existing released input home. Files do not grant
+        // publication: load() still offers every word to the actual VM/ACK path.
+        const char* carry=std::getenv("DSROM_S81_NATIVE_HEAD_CARRY_DIR");
+        const std::string operand_dir=carry&&*carry?carry:dir;
+        h=raw(operand_dir+"/H_rank"+std::to_string(rank)+".u32",20480);
+        pf=raw(operand_dir+"/PF_rank"+std::to_string(rank)+".u32",4);
         std::ifstream literal(dir+"/normalization.words");
         const std::array<std::vector<std::pair<uint32_t,uint32_t>>,5> extents{{
             {{20480,5120}},{{20480,5120}},{{41344,5120},{51584,1}},{{51616,1}},{{46464,5120}}}};
@@ -405,6 +424,35 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
     std::array<std::unique_ptr<HeadRank>,4> ranks;
     std::array<DsromS81MinimumSourceIo,4> ios;
     std::shared_ptr<DsromS81NativeHeadArgmax> argmax;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+    std::unique_ptr<VDsromHeadStreamR1> stream1;
+    std::unique_ptr<VDsromHeadStreamR2> stream2;
+    std::unique_ptr<VDsromHeadStreamR3> stream3;
+    std::array<DsromS81MinimumParticipant,3> stream_participants;
+    std::array<bool,4> native_write_taken{};
+    std::shared_ptr<DsromS81NativeHeadCollective> stream_collective;
+    DsromS81MinimumParticipant stream_transport;
+    static uint64_t positive_delay(const char* name) {
+        const char* value=std::getenv(name);
+        Source::require(value&&*value,"native stream needs explicit selected positive transport cycles");
+        uint64_t result=0;
+        for(const char* c=value;*c;++c){
+            Source::require(*c>='0'&&*c<='9'&&result<=(UINT64_MAX-unsigned(*c-'0'))/10,
+                "native stream transport cycles invalid/overflow");
+            result=result*10+unsigned(*c-'0');
+        }
+        Source::require(result>0,"native stream cannot use zero transport cycles");return result;
+    }
+    template<class Native> void bind_stream(Native& native,unsigned rank) {
+        stream_participants[rank-1]=dsrom_s81_retained_head_stream_participant(runtime,native,*ranks[rank]->vm,
+            rank,ID,1,[this,rank](){return dot&&current==rank&&!ranks[rank]->publication_begun&&cut.go&&cut.ready;},
+            [this,rank]()->const NativeBfHeadRoots*{return current==rank&&held?&*held:nullptr;},
+            [this,rank]()->const uint32_t*{return current==rank&&held&&!taken&&tail_stage>=4?&join_bits:nullptr;},
+            [this,rank](){return ranks[rank]->publication_begun;},
+            [this,rank](){Source::require(current==rank&&held&&!native_write_taken[rank],
+                "native stream duplicate/foreign accepted logit");native_write_taken[rank]=true;});
+    }
+#endif
     Vcut cut;Vretn pad1,pad2,join;
     std::unique_ptr<DsromS81NativeHeadBinding> head;
     DsromS81MinimumParticipant input,returned,cold_return;
@@ -416,11 +464,12 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
     uint32_t join_tag=0,join_bits=0;
     bool attached=false,initialized=false,dot=false,taken=false,root_sent=false,observed_head_go=false;
     bool sampled_root=false,sampled_packet_take=false,sampled_final=false,winner_taken=false,consumed=false;
-    bool argmax_started=false,replay=false;
+    bool argmax_started=false,replay=false,sim_actual_xn=false;
     std::optional<unsigned> replay_row;
-    std::array<std::vector<uint32_t>,4> archived_outputs;
-    unsigned row()const{return replay?*replay_row:held->local_row;}
-    bool pending()const{return replay?bool(replay_row):bool(held);}
+    std::array<std::vector<uint32_t>,4> returned_outputs;
+    bool returned_rows()const{return replay||sim_actual_xn;}
+    unsigned row()const{return returned_rows()?*replay_row:held->local_row;}
+    bool pending()const{return returned_rows()?bool(replay_row):bool(held);}
     static void pinned_file(const std::string& path,const char* expected) {
         std::ifstream f(path,std::ios::binary);Source::require(bool(f),"native boundary source pin missing");
         f.seekg(0,std::ios::end);const auto size=f.tellg();
@@ -461,6 +510,14 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         const char* sim=std::getenv("DSROM_S81_SIM_ONLY_HEAD_RETURN");
         Source::require(!sim||std::string(sim)=="0"||std::string(sim)=="1","HEAD return selector must explicit 0/1");
         replay=sim&&std::string(sim)=="1";
+        const char* actual_xn=std::getenv("SIM_ONLY_HEAD_ACTUAL_XN");
+        Source::require(!actual_xn||std::string(actual_xn)=="0"||std::string(actual_xn)=="1",
+            "actual-XN math selector must explicit 0/1");
+        sim_actual_xn=actual_xn&&std::string(actual_xn)=="1";
+        Source::require(!(replay&&sim_actual_xn),"actual-XN math cannot consume archived logits");
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        Source::require(!returned_rows(),"native stream requires actual roots; SIM_ONLY returns are not native enrollment");
+#endif
         if(replay) {
             const char* archive=std::getenv("DSROM_S81_NATIVE_HEAD_RETURN_DIR");
             Source::require(archive&&*archive,"SIM_ONLY HEAD return requires explicit actual native archive");
@@ -475,9 +532,11 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                 "d2402bb6f734d3b4bfdd70980592b79230ce4b89e5dd0d59cbe1bc295c7fb540"}};
             for(unsigned rank=0;rank<4;++rank){
                 const auto file=path+"/logits_rank"+std::to_string(rank)+".u32";pinned_file(file,pins[rank]);
-                archived_outputs[rank]=HeadRank::raw(file,32320);
-                for(auto bits:archived_outputs[rank])Source::require((bits&0x7f800000u)!=0x7f800000u,"native archived nonfinite HEAD value");
+                returned_outputs[rank]=HeadRank::raw(file,32320);
+                for(auto bits:returned_outputs[rank])Source::require((bits&0x7f800000u)!=0x7f800000u,"native archived nonfinite HEAD value");
             }
+        }else if(sim_actual_xn) {
+            bytes=std::make_shared<HeadBytes>(); // released source extent, never a logit oracle
         }else {
         bytes=std::make_shared<HeadBytes>();
         head=std::make_unique<DsromS81NativeHeadBinding>(r,cut,ios,
@@ -486,23 +545,60 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                 auto& rank=*ranks.at(current);
                 Source::require(roots.identity==ID&&roots.request_sequence==1&&roots.rank==current&&
                     roots.local_row==rank.logits-(taken?1u:0u),"native HEAD held root owner/order differs");
-                if(!held){held=roots;tail_stage=0;taken=false;root_sent=false;return false;}
+                if(!held){held=roots;tail_stage=0;taken=false;root_sent=false;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+                    native_write_taken[current]=false;
+#endif
+                    return false;}
                 Source::require(held->root4096==roots.root4096&&held->root1024==roots.root1024,
                     "native HEAD changed root before positive VM ACK");
                 if(!taken)return false;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+                Source::require(current==0||native_write_taken[current],"producer release without actual native stream take");
+#endif
                 held.reset();tail_stage=0;taken=false;root_sent=false;return true;});
         input=head->selected_input_participant();returned=head->selected_return_participant();cold_return=head->return_participant();
         }
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        stream1=std::make_unique<VDsromHeadStreamR1>(r.context,"head_stream_rank1");
+        stream2=std::make_unique<VDsromHeadStreamR2>(r.context,"head_stream_rank2");
+        stream3=std::make_unique<VDsromHeadStreamR3>(r.context,"head_stream_rank3");
+        bind_stream(*stream1,1);bind_stream(*stream2,2);bind_stream(*stream3,3);
+        const auto link=positive_delay("DSROM_S81_NATIVE_HEAD_LINK_CYCLES");
+        const auto final=positive_delay("DSROM_S81_NATIVE_HEAD_FINAL_CYCLES");
+        stream_collective=std::make_shared<DsromS81NativeHeadCollective>(
+            std::array<DsromS81NativeHeadPorts,4>{dsrom_s81_native_head_ports(*core),
+                dsrom_s81_retained_head_stream_ports(*stream1),dsrom_s81_retained_head_stream_ports(*stream2),
+                dsrom_s81_retained_head_stream_ports(*stream3)},ID,
+            std::array<uint64_t,3>{link,link,link},std::array<uint64_t,4>{final,final,final,final},true);
+        stream_transport=dsrom_s81_native_head_collective_participant(r,stream_collective,ID);
+#else
         argmax=std::make_shared<DsromS81NativeHeadArgmax>(r,ID,ios,486848);
+#endif
         for(auto* node:{&pad1,&pad2,&join}){node->clk=0;node->rst_n=0;node->a_v=node->b_v=0;node->a_e=node->b_e=0;}
     }
     void drive_tail(Vretn& node,uint32_t a,uint32_t b){const unsigned row=current*32320+held->local_row;
         node.a_v=node.b_v=1;node.a_t=(row<<13)|2;node.b_t=(row<<13)|258;node.a_d=a;node.b_d=b;}
     void prepare(const DsromS81PairResult& old) {
+        // Coarse diagnostics go to the caller's existing runtime journal.
+        // Reuse actual source counters; do not add polling or ownership state.
+        if(runtime.identity && runtime.cycle()%65536==0) {
+            bool all_published=true;
+            for(const auto& rank:ranks)all_published=all_published&&rank->published();
+            fprintf(stderr,"HEAD_NATIVE_PROGRESS cycle=%ld phase=%s math=%s rank=%u I5_accepted=%u "
+                "norm_ops=%u,%u,%u,%u published_rows=%u,%u,%u,%u "
+                "final_accepted=%u END_done=%u\n",
+                runtime.cycle(),!dot?"normalization":all_published?"collective-END":"DOT",
+                sim_actual_xn?"SIM_ONLY_HEAD_ACTUAL_XN":replay?"native-archive-return":"native",
+                current,unsigned(dot),ranks[0]->norm,ranks[1]->norm,ranks[2]->norm,ranks[3]->norm,
+                ranks[0]->logits,ranks[1]->logits,ranks[2]->logits,ranks[3]->logits,
+                unsigned(winner_taken),unsigned(core->done));
+            fflush(stderr);
+        }
         for(auto& rank:ranks)rank->prepare();
         if(head){input.prepare(old);returned.prepare(old);}else runtime.drive({});
-        if(replay&&dot&&current<4&&!replay_row&&ranks[current]->logits<32320) {
-            replay_row=ranks[current]->logits;join_bits=archived_outputs[current][*replay_row];tail_stage=4;root_sent=false;
+        if(returned_rows()&&dot&&current<4&&!replay_row&&ranks[current]->logits<32320) {
+            replay_row=ranks[current]->logits;join_bits=returned_outputs[current][*replay_row];tail_stage=4;root_sent=false;
         }
         for(auto* node:{&pad1,&pad2,&join}){node->a_v=node->b_v=0;node->a_e=node->b_e=0;}
         if(held&&!taken){
@@ -556,11 +652,11 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                     pin(core->capture_vm_accept,root,1,1);expected_accept=1u<<bank;
                 }
             }else {
-                if(replay&&!rank.batch->pending()) {
+                if(returned_rows()&&!rank.batch->pending()) {
                     S81EmbeddingOutput out{};out.vm_valid=1;out.vm_identity=ID;out.vm_address=486848+row();out.vm_data[0]=join_bits;
                     rank.batch->capture(4892,out,1,true); // explicit SIM_ONLY boundary writer, not a new native join observation
                 }
-                const bool ack=replay?rank.batch->progress():
+                const bool ack=returned_rows()?rank.batch->progress():
                     dsrom_s81_publish_minimum_head_logit(rank.rt,*rank.batch,ID,current,row(),join_tag,join_bits,true);
                 if(ack){++rank.logits;taken=true;}
                 for(auto& owner:ranks)owner->prepare_bank();
@@ -570,6 +666,28 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             for(auto& rank:ranks)rank->prepare_bank();
             Source::require(get(core->rom_we,0,64)==0&&get(core->rom_we,64,64)==0,"core HEAD writer without native retained owner");
         }
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        // All banks have settled OLD acceptance. This gates their live wr_v
+        // before the SAME sole bank rising edge and drives the native tuple.
+        for(auto& participant:stream_participants)participant.prepare(old);
+        if(core->head_dn_valid&&core->head_dn_ready){
+            sampled_packet={};sampled_packet.identity=core->head_dn_identity;sampled_packet.last=core->head_dn_last;
+            for(unsigned i=0;i<16;++i)sampled_packet.data[i]=core->head_dn_data[i];
+            Source::require(!local_packet&&sampled_packet.identity==ID&&sampled_packet.last&&
+                get(sampled_packet.data,16,4)==6&&get(sampled_packet.data,160,1)&&
+                get(sampled_packet.data,128,32)<32320,"native core rank0 packet source differs");
+            sampled_packet_take=true;
+        }
+        if(stream3->downstream_valid&&stream3->downstream_ready){
+            Source::require(!winner&&stream3->downstream_identity==ID&&stream3->downstream_last&&
+                get(stream3->downstream_data,16,4)==6&&get(stream3->downstream_data,160,1)&&
+                get(stream3->downstream_data,128,32)<129280,
+                "native carried global winner source differs");
+            // A real native carried packet, not a host argmax or a VM scan.
+            winner=DsromS81HeadArgmaxResult{ID,1,uint32_t(get(stream3->downstream_data,128,32)),
+                uint32_t(get(stream3->downstream_data,96,32))};
+        }
+#else
         core->head_dn_ready=0;core->head_final_valid=0;
         auto actual=argmax->result();
         if(actual){
@@ -591,6 +709,7 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             core->head_final_valid=!winner_taken;core->head_final_identity=frame.identity;
             for(unsigned i=0;i<16;++i)core->head_final_data[i]=frame.data[i];
         }
+#endif
     }
     void rising(bool released) {
         observed_head_go=released&&core->rootp->ot_dsrom_s81_actual_core_end__DOT__rom_m_go&&
@@ -598,6 +717,9 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
             core->rootp->ot_dsrom_s81_actual_core_end__DOT__me_nout==32320;
         const bool first=released&&head&&dot&&!ranks[current]->publication_begun&&cut.go&&cut.ready;
         for(auto& rank:ranks)rank->rising(released);
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        for(auto& participant:stream_participants)participant.rising(released);
+#endif
         if(released&&expected_accept)Source::require((ranks[0]->accepted_this_edge&expected_accept)==expected_accept,
             "native core capture acceptance did not occur on its same bank edge");
         if(head){input.rising(released);returned.rising(released);}
@@ -616,13 +738,23 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         xread_pipe[1]=xread_pipe[0];xread_pipe[0]=sampled_xread;
     }
     void falling(bool released){for(auto& rank:ranks)rank->falling(released);
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        for(auto& participant:stream_participants)participant.falling(released);
+#endif
         if(head){input.falling(released);returned.falling(released);}
         if(!released&&head){cut.clk=0;cut.eval();cold_return.falling(false);head->observe_shared_cold_reset();}
         for(auto* node:{&pad1,&pad2,&join}){node->clk=0;node->eval();}}
-    bool fault()const{if(core->fault||(head&&(input.fault()||returned.fault()))||pad1.fault||pad2.fault||join.fault||argmax->fault())return true;
+    bool fault()const{
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        if(core->fault||(head&&(input.fault()||returned.fault()))||pad1.fault||pad2.fault||join.fault||
+            stream_collective->fault())return true;
+        for(const auto& participant:stream_participants)if(participant.fault())return true;
+#else
+        if(core->fault||(head&&(input.fault()||returned.fault()))||pad1.fault||pad2.fault||join.fault||argmax->fault())return true;
+#endif
         for(const auto& rank:ranks)if(rank->fault())return true;
         return false;}
-    bool publications_drained()const {if(!dot||pending()||(!replay&&!head->all_roots_accepted())||fault())return false;
+    bool publications_drained()const {if(!dot||pending()||(!returned_rows()&&!head->all_roots_accepted())||fault())return false;
         for(const auto& rank:ranks)if(!rank->published())return false;
         return true;}
     void initialize(){Source::require(attached&&!initialized&&runtime.identity&&*runtime.identity==ID,
@@ -631,15 +763,59 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         initialized=true;}
     bool inputs_visible(){Source::require(initialized,"HEAD inputs before cold initialization");
         bool ready=true;for(auto& rank:ranks){rank->load();rank->normalize();ready=ready&&rank->normalizations_done;}return ready;}
+    void calculate_actual_xn_rows() {
+        const char* helper=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_HELPER");
+        const char* output=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_DIR");
+        const char* python=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_PYTHON");
+        Source::require(helper&&*helper&&output&&*output,
+            "actual-XN math requires explicit DOT-only helper and fresh output directory");
+        const std::filesystem::path root(output),input=root/"xn",result=root/"dot";
+        Source::require(std::filesystem::create_directory(root),"preserve actual-XN math output");
+        Source::require(std::filesystem::create_directory(input),"actual-XN input directory unavailable");
+        for(unsigned rank=0;rank<4;++rank) {
+            auto& owner=*ranks[rank];
+            Source::require(owner.normalizations_done&&owner.prefetched==5120&&
+                owner.io.span_lease(ID,46464,5120),"actual-XN math before native normalization/read lease");
+            std::ofstream raw(input/("XN_rank"+std::to_string(rank)+".u32"),std::ios::binary);
+            Source::require(bool(raw),"actual-XN source output unavailable");
+            for(uint32_t value:owner.xn) {
+                Source::require(!(value&65535u)&&((value>>23)&255)!=255,
+                    "actual-XN math requires finite native BF16-widened readbacks");
+                const char b[]={char(value),char(value>>8),char(value>>16),char(value>>24)};
+                raw.write(b,4);
+            }
+            raw.close();Source::require(bool(raw),"actual-XN source output failed");
+        }
+        // The existing helper computes only released-weight DOT from these
+        // actual native readbacks. It cannot normalize, select, or grant ACKs.
+        std::vector<std::string> args={python&&*python?python:"python3",helper,
+            "--input-dir",input.string(),"--head-shard",std::getenv("DSROM_S81_NATIVE_HEAD_SHARD"),
+            "--head-byte-offset",std::to_string(bytes->offset),"--output-dir",result.string()};
+        std::vector<char*> argv;for(auto& a:args)argv.push_back(a.data());argv.push_back(nullptr);
+        pid_t child;Source::require(posix_spawnp(&child,argv[0],nullptr,nullptr,argv.data(),environ)==0,
+            "actual-XN DOT-only helper launch failed");
+        int status=0;pid_t waited;
+        do {waited=waitpid(child,&status,0);} while(waited<0&&errno==EINTR);
+        Source::require(waited==child&&WIFEXITED(status)&&WEXITSTATUS(status)==0,
+            "actual-XN DOT-only helper failed; accepted command retained");
+        for(unsigned rank=0;rank<4;++rank) {
+            returned_outputs[rank]=HeadRank::raw((result/("logits_rank"+std::to_string(rank)+".u32")).string(),32320);
+            for(auto value:returned_outputs[rank])Source::require(((value>>23)&255)!=255,
+                "actual-XN DOT-only helper returned nonfinite row");
+        }
+        fprintf(stderr,"HEAD_MATH_SCOPE SIM_ONLY_HEAD_ACTUAL_XN native_normalization=1 native_DOT=0 native_selector=1\n");
+        fflush(stderr);
+    }
     void start(){Source::require(initialized&&!dot&&observed_head_go,
         "HEAD DOT requires actual accepted original core I5");
         for(const auto& rank:ranks)Source::require(rank->normalizations_done,"HEAD DOT before native normalization/XN staging");
+        if(sim_actual_xn)calculate_actual_xn_rows();
         dot=true;current=0;
-        if(replay){for(auto& rank:ranks){rank->publication.begin(ID,4892);rank->publication_begun=true;}}
+        if(returned_rows()){for(auto& rank:ranks){rank->publication.begin(ID,4892);rank->publication_begun=true;}}
         else head->start(ID,1,current);}
 
     void advance(){if(!dot)return;
-        if(replay){
+        if(returned_rows()){
             if(taken){replay_row.reset();taken=false;tail_stage=0;root_sent=false;}
             if(!replay_row&&current<3&&ranks[current]->published())++current;
         }else {
@@ -648,7 +824,10 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
                 ++current;head->start(ID,1,current);}
         }
         bool all=true;for(const auto& rank:ranks)all=all&&rank->published();
-        if(all&&!argmax_started&&argmax->inputs_ready()){argmax->start(1);argmax_started=true;}}
+#ifndef DSROM_S81_NATIVE_HEAD_STREAM
+        if(all&&!argmax_started&&argmax->inputs_ready()){argmax->start(1);argmax_started=true;}
+#endif
+    }
     bool complete(){
         if(consumed)return true;
         // Invoked as the existing accepted result consumer ONLY after source.cpp
@@ -657,13 +836,24 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         Source::require(publications_drained()&&winner_taken&&winner&&local_packet&&
             core->next_token==winner->global_id&&core->next_val==winner->bits&&
             winner->identity==ID&&winner->sequence==1,"real END differs from held native winner/publication");
-        argmax->acknowledge(*winner);consumed=true;local_packet.reset();return true;
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        Source::require(stream_collective->complete(),
+            "real END before all native carried final deliveries retired");
+#else
+        argmax->acknowledge(*winner);
+#endif
+        consumed=true;local_packet.reset();return true;
     }
     void attach(){Source::require(!attached,"HEAD source attached twice");auto self=shared_from_this();
+#ifdef DSROM_S81_NATIVE_HEAD_STREAM
+        runtime.participants.push_back(stream_transport); // sample OLD native ports before any leaf/core rises
+#endif
         runtime.participants.push_back({"native-HEAD-four-source-homes",
             [self](const auto& p){self->prepare(p);},[self](bool r){self->rising(r);},
             [self](bool r){self->falling(r);},[self](){return self->fault();}});
+#ifndef DSROM_S81_NATIVE_HEAD_STREAM
         runtime.participants.push_back(argmax->participant());
+#endif
         runtime.publication_ready=[self](auto id){return id==ID&&!self->fault();};
         runtime.publication_drained=[self](auto id){return id==ID&&self->publications_drained();};attached=true;
     }
@@ -677,11 +867,46 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
     DsromS81PrefixNativeEngine su;
     DsromS81PrefixOperation operation=DsromS81PrefixOperation{2470,2,"0a8042d53254c972480a5c7c05cf676d0c5e3cbea44e456aa5537b16ce93e622",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x800004u,0x0u,0x280u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x4050140u,0xa02u,0x0u,0x0u,0x0u,0x0u,0x8d40000u,0x3c79ca1u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
     bool attached=false,started=false,accepted=false,go=false,finished=false;
+    bool mutable_h=false;
+    std::optional<DsromS81PrefixOperation> h_successor;
+    unsigned selected_pc=0; // source PC is distinct from publication producer ID
+    uint32_t output_address=40992;
+    std::vector<std::pair<uint32_t,uint32_t>> output_spans{{40992,1}};
     long first=-1,last=-1;
     std::optional<uint32_t> output;
     SourceL20I0(DsromS81MinimumRuntime& r,std::shared_ptr<Vnative_vm> vm)
-      :runtime(r),bank(r,ID,std::move(vm),dsrom_s81_bind_minimum_source_tags(r,ID)) {
-        bank.publication().enroll_literal(operation.index,{{40992,1}});
+      :runtime(r),bank(r,ID,std::move(vm),dsrom_s81_bind_minimum_source_tags(r,ID),
+        std::getenv("DSROM_S81_NATIVE_L20_SU_PC")&&
+        std::string(std::getenv("DSROM_S81_NATIVE_L20_SU_PC"))!="0") {
+        // Bounded nonfield source selection; ordinary I0 remains the default.
+        // These are the unchanged retained L20 H-producing SU literals, not
+        // field work, I55, HEAD, or software-computed activations.
+        const char* pc=std::getenv("DSROM_S81_NATIVE_L20_SU_PC");
+        if(pc&&std::string(pc)!="0") {
+            if(std::string(pc)=="76")
+                operation=DsromS81PrefixOperation{2547,2,"b697342bd2e9299a0cc2a141a25b26c011f4830af680c74cd7ec21357c5fd820",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0x8000000au,0x528u,0x400000u,0x0u,0x0u,0x4000a08u,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x6008040u,0x0u,0x1000050u,0x50000000u,0x14000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xa03u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+            else if(std::string(pc)=="142")
+                operation=DsromS81PrefixOperation{2613,2,"8aa055e9953fb574d1c9505c6c0d3283c4db8e96c4d2f3d38ca9a778a7411c63",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0x8000000au,0x19f7u,0x400000u,0x0u,0x0u,0x4000a0eu,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x6008040u,0x0u,0x1000050u,0x50000000u,0x14000u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0xa03u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+            else throw std::runtime_error("native L20 SU selector must be 0, 76 or 142");
+            // Produce the last T version natively on this SAME bank before
+            // its H consumer. Upstream operand leases remain mandatory;
+            // no expected T/H restoration or borrowed cross-bank ACK exists.
+            selected_pc=std::string(pc)=="76"?76:142;
+            h_successor=operation;
+            if(std::string(pc)=="76")
+                operation=DsromS81PrefixOperation{2546,2,"fab801f2bcbcd4cdff06867c95bb963c9d1dd59a7416dd7a5460a4ad3322804d",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0xau,0xf0u,0x400000u,0x0u,0xc0000000u,0x4000a0au,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x4008040u,0x500u,0x1000050u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x2800u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+            else
+                operation=DsromS81PrefixOperation{2612,2,"c60f0f4efd0f3401b2ecb779c588bc675143deb557a953395563fa563c3c05e5",{0x2u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x10u,0xau,0xf0u,0x400000u,0x0u,0xc0000000u,0x4000a10u,0x0u,0x0u,0x2800u,0x8000280u,0x0u,0x0u,0x0u,0x0u,0x4008040u,0x500u,0x1000050u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x80000000u,0x2800u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u,0x0u}};
+            output_spans={{20480,20480}}; // literal four-copy T output
+        }
+        // Goodall: optional SIM_ONLY computed prefix uses THIS bank's actual
+        // tagged VM writes/ACKs; never admits a lease directly from files.
+        if(const char* input=std::getenv("DSROM_S81_NATIVE_L20_PRE_I75_INPUT")) {
+            require(pc&&std::string(pc)=="76"&&*input,
+                    "pre-I75 inputs require native PC76; PC142 needs its own actual boundary");
+            bank.entry().install_sim_only_pre_i75(input);
+        }
+        if(!mutable_h)bank.publication().enroll_literal(operation.index,output_spans);
         su=dsrom_s81_bind_minimum_su256(r,ID,bank.publication(),bank.io(),bank.tags());
     }
     void attach() {
@@ -693,14 +918,23 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
         runtime.participants.push_back({"source-L20-I0-native-SU",
           [this](const auto& result) {
             go=false;
-            if(started&&!accepted)go=bank.inputs_visible()&&su.inputs_ready(operation)&&su.ready();
+            if(started&&!accepted)go=bank.inputs_visible()&&su.inputs_ready(operation)&&su.ready()&&
+                (!mutable_h||(su.idle()&&bank.native_target().mutable_write_drained()));
             su.drive(operation,go);su.participant.prepare(result);
           },
           [this](bool released) {
             if(!released)require(!started&&!accepted,"reset erases accepted L20 I0 work");
             else if(go) {
                 require(!accepted&&su.ready(),"L20 I0 lost actual native acceptance");
-                bank.publication().begin(ID,operation.index);accepted=true;first=runtime.cycle();
+                if(mutable_h) {
+                    // inputs_ready has captured every operand through SourceIo;
+                    // idle excludes native/staged SU output debt, and the same
+                    // target excludes outstanding reads and real ACK debt.
+                    const bool readers_drained=su.idle()&&bank.native_target().mutable_write_drained();
+                    bank.admit_mutable_h_writer(operation.index,output_spans,
+                        go&&su.ready(),readers_drained);
+                }else bank.publication().begin(ID,operation.index);
+                accepted=true;first=runtime.cycle();
             }
             su.participant.rising(released);
           },
@@ -719,18 +953,32 @@ struct SourceL20I0 : std::enable_shared_from_this<SourceL20I0> {
         if(!accepted||finished)return;
         require(!bank.fault()&&!su.participant.fault(),"L20 I0 native failure");
         if(!su.idle()||!bank.publication().complete(ID,operation.index))return;
+        if(h_successor) {
+            // Native SU idle includes its output queue/ACK drain. Re-read the
+            // published T through the same SourceIo on the next admission;
+            // do not carry staged operands or source GO into another literal.
+            require(bank.native_target().mutable_write_drained()&&
+                    bank.io().span_lease(ID,20480,20480),
+                    "H successor lacks its native same-bank T publication");
+            su.drive(operation,false);
+            operation=*h_successor;h_successor.reset();
+            output_spans={{0,20480},{40960,1}};
+            output_address=0;mutable_h=true;accepted=false;go=false;
+            return;
+        }
         // Read back ONLY the published native result through the same held
         // bank request path. This is the operand for the following operation.
-        output=bank.io().read_word(ID,40992);
+        output=bank.io().read_word(ID,output_address);
         if(output){finished=true;last=runtime.cycle();}
     }
     void write(const std::string& directory) {
         require(finished&&output&&first>=0&&last>=first,"L20 I0 has no terminal native operand");
-        std::ofstream file(directory+"/native_L20_I0.tsv",std::ios::out|std::ios::app);
+        const auto pc=selected_pc;
+        std::ofstream file(directory+"/native_L20_I"+std::to_string(pc)+".tsv",std::ios::out|std::ios::app);
         require(bool(file),"L20 I0 measurement output unavailable");
         file<<"scope\tposition\trank\tproducer\taccepted_cycle\tvisible_read_cycle\taddress\traw32\n"
-            <<"L20.I0.native-component\t1048575\t"<<runtime.rank<<'\t'<<operation.index
-            <<'\t'<<first<<'\t'<<last<<"\t40992\t"<<*output<<'\n';
+            <<"L20.I"<<pc<<".native-component\t1048575\t"<<runtime.rank<<'\t'<<operation.index
+            <<'\t'<<first<<'\t'<<last<<'\t'<<output_address<<'\t'<<*output<<'\n';
         require(bool(file),"L20 I0 measurement write failed");
     }
     static void require(bool ok,const char* message){if(!ok)throw std::runtime_error(message);}
@@ -800,7 +1048,7 @@ struct SourceL20Index : std::enable_shared_from_this<SourceL20Index> {
             return std::nullopt;
         };
         backend=std::make_shared<NativeIndexHbm>(r,"native_L20_rank3_index_backend");
-        backend->preload_ring("/tmp/opentallas-L20-RING-priorhistory-20261004-r1/r3");
+        backend->preload_ring(dir+"/ring_prior_r3");
         writer=std::make_shared<L20IndexWriter>(r,ID,su_ports,backend,key_operation);
         scorer=std::make_shared<VDsromS81IndexScorer>(r.context,"native_L20_rank3_fullscan");
         backend->bind_wiring([this](VDsromS81IndexHbm& m) {

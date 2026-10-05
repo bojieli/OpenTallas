@@ -97,7 +97,7 @@ def main() -> None:
     ap.add_argument("--tp", type=int, choices=(2, 4), default=2, help="dies (tensor-parallel ranks)")
     ap.add_argument("--enable-ar256", action="store_true", help="opt in to zero-count 256-word all-reduce descriptors")
     ap.add_argument("--async-coll", action="store_true", help="ASYNC_COLL=1: decode descriptor bit 20 as a cut-through all-reduce")
-    ap.add_argument("--sb-pipe", type=int, nargs="?", const=1, default=0, choices=(0, 1, 2, 3),
+    ap.add_argument("--sb-pipe", type=int, nargs="?", const=1, default=0, choices=(0, 1, 2, 3, 4),
                     help="SB_PIPE of the asynchronous sequencer (bare flag = 1: pipelined scoreboard set; "
                          "2/3: also the registered read, no wide lookup in the read loop)")
     ap.add_argument("--coll-lat", type=int, default=11, help="collective link latency (cycles), ot_rom_oneshot_allreduce LAT")

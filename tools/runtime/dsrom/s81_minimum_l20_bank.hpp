@@ -28,6 +28,7 @@ private:
     DsromS81EmbeddingSink h_sink;
     std::unique_ptr<dsrom_s81_minimum::DsromS81MinimumTargetEntry> initial;
     bool bank_handed=false,entry_handed=false,read_pending=false,stopped=false;
+    const bool mutable_h_selected;
     uint32_t read_address=0;
     std::array<uint32_t,8> read_owner{};
     static void require(bool ok,const char* why) {
@@ -52,8 +53,8 @@ private:
 public:
     DsromS81MinimumL20Bank(DsromS81MinimumRuntime& r,uint64_t id,
                           std::shared_ptr<Vnative_vm> actual_vm,
-                          DsromS81MinimumSourceTags actual_tags)
-        :runtime(r),identity(id),model(std::move(actual_vm)),pub(id),source_tags(std::move(actual_tags)) {
+                          DsromS81MinimumSourceTags actual_tags,bool mutable_h=false)
+        :runtime(r),identity(id),model(std::move(actual_vm)),pub(id),source_tags(std::move(actual_tags)),mutable_h_selected(mutable_h) {
         require(r.stage==37&&r.rank>=0&&r.rank<4&&id<(1ull<<47)&&r.context&&model&&
                 model->contextp()==r.context,"L20 bank requires actual stage37/rank/shared VM context");
         require(source_tags.record&&source_tags.read_owner&&source_tags.root_owner&&
@@ -68,7 +69,10 @@ public:
         };
         target=std::make_unique<Target>(*model,id,0,
             [this](const auto& out,unsigned lane) {
-                return out.vm_address<20480?source_tags.record(out,lane):pub.record(out,lane);
+                if(out.vm_address<20480&&
+                   !(mutable_h_selected&&pub.write_allowed(identity,out.vm_address+lane,1)))
+                    return source_tags.record(out,lane);
+                return pub.record(out,lane);
             },
             [this](auto owner,auto address,auto count){return pub.source_span_lease(owner,address,count);},
             [this](auto owner,auto address,auto count){return pub.write_allowed(owner,address,count);},
@@ -78,7 +82,7 @@ public:
             },
             Target::AcceptObservers{true,
                 [this](unsigned bank,const auto& command){source_tags.scalar_accept(bank,command);},
-                [this](uint32_t address,const auto& owner){source_tags.read_accept(address,owner);}});
+                [this](uint32_t address,const auto& owner){source_tags.read_accept(address,owner);}},mutable_h);
         source_io={
             [this](auto owner,auto address){return read(owner,address);},
             [this](auto owner,auto address,auto count){return target->source_span_lease(owner,address,count);},
@@ -117,6 +121,34 @@ public:
         initial->start();
     }
     bool inputs_visible() const{return !fault()&&initial->complete();}
+    // At actual later native command acceptance ONLY. Arch retains dispatch
+    // and supplies the real old-reader drain fence, not an elapsed-time promise.
+    // Later output strobes must still reserve source tags and call native_scalar;
+    // source_io.offer/visible use the SAME VM/participant and actual MacroWrite ACK.
+    void admit_mutable_h_writer(unsigned producer,
+          const std::vector<std::pair<uint32_t,uint32_t>>& ranges,
+          bool actual_native_accept,bool old_readers_drained) {
+        try {
+            require(mutable_h_selected&&inputs_visible()&&actual_native_accept&&
+                    old_readers_drained&&!read_pending&&target->mutable_write_drained()&&
+                    runtime.identity&&*runtime.identity==identity&&!ranges.empty(),
+                    "later H writer lacks opt-in/actual acceptance/drained old readers");
+            bool owns_h=false;
+            for(const auto& span:ranges) {
+                require(span.second&&uint64_t(span.first)+span.second<=(1u<<19)&&
+                        (span.first>=20480||uint64_t(span.first)+span.second<=20480),
+                        "later H literal exceeds VM19 or straddles the original H extent");
+                owns_h=owns_h||span.first<20480;
+            }
+            require(owns_h,"later H admission has no literal H output");
+            // A native H writer also publishes its source reducer (SSX).
+            // Enroll all outputs once, but revoke initial H witnesses only.
+            pub.enroll_literal(producer,ranges); // descriptors alone create no visibility
+            for(const auto& span:ranges)if(span.first<20480)
+                target->admit_mutable_h_span(span.first,span.second);
+            pub.begin(identity,producer); // old publication version revoked before native writes
+        }catch(...){stopped=true;throw;}
+    }
     // Other native writer's positive old-head ACK enters the SAME target
     // address witness, mutable callback chain and one retirement. Do not also
     // invoke publication/visibility manually for this same receipt.

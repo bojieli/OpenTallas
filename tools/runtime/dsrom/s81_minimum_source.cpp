@@ -59,9 +59,35 @@ class HeadEndCore {
         if(bit%32 && bit/32+1<words.size())v|=uint64_t(words[bit/32+1])<<32;
         return uint32_t(v>>(bit%32)) & (width==32?0xffffffffu:((1u<<width)-1));
     }
-    void healthy() {
-        require(!stopped&&!core->fault&&!core->capture_fault,
-                "actual HEAD core fault; accepted ownership retained");
+    bool capture_sticky_fault() const {
+        return core->rootp->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__u_spine__DOT__u_capture__DOT__sticky_fault;
+    }
+    void healthy(bool settled_preedge=true) {
+        // capture_fault includes combinational NEXT-edge invalid terms.
+        // After a push the newly valid head has no ACK until LOW preparation;
+        // only settled OLD inputs may be checked for edge admission. RTL
+        // sticky_fault retains EVERY invalid accepted edge for post-edge checks.
+        if(stopped||core->fault||capture_sticky_fault()||(settled_preedge&&core->capture_fault)) {
+            const auto* r=core->rootp;
+            std::ostringstream detail;
+            detail << "actual HEAD core fault; accepted ownership retained"
+                << " cycle=" << runtime.cycle()
+                << " pc=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__pc)
+                << " state=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__st)
+                << " core_fault=" << unsigned(core->fault)
+                << " capture_fault=" << unsigned(core->capture_fault)
+                << " capture_sticky_fault=" << unsigned(capture_sticky_fault())
+                << " settled_preedge=" << unsigned(settled_preedge)
+                << " adapter_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__a_fault)
+                << " spine_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_rom__DOT__sp_fault)
+                << " head_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__head_fault)
+                << " native_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_native_head__DOT__u_head__DOT__native_fault)
+                << " range_fault=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_native_head__DOT__u_head__DOT__range_fault)
+                << " nonfinite=" << unsigned(r->ot_dsrom_s81_actual_core_end__DOT__g_native_head__DOT__u_head__DOT__nonfinite)
+                << " command_accepted=" << dot_accepted
+                << " final_accepted=" << final_taken;
+            throw std::runtime_error(detail.str());
+        }
     }
     void unsupported() {
         // These service endpoints have accepted NO commands. They are not an
@@ -269,6 +295,9 @@ public:
     void bind(DsromS81MinimumSourcePlan& plan) {
         require(plan.position==1048575&&plan.identity<(1ull<<47),"HEAD actual owner/position required");
         owner=plan.identity;begin_dot=plan.begin_prefix;
+        // The existing capture and native rank0 reducer latch this source owner
+        // at accepted I5; bind it before arming the real core command.
+        core->capture_identity=owner;
         require(bool(begin_dot),"HEAD native DOT acceptance callback absent");
         plan.begin_prefix=[this,token=plan.token,position=plan.position] {
             require(!armed&&!started&&!dot_accepted&&!terminal,"HEAD core start repeated");
@@ -338,6 +367,16 @@ public:
                     }
                     const bool re=core->prog_re;const unsigned addr=core->prog_addr;
                     core->clk=1;core->eval();
+                    // These pulses were consumed on the ONE real rising edge.
+                    // Do not reinterpret OLD root-valid/VM-accept against the
+                    // post-NBA FIFO count: a push fills CAPACITY1 and a pop
+                    // empties it. Keep payload/owners and sticky faults intact.
+                    for(unsigned root=0;root<128;++root) {
+                        const unsigned valid_bit=root*69+68;
+                        core->rom_fr[valid_bit/32]&=~(uint32_t(1)<<(valid_bit%32));
+                    }
+                    for(unsigned j=0;j<4;++j)core->capture_vm_accept[j]=0;
+                    core->eval(); // same HIGH clock: combinational settle only
                     // Synchronous program read: CAP sees OLD prog_q. Update
                     // after the edge, preserving real FETCH/WAIT/CAP chronology.
                     if(reset_n&&re) {
@@ -345,7 +384,7 @@ public:
                         for(unsigned j=0;j<64;++j)core->prog_q[j]=program.at(addr-first_pc)[j];
                     }
                     if(reset_n) {
-                        healthy();
+                        healthy(false);
                         if(core->done) {
                             require(end_seen&&final_taken&&core->next_token==field(final_frame,128,32)&&
                                     core->next_val==field(final_frame,96,32)&&core->capture_drained,
@@ -356,7 +395,7 @@ public:
                 }catch(...){stopped=true;throw;}
             },
             [this](bool reset_n) {core->rst_n=reset_n;core->start=0;core->clk=0;core->eval();},
-            [this] {return stopped||bool(core->fault)||bool(core->capture_fault);}};
+            [this] {return stopped||bool(core->fault)||capture_sticky_fault();}};
     }
     bool complete()const{return terminal;}
     uint32_t winner()const{return core->next_token;}
@@ -518,7 +557,9 @@ extern "C" int dsrom_s81_minimum_source_main(DsromS81MinimumRuntime& runtime,con
     if(!journal)throw std::runtime_error("preserve existing native source stage results");
     const int wrote=fprintf(journal,"scope\tstage\trank\tpair\tidentity\ttoken\tinput_start\tinput_end\tinput_words\tterminal_cycle\n"
         "%s\t%d\t%d\t%d\t%llu\t%u\t%ld\t%ld\t%u\t%ld\n",
-        head_end?"Lhead.I5.I6.actual-core-END":index_component?"L20.I36.I44.native-SIM_ONLY-boundary-inputs":seeded?"L20.seeded-native-component":"L0.I7-component-rows0,1",
+        head_end?(std::getenv("SIM_ONLY_HEAD_ACTUAL_XN")&&
+            std::string(std::getenv("SIM_ONLY_HEAD_ACTUAL_XN"))=="1"
+            ?"Lhead.I5.I6.SIM_ONLY_HEAD_ACTUAL_XN.actual-core-END":"Lhead.I5.I6.actual-core-END"):index_component?"L20.I36.I44.native-SIM_ONLY-boundary-inputs":seeded?"L20.seeded-native-component":"L0.I7-component-rows0,1",
         runtime.stage,runtime.rank,runtime.pair,(unsigned long long)plan->identity,
         plan->token,input_start,input_end,index_component?4256u:seeded?20480u:embedding->committed_words(),runtime.cycle());
     const int closed=fclose(journal);

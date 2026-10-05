@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.retirement.v1",
+ "date": "2026-10-04",
+ "owner": "Claude:qwen-nearhbm (owner instruction 2026-10-04)",
+ "retired": {
+  "name": "HBM_STREAM (one-stack near-HBM streaming KV controller, Qwen3-8B ROM REAL_MEM runtime)",
+  "main_merge": "081875cf2 (branch claude/qwen-hbm-stream-realmem-20261004; ADOPT 146dc2b2b, closure 0a2ba9b20)",
+  "runner": "tools/qwen_rom_rt_token_stream_w12.py --real-mem --hbm-stream (kept byte-identical for replay)",
+  "rtl": [
+   "rtl/hdc/kv/ot_qwen_rt_kv_stream_service.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv NCH=1"
+  ],
+  "measured": {
+   "verdict_at_P255": "ADOPT (>=1%): +10.81% per user at P255 (default-off HBM_STREAM, WBW=4)",
+   "token_rate_gain_pct_at_P255": 10.81,
+   "tok_per_s_1p2ghz": {
+    "hbm_stream": 7708.9,
+    "hbm_stream_upper_bound": 7821.5,
+    "real_mem": 6957.2
+   },
+   "record": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/compose_P255_ar256.json"
+  },
+  "why_retired": [
+   "one HBM3E stack per die: 12.7% of the 4-stack peak at P8191 (REAL_MEM one-stack L0 14,574 cycles, fill 9,893)",
+   "faults at positions >= 2048, so it cannot serve the Qwen3-8B target context (P8191)",
+   "its gain was measured only at P255 (off target context)"
+  ]
+ },
+ "successor": {
+  "name": "STREAM4 (4 HBM3E stacks a die, ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack)",
+  "main_commit": "c14759ef1",
+  "runner": "tools/qwen_rom_rt_token_stream4_w12.py --real-mem --stream4",
+  "record": "results/rtl/qwen_rom_kv_fullbw_20261004/README.md",
+  "measured_P8191_L0_isolated": {
+   "cycles": 6468,
+   "fill_cycles": 1348,
+   "sectors_per_cycle": 97.23,
+   "TBps": 3.734,
+   "pct_of_4stack_peak": 93.4,
+   "exact": "X of all 4 dies and token K/V write-back bit-exact vs realmem-ctx8k/gold/P8191",
+   "result": "results/rtl/qwen_rom_kv_fullbw_20261004/runtime_P8191/L0_iso/result.json"
+  },
+  "vs_one_stack_REAL_MEM_P8191_L0": {
+   "cycles_before": 14574,
+   "cycles_after": 6468
+  }
+ },
+ "selection": "The Qwen3-8B ROM KV path is STREAM4. HBM_STREAM is retired: no new runs, compositions or headline figures use it; its evidence stays as history (verdicts not overwritten). Scoreboard spec entries for HBM_STREAM are marked retired."
+}

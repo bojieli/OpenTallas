@@ -3,6 +3,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <sstream>
 #include <utility>
 #include <tuple>
 
@@ -402,8 +403,34 @@ public:
             [self,&ckv,restore,prepared](bool released){
                 require(*prepared&&!self->fault()&&(!self->runtime.identity||released),
                         "native CKV edge lacks snapshot or resets admitted context");
-                restore();ckv.rst_n=released;ckv.clk=1;ckv.eval();
-                if(ckv.fault){self->stopped=true;throw std::runtime_error("native CKV edge fault");}
+                restore();
+                const auto edge_addr=ckv.c_addr;
+                const auto edge_tag=ckv.c_tag;
+                const unsigned edge_request=ckv.c_v,edge_write=ckv.c_we;
+                const unsigned edge_vm_re=ckv.vm_re,edge_vm_addr=ckv.vm_raddr;
+                ckv.rst_n=released;ckv.clk=1;ckv.eval();
+                if(ckv.fault){
+                    self->stopped=true;
+                    // Report existing native outputs and the OLD restored inputs
+                    // at the failing edge. No repair, retry or invented authority.
+                    std::ostringstream e;
+                    e<<"native CKV edge fault rank="<<self->runtime.rank
+                     <<" cycle="<<self->runtime.cycle()<<" fault_code="<<unsigned(ckv.fault_code)
+                     <<" sel_v="<<unsigned(ckv.sel_v)<<" sel_vmword="<<ckv.sel_vmword
+                     <<" vm_re="<<edge_vm_re<<" vm_raddr="<<edge_vm_addr
+                     <<" nw_we="<<unsigned(ckv.nw_we)<<" nw_addr=0x"<<std::hex<<ckv.nw_addr
+                     <<" c_v=0x"<<edge_request<<" c_we=0x"<<edge_write
+                     <<" c_rdy=0x"<<unsigned(ckv.c_rdy)<<" c_wr_done=0x"<<unsigned(ckv.c_wr_done)
+                     <<" c_tag=0x"<<edge_tag<<" c_sv=0x"<<unsigned(ckv.c_sv)
+                     <<" c_stag=0x"<<ckv.c_stag<<" c_sbeat=0x"<<ckv.c_sbeat
+                     <<" c_addr_words=";
+                    for(unsigned w=0;w<4;w++)e<<(w?",":"")<<edge_addr[w];
+                    e<<" vm_rq_words=";
+                    for(unsigned w=0;w<16;w++)e<<(w?",":"")<<ckv.vm_rq[w];
+                    e<<" ag_rx_valid=0x"<<unsigned(ckv.ag_rx_valid)
+                     <<" ag_rx_rank=0x"<<ckv.ag_rx_rank<<" ag_rx_gid=0x"<<ckv.ag_rx_gid;
+                    throw std::runtime_error(e.str());
+                }
             },
             [&ckv,restore,prepared](bool released){
                 restore();ckv.rst_n=released;ckv.clk=0;ckv.eval();*prepared=false;
@@ -483,7 +510,18 @@ public:
         auto source=std::make_shared<DsromS81PrefixNativeEngine>(std::move(owner));
         descriptor_drained=source->idle;
         return {{"actual-packed-window-kv",
-            [self,source](const auto& r){source->participant.prepare(r);self->prepare();},
+            [self,source](const auto& r){
+                // A pending literal requests descriptor capture/staging; it is
+                // not GO authority. Keep the actual owner progressing before
+                // it snapshots start/prime, even while WINDOW is not ready.
+                if(self->held_consumer&&!self->held_go&&!self->stream_active){
+                    require(!self->fault()&&!source->participant.fault(),
+                            "pending packed WINDOW source authority fault");
+                    source->inputs_ready(*self->held_consumer);
+                    source->drive(*self->held_consumer,false);
+                }
+                source->participant.prepare(r);self->prepare();
+            },
             [self,source](bool reset){self->rising(reset);source->participant.rising(reset);},
             [self,source](bool reset){self->falling(reset);source->participant.falling(reset);},
             [self,source](){return self->fault()||source->participant.fault();}},
@@ -507,12 +545,13 @@ public:
                             self->held_consumer->unit==op.unit&&
                             self->held_consumer->instruction==op.instruction,
                             "packed WINDOW held consumer changed before GO");
-                // This is actual descriptor authorization for THIS literal
-                // operation, not a lease derived from a generation number.
-                if(!source->inputs_ready(op)||!source->ready()||!self->staged()||
-                   !self->selected_bound||!self->selected_ready||!self->current_row_visible())return false;
+                // Ask the real descriptor owner to capture THIS literal before
+                // waiting for WINDOW staging. Retaining a pending request grants
+                // no readiness, native generation or operand lease by itself.
+                const bool authorized=source->inputs_ready(op);
                 self->held_consumer=op;
-                return true;
+                return authorized&&source->ready()&&self->staged()&&
+                       self->selected_bound&&self->selected_ready&&self->current_row_visible();
             },
             [self,source](const auto& op,bool go){
                 if(go)require(self->held_consumer&&!self->held_go&&

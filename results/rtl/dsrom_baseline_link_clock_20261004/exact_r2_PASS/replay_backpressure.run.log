@@ -1,0 +1,3 @@
+ARGV ["vvp", "-n", "/srv/opentallas-scratch/codex/dsrom-baseline-link-clock/exact-r2/replay_backpressure.vvp", "+seed=81", "+case=replay_backpressure", "+n=1000", "+gap=10", "+bpm=1"]
+LINKRT_SUMMARY case=replay_backpressure result=PASS n=1000 sent=1000 rcvd=1000 mism=0 extra=0 stalled=0 fault=0 fault_code=0 cycles=7525 lat_first=15 lat_min=15 lat_max=476 lat_avg=202.41 rate=0.1453 credit_stalls=5394 st_flits_tx=1189 st_flits_rx_ok=1000 st_crc_err=98 st_naks=32 st_replays=32 st_timeouts=0 st_retx_flits=189 st_max_replay_occ=23 ch=8 dyn=0 chsel=8 credits=32 seqw=8 efwd=37 erev=29 gap=10 bpm=1 seed=81
+/srv/opentallas-scratch/codex/dsrom-baseline-link-clock/exact-r2/replay_backpressure.sv:179: $finish called at 15059000 (1ps)
