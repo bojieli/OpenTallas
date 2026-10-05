@@ -4,6 +4,7 @@
 // This component has root POR only; it does not certify parent warm quarantine.
 module tb_hbm_integrated_w2_publication_nash;
  parameter integer REGISTERED_SUBBLOCKS=0;
+ parameter integer PROTECTED_TRANSACTION_PIPELINE=0;
  `include "private_alloc.svh"
  reg clk=0; always #5 clk=~clk;
  reg por_n=0,cmd_we=0,db_v=0,cpl_rdy=0;
@@ -74,7 +75,7 @@ module tb_hbm_integrated_w2_publication_nash;
  assign s_req_r=req_rdy[3];
  assign s_rsp_v=rsp_v[3]&&delivery_enabled;
  assign s_rsp={rsp_tag[63:48],rsp_we[3],rsp_data[1023:768]};
- ot_hbm_integrated_w2_result_sink #(.ENABLE(1),.REGISTERED_SUBBLOCKS(REGISTERED_SUBBLOCKS)) sink(
+ ot_hbm_integrated_w2_result_sink #(.ENABLE(1),.REGISTERED_SUBBLOCKS(REGISTERED_SUBBLOCKS),.PROTECTED_TRANSACTION_PIPELINE(PROTECTED_TRANSACTION_PIPELINE)) sink(
   .clk(clk),.por_n(por_n),.owned(grants[2]),.installed(installed),.reserve_v(reserve_v),.reserve_r(reserve_r),
   .pair_op(1'b1),.rows_a(2'd2),.rows_b(2'd2),.op_a(OPA),.op_b(OPB),
   .base_a(BASE_A),.limit_a(LIMIT_A),.base_b(BASE_B),.limit_b(LIMIT_B),.provider_tag(16'hf239),.frame(FRAME),
@@ -152,7 +153,26 @@ module tb_hbm_integrated_w2_publication_nash;
   if(!source_permit)$fatal(1,"no preGO reservation for no-ready result slot%0d",s);
   result_v=1;result_op=s<2?OPA:OPB;result_row=12'(s%2);result_data=literal_row(s);
  endtask
- generate if(REGISTERED_SUBBLOCKS)begin:inject_registered
+ generate if(PROTECTED_TRANSACTION_PIPELINE)begin:inject_pipeline
+  initial begin
+   wait(control_corrupt);wait(provider_pending);@(negedge clk);
+   sink.transaction_pipeline.u_pipe.code[71]=sink.transaction_pipeline.u_pipe.code[71]^72'h3;
+   protection_injected=1;
+  end
+  initial begin
+   if($test$plusargs("CORRECT_PAYLOAD_CE"))begin
+    wait(provider_pending);@(negedge clk);
+    sink.transaction_pipeline.u_pipe.code[8]=sink.transaction_pipeline.u_pipe.code[8]^72'h1;
+    @(negedge clk);
+    if(sink_fault||source_permit||s_req_v||s_rsp_r||!retained||!owner.on.debt[0])
+     $fatal(1,"CE used unchecked permission or lost accepted debt");
+    wait(sink.transaction_pipeline.u_pipe.normal);@(negedge clk);
+    if(sink_fault||sink.transaction_pipeline.u_pipe.ce[8]||!retained)
+     $fatal(1,"CE did not recheck/scrub protected payload");
+    $display("PASS_CORRECT_PAYLOAD_CE held_owner_debt=1 protected_recheck=1");
+   end
+  end
+ end else if(REGISTERED_SUBBLOCKS)begin:inject_registered
   initial begin
    wait(control_corrupt);wait(provider_pending);@(negedge clk);
    // Two parity-invalid copies must fail closed. The routed alias census gives

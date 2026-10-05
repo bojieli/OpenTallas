@@ -3,7 +3,7 @@
   "area": {
     "FF_proxy_um2": 0.2916,
     "actual_parent_slot_bbox_um": null,
-    "binding_owner": "Claude HBM floorplan owner",
+    "binding_owner": "Turing 01a10dba-5786-7d01-b636-797f591b5657 (existing dieplan takeover; Claude limit confirmed)",
     "codec_basis": "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json#SRAM_protection_candidate.pair_cell_body_um2",
     "exclusions": "loaded CTS/PG, hold repair, actual long channels and physically distinct protection implementation",
     "historical_component_core_is_not_parent_slot": true,
@@ -26,8 +26,8 @@
       "/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json"
     ],
     "parent_instance_path": "ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink",
-    "planned_50pct_placement_um2": 48589.918818000006,
-    "planned_cell_body_um2": 23138.05658,
+    "planned_50pct_placement_um2": 51850.85829000001,
+    "planned_cell_body_um2": 24690.884900000005,
     "slot_fit": null
   },
   "compute": {
@@ -37,7 +37,7 @@
     "incoming_FP32_words": 32
   },
   "default_enabled": false,
-  "engine_RTL_admitted": false,
+  "engine_RTL_admitted": true,
   "gate": {
     "assertions": "accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high",
     "existing_fourrow_inputs_unchanged": true,
@@ -51,8 +51,10 @@
     ],
     "targeted_new_cases": [
       "sink_control_UE_after_provider_accept",
-      "shared_owner_UE_after_provider_accept"
+      "shared_owner_UE_after_provider_accept",
+      "payload_CE_with_accepted_debt"
     ],
+    "terminal": "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json",
     "warm_hook_in_component": false
   },
   "measured_connected_component": {
@@ -96,6 +98,7 @@
     ],
     "native_returns": 64,
     "new_replay": false,
+    "owned_transactions": 1,
     "provider_sink_accept_trace": [
       [
         11397,
@@ -164,7 +167,7 @@
         3
       ]
     ],
-    "recipe_Npublication": 1,
+    "recipe_Npublication": 4,
     "registered_flag_OFF_original_body_unchanged": true,
     "releases": 1,
     "result_writes": 4,
@@ -176,11 +179,65 @@
     "source_commit": "a86d3cfd3",
     "whole_token": false
   },
+  "measured_successor_component": {
+    "FP32_words": 32,
+    "artifact_sha256": {
+      "CORRUPT_SHARED_OWNER.log": "0229706a6e9b987d996fb1258b0f49a935b8e599d91b788eabfb9d4eb48a8d42",
+      "CORRUPT_SINK_CONTROL.log": "02c8c911162d774701002e3dd438323555a9c0dea78263c7bf6016e023fc2457",
+      "compile.log": "915b2b782f2807efc9336f029d9e2b92a5e931ac1cef5a0b3a0683290e474d76",
+      "corrupt.log": "9f8524cd780513c4c4627e41677f02f3f900da1437dc103940e682432f20758c",
+      "normal.log": "04bbbd63dffd1cb9a9feea9349f0e0b8cbe45c068a7e0769cc79f0e7273e4b4d",
+      "payload_ce.log": "09aeeba90d57e0d35b97f134ed629b9029690ada57475e4339d29ead7f0f1d52",
+      "run.log": "d7dcd516ff6f0557701cc35f5721f63e57c73621e0324d1e192d62393d8a8081",
+      "runtime.rc": "8d6c81a2117607d9abacfdfdd4cb38794314e8113925d763eea2fafe4b775486",
+      "source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
+      "toolchain.log": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    },
+    "authority_negative_observation_edges": 12,
+    "clock_is_functional_not_signoff": true,
+    "command": "PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH NASH_W2_TRANSACTION_PIPELINE=1 NASH_W2_PROTECTION_CASES=1 bash src/tools/nash_w2_publication_gate.sh JOB",
+    "default_enabled": false,
+    "delivery_stall_edges": 7,
+    "delta_edges_vs_original_162": 34,
+    "delta_edges_vs_rejected_registered_181": 15,
+    "fixture_clock_ns": 10,
+    "full_readbacks": 4,
+    "last_verified_edge": 191,
+    "mode": "PROTECTED_TRANSACTION_PIPELINE=1",
+    "negative_cases": [
+      "CORRUPT_READBACK",
+      "CORRUPT_SINK_CONTROL",
+      "CORRUPT_SHARED_OWNER"
+    ],
+    "parent_condition": "real CP reset/quarantine must keep root POR high and preserve sink, borrower and CDC accepted debt until matched consumption",
+    "parent_warm_reset_tested": false,
+    "payload_CE": {
+      "added_release_edges": 0,
+      "held_owner_debt": true,
+      "injected_codeword": 8,
+      "protected_recheck": true,
+      "release_edge": 196,
+      "scope": "reserved ingress payload with provider accepted debt; not a selected-stage injection",
+      "service_can_overlap_other_reserved_row": true
+    },
+    "physical_admission": false,
+    "physical_binding_complete": false,
+    "release_edge": 196,
+    "request_stall_edges": 2,
+    "route_launched": false,
+    "rows": 4,
+    "shared_releases": 1,
+    "source_commit": "91714b0525e69d6eadb677fdcc3481e61bb3e3c0",
+    "verdict": "PASS_COMPONENT_EXACT",
+    "whole_token": false,
+    "writes": 4
+  },
   "model_bounded": true,
   "parent_binding_complete": false,
   "physical_launch_admitted": false,
   "ports": {
-    "checked_reads_per_publication": 4,
+    "checked_reads_per_numeric_publication": 1,
+    "checked_reads_per_owned_transaction": 4,
     "max_result_accepts_per_cycle": 1,
     "new_memory_ports": 0,
     "provider_capacity_under_refusal": null,
@@ -191,35 +248,38 @@
     "provider_request_bits": 337,
     "provider_return_bits": 273,
     "result_payload_B_per_accept": 32,
-    "writes_per_publication": 4
+    "writes_per_numeric_publication": 1,
+    "writes_per_owned_transaction": 4
   },
   "protection": {
     "CE_bound_scope": "one transient correctable error per selected stripe; repeated faults/refusal have no finite completion bound",
     "CE_critical_path": false,
-    "CE_extra_edges_per_corrected_stripe": 4,
+    "CE_extra_edges_per_corrected_stripe": 5,
     "CE_holds_accepted_debt": true,
     "CE_max_selected_payload_stripes": 4,
     "CE_path": "hold code+identity+owner/debt; serial correction select, corrected-code capture, fresh syndrome/DUE recheck, scrub/positive capture; resume only after successful recheck",
     "CE_requires_preissued_noready_results_still_captured_in_reserved_seats": true,
-    "CE_selected_payload_extra_edges_bound": 16,
+    "CE_selected_payload_extra_edges_bound": 20,
     "DUE_always_vetoes_handshakes": true,
     "code": "unchanged W6 SECDED64/72, including every stage identity/phase/completion word",
     "completion": "all source cuts valid + matching protected identity + four matched write ACKs + four full payload readbacks + positive verified/completion fences; shared matched release then CP callback/CPL",
-    "exact_gate_passed": false,
-    "implementation_present": false,
+    "exact_gate_passed": true,
+    "exact_gate_scope": "minimum four-row component with real CP/shared owner/finite RAM; enclosing warm reset and physical closure untested",
+    "implementation_present": true,
     "no_ROM_waiver_for_mutable_state": true,
     "no_parity_waiver": true,
     "normal_path": "select unchanged code+identity; capture syndrome/overall; reject DUE; capture checked original code+identity with positive completion (no correction mux or re-encode of payload)",
     "physical_triplicate_independence_credited": false,
-    "planned_codec_pairs": 73,
+    "planned_codec_pairs": 78,
     "raw_code_retained_through_check": true,
     "representation_basis": "72-bit SECDED code FF per64bit stripe, not textual triplicate views; successor mapping not measured",
     "syndrome_bits_per_word": 8,
     "syndrome_status_stored_as_W6": true
   },
   "publication_count": {
-    "Npublication": 1,
+    "Npublication": 4,
     "canonical_program_census_source": "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json#selected_case",
+    "owned_transactions": 1,
     "rows_per_operation": 2,
     "schedule_source": "tools/hubble_w2_connected_runtime.py prepare: native seq[:16], both op IDs x rows(0,1); tb_hbm_integrated_gu_w2_hubble.sv one reserve edge",
     "selected_descriptor_records": 1,
@@ -234,7 +294,7 @@
     "actual_parent_channel_capacity_tracks": null,
     "buffer_tree_load_assumption": 7,
     "channel_fit": null,
-    "estimated_buffer_count": 751,
+    "estimated_buffer_count": 803,
     "identity_code_bits": 216,
     "logical_slot_select_fanout": 288,
     "mapped_fanout": null,
@@ -252,6 +312,7 @@
     "immutable_caller": "f835c8641",
     "released_selected_schedule": "a86d3cfd3"
   },
+  "source_permission": "Owner explicitly authorizes bounded component pipeline/gate while actual parent slot remains unbound; no physical fit or route admission",
   "source_sha256": {
     "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
     "results/physical/hbm_w2_sink_registered_terminal_20261005/r1/endpoint_groups.json": "3ab6043317f55791134fda188d64515611084309fb1c52edaa966485b043c0c8",
@@ -262,9 +323,12 @@
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/private_alloc.svh": "0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/seq.hex": "1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json": "b3833a7548aec7bd6e4c3f558bd44e81be6055f595f480ae415acebf0958568e",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json": "4829fac869af50bff19585f4aa2be38ef58aca340f103790978d400c90a47b39",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
     "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
     "results/uarch/hbm_w2_publication_20261005/inputs/immutable_parent.sv": "f569e6f459a46dcb1bbe0826c99a8aeaefca4fba81ba3c75c65174e7eb90e16e",
     "results/uarch/hbm_w2_publication_20261005/inputs/original_f835_sink.sv": "b0c030d784e9dddd285bfa827548884fdaf881a1256ec1555b1de95685f681c0",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
     "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv": "1b89c72997ca02eccd4992358d748bcad93f89b435304c3b5358a0ab02162e6e",
     "tools/hbm_accel_sm_v_floorplan.py": "44086afc377ac93856e65cc7a32e731b07f40e1e94ea6ea843202e7da4763b73",
     "tools/hubble_w2_connected_runtime.py": "b364eb89a5c5d3a210cecb44cab41e7c6df0bdebb02b141556bfd33f7f2cb00f"
@@ -283,8 +347,11 @@
     "new_SRAM_ports": 0,
     "no_result_ready": true,
     "payload_bytes": 128,
-    "planned_source_FF_bits": 5256,
+    "planned_source_FF_bits": 5616,
     "protected_words_by_stage": {
+      "CE_code_snapshot": 2,
+      "CE_controller": 1,
+      "CE_mask_snapshot": 2,
       "checked_payload_and_identity": 7,
       "control_and_completion": 2,
       "held_request": 6,
@@ -301,7 +368,7 @@
     "whole_die_sink_replica_count": null
   },
   "timing": {
-    "CE_selected_payload_added_edges_bound": 64,
+    "CE_selected_payload_added_edges_bound": 80,
     "CE_selected_payload_bound_scope": "at most4 transient CE stripes in each of4rows, serial correction; excludes control/identity faults and repeated injection",
     "FF_hold_uncertainty_ps": 25,
     "SS_setup_uncertainty_ps": 60,
@@ -311,8 +378,10 @@
       "original": 162,
       "registered": 181
     },
-    "measured_successor_delta_edges": null,
-    "measured_successor_release_edges": null,
+    "measured_calendar_scope": "same four-row inputs/stalls; arrival-seat schedule differs; delta is observed calendar, not sum of cut inventory",
+    "measured_successor_delta_edges_vs_original": 34,
+    "measured_successor_delta_edges_vs_registered": 15,
+    "measured_successor_release_edges": 196,
     "old_FF_hold_slack_ps": 15.645707,
     "old_REGISTERED_SUBBLOCKS_verdict": "REJECT_SS_SETUP",
     "old_SS_slack_ps": -733.090149,
@@ -320,15 +389,17 @@
     "parent_sink_clock_port": "clk_sm (immutable_parent.sv u_w2_sink .clk)",
     "planned_added_local_edges_by_cut": {
       "final_completion_fence": 1,
-      "metadata_decode_check_capture": 2,
-      "payload_select_decode_check_capture": 12,
-      "request_data_parity_capture": 8,
-      "response_check_capture": 4,
-      "verified_feedback_positive_fence": 4
+      "metadata_check": 0,
+      "payload_select_syndrome_check_protected_capture": 8,
+      "protected_request_capture": 0,
+      "response_capture_compare": 0,
+      "verified_feedback_positive_fence": 4,
+      "write_ACK_positive_fence": 4
     },
-    "planned_added_local_edges_per_publication": 31,
+    "planned_added_local_edges_per_owned_transaction": 17,
+    "planned_selected_recipe_serial_local_delta_at_target_ns": 14.166666666666668,
+    "projection_requires_actual_parent_clock_binding": true,
     "release_181_plus_planned_edges_is_not_a_measurement": true,
-    "selected_recipe_serial_local_delta_ns": 25.833333333333336,
     "target_clock_ps": 833.333,
     "total_fault_stall_bound": null,
     "whole_token_added_latency_ns": null
