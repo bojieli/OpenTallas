@@ -121,12 +121,29 @@ def emit_candidate_dispatch(execution, candidate, context, out, *,
         covered.update(run['nodes'])
     service_endpoints, field_endpoints = {}, {}
     if endpoint_map is not None:
+        adjacent = endpoint_map.get('schema') == 'opentallas.S81.level2_service_stream.v1'
+        if adjacent:
+            require(endpoint_map.get('original_field_mapping_unchanged') is True,
+                    'adjacent hub requires original field ownership')
         for home in endpoint_map['homes']:
-            require(home['rank_service_die_ids'] ==
-                    [4*home['service_home']+r for r in range(4)],
+            layer = home['layer'] if adjacent else home['layer_provider']
+            endpoint = home['hub_endpoint'] if adjacent else home['service_home']
+            dies = home['rank_die_ids'] if adjacent else home['rank_service_die_ids']
+            require(type(layer) is int and 0 <= layer < 40 and
+                    type(endpoint) is int and 0 <= endpoint and
+                    dies == [4*endpoint+r for r in range(4)],
                     'explicit rank service die mapping differs')
-            service_endpoints[home['layer_provider']] = (
-                home['service_home'], home['rank_service_die_ids'])
+            require(layer not in service_endpoints, 'duplicate service source layer')
+            service_endpoints[layer] = (endpoint, dies)
+            if adjacent:
+                require(home['adjacent_field_stage'] in home['canonical_field_stages'],
+                        'hub anchor is not a canonical source field stage')
+                for logical in home['canonical_field_stages']:
+                    require(type(logical) is int and 0 <= logical < 81,
+                            'original canonical field stage bounds')
+                    field_endpoints[logical] = logical
+        require(all(layer in service_endpoints for layer in selected_layers),
+                'selected source layer lacks explicit service endpoint')
         for fragment in (fragment_endpoints if fragment_endpoints is not None
                          else endpoint_map.get('matrix_fragments', [])):
             logical, physical = fragment['logical_stage'], fragment['physical_endpoint']
@@ -242,7 +259,9 @@ def emit_candidate_dispatch(execution, candidate, context, out, *,
                 # These remain real source events, not fabricated native END or
                 # instructions. The owner must supply their actual consumers.
                 events.append(dict(kind=n['kind'], node=node, source=n,
-                                   assignment=assignments[node]))
+                                   assignment=dict(assignments[node],
+                                      physical_endpoint=service_endpoints.get(n['scope'],
+                                          (assignments[node]['stage'], []))[0])))
             handled.add(node)
     out = Path(out)
     require(not out.exists(), 'fresh candidate program output required')
@@ -267,6 +286,11 @@ def emit_candidate_dispatch(execution, candidate, context, out, *,
     result = dict(schema='dsrom.S81.C8.owner-source-dispatch.v1',
                   offers=offers, ownerorderedgroups=groups,
                   ownerorderedgroups_by_stage=by_stage, node_order_by_stage=node_order,
+                  node_order_by_endpoint={e:[[offers[i]['node'] for i in g]
+                                             for g in gs] for e,gs in by_endpoint.items()},
+                  service_endpoint_source=None if endpoint_map is None else
+                      dict(schema=endpoint_map.get('schema'),
+                           candidate=endpoint_map.get('candidate'),homes=endpoint_map['homes']),
                   ownerorderedgroups_by_endpoint=by_endpoint,
                   logical_serial_stages=81, added_serial_stages=0,
                   source_order=events, selected_layers=selected_layers,

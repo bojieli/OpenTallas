@@ -174,6 +174,29 @@ class CandidateEntries(unittest.TestCase):
         self.assertEqual(result['added_serial_stages'],0)
         self.assertIn('100',result['ownerorderedgroups_by_endpoint'])
 
+    def test_actual_adjacent_model_uses_hub101_without_remapping_fields(self):
+        model=json.loads((ROOT/'results/uarch/dsrom_s81_level2_service_stream_20261004/model.json').read_text())
+        home=next(h for h in model['homes'] if h['layer']==20)
+        self.assertEqual((home['hub_endpoint'],home['adjacent_field_stage']),(101,37))
+        with tempfile.TemporaryDirectory() as t:
+            result=emit_candidate_dispatch(self.owner(),self.candidate,self.context(),
+                Path(t)/'p',layers=[20],include_fields=False,endpoint_map=model)
+            self.assertTrue((Path(t)/'p/s101_r0/prog.hex').is_file())
+            with self.assertRaisesRegex(ValueError,'inactive candidate'):
+                emit(result,result['ownerorderedgroups_by_endpoint']['101'],37,Path(t)/'caller.cpp')
+        self.assertTrue(all(o['physical_endpoint']==101 and o['die_id']==404+o['rank']
+                            for o in result['offers']))
+        self.assertTrue(all(o['stage']==40 for o in result['offers'])) # source witness, not execution home
+        for offer in result['offers']:
+            for op in offer['source_pc']:
+                self.assertEqual(op['native_operation']['index'],9+op['native_pc'])
+        fence=next(e for e in result['source_order'] if e.get('node')=='L20.fence')
+        self.assertEqual(fence['assignment']['physical_endpoint'],101)
+        self.assertEqual(result['node_order_by_endpoint']['101'],
+                         [[result['offers'][i]['node'] for i in g]
+                          for g in result['ownerorderedgroups_by_endpoint']['101']])
+        self.assertFalse(result['parent_dispatch_ready'])
+
     def test_changed_native_run_refuses(self):
         candidate = dict(self.candidate)
         candidate['ordered_nonfield_runs'] = [dict(r) for r in candidate['ordered_nonfield_runs']]
