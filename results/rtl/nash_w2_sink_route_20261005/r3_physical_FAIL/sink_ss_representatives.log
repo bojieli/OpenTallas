@@ -1,0 +1,208 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+SOURCE_CLASS protected_control -1161.007568 on.code[24][49]$_DFF_PN0_/QN -> on.code[24][71]$_DFF_PN0_/D
+Startpoint: on.code[24][49]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: on.code[24][71]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   13.50    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 29.25    9.23    9.23 ^ clkbuf_0_clk/A (BUFx24_ASAP7_75t_R)
+     4   16.15   23.83   40.61   49.84 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk (net)
+                 26.50    4.08   53.92 ^ clkbuf_2_2_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    8.93   17.45   37.52   91.45 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_2_0_clk (net)
+                 20.26    3.47   94.92 ^ clkbuf_3_5_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    7.16   16.29   34.85  129.77 ^ clkbuf_3_5_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_5_0_clk (net)
+                 16.58    1.24  131.00 ^ clkbuf_4_11__f_clk/A (BUFx24_ASAP7_75t_R)
+     9   31.58   36.76   40.42  171.43 ^ clkbuf_4_11__f_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_11__leaf_clk (net)
+                 41.51    6.93  178.36 ^ clkbuf_leaf_47_clk/A (BUFx24_ASAP7_75t_R)
+    18   12.20   20.21   44.53  222.89 ^ clkbuf_leaf_47_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_47_clk (net)
+                 21.08    2.05  224.94 ^ on.code[24][49]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     3    2.24   54.03  103.39  328.34 v on.code[24][49]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+                                         _02109_ (net)
+                 54.03    0.19  328.53 v _25488_/A (XOR2x2_ASAP7_75t_R)
+     1    1.07   17.44   60.21  388.74 ^ _25488_/Y (XOR2x2_ASAP7_75t_R)
+                                         _20271_ (net)
+                 17.45    0.12  388.85 ^ _25489_/B (XNOR2x2_ASAP7_75t_R)
+     1    1.94   22.95   56.98  445.83 v _25489_/Y (XNOR2x2_ASAP7_75t_R)
+                                         _20272_ (net)
+                 22.97    0.35  446.19 v _25490_/A (XNOR2x1_ASAP7_75t_R)
+     1    1.70   29.43   36.51  482.70 v _25490_/Y (XNOR2x1_ASAP7_75t_R)
+                                         _20273_ (net)
+                 29.43    0.18  482.87 v _25498_/B (XNOR2x1_ASAP7_75t_R)
+     2    2.63   36.36   43.36  526.23 v _25498_/Y (XNOR2x1_ASAP7_75t_R)
+                                         _20281_ (net)
+                 36.37    0.46  526.69 v _25505_/B (XNOR2x1_ASAP7_75t_R)
+     8    6.16   70.94   61.13  587.82 v _25505_/Y (XNOR2x1_ASAP7_75t_R)
+                                         _20288_ (net)
+                 71.00    1.25  589.08 v rebuffer21680/A (BUFx3_ASAP7_75t_R)
+     2    1.53   15.24   45.43  634.51 v rebuffer21680/Y (BUFx3_ASAP7_75t_R)
+                                         net21654 (net)
+                 15.25    0.15  634.66 v rebuffer21679/A (BUFx2_ASAP7_75t_R)
+     1    0.84   11.80   29.27  663.94 v rebuffer21679/Y (BUFx2_ASAP7_75t_R)
+                                         net21653 (net)
+                 11.80    0.08  664.02 v _25759_/A (AND3x1_ASAP7_75t_R)
+     3    2.50   30.75   31.98  695.99 v _25759_/Y (AND3x1_ASAP7_75t_R)
+                                         _20542_ (net)
+                 30.76    0.13  696.12 v place16241/A (BUFx6f_ASAP7_75t_R)
+     4    3.14   12.99   32.74  728.86 v place16241/Y (BUFx6f_ASAP7_75t_R)
+                                         net16208 (net)
+                 13.00    0.17  729.03 v _25843_/A2 (OA21x2_ASAP7_75t_R)
+     1    1.01   15.41   36.72  765.76 v _25843_/Y (OA21x2_ASAP7_75t_R)
+                                         _20626_ (net)
+                 15.41    0.16  765.91 v _25845_/C (OR4x1_ASAP7_75t_R)
+     1    0.62   20.85   56.94  822.85 v _25845_/Y (OR4x1_ASAP7_75t_R)
+                                         _20628_ (net)
+                 20.85    0.09  822.94 v _25851_/B1 (AO22x1_ASAP7_75t_R)
+     2    1.11   21.40   44.42  867.36 v _25851_/Y (AO22x1_ASAP7_75t_R)
+                                         _20634_ (net)
+                 21.40    0.09  867.45 v _30066_/A2 (AO32x1_ASAP7_75t_R)
+     2    1.86   30.34   53.71  921.16 v _30066_/Y (AO32x1_ASAP7_75t_R)
+                                         _03675_ (net)
+                 30.35    0.30  921.46 v rebuffer21681/A (BUFx2_ASAP7_75t_R)
+     1    1.18   13.68   35.73  957.19 v rebuffer21681/Y (BUFx2_ASAP7_75t_R)
+                                         net21655 (net)
+                 13.68    0.06  957.25 v place14051/A (BUFx6f_ASAP7_75t_R)
+     1    2.53   11.51   26.14  983.39 v place14051/Y (BUFx6f_ASAP7_75t_R)
+                                         net14018 (net)
+                 11.54    0.24  983.63 v _30072_/B (NOR3x2_ASAP7_75t_R)
+     2    7.32   66.30   36.77 1020.41 ^ _30072_/Y (NOR3x2_ASAP7_75t_R)
+                                         _03681_ (net)
+                 66.73    3.00 1023.41 ^ _30073_/B (OR2x6_ASAP7_75t_R)
+     4    8.73   33.78   56.03 1079.44 ^ _30073_/Y (OR2x6_ASAP7_75t_R)
+                                         _03682_ (net)
+                 33.95    1.36 1080.80 ^ place13182/A (BUFx4f_ASAP7_75t_R)
+    10   11.84   52.20   46.21 1127.00 ^ place13182/Y (BUFx4f_ASAP7_75t_R)
+                                         net13149 (net)
+                 52.91    3.48 1130.49 ^ place13168/A (BUFx2_ASAP7_75t_R)
+     6    3.55   32.63   47.36 1177.85 ^ place13168/Y (BUFx2_ASAP7_75t_R)
+                                         net13135 (net)
+                 32.64    0.16 1178.01 ^ _39961_/C (OA211x2_ASAP7_75t_R)
+     1    0.89   18.36   42.90 1220.91 ^ _39961_/Y (OA211x2_ASAP7_75t_R)
+                                         _13090_ (net)
+                 18.37    0.13 1221.05 ^ _39962_/B (AO21x1_ASAP7_75t_R)
+     2    8.08  126.90   70.58 1291.62 ^ _39962_/Y (AO21x1_ASAP7_75t_R)
+                                         _13091_ (net)
+                127.15    3.28 1294.90 ^ _41688_/B (XNOR2x2_ASAP7_75t_R)
+     1    0.56   16.14   72.57 1367.48 v _41688_/Y (XNOR2x2_ASAP7_75t_R)
+                                         _14655_ (net)
+                 16.14    0.02 1367.50 v _41690_/A1 (OA21x2_ASAP7_75t_R)
+     1    0.62   13.59   35.99 1403.49 v _41690_/Y (OA21x2_ASAP7_75t_R)
+                                         _14657_ (net)
+                 13.59    0.06 1403.55 v _41709_/B (OR3x1_ASAP7_75t_R)
+     1    2.52   37.54   56.31 1459.85 v _41709_/Y (OR3x1_ASAP7_75t_R)
+                                         _14675_ (net)
+                 37.57    0.48 1460.34 v _41754_/B (OR4x1_ASAP7_75t_R)
+     1    0.60   21.13   58.72 1519.06 v _41754_/Y (OR4x1_ASAP7_75t_R)
+                                         _14720_ (net)
+                 21.14    0.05 1519.11 v _41911_/A (OR4x1_ASAP7_75t_R)
+     1    3.95   57.55   74.85 1593.95 v _41911_/Y (OR4x1_ASAP7_75t_R)
+                                         _14877_ (net)
+                 57.60    0.93 1594.89 v _42236_/C (OR5x1_ASAP7_75t_R)
+     1    6.63   89.71  116.21 1711.10 v _42236_/Y (OR5x1_ASAP7_75t_R)
+                                         _15202_ (net)
+                 89.90    2.62 1713.72 v place12135/A (BUFx6f_ASAP7_75t_R)
+     3   11.51   32.98   54.08 1767.80 v place12135/Y (BUFx6f_ASAP7_75t_R)
+                                         net12102 (net)
+                 38.44    6.98 1774.79 v _44008_/E (OR5x1_ASAP7_75t_R)
+     2    1.58   37.06   84.65 1859.43 v _44008_/Y (OR5x1_ASAP7_75t_R)
+                                         _16968_ (net)
+                 37.07    0.27 1859.70 v _44010_/A (AND4x1_ASAP7_75t_R)
+     1    0.62   12.09   30.64 1890.34 v _44010_/Y (AND4x1_ASAP7_75t_R)
+                                         _16970_ (net)
+                 12.09    0.06 1890.40 v _44011_/B (OR3x1_ASAP7_75t_R)
+     1    1.55   27.34   50.12 1940.51 v _44011_/Y (OR3x1_ASAP7_75t_R)
+                                         _16971_ (net)
+                 27.34    0.11 1940.63 v _44012_/B (XNOR2x1_ASAP7_75t_R)
+     1    1.45   25.23   37.20 1977.83 v _44012_/Y (XNOR2x1_ASAP7_75t_R)
+Signal 11 received
+Stack trace:
+                                         _16972_ (net)
+                 25.23    0.10 1977.93 v _44013_/A (XNOR2x1_ASAP7_75t_R)
+     2    2.11   29.96   39.10 2017.03 v _44013_/Y (XNOR2x1_ASAP7_75t_R)
+                                         _16973_ (net)
+                 29.96    0.19 2017.22 v _47805_/B (XNOR2x1_ASAP7_75t_R)
+     1    1.66   28.28   39.05 2056.28 v _47805_/Y (XNOR2x1_ASAP7_75t_R)
+                                         _19383_ (net)
+                 28.29    0.19 2056.46 v _47806_/A (XNOR2x1_ASAP7_75t_R)
+     1    1.92   28.30   39.19 2095.65 v _47806_/Y (XNOR2x1_ASAP7_75t_R)
+                                         _19384_ (net)
+                 28.30    0.14 2095.79 v _47807_/B (NAND2x2_ASAP7_75t_R)
+     1    0.58   25.98   16.79 2112.58 ^ _47807_/Y (NAND2x2_ASAP7_75t_R)
+                                         _00212_ (net)
+                 25.98    0.04 2112.62 ^ on.code[24][71]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                               2112.62   data arrival time
+
+                        833.33  833.33   clock core_clk (rise edge)
+                          0.00  833.33   clock source latency
+     1   12.91    0.00    0.00  833.33 ^ clk (in)
+                                         clk (net)
+                 27.14    8.56  841.90 ^ clkbuf_0_clk/A (BUFx24_ASAP7_75t_R)
+     4   13.80   21.70   39.25  881.14 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_0_clk (net)
+                 23.75    3.37  884.52 ^ clkbuf_2_3_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    7.71   16.60   36.11  920.63 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_3_0_clk (net)
+                 18.40    2.68  923.30 ^ clkbuf_3_7_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    7.79   16.70   34.41  957.71 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_3_7_0_clk (net)
+                 17.16    1.42  959.12 ^ clkbuf_4_14__f_clk/A (BUFx24_ASAP7_75t_R)
+     7   18.46   25.18   37.33  996.45 ^ clkbuf_4_14__f_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_4_14__leaf_clk (net)
+                 26.08    2.46  998.91 ^ clkbuf_leaf_61_clk/A (BUFx24_ASAP7_75t_R)
+    19    9.27   17.79   37.86 1036.77 ^ clkbuf_leaf_61_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_61_clk (net)
+                 18.05    1.05 1037.82 ^ on.code[24][71]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00  977.82   clock uncertainty
+                          2.03  979.85   clock reconvergence pessimism
+                        -28.24  951.62   library setup time
+                                951.62   data required time
+-----------------------------------------------------------------------------
+                                951.62   data required time
+                               -2112.62   data arrival time
+-----------------------------------------------------------------------------
+                               -1161.01   slack (VIOLATED)
+
+
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# sta::Properties::getProperty(sta::PathEnd*, std::basic_string_view<char, std::char_traits<char> >) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 3# 0x00000000010C6ADB in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 4# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 5# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 6# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 7# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 8# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 9# 0x0000000003E22810 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+10# ord::tclAppInit(Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+11# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+12# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+13# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+14# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+15# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
