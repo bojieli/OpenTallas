@@ -88,7 +88,7 @@ def prepare(reference, out, *, stage, rank, variant='baseline_static'):
                   wrapper=str(wrapper),wrapper_sha256=sha(wrapper),
                   reference_cut=str(Path(reference).resolve()),reference_sha256=reference_pins,
                   catalog=str(ROOT/CATALOG),catalog_sha256=sha(ROOT/CATALOG),
-                  canonical_inputs=catalog['canonical_inputs'],image_path=str(image),
+                  canonical_inputs=catalog['canonical_inputs'],image_path=str(image),image_repo_path=entry['image_path'],
                   binding_sha256=entry['binding_sha256'],image_sha256=entry['files_sha256'],
                   key_frame=str(image/f'spine_keys.rank{rank}.hex'),
                   source_sha256={p:sha(ROOT/p) for p in STATIC+COMMON+[TEMPLATE,
@@ -131,7 +131,7 @@ def build(out, *, verilator, jobs=2):
         (out/'selection.json').write_text(json.dumps(record,indent=2)+'\n')
         if result.returncode:
             raise RuntimeError('actual native cut '+name+' failed; preserve '+str(out))
-    record.update(build_complete=True,model_directory=str(obj),
+    record.update(build_complete=True,model_directory='obj',
                   artifacts_sha256={p.name:sha(p) for p in [obj/'Vcut.h',obj/'Vcut___024root.h',obj/'Vcut__ALL.a',obj/'Vcut__verFiles.dat']})
     (out/'selection.json').write_text(json.dumps(record,indent=2)+'\n')
     return record
@@ -142,7 +142,7 @@ def enroll(selection, sources, include_dirs, archives):
     record=json.loads(Path(selection).read_text())
     if not record['build_complete'] or record['variant']!='baseline_static':
         raise ValueError('completed baseline-static native cut required, not a source-only plan')
-    obj=Path(record['model_directory'])
+    obj=(Path(selection).resolve().parent/record['model_directory']).resolve()
     for name,pin in record['artifacts_sha256'].items():
         if sha(obj/name)!=pin:
             raise ValueError('actual static cut artifact changed: '+name)
@@ -181,7 +181,8 @@ def selected_image(selection, *, canonical_inputs, stage, rank):
         raise ValueError('actual compiled static cut stage/rank differs from emitted fragment')
     if record['canonical_inputs']!=canonical_inputs:
         raise ValueError('actual current assignment differs from compiled static provider')
-    return Path(record['image_path'])
+    enroll(selection,[],[],[])
+    return ROOT/record['image_repo_path']
 
 
 def main():

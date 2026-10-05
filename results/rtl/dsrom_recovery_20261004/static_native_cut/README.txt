@@ -36,3 +36,11 @@ canonical phase/key/CFG25*phase remain unchanged. Parent keeps actual captured
 expert IDs, positive SourceIo/span/VM publication/ACK and shared clock/context.
 No zero image, expected inputs, phase0 relabel or intermediate-ACK substitute.
 Provider/runtime hardware adoption/loaded physical timing remain open.
+
+Completed selection directory is portable as one directory with obj/ plus
+selection.json. Model paths resolve relative to that directory; canonical
+image paths resolve against the caller's current source checkout. Frozen
+source/artifact hashes must still match; relocation is not a source override.
+Cheap checks PASS:3 Python source parses, original native port/observer block
+byte-identical, exact reference parameters and stage37/rank0/image/flags
+binding, refusals for unbuilt cut, flat PQ, and different stage enrollment.
