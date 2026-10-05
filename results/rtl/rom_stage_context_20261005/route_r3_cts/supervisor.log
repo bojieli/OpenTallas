@@ -1,0 +1,124 @@
+Mon Oct  5 22:50:43 UTC 2026
+ 15:50:43 up 20:54, 42 users,  load average: 112.30, 113.14, 107.70
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 475351064576 87049805824     8167424 661690773504 741266800640
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 768620949504 2380588208128  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.05408785368141316 free_cores 6.9232452712208845
+Mon Oct  5 22:51:04 UTC 2026
+ 15:51:04 up 20:55, 41 users,  load average: 115.89, 113.97, 108.10
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 475818233856 86391930880     8175616 661881581568 740799631360
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 768805990400 2380403167232  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.05935181569699336 free_cores 7.59703240921515
+Mon Oct  5 22:51:26 UTC 2026
+ 15:51:26 up 20:55, 41 users,  load average: 114.52, 113.93, 108.24
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 472988082176 88862699520     8175616 662240886784 743629783040
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 769154301952 2380054855680  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.04854217150003908 free_cores 6.2133979520050024
+Mon Oct  5 22:51:47 UTC 2026
+ 15:51:47 up 20:55, 42 users,  load average: 111.64, 113.29, 108.15
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 474513211392 87150505984     8175616 662427967488 742104653824
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 769335025664 2379874131968  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.04241193470280403 free_cores 5.428727641958916
+Mon Oct  5 22:52:08 UTC 2026
+ 15:52:08 up 20:56, 42 users,  load average: 106.76, 112.34, 107.97
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 475798228992 85672833024     8187904 662619598848 740819636224
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 769518489600 2379690668032  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.005470459518599562 free_cores 0.700218818380744
+Mon Oct  5 22:52:29 UTC 2026
+ 15:52:29 up 20:56, 41 users,  load average: 103.12, 111.42, 107.77
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 474940764160 86345302016     8167424 662805594112 741677101056
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 769699315712 2379509841920  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.010866166353971233 free_cores 1.3908692933083178
+Mon Oct  5 22:52:50 UTC 2026
+ 15:52:50 up 20:56, 45 users,  load average: 105.84, 111.53, 107.91
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 473665052672 87437537280     8200192 662989090816 742952812544
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 769876025344 2379333132288  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.05404561074664167 free_cores 6.917838175570134
+Mon Oct  5 22:53:11 UTC 2026
+ 15:53:11 up 20:57, 43 users,  load average: 96.36, 109.22, 107.24
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 473124347904 87066763264     8179712 663900581888 743493517312
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 770759118848 2378450038784  25% /srv/opentallas-scratch2
+measured_cpu_idle 0.269936235534913 free_cores 34.55183814846887
+Mon Oct  5 22:53:12 UTC 2026
+ 15:53:12 up 20:57, 39 users,  load average: 96.36, 109.22, 107.24
+               total        used        free      shared  buff/cache   available
+Mem:     1216617865216 470093774848 90087772160     8159232 663910195200 746524090368
+Swap:     8589930496    12836864  8577093632
+Filesystem         1B-blocks         Used     Available Use% Mounted on
+/dev/nvme3n1   3149225934848 770767941632 2378441216000  25% /srv/opentallas-scratch2
+after_guard_idle 0.5413343861034347 free_cores 69.29080142123964
+MACRO_TRACK_GATE PASS macros=1 hooks=2 warnings=1 record=/srv/opentallas-scratch2/codex/w5-context-20261005/route-r3/macro_gate.json
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ck_pg_before_route.tcl
+write_db /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/3_place.sdc
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          503          10242 6ba31f9c2a248b653af3
+cp /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/3_5_place_dp.odb /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 3 sinks.
+[ERROR ODB-0370] Attempt to disconnect term CLK of dont_touch instance u_stage.u_ao.g_checked.u_qualify.u_latch
+Error: cts.tcl, 36 ODB-0370
+
+Elapsed time: 0:08.26[h:]min:sec. CPU time: user 7.92 sys 0.34 (99%). Peak memory: 929236KB.
+Elapsed time: 3:38.50[h:]min:sec. CPU time: user 243.42 sys 36.05 (127%). Peak memory: 1472428KB.
+Elapsed time: 1:51.89[h:]min:sec. CPU time: user 161.23 sys 48.83 (187%). Peak memory: 1397432KB.
+Elapsed time: 0:02.39[h:]min:sec. CPU time: user 2.19 sys 0.20 (100%). Peak memory: 681716KB.
+Elapsed time: 0:07.98[h:]min:sec. CPU time: user 7.71 sys 0.28 (99%). Peak memory: 903664KB.
+Elapsed time: 0:35.43[h:]min:sec. CPU time: user 254.24 sys 0.62 (719%). Peak memory: 1396344KB.
+Elapsed time: 0:02.49[h:]min:sec. CPU time: user 2.27 sys 0.22 (99%). Peak memory: 752252KB.
+Elapsed time: 5:38.08[h:]min:sec. CPU time: user 806.03 sys 302.60 (327%). Peak memory: 4581976KB.
+Elapsed time: 1:55.22[h:]min:sec. CPU time: user 177.51 sys 111.00 (250%). Peak memory: 2096540KB.
+Elapsed time: 8:23.56[h:]min:sec. CPU time: user 558.95 sys 69.89 (124%). Peak memory: 10488252KB.
+Elapsed time: 0:07.76[h:]min:sec. CPU time: user 7.45 sys 0.31 (100%). Peak memory: 1003132KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_w5_context_asap7_w5_context_r1_20261005/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/codex/w5-context-20261005/route-r3/out
