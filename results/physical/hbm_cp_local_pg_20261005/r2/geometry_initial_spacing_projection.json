@@ -2406,12 +2406,12 @@
   "PG_intersection_west_signal_entrance": [],
   "native_M6_pitch_um": 0.064,
   "signal_width_um": 0.032,
-  "PG_signal_spacing_um": 0.072,
+  "PG_signal_spacing_um": 0.04,
   "raw_core_tracks": 675,
-  "PG_via_projected_tracks_lost": 83,
+  "PG_via_projected_tracks_lost": 63,
   "clock_other_reserved_tracks": 64,
   "additional_signal_via_reserved_tracks": 34,
-  "residual_core_M6_tracks": 494,
+  "residual_core_M6_tracks": 514,
   "required_signal_tracks": 236,
   "via_census": {
     "via8_9_480_480_5_5_97_97": 481,
@@ -2425,7 +2425,5 @@
   },
   "VDD_VSS_shape_connectivity": true,
   "IR_qualified": false,
-  "source_phase_and_clock_policy_unchanged": true,
-  "native_spacing_rule": "M6 PARALLELRUNLENGTH0 WIDTH0.033 spacing0.072; conservatively apply to every landing",
-  "native_tech_lef_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+  "source_phase_and_clock_policy_unchanged": true
 }
