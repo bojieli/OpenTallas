@@ -8190,6 +8190,33 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+def dsrom_wfc_reset_release_gate_price():
+    """Owner-supplied reset-release qualifiers, not a clock-domain change.
+
+    The existing rst_q register still releases one edge after rst_n. Suppress
+    all link admission/write and core-start terms during that existing edge;
+    no new state or steady-state response edge is added.
+    """
+    signals = ['in_ready', 'rx_hdr', 'rx_res', 'rx_side', 'vm_we',
+               'st_rx', 'st_new', 'st_q', 'st_fb', 'st_wk', 'core_start']
+    nand2, buffers = 2*len(signals), 3*len(signals)
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(new_FF_bits=0, new_clock_pin_cap_fF_SS=0, new_memory_ports=0,
+                new_memory_bytes_per_cycle=0, MACs_per_cycle=0, replicas=1,
+                reset_qualified_terms=signals, added_pipeline_edges=0,
+                reset_release_edges_after_rst_n=1, steady_state_cycle_delta=0,
+                model_reference_cycle_contract='Existing registered-root +1 reset edge; SOURCE1 serial engine +3.7 cycles/issue historical until remeasured. Golden rounding and reductions unchanged.',
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                original_clock_and_reset_register_unchanged=True,
+                full_shape=dict(WIN=6,FLIT=512,NW=21,AW=30,VWA=15,USER_W=10,MAXU=866,KVW=32768),
+                target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+                utilizations=[0.40,0.45,0.50], actual_route_fit_unknown=True,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                prior_r12_source_sha256='26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba',
+                physical_adopted=False)
+
+
 def dsrom_wfc_typed_completion_price(idw=47, paw=14, nw=21):
     """Add one retained terminal kind to the finite END/result join.
 
