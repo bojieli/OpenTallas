@@ -27,6 +27,7 @@ def build():
  pg=add_port(pg,'output wire [3+((NSUB>1)?$clog2(NSUB+1):1)+CW+NSUB+5-1:0] snapshot')
  pg=pg.replace('endmodule','assign snapshot = {st,idx,cnt,sw_en,iso_n,dom_rst_n,clk_en,pwr_good,fault};\nendmodule')
  sch=kept(renamed(raw[srcs[1]]))
+ sch=sch.replace('module ot_w5_sched #(', '(* keep_hierarchy = \"yes\" *)\nmodule ot_w5_sched #(',1)
  sch=add_port(sch,'output wire [2*TW+10+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] snapshot')
  sch=sch.replace('    (* keep, dont_touch *) reg [TW-1:0] cnt;', '    wire [3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] pg_snapshot;\n    (* keep, dont_touch *) reg [TW-1:0] cnt;')
  sch=sch.replace('.clk(clk), .rst_n(rst_n), .req_on(req_on)', '.snapshot(pg_snapshot), .clk(clk), .rst_n(rst_n), .req_on(req_on)')
@@ -43,6 +44,7 @@ def build():
       infl?{cdc_rp_a,cdc_rp_d}:53'b0};
 endmodule''')
  ctl=kept(renamed(module(stage,'ot_v41_rom_stage_pg_ctl_sp')))
+ ctl=ctl.replace('ot_w5_sched #(', '(* keep, dont_touch *) ot_w5_sched #(',1)
  ctl=add_port(ctl,'output wire [2*TW+12+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] snapshot')
  ctl=ctl.replace('    wire clk_en, req_on;', '    wire [2*TW+10+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] sched_snapshot;\n    wire clk_en, req_on;')
  ctl=ctl.replace('.clk(a_clk), .rst_n(rst_n)', '.snapshot(sched_snapshot), .clk(a_clk), .rst_n(rst_n)',1)
