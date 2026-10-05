@@ -72,27 +72,27 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
       idle_rank = (s==3'(IDLE0))?0:(s==3'(IDLE1))?1:(s==3'(IDLE2))?2:(s==3'(IDLE3))?3:
                   (s==3'(IDLE4))?4:(s==3'(IDLE5))?5:(s==3'(IDLE6))?6:7;
     endfunction
-    reg [10:0] j, n; reg [10:0] j_bar, n_bar; reg [18:0] row; reg [18:0] row_bar;
-    reg [31:0] open, done, stale, refreshed; reg [31:0] open_bar, done_bar, stale_bar, refreshed_bar;
-    reg [1:0] rrds_c; reg [1:0] rrds_c_bar; reg [3:0] noact_c; reg [3:0] noact_c_bar; reg [RW-1:0] ref_c; reg [RW-1:0] ref_c_bar; reg ref_pend; reg ref_pend_bar; reg [4:0] rb; reg [4:0] rb_bar; reg fault_r; reg fault_r_bar;
-    reg [6:0] credit; reg [6:0] credit_bar; reg running; reg running_bar; reg [31:0] blk; reg [31:0] blk_bar;   // blk: one-hot of rb while a REFpb is pending
-    reg streaming; reg streaming_bar; reg [2:0] last; reg [2:0] last_bar; reg [10:0] nm1; reg [10:0] nm1_bar;   // registered at descriptor accept
+    (* keep = 1 *) reg [10:0] j, n; (* keep = 1 *) reg [10:0] j_bar, n_bar; (* keep = 1 *) reg [18:0] row; (* keep = 1 *) reg [18:0] row_bar;
+    (* keep = 1 *) reg [31:0] open, done, stale, refreshed; (* keep = 1 *) reg [31:0] open_bar, done_bar, stale_bar, refreshed_bar;
+    (* keep = 1 *) reg [1:0] rrds_c; (* keep = 1 *) reg [1:0] rrds_c_bar; (* keep = 1 *) reg [3:0] noact_c; (* keep = 1 *) reg [3:0] noact_c_bar; (* keep = 1 *) reg [RW-1:0] ref_c; (* keep = 1 *) reg [RW-1:0] ref_c_bar; (* keep = 1 *) reg ref_pend; (* keep = 1 *) reg ref_pend_bar; (* keep = 1 *) reg [4:0] rb; (* keep = 1 *) reg [4:0] rb_bar; (* keep = 1 *) reg fault_r; (* keep = 1 *) reg fault_r_bar;
+    (* keep = 1 *) reg [6:0] credit; (* keep = 1 *) reg [6:0] credit_bar; (* keep = 1 *) reg running; (* keep = 1 *) reg running_bar; (* keep = 1 *) reg [31:0] blk; (* keep = 1 *) reg [31:0] blk_bar;   // blk: one-hot of rb while a REFpb is pending
+    (* keep = 1 *) reg streaming; (* keep = 1 *) reg streaming_bar; (* keep = 1 *) reg [2:0] last; (* keep = 1 *) reg [2:0] last_bar; (* keep = 1 *) reg [10:0] nm1; (* keep = 1 *) reg [10:0] nm1_bar;   // registered at descriptor accept
     wire [2:0] k = j[9:7];
     wire [4:0] rd_bank = {j[9:7], j[1:0]};
     wire [1:0] rd_bg = j[1:0];
     // ---- refresh windows -------------------------------------------------------------
     wire ref_due = (ref_c == 0);
-    reg  phase; reg phase_bar;                                       // cycle parity; this PC's row slot when == PC[0]
+    (* keep = 1 *) reg  phase; (* keep = 1 *) reg phase_bar;                                       // cycle parity; this PC's row slot when == PC[0]
     wire slot_next = (phase != 1'(PC % 2));           // the next cycle is this PC's row slot
     wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;   // ref_c of the next cycle
     wire ref_due_n = (ref_n == 0);
     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
                               : (ref_n <= RW'(T_RP + T_RAS + 2));
-    wire rd_block  = REF_MODE ? 1'b0 : (begin ref_c <= RW'(T_RP + T_RTP + 2)); ref_c_bar <= ~(RW'(T_RP + T_RTP + 2))); end
+    wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
     wire preall_ok = !REF_MODE && ref_n <= RW'(T_RP + 2) && ref_n >= RW'(T_RP) && (|open);
     // ---- row command (combinational) and its events ------------------------------------
-    reg r_v, r_prio; reg [2:0] r_op; reg [4:0] r_bank;      // decision for the next cycle
-    reg c_v, c_prio; reg c_v_bar, c_prio_bar; reg [2:0] c_op; reg [2:0] c_op_bar; reg [4:0] c_bank; reg [4:0] c_bank_bar; reg [31:0] c_oh; reg [31:0] c_oh_bar;   // issued this cycle
+    (* keep = 1 *) reg r_v, r_prio; (* keep = 1 *) reg [2:0] r_op; (* keep = 1 *) reg [4:0] r_bank;      // decision for the next cycle
+    (* keep = 1 *) reg c_v, c_prio; (* keep = 1 *) reg c_v_bar, c_prio_bar; (* keep = 1 *) reg [2:0] c_op; (* keep = 1 *) reg [2:0] c_op_bar; (* keep = 1 *) reg [4:0] c_bank; (* keep = 1 *) reg [4:0] c_bank_bar; (* keep = 1 *) reg [31:0] c_oh; (* keep = 1 *) reg [31:0] c_oh_bar;   // issued this cycle
     wire row_fire = c_v && row_gnt;
     wire [31:0] open_nx = !row_fire ? open : (c_op == ACT) ? (open | c_oh) : (c_op == PRE) ? (open & ~c_oh) :
                           (c_op == PREALL) ? 32'b0 : open;
@@ -102,7 +102,7 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
     wire [31:0] rcd_z, ras_z, rtp_z, aok_z, aok_busy;
     wire [223:0] keys; wire [31:0] bank_bad; wire [3:0] bg_bad;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
-      reg [4:0] rcd, ras; reg [4:0] rcd_bar, ras_bar; reg [8:0] aok; reg [8:0] aok_bar; reg [2:0] rtp; reg [2:0] rtp_bar;
+      (* keep = 1 *) reg [4:0] rcd, ras; (* keep = 1 *) reg [4:0] rcd_bar, ras_bar; (* keep = 1 *) reg [8:0] aok; (* keep = 1 *) reg [8:0] aok_bar; (* keep = 1 *) reg [2:0] rtp; (* keep = 1 *) reg [2:0] rtp_bar;
       assign bank_bad[b] = (rcd != ~rcd_bar) || (ras != ~ras_bar) || (aok != ~aok_bar) || (rtp != ~rtp_bar);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
@@ -139,7 +139,7 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
     // ---- per-bank-group state ----------------------------------------------------------
     wire [3:0] rrdl_z, ccdl_z, faw_z;
     for (genvar g = 0; g < 4; g = g + 1) begin : bgs
-      reg [2:0] rrdl; reg [2:0] rrdl_bar; reg [1:0] ccdl; reg [1:0] ccdl_bar; reg [3:0] faw; reg [3:0] faw_bar;
+      (* keep = 1 *) reg [2:0] rrdl; (* keep = 1 *) reg [2:0] rrdl_bar; (* keep = 1 *) reg [1:0] ccdl; (* keep = 1 *) reg [1:0] ccdl_bar; (* keep = 1 *) reg [3:0] faw; (* keep = 1 *) reg [3:0] faw_bar;
       assign bg_bad[g] = (rrdl != ~rrdl_bar) || (ccdl != ~ccdl_bar) || (faw != ~faw_bar);
       wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
       // FAW slot g takes this ACT if it is the lowest free slot
@@ -158,15 +158,15 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
     // registered keys, then three registered 4-way stages (32 -> 8 -> 2 -> 1); the choice taken
     // at ref_c == LEAD reflects the bank state 4 cycles earlier (protection spans 3 sets).
     function automatic [8:0] min4(input [27:0] k4, input [1:0] dummy);   // {key, idx2}
-      reg [6:0] ka, kb; reg ia, ib;
+      (* keep = 1 *) reg [6:0] ka, kb; (* keep = 1 *) reg ia, ib;
       begin
         ka = (k4[13:7] < k4[6:0]) ? k4[13:7] : k4[6:0];   ia = (k4[13:7] < k4[6:0]);
         kb = (k4[27:21] < k4[20:14]) ? k4[27:21] : k4[20:14]; ib = (k4[27:21] < k4[20:14]);
         min4 = (kb < ka) ? {kb, 1'b1, ib} : {ka, 1'b0, ia};
       end
     endfunction
-    reg [6:0] s1k [0:7]; reg [6:0] s1k_bar [0:7]; reg [4:0] s1i [0:7]; reg [4:0] s1i_bar [0:7]; reg [6:0] s2k [0:1]; reg [6:0] s2k_bar [0:1]; reg [4:0] s2i [0:1]; reg [4:0] s2i_bar [0:1]; reg [4:0] bsel; reg [4:0] bsel_bar;
-    wire [71:0] m1; wire [17:0] m2; reg [223:0] keys_r; reg [223:0] keys_r_bar;
+    (* keep = 1 *) reg [6:0] s1k [0:7]; (* keep = 1 *) reg [6:0] s1k_bar [0:7]; (* keep = 1 *) reg [4:0] s1i [0:7]; (* keep = 1 *) reg [4:0] s1i_bar [0:7]; (* keep = 1 *) reg [6:0] s2k [0:1]; (* keep = 1 *) reg [6:0] s2k_bar [0:1]; (* keep = 1 *) reg [4:0] s2i [0:1]; (* keep = 1 *) reg [4:0] s2i_bar [0:1]; (* keep = 1 *) reg [4:0] bsel; (* keep = 1 *) reg [4:0] bsel_bar;
+    wire [71:0] m1; wire [17:0] m2; (* keep = 1 *) reg [223:0] keys_r; (* keep = 1 *) reg [223:0] keys_r_bar;
     for (genvar q = 0; q < 8; q = q + 1) begin : st1
       assign m1[q*9 +: 9] = min4(keys_r[q*28 +: 28], 2'd0);
     end
@@ -211,7 +211,7 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
                          (3'(b >> 2) == k + 3'd1 && k != 3'd7) ? act_oh8[4 + (b & 3)] : 1'b0;
     end
     function automatic [4:0] ffs32(input [31:0] v);   // index of the lowest set bit (tree)
-      reg [15:0] v16; reg [7:0] v8; reg [3:0] v4; reg [1:0] v2;
+      (* keep = 1 *) reg [15:0] v16; (* keep = 1 *) reg [7:0] v8; (* keep = 1 *) reg [3:0] v4; (* keep = 1 *) reg [1:0] v2;
       begin
         ffs32[4] = ~|v[15:0];  v16 = ffs32[4] ? v[31:16] : v[15:0];
         ffs32[3] = ~|v16[7:0]; v8 = ffs32[3] ? v16[15:8] : v16[7:0];
@@ -224,7 +224,7 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
     wire [2:0] act_sel = 3'(ffs32({24'b0, act_cand}));
     wire [4:0] pre_sel = ffs32(pre_cand);
     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
-    reg [31:0] r_oh;
+    (* keep = 1 *) reg [31:0] r_oh;
     always @* begin
       r_v = 0; r_prio = 0; r_op = PRE; r_bank = 0; r_oh = 0;
       if (REF_MODE && ref_due_n && ref_pend) begin r_v = 1; r_prio = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
@@ -235,7 +235,7 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
       else if (|pre_cand) begin r_v = 1; r_op = PRE; r_bank = pre_sel; r_oh = pre_oh; end
     end
     wire protect_bad = (|bank_bad) || (|bg_bad) || (j != ~j_bar) || (n != ~n_bar) || (row != ~row_bar) || (open != ~open_bar) || (done != ~done_bar) || (stale != ~stale_bar) || (refreshed != ~refreshed_bar) || (rrds_c != ~rrds_c_bar) || (noact_c != ~noact_c_bar) || (ref_c != ~ref_c_bar) || (ref_pend != ~ref_pend_bar) || (rb != ~rb_bar) || (fault_r != ~fault_r_bar) || (credit != ~credit_bar) || (running != ~running_bar) || (blk != ~blk_bar) || (streaming != ~streaming_bar) || (last != ~last_bar) || (nm1 != ~nm1_bar) || (phase != ~phase_bar) || (c_v != ~c_v_bar) || (c_prio != ~c_prio_bar) || (c_op != ~c_op_bar) || (c_bank != ~c_bank_bar) || (c_oh != ~c_oh_bar) || (bsel != ~bsel_bar) || (keys_r != ~keys_r_bar) || (s1k[0] != ~s1k_bar[0]) || (s1k[1] != ~s1k_bar[1]) || (s1k[2] != ~s1k_bar[2]) || (s1k[3] != ~s1k_bar[3]) || (s1k[4] != ~s1k_bar[4]) || (s1k[5] != ~s1k_bar[5]) || (s1k[6] != ~s1k_bar[6]) || (s1k[7] != ~s1k_bar[7]) || (s1i[0] != ~s1i_bar[0]) || (s1i[1] != ~s1i_bar[1]) || (s1i[2] != ~s1i_bar[2]) || (s1i[3] != ~s1i_bar[3]) || (s1i[4] != ~s1i_bar[4]) || (s1i[5] != ~s1i_bar[5]) || (s1i[6] != ~s1i_bar[6]) || (s1i[7] != ~s1i_bar[7]) || (s2k[0] != ~s2k_bar[0]) || (s2k[1] != ~s2k_bar[1]) || (s2i[0] != ~s2i_bar[0]) || (s2i[1] != ~s2i_bar[1]);
-    reg poison; always @(posedge clk or negedge rst_n) if (!rst_n) poison<=0; else if (protect_bad) poison<=1;
+    (* keep = 1 *) reg poison; always @(posedge clk or negedge rst_n) if (!rst_n) poison<=0; else if (protect_bad) poison<=1;
     assign row_v = c_v && !protect_bad && !poison; assign row_prio = c_prio; assign row_op = c_op; assign row_bank = c_bank;
     assign row_row = row;
     assign col_v = rd_ok && !protect_bad && !poison; assign col_bank = rd_bank; assign col_col = j[6:2];
@@ -265,7 +265,7 @@ module ot_hbm_accel_expert_stream_pc_p2 #(
         if (rd_ok) begin
           begin j <= j + 1'b1; j_bar <= ~(j + 1'b1); end
           if (j == nm1) begin streaming <= 0; streaming_bar <= ~(0); end
-          if (begin j[6:2] == 5'd31) done[rd_bank] <= 1'b1; j_bar[6:2] == 5'd31) done[rd_bank] <= ~(1'b1); end
+          if (j[6:2] == 5'd31) begin done[rd_bank] <= 1'b1; done_bar[rd_bank] <= 1'b0; end
         end
         // row
         if (row_fire) case (c_op)
