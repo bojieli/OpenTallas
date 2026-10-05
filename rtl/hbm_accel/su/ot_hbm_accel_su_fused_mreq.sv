@@ -92,7 +92,7 @@ module ot_hbm_accel_su_fused_mreq #(
    jid<=0;vmb<=0;crb<=0;nf<=0;ep<=0;xb<=0;yb<=0;gb<=0;tag<=0;
    beat<=0;word_index<=0;output_index<=0;gain_buf<=0;input_buf<=0;
    landed<=0;engine_finished<=0;read_sectors<=0;write_sectors<=0;publication_sectors<=0;
-  end else begin
+  end else if(ENABLE) begin
    done<=0;
    if(accepted) begin
     busy<=1;jid<=job_id;vmb<=vm_byte_base;crb<=cr_byte_base;

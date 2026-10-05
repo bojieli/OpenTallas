@@ -30,7 +30,7 @@ def main():
   '--unroll-count','4','-fno-dfg',*[f'-G{k}={v}' for k,v in params.items()],*map(str,src),'-CFLAGS','-O1']
  pin=dict(command=cmd,source_sha256={str(p.relative_to(S.ROOT)):sha(p) for p in src},
   plan=plan,arithmetic='existing DPI primitive functional gate; no physical closure credit',
-  clk_SU_period_ns=.833333334,clk_mem_period_ns=1,actual_parent_program_bound=False,
+  clk_SU_period_ns=.833334,clk_mem_period_ns=1,actual_parent_program_bound=False,
   baseline_family_rerun=False,SS60_FF25_qualified=False,adopted=False)
  (a.work/'source.json').write_text(json.dumps(pin,indent=2)+'\n')
  with (a.work/'build.log').open('w') as log:r=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT)
