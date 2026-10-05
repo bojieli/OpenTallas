@@ -26,7 +26,7 @@ module tb_hbm_qwen_code_tile_join;
  @(negedge sc);sv=0;@(posedge sc);#1;
  end endtask
  parameter integer EXTRA=0;
- reg ib_go=0;reg[378:0] ib=0;
+ reg kv_phase=0;reg ib_go=0;reg[378:0] ib=0;
  reg[127:0] xl=0;reg[2047:0] kv=0;
  wire[511:0] nt,ot;wire nv,ov, nf,of;
  wire[4:0] nce,oce;wire[11:0] na,oa;wire nkre,okre;
@@ -83,12 +83,12 @@ module tb_hbm_qwen_code_tile_join;
    end
    if(newtile.on.u_me.s1_v)begin
     if(newtile.on.u_me.mq_x!==old_x)$fatal(1,"X extra-edge mismatch");x_checks=x_checks+1;
-    if(newtile.on.u_me.s1b_wsrc)begin
+    if(newtile.on.u_me.s1_wsrc)begin
      if(newtile.on.u_me.mq_kv!==old_kv)$fatal(1,"KV extra-edge mismatch");kv_checks=kv_checks+1;
     end else if(newtile.on.u_me.mq_wrom!==old_code)$fatal(1,"CODE extra-edge mismatch");
    end
    if(nv!==old_result_v)$fatal(1,"result valid timing");
-   if(nv)begin if(nt!==old_result_data)$fatal(1,"actual arithmetic differs from original");if(issues==32)results=results+1;end
+   if(nv)begin if(nt!==old_result_data)$fatal(1,"actual arithmetic differs from original");if(!kv_phase)results=results+1;end
   end else #2;
   old_v=reference.u_me.m_v;old_tag=reference.u_me.m_tag;old_gm=reference.u_me.m_gm;
   old_round=reference.u_me.m_t;old_first=reference.u_me.m_first;
@@ -111,7 +111,7 @@ module tb_hbm_qwen_code_tile_join;
  if(issues!=32||results!=32||continuous_max!=32)$fatal(1,"actual tile issue/result counts %0d %0d %0d",issues,results,continuous_max);
  // A separate actual external KV response-port alignment control, not a
  // released KV numerical qualification or claim of installed KV SRAM.
- @(negedge cc);ib_go=1;ib=instruction(1);
+ @(negedge cc);kv_phase=1;ib_go=1;ib=instruction(1);
  cedge();@(negedge cc);ib_go=0;
  wait(reference.u_me.active_o==1);wait(reference.u_me.active_o==0);
  repeat(80)cedge();
