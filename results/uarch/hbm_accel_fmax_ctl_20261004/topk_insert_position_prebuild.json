@@ -37,5 +37,10 @@
   "SSFF_qualified": false,
   "adopted": false,
   "full_token_clock_qualified": false,
-  "source_sha256": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3"
+  "source_sha256": "181dedac8d9c3d39559b326168810c13cd7a9f6586aa90849c64a82767736ec3",
+  "physical_wrapper": "rtl/gpu/ot_gpu_router_topk_ip_ctx384.sv",
+  "wrapper_added_logic_and_FF": 0,
+  "wrapper_added_cycles": 0,
+  "physical_variant1": "retained exact gate PASS; physical Yosys top-level param-hierarchy collision, no timing result",
+  "physical_variant2": "fixed fullshape no-parameter wrapper, SAME tested child/source/defaultshape; updated main timeout API explicit unlimited; no numeric rerun"
 }
