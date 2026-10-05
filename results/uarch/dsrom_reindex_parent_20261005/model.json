@@ -148,6 +148,7 @@
     "response_fanout_bound": 16,
     "request_FIFO_entries_per_PC": 1,
     "drain_reserved_entries": 4,
+    "drain_metadata_code": "SECDED79 per71-bit finite output header; pointers/count checked; actual key SRAM data path unchanged",
     "half_die_copy_stages": 1,
     "half_copy_bits_per_lane": 270,
     "half_copy_lanes": 4,
@@ -160,12 +161,13 @@
     "added_FF": {
       "request_FIFO": 2145,
       "response_check": 512,
+      "drain_metadata": 147,
       "decoded_FIFO": 2032,
       "list_capture": 1912,
       "pending_and_metadata_checks": 384,
       "local_half_copies": 1080
     },
-    "net_FF_delta": 1153,
+    "net_FF_delta": 1300,
     "protection": "SRAM SECDED; counter check bits; pending/metadata checks; full tag/beat identity; finite occupancy and reservation checks, no invented clears or credits"
   },
   "latency": {
@@ -186,7 +188,7 @@
   "area": {
     "control_cell_cap_um2": 37452.2,
     "retained_KC8_cells_um2": 37615.4,
-    "estimated_FF_delta_um2": 437.07923999999997,
+    "estimated_FF_delta_um2": 492.804,
     "unmeasured_mapping_logic_CTS_delta_um2": null,
     "control_cap_unchanged": true,
     "list_macro_reservation_um2": 82730.4192,
