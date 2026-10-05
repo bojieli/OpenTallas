@@ -84,7 +84,8 @@ module tb_hdc_mul_equiv (input wire clk);
                 $display("MULEQ checked=%0d mismatches=%0d", checked, bad);
                 $display("BMULEQ checked=%0d faulted=%0d mismatches=%0d", bchecked, bfault, bbad);
                 if (bad == 0 && checked == n && bbad == 0) $display("PASS"); else $display("FAIL");
-                $finish;
+                if (!(bad == 0 && checked == n && bbad == 0)) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+        $finish;
             end
         end
     end

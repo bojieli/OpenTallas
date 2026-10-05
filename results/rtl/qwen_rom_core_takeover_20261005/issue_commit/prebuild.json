@@ -1,0 +1,87 @@
+{
+  "schema": "qwen.rom.registered_issue_commit.v1",
+  "before_RTL": true,
+  "mandatory_baseline_repair": true,
+  "selection": "ME unit1 && me_amax only",
+  "parent_source": "29ee4efaec2e1a96e86941a06c8ff2ddc509a024",
+  "actual_path": "la_chase_q2 -> qualification -> argmax enable -> run_idx4 SS-72.98ps",
+  "selected_program_count_record": "selected_plain_ar_count.json",
+  "affected_instructions_per_rank": 4,
+  "affected_head_PC": [
+    3,
+    4,
+    5,
+    6
+  ],
+  "decoder_affected_count": 0,
+  "replicas": 4,
+  "cycles": {
+    "reservation_to_commit": 1,
+    "added_cycles_per_affected_instruction": 1,
+    "scheduled_token_delta_cycles": 4,
+    "scheduled_token_delta_ns": 3.332,
+    "additional_live_ready_memory_stalls": "must be measured; not assumed0; eligibility/epoch remains held with NEXT"
+  },
+  "state": {
+    "pending_async_reset_bits": 1,
+    "previous_argmax_snapshot_bits": 51,
+    "descriptor_bits_copied": 0,
+    "complete_descriptor_bits_held_in_existing_NEXT": 878,
+    "added_state_bits_per_core": 52,
+    "total_added_state_bits": 208
+  },
+  "area": {
+    "DFF_um2": 0.2916,
+    "reset_DFF_um2": 0.37908,
+    "FF_body_um2": 15.250680000000001,
+    "hold_mux_allowance_um2": 22.3074,
+    "control_gate_allowance_um2": 3.2,
+    "body_plus_mux_control_um2": 40.75808000000001,
+    "gross_at30pct_um2": 135.8602666666667,
+    "actual_controller_core_um2": 19970.8,
+    "retained_slot_um2": 20671.2,
+    "physical_fit_qualified": false,
+    "fold_input_mux_allowance_um2": 22.3074,
+    "second_preserved_32bit_key_compare_allowance_um2": 19.200000000000003,
+    "complete_conservative_um2": 82.26548000000001,
+    "complete_gross_at30pct_um2": 274.2182666666667,
+    "comparator_basis": "Existing END helper remains exact; second same key_gt helper for held snapshot fold,96gate-equivalent proxy unmeasured"
+  },
+  "ports": {
+    "MACs_added": 0,
+    "program_bytes_per_cycle": 128,
+    "new_memory_ports": 0,
+    "new_memory_bytes_per_cycle": 0,
+    "held_descriptor_boundary_bits": 878,
+    "argmax_snapshot_internal_bits": 51,
+    "external_boundary_bits_tracks_added": 0
+  },
+  "power": {
+    "clock_pin_nominal_uW_per_core": 14.508567779999998,
+    "hold_enable_fanout": 51,
+    "qualification_pending_sink_count": 1,
+    "other_power": "unmeasured nonzero",
+    "new_clock_domains": 0,
+    "new_CDC": 0
+  },
+  "semantics": [
+    "reservation uses exact existing barrier/chase/wait/ready/memory predicates",
+    "hold NX, la_nx and all878 decoded fields until actual commit; fetch throttle unchanged",
+    "no other unit issue while pending: producer instruction epochs cannot change; dependencies already certified at reservation",
+    "commit rechecks live unit_ready including ME enable plus kv_gate/w_gate; waits on withdrawals",
+    "snapshot am_idx/am_val/am_any on reservation edge preserves original previous-chunk fold input; selected firstchunk AMC0, remainingchunks barrier1 drain previous ME",
+    "reset/start cancel pending; END cannot pass held target descriptor",
+    "non-AMAX ME and every SU unchanged; no serial-chain frequency change"
+  ],
+  "gates": [
+    "actual focused ordered878 fields, independent producer clocks/status advancement per accepted instruction",
+    "target reserve/commit +1edge; ready withdrawal and memory gate blocking",
+    "previous result snapshot stable during wait; ties/negative/zero/fullargmax END equality",
+    "reset pending, barrier/chase/waits, actual selected head program PC3..6 with measuredcycleaccounting"
+  ],
+  "default_off": true,
+  "adoption": false,
+  "SSFF_closed": false,
+  "physical_launch": false,
+  "real_context_dependency": "Laplace actual ME spine/vector accept registers and loads/clocks; no ideal output receiver or async exceptions"
+}

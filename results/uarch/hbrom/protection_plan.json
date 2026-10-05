@@ -1,0 +1,817 @@
+{
+  "schema": "hbrom.protection-plan.v1",
+  "status": "PRICED_PROPOSAL_NOT_IMPLEMENTED_OR_QUALIFIED",
+  "shape": {
+    "NC": 1,
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "XD": 128,
+    "IL": 8
+  },
+  "sources_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "results/floorplan/qwen_o4_unit_areas.json": "3805d42b5eaf79491eb8d72879d4e5deae717bd4c815284a807af2439b3bdf41"
+  },
+  "activation_layout": [
+    {
+      "leaf": 0,
+      "codewords": [
+        {
+          "beat": 0,
+          "code_offset": 0,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 0,
+              "ingress_start": 0,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 72,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 64,
+              "ingress_start": 64,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 144,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 128,
+              "ingress_start": 128,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 216,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 192,
+              "ingress_start": 192,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 288,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 256,
+              "ingress_start": 256,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 360,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 320,
+              "ingress_start": 320,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 432,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 384,
+              "ingress_start": 384,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 504,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 448,
+              "ingress_start": 448,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 576,
+          "zero_pad": 44,
+          "runs": [
+            {
+              "leaf_start": 512,
+              "ingress_start": 512,
+              "length": 20
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 648,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 532,
+              "ingress_start": 80,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 720,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 596,
+              "ingress_start": 144,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 792,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 660,
+              "ingress_start": 208,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 864,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 724,
+              "ingress_start": 272,
+              "length": 64
+            }
+          ]
+        }
+      ],
+      "encoded_bits": 936,
+      "macro_count": 4
+    },
+    {
+      "leaf": 1,
+      "codewords": [
+        {
+          "beat": 0,
+          "code_offset": 0,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 0,
+              "ingress_start": 532,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 72,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 64,
+              "ingress_start": 596,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 144,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 128,
+              "ingress_start": 660,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 216,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 192,
+              "ingress_start": 724,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 288,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 256,
+              "ingress_start": 788,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 360,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 320,
+              "ingress_start": 852,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 432,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 384,
+              "ingress_start": 916,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 504,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 448,
+              "ingress_start": 980,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 576,
+          "zero_pad": 44,
+          "runs": [
+            {
+              "leaf_start": 512,
+              "ingress_start": 1044,
+              "length": 20
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 648,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 532,
+              "ingress_start": 336,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 720,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 596,
+              "ingress_start": 400,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 792,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 660,
+              "ingress_start": 464,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 864,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 724,
+              "ingress_start": 528,
+              "length": 64
+            }
+          ]
+        }
+      ],
+      "encoded_bits": 936,
+      "macro_count": 4
+    },
+    {
+      "leaf": 2,
+      "codewords": [
+        {
+          "beat": 0,
+          "code_offset": 0,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 0,
+              "ingress_start": 1064,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 72,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 64,
+              "ingress_start": 1128,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 144,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 128,
+              "ingress_start": 1192,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 216,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 192,
+              "ingress_start": 1256,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 288,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 256,
+              "ingress_start": 1320,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 360,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 320,
+              "ingress_start": 1384,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 432,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 384,
+              "ingress_start": 1448,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 504,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 448,
+              "ingress_start": 1512,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 576,
+          "zero_pad": 44,
+          "runs": [
+            {
+              "leaf_start": 512,
+              "ingress_start": 1576,
+              "length": 20
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 648,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 532,
+              "ingress_start": 592,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 720,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 596,
+              "ingress_start": 656,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 792,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 660,
+              "ingress_start": 720,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 864,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 724,
+              "ingress_start": 784,
+              "length": 64
+            }
+          ]
+        }
+      ],
+      "encoded_bits": 936,
+      "macro_count": 4
+    },
+    {
+      "leaf": 3,
+      "codewords": [
+        {
+          "beat": 0,
+          "code_offset": 0,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 0,
+              "ingress_start": 1596,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 72,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 64,
+              "ingress_start": 1660,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 144,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 128,
+              "ingress_start": 1724,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 216,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 192,
+              "ingress_start": 1788,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 288,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 256,
+              "ingress_start": 1852,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 360,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 320,
+              "ingress_start": 1916,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 432,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 384,
+              "ingress_start": 1980,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 0,
+          "code_offset": 504,
+          "zero_pad": 60,
+          "runs": [
+            {
+              "leaf_start": 448,
+              "ingress_start": 2044,
+              "length": 4
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 576,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 452,
+              "ingress_start": 0,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 648,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 516,
+              "ingress_start": 64,
+              "length": 16
+            },
+            {
+              "leaf_start": 532,
+              "ingress_start": 848,
+              "length": 48
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 720,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 580,
+              "ingress_start": 896,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 792,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 644,
+              "ingress_start": 960,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 864,
+          "zero_pad": 0,
+          "runs": [
+            {
+              "leaf_start": 708,
+              "ingress_start": 1024,
+              "length": 64
+            }
+          ]
+        },
+        {
+          "beat": 1,
+          "code_offset": 936,
+          "zero_pad": 48,
+          "runs": [
+            {
+              "leaf_start": 772,
+              "ingress_start": 1088,
+              "length": 16
+            }
+          ]
+        }
+      ],
+      "encoded_bits": 1008,
+      "macro_count": 4
+    }
+  ],
+  "codec": {
+    "source": "ot_gpu_w6_secded_pkg encode64/decode64",
+    "code": "extended Hamming(72,64) SECDED",
+    "single_bit": "correct data before use",
+    "double_bit": "sticky fault and suppress issue/results; do not silently use corrupted data",
+    "per_encoder_xor2_unshared": 268,
+    "per_decoder_xor2_unshared": 340,
+    "partial_write": "Codewords contain only bits from one independently written 2048-bit ingress beat. Encode padded word; mask all72 bits atomically. Macros may split codewords but update on same edge. No RMW or assembly; legal out-of-order/repeated beat writes retained."
+  },
+  "blocks": {
+    "activation": {
+      "encoders": 53,
+      "decoders": 53,
+      "codewords": 53,
+      "extra_macro_count": 0,
+      "xor2_count_unshared": 32224,
+      "decode_7bit_equality_count": 3392,
+      "encoder_pipeline_bits": 7579,
+      "decoder_pipeline_bits": 7738,
+      "pipeline_flop_area_mm2": 0.0044664372,
+      "logic_area_allowance_mm2": 0.016790399999999997,
+      "area_allowance_packed_50pct_mm2": 0.04251367439999999
+    },
+    "ring": {
+      "encoders": 17,
+      "decoders": 17,
+      "codewords": 17,
+      "extra_macro_count": 0,
+      "xor2_count_unshared": 10336,
+      "decode_7bit_equality_count": 1088,
+      "encoder_pipeline_bits": 2431,
+      "decoder_pipeline_bits": 2482,
+      "pipeline_flop_area_mm2": 0.0014326308000000001,
+      "logic_area_allowance_mm2": 0.005385599999999999,
+      "area_allowance_packed_50pct_mm2": 0.013636461599999998
+    },
+    "shared_rf": {
+      "encoders": 64,
+      "decoders": 128,
+      "codewords": 128,
+      "extra_macro_count": 16,
+      "xor2_count_unshared": 60672,
+      "decode_7bit_equality_count": 8192,
+      "encoder_pipeline_bits": 9152,
+      "decoder_pipeline_bits": 18688,
+      "pipeline_flop_area_mm2": 0.008118144,
+      "logic_area_allowance_mm2": 0.03540479999999999,
+      "area_allowance_packed_50pct_mm2": 0.08704588799999999
+    },
+    "shared_scratch": {
+      "encoders": 8,
+      "decoders": 8,
+      "codewords": 8,
+      "extra_macro_count": 1,
+      "xor2_count_unshared": 4864,
+      "decode_7bit_equality_count": 512,
+      "encoder_pipeline_bits": 1144,
+      "decoder_pipeline_bits": 1168,
+      "pipeline_flop_area_mm2": 0.0006741792000000001,
+      "logic_area_allowance_mm2": 0.0025344,
+      "area_allowance_packed_50pct_mm2": 0.0064171584
+    }
+  },
+  "cycles": {
+    "activation_write_extra": 2,
+    "activation_read_extra": 2,
+    "ring_response_to_committed_extra": 2,
+    "ring_read_to_valid_extra": 2,
+    "rf_read_extra": 2,
+    "rf_write_ack_extra": 2,
+    "scratch_read_extra": 2,
+    "scratch_write_ack_extra": 2,
+    "activation_steady_Bpc": 394,
+    "ring_steady_Bpc": 136,
+    "throughput_condition": "parallel codec per word, all stages pipelined; control,weight,tag delayed same2 cycles with activation; next phase slot timing must remain aligned. SS/FF measurement can reject stage budget."
+  },
+  "area_basis": {
+    "dff_um2": 0.2916,
+    "xor2_and_twoinput_gate_allowance_um2": 0.3,
+    "allowance_status": "Explicit uncharacterized gate allowance, not measured area or guaranteed upper bound. Decoder equality priced7 gates/position. Control fault gates, buffers, CTS and metadata seal not included; do not claim complete signoff area."
+  },
+  "integration": [
+    {
+      "file": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "module": "ot_hbm_accel_smv_leaf",
+      "seams": [
+        "Replace g_wb wd_n/wd_m/wm_m mapping by beat-aligned encode map. Delay wa/we by2 codec stages.",
+        "Keep four u_x macros. Decode xrd into original788bit ix layout; add2 matching control and weight stages at E4.",
+        "Propagate decoder UE to leaf gf and suppress affected validity. Keep data fault latch sticky.",
+        "Top start readiness must include write-retirement fence; delay original accepted start by2 and reject invalid or incompletely written row."
+      ]
+    },
+    {
+      "file": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "module": "ot_hbm_accel_bulk_copy",
+      "seams": [
+        "Encode rsp_data into1224b; delay rsp_v AND rsp_tag by2 before ALL full bitmap/headfull/credit return updates. Width1280 physical unaffected.",
+        "Capture codeword then pipeline decode2 stages before output queue valid. Grow queue credit accounting by2 in-flight stages; preserve at least3+2=5 slots.",
+        "Validate return slot allocated/not already full and transaction identity before accepting; freeze on UE/identity mismatch.",
+        "Protect full bitmap, alloc/cons/used/outstanding and descriptor state; existing raw control is not exempt."
+      ]
+    },
+    {
+      "file": "rtl/gpu/ot_gpu_rf_service.sv",
+      "module": "ot_gpu_rf_service",
+      "seams": [
+        "Encode4096bit write once to4608b, mirror both operand copies,18 width banks rather than16 perpage.",
+        "Keep4page select per copy; decode128 codewords before rsp_valid.",
+        "Hold lease until decoded response consumption; ack after both encoded writes commit."
+      ]
+    },
+    {
+      "file": "rtl/gpu/ot_gpu_scratch_service.sv",
+      "module": "ot_gpu_scratch_service",
+      "seams": [
+        "Encode512b to576b across3x256 macros; decode before done; preserve single outstanding lease."
+      ]
+    }
+  ],
+  "remaining_mandatory_gates": [
+    "Mutable control protection: duplicate sealed control image or SECDED state, including x write/valid bitmap, descriptors, ring ownership. Needs exact state inventory/area before qualification.",
+    "Read pipeline poison and no stale result after fault.",
+    "Fault inject every data+check bit; prove single correction and all double-bit detection; pointer/tag fault cases.",
+    "All partial writes including leaf3 split and repeated/out-of-order groups compared against original raw layout.",
+    "Full AR shape exactness and stalled finite streams; source-pinned synthesis and contextual SS/FF."
+  ]
+}

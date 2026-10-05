@@ -1,0 +1,22 @@
+images loaded in 4.4 s
+stream: total_words=555 preroll=1000 ctl_cycles; words_ready_at_start=38/38
+models constructed in 7.8 s (tiles/die=1536 nodes/die=1488)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=1s passes=3
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=1481/1481 wall=962s passes=9609
+progress tick=8192 cyc=8193 pc_base=0/0 me_busy=3748/3748 wall=2376s passes=20198
+progress tick=12288 cyc=12289 pc_base=69/69 me_busy=4904/4904 wall=3202s passes=30797
+progress tick=16384 cyc=16385 pc_base=69/69 me_busy=5771/5771 wall=3881s passes=39856
+STAGE L0 done cycles=18458 start_cyc=7 end_cyc=18465 me_busy=5852/5852 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=21504 su_writes=382976 wall=4018s
+HBMSTAT L0 die0 hbm_wait=4420 kv_wait=489 matmul=3401 attention=648 collective=2764 stream_unit=6689 other=48 ctl_cycles=16025 rd=1704960 room_block=0 desc_gap=1792 words_done=555 last_wread_cyc=16279 hbm_fault=0 wst_fault=0
+HBMSTAT L0 die1 hbm_wait=4420 kv_wait=489 matmul=3401 attention=648 collective=2764 stream_unit=6689 other=48 ctl_cycles=16025 rd=1704960 room_block=0 desc_gap=1792 words_done=555 last_wread_cyc=16279 hbm_fault=0 wst_fault=0
+HBMSTAT L0 die2 hbm_wait=4420 kv_wait=489 matmul=3401 attention=648 collective=2764 stream_unit=6689 other=48 ctl_cycles=16025 rd=1704960 room_block=0 desc_gap=1792 words_done=555 last_wread_cyc=16279 hbm_fault=0 wst_fault=0
+HBMSTAT L0 die3 hbm_wait=4420 kv_wait=489 matmul=3401 attention=648 collective=2764 stream_unit=6689 other=48 ctl_cycles=16025 rd=1704960 room_block=0 desc_gap=1792 words_done=555 last_wread_cyc=16279 hbm_fault=0 wst_fault=0
+VPSTAT L0 die0 nuse=4 hbm_code_reads=2048 rel_fault=0
+VPSTAT L0 die1 nuse=4 hbm_code_reads=2048 rel_fault=0
+VPSTAT L0 die2 nuse=4 hbm_code_reads=2048 rel_fault=0
+VPSTAT L0 die3 nuse=4 hbm_code_reads=2048 rel_fault=0
+VERIFY_TOKENS die=0 n=0
+VERIFY_TOKENS die=1 n=0
+VERIFY_TOKENS die=2 n=0
+VERIFY_TOKENS die=3 n=0
+QWEN_HBMACC_TOKEN PASS stages=1 token=0 val=00000000 die1_token=0 cycles=18465 edges=18465 settle_max=2 wall_s=4018.5 RSS_KiB=1486396 threads=4 ctl_cycles=16026 preroll=1000

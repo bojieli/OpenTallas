@@ -6,8 +6,7 @@
 // The baseline's RX path is one cycle from the RX FIFO read pointer to the reassembly register: rbin -> 16:1 x
 // 546-bit FIFO read mux -> {src, word} -> src * count + word * LANES -> per-lane placement compare -> 16:1 lane
 // select -> asmb (NL x 32 bits).  Routed in the HA3 context it fails by 1.70 ns at 0.833 ns.  Changes:
-//   RX  (+2 clk_sm cycles per collective at XREG = 1, the closure setting (+1 at XREG = 0); none per record:
-//       one record a cycle either way)
+//   RX  (+1 clk_sm cycle per collective, none per record: one record a cycle either way)
 //       stage A  pop the record (one-hot replicated FIFO read select, ot_gpu_cdc_fifo_oh) and register it with
 //                its placement offset off = (gather ? off_tab[src] : 0) + word * LANES, its 16-lane valid mask
 //                (word * LANES + k < count) and its tag check; off_tab[r] = r * count is registered once per
@@ -18,7 +17,7 @@
 //                coll_rsp_data.  Records are popped only while fewer than the expected count have been popped
 //                (the baseline stopped popping by leaving S_RUN on the last take), so an early record of the
 //                next collective stays in the FIFO exactly as before.
-//   TX  (zero cycles) the request data is captured raw, masked per word by a registered look-ahead lane mask; the record's word is
+//   TX  (zero cycles) the request data is captured raw with a registered lanes < count mask, and the record's word is
 //       selected by a one-hot copy of sw (replicated), not by a sw * LANES-indexed lane multiplexer; the TX FIFO
 //       is ot_gpu_cdc_fifo_oh.
 // The reassembly register is cleared on the first S_RUN cycle instead of at acceptance (the response is not
@@ -40,7 +39,7 @@ module ot_gpu_coll_endpoint_f12 #(
     parameter integer AW_RX  = 4,
     parameter integer SYNC   = 2,
     parameter integer RDUP   = 8,
-    parameter integer XREG   = 1,      // 1 (closure setting): a register between pop and per-lane select (+1 cycle per collective)
+    parameter integer XREG   = 0,      // 1: one more register before the per-lane select (+1 cycle per collective)
     parameter integer FW     = 32 * LANES,
     parameter integer PW     = FW + 2 + TAGW
 ) (
@@ -100,9 +99,11 @@ module ot_gpu_coll_endpoint_f12 #(
         wire [8:0]  req_nrec = 9'((32'(coll_count) + LANES - 1) / LANES);
         wire        req_bad  = (coll_count == 8'd0) || (32'(coll_count) > NL) ||
                                (coll_mode && 32'(coll_count) * R > NL);
-        // the request lanes are captured raw (as the baseline); lanes >= count are zeroed on the TX side by the
-        // current word's lane mask, registered (look-ahead) with the one-hot word select
-
+        // the request lanes are captured raw (as the baseline); lanes >= count are zeroed on the TX side by a lane
+        // mask registered at the same capture, so the capture path is the SM-side select alone
+        reg  [NL-1:0] dmask;
+        reg  [NL-1:0] dmask_n;
+        always @* for (integer l = 0; l < NL; l = l + 1) dmask_n[l] = (l < 32'(coll_count));
 
         // request data capture: every cycle while idle (dat is read only in S_RUN), enabled by registered per-slice
         // copies of "idle next cycle", so the SM-side request valid (the mux owner select) does not fan out to the
@@ -135,21 +136,12 @@ module ot_gpu_coll_endpoint_f12 #(
                 wire [NW-1:0] oh_d = accept ? {{(NW-1){1'b0}}, 1'b1} : tx_adv ? (oh_q << 1) : oh_q;
                 ot_gpu_kreg_oh #(.W(NW), .RV({{(NW-1){1'b0}}, 1'b1})) u_sw (.clk(clk_sm), .rst_n(rst_sm_n),
                     .d(oh_d), .q(oh_q));
-                // lane mask of the word being sent (lane sw*LANES + j < count), registered with the word select
-                wire [LANES-1:0] tm_q;
-                reg  [LANES-1:0] tm_d;
-                always @* for (integer j = 0; j < LANES; j = j + 1)
-                    tm_d[j] = accept ? (j < 32'(coll_count)) :
-                              tx_adv ? ((32'(sw) + 1) * LANES + j < 32'(cnt_q)) : tm_q[j];
-                ot_gpu_kreg_oh #(.W(LANES), .RV({LANES{1'b0}})) u_tm (.clk(clk_sm), .rst_n(rst_sm_n),
-                    .d(tm_d), .q(tm_q));
                 reg [HI-LO-1:0] ts;
                 always @* begin
                     ts = '0;
                     for (integer w = 0; w < NW; w = w + 1)
                         for (integer b = LO; b < HI; b = b + 1)
-                            if (w * FW + b < NL * 32) ts[b-LO] = ts[b-LO] | (oh_q[w] & dat[w*FW + b]);
-                    for (integer b = LO; b < HI; b = b + 1) ts[b-LO] = ts[b-LO] & tm_q[b / 32];
+                            if (w * FW + b < NL * 32) ts[b-LO] = ts[b-LO] | (oh_q[w] & dmask[(w*FW + b) / 32] & dat[w*FW + b]);
                 end
                 assign txd[HI-1:LO] = ts;
             end
@@ -241,7 +233,7 @@ module ot_gpu_coll_endpoint_f12 #(
                 qa_bad <= pa_bad;
                 case (st)
                     S_IDLE: if (coll_req_v) begin
-                        mode_q <= coll_mode; cnt_q <= coll_count;
+                        dmask <= dmask_n; mode_q <= coll_mode; cnt_q <= coll_count;
                         sw <= 8'd0; nrec <= req_nrec[7:0]; rcv <= 9'd0; npop <= 9'd0;
                         nexp <= coll_mode ? 9'(32'(req_nrec) * R) : req_nrec;
                         for (integer r = 0; r < (1 << RB); r = r + 1) off_tab[r] <= OB'(r * 32'(coll_count));

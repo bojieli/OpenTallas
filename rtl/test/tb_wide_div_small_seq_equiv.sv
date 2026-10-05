@@ -165,6 +165,7 @@ module tb_wide_div_small_seq_equiv;
                      checked, DUTS);
         else
             $display("FAIL tb_wide_div_small_seq_equiv %0d mismatches", errors);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

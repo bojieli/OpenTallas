@@ -1,0 +1,97 @@
+{
+  "PDN_changed": false,
+  "added_token_cycles": 0,
+  "current_authority": "S81 feasibility main21fcf6469 c5_spine original peak raster IR; pre-recovery4706 tree; interior IR selection per committed record",
+  "current_recovery_die_qualified": false,
+  "delta": "only -enable_em and -em_outfile",
+  "em_rule_authority": null,
+  "foundry_violation_count": null,
+  "load_or_supply_changed": false,
+  "new_MACs": 0,
+  "new_hardware_area_mm2": 0,
+  "new_memory_ports": 0,
+  "original_manifest": {
+    "align": true,
+    "budget_mv": 35.0,
+    "bump_sites": 2376,
+    "bumps": {
+      "array_pitch_um": 45.0,
+      "scheme": "every core bump a power bump (VDD/VSS interleaved half a pitch); PHY/link regions carry signal bumps only",
+      "size_um": 20.0,
+      "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 140,
+    "coverage": {
+      "channel": 0.0439,
+      "field": 0.128,
+      "hub": 0.044,
+      "svc": 0.1639
+    },
+    "die": "layer",
+    "loads": 23800,
+    "peak": true,
+    "power_w": 9.2335,
+    "power_w_by_kind": {
+      "bf": 1.2419,
+      "cfg": 0.4115,
+      "fifo_blk": 0.04,
+      "hub": 4.47,
+      "hub_fifo": 0.192,
+      "node": 0.8091,
+      "q": 2.0828,
+      "waypoint": 0.0339
+    },
+    "power_w_per_mm2": 0.9593,
+    "scale": 1.0,
+    "signal_bumps_phy": true,
+    "size_um": [
+      3435.232,
+      2801.84
+    ],
+    "stripes": {
+      "M8": 3960,
+      "M9": 1056,
+      "pitch_by_kind": {
+        "channel": 9.0914,
+        "field": 3.3495,
+        "hub": 9.0914,
+        "svc": 2.7669
+      },
+      "vias": 576576,
+      "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "spine",
+    "window_um": [
+      14782.608,
+      11599.2,
+      18217.84,
+      14401.04
+    ]
+  },
+  "power_w_from_original_commands": 9.233505426,
+  "prepared_sha256": {
+    "loads.lef": "23ad484ae9183503213433a7c9688999b072b3847d9092e6f595b3e20950e9c4",
+    "manifest.json": "9b116f2c3d848646ffcd9a3a83cf154894e2dd8e66ad1fd8b7dc4d4bb318e080",
+    "run.tcl": "bcaf19bacb70dbc708657b67836906ce0778e4ef312f9cdadc5ea92a38c4c9f8",
+    "top.def": "9af1c1399e16310a85b1ad5e916cd7f8102df2de4dd1831dcc57241cdc384cc7",
+    "vsrc_VDD.loc": "917bedb382448bd8bae4641808a7637b57f460f19cb3ca23a1130ed2dffbb4bd",
+    "vsrc_VSS.loc": "991a6a582483ffe4967a2818d5cc130767058dda9b1e2d1ce4374912ba4db7be"
+  },
+  "rails": [
+    "VDD",
+    "VSS"
+  ],
+  "schema": "opentallas.die_window_em.input.v1",
+  "source": "/mnt/epyc1-scratch/claude/dsrom-s81-fulldie/cases/c5_spine",
+  "source_sha256": {
+    "loads.lef": "23ad484ae9183503213433a7c9688999b072b3847d9092e6f595b3e20950e9c4",
+    "manifest.json": "9b116f2c3d848646ffcd9a3a83cf154894e2dd8e66ad1fd8b7dc4d4bb318e080",
+    "run.tcl": "71f9337d9fc297eb345d756709a6d21d8cc2fee3806cf27b1345d9eb731c7740",
+    "top.def": "9af1c1399e16310a85b1ad5e916cd7f8102df2de4dd1831dcc57241cdc384cc7",
+    "vsrc_VDD.loc": "917bedb382448bd8bae4641808a7637b57f460f19cb3ca23a1130ed2dffbb4bd",
+    "vsrc_VSS.loc": "991a6a582483ffe4967a2818d5cc130767058dda9b1e2d1ce4374912ba4db7be"
+  }
+}

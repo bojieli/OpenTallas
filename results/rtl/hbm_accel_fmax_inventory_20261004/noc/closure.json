@@ -12,7 +12,7 @@
  "rows": [
   {
    "module": "ot_gpu_coll_endpoint + ot_gpu_coll_mux (successors ot_gpu_coll_endpoint_f12, ot_gpu_coll_mux_f12, ot_gpu_cdc_fifo_oh)",
-   "file": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv, rtl/gpu_sys/ot_gpu_coll_mux_f12.sv, rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+   "file": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv (r6 on main, XREG default 0), rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv (Codex continuation, TX_MASK_LA), rtl/gpu_sys/ot_gpu_coll_mux_f12.sv, rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
    "params": "NL 128, LANES 16, R 2, RANK 0, NSM 2, RDUP 8, XREG 1 (the DS cluster vehicle, rtl/gpu_sys/ds_hbm_full20)",
    "on_token_path": "yes: every collective of the DS GPU-organised baseline goes SM -> coll_mux -> coll_endpoint (clk_sm, 1.2 GHz) -> link (rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv u_coll); same block as HA3's A/B baseline (rtl/hbm_accel/collective/ot_hbm_accel_coll_port_ctx.sv HA3=0)",
    "before": {
@@ -95,9 +95,19 @@
     }
    ],
    "after": {
-    "route_label": "collctx_f12x_r7",
+    "route_label": "collctx_f12x_r6",
+    "status": "NOT CLOSED: best routed SS -4.23 ps r2r (6 pins: TX lane mask dmask -> TX FIFO write data), FF +4.13 ps (XREG=1)",
     "false_path_io": "yes: the ctx wrapper registers every port on both sides exactly as HA3's ot_hbm_accel_coll_port_ctx does (SM coll_* registers, link-pipe first stage); clk_link tied to clk_sm (pessimistic for the Gray pointers)",
-    "fix": "r7 = r6 + the TX lane mask as a registered look-ahead per-word mask (final design)"
+    "continuation": "handed to Codex (GOODALL, main 43eb3f728): ot_gpu_coll_endpoint_f12_txmask TX_MASK_LA=1 XREG=1 route; Claude's equivalent r7 (registered look-ahead per-word lane mask, source snapshot routes/collctx_f12x_r7_src/, exact on tb_gpu_coll bench/coll_f12_r7.json) was routing on agidock128 (collctx_f12x_r7) and EPYC (colldie_f12_r8) at handoff",
+    "route_record": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/routes/collctx_f12x_r6/",
+    "period_ns": 0.833,
+    "ss_r2r_ps": -4.23,
+    "ss_worst_ps": -4.23,
+    "ss_output_port_ps": 1000000000.0,
+    "ss_input_to_reg_ps": Infinity,
+    "ff_hold_ps": 4.13,
+    "closes_signoff": false,
+    "cell_area_um2": 48614.011
    },
    "fix_summary": "zero-latency: replicated one-hot FIFO read/write selects (keep_hierarchy), look-ahead write enables, owner select x16, idle-replicated capture, registered per-word lane mask, per-slice asmb strobes; pipelining: RX record register (+1) and XREG select register (+1)",
    "cycles_added": "+2 clk_sm per collective (RX), 0 per record, 0 on TX",

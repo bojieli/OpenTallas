@@ -1,0 +1,417 @@
+{
+ "schema": "opentallas.dsrom-1m.cand-select.v1",
+ "scope": "DS-ROM L20 candidate-block select at position 1,048,575 (1M), TP4, golden 1M index scores; graph nodes L20.attn.cand.topk_local (local), L20.attn.cand.merge (all-gather, bytes only), L20.attn.cand.final",
+ "status": "pass",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "simulator_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+ "clock_hz": 1200000000.0,
+ "wall_s": 12.8,
+ "golden_shards": {
+  "ctx1048576_L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45",
+  "ctx1048576_cand.npz": "570b5f5dc2d28df2e88510005bab07332aaa563d84d244f1f1f33f0745b84b0e"
+ },
+ "golden": {
+  "scores": 1048576,
+  "blocks": 131072,
+  "cand_b": 8,
+  "cand_k": 2048,
+  "arith": "chunk8",
+  "scores_bf16_exact": true,
+  "cand_mask_block_uniform": true,
+  "golden_mask_blocks": 2048,
+  "candidate_blocks_full_equals_mask": true,
+  "golden_mask_blocks_per_rank": [
+   485,
+   541,
+   517,
+   505
+  ],
+  "golden_blocks_sha256": "8e2c4ab717f593b256328e36d57bf72a242a79c91d9d4b2d49d0776c30e3c7af"
+ },
+ "local": {
+  "unit": "ot_hdc_v41x_sel_cand",
+  "params": {
+   "Q": 4,
+   "SL": 16,
+   "IWP": 20,
+   "K": 2048,
+   "AW": 10
+  },
+  "placement": "rank r = positions [r*262144, (r+1)*262144); port q = stack sub-quarter of 65,536",
+  "rtl_pass": true,
+  "exact_vs_golden_slice": true,
+  "per_rank": [
+   {
+    "rank": 0,
+    "positions": [
+     0,
+     262143
+    ],
+    "kept_blocks": 2048,
+    "golden_blocks_in_rank": 485,
+    "pinned_block": 32767,
+    "pinned_block_in_global_golden": false,
+    "expected_equals_golden_slice": true,
+    "cycles": 12366,
+    "us": 10.305,
+    "ingest_cycles": 4096,
+    "tail": 8270,
+    "ovf": 1,
+    "replays": 2,
+    "stall": 0,
+    "k": 2048,
+    "nhead": [
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "n2": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "n3": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "rank": 1,
+    "positions": [
+     262144,
+     524287
+    ],
+    "kept_blocks": 2048,
+    "golden_blocks_in_rank": 541,
+    "pinned_block": 65535,
+    "pinned_block_in_global_golden": false,
+    "expected_equals_golden_slice": true,
+    "cycles": 12366,
+    "us": 10.305,
+    "ingest_cycles": 4096,
+    "tail": 8270,
+    "ovf": 1,
+    "replays": 2,
+    "stall": 0,
+    "k": 2048,
+    "nhead": [
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "n2": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "n3": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "rank": 2,
+    "positions": [
+     524288,
+     786431
+    ],
+    "kept_blocks": 2048,
+    "golden_blocks_in_rank": 517,
+    "pinned_block": 98303,
+    "pinned_block_in_global_golden": false,
+    "expected_equals_golden_slice": true,
+    "cycles": 12366,
+    "us": 10.305,
+    "ingest_cycles": 4096,
+    "tail": 8270,
+    "ovf": 1,
+    "replays": 2,
+    "stall": 0,
+    "k": 2048,
+    "nhead": [
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "n2": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "n3": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "rank": 3,
+    "positions": [
+     786432,
+     1048575
+    ],
+    "kept_blocks": 2048,
+    "golden_blocks_in_rank": 505,
+    "pinned_block": 131071,
+    "pinned_block_in_global_golden": true,
+    "expected_equals_golden_slice": true,
+    "cycles": 12366,
+    "us": 10.305,
+    "ingest_cycles": 4096,
+    "tail": 8270,
+    "ovf": 1,
+    "replays": 2,
+    "stall": 0,
+    "k": 2048,
+    "nhead": [
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "n2": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "n3": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "worst_rank": {
+   "rank": 0,
+   "cycles": 12366,
+   "us": 10.305
+  },
+  "overflow_note": "AW 10 holds 2 x 1,024 = 2,048 block records a sub-quarter; at 1M every rank overflows and the unit asks the source to re-stream the rank's 262,144 scores twice (tail = 2 rescans), as in the committed campaign's shipped_1m rows",
+  "sensitivity_aw12": {
+   "note": "NOT the as-built unit: AW 12 (8,192 blocks a sub-quarter, cannot overflow); same vectors",
+   "rtl_pass": true,
+   "per_rank": [
+    {
+     "rank": 0,
+     "cycles": 4794,
+     "us": 3.995,
+     "ingest_cycles": 4096,
+     "tail": 698,
+     "ovf": 0,
+     "replays": 0,
+     "stall": 0,
+     "k": 2048,
+     "nhead": [
+      1235,
+      1233,
+      1232,
+      1258
+     ],
+     "n2": [
+      309,
+      282,
+      297,
+      299
+     ],
+     "n3": [
+      309,
+      281,
+      297,
+      299
+     ]
+    },
+    {
+     "rank": 1,
+     "cycles": 4777,
+     "us": 3.9808,
+     "ingest_cycles": 4096,
+     "tail": 681,
+     "ovf": 0,
+     "replays": 0,
+     "stall": 0,
+     "k": 2048,
+     "nhead": [
+      1247,
+      1263,
+      1232,
+      1253
+     ],
+     "n2": [
+      290,
+      300,
+      297,
+      289
+     ],
+     "n3": [
+      289,
+      299,
+      297,
+      289
+     ]
+    },
+    {
+     "rank": 2,
+     "cycles": 4791,
+     "us": 3.9925,
+     "ingest_cycles": 4096,
+     "tail": 695,
+     "ovf": 0,
+     "replays": 0,
+     "stall": 0,
+     "k": 2048,
+     "nhead": [
+      1245,
+      1255,
+      1211,
+      1228
+     ],
+     "n2": [
+      295,
+      308,
+      289,
+      278
+     ],
+     "n3": [
+      295,
+      307,
+      288,
+      277
+     ]
+    },
+    {
+     "rank": 3,
+     "cycles": 4780,
+     "us": 3.9833,
+     "ingest_cycles": 4096,
+     "tail": 684,
+     "ovf": 0,
+     "replays": 0,
+     "stall": 0,
+     "k": 2048,
+     "nhead": [
+      1225,
+      1216,
+      1234,
+      1244
+     ],
+     "n2": [
+      295,
+      296,
+      299,
+      302
+     ],
+     "n3": [
+      294,
+      296,
+      298,
+      302
+     ]
+    }
+   ]
+  },
+  "vectors_sha256": "796d90973e9309a6da2187929db23bd7e96264e527d8080fbce6c5980c481be6",
+  "errors": 0,
+  "log": null
+ },
+ "merge": {
+  "kind": "4-die all-gather of the local kept-block records",
+  "records_per_die": 2048,
+  "record": "BF16 block max (16 b) + block index within the sender's rank (15 b) = 31 b -> 4 B",
+  "bytes_per_die_sent": 8192,
+  "bytes_per_die_received": 24576,
+  "bytes_on_links_total": 98304,
+  "gathered_bytes_per_die": 32768
+ },
+ "final": {
+  "unit": "ot_hdc_v41x_sel",
+  "params": {
+   "Q": 4,
+   "W": 16,
+   "IW": 17,
+   "K": 2048,
+   "AW": 7
+  },
+  "input": "4 x 2,048 records (rank r on port r, block ascending), value = true BF16 block max, block 131,071 (the newest) pinned +inf",
+  "rtl_pass": true,
+  "errors": 0,
+  "log": null,
+  "vectors_sha256": "b5de6b809ed54bc9a5dfe323ac9a004c0faaaa4299942ee058c013a863a6da6e",
+  "cycles": 355,
+  "us": 0.2958,
+  "ingest_cycles": 128,
+  "tail": 227,
+  "ovf": 0,
+  "replays": 0,
+  "stall": 0,
+  "k": 2048,
+  "nhead": [
+   114,
+   116,
+   116,
+   117
+  ],
+  "n2": [
+   108,
+   111,
+   110,
+   112
+  ],
+  "n3": [
+   31,
+   34,
+   33,
+   32
+  ],
+  "kept_blocks": 2048,
+  "equals_golden_cand_mask": true,
+  "equals_golden_candidate_blocks_full": true,
+  "newest_block_kept": true
+ },
+ "semantics": {
+  "local_pin": "the local unit pins its slice's newest block (golden candidate_blocks on the slice does the same); the global golden pins only block 131,071, so ranks 0-2 each force one extra block (32,767 / 65,535 / 98,303) into their local list",
+  "local_pin_harmless_here": true,
+  "final_must_use_true_maxima": "the final must rank ranks 0-2's pinned blocks by their TRUE block max: with the local +inf pins carried into the final it keeps those three blocks",
+  "final_with_local_pins_equals_golden": false,
+  "final_with_local_pins_diff": {
+   "extra": [
+    32767,
+    65535,
+    98303
+   ],
+   "missing": [
+    117795,
+    120003,
+    121424
+   ]
+  },
+  "rtl_gap": "ot_hdc_v41x_sel_cand exports block indices only (out_blk; u_sel's out_val is not brought out) and its front end overwrites the pinned block's max with +inf, so as built the merge records' values (and the true max of ranks 0-2's pinned blocks) are not available from the unit; the final here takes them from the golden scores"
+ },
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": "a91af5415f5872e6d7c2b8abf90c33008f538e7e669a217f9f75bbc74fe1739d",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "rtl/test/hdc_v41x_sel_cand_harness.cpp": "af002f6e30d578847294bcc5de971de059b4354b314fb5f4faee56f8bfb94a08",
+  "rtl/test/hdc_v41x_sel_harness.cpp": "32e0872cc0b1beee5b41dfc9b7f05e174fa0a3b02f7baf07447dafc287452f69",
+  "rtl/test/tb_hdc_v41x_sel.sv": "4956bd6294cfab4c2b9e93d2f388ede28dc19016ea0de70af4c12f6527281cef",
+  "rtl/test/tb_hdc_v41x_sel_cand.sv": "b920dc3a4c8f4288fbf0a813200218a99aa67c2569a71157aa855eabdd187852",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/rtl_hdc_v41x_sel_campaign.py": "be281d187bbe5ca761a40b45709f35597fb166c1a631a184a402e6852ceb81fb",
+  "tools/rtl_hdc_v41x_sel_cand_campaign.py": "4e1c948abeafc7903880ca8dd28a1ceb79a3e13e32bba448ab3427f127abbb34",
+  "tools/dsrom_1m_measure.py": "50effa723f6bf50b2ee6f33caa9c0c9c8c993106730c3a4f11d160fa0ce85818",
+  "tools/dsrom_1m_cand_select.py": "736388a200c0ce1aeed733f424838d7045391e5634c98668237f35e6559d1030"
+ }
+}

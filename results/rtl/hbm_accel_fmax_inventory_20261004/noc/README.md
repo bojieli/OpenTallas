@@ -7,7 +7,7 @@ Sign-off: 0.833 ns, SS setup with 60 ps uncertainty, FF hold with 25 ps (`tools/
 |---|---|
 | `ot_gpu_bd_line` | **closed** as built: SS +154.07 ps, FF +7.47 ps, no false path |
 | `ot_gpu_mreq_cdc` → `ot_gpu_mreq_cdc_oh` | **closed**: SS +121.55 r2r / +22.98 worst, FF +11.23. Before: output port -110.75 ps. Zero cycles added |
-| `ot_gpu_coll_endpoint` + `ot_gpu_coll_mux` → `_f12` successors | before -1.70 ns (HA3 ctx). The f12 revisions went -242 → -96 → **-4.23 ps** (r6, XREG=1; FF +4.13). The final design r7 is routing (`collctx_f12x_r7`). +2 clk_sm per collective, 0 per record |
+| `ot_gpu_coll_endpoint` + `ot_gpu_coll_mux` → `_f12` successors | **not closed**: before -1.70 ns (HA3 ctx); f12 revisions -242 → -96 → **-4.23 ps** (r6, XREG=1; FF +4.13). Last cone (TX lane mask) fixed in r7 (source in `routes/collctx_f12x_r7_src/`, exact) and in Codex's `ot_gpu_coll_endpoint_f12_txmask`; route loop handed to Codex. +2 clk_sm per collective, 0 per record |
 | `ot_ha2_owner_reduce` (the HA2 reducer, priced by TU `reducer_cycles`) | lockstep-exact (768 results, 0 mismatches). The full-shape flat route is still in placement (`ha2red_sr1_r4`) |
 
 Handed to Codex: `/tmp/claude-review-20261003/handoff_to_codex_20261004/hbm_fmax_noc.md`.

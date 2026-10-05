@@ -1,0 +1,218 @@
+{
+  "schema": "hbrom.scheduler.v1",
+  "status": "analytical_contract_not_RTL_measured",
+  "clock_GHz": 1.2,
+  "purpose": "Finite descriptor-driven reuse of a compute tile across nearby ROM banks. No host/software action per weight word.",
+  "configuration": {
+    "descriptor_bytes": 64,
+    "config_port_bytes_per_cycle": 16,
+    "descriptor_fetch_cycles": 4,
+    "descriptor_contexts_per_tile": 2,
+    "template_entries_per_cluster": 256,
+    "template_store_bytes": 16384,
+    "runtime_descriptor_queue_depth": 8,
+    "runtime_descriptor_queue_bytes": 512,
+    "completion_queue_depth": 8,
+    "completion_bytes": 16,
+    "completion_queue_bytes": 128,
+    "boot_template_preload_cycles_per_cluster": 1024,
+    "boot_preload_note": "At 16 bytes/cycle exclusive local config port. Shared die bus multiplies by clusters; immutable ROM templates eliminate external boot writes but still incur local fetch. No zero-cost hide assumed.",
+    "template_capacity_note": "256 templates is provisional; matrix shapes reuse templates with runtime bank/base/expert identities. Reject schedule whose distinct resident templates exceed this bound or price template refills."
+  },
+  "descriptor": {
+    "identity": [
+      "transaction_epoch_32",
+      "operation_sequence_32",
+      "expert_router_ordinal_16",
+      "matrix_id_16"
+    ],
+    "layout": [
+      "source_bank_first_16",
+      "source_bank_count_16",
+      "source_row_base_32",
+      "source_row_count_32",
+      "source_stride_32"
+    ],
+    "arithmetic": [
+      "format_and_golden_reduction_mode_16",
+      "valid_rows_16",
+      "valid_k_32"
+    ],
+    "operands": [
+      "activation_slot_16",
+      "activation_generation_16",
+      "scale_slot_16",
+      "scale_generation_16",
+      "output_slot_16",
+      "output_generation_16"
+    ],
+    "schedule": [
+      "dependency_mask_32",
+      "weight_bytes_32",
+      "scale_bytes_32",
+      "flags_32"
+    ],
+    "note": "Fields total 512 bits; immutable layout and arithmetic + runtime identity form one descriptor. Runtime identity must not wrap while previous response can exist."
+  },
+  "phase_cycles": {
+    "admission_cycles": 1,
+    "reserve_cycles": 1,
+    "activation_acquire_cycles": 1,
+    "result_publish_cycles": 1,
+    "completion_enqueue_cycles": 1,
+    "descriptor_cold_cycles": 4,
+    "fixed_cold_control_cycles": 9,
+    "compute_drain_cycles": "D_arith supplied by selected exact compute engine; NOT zero",
+    "read_capture_cycles": "L_rom supplied by SS-qualified macro/capture plan",
+    "network_forward_cycles": "L_net supplied by routed cluster proposal",
+    "minimum_no_overlap": "9 + ceil(A_bytes/A_port) + ceil(S_bytes/S_port) + L_rom + L_net + max(ceil(W_bytes/W_service), ceil(MACs/MAC_per_cycle), ceil(O_bytes/O_port)) + D_arith + stalls",
+    "overlap_rule": "Only lookahead descriptor fetch/operand fill with distinct FREE shadow slots may overlap current execution. Subtract overlap only when schedule proves input available and port conflict absent. No phase swap until prior output published and all old reads and compute responses drained."
+  },
+  "flow_control": {
+    "state_machine": [
+      "FREE",
+      "RESERVED",
+      "FILLING",
+      "READY",
+      "ACTIVE",
+      "DRAINING",
+      "COMPLETION_PENDING",
+      "FREE"
+    ],
+    "issue_rule": "Consume one receive-buffer credit at accepted ROM read, not on return. ROM responses cannot be stalled after read acceptance. Credit returned after downstream consume frees slot.",
+    "credit_minimum_for_peak": "ceil(issue_beats_per_cycle * (L_rom + L_net + L_credit_return)) + elastic_beats",
+    "landing_bytes": "credit_depth * weight_beat_bytes",
+    "per_beat_identity_bytes": 16,
+    "landing_metadata_bytes": "credit_depth * 16",
+    "elastic_beats": 2,
+    "activation_buffer_bytes": "2 * round_up(max_live_activation_bytes, SRAM_macro_geometry)",
+    "scale_buffer_bytes": "2 * round_up(max_live_scale_bytes, SRAM_macro_geometry)",
+    "output_buffer_bytes": "2 * round_up(max_output_tile_bytes, SRAM_macro_geometry)",
+    "port_demands": {
+      "weight_write": "W_service bytes/cycle landing",
+      "weight_read": "W_service bytes/cycle compute",
+      "activation_read": "compute_tile_activation_port bytes/cycle; local broadcast fanout priced by network",
+      "activation_fill": "A_port bytes/cycle; bank-disjoint from ACTIVE reader",
+      "scale_read": "compute_tile_scale_port bytes/cycle",
+      "output_write": "O_port bytes/cycle",
+      "output_read": "O_port bytes/cycle consumer; may require separate bank or true dual port"
+    },
+    "stall_guarantee": "Any downstream stall length is safe with finite credit admission; uninterrupted peak throughput guaranteed only under stated service/credit-latency bound. No arbitrary finite queue can hide unbounded consumer stall.",
+    "retirement": "Require issued==returned==consumed, arithmetic outstanding==0, output last accepted by publication buffer, and completion queue slot reserved. Source bank/operand slots remain bound to generation until this fence.",
+    "cancel": "Stop new issue; drain in-flight responses and arithmetic; drop only tagged canceled generation; free slots after drain. Never release ACTIVE slot immediately.",
+    "completion_backpressure": "Reserve completion slot at descriptor admission so compute completion cannot deadlock on queue fullness."
+  },
+  "exactness": {
+    "fetch_order": "May vary bank/expert fetch order only with identity tagging and bounded reorder storage. Release arithmetic chunks and final expert contributions in golden order.",
+    "scale_binding": "Weight payload, scale extent/generation, activation generation, format, K-tail and matrix mapping must all match active descriptor.",
+    "no_rom_ecc": true,
+    "mutable_protection": "SRAM and mutable owner/descriptor/control protection still required; overhead is excluded until selected memory/control implementation supplied, and must be added to physical inventory.",
+    "bounds": "Validate bank range, byte count, row extent, format, K tail, operand extent, transaction generation and output extent at admission."
+  },
+  "reuse": {
+    "rtl/gpu/ot_gpu_expert_fetch.sv": "Bulk descriptors, slot allocation, four-sector completion mask and ordered line release; do not copy HBM global arbitration blindly into ROM local network.",
+    "rtl/abi3/ot_a3_operand_bank_owner.sv": "Two-bank ownership/tag contract. Caller must actually detect drain; controller alone does not.",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "Dependency publication semantics available; full ABI wait engine prices four producers/cycle across three cycles and is unnecessary on critical path for fixed local graph.",
+    "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": "Bounded lookahead, source-order fetch with golden-order staging release; HBM refresh/open-row logic is omitted.",
+    "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv": "NOT a payload implementation: timing model preloads data and only signals arrival. Cannot support exact data-path claim.",
+    "rtl/ot_schedule_controller.sv": "Quiescent active/shadow configuration concept only; existing CRC datapath is not mandated for ROM successor."
+  },
+  "minimum_new_RTL": [
+    "default-off bounded template/descriptor dispatcher with generation allocation",
+    "ROM bank burst walker with real macro read/capture timing",
+    "credit-reserved response pipeline and tagged payload landing",
+    "weight/scale/activation alignment adapter into existing exact reusable compute ports",
+    "drain-completion fence binding reusable owner to real read/compute counters"
+  ],
+  "validation_required": [
+    "single tile at full selected bank/operand width",
+    "reuse across at least two distinct ROM banks with different weights/scales and identical activation",
+    "consumer stalls longer than full pipeline credit round trip",
+    "back-to-back descriptors with same physical slots and different generations",
+    "late response and cancellation cannot mutate current generation",
+    "completion blocked beyond queue capacity causes admission backpressure",
+    "golden numerical compare including tails and scale boundaries",
+    "SS setup and FF hold in context before adoption"
+  ],
+  "sources": [
+    {
+      "path": "rtl/gpu/ot_gpu_expert_fetch.sv",
+      "sha256": "a36d62a66e7541a5052b0a1cd3c1c7be346e45627c80f4b94fc72d733b98883e"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+      "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_event_scoreboard.sv",
+      "sha256": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65"
+    },
+    {
+      "path": "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv",
+      "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
+    },
+    {
+      "path": "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv",
+      "sha256": "24f3f13649f31078863b9d82d48c2f2984a1bd3a7eabdbd47c9947a311501cf6"
+    },
+    {
+      "path": "rtl/ot_schedule_controller.sv",
+      "sha256": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826"
+    }
+  ],
+  "illustrative_buffer_sweep": {
+    "status": "sensitivity_only_not_selected_floorplan",
+    "assumptions": {
+      "beats_per_cycle": 1,
+      "rom_plus_network_cycles": 8,
+      "credit_return_cycles": 2,
+      "elastic_beats": 2,
+      "credits": 12
+    },
+    "rows": [
+      {
+        "weight_bytes_per_cycle": 32,
+        "weight_GB_per_s": 38.4,
+        "landing_payload_bytes": 384,
+        "landing_tag_bytes": 192,
+        "read_and_write_port_bytes_per_cycle_each": 32
+      },
+      {
+        "weight_bytes_per_cycle": 64,
+        "weight_GB_per_s": 76.8,
+        "landing_payload_bytes": 768,
+        "landing_tag_bytes": 192,
+        "read_and_write_port_bytes_per_cycle_each": 64
+      },
+      {
+        "weight_bytes_per_cycle": 128,
+        "weight_GB_per_s": 153.6,
+        "landing_payload_bytes": 1536,
+        "landing_tag_bytes": 192,
+        "read_and_write_port_bytes_per_cycle_each": 128
+      },
+      {
+        "weight_bytes_per_cycle": 256,
+        "weight_GB_per_s": 307.2,
+        "landing_payload_bytes": 3072,
+        "landing_tag_bytes": 192,
+        "read_and_write_port_bytes_per_cycle_each": 256
+      },
+      {
+        "weight_bytes_per_cycle": 512,
+        "weight_GB_per_s": 614.4,
+        "landing_payload_bytes": 6144,
+        "landing_tag_bytes": 192,
+        "read_and_write_port_bytes_per_cycle_each": 512
+      },
+      {
+        "weight_bytes_per_cycle": 1024,
+        "weight_GB_per_s": 1228.8,
+        "landing_payload_bytes": 12288,
+        "landing_tag_bytes": 192,
+        "read_and_write_port_bytes_per_cycle_each": 1024
+      }
+    ],
+    "warning": "Do not aggregate all cluster banks into one global bus. These are per independent stream; replicate count scales storage and routing."
+  }
+}

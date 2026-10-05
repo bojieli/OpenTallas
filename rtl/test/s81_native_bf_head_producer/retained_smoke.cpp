@@ -1,6 +1,107 @@
 // C++ orchestration test links unchanged Vpb/Vcut/Vretn/Vroot archives.
 // Raw1/2 weights and XN1 are test stimuli; expected roots are assertions only.
 #include "s81_native_bf_head_producer.hpp"
+#ifdef DSROM_S81_RETAINED_HEAD_STREAM_BIND_ONLY
+#include "s81_native_head_collective.hpp"
+
+// Caller hook for the SAME native R128 argmax on missing ranks1..3. Include
+// this existing source with BIND_ONLY in the enclosing shared-clock caller.
+// No dot/comparator, host ordering, shadow logits or command-owner store.
+// Required participant order: collector.prepare, bank.prepare, this.prepare;
+// collector.rising (OLD ready sample), bank.rising, this.rising;
+// all native falling, then collector.falling. The bank remains its sole owner.
+template<class NativeAmax,class Vm>
+DsromS81MinimumParticipant dsrom_s81_retained_head_stream_participant(
+    DsromS81MinimumRuntime& rt,NativeAmax& native,Vm& vm,
+    unsigned rank,uint64_t identity,uint64_t sequence,
+    std::function<bool()> actual_first_go,
+    std::function<const dsrom_s81_minimum::NativeBfHeadRoots*()> held_source,
+    std::function<const uint32_t*()> held_joined_bits,
+    std::function<bool()> publication_live,
+    std::function<void()> actual_write_taken) {
+    if(rank<1||rank>3||identity>=(1ull<<47)||!rt.context||
+       native.contextp()!=rt.context||vm.contextp()!=rt.context||
+       !actual_first_go||!held_source||!held_joined_bits||!publication_live||!actual_write_taken)
+        throw std::runtime_error("native head stream requires actual rank/context/source callbacks");
+    struct Edge {bool prepared=false,begun=false,start=false,take=false,stopped=false;};
+    auto edge=std::make_shared<Edge>();
+    return {"native-head-accepted-writer-rank"+std::to_string(rank),
+        [&,edge,rank,identity,sequence,actual_first_go,held_source,held_joined_bits,publication_live](const auto&) {
+            if(edge->prepared||edge->stopped||native.fault)
+                throw std::runtime_error("native head stream reused/quarantined edge");
+            edge->prepared=true;edge->take=false;edge->start=actual_first_go();
+            if(edge->start&&(edge->begun||native.busy||!rt.identity||*rt.identity!=identity))
+                throw std::runtime_error("native head stream duplicate/foreign first accepted I5 GO");
+            if(edge->begun&&(!rt.identity||*rt.identity!=identity))
+                throw std::runtime_error("native head stream held source identity changed");
+            native.start=edge->start;native.identity=identity;
+            native.nout=32320;native.obase=486848;
+            for(unsigned i=0;i<4;++i)native.write_valid[i]=native.write_accept[i]=0;
+            for(unsigned i=0;i<120;++i)native.write_address[i]=0;
+            for(unsigned i=0;i<128;++i)native.write_bits[i]=0;
+            native.clk=0;native.eval(); // settle REAL ready, no extra clock edge
+            if(native.source_rank!=rank)
+                throw std::runtime_error("head stream compiled RANK differs from actual producer");
+            const auto* source=held_source();const auto* bits=held_joined_bits();
+            if(!publication_live()||!bits)return; // normalization/input writes are not head logits
+            if(!edge->begun||!source||source->identity!=identity||source->request_sequence!=sequence||
+               source->rank!=rank||source->local_row>=32320||!native.busy)
+                throw std::runtime_error("head stream lacks actual retained producer/source epoch");
+            // Do not let the sole VM accept a write the native leaf cannot
+            // consume. Preserve its command/address/data/tag and existing seats.
+            if(!native.write_ready)vm.wr_v=0;
+            vm.clk=0;vm.eval();
+            const unsigned offered=vm.wr_v,take=vm.wr_accept_v;
+            if(take&~offered||__builtin_popcount(offered)>1)
+                throw std::runtime_error("head scalar stream foreign/burst VM acceptance");
+            if(!offered)return;
+            const unsigned bank=__builtin_ctz(offered);
+            const uint32_t mask=uint32_t((uint64_t(vm.wr_lane_mask)>>(16*bank))&65535);
+            if(__builtin_popcount(mask)!=1)
+                throw std::runtime_error("head scalar stream requires the actual one-word native publication");
+            const unsigned lane=__builtin_ctz(mask);
+            const uint32_t address=uint32_t((uint64_t(vm.wr_word_addr)>>(15*bank))&32767)*16+lane;
+            if(bank!=((address>>4)&3)||address!=486848+source->local_row||vm.wr_word_data[bank*16+lane]!=*bits)
+                throw std::runtime_error("head stream VM tuple differs from held native joined root");
+            const unsigned root=(source->local_row%256)/2;
+            native.write_valid[root/32]|=1u<<(root%32);
+            native.write_bits[root]=vm.wr_word_data[bank*16+lane];
+            for(unsigned i=0;i<30;++i) {
+                const unsigned bit=root*30+i;
+                native.write_address[bit/32]|=((address>>i)&1u)<<(bit%32);
+            }
+            if(take&(1u<<bank)) {
+                if(!native.write_ready)throw std::runtime_error("VM took head logit without actual native credit");
+                native.write_accept[root/32]|=1u<<(root%32);edge->take=true;
+            }
+            native.eval();
+        },
+        [&,edge,actual_write_taken](bool released) {
+            if(!edge->prepared||edge->stopped)
+                throw std::runtime_error("head stream rising lacks settled old writer tuple");
+            if(!released&&(edge->begun||edge->start||edge->take))
+                throw std::runtime_error("reset would erase accepted native head stream debt");
+            native.rst_n=released;native.clk=1;native.eval();
+            if(native.fault){edge->stopped=true;throw std::runtime_error("actual native head stream fault");}
+            if(edge->start)edge->begun=true;
+            // This callback records the native take; it NEVER grants a VM ACK
+            // or releases the producer. Existing OutputBatch ACK still required.
+            if(edge->take)actual_write_taken();
+        },
+        [&,edge](bool released) {
+            native.rst_n=released;native.clk=0;native.eval();edge->prepared=false;
+        },
+        [&,edge](){return edge->stopped||bool(native.fault);}
+    };
+}
+
+// Supply this actual ports object to the existing four-rank collector. Rank0
+// remains its existing raw-core ports; never substitute a local winner for it.
+template<class NativeAmax>
+DsromS81NativeHeadPorts dsrom_s81_retained_head_stream_ports(NativeAmax& native) {
+    return dsrom_s81_native_head_amax_ports(native);
+}
+#else
 #include "Vpb.h"
 #include "Vretn.h"
 #include "Vroot.h"
@@ -11,7 +112,7 @@ using namespace dsrom_s81_minimum;
 NativeBfHeadProducer<Vretn,Vroot>* producer=nullptr;
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
 #include "s81_native_bf_head_factory.hpp"
-static DsromS81NativeHeadBinding* released_head=nullptr;
+
 #endif
 std::map<const void*,unsigned> banks;
 extern "C" void v41rt_rom_register(const char* instance) {
@@ -21,14 +122,14 @@ extern "C" void v41rt_rom_register(const char* instance) {
 extern "C" void v41rt_cfg_register() {}
 extern "C" long long v41rt_cfg_read(int address) {
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
-    if(released_head)return released_head->cfg_word(address);
+    // The existing producer below owns direct component ROM/CFG routing.
 #endif
     if(!producer)throw std::runtime_error("CFG before actual head producer");
     return producer->cfg_word(address);
 }
 extern "C" void v41rt_rom_read(int address,svBitVecVal* out) {
 #ifdef DSROM_S81_RELEASED_HEAD_COMPONENT
-    if(released_head){auto w=released_head->raw_word(banks.at(svGetScope()),address);std::copy(w.begin(),w.end(),out);return;}
+    // No whole-caller PairMem installer is substituted here.
 #endif
     if(!producer)throw std::runtime_error("ROM before actual head producer");
     auto word=producer->raw_word(banks.at(svGetScope()),address);
@@ -200,7 +301,7 @@ int main(int argc,char** argv) {
     std::ofstream logit_file(output+"/logits_rank"+std::to_string(rank)+".u32",std::ios::binary);
     std::ofstream xn_file(output+"/XN_rank"+std::to_string(rank)+".u32",std::ios::binary);
     unsigned raw_reads=0;
-    DsromS81NativeHeadBinding head(rt,cut,io,
+    DsromS81NativeHeadProducer head(rt,cut,io.read_word,io.span_lease,
         [&](unsigned r,unsigned row,unsigned group,unsigned step){
             if(r!=rank||row>=32320||group>=40||step>=8)throw std::runtime_error("released head source coordinates");
             NativeBfHeadRom::Word w{};
@@ -218,12 +319,13 @@ int main(int argc,char** argv) {
                 throw std::runtime_error("held native roots changed");
             if(!taken)return false;
             held.reset();tail_stage=0;taken=false;return true;
-        },false);released_head=&head;
+        },false);producer=&head;
     auto bank=target.participant();auto oldrise=bank.rising;
     bank.rising=[&](bool r){oldrise(r);if(r)actual_acks+=__builtin_popcount(unsigned(vm.wr_ack_v));};
-    auto input_part=head.selected_input_participant(),ret_part=head.selected_return_participant();
-    auto cold_return=head.return_participant();
     bool su_active=true,head_active=false;
+    auto input_part=dsrom_s81_select_native_bf_head_phase(rt,cut,[&](){return head_active;},head.input_participant());
+    auto ret_part=dsrom_s81_select_native_bf_head_phase(rt,cut,[&](){return head_active;},head.return_participant());
+    auto cold_return=head.return_participant();
     auto tail_drive=[&](Vretn& node,uint32_t a,uint32_t b){
         uint32_t row=rank*32320+held->local_row;
         node.a_v=1;node.b_v=1;node.a_t=(row<<13)|2;node.b_t=(row<<13)|258;
@@ -330,8 +432,9 @@ int main(int argc,char** argv) {
       <<",\"logit_publication_acknowledged\":true"
 #endif
       <<",\"argmax_bound\":false,\"reference_compared\":false}";
-    released_head=nullptr;munmap(mapped,st.st_size);close(fd);
+    producer=nullptr;munmap(mapped,st.st_size);close(fd);
     std::cout<<"NATIVE_HEAD_COMPONENT_DONE rank="<<rank<<" logits="<<logits<<" cycles="<<cycles<<std::endl;return 0;
  }catch(const std::exception& e){std::cerr<<"NATIVE_HEAD_COMPONENT_ERROR "<<e.what()<<std::endl;return 1;}
 }
 #endif
+#endif // DSROM_S81_RETAINED_HEAD_STREAM_BIND_ONLY
