@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
-// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 8 by default).
+// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 9 by default).
+// SEQ (QX >= 9, the segment tree ot_v41_segtree5: a tree level costs one more cycle, so output TIMES are later and
+// data-dependent): the outputs are compared as sequences, per (macro, segment, position) key, every dut event against
+// the reference's event of that key in order (value, row, segments, error); the walker / FIFO / issue state is still
+// compared cycle by cycle; the fault bit is compared per reset window (did it rise); events still pending when both
+// are in reset are counted (dropped by the reset), and nothing may be pending at the end.
 // QY exactness bench (2026-10-04): tb_dsrom_qz_exact with dut = ot_v41_rom_elem_q_qy_w10 (QY = 1 by default).  QY
 // reports fault FL = 2 cycles later, so the dut's fault bit is compared with the ref's L + FL cycles earlier (every
 // other field still L) and the post-reset exemption is L + FL + 1 cycles.  Built with QP_CHECK the dut also asserts
@@ -24,10 +29,11 @@ module tb_dsrom_qx_exact;
  parameter integer QP = 1, XS = 1, CAP = 0, P1 = 1, CSAM = 10;   // QP = 0: the copy's default (no shift)
  parameter integer QZ = 1;                                         // QZ = 0: the qp circuit
  parameter integer QY = 1;                                         // QY = 0: the qz circuit
- parameter integer QX = 8;                                         // 2, 1: earlier QX levels, 0: the qy circuit
+ parameter integer QX = 9;                                         // 2, 1: earlier QX levels, 0: the qy circuit
  localparam integer FL = QY != 0 ? 2 : 0;                          // fault reporting delay
  localparam integer QK = QP != 0 ? CAP + P1 : 0;
  localparam integer L = QP != 0 ? XS + QK : 0;
+ localparam integer SEQ = QX >= 9 ? 1 : 0;
  localparam integer FS = QP != 0 ? XS : 0;    // front-end state shift
  reg clk=0, rst_n=0, cfg_v=0, go=0, xs_v=0;
  reg [4:0] cfg_a=0; reg [47:0] cfg_d=0;
@@ -102,12 +108,52 @@ module tb_dsrom_qx_exact;
  integer st_ex = 0, st_go = -1;
  always @(negedge rst_n) begin last_assert = tcyc; st_ex = 1; st_go = -1; end
  always @(negedge clk) if (st_ex && rst_n && dut.u_e.go_e && st_go < 0) st_go = tcyc;
+ // SEQ: per-key event FIFOs (see the header)
+ typedef bit [53:0] ev_t;
+ ev_t rq [0:511][$];
+ ev_t dq [0:511][$];
+ integer seq_matched = 0, seq_dropped = 0, rflt = 0, dflt = 0;
+ bit both_rst_seen = 0;
+ task automatic seq_push(input bit is_dut, input integer key, input ev_t e);
+   if (is_dut) begin
+     if (rq[key].size() > 0) begin
+       if (rq[key][0] !== e) $fatal(1, "sequence mismatch key=%0d cycle=%0d dut %h ref %h", key, tcyc, e, rq[key][0]);
+       void'(rq[key].pop_front()); seq_matched = seq_matched + 1;
+     end else dq[key].push_back(e);
+   end else begin
+     if (dq[key].size() > 0) begin
+       if (dq[key][0] !== e) $fatal(1, "sequence mismatch key=%0d cycle=%0d dut %h ref %h", key, tcyc, dq[key][0], e);
+       void'(dq[key].pop_front()); seq_matched = seq_matched + 1;
+     end else rq[key].push_back(e);
+   end
+ endtask
+ function automatic integer seq_pending();
+   seq_pending = 0;
+   for (int k = 0; k < 512; k++) seq_pending = seq_pending + rq[k].size() + dq[k].size();
+ endfunction
+ always @(negedge clk) if (SEQ != 0) begin
+   for (int m = 0; m < 2; m++) begin
+     if (av[m] && rf_rst_n) seq_push(0, m*256 + asg[5*m +: 5]*8 + ap[3*m +: 3], {ad[32*m +: 32], ar[16*m +: 16], an[5*m +: 5], ae[m]});
+     if (bv[m] && rst_n)    seq_push(1, m*256 + bsg[5*m +: 5]*8 + bp[3*m +: 3], {bd[32*m +: 32], br[16*m +: 16], bn[5*m +: 5], be[m]});
+   end
+   if (af && rf_rst_n) rflt = 1;
+   if (bf && rst_n) dflt = 1;
+   if (!rst_n && !rf_rst_n) begin
+     if (!both_rst_seen) begin
+       if (rflt != dflt) $fatal(1, "fault differs in a reset window (ref %0d dut %0d) cycle=%0d", rflt, dflt, tcyc);
+       seq_dropped = seq_dropped + seq_pending();
+       for (int k = 0; k < 512; k++) begin rq[k].delete(); dq[k].delete(); end
+       rflt = 0; dflt = 0;
+     end
+     both_rst_seen = 1;
+   end else both_rst_seen = 0;
+ end
  always @(negedge clk) begin
    tcyc = tcyc + 1;
    if (rst_n) cyc = cyc + 1;
    oh[tcyc % 32] = ro; sh[tcyc % 32] = rs;
    if (tcyc > L + FL + 2 && tcyc - last_assert > L + FL + 1) begin
-     if (!oeq(dov, {oh[(tcyc - L) % 32][OW-1:1], oh[(tcyc - L - FL) % 32][0]})) $fatal(1, "output mismatch cycle=%0d (dut %h, ref L=%0d earlier %h)", tcyc, dov, L, oh[(tcyc - L) % 32]);
+     if (SEQ == 0 && !oeq(dov, {oh[(tcyc - L) % 32][OW-1:1], oh[(tcyc - L - FL) % 32][0]})) $fatal(1, "output mismatch cycle=%0d (dut %h, ref L=%0d earlier %h)", tcyc, dov, L, oh[(tcyc - L) % 32]);
      if (st_ex && st_go >= 0 && tcyc > st_go + 2) st_ex = 0;
      if (!st_ex && ds !== sh[(tcyc - FS) % 32]) $fatal(1, "state divergence cycle=%0d dut %h ref %h", tcyc, ds, sh[(tcyc - FS) % 32]);
      compared = compared + 1;
@@ -228,6 +274,11 @@ module tb_dsrom_qx_exact;
      end
    end
    tick(400);
+   if (SEQ != 0) begin
+     if (seq_pending() != 0) $fatal(1, "sequence: %0d events still pending at the end", seq_pending());
+     if (rflt != dflt) $fatal(1, "fault differs at the end (ref %0d dut %0d)", rflt, dflt);
+     $display("SEQ matched=%0d dropped_at_reset=%0d", seq_matched, seq_dropped);
+   end
    if(hits<2000 || issues<2000 || rows<200 || nonzero<100 || classes!=255 || wraps==0 || qadv==0 || restarts<4 ||
       rejected<50 || go_closed<20 || go_drain<20 || closed_cycles<1000 || resets<3)
      $fatal(1,"coverage incomplete h=%0d i=%0d r=%0d w=%0d q=%0d rst=%0d rej=%0d gc=%0d gd=%0d go=%0d cc=%0d rs=%0d",
