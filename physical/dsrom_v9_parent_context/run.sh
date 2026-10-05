@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
-# Execute only in this agent's pinned clean source worktree on EPYC1.
+# Execute only in this agent's pinned clean source worktree on an admitted EPYC host.
 : "${V9_PARENT_OUTPUT:?absolute persistent run root required}"
 export OT_ORFS_NUM_CORES=4
 python3 tools/run_abi3_physical_persistent.py \
@@ -16,6 +16,7 @@ python3 tools/run_abi3_physical_persistent.py \
  --output-delay-min-ns .360 --output-delay-max-ns .727 \
  --sdc-append physical/dsrom_v9_parent_context/boundary.sdc \
  --stages pnr --orfs-corner WC --hold-corners WC,BC \
+ --orfs-var SYNTH_HDL_FRONTEND=slang \
  --die-area 0 0 1040.256 239.76 --core-area 2.16 2.16 1038.096 237.60 \
  --place-density .5 --orfs-var PLACE_DENSITY_LB_ADDON= \
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl \
