@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "scope": "completed L34 X only; full36/head/final KV drain pending",
+  "position": 8191,
+  "token": 24,
+  "stage": "STAGE L34 done cycles=5282 start_cyc=180391 end_cyc=185673 me_busy=3253/3253 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=38082s",
+  "reference": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp4/P8191",
+  "dies": [
+    {
+      "die": 0,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7",
+      "expected_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7"
+    },
+    {
+      "die": 1,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7",
+      "expected_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7"
+    },
+    {
+      "die": 2,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7",
+      "expected_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7"
+    },
+    {
+      "die": 3,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7",
+      "expected_sha256": "43c94b6468c36d2f1828fe3c077b133467afb4680fff5c618b466f502917f0d7"
+    }
+  ]
+}
