@@ -47,9 +47,11 @@
     "descriptor_prefetch": 2,
     "bank_local_decode": 1,
     "bank_reduction": 2,
-    "SRAM_read_then_correct_capture": 2,
+    "SRAM_read_then_correct_capture": 3,
     "per_pc_broadcast_local": true,
     "read_capture": "real corner macro clkQ -> correction registers -> finite skid/consumer",
+    "macro_address_capture": "falling-edge address/data/enable staging; real half-cycle relation to rising macro capture",
+    "output_credit_depth": 8,
     "min_paths": "real capture clocks and loads; repair hold on SRAM address/data/enable and local control, no false IO"
   },
   "replicas_mux_demux_fanout": {
@@ -71,12 +73,12 @@
       "local_lut_and_bases": 66560,
       "mask_mirrors": 16384,
       "bank_selection_cuts": 46080,
-      "read_correction_and_skid": 30720,
+      "read_correction_and_skid": 81920,
       "core_control_mirrors": 32768,
       "ingress_and_outputs": 25856
     },
-    "added_FF_ceiling_bits": 384256,
-    "standard_cell_upper_um2": 477463.0496,
+    "added_FF_ceiling_bits": 435456,
+    "standard_cell_upper_um2": 492392.9696,
     "macro_area_um2": 497052.0,
     "util_ceiling": 0.35,
     "CTS_route_headroom_fraction": 0.15,
@@ -102,13 +104,13 @@
     "parent_channel_fit": false
   },
   "latency": {
-    "added_clk_edges_upper": 6,
+    "added_clk_edges_upper": 7,
     "added_hclk_edges_upper": 2,
-    "first_access_added_ns_upper": 7.048,
+    "first_access_added_ns_upper": 7.881333333333334,
     "DS_routed_fetches": 40,
-    "DS_token_added_us_upper": 0.28192,
+    "DS_token_added_us_upper": 0.31525333333333333,
     "old_measured_gain_us": 13.343,
-    "remaining_gain_us_lower": 13.06108,
+    "remaining_gain_us_lower": 13.027746666666667,
     "golden_sector_sequence_unchanged": true,
     "steady_PC_sectors_per_hclk": 1,
     "bounds_analytical_until_changed_source_bench": true
@@ -124,11 +126,11 @@
     },
     "qwen_hbm": {
       "applicable": true,
-      "token_added_ns_per_fetch": 7.048
+      "token_added_ns_per_fetch": 7.881333333333334
     },
     "v41_hbm": {
       "applicable": true,
-      "token_added_ns_per_fetch": 7.048
+      "token_added_ns_per_fetch": 7.881333333333334
     }
   },
   "clock": {

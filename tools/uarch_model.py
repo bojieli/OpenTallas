@@ -9787,7 +9787,7 @@ def hbm_r5a_protected_pipeline_model():
         pc_descriptor_tables=pcs*8*72, pc_mutable_mirrors=pcs*1280,
         local_lut_and_bases=pcs*(49*32+8*64),
         mask_mirrors=sms*depth*4, bank_selection_cuts=banks*4*360,
-        read_correction_and_skid=sms*3*1280, core_control_mirrors=32768,
+        read_correction_and_skid=sms*8*1280, core_control_mirrors=32768,
         ingress_and_outputs=pcs*360+sms*1280+4096)
     extra_bits=sum(added_ff.values())
     extra_cell=extra_bits*DFF_UM2+110000 # ECC/decode/selection mux explicit upper allowance
@@ -9804,7 +9804,7 @@ def hbm_r5a_protected_pipeline_model():
     clk_ns=1/1.2;hclk_ns=1.024
     # Fixed critical path edge additions: ingress1, descriptor2, landing3,
     # SRAM corrected output2. Credit32 unchanged; steady sectors per PC remains1.
-    extra_ns=clk_ns*(1+3+2)+hclk_ns*2
+    extra_ns=clk_ns*(1+3+3)+hclk_ns*2
     return dict(item=6,status='PREBUILD_DEFAULT_OFF',enabled_default=False,
         evidence=dict(path=str(measured.relative_to(ROOT)),sha256=hashlib.sha256(measured.read_bytes()).hexdigest()),
         shape=dict(NPC=pcs,NSM=sms,banks=banks,depth=depth,landing_credit=32,
@@ -9821,9 +9821,10 @@ def hbm_r5a_protected_pipeline_model():
             mutable='complement mirrors on FIFO local pointers, dispatch, location, masks and PC refresh state; mismatched synchronised Gray rails conservatively refuse',
             config='duplicated local LUT/base with bounds/validity; never waive HBM/link/SRAM protection'),
         cuts=dict(ingress_registered=1,descriptor_prefetch=2,bank_local_decode=1,
-            bank_reduction=2,SRAM_read_then_correct_capture=2,per_pc_broadcast_local=True,
+            bank_reduction=2,SRAM_read_then_correct_capture=3,per_pc_broadcast_local=True,
             read_capture='real corner macro clkQ -> correction registers -> finite skid/consumer',
-            min_paths='real capture clocks and loads; repair hold on SRAM address/data/enable and local control, no false IO'),
+            macro_address_capture='falling-edge address/data/enable staging; real half-cycle relation to rising macro capture',
+            output_credit_depth=8, min_paths='real capture clocks and loads; repair hold on SRAM address/data/enable and local control, no false IO'),
         replicas_mux_demux_fanout=dict(bank_winner_inputs=8,bank_mux='two-level registered 4:1 then2:1 one-hot reduction',
             global_grant_to_payload=False,descriptor_tables=pcs,configuration_tables=pcs,
             masks_per_SM=depth,fanout='PC-local and bank-local registered request; no shared ptr ->32 row fanout'),
@@ -9837,7 +9838,7 @@ def hbm_r5a_protected_pipeline_model():
             pitch_um=.08,PG_via_reserved_fraction=.2256,clock_tracks=64,
             capacity_tracks=capacity,local_reservation_fits=tracks<=capacity,
             actual_parent_residual_tracks=None,parent_channel_fit=False),
-        latency=dict(added_clk_edges_upper=6,added_hclk_edges_upper=2,
+        latency=dict(added_clk_edges_upper=7,added_hclk_edges_upper=2,
             first_access_added_ns_upper=extra_ns,DS_routed_fetches=40,
             DS_token_added_us_upper=40*extra_ns/1000,
             old_measured_gain_us=13.343,remaining_gain_us_lower=13.343-40*extra_ns/1000,
