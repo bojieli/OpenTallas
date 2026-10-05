@@ -10253,3 +10253,102 @@ def qwen_rom_stream4_fulltoken_measurement():
         qualified_latency_us=None,qualified_rate_tok_s=None,MTP_credit=None,
         physical_qualified=False,
         limitations='No full-vocabulary-logit dump; exact argmax/winning logit/Xnorm plus all36 decoder outputs and all144 currentKV checks. No HBM activation-provider or DS optimization credit transferred.')
+
+
+def hbm_index_ds20_gather_bridge_model():
+    """Correctness-only installed-pool proposal for two NORMAL W15 gathers.
+
+    All arena accesses use the existing single DS20 SM0 LSU. A backing extent
+    is leased from a real installer book; sizing bytes is not allocation.
+    This supersedes paired/rank-major layout assumptions for this caller only.
+    """
+    import hashlib
+    import json
+    import math
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    codec_path='results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json'
+    codec=json.loads((root/codec_path).read_text())['SRAM_protection_candidate']
+    base=2952
+    # Distinct payload seats for split-write and joined-read: do not silently
+    # rely on an unproved register-sharing lifetime. Lease table is separate.
+    payload_extra=8*72
+    lease_bits=8*72
+    bridge_ff=base+payload_extra+lease_bits
+    shared_ledger_ff=36*72  # protected prior accepted owners, union once
+    ff=bridge_ff+shared_ledger_ff
+    pairs=8+8+11+36+8
+    mux_bits=512+337+273+64*8
+    nand2=4096+32*12*4+512  # bounds/tag/kind/lease/control positive allowance
+    buffers=math.ceil((ff-1)/7)
+    body=ff*.2916+(ff+mux_bits)*.2+nand2*.08748+buffers*.10206+pairs*codec['pair_cell_body_um2']
+    placement=2*body*1.05/1e6
+    counts=dict(producer_score_ID_reads=12288,gather_score_ID_writes=12288,
+        gather_checked_readbacks=12288,formatter_two_plane_reads=24576,
+        sink_ID_writes=64,sink_checked_readbacks=64)
+    sectors=sum(counts.values())
+    assert sectors==61568
+    # These are local held cuts, not queue wait or a PHY throughput claim.
+    local_per_sector=1+1+2+3+1
+    word_handoffs=sectors//2
+    admission_edges=8+2+3+3 # actual descriptor load/encode/validation/quiet
+    final_release_edges=1+1
+    local_edges=sectors*local_per_sector+word_handoffs+admission_edges+final_release_edges
+    adapter=hbm_index_ordered_adapter_model()
+    # Actual two-plane formatter6 internal edges and merger load1 per8pairs;
+    # checked reads already priced as MREQ below, not added again as9edges.
+    remaining_adapter_edges=adapter['serial_selection_edges']+6144*(6+1)
+    paths=[codec_path,'rtl/chip/ot_w15_coll_dma.sv','rtl/chip/ot_coll_topk_merge.sv',
+        'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv',
+        'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv',
+        'rtl/gpu_sys/ot_gpu_mreq_cdc.sv','rtl/gpu_sys/ot_gpu_cdc_fifo.sv',
+        'rtl/gpu_sys/ot_gpu_memsys.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv']
+    return dict(schema='hbm.index.ds20.normal-gather.minimum.v1',default_enabled=False,
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths},
+        source_owner='Rawls enclosing bridges/lease; Sagan plane-major formatter/adapter; Confucius selector unchanged',
+        selected_scope='correctness-only, no419cycle or acceleration credit',
+        provider='DS20 SM0 c_req/c_rsp337/273 -> existing g_cdc[0] AW3 -> u_mem; one outstanding sector',
+        new_memory_ports=0,new_backing_SRAM_bytes=0,
+        source_clock_target_ns=1/1.2,memory_source_clock_ns=1,clock_qualified=False,
+        arena_bytes=393216,result_sink_bytes=2048,required_existing_pool_bytes=395264,
+        actual_base=None,installed_pool_lease=False,
+        admission='Pinned installer allocated/free book with byte-range/alignment/overflow checks; arena/sink/input nonoverlap, all prior accepted SM/SU/W2 owners drained; actual lease, not fixture-ready',
+        normal_gathers=[dict(mode=1,topk=0,GW=1,n_words512_per_rank=32,plane='score',destination_byte_offset=0),
+            dict(mode=1,topk=0,GW=1,n_words512_per_rank=32,plane='ID',destination_byte_offset=196608)],
+        layout='PLANE_MAJOR, byte-addressed: score=BASE+rank*2048+64*(pairword>>1); ID=BASE+196608+rank*2048+64*(pairword>>1); half=pairword&1. Explicit /64 conversion at512b formatter face.',
+        formatter_layout_gate='Sagan09ed rank-major live component cannot attach unchanged; bounded plane-major opt-in correction/caller binding required, original source and live test preserved',
+        state=dict(Rawls_base_protected_FF=base,second_direction_payload_FF=payload_extra,
+            lease_FF_allowance=lease_bits,bridge_FF=bridge_ff,shared_borrower_ledger_FF=shared_ledger_ff,
+            total_with_shared_ledger_once=ff,capacity512_words_each_direction=1,
+            descriptor_CMD64_capacity=8,provider_outstanding=1),
+        protection=dict(W6_pairs=pairs,encode_held_edges=2,decode_held_edges=3,
+            source_body_mm2=pairs*codec['pair_cell_body_um2']/1e6,
+            basis='retained W6 source; positive250ps local loading estimate, held2/3 target edges; physical timing unqualified'),
+        area=dict(placement_at50pct_mm2=placement,required_component_outline_um=[400,400],
+            required_envelope_mm2=.16,estimate_fits_required_envelope=placement<=.16,
+            parent_slot_reserved=False,shared_ledger_charge_once=True,
+            additional_to_existing_adapter_and_formatter=True,
+            exclusions='actual loaded CTS/PG/long channels/protected backing implementation, codec cut/hold excess; no parent-space fit claim'),
+        physical_boundary_tracks_lower_bound=512+512+337+273,
+        actual_channel_capacity=None,
+        accepted_sector_actions=counts,total_sector_actions=sectors,
+        total_physical_bytes=sectors*32,provider_byte_throughput_floor_us=sectors/1000,
+        source_VM_producer_reads_included=True,
+        full_sector_writes='All32 strobes on each accepted256b sector; no partial-sector RMW required. Changed mask requires actual extra oldread/RMW pricing.',
+        protocol=dict(local_edges_per_sector=local_per_sector,descriptor_admission_edges=admission_edges,
+            two_sector_word_handoff_edges=1,final_visible_release_edges=final_release_edges,
+            local_bridge_edges=local_edges,adapter_tree_assembly_load_edges=remaining_adapter_edges,
+            CDC_request_receiver_edges_minimum=3,CDC_response_receiver_edges_minimum=3,
+            CDC_positive_minimum_ns=3*1+3/1.2,
+            provider_roundtrip_ns_planning_range=[45,500],
+            CDC_included_in_roundtrip=True,
+            range_condition='exclusive/drained path, held sinks accept; CL/REQ/RSP+ACT/PRE/one refresh and CDC included once; not a bound under refusal/competing traffic/fault',
+            checked_readback='Each pair of write sectorACKs precedes corresponding two readbacks/checked owner capture; whole score+ID arena visible before ordered adapter; result sink similarly checked before publication/reverse',
+            borrowed_lease_release='Last matched checked VMvisible + positive captured reverse; ACK/done alone never frees arena or requester debt'),
+        serialized_provider_planning_us_range=[(sectors*45+(local_edges+remaining_adapter_edges)/1.2)/1000,
+            (sectors*500+(local_edges+remaining_adapter_edges)/1.2)/1000],
+        memory_and_codec_publication_cost_counted_once=True,
+        previous_formatter_9edge_service_not_added_again=True,
+        static_source_implementation_permitted=True,functional_integration_permitted_after_layout_and_real_lease=True,
+        physical_build_admitted=False,adopted=False,token_gain_us=None,
+        next='Rawls implements priced opt-in loadedbook/lease+bridges; Sagan plane-major actual formatter. Missing installer must fail closed; no free arena/base or port. Compose actual accepted service after implementation, not model rate adoption.')
