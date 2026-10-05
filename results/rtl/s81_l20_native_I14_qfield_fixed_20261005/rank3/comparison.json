@@ -1,0 +1,36 @@
+{
+  "scope": "Native I14 two canonical fragments on actual native I13 QR; initial I0-I6 prefix SIM_ONLY; no fulltoken or physicaltiming claim",
+  "rank": 3,
+  "position": 1048575,
+  "token": 16754,
+  "exact": true,
+  "expected_outputs_used_by_native": false,
+  "input_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+  "source_inputs_sha256": {
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434"
+  },
+  "results": [
+    {
+      "fragment": 0,
+      "phase": 20,
+      "output_base": 55744,
+      "words": 4608,
+      "bit_mismatches": 0,
+      "output_sha256": "d3b25d5a3bfd58c436d155bcd4c092b03bed8c211735c0b5eaff166be62b7f59",
+      "first": []
+    },
+    {
+      "fragment": 1,
+      "phase": 21,
+      "output_base": 60352,
+      "words": 3584,
+      "bit_mismatches": 0,
+      "output_sha256": "ac7004406c399c465d0270a075947064bc14e1d69df2a59aa5ec0fb06ab36208",
+      "first": []
+    }
+  ]
+}

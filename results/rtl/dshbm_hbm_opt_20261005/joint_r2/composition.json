@@ -361,6 +361,35 @@
   "Qwen_provider_bound": false,
   "Qwen_opt3_enabled": false
  },
+ "paired_W2_increment": {
+  "inputs": {
+   "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/result.json": "f56ef9266e86263699272b6020bd4d4ef404440605f6cc0d40b4bbe8828e8f3a",
+   "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/fixture.json": "893a90770ef8eab19e408823dc744b12dbcfd477254520c91b59be253d995cf1",
+   "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/changed_hook_cases.json": "9edfd2aa39dfa866ab3cb34d2ab686d77aced56762afbc9abcf9bcdd0463a5d4",
+   "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/source_pin.json": "6495713c68e0b0d2a1f937743a5410578a2a09c6e2a6c82d973602d1d72afa86",
+   "results/rtl/dshbm_hbm_opt_20261005/opt2/paired_sm_r3/source.commit": "5a5f511f9916c64408d97f828866af70e32ced3953cca25201befdad5035e849"
+  },
+  "baseline": "source-matched joint PQ+XMAP; W2 group unchanged from production PQ",
+  "measured_component_old_cycles": 609,
+  "measured_component_new_cycles": 425,
+  "measured_component_saved_cycles": 184,
+  "authoritative_exposed_W2_groups": 40,
+  "target_clock_hz": 1200000000.0,
+  "target_period_ns": 0.8333333333333334,
+  "incremental_AR_projection_us": 6.133333333333334,
+  "prior_joint_AR_projection_us": 438.392,
+  "candidate_AR_projection_us": 432.25866666666667,
+  "projected_per_user_rate_gain_pct": 1.4189034960548241,
+  "model_one_percent_threshold_met": true,
+  "accounting": "Replace W2 interval only, forty times; unchanged handshake/barrier once; no analytic partial-wave saving added",
+  "actual_combined_PQ_XMAP_PACK_measured": false,
+  "MTP_increment_us": null,
+  "full_token_gain_measured": false,
+  "physical_ss_ff_qualified": false,
+  "adopted": false,
+  "qualified_headline_rate": null,
+  "next_integration": "Rawls combined configuration must bind actual PACK caller and measure interaction; Erdos component gate is not that combined run"
+ },
  "production_measurement_scope": {
   "result": "results/rtl/hbm_opt1_production_20261005/functional_r1/result.json",
   "result_sha256": "52fc6ed6346268207b08b9fc3f5f2b080654feb619535467b1c6d5bc033ef889",
@@ -1176,6 +1205,6 @@
   "results/rtl/hbm_opt1_production_20261005/functional_r1/pq/wg_f1s.json": "7d5d25ee09631ec02b1bd2653443f0171913e287aa7e975e3a76c30a797fafcb"
  },
  "tool_sha256": {
-  "tools/dshbm_hbm_opt_compose.py": "a67aac0f3132a8558dc21212240add1cbbfb507148503927fdf10d6dc972d1e9"
+  "tools/dshbm_hbm_opt_compose.py": "a4d0a4c373b3ff9a8f69a31b05c72137085e96f2f4ccc0de43d5820b0928e432"
  }
 }
