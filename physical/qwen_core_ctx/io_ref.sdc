@@ -12,9 +12,12 @@ unset_output_delay [all_outputs]
 # the gated engine clock (ICG output to the ME spine) is a clock, not a boundary data port
 set qcc_outs {}
 foreach p [all_outputs] { if {[get_full_name $p] ne "u_me.clk"} { lappend qcc_outs $p } }
-set qcc_cells [get_cells {nx_v*}]
-if {[llength $qcc_cells] == 0} { set qcc_cells [get_cells {pend1*}] }
-set qcc_ref [get_pins "[get_full_name [lindex $qcc_cells 0]]/CLK"]
+set qcc_ref {}
+foreach qcc_c [get_cells -quiet {nx_v*}] {
+  set qcc_p [get_pins -quiet "[get_full_name $qcc_c]/CLK"]
+  if {[llength $qcc_p]} { set qcc_ref $qcc_p; break }
+}
+if {[llength $qcc_ref] == 0} { set qcc_ref [lindex [all_registers -clock_pins] 0] }
 set qcc_w [sta::worst_slack_cmd max]
 set qcc_lmax [get_property $qcc_ref arrival_max_rise]
 set qcc_lmin [get_property $qcc_ref arrival_min_rise]
