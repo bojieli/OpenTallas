@@ -10507,6 +10507,105 @@ def qwen_rom_stream4_periodic_provider_model():
     return model(Path(__file__).resolve().parents[1])
 
 
+def hbm_su_ctl_registered_closure_model():
+    """Price the mandatory controller cuts on the existing measured HBM walk.
+
+    This is a latency/area reservation, not a qualified clock or gain row.
+    The preserved controller report decides the mechanisms; no model sweep.
+    """
+    import json
+    from pathlib import Path
+    from tools import dshbm_hbm_opt_compose as OC
+    from tools import dshbm_chain_levers as CL
+    from tools import dshbm_matched_reference as M
+    from tools import dshbm_1m_allmeasured as A
+    root = Path(__file__).resolve().parents[1]
+    rec = root / 'results/rtl/hbm_suattn_takeover_20261005'
+    comp = json.loads((rec / 'su/composition.json').read_text())
+    tables = []
+    for key in ('c12_v2', 'c12_p6'):
+        r = json.loads((root / comp['su_records'][key]).read_text())
+        for c in r['chains']:
+            # Conservative serial charge: includes even the first op's setup,
+            # although the inherited first-emit span excludes that startup.
+            c['first_emit_to_last_write'] += 5 * c['ops']
+        tables.append(CL.su_table_overlap(CL.best_of([('dr', r)])))
+    S = OC.setup()
+    clk = dict(A.TARGET, su=1.2e9, du_ser=M.F_SER)
+    use = ('coll', 'local', 'hbm', 'mixes')
+    ar, _ = M.walk(S['prog'], S['smseq'], tables[0], S['coll'], S['local'], S['hbm'],
+                   P=1, clk=clk, use=use, wg=True, fused=S['fused'])
+    mtp, _ = M.mtp(S['prog'], S['smseq'], tables[1], S['coll'], S['local'], S['hbm'],
+                    clk, use, True, S['fused'])
+    # Declared FF bound includes unsimplified nibble partials and local flag
+    # copies. Physical synthesis must replace the reservation with actual area.
+    raw_capture = 670
+    nibble_partial_and_pair = 6 * (4 + 2) * 24 + (4 + 2) * 24
+    local_flags = 128 * 16
+    pre_terms = 5 * 10 * 24 + 2 * 5 * 24
+    ff_bound = raw_capture + nibble_partial_and_pair + local_flags + pre_terms + 32
+    # Actual stage4->5 FF110.012ps skew: falling-edge bridge between
+    # unchanged positive-edge stages. Price every payload/identity bit; no
+    # positive-edge latency change or unqualified hold-margin credit.
+    return_bridge = (1024*(112+2) + 128*(56+1) + 18)*7
+    broadcast_bridge = (606 + (1+5*10*24))*5
+    insertion_bridge = (190+1)*(6+21+275)
+    control_delay_bridge = 190*(5+6+6+5)
+    valid_bridge_reserve = 64
+    bridge_ff = return_bridge + broadcast_bridge + insertion_bridge + control_delay_bridge + valid_bridge_reserve
+    ff_bound += bridge_ff
+    prefix_widths = [24] * 32 + [16] * 25 + [120]
+    def prefix_gates(w):
+        levels = w.bit_length()
+        nodes = sum(w + 1 - (1 << k) for k in range(levels))
+        return 3 * nodes + 4 * w
+    logic_upper = sum(prefix_gates(w) for w in prefix_widths) + 28 * (4*24 + 3*24*5)
+    return dict(schema='opentallas.hbm.su.controller.registered_closure.v1',
+                default_parameter=dict(CTL13=0), selected=False, adopted=False,
+                original_failure='su/ctl64_d760/cts_diagnosis/diagnosis.json',
+                MACs_per_cycle=0, new_memory_ports=0, new_boundary_bits=0,
+                replica_count=1, modeled_functional_shape=dict(N=1024, M=256),
+                minimum_controller_mechanism_shape=dict(N=64, M=16),
+                cuts=dict(input_capture_cycles=1, normal_setup_delta_cycles=4,
+                          whole_unflattened_setup_delta_cycles=5,
+                          per_vector_delta_cycles=0, return_delta_cycles=0,
+                          control_pipe_delta_cycles=0, arithmetic_reordering=False),
+                implementation=dict(stride_product='four nibble partials, registered pair sums and final sum',
+                                    flags='registered setup/accept/promotion bank enables; exact next-state lookahead',
+                                    address='prefix additions at original widths, including 120-bit concatenated row',
+                                    short_paths='falling-edge bridge between positive-edge payload and validity stages, no positive-edge latency change; real half-cycle CTS/setup/hold must close'),
+                half_cycle_bridge=dict(extra_FF_upper=bridge_ff,
+                    return_FF=return_bridge, broadcast_FF=broadcast_bridge,
+                    insertion_FF=insertion_bridge, control_delay_FF=control_delay_bridge,
+                    valid_FF_reserve=valid_bridge_reserve,
+                    minimum_setup_window_ps=833.333333/2,
+                    setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    clock_pin_and_inverter_distribution_qualified=False),
+                added_FF_declared_upper=ff_bound,
+                FF_cell_area_upper_um2=ff_bound * .37908,
+                prefix_width_reservation=prefix_widths,
+                logic_gate_equivalent_upper=logic_upper,
+                prefix_and_nibble_logic_reservation_um2=logic_upper * .2916,
+                area_reservation_um2=ff_bound * .37908 + logic_upper * .2916,
+                area_basis='real preserved ASAP7 DFFASRHQNx1 0.37908um2; kept prefix-node count plus nibble AND/adder upper at 0.2916um2/gate; no legacy logic subtraction, not mapped area',
+                routing=dict(control_word_bits=190, return_bits_per_cycle_64=64*112,
+                             return_bytes_per_cycle_64=64*112/8,
+                             existing_read_bytes_per_cycle_1024=1024*5*4,
+                             existing_return_bytes_per_cycle_1024=1024*112/8,
+                             existing_reducer_return_bits_per_cycle=128*56,
+                             kept_local_prefix_wire_bits=sum(2*(w+1)*(w.bit_length()+1) for w in prefix_widths),
+                             local_flag_target_max_data_fanout=32, actual_max_data_fanout=None,
+                             dynamic_address_state_bank_split_complete=True, remaining_counter_flag_fanout_mapped=False, local_flag_banks=128, new_parent_tracks=0,
+                             local_prefix_wire_capacity_qualified=False,
+                             pipeline_placement_and_clock_capacity_qualified=False),
+                composed=dict(AR_us_upper=ar, MTP=mtp, setup_charge_cycles_per_op=5,
+                              existing_walk='tools/dshbm_matched_reference.py walk/mtp',
+                              timing_rows_qualified=False, actual_measured_successor_cycles=None),
+                parent_slot_fit=None, SS_setup_ps=None, FF_hold_ps=None,
+                setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                actual_qualified_rate_comparison=None)
+
+
 def hbm_attn_m6h1_replication_model():
     """Price the measured F12/LA6 one-head successor in the existing HBM tile slot.
 
