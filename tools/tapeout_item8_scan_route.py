@@ -21,7 +21,7 @@ ROWFIX = {'rtl/v41rom/ot_v41_rom_elem_qp_w10.sv',
           'rtl/v41rom/ot_v41_rom_elem_w10.sv'}
 
 
-def prepare(output, recipe=1):
+def prepare(output, recipe=1, frame_growth_percent=None):
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     baseline = json.loads((ROOT / BASE).read_text())
@@ -44,7 +44,12 @@ def prepare(output, recipe=1):
                     'PAIRS, BF_PAIRS, ROOTS = 2417, 519, 128'):
         if literal not in model_text:
             raise ValueError('S81 slot changed; reprice before routing')
-    height = 140.4
+    # Fanout grows frame AREA by growing height only: the current S81 lane
+    # width, macro offsets, pin span and die-level horizontal hops stay fixed.
+    height = (126.9 * (1 + frame_growth_percent / 100)
+              if frame_growth_percent is not None else 140.4)
+    variant = (f'fanout_frame_plus{frame_growth_percent}'
+               if frame_growth_percent is not None else f'recipe{recipe}')
     available = 239.76 - 77.76 - 4.32
     if height > available:
         raise ValueError('scan frame exceeds existing element slot')
@@ -54,16 +59,18 @@ def prepare(output, recipe=1):
         argv[i + 1:i + 1 + len(values)] = values
     replace('--die-area', ['0', '0', '510.84', str(height)])
     replace('--core-area', ['0', '0.27', '510.84', str(height - 0.27)])
-    replace('--nickname-tag', [f'item8_q_scan_recipe{recipe}'])
-    if recipe == 3:
+    replace('--nickname-tag', [f'item8_q_scan_{variant}'])
+    if recipe == 3 or frame_growth_percent is not None:
         replace('--place-density', ['0.55'])
     replace('--keep-workdir', [str(output / 'work')])
     replace('--output', [str(output / 'physical.json')])
     argv += ['--dft', 'scan', '--scan-max-length', '1024', '--dft-bound-macros',
              '--pin-region', '^(scan_|test_mode).*=bottom:136.08-374.76']
     record = dict(
-        variant=f'scan_recipe_{recipe}_pinned_ports_height140p4', adopted=False,
-        place_density=0.55 if recipe == 3 else 0.6,
+        variant=f'scan_{variant}_pinned_ports', adopted=False,
+        frame_growth_percent=frame_growth_percent,
+        frame_growth_axis='height_only_fixed_lane_width',
+        place_density=0.55 if recipe == 3 or frame_growth_percent is not None else 0.6,
         baseline_record=BASE,
         baseline_record_sha256=hashlib.sha256((ROOT / BASE).read_bytes()).hexdigest(),
         source_pins=pins, changed_since_historical_baseline=changed,
@@ -96,9 +103,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--recipe', type=int, choices=(1, 3), default=1)
+    parser.add_argument('--frame-growth-percent', type=int, choices=(8, 15))
     parser.add_argument('--prepare-only', action='store_true')
     args = parser.parse_args()
-    argv = prepare(args.output, args.recipe)
+    argv = prepare(args.output, args.recipe, args.frame_growth_percent)
     if args.prepare_only:
         return 0
     os.environ['OT_ORFS_NUM_CORES'] = '16'
