@@ -90,6 +90,7 @@ module tb_dsrom_su_norm_la6_transport #(
     reg [(HC ? 4 : 1)*N*32-1:0] hx [0:HUB_IN];
     integer cyc = 0, go_cyc = -1, iss = 0, ey_err = 0, er_err = 0, eq_err = 0, ny = 0, nq = 0, nr = 0;
     integer y_last = -1, ro_last = -1, q_last = -1, r_cyc = -1, idle = 0, ro_cnt = 0;
+    integer input_vectors = 0, y_vectors = 0, q_vectors = 0;
     reg [7:0] vi;
     always @(posedge clk) begin
         cyc <= cyc + 1;
@@ -122,7 +123,12 @@ module tb_dsrom_su_norm_la6_transport #(
             $display("SU_BOUNDARY input cycle=%0d vector=%0d", cyc - go_cyc, hi[HUB_IN - 1]);
         if (wl_v) $display("SU_BOUNDARY gain_load cycle=%0d vector=%0d", cyc, wl_i);
         if (go) $display("SU_BOUNDARY go cycle=%0d", cyc);
-        if (in_v) $display("SU_BOUNDARY lane_input cycle=%0d vector=%0d", cyc, dut.in_i);
+        if (in_v) begin
+            if (dut.in_i != input_vectors || input_vectors >= NV)
+                $fatal(1, "input vector identity/order violation");
+            input_vectors = input_vectors + 1;
+            $display("SU_BOUNDARY lane_input cycle=%0d vector=%0d", cyc, dut.in_i);
+        end
         if (dut.x_v) $display("SU_BOUNDARY mix_output cycle=%0d vector=%0d", cyc, dut.xi);
         if (dut.ss_v) $display("SU_BOUNDARY sumsq_root cycle=%0d", cyc);
         if (dut.ssw[32]) $display("SU_BOUNDARY scalar_input cycle=%0d", cyc);
@@ -134,6 +140,9 @@ module tb_dsrom_su_norm_la6_transport #(
         if (r_v) $display("SU_BOUNDARY reduction_scalar cycle=%0d", cyc);
         if (r_v && r_cyc < 0) r_cyc <= cyc - go_cyc;
         if (y_v) begin
+            if (y_i != y_vectors || y_vectors >= NV)
+                $fatal(1, "Y vector identity/order violation");
+            y_vectors = y_vectors + 1;
             y_last <= cyc - go_cyc + (REGISTER_OUTPUT ? 0 : HUB_OUT);
             for (j = 0; j < N; j = j + 1)
                 if (y_i * N + j < D) begin
@@ -159,6 +168,9 @@ module tb_dsrom_su_norm_la6_transport #(
             ro_cnt = ro_cnt + 1;
         end
         if (q_v) begin
+            if (q_i != q_vectors || q_vectors >= NV)
+                $fatal(1, "quant vector identity/order violation");
+            q_vectors = q_vectors + 1;
             $display("SU_BOUNDARY quant cycle=%0d vector=%0d", cyc - go_cyc, q_i);
             q_last <= cyc - go_cyc + (REGISTER_OUTPUT ? 0 : HUB_OUT);
             for (k = 0; k < (QUANT ? N / 32 : 0); k = k + 1)
@@ -177,6 +189,7 @@ module tb_dsrom_su_norm_la6_transport #(
             $display("SUN go=%0d y_last=%0d r=%0d ro_last=%0d q_last=%0d ey=%0d er=%0d eq=%0d checked_y=%0d checked_r=%0d checked_q=%0d fault=%0d",
                      go_cyc, y_last, r_cyc, ro_last, q_last, ey_err, er_err, eq_err, ny, nr, nq, fault);
             if (ey_err == 0 && er_err == 0 && eq_err == 0 && ny == D && (RD == 0 || nr == D) && (!QUANT || nq == NB)
+                && input_vectors == NV && y_vectors == NV && (!QUANT || q_vectors == NV)
                 && !fault) $display("PASS");
             else $display("FAIL");
             $finish;
