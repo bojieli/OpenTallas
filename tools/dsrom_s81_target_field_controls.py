@@ -268,7 +268,7 @@ def linked_native_stream(matrix, *, fp32_output, stage, phase, key, stage_image)
 
 
 def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
-                               fragment_index=0,expert_ids=None,stage_image=None):
+                               fragment_index=0,expert_ids=None,stage_image=None,static_native_cut=None):
     """Source-exact controls for any selected QE/weight-ME fragment.
 
     Dynamic EIDs must be the caller's captured native tuple. This function
@@ -290,6 +290,12 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
     if not (me or qe) or (matrix['format']=='bf16')!=me:
         raise ValueError('actual weight ME or mode0 QE controls required')
     fp32=not instruction.get('me_round',0) if me else bool(instruction.get('qe_unrounded',0))
+    if static_native_cut is not None:
+        if stage_image is not None:
+            raise ValueError('select one canonical image through the actual static cut enrollment')
+        from dsrom_s81_static_native_cut import selected_image
+        stage_image=selected_image(static_native_cut,canonical_inputs=execution.input_sha256,
+            stage=fragment['stage'],rank=rank)
     if stage_image is None:
         phrom,beats,stream_pin=native_stream(matrix,fp32_output=fp32)
     else:
@@ -319,7 +325,8 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
         actual_BF_site_IDs=execution.stage_join.stage_map['BF_site_IDs'],
         input_VM_base=instruction['me_xbase'] if me else instruction['qe_xbase'],
         ME=me,FP32_output=fp32,cfg_phase_must_not_be_relabelled=True,
-        native_execution_qualified=False,immutable_stage_image=str(stage_image) if stage_image is not None else None)
+        native_execution_qualified=False,immutable_stage_image=str(stage_image) if stage_image is not None else None,
+        static_native_cut=str(static_native_cut) if static_native_cut is not None else None)
     (out/'binding.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
 
