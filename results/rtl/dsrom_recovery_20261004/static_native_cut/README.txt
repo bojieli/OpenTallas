@@ -44,3 +44,10 @@ source/artifact hashes must still match; relocation is not a source override.
 Cheap checks PASS:3 Python source parses, original native port/observer block
 byte-identical, exact reference parameters and stage37/rank0/image/flags
 binding, refusals for unbuilt cut, flat PQ, and different stage enrollment.
+
+ONE minimum stage37 baseline-static cut compilation EPYC2 TERMINAL0.
+Public Vcut.h hash equals retained actualcaller ABI. Completed enrollment
+checks PASS, dut.vm present, no dut.u_f field array. All7 COMMON arithmetic
+sources match retained cut exactly. No runtime/numerical/physical gate claim.
+Exact remote build path and artifact hashes: terminal.json plus
+selection.stage37.rank0.json. Other model archives remain reused unchanged.
