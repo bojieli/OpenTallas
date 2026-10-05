@@ -24,8 +24,11 @@ RETAINED = ROOT / "results/rtl/qwen_rom_core_takeover_20261005/retained_screen/s
 OLDROOT = "/srv/opentallas-scratch/claude/qwen-core-decode/src/"
 
 
-def core_text(fallback: int, vpos: int) -> str:
+def core_text(fallback: int, vpos: int, bound: bool = False) -> str:
     s = E.emit(E.V.E.CORE.read_text())
+    if bound:   # Codex DEC_LA_BOUND: E2 remainder table width ODD*2^H-1 (exact; tools/qwen_rom_core_dec_bound_emit_w12.py)
+        import qwen_rom_core_dec_bound_emit_w12 as BD
+        s = BD.apply(s)
     s = FB.apply(s, fallback)
     # Yosys 0.68 workarounds of the retained screen copy (logic identical).
     s = s.replace("    generate if (VPOS != 0) begin : g_vpos_tiles\n        genvar vpt;\n",
@@ -43,10 +46,11 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--fallback", type=int, default=0, help="0 none, 1 issue copies, 2 = 1 + one-hot chase select")
     ap.add_argument("--vpos", type=int, default=0)
+    ap.add_argument("--bound", action="store_true", help="also DEC_LA_BOUND (narrow la_lo remainder table)")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
     (a.out / "gen").mkdir()
-    core = core_text(a.fallback, a.vpos)
+    core = core_text(a.fallback, a.vpos, a.bound)
     (a.out / "core.sv").write_text(core)
     (a.out / "gen/ot_hdc_vstream_rt.sv").write_text(E.E.emit_vstream(E.E.VSTREAM.read_text()))
     lines = []
@@ -70,13 +74,15 @@ def main() -> None:
             line = line.replace("-chparam VPOS 0", f"-chparam VPOS {a.vpos}")
             if a.fallback:
                 line += f" -chparam DEC_LA_ISSUE_FB {a.fallback}"
+            if a.bound:
+                line += " -chparam DEC_LA_BOUND 1"
             lines.append(line)
         else:
             lines.append(line)
     lines += ["proc", f"write_json {a.out}/original.json"]
     (a.out / "prepare.ys").write_text("\n".join(lines) + "\n")
     (a.out / "inputs.json").write_text(json.dumps(dict(
-        core_sha256=hashlib.sha256(core.encode()).hexdigest(), fallback=a.fallback, vpos=a.vpos, dec_la=1,
+        core_sha256=hashlib.sha256(core.encode()).hexdigest(), fallback=a.fallback, bound=a.bound, vpos=a.vpos, dec_la=1,
         parameter_source="results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys (P8191 plain-AR set)",
         clock_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25), indent=2) + "\n")
 

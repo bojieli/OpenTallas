@@ -61,8 +61,12 @@ FB_CORE = r"""
 
 def apply(text: str, level: int, default: int = 0) -> str:
     """Patch for levels <= `level`; the parameter's default is `default` (0: opt-in by parameter)."""
-    text = _rep(text, "    parameter integer DEC_LA = 0\n) (",
-                f"    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_ISSUE_FB = {default}\n) (")
+    if "    parameter integer DEC_LA = 0\n) (" in text:
+        text = _rep(text, "    parameter integer DEC_LA = 0\n) (",
+                    f"    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_ISSUE_FB = {default}\n) (")
+    else:   # another default-off DEC_LA_* parameter follows (e.g. DEC_LA_BOUND)
+        text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                    f"    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_ISSUE_FB = {default},\n")
     if level == 0:
         return text
     assert level in (1, 2)

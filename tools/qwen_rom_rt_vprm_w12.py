@@ -90,6 +90,8 @@ def main() -> None:
     ap.add_argument("--enable-ar256", type=int, default=1)
     ap.add_argument("--dec-la", type=int, choices=(0, 1), default=1,
                     help="core decode restructure DEC_LA (results/rtl/qwen_core_decode_closure_20261004)")
+    ap.add_argument("--dec-la-bound", type=int, choices=(0, 1), default=0,
+                    help="DEC_LA_BOUND (tools/qwen_rom_core_dec_bound_emit_w12.py); 0 = core unchanged")
     ap.add_argument("--dec-la-issue-fb", type=int, choices=(0, 1, 2), default=0,
                     help="DEC_LA issue fallback (tools/qwen_rom_core_issue_fallback_w12.py); 0 = core unchanged")
     ap.add_argument("--seq-la", type=int, choices=(0, 1), default=1,
@@ -123,6 +125,10 @@ def main() -> None:
     gen.mkdir(exist_ok=True)
     core_sv = gen / "ot_qwen_rom_core.sv"
     core_text = qwen_rom_core_dec_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text())
+    if args.dec_la_bound:
+        import qwen_rom_core_dec_bound_emit_w12
+        core_text = qwen_rom_core_dec_bound_emit_w12.apply(core_text).replace(
+            "parameter integer DEC_LA_BOUND = 0", "parameter integer DEC_LA_BOUND = 1")
     if args.dec_la_issue_fb:
         import qwen_rom_core_issue_fallback_w12
         core_text = qwen_rom_core_issue_fallback_w12.apply(core_text, args.dec_la_issue_fb, args.dec_la_issue_fb)
@@ -256,7 +262,7 @@ def main() -> None:
         "design_point": {"tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
                          "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut, "collective_lat_cycles": args.coll_lat,
                          "collective_depth": args.coll_depth, "code_banks": args.code_banks, "mem_extra": args.mem_extra,
-                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la, "dec_la": args.dec_la, "dec_la_issue_fb": args.dec_la_issue_fb,
+                         "vpos": 1, "enable_arp": 1, "enable_ar256": args.enable_ar256, "vpmax": args.vpmax, "seq_la": args.seq_la, "dec_la": args.dec_la, "dec_la_issue_fb": args.dec_la_issue_fb, "dec_la_bound": args.dec_la_bound,
                          "kv": "REAL_MEM: ot_qwen_rt_kv_mp_service + ot_qwen_hbm_model_ack NPC=32 CLK_PS=833 WR_ACK=1, KV_HBM=1, KV_VEC_WRITE_BRIDGE=1"},
         "wire_stages": {"bd": args.bd, "xvm": args.xvm, "nws": args.nws, "tws": args.tws, "ord": args.ord},
         "stages": per_stage, "verify_tokens": tokens, "accept": accepts, "commits": commits,
