@@ -1,0 +1,14 @@
+{
+  "status": "INCONCLUSIVE_SHARED_DRIVER_PREFLOW_FAILURE",
+  "source_commit": "dc2ec21865295c5cd401a8698c634f1173184609",
+  "source_sha256": "bcb87b02de7960d464880a6b5064066967efb40477c46d5f0ca9d6672c2558a3",
+  "exit": "route_rc=1",
+  "Yosys_invoked": false,
+  "ORFS_invoked": false,
+  "SSFF": "unmeasured",
+  "cause": "_main(args) references undefined argv while constructing run metadata",
+  "tool_owner": "Bacon",
+  "hardware_attempt_remaining": 1,
+  "new_RTL_variants_allowed": 0,
+  "failure_log_sha256": "29981b283439f9b7e7bc18bdb7e7ad36d1b78850b45bf008f815a4a38f21d265"
+}
