@@ -9317,7 +9317,7 @@ def hbm_collective_txmask_physical_fanout():
                       clock_sm_ns=.833, clock_link_tied_for_physical_context=True,
                       setup_SS_ps=60, hold_FF_ps=25,
                       estimated_smallest_context_edge_track_capacity=4*(mapped/.15)**.5/.08,
-                      port_bits_approximately=13417,
+                      context_port_bits=13411,
                       track_basis='All four edges, 80nm one-layer equivalent; pin/route legality measured by flow, no installed parent pin map credit'),
         cycles=dict(added_clk_sm_per_collective=2, added_per_record=0,
                     prospective_token_ns_265_collectives=265*2*(1000/1200),
