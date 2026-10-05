@@ -54,8 +54,8 @@ module ot_dsrom_reindex_gather_parent #(
     wire [NPC*AW-1:0] c_req_addr;wire [NPC*LENW-1:0] c_req_len;wire [NPC*TAGW-1:0] c_req_tag;
     wire command_valid,command_ready,command_in_ready,command_fault;
     wire [47:0] command;
-    reg bad_command;
-    wire live_fault=dfault||mfault||command_fault||bad_command||(|qfault);
+    reg bad_command,bad_list;
+    wire live_fault=bad_list||dfault||mfault||command_fault||bad_command||(|qfault);
     wire all_fault=live_fault||cfault;
     wire d_valid;wire [15:0] d_kv;wire [16*544-1:0] d_key;wire [27:0] d_blk;
     assign busy=cbusy||d_valid||command_valid||(|req_v)||all_fault;
@@ -73,12 +73,16 @@ module ot_dsrom_reindex_gather_parent #(
     wire [11:0] list_count;wire writer_pending,read_valid;
     reg [2:0] rd_slot;
     wire [1:0] lr_mask;wire lr_re;wire [9:0] lr_addr;wire [13:0] lr_e,lr_o;
-    wire command_bounds=(command[47:45]==0)&&(command_n<=2048)&&(command_skip[2:0]==0)&&command_n<=list_count;
+    // One stack owns 65,536 key positions = 8,192 eight-key blocks.
+    // Price and check the complete sector region, including its scale sector.
+    wire region_address_ok=(command_base <= (command_skip==0 ? 20'd1047488 : 20'd1047471));
+    wire command_bounds=region_address_ok&&(command[47:45]==0)&&(command_n<=2048)&&(command_skip[2:0]==0)&&command_n<=list_count;
     assign command_ready=!cbusy&&!d_valid&&!(|req_v)&&!all_fault&&!writer_pending&&
                          !(lw_v&&lw_slot==command_slot)&&command_bounds;
     always @(posedge clk)begin
-        if(!rst_n)begin rd_slot<=0;bad_command<=0;end
+        if(!rst_n)begin rd_slot<=0;bad_command<=0;bad_list<=0;end
         else begin
+            if(lw_v&&lw_blk>=14'd8192)bad_list<=1;
             if(command_valid&&!writer_pending&&!(lw_v&&lw_slot==command_slot)&&!command_bounds)bad_command<=1;
             if(command_valid&&command_ready)rd_slot<=command_slot;
         end
