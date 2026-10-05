@@ -52,9 +52,13 @@ def emit(host, output):
                         '        for (int d = 0; d < D; d++) die[d]->clk = 1;\n'
                         '        coll.clk = 1;\n'
                         '        for (int d = 0; d < D; d++) die[d]->eval();\n'
-                        '        coll.eval();',
+                        '        coll.eval();\n'
+                        '        for (int d = 0; d < D; d++) if (tile_en[d]) fab[d]->edge();',
                         '        clocks.edge(uint64_t(tick)*833333+416666, controller, [&] {\n'
                         '            for (int d=0; d<D; ++d) die[d]->clk=1; coll.clk=1;\n'
+                        '            for (int d=0; d<D; ++d) die[d]->eval(); coll.eval();\n'
+                        '            // Keep the original pre-edge tile inputs through their capture.\n'
+                        '            for (int d=0; d<D; ++d) if (tile_en[d]) fab[d]->edge();\n'
                         '        }, [&] { settle(live_all); });')
     text = text.replace('QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE',
                         'QWEN_ROM_COMBINED_P0_SOURCE_JOIN DONE')
