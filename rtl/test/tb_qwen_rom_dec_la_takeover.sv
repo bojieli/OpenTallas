@@ -52,8 +52,10 @@ always @(posedge clk) begin
   if(bad1) invalid1=invalid1+1;
  end
 end
+generate if(BOUNDED != 0) begin : g_check_bound
+ initial if(b.LA_LO_W != 9) $fatal(1,"bounded-state parameter not selected");
+end endgenerate
 initial begin
- if(BOUNDED != 0 && b.LA_LO_W != 9) $fatal(1,"bounded-state parameter not selected");
  for(i=0;i<64;i=i+1) begin
   for(v=0;v<32;v=v+1) mem[i][v*32+:32]=$random;
   mem[i][O_UNIT+:W_UNIT]=(i%2)+1;
