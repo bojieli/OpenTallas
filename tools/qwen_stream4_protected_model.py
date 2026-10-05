@@ -126,7 +126,8 @@ def model(root=ROOT):
            'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv',
            'rtl/lib/ot_reset_sync.sv',
            'results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_stream4_cdc_pc.sv',
-           'results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_hbm_stream4_cdc.sv']
+           'results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_hbm_stream4_cdc.sv',
+           'results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json']
     return dict(schema='opentallas.qwen.stream4.mutable-interface.prebuild.v1',
         PROTECTED=0, selected_candidate_only=True, ROM_ECC=False,
         original_raw_source='6fc28b155c419ee79da72f1eb084aae2141f1f64',
@@ -135,7 +136,8 @@ def model(root=ROOT):
         per_PC_core_area_mm2=core, utilization=util,
         replicated_PC_core_area_mm2=128*core,
         complete_interface_core_area_mm2=128*core+shared_cell/util,
-        parent_slot_fit=False, slot_reason='Required PC array plus shared home exceeds historical 4x4mm slot; no compression/undersized physical vehicle admitted',
+        parent_slot_fit=None, slot_reason='Pinned preceding clock-boundary model has physical_slot_fit=null; no actual parent allocation is available. Required positive homes are priced, not silently fitted to a guessed slot.',
+        previous_slot_source='results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json',
         replicated_PC_array_um=[8*width,16*height],
         local_routing=dict(layers=['M2','M3','M4','M5','M6','M7'],
             channel_width_um=40, pitch_um=.048, tracks_per_layer=int(40/.048),

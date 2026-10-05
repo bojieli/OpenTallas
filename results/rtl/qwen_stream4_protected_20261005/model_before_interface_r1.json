@@ -385,9 +385,8 @@
   "utilization": 0.3,
   "replicated_PC_core_area_mm2": 17.9123768064,
   "complete_interface_core_area_mm2": 17.9179305714,
-  "parent_slot_fit": null,
-  "slot_reason": "Pinned preceding clock-boundary model has physical_slot_fit=null; no actual parent allocation is available. Required positive homes are priced, not silently fitted to a guessed slot.",
-  "previous_slot_source": "results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json",
+  "parent_slot_fit": false,
+  "slot_reason": "Required PC array plus shared home exceeds historical 4x4mm slot; no compression/undersized physical vehicle admitted",
   "replicated_PC_array_um": [
     4000,
     4492.8
@@ -435,7 +434,6 @@
     "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
     "results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_stream4_cdc_pc.sv": "a97f5b3fd85862509c09f48b43e3b27eec48baac6739e67c71952f5e0b1e9f3a",
-    "results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_hbm_stream4_cdc.sv": "ec1b680a977f0814130eba93b4768c1f909463fe1c7bcdf4882198356f10b5e7",
-    "results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json": "efcc0bb0fc2a5f0f902950c42fbe5233ba5e2ca7925959ec261aecccdbfa11fe"
+    "results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_hbm_stream4_cdc.sv": "ec1b680a977f0814130eba93b4768c1f909463fe1c7bcdf4882198356f10b5e7"
   }
 }
