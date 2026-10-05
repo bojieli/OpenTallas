@@ -1,0 +1,24 @@
+{
+  "verdict": "FAIL_FIXTURE_INCOMPLETE_NO_QUALIFICATION",
+  "source_commit": "84528c8d041a7e2cd9da158768b34ff41b6acf0b",
+  "remote_root": "/srv/opentallas-scratch/codex/epicurus-field-address-20261005-r1",
+  "terminal_exit": 1,
+  "diff_logged": false,
+  "cause_confidence": "High source-derived fixture defect; terminal guard did not print internal state. No value/address DIFF observed, no DUT qualification.",
+  "first_source_word_hex": "0000000030bf",
+  "q_u": 95,
+  "q_b": 0,
+  "q_sv2": 3,
+  "required_have": 48928,
+  "maximum_loader_have": 6144,
+  "independent_contract": "need_q={u,1,b,5d0}+32 for sv2[1]; have tops at K6144. Immutable synthetic fixture is illegal for its declared K, so first active q row stalls indefinitely.",
+  "correction": "Use u11 b7 sv2=3 =>6144, legal last pair of 32-element blocks. No DUT/oracle/expectation change.",
+  "artifact_sha256": {
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "build.metrics": "7baa9b949202b0fccb08c5bf39a3609fd6bb70737e396574d028c80cbba91e8a",
+    "build.log": "ea5095f8d033b37cf91ab4fd692af424607f0b0caa651a83481527346b3d2548",
+    "sim.log": "9a852e71f0a276fe68ac99bdbd9fab4b89d0f6a57a5ab20b67c8ec5f700826a6",
+    "sim.metrics": "9ae0b2d321c8d81970a616b738406c35a68b0eee0916238b25624ab2ec6ca769",
+    "admission.json": "74774031506e2c875a97995d6de5a2a89e2ca24c07b8749375cdf9330080fd35"
+  }
+}

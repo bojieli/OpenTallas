@@ -141,3 +141,29 @@ def test_native_storage_bound_never_claims_padding_holes_as_capacity():
     assert bound['total_records']==96
     assert actual['used_record_highwaters'][0][0]==104
     assert not actual['fits']
+
+
+@pytest.mark.parametrize('fmt,k,groups',[('fp4',5120,3),('fp4',2304,2),('fp8',5120,5),('bf16',5120,10)])
+@pytest.mark.parametrize('rows',range(1,17))
+def test_dense_source_calendar_tail_recursions(fmt,k,groups,rows):
+    a=A.allocate([tensor(rows=rows,k=k,fmt=fmt)],1,1,32,rows_per_macro=128)
+    events=list(A.source_request_calendar(a,'w.weight',0,0))
+    assert len(events)==rows*groups*8
+    last={}
+    for event in events:
+        for addr in event['addresses']:
+            assert event['cycle']-last.get(addr['macro'],-2)>=2
+            last[addr['macro']]=event['cycle']
+    source_cycles=events[-1]['cycle']+1
+    cal=A.selected_calendar(a,['w.weight'])['tiles'][0]['matrices'][0]
+    assert source_cycles<=cal['source_request_cycles_upper']
+    assert source_cycles<=cal['issue_cycles']
+    assert sum(e['macro_busy_stall_cycles'] for e in events)<=cal['macro_busy_stalls_upper']
+
+
+def test_odd_dense_request_tail_really_stalls_not_bubble_assumption():
+    a=A.allocate([tensor(rows=1,k=5120)],1,1,4)
+    events=list(A.source_request_calendar(a,'w.weight',0,0))
+    assert len(events)==24
+    assert sum(e['macro_busy_stall_cycles'] for e in events)==7
+    assert events[-1]['cycle']+1==31
