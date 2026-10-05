@@ -9496,3 +9496,30 @@ def qwen_service_actual_edge_eligibility_model(exposed_column_transactions=None)
     result['composed_token_delta_s'] = None
     result['composition_missing'] = 'actual accepted column/refresh/return/credit calendar and generated edge phase; no free overlap assumption'
     return result
+
+
+def hbm_loader_retained_token_host_price(*, mem_words, dies=2, slices=2):
+    """Acceptance8c retained reduced HA3 fixture; boot is outside decode latency.
+    No new engine/datapath. Actual LOAD_VERIFY and finite ACK/readback then
+    code/command SRAM publication fence precede host SQ doorbell. Not a new
+    full-target model or physical/adoption claim.
+    """
+    n=mem_words*dies*slices*32
+    return dict(scope='retained reduced Qwen/V4.1 acceptance8c, HA3=0',
+        added_MACs_per_cycle=0,added_engine_area_um2=0,new_engine_RTL=False,
+        dies=dies,SMs_per_die=2,lanes_per_SM=128,slices_per_die=slices,
+        mem_words_per_partition=mem_words,image_bytes=n,host_DMA_bits=64,
+        host_DMA_bytes_per_edge=8,mem_payload_bits=256,mem_bytes_per_accepted_edge=32,
+        internal_request_bits=337,response_bits=273,loader_clients_per_die=1,
+        loader_write_debt_slots=96,loader_verify_read_slots=16,data_CDC_words=32,
+        code_CDC_record_bits=97,code_CDC_words=8,
+        loader_replica_count=dies,existing_dma_arbiter_clients=2*dies+1,
+        host_period_ns=4.0,SM_period_ns=.833,mem_period_ns=1.0,link_period_ns=.9,
+        minimum_host_read_boot_ns=n/8*4,boot_extra_verify_bytes=n,
+        boot_latency_measured_ns=None,decode_latency_measured_cycles=None,
+        decode_added_cycles=0,new_boundary_bits_per_cycle=0,new_ports=0,
+        fence='real descriptorCRC/readback/status + matchedACKdebt; all accepted ld records applied and actual SRAM readback observed before SQ_TAIL',
+        bytes_and_visibility='retained images only in host memory; no gpu_sys_mem_prefix, no hierarchical DUT assignment',
+        existing_wire_CDC_credits_refresh='retained model RTL exercised, not zero-cost or physical signoff',
+        unknowns='production PCIe tail, full-system physical CDC/slot/SSFF remain unqualified',
+        adopted=False,physical_qualified=False,source_changed_datapath=False)
