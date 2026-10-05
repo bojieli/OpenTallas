@@ -1,0 +1,23 @@
+{
+  "default_CUTS": 0,
+  "source_sha256": {
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_owner.sv": "0a2ebc2be21252c74ba4d9e762907dcf093deb9e2cb954ed825037777a9e7dbb",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_item9_owner.sv": "3d17d115b2c250b768e4a8200413b21341552e9451e3d0f2d4924311749df16b"
+  },
+  "only_changes": [
+    "add CUTS0 parameter/module name",
+    "bind existing adapter interface to exact item9 successor"
+  ],
+  "protocol_source_unchanged": true,
+  "fullshape": {
+    "NC": 8,
+    "LANES": 16,
+    "PFMAX": 384,
+    "NPT": 8,
+    "INJ": 2
+  },
+  "lint_exit": 0,
+  "numerical_gate_reused": "HA2_cuts_exact_r1/result.json",
+  "contextual_SS_FF": false,
+  "adopted": false
+}
