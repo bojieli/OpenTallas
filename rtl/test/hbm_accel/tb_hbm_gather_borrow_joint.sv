@@ -95,6 +95,9 @@ module tb_hbm_gather_borrow_joint;
    $display("BRIDGE state=%0d grants=%b start=%b req=%b legal=%b frame=%b shared_fault=%b",bridge.on.state,grants,start_v,req_v,bridge.on.legal,bridge.on.frame_match,borrow_fault);
   if(por_n && bridge.on.state==2)
    $display("READY predicates fault=%b bad=%b grant=%b release=%b release_match=%b req=%b legal=%b frame=%b",bridge_fault,bridge.on.bad,bridge.borrow_granted,bridge.release_v,bridge.on.release_match,bridge.req_v,bridge.on.legal,bridge.on.frame_match);
+  if(por_n && bridge.on.bad)
+   for(integer row=0;row<39;row++)
+    if(bridge.on.dec[row][65])$display("BAD_ROW row=%0d code=%h decoded=%h",row,bridge.on.code[row],bridge.on.dec[row]);
   previous_state<=bridge.on.state;
   cycles<=cycles+1;
   if(!por_n)begin pending<=0;m_rsp_v<=0;accepted<=0;read_sectors<=0;write_sectors<=0;end
