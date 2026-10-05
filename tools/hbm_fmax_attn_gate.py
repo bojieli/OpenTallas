@@ -33,7 +33,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41x_attn_campaign as C  # noqa: E402
 
 V, T = ROOT / "rtl/hdc/v41x", ROOT / "rtl/test"
-FPLIB = [ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
+FPLIB = [ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fp32_f12.sv"]
 AS_BUILT = dict(RTL_TILE=C.RTL_TILE, RTL_ENG=C.RTL_ENG, TB_ENG=C.TB_ENG, lib=C.lib)
 VL_BASE = list(C.VL_EXTRA) + ["-MAKEFLAGS", "OPT_SLOW=-O0"]   # the root ctor/var-reset file is ~38 MB at FPL 7
 # --hier: Verilator hierarchical blocks (simulation compilation boundaries only), as the full-geometry benches
@@ -134,6 +134,8 @@ def gate_sched(a):
     fpl, fml = map(int, a.lat.split(","))
     rows, ok = [], True
     for T in (128, 640):
+        if a.only and f"T{T}" not in a.only.split(","):
+            continue
         rng = np.random.default_rng(20260929 + T)
         job = [C.random_job(rng, 16, 64, T, 128, "coarse")]
         for cname, ex in SCHED_CFGS.items():

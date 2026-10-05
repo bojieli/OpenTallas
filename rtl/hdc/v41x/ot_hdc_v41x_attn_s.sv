@@ -213,6 +213,8 @@ module ot_hdc_v41x_attn_s #(
     parameter integer FPLX = 0,        // >0: FP32 add latency of the lane trees and block merges (default FPL)
     parameter integer F12 = 0,         // 1: every FP32 add is the 1.2 GHz f12 unit (LAT 4: ot_hdc_fp32_add_f12_l4,
                                        //    registered operands; LAT 5: ot_hdc_fp32_add_f12_l5x, operand mux in front)
+    parameter integer TRX = 0,         // 1 (REPL >= 1): transposers with per-element one-hot read selects and per-row
+                                       //    one-hot write enables (ot_hdc_v41x_attn_tr_x; same cycles)
     parameter integer MFAN = 0,        // 1: the block merges with per-head control copies (ot_hdc_v41x_attn_merge_x;
                                        //    +1 cycle on p.v results only)
     parameter integer NARROW = 0       // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
@@ -702,7 +704,18 @@ module ot_hdc_v41x_attn_s #(
                 assign w_g[gl*GW +: GW] = rd_q_fl[gl*ROWW + ((gk*DPT) / 32) * GW +: GW];
                 assign w_pad[gl] = (XD != 0) ? fpad_d1[gl] : (REPL != 0) ? ((row_fl_c + gl) >= T_p) : ((r0_fl + gl) >= T_p);
             end
-            if (PHYS == 0) begin : g_real
+            if (PHYS == 0 && TRX != 0 && REPL != 0) begin : g_x
+                ot_hdc_v41x_attn_tr_x #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32)) u_tr (
+                    .clk(clk), .rst_n(rst_n),
+                    .w_en_i((XD != 0) ? fill_wr : (fl_go && ((NSTAGE == 2) || !qk_go))),
+                    .w_half_i((XD != 0) ? fill_blk_d[0] : fl_blk[0]),
+                    .w_cnt_i((XD != 0) ? fill_cnt_d : fl_cnt),
+                    .w_pad_i(w_pad), .w_g(w_g),
+                    .r_half_i((XD != 0) ? iss_blk_d[0] : iss_blk[0]),
+                    .r_c_i((XD != 0) ? iss_c_d : iss_c),
+                    .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
+                    .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
+            end else if (PHYS == 0) begin : g_real
                 ot_hdc_v41x_attn_tr #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
                     .clk(clk), .rst_n(rst_n),
                     .w_en_i((XD != 0) ? fill_wr : (REPL != 0) ? (fl_go && ((NSTAGE == 2) || !qk_go)) : fill_wr),
@@ -973,4 +986,87 @@ module ot_hdc_v41x_kreg #(
     end else begin : g_n
         always @(posedge clk) q <= d;
     end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------
+// Per-tile TRANSPOSER for REPL >= 1 with the read and write selects decoded and duplicated (engine TRX = 1):
+// ot_hdc_v41x_attn_tr (rtl/hdc/v41x/ot_hdc_v41x_attn.sv) at REPL != 0, same storage, same cycles.  There the
+// registered read index (rb_t, rc_t) steered a 2*DPT:1 mux on all TD x 18 element bits (~9,000 loads; routed SS
+// -431 ps in the controller vehicle).  Here every element has its own registered one-hot read select and its own
+// q.k/p.v select (kept hierarchy copies, decoded from the controller's values one cycle earlier, exactly where
+// tr registers rb_t / rc_t / sel_t), and every stored row its own registered write enable.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_tr_x #(
+    parameter integer TD = 64,
+    parameter integer DPT = 16,
+    parameter integer NL = 4,
+    parameter integer XOFF = 0
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              w_en_i,
+    input  wire              w_half_i,
+    input  wire [7:0]        w_cnt_i,
+    input  wire [NL-1:0]     w_pad_i,
+    input  wire [NL*265-1:0] w_g,
+    input  wire              r_half_i,
+    input  wire [7:0]        r_c_i,
+    input  wire              sel_i,
+    input  wire [TD*18-1:0]  qk_ib,
+    output wire [TD*18-1:0]  col,
+    output wire [TD*18-1:0]  eib
+);
+    localparam integer GW = 265;
+    localparam integer NS = 2 * DPT;          // read positions (half, dim)
+    localparam integer NR = 2 * TD;           // stored rows (half, row)
+    function automatic [17:0] elem(input [GW-1:0] gw, input integer x, input pad);
+        begin
+            if (gw[264]) elem = {pad, 1'b1, 4'd0, gw[4*x +: 4], gw[128 + 8*(x/16) +: 8]};
+            else         elem = {pad, 1'b0, gw[8*x +: 8], gw[263:256]};
+        end
+    endfunction
+    // one-hot read position and write row, from the controller's values (registered below, as tr's rb_t/rc_t/fc_t)
+    wire [NS-1:0] rsel_c;
+    wire [NR-1:0] wrow_c;
+    genvar gs, gr, gx;
+    generate
+        for (gs = 0; gs < NS; gs = gs + 1) begin : g_rs
+            assign rsel_c[gs] = (r_half_i == (gs / DPT)) && (r_c_i == (gs % DPT));
+        end
+        for (gr = 0; gr < NR; gr = gr + 1) begin : g_ws
+            assign wrow_c[gr] = w_en_i && (w_half_i == (gr / TD)) && (w_cnt_i == ((gr % TD) / NL));
+        end
+    endgenerate
+    reg [NL-1:0] fp_t;
+    always @(posedge clk) fp_t <= w_pad_i;
+    reg [17:0] tr [0:NR*DPT-1];
+    generate
+        // writes: row gr (half gr/TD, row gr%TD) takes lane r = gr % NL of the fill word
+        for (gr = 0; gr < NR; gr = gr + 1) begin : g_w
+            wire we;
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_we (.clk(clk), .rst_n(rst_n), .d(wrow_c[gr]), .q(we));
+            for (gx = 0; gx < DPT; gx = gx + 1) begin : g_x
+                always @(posedge clk)
+                    if (we) tr[gr * DPT + gx] <= elem(w_g[(gr % NL)*GW +: GW], XOFF + gx, fp_t[gr % NL]);
+            end
+        end
+        // reads: element gs selects position (half, dim) with its own one-hot copy
+        for (gs = 0; gs < TD; gs = gs + 1) begin : g_c
+            wire [NS-1:0] oh;
+            wire          sel;
+            ot_hdc_v41x_kreg #(.W(NS), .R(0)) u_rs (.clk(clk), .rst_n(rst_n), .d(rsel_c), .q(oh));
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_sl (.clk(clk), .rst_n(rst_n), .d(sel_i), .q(sel));
+            reg [17:0] v;
+            integer k;
+            always @* begin
+                v = 18'd0;
+                for (k = 0; k < NS; k = k + 1)
+                    v = v | ({18{oh[k]}} & tr[((k / DPT) * TD + gs) * DPT + (k % DPT)]);
+            end
+            assign col[gs*18 +: 18] = v;
+            reg [17:0] e;
+            always @(posedge clk) e <= sel ? v : qk_ib[gs*18 +: 18];
+            assign eib[gs*18 +: 18] = e;
+        end
+    endgenerate
 endmodule

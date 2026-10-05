@@ -109,17 +109,30 @@ module ot_hdc_v41x_attn_hgrp_s #(
     // -- per head of the group (tile head index hh = gid*HG + gh)
     generate
         for (gh = 0; gh < HG; gh = gh + 1) begin : g_h
-            wire [7:0] hh = gid * HG + gh;
-            // this head's columns of a p-mode word: word j*H + hh, j = 0 .. R-1 (gid selects them)
-            wire [R*16-1:0] pcol, pcol2;
-            genvar gj;
-            for (gj = 0; gj < R; gj = gj + 1) begin : g_pc
-                assign pcol[gj*16 +: 16] = r_ld_w[(gj * H + hh) * 16 +: 16];
-                if (PWORDS > 1) begin : g_p2
-                    assign pcol2[gj*16 +: 16] = r_ld_w[TD * 16 + (gj * H + hh) * 16 +: 16];
-                end else begin : g_p1
-                    assign pcol2[gj*16 +: 16] = 16'd0;
-                end
+            // the head's tile index hh = gid*HG + gh and the group one-hot, registered from the static gid port
+            // (constant after reset release: the registers only take gid out of the load paths)
+            reg [7:0]      hh;
+            reg [H/HG-1:0] gsel;
+            integer gq;
+            always @(posedge clk) begin
+                hh <= gid * HG + gh;
+                for (gq = 0; gq < H / HG; gq = gq + 1) gsel[gq] <= (gid == gq);
+            end
+            // this head's columns of a p-mode word: word j*H + hh, j = 0 .. R-1 (an AND-OR over the groups)
+            reg [R*16-1:0] pcol, pcol2;
+            integer gj, gg;
+            always @* begin
+                pcol = {R*16{1'b0}};
+                pcol2 = {R*16{1'b0}};
+                for (gj = 0; gj < R; gj = gj + 1)
+                    for (gg = 0; gg < H / HG; gg = gg + 1) begin
+                        pcol[gj*16 +: 16] = pcol[gj*16 +: 16] |
+                                            ({16{gsel[gg]}} & r_ld_w[(gj * H + gg * HG + gh) * 16 +: 16]);
+                        if (PWORDS > 1)
+                            pcol2[gj*16 +: 16] = pcol2[gj*16 +: 16] |
+                                                 ({16{gsel[gg]}} & r_ld_w[(PWORDS > 1 ? TD * 16 : 0) +
+                                                                          (gj * H + gg * HG + gh) * 16 +: 16]);
+                    end
             end
             wire [TD-1:0]    we;
             wire [TD*16-1:0] wd;

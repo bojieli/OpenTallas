@@ -42,6 +42,7 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer MFAN = 0;            // engine MFAN (per-head merge control copies)
     parameter integer F12 = 0;             // engine F12 (1.2 GHz f12 FP32 adds)
     parameter integer FPLX = 0;            // engine FPLX (lane-tree / merge add latency)
+    parameter integer TRX = 0;             // engine TRX (decoded transposer selects)
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
     localparam integer DPT = D / NT;
@@ -96,7 +97,7 @@ module tb_hdc_v41x_attn (input wire clk);
     reg pv_cr = 0;
     wire qk_iss, pv_iss;
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
-                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .FPL(FPL), .FML(FML), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED), .NBANKP(NBANKP), .REPL(REPL), .NSTAGE(NSTAGE), .TILE_S(TILE_S), .NARROW(NARROW), .MFAN(MFAN), .F12(F12), .FPLX(FPLX)) dut (
+                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .FPL(FPL), .FML(FML), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED), .NBANKP(NBANKP), .REPL(REPL), .NSTAGE(NSTAGE), .TILE_S(TILE_S), .NARROW(NARROW), .MFAN(MFAN), .F12(F12), .FPLX(FPLX), .TRX(TRX)) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
