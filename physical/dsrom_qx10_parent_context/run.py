@@ -20,7 +20,7 @@ RTL += [f'{BASE}/selected_0032/{n}.sv' for n in (
 RTL += [f'rtl/hdc/{n}.sv' for n in ('ot_hdc_fpu','ot_hdc_fp32_mul_pipe','ot_hdc_delay','ot_hdc_cg')]
 RTL += ['rtl/proto/ot_fp32_add_rne_pipe.sv','rtl/common/ot_prefix.sv',
         f'{BASE}/parent_loader/ot_v41_pair_pq_ld_frontend.sv',
-        'rtl/v41die/ot_v41_retn_w17w10.sv','rtl/v41rom/ot_v41_ret.sv',
+        'rtl/v41die/ot_v41_retn_w17w10.sv',f'{BASE}/selected_return/ot_v41_ret.sv',
         f'{BASE}/ot_v41_qx10_native_parent.sv']
 ROM=[f'physical/asap7_memory_macros/{n}/{n}_bb.v' for n in ('ot_rom_8192x274_m8','ot_rom_4096x274_m8')]
 
