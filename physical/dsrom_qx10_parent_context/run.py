@@ -20,7 +20,7 @@ RTL += [f'{BASE}/selected_0032/{n}.sv' for n in (
 RTL += [f'rtl/hdc/{n}.sv' for n in ('ot_hdc_fpu','ot_hdc_fp32_mul_pipe','ot_hdc_delay','ot_hdc_cg')]
 RTL += ['rtl/proto/ot_fp32_add_rne_pipe.sv','rtl/common/ot_prefix.sv',
         f'{BASE}/parent_loader/ot_v41_pair_pq_ld_frontend.sv',
-        'rtl/v41die/ot_v41_retn_w17w10.sv','rtl/v41rom/ot_v41_ret.sv',
+        'rtl/v41rom/ot_v41_ret.sv','rtl/v41die/ot_v41_retn_w17w10.sv',
         f'{BASE}/ot_v41_qx10_native_parent.sv']
 ROM=[f'physical/asap7_memory_macros/{n}/{n}_bb.v' for n in ('ot_rom_8192x274_m8','ot_rom_4096x274_m8')]
 
@@ -41,6 +41,7 @@ def command(out):
              '--macro-view','ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8',
              '--max-transition-ns','.32','--slew-margin-percent','40','--hold-margin-ns','.025',
              '--orfs-corner','WC','--hold-corners','WC,BC','--pnr-stop-after','finish',
+             '--orfs-var','SYNTH_HDL_FRONTEND=slang',
              '--orfs-var','PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl',
              '--orfs-var','FASTROUTE_TCL=/src/physical/dsrom_v9_parent_context/fastroute.tcl',
              '--orfs-var','ROUTING_LAYER_ADJUSTMENT=0.22','--orfs-var','SETUP_SLACK_MARGIN=15',

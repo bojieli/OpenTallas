@@ -1,0 +1,53 @@
+{
+ "observed_utc": "2026-10-05T23:40:19.824214+00:00",
+ "routes": {
+  "rope_d65": {
+   "physical_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/collected/swiglu-rope_d65-physical.json",
+   "source_pin_matches": {
+    "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv": true,
+    "rtl/hdc/ot_hdc_delay.sv": true,
+    "rtl/hdc/ot_hdc_fpu.sv": true,
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": true,
+    "rtl/hdc/ot_hdc_sfu.sv": true,
+    "rtl/hdc/ot_hdc_fastfp.sv": true,
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": true,
+    "rtl/hdc/ot_hdc_fp32_f12.sv": true,
+    "rtl/hdc/ot_hdc_prefix.sv": true
+   },
+   "driver_verdict": "error: observation timeout after21600s",
+   "engineering_verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+   "host": "ot-epyc1tb",
+   "openroad_pid": 2436315,
+   "stage": "5_1_grt hold repair",
+   "latest_log_write_epoch": 1791243547.0871809,
+   "final_odb_exists": false,
+   "action": "Preserve progressing source/container/objects. Detached final-output watch; no new route/restart/engineering rejection/adoption."
+  },
+  "rope_d45h": {
+   "physical_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/collected/swiglu-rope_d45h-physical.json",
+   "source_pin_matches": {
+    "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv": true,
+    "rtl/hdc/ot_hdc_delay.sv": true,
+    "rtl/hdc/ot_hdc_fpu.sv": true,
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": true,
+    "rtl/hdc/ot_hdc_sfu.sv": true,
+    "rtl/hdc/ot_hdc_fastfp.sv": true,
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": true,
+    "rtl/hdc/ot_hdc_fp32_f12.sv": true,
+    "rtl/hdc/ot_hdc_prefix.sv": true
+   },
+   "driver_verdict": "error: observation timeout after21600s",
+   "engineering_verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+   "host": "ot-agidock128",
+   "openroad_pid": 2437230,
+   "stage": "5_1_grt hold repair",
+   "latest_log_write_epoch": 1791243530.6879454,
+   "final_odb_exists": false,
+   "action": "Preserve progressing source/container/objects. Detached final-output watch; no new route/restart/engineering rejection/adoption."
+  }
+ }
+}

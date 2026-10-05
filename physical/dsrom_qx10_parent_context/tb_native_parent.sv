@@ -32,7 +32,15 @@ module tb_native_parent;
          .node_v(node_v),.node_e(node_e),.node_t(node_t),.node_d(node_d),
          .busy(busy),.fault(fault),.captured_root(captured_root),.f_bus());
     integer rows=0,seen0=0,seen1=0,beats=0,cycles=0;
-    integer row,mask;
+    localparam integer EXPECTED_BEATS=8*8; // eight classes, eight walker rounds
+    integer row,mask,accepted=0,before_accept,wait_edges;
+    always @(posedge dut.u_qx.u_e.gclk) if (dut.u_qx.u_e.rst_n && dut.u_qx.u_e.hit) begin
+        accepted=accepted+1;
+        $display("ACCEPT n=%0d pair=%0d b=%0d c=%0d j=%0d pos=%0d cfg_v=%b go=%b xs_v=%b hit=%b fifo=%0d",
+            accepted,dut.u_qx.u_e.n_pair,dut.u_qx.u_e.n_b,dut.u_qx.u_e.n_c,
+            dut.u_qx.u_e.n_j,dut.u_qx.u_e.n_pos,dut.u_qx.u_e.cfg_v_e,
+            dut.u_qx.u_e.go_e,dut.u_qx.u_e.xs_v_e,dut.u_qx.u_e.hit,dut.u_qx.u_e.f_cnt);
+    end
     always @(negedge clk) if (rst_n) begin
         cycles=cycles+1;
         if (dut.u_ld.fault!==1'b0) $fatal(1,"PQ0 descriptor fault semantics differ after reset");
@@ -59,9 +67,21 @@ module tb_native_parent;
         go=1;tick(1);go=0;tick(8);
         while (dut.u_qx.u_e.n_run) begin
             xs_p=dut.u_qx.u_e.n_pair;xs_b=dut.u_qx.u_e.n_b;xs_pos=dut.u_qx.u_e.n_pos;
-            xs_v=1;tick(1);xs_v=0;tick(16);beats=beats+1;
-            if (beats>16) $fatal(1,"source walker did not accept directed native broadcast beats");
+            before_accept=accepted;wait_edges=0;xs_v=1;
+            // Acceptance is the actual gated-clock hit, not source valid.
+            // Retain the tuple through D3 and the selected XS capture stages.
+            while (accepted==before_accept && wait_edges<16) begin tick(1);wait_edges=wait_edges+1;end
+            if (accepted!=before_accept+1)
+                $fatal(1,"broadcast acceptance failed sent=%0d accepted=%0d request=%0d/%0d/%0d actual=%0d/%0d/%0d run=%b rst=%b gclk=%b cfg=%b go=%b xs=%b match=%b hit=%b",
+                    beats,accepted,xs_p,xs_b,xs_pos,dut.u_qx.u_e.xs_p_e,dut.u_qx.u_e.xs_b_e,
+                    dut.u_qx.u_e.xs_pos_e,dut.u_qx.u_e.n_run,dut.u_qx.u_e.rst_n,dut.u_qx.u_e.gclk,
+                    dut.u_qx.u_e.cfg_v_e,dut.u_qx.u_e.go_e,dut.u_qx.u_e.xs_v_e,
+                    dut.u_qx.u_e.pair_match,dut.u_qx.u_e.hit);
+            xs_v=0;tick(16);beats=beats+1;
+            if (beats>EXPECTED_BEATS) $fatal(1,"walker exceeded eight classes by eight rounds");
         end
+        if (beats!=EXPECTED_BEATS || accepted!=EXPECTED_BEATS)
+            $fatal(1,"native input coverage failed sent=%0d accepted=%0d expected=%0d",beats,accepted,EXPECTED_BEATS);
         tick(400);
         if (busy || fault || rows!=16 || seen0!=255 || seen1!=255)
             $fatal(1,"native return/drain failed rows=%0d banks=%h/%h busy=%b fault=%b",rows,seen0,seen1,busy,fault);
