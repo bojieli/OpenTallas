@@ -9129,3 +9129,9 @@ def hbm_attn_m6h1_replication_model():
                 adopted=False, gain_claim=None,
                 source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                                for p in (leaf_path, corner_path, die_path, macro_path)})
+
+
+def qwen_stream4_mutable_interface_model():
+    """Selected protected STREAM4 rings/owner/control, sized before RTL."""
+    from qwen_stream4_protected_model import model
+    return model()
