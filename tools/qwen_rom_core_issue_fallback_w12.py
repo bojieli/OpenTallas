@@ -88,3 +88,77 @@ def apply(text: str, level: int, default: int = 0) -> str:
     for n in ("fqd_d_unit", "fqd_d_barrier", "fqd_d_chase ", "fqd_d_chase_rows"):
         assert ("reg " in text) and (n.strip() + " [0:7]" in text), n
     return text
+
+
+AMQ_REGS = r"""
+    // ---- DEC_LA_AMQ (tools/qwen_rom_core_issue_fallback_w12.py): the engine's argmax result (am_idx / am_val /
+    // am_any, unit registers) is registered at the core boundary; the lm_head chunk fold and the END fold read the
+    // registered copy one edge later (the fold's NEXT fields are captured with its trigger), and done / next_token /
+    // next_val are written one edge after fin.  Values identical; +1 cycle per core program END only.
+    reg [NW-1:0] amq_idx; reg [31:0] amq_val; reg amq_any;
+    reg amf_v, amf_amc; reg [NW-1:0] amf_row0;
+    always @(posedge clk) begin amq_idx <= am_idx; amq_val <= am_val; amq_any <= am_any; end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) amf_v <= 1'b0;
+        else amf_v <= (DEC_LA_AMQ != 0) && la_me_go_am && me_amax;
+    always @(posedge clk) begin amf_amc <= me_amc; amf_row0 <= me_row0; end
+    wire [NW-1:0] amv_idx = (DEC_LA_AMQ != 0) ? amq_idx : am_idx;
+    wire [31:0] amv_val = (DEC_LA_AMQ != 0) ? amq_val : am_val;
+    wire amv_any = (DEC_LA_AMQ != 0) ? amq_any : am_any;
+    wire am_trig = (DEC_LA_AMQ != 0) ? amf_v : (la_me_go_am && me_amax);
+    wire am_trig_amc = (DEC_LA_AMQ != 0) ? amf_amc : me_amc;
+    wire [NW-1:0] am_trig_row0 = (DEC_LA_AMQ != 0) ? amf_row0 : me_row0;
+"""
+
+
+def apply_amq(text: str) -> str:
+    """DEC_LA_AMQ (default 0): argmax boundary register, +1 cycle per program END (not in the issue loop)."""
+    text = _rep(text, "    parameter integer DEC_LA = 0,\n",
+                "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_AMQ = 0,\n") \
+        if "    parameter integer DEC_LA = 0,\n" in text else \
+        _rep(text, "    parameter integer DEC_LA = 0\n) (", "    parameter integer DEC_LA = 0,\n    parameter integer DEC_LA_AMQ = 0\n) (")
+    text = _rep(text, "    wire la_am_gt;\n", AMQ_REGS + "    wire la_am_gt;\n")
+    text = _rep(text, "ot_qwen_core_key_gt u_la_am_gt (.a(okey(am_val)), .b(run_key), .gt(la_am_gt));",
+                "ot_qwen_core_key_gt u_la_am_gt (.a(okey(amv_val)), .b(run_key), .gt(la_am_gt));")
+    text = _rep(text, "    wire am_wins = am_any && (!run_any || ((DEC_LA != 0) ? la_am_gt : (okey(am_val) > run_key)));\n",
+                "    wire am_wins = amv_any && (!run_any || ((DEC_LA != 0) ? la_am_gt : (okey(amv_val) > run_key)));\n")
+    text = _rep(text, "    wire [NW-1:0] fin_idx = am_wins ? am_idx + last_row0 : run_idx;\n    wire [31:0] fin_val = am_wins ? am_val : run_val;\n",
+                "    wire [NW-1:0] fin_idx = am_wins ? amv_idx + last_row0 : run_idx;\n    wire [31:0] fin_val = am_wins ? amv_val : run_val;\n")
+    old = """        else if (la_me_go_am && me_amax) begin
+            last_row0<=me_row0;
+            if (!me_amc) run_any<=1'b0;
+            else if (am_wins) begin
+                run_any<=1'b1; run_key<=okey(am_val);
+                run_idx<=am_idx+last_row0; run_val<=am_val;"""
+    new = """        else if (am_trig) begin
+            last_row0<=am_trig_row0;
+            if (!am_trig_amc) run_any<=1'b0;
+            else if (am_wins) begin
+                run_any<=1'b1; run_key<=okey(amv_val);
+                run_idx<=amv_idx+last_row0; run_val<=amv_val;"""
+    text = _rep(text, old, new)
+    old = """                    if (fin) begin
+                        done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; st <= S_IDLE; nx_v <= 1'b0;"""
+    new = """                    if (fin) begin
+                        if (DEC_LA_AMQ == 0) begin done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; end
+                        st <= S_IDLE; nx_v <= 1'b0;"""
+    text = _rep(text, old, new)
+    # the delayed END write (fin_d), in the FSM block after the state case
+    old = """                default: st <= S_IDLE;
+            endcase
+        end
+    end
+"""
+    assert text.count(old) >= 1
+    i = text.index(old)
+    new = """                default: st <= S_IDLE;
+            endcase
+            fin_d <= (DEC_LA_AMQ != 0) && fin;
+            if (DEC_LA_AMQ != 0 && fin_d) begin done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; end
+        end
+    end
+"""
+    text = text[:i] + new + text[i + len(old):]
+    text = _rep(text, "            cycles <= 0; next_token <= 0;\n", "            cycles <= 0; next_token <= 0; fin_d <= 1'b0;\n")
+    text = _rep(text, "    wire fin = (st == S_RUN)", "    reg fin_d;\n    wire fin = (st == S_RUN)")
+    return text
