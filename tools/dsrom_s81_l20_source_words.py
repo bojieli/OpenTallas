@@ -55,7 +55,9 @@ def main():
     p.add_argument('--source-sha', default='')
     p.add_argument('--rank', type=int, required=True)
     p.add_argument('--fragment', type=int, default=0)
+    p.add_argument('--native-pp-word-order', action='store_true')
     a = p.parse_args()
+    require(not a.native_pp_word_order or a.kind == 'field', 'PP order is a field-only binding')
     source = Checkpoint(a.checkpoint)
     try:
         execution = CanonicalS81Execution(a.owner)
@@ -71,7 +73,7 @@ def main():
             require(execution.source.bindings[a.node]['selector_slot'] is None,
                     'dynamic actor must use delayed capture transport')
             raw = ReleasedQeOperationWords(execution, source, a.node, a.rank,
-                                          fragment=a.fragment)
+                                          fragment=a.fragment, native_pp=a.native_pp_word_order)
             if a.kind == 'field':
                 require(execution.source.nodes[a.node]['instruction']['unit'] == 3,
                         'static field requires mode0 QE')
