@@ -1,0 +1,139 @@
+{
+ "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at 20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+ "artifacts_sha256": {
+  "6_final.odb": "90b5d14e5f81caf4eaca70efe10e49ccdc993d3630554533ffe105ee59d13167",
+  "6_final.sdc": "d349cccf7cf1e02df798d01db04969593ba4b26bb8c73207e0aa59fed8e0eb29",
+  "6_final.spef": "598f1b28b2ba664ca3979101fca10c3e112b93fbc8714843f138957199f7873f"
+ },
+ "corners": {
+  "SS": {
+   "exit": 0,
+   "done": true,
+   "insertion_ps": [
+    319.0,
+    355.1
+   ],
+   "block": {
+    "setup_wns_ps": -255.4,
+    "hold_wns_ps": 40.2,
+    "failing_setup": 1522,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "rx_j[4]$_DFFE_PN0P_",
+     "core_start"
+    ],
+    "worst_max_path_slack_ps": -255.4,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "vm_rq[48]",
+     "txq_d[2][48]$_DFFE_PP_"
+    ],
+    "worst_min_path_slack_ps": 40.2,
+    "worst_min_path_group": "core_clk"
+   },
+   "incontext": {
+    "setup_wns_ps": -150.8,
+    "hold_wns_ps": 53.0,
+    "failing_setup": 3062,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "core_done",
+     "txq_d[3][75]$_DFFE_PP_"
+    ],
+    "worst_max_path_slack_ps": -150.8,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_",
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 53.0,
+    "worst_min_path_group": "core_clk"
+   },
+   "reg2reg": {
+    "setup_wns_ps": -62.4,
+    "hold_wns_ps": 53.0,
+    "failing_setup": 956,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "uchk4$_DFF_PN0_",
+     "g_upos[21].ug/upos[2][8]$_DFFE_PP_"
+    ],
+    "worst_max_path_slack_ps": -62.4,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_",
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 53.0,
+    "worst_min_path_group": "core_clk"
+   }
+  },
+  "FF": {
+   "exit": 0,
+   "done": true,
+   "insertion_ps": [
+    198.2,
+    225.4
+   ],
+   "block": {
+    "setup_wns_ps": 123.0,
+    "hold_wns_ps": 11.0,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "txq_r[0]$_DFFE_PN0P_",
+     "out_data[135]"
+    ],
+    "worst_max_path_slack_ps": 123.0,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_",
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 11.0,
+    "worst_min_path_group": "core_clk"
+   },
+   "incontext": {
+    "setup_wns_ps": 199.0,
+    "hold_wns_ps": 11.0,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "core_done",
+     "in_ready"
+    ],
+    "worst_max_path_slack_ps": 199.0,
+    "worst_max_path_group": "vclk",
+    "worst_min_path": [
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_",
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 11.0,
+    "worst_min_path_group": "core_clk"
+   },
+   "reg2reg": {
+    "setup_wns_ps": 343.2,
+    "hold_wns_ps": 11.0,
+    "failing_setup": 0,
+    "failing_hold": 0,
+    "worst_max_path": [
+     "uchk4$_DFF_PN0_",
+     "g_upos[26].ug/upos[2][0]$_DFFE_PP_"
+    ],
+    "worst_max_path_slack_ps": 343.2,
+    "worst_max_path_group": "core_clk",
+    "worst_min_path": [
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_",
+     "g_upos[19].ug/uval[2]$_SDFFE_PN0P_"
+    ],
+    "worst_min_path_slack_ps": 11.0,
+    "worst_min_path_group": "core_clk"
+   }
+  }
+ },
+ "signoff": {
+  "block": false,
+  "incontext": false,
+  "reg2reg": false
+ }
+}

@@ -1,0 +1,10 @@
+owner: Kant handover2 #4
+implementation: f0027f749de162169a6757e5b260e123b15334ad
+clean exported source checkout: 9a564b1df191f29ba9b6593a40889c374dd7dd90
+collector SHA256: 8c6d2df3ee95908d93db314528c2b8a6fb49b08f798ebfb47c79d7fef357bf6d
+input stream: /srv/opentallas-scratch/claude/qwen-rom-dspark
+input source: src-a0c4818dd
+reuses: head1/head4 existing runners (2059065/2059066), simulations (2060346/2060345)
+trigger: both real head1.rc and head4.rc exist; no deadline; no job restart
+outputs: results/head{1,4} raw receipts/logs/oracle, results/measured_head.json, collector.rc
+claim: head-only bit-exact and measured cycles; no overlap/end-to-end/physical adoption

@@ -1,0 +1,520 @@
+{
+ "hbm": "scratchpad runs/taps_hbm_p10.npz (state-read binding commit ecfc4a52; unchanged in prefill by these fixes)",
+ "rom_wafer": "runs/taps_romw_p10.npz (this commit)",
+ "taps": [
+  {
+   "tap": "L00.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L00.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L01.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L01.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L02.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L02.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L03.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L03.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L04.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L04.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L05.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L05.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L06.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L06.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L07.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L07.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L08.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L08.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L09.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L09.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L10.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L10.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L11.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L11.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L12.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L12.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L13.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L13.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L14.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L14.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L15.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L15.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L16.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L16.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L17.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L17.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L18.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L18.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L19.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L19.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L20.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L20.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L21.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L21.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L22.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L22.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L23.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L23.ffn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L24.attn_norm",
+   "identical": true
+  },
+  {
+   "tap": "L24.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.996301,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L25.attn_norm",
+   "identical": false,
+   "min_cosine": 0.999361,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L25.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.989686,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L26.attn_norm",
+   "identical": false,
+   "min_cosine": 0.99987,
+   "rows_below_0_9999": [
+    9
+   ]
+  },
+  {
+   "tap": "L26.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.989694,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L27.attn_norm",
+   "identical": false,
+   "min_cosine": 0.985597,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L27.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.986782,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L28.attn_norm",
+   "identical": false,
+   "min_cosine": 0.986007,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L28.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.983485,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L29.attn_norm",
+   "identical": false,
+   "min_cosine": 0.98725,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L29.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.977558,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L30.attn_norm",
+   "identical": false,
+   "min_cosine": 0.991406,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L30.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.977873,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L31.attn_norm",
+   "identical": false,
+   "min_cosine": 0.980537,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L31.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.978253,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L32.attn_norm",
+   "identical": false,
+   "min_cosine": 0.986113,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L32.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.974393,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L33.attn_norm",
+   "identical": false,
+   "min_cosine": 0.966027,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L33.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.972797,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L34.attn_norm",
+   "identical": false,
+   "min_cosine": 0.960662,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L34.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.96757,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L35.attn_norm",
+   "identical": false,
+   "min_cosine": 0.950847,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L35.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.968713,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L36.attn_norm",
+   "identical": false,
+   "min_cosine": 0.957631,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L36.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.954173,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L37.attn_norm",
+   "identical": false,
+   "min_cosine": 0.954982,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L37.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.959231,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L38.attn_norm",
+   "identical": false,
+   "min_cosine": 0.951111,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L38.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.959365,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L39.attn_norm",
+   "identical": false,
+   "min_cosine": 0.954451,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L39.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.956275,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "tap": "L40.attn_norm",
+   "identical": false,
+   "min_cosine": 0.971444,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  }
+ ]
+}

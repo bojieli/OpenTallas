@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/tools/build_ds_v41_request_deployment.py", line 34, in <module>
+    raise SystemExit(main())
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/tools/build_ds_v41_request_deployment.py", line 24, in main
+    graph,plan,deployment=build_request_deployment(a.ir,cap,phase=a.phase,
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/request_deployment.py", line 50, in build_request_deployment
+    deployment = emitter.run()
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 523, in run
+    self._emit_sequence(body)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 3571, in _emit_sequence
+    self._emit_kernel(plan, shared_row_loop=row_loop)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 3736, in _emit_kernel
+    event = self._emit_phase_consumer(
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 5574, in _emit_phase_consumer
+    gathered = self._emit_sparse_input(
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 6855, in _emit_sparse_input
+    exchange = self._participant_array(gathered_elements, kv.dtype)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 6384, in _participant_array
+    raise LoweringError(
+compiler.backends.hbm_sram.lower.LoweringError: cluster exchange needs 134348800 bytes, but the physical plan reserved 3932160 bytes of communication scratch

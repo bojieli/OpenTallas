@@ -1,0 +1,19 @@
+{
+  "schema": "parent.crom-selector-width-counterexample.v1",
+  "source_commit": "bc1ec8b8f73ce5594a2b65ac7856b88c3f6b027c",
+  "tool_sha256": "d2f1160269a4b8c373f1e2846799f9e181304962e7fb721652be9a4bdb473b50",
+  "actual_operand": "rank0 layer0 attn_norm.weight base1808 nin5120; first1024lane emit addresses1808..2831",
+  "wave_values": 135,
+  "selector_width_priced_bits": 7,
+  "required_selector_width_bits": 8,
+  "high_index": 128,
+  "high_address": 2069,
+  "truncated_index": 0,
+  "aliased_address": 1941,
+  "old_selector_entry_bits": 135,
+  "required_selector_entry_bits": 151,
+  "catalog_word_bits": 274,
+  "corrected_entry_still_fits": true,
+  "classification": "Compiler/control-format candidate failure, not liveRTLfailure. No restricted/reindexed128value partition demonstrated.",
+  "hardware_admission": false
+}

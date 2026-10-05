@@ -1,0 +1,122 @@
+%Warning-IMPLICIT: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:20:70: Signal definition not found, creating implicitly: 'commit_ready'
+                                                                                  : ... Suggested alternative: 'commit_r'
+   20 |    assign req_r=0;assign cmd_v=0;assign cmd='0;assign rsp_r=0;assign commit_ready=0;
+      |                                                                      ^~~~~~~~~~~~
+                   ... For warning description see https://verilator.org/warn/IMPLICIT?v=5.050
+                   ... Use "/* verilator lint_off IMPLICIT */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:19:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                    : ... note: In instance 'ot_hbm_causal_command_provider'
+   19 |  generate if(!ENABLE)begin:off
+      |              ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:25:10: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's AND generates 34 bits.
+                                                                    : ... note: In instance 'ot_hbm_causal_command_provider'
+   25 |     pc_of=((s>>2)^(s>>7)^(s>>12))&31;
+      |          ^
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:28:31: Operator ASSIGN expects 19 bits on the Assign RHS, but Assign RHS's SHIFTR generates 34 bits.
+                                                                    : ... note: In instance 'ot_hbm_causal_command_provider'
+   28 |     logic [18:0] row;begin row=s>>15;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:29:30: Operator SHIFTR expects 34 bits on the LHS, but LHS's VARREF 'row' generates 19 bits.
+                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |                              ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:29:46: Operator XOR expects 34 bits on the RHS, but RHS's VARREF 'row' generates 19 bits.
+                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:29:14: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's OR generates 34 bits.
+                                                                    : ... note: In instance 'ot_hbm_causal_command_provider'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |              ^
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:6:13: Signal is not used: 'clk'
+                                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+    6 |  input wire clk,rst_n,
+      |             ^~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:6:17: Signal is not used: 'rst_n'
+                                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+    6 |  input wire clk,rst_n,
+      |                 ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:7:13: Signal is not used: 'req_v'
+                                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+    7 |  input wire req_v,output wire req_r,input ot_hbm_r14_pkg::request_t req,
+      |             ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:7:69: Signal is not used: 'req'
+                                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+    7 |  input wire req_v,output wire req_r,input ot_hbm_r14_pkg::request_t req,
+      |                                                                     ^~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:8:31: Signal is not used: 'cmd_r'
+                                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+    8 |  output wire cmd_v,input wire cmd_r,output ot_hbm_r14_pkg::command_t cmd,
+      |                               ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:9:20: Signal is not used: 'rsp_v'
+                                                                                     : ... note: In instance 'ot_hbm_causal_command_provider'
+    9 |  input wire [31:0] rsp_v,output wire [31:0] rsp_r,
+      |                    ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:10:21: Signal is not used: 'rsp_tag'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   10 |  input wire [511:0] rsp_tag,input wire [159:0] rsp_beat,input wire [8191:0] rsp_data,
+      |                     ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:10:48: Signal is not used: 'rsp_beat'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   10 |  input wire [511:0] rsp_tag,input wire [159:0] rsp_beat,input wire [8191:0] rsp_data,
+      |                                                ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:10:77: Signal is not used: 'rsp_data'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   10 |  input wire [511:0] rsp_tag,input wire [159:0] rsp_beat,input wire [8191:0] rsp_data,
+      |                                                                             ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:11:20: Signal is not used: 'commit_v'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   11 |  input wire [31:0] commit_v,output wire [31:0] commit_r,
+      |                    ^~~~~~~~
+%Warning-UNDRIVEN: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:11:48: Signal is not driven: 'commit_r'
+                                                                                  : ... note: In instance 'ot_hbm_causal_command_provider'
+   11 |  input wire [31:0] commit_v,output wire [31:0] commit_r,
+      |                                                ^~~~~~~~
+                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050
+                   ... Use "/* verilator lint_off UNDRIVEN */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:12:20: Signal is not used: 'commit_slot'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   12 |  input wire [63:0] commit_slot,
+      |                    ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:13:33: Signal is not used: 'owned_r'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   13 |  output wire owned_v,input wire owned_r,output wire owned_we,output wire owned_credit,output ot_hbm_r14_pkg::owned_t owned,
+      |                                 ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:14:13: Signal is not used: 'credit_v'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   14 |  input wire credit_v,input wire credit_we,output wire credit_r,input ot_hbm_r14_pkg::identity_t credit_id,
+      |             ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:14:33: Signal is not used: 'credit_we'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   14 |  input wire credit_v,input wire credit_we,output wire credit_r,input ot_hbm_r14_pkg::identity_t credit_id,
+      |                                 ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:14:97: Signal is not used: 'credit_id'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   14 |  input wire credit_v,input wire credit_we,output wire credit_r,input ot_hbm_r14_pkg::identity_t credit_id,
+      |                                                                                                 ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:15:20: Signal is not used: 'credit_tag'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   15 |  input wire [11:0] credit_tag,input wire [4:0] credit_beat,
+      |                    ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:15:48: Signal is not used: 'credit_beat'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   15 |  input wire [11:0] credit_tag,input wire [4:0] credit_beat,
+      |                                                ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:20:70: Signal is not used: 'commit_ready'
+                                                                                      : ... note: In instance 'ot_hbm_causal_command_provider'
+   20 |    assign req_r=0;assign cmd_v=0;assign cmd='0;assign rsp_r=0;assign commit_ready=0;
+      |                                                                      ^~~~~~~~~~~~
+%Warning-SYMRSVDWORD: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:5:28: Symbol matches C++ common word: 'stack'
+    5 |     logic die; logic [1:0] stack; logic [33:0] sector;
+      |                            ^~~~~
+                      ... For warning description see https://verilator.org/warn/SYMRSVDWORD?v=5.050
+                      ... Use "/* verilator lint_off SYMRSVDWORD */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.236 MB sources in 7 modules, into 0.004 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.015 s (elab=0.004, cvt=0.002, bld=0.000); cpu 0.015 s on 1 threads; allocated 35.145 MB

@@ -1,0 +1,786 @@
+{
+  "schema": "PVE1_PINNED_STAGE_DEPENDENCIES_V1",
+  "environment": {
+    "SYNTH_SKIP_KEEP": "0",
+    "WRAPPED_GDSOAS": "",
+    "SET_RC_TCL": "/OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
+    "OPENROAD_HIERARCHICAL": "0",
+    "WRITE_ODB_AND_SDC_EACH_STAGE": "1",
+    "WC_LIB_FILES": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+    "ENABLE_DPO": "1",
+    "LIB_FILES": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz   ",
+    "RTLMP_BOUNDARY_WT": "50.0",
+    "TIE_SEPARATION": "0",
+    "PLACE_SITE": "asap7sc7p5t",
+    "STREAM_SYSTEM_EXT": "gds",
+    "PLATFORM": "asap7",
+    "GENERATE_ARTIFACTS_ON_FAILURE": "0",
+    "CLKGATE_MAP_FILE": "/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v",
+    "UTILS_DIR": "/OpenROAD-flow-scripts/flow/util",
+    "PYTHON_EXE": "/usr/bin/python3",
+    "RTLMP_AREA_WT": "0.1",
+    "CORE_UTILIZATION": "35",
+    "DETAILED_ROUTE_END_ITERATION": "64",
+    "ADDER_MAP_FILE": "",
+    "OPT_POST_GRT_WNS": "1",
+    "PLATFORM_TCL": "/OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl",
+    "SYNTH_GUT": "0",
+    "VERILOG_TOP_PARAMS": "MLAT 5 ALAT 4",
+    "ABC_CLOCK_PERIOD_IN_PS": "1111",
+    "OBJECTS_DIR": "/work/objects/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base",
+    "SLEW_MARGIN": "40",
+    "RTLMP_MIN_AR": "0.33",
+    "RULES_JSON": "/work/rules-base.json",
+    "PLACE_DENSITY_LB_ADDON": "0.05",
+    "MIN_PLACE_STEP_COEF": "0.95",
+    "TIEHI_CELL_AND_PORT": "TIEHIx1_ASAP7_75t_R H",
+    "ROUTING_LAYER_ADJUSTMENT": "0.25",
+    "RCX_RULES": "/OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules",
+    "PLACE_DENSITY": "0.6",
+    "IR_DROP_LAYER": "M1",
+    "ABC_AREA": "0",
+    "INFER_CLKGATES": "0",
+    "BC_LIB_FILES": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+    "SKIP_CTS_REPAIR_TIMING": "0",
+    "PDN_TCL": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/pdn/grid_strategy-M1-M2-M5-M6.tcl",
+    "BALANCE_ROWS": "0",
+    "FILL_CELLS": "FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R DECAPx1_ASAP7_75t_R DECAPx2_ASAP7_75t_R DECAPx4_ASAP7_75t_R DECAPx6_ASAP7_75t_R DECAPx10_ASAP7_75t_R",
+    "PRE_GLOBAL_ROUTE_TCL": "/work/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl",
+    "AUTO_MEMORIES": "0",
+    "PRE_CTS_TCL": "/work/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl",
+    "FLOW_VARIANT": "base",
+    "IO_PLACER_H": "M4",
+    "NUM_CORES": "28",
+    "RTLMP_OUTLINE_WT": "100.0",
+    "CLUSTER_FLOPS": "0",
+    "REPORTS_DIR": "/work/reports/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base",
+    "SKIP_ANTENNA_REPAIR": "0",
+    "DETAILED_METRICS": "0",
+    "IO_PLACER_V": "M5",
+    "SYNTH_USE_SYN": "0",
+    "SKIP_ANTENNA_REPAIR_POST_DRT": "0",
+    "LIB_MODEL": "NLDM",
+    "YOSYS_FLAGS": "-v 3",
+    "ADDITIONAL_LEFS": " ",
+    "MAX_REPAIR_ANTENNAS_ITER_GRT": "5",
+    "GPL_ROUTABILITY_DRIVEN": "1",
+    "SKIP_INCREMENTAL_REPAIR": "0",
+    "RTLMP_WIRELENGTH_WT": "100.0",
+    "MIN_ROUTING_LAYER": "M2",
+    "TNS_END_PERCENT": "100",
+    "MAX_ROUTING_LAYER": "M6",
+    "GPL_TIMING_DRIVEN": "1",
+    "DESIGN_NICKNAME": "opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7",
+    "ENABLE_RESISTANCE_AWARE": "1",
+    "TECH_LEF": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+    "HOLD_SLACK_MARGIN": "10",
+    "KEPLER_FORMAL_EXE": "/OpenROAD-flow-scripts/tools/install/kepler-formal/bin/kepler-formal",
+    "SKIP_ANTENNA_REPAIR_PRE_GRT": "0",
+    "ABC_DRIVER_CELL": "BUFx2_ASAP7_75t_R",
+    "SCRIPTS_DIR": "/OpenROAD-flow-scripts/flow/scripts",
+    "MAX_REPAIR_ANTENNAS_ITER_DRT": "5",
+    "RTLMP_MAX_LEVEL": "2",
+    "CELL_PAD_IN_SITES_DETAIL_PLACEMENT": "0",
+    "RTLMP_KEEP_CLUSTERING": "0",
+    "SYNTH_SLANG_ARGS": "",
+    "FLOW_HOME": "/OpenROAD-flow-scripts/flow",
+    "MATCH_CELL_FOOTPRINT": "0",
+    "RUN_LOG_NAME_STEM": "run",
+    "LATCH_MAP_FILE": "/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v",
+    "CORE_MARGIN": "2",
+    "REMOVE_ABC_BUFFERS": "0",
+    "VERILOG_DEFINES": "-DSYNTHESIS",
+    "LEC_CHECK": "0",
+    "SYNTH_HIERARCHICAL": "0",
+    "PLATFORM_DIR": "/OpenROAD-flow-scripts/flow/platforms/asap7",
+    "SYNTH_MINIMUM_KEEP_SIZE": "1000",
+    "OPENROAD_EXE": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "RTLMP_FENCE_LY": "0.0",
+    "RTLMP_FENCE_LX": "0.0",
+    "SYNTH_KEEP_MOCKED_MEMORIES": "1",
+    "PWR_NETS_VOLTAGES": "VDD 0.63",
+    "CORE_ASPECT_RATIO": "1",
+    "GUI_TIMING": "1",
+    "FASTROUTE_TCL": "/OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl",
+    "SETUP_SLACK_MARGIN": "0",
+    "SC_LEF": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef",
+    "TAP_CELL_NAME": "TAPCELL_ASAP7_75t_R",
+    "GDS_FILES": "/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds ",
+    "MIN_BUF_CELL_AND_PORTS": "BUFx2_ASAP7_75t_R A Y",
+    "SYNTH_MEMORY_MAX_BITS": "65536",
+    "RECOVER_POWER": "0",
+    "SKIP_REPAIR_TIE_FANOUT": "0",
+    "SKIP_DETAILED_ROUTE": "0",
+    "GDS_ALLOW_EMPTY": "fakeram.*",
+    "VERILOG_FILES": "/src/rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv /src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_sfu.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "CORNERS": "WC BC",
+    "RESULTS_DIR": "/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base",
+    "CTS_SNAPSHOTS": "0",
+    "MIN_CLK_ROUTING_LAYER": "M4",
+    "DONT_USE_CELLS": "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*",
+    "KEEP_VARS": "0",
+    "TIELO_CELL_AND_PORT": "TIELOx1_ASAP7_75t_R L",
+    "DONT_BUFFER_PORTS": "0",
+    "CLUSTER_FLOPS_ARGS": "",
+    "RTLMP_FENCE_UX": "0.0",
+    "RTLMP_FENCE_UY": "0.0",
+    "CORNER": "WC",
+    "ENABLE_PLACE_REPAIR_TIMING": "0",
+    "RTLMP_NOTCH_WT": "50.0",
+    "ASAP7_USE_VT": "RVT",
+    "REMOVE_CELLS_FOR_LEC": "TAPCELL*",
+    "REPORT_CLOCK_SKEW": "1",
+    "GND_NETS_VOLTAGES": "VSS 0.0",
+    "MAKE_TRACKS": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl",
+    "GLOBAL_ROUTE_USE_CUGR": "0",
+    "TAPCELL_TCL": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/tapcell.tcl",
+    "SYNTH_INSBUF": "1",
+    "PROCESS": "7",
+    "SYNTH_REPEATABLE_BUILD": "1",
+    "SYNTH_HIER_SEPARATOR": ".",
+    "DESIGN_NAME": "ot_hdc_v41x_vec_red1024",
+    "PATH": "/OpenROAD-flow-scripts/tools/install/kepler-formal/bin:/OpenROAD-flow-scripts/tools/install/yosys/bin:/OpenROAD-flow-scripts/tools/install/OpenROAD/bin:/usr/local/bin/wrapped-cc:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "KLAYOUT_TECH_FILE": "/OpenROAD-flow-scripts/flow/platforms/asap7/KLayout/asap7.lyt",
+    "MAX_PLACE_STEP_COEF": "1.05",
+    "SDC_FILE_CLOCK_PERIOD": "/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/clock_period.txt",
+    "LOG_DIR": "/work/logs/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base",
+    "DPO_MAX_DISPLACEMENT": "5 1",
+    "MACRO_PLACE_HALO": "10 10",
+    "ABC_LOAD_IN_FF": "3.898",
+    "SDC_FILE": "/work/constraint.sdc",
+    "SKIP_REPORT_METRICS": "0",
+    "USE_FILL": "0",
+    "SYNTH_KEEP_MODULES": "ot_hdc_fp32_mul_lat5i ot_hdc_fp32_add_lat4i ot_hdc_v41x_vred_op ot_hdc_v41x_vsq",
+    "GLOBAL_ROUTE_ARGS": "-congestion_report_iter_step 5 -verbose",
+    "SYNTH_MOCK_LARGE_MEMORIES": "0",
+    "CELL_PAD_IN_SITES_GLOBAL_PLACEMENT": "0",
+    "MACRO_ROWS_HALO_Y": "2",
+    "MACRO_ROWS_HALO_X": "2",
+    "DESIGN_HOME": "/OpenROAD-flow-scripts/flow/designs",
+    "KLAYOUT_ENV_VAR_IN_PATH": "valid",
+    "LIB_DIR": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM",
+    "RESULTS_GDS": "",
+    "KLAYOUT_ENV_VAR_IN_PATH_VERSION": "0.28.11",
+    "OPENROAD_WEB_CMD": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -web -threads 28 ",
+    "OPENROAD_ARGS": "-no_init -threads 28 ",
+    "YOSYS_EXE": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+    "ISSUE_VARIABLES": " ABC_AREA=0\n  ABC_DRIVER_CELL=BUFx2_ASAP7_75t_R\n  ABC_LOAD_IN_FF=3.898\n  ADDER_MAP_FILE=''\n  ADDITIONAL_GDSOAS=''\n  ADDITIONAL_LEFS= \n  ASAP7_USE_VT=RVT\n  AUTO_MEMORIES=0\n  BALANCE_ROWS=0\n  BC_CCS_DFF_LIB_FILE=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_ccs_220123.lib\n  BC_CCS_DFF_LIB_FILE_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_FF_ccs_220123.lib\n  BC_CCS_LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_ccs_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_ccs_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_ccs_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_ccs_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_ccs_220123.lib \n  BC_CCS_LIB_FILES_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_PLACEHOLDERVT_FF_ccs_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_PLACEHOLDERVT_FF_ccs_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_PLACEHOLDERVT_FF_ccs_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_PLACEHOLDERVT_FF_ccs_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_FF_ccs_220123.lib\n  BC_LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n  BC_NLDM_DFF_LIB_FILE=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n  BC_NLDM_DFF_LIB_FILE_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_FF_nldm_220123.lib\n  BC_NLDM_LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n  BC_NLDM_LIB_FILES_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_PLACEHOLDERVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_PLACEHOLDERVT_FF_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_PLACEHOLDERVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_PLACEHOLDERVT_FF_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_FF_nldm_220123.lib\n  BC_TEMPERATURE=25C\n  BC_VOLTAGE=0.77\n  CELL_PAD_IN_SITES_DETAIL_PLACEMENT=0\n  CELL_PAD_IN_SITES_GLOBAL_PLACEMENT=0\n  CLKGATE_MAP_FILE=/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v\n  CLUSTER_FLOPS=0\n  CLUSTER_FLOPS_ARGS=''\n  CORE_ASPECT_RATIO=1\n  CORE_MARGIN=2\n  CORE_UTILIZATION=35\n  CORNER=WC\n  CORNERS=WC BC\n  CTS_SNAPSHOTS=0\n  CURDIR=/OpenROAD-flow-scripts/flow\n  DB_FILES=''\n  DESIGN_CONFIG=/work/config.mk\n  DESIGN_DIR=/work\n  DESIGN_HOME=/OpenROAD-flow-scripts/flow/designs\n  DESIGN_NAME=ot_hdc_v41x_vec_red1024\n  DESIGN_NICKNAME=opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7\n  DETAILED_METRICS=0\n  DETAILED_ROUTE_END_ITERATION=64\n  DONT_BUFFER_PORTS=0\n  DONT_USE_CELLS=*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*\n  DPO_MAX_DISPLACEMENT=5 1\n  ENABLE_DPO=1\n  ENABLE_PLACE_REPAIR_TIMING=0\n  ENABLE_RESISTANCE_AWARE=1\n  FASTROUTE_TCL=/OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl\n  FILL_CELLS=FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R DECAPx1_ASAP7_75t_R DECAPx2_ASAP7_75t_R DECAPx4_ASAP7_75t_R DECAPx6_ASAP7_75t_R DECAPx10_ASAP7_75t_R\n  FILL_CELLS_T=FILLERxp5_ASAP7_75t_ FILLER_ASAP7_75t_ DECAPx1_ASAP7_75t_ DECAPx2_ASAP7_75t_ DECAPx4_ASAP7_75t_ DECAPx6_ASAP7_75t_ DECAPx10_ASAP7_75t_\n  FLOW_VARIANT=base\n  GDSOAS_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds \n  GDS_ALLOW_EMPTY=fakeram.*\n  GDS_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds \n  GDS_FINAL_FILE=/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/6_final.gds\n  GDS_MERGED_FILE=/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/6_1_merged.gds\n  GENERATE_ARTIFACTS_ON_FAILURE=0\n  GLOBAL_ROUTE_ARGS=-congestion_report_iter_step 5 -verbose\n  GLOBAL_ROUTE_USE_CUGR=0\n  GND_NETS_VOLTAGES=VSS 0.0\n  GPL_ROUTABILITY_DRIVEN=1\n  GPL_TIMING_DRIVEN=1\n  GUI_TIMING=1\n  HOLD_BUF_CELL=BUFx2_ASAP7_75t_R\n  HOLD_SLACK_MARGIN=10\n  INFER_CLKGATES=0\n  IO_PLACER_H=M4\n  IO_PLACER_V=M5\n  IR_DROP_LAYER=M1\n  KEEP_VARS=0\n  KEPLER_FORMAL_EXE=/OpenROAD-flow-scripts/tools/install/kepler-formal/bin/kepler-formal\n  LATCH_MAP_FILE=/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v\n  LEC_CHECK=0\n  LIB_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM\n  LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz   \n  LIB_MODEL=NLDM\n  LOG_DIR=/work/logs/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base\n  MACRO_PLACE_HALO=10 10\n  MACRO_ROWS_HALO_X=2\n  MACRO_ROWS_HALO_Y=2\n  MAKEFILE_LIST=Makefile settings.mk /work/config.mk /OpenROAD-flow-scripts/flow/scripts/variables.mk /OpenROAD-flow-scripts/flow/platforms/asap7/config.mk\n  MAKEFLAGS= --no-print-directory --no-builtin-rules\n  MAKE_TRACKS=/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl\n  MATCH_CELL_FOOTPRINT=0\n  MAX_PLACE_STEP_COEF=1.05\n  MAX_REPAIR_ANTENNAS_ITER_DRT=5\n  MAX_REPAIR_ANTENNAS_ITER_GRT=5\n  MAX_ROUTING_LAYER=M6\n  MIN_BUF_CELL_AND_PORTS=BUFx2_ASAP7_75t_R A Y\n  MIN_CLK_ROUTING_LAYER=M4\n  MIN_PLACE_STEP_COEF=0.95\n  MIN_ROUTING_LAYER=M2\n  NUM_CORES=28\n  OBJECTS_DIR=/work/objects/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base\n  OPENROAD_HIERARCHICAL=0\n  OPT_POST_GRT_WNS=1\n  OTHER_VT=''\n  PDN_TCL=/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/pdn/grid_strategy-M1-M2-M5-M6.tcl\n  PLACE_DENSITY=0.6\n  PLACE_DENSITY_LB_ADDON=0.05\n  PLACE_SITE=asap7sc7p5t\n  PLATFORM=asap7\n  PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7\n  PLATFORM_HOME=/OpenROAD-flow-scripts/flow/platforms\n  PLATFORM_TCL=/OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\n  PRE_CTS_TCL=/work/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl\n  PRE_GLOBAL_ROUTE_TCL=/work/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl\n  PRIMARY_VT=RVT\n  PRIMARY_VT_TAG=R\n  PROCESS=7\n  PUBLIC=nangate45 sky130hd sky130hs asap7 ihp-sg13g2 gf180 gt2n\n  PWR_NETS_VOLTAGES=VDD 0.63\n  QT_QPA_PLATFORM=offscreen\n  RCX_RULES=/OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules\n  RECOVER_POWER=0\n  REMOVE_ABC_BUFFERS=0\n  REMOVE_CELLS_FOR_LEC=TAPCELL*\n  REPORTS_DIR=/work/reports/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base\n  REPORT_CLOCK_SKEW=1\n  RESULTS_DEF=''\n  RESULTS_DIR=/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base\n  RESULTS_GDS=''\n  RESULTS_OAS=''\n  RESULTS_ODB=1_synth.odb 2_1_floorplan.odb 2_2_floorplan_macro.odb 2_3_floorplan_tapcell.odb 2_4_floorplan_pdn.odb 2_floorplan.odb 3_1_place_gp_skip_io.odb 3_2_place_iop.odb\n  RESULTS_V=1_2_yosys.v\n  ROUTING_LAYER_ADJUSTMENT=0.25\n  RTLMP_AREA_WT=0.1\n  RTLMP_BOUNDARY_WT=50.0\n  RTLMP_FENCE_LX=0.0\n  RTLMP_FENCE_LY=0.0\n  RTLMP_FENCE_UX=0.0\n  RTLMP_FENCE_UY=0.0\n  RTLMP_KEEP_CLUSTERING=0\n  RTLMP_MAX_LEVEL=2\n  RTLMP_MIN_AR=0.33\n  RTLMP_NOTCH_WT=50.0\n  RTLMP_OUTLINE_WT=100.0\n  RTLMP_WIRELENGTH_WT=100.0\n  RUN_CMD=/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py\n  RUN_LOG_NAME_STEM=run\n  SCRIPTS_DIR=/OpenROAD-flow-scripts/flow/scripts\n  SC_LEF=/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef\n  SDC_FILE=/work/constraint.sdc\n  SDC_FILE_CLOCK_PERIOD=/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/clock_period.txt\n  SEAL_GDSOAS=''\n  SETUP_SLACK_MARGIN=0\n  SET_RC_TCL=/OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\n  SHELL=/usr/bin/env bash\n  SKIP_ANTENNA_REPAIR=0\n  SKIP_ANTENNA_REPAIR_POST_DRT=0\n  SKIP_ANTENNA_REPAIR_PRE_GRT=0\n  SKIP_CTS_REPAIR_TIMING=0\n  SKIP_DETAILED_ROUTE=0\n  SKIP_INCREMENTAL_REPAIR=0\n  SKIP_REPAIR_TIE_FANOUT=0\n  SKIP_REPORT_METRICS=0\n  SLEW_MARGIN=40\n  STREAM_SYSTEM=GDS\n  STREAM_SYSTEM_EXT=gds\n  SYNTH_GUT=0\n  SYNTH_HIERARCHICAL=0\n  SYNTH_HIER_SEPARATOR=.\n  SYNTH_INSBUF=1\n  SYNTH_KEEP_MOCKED_MEMORIES=1\n  SYNTH_KEEP_MODULES=ot_hdc_fp32_mul_lat5i ot_hdc_fp32_add_lat4i ot_hdc_v41x_vred_op ot_hdc_v41x_vsq\n  SYNTH_MEMORY_MAX_BITS=65536\n  SYNTH_MINIMUM_KEEP_SIZE=1000\n  SYNTH_MOCK_LARGE_MEMORIES=0\n  SYNTH_REPEATABLE_BUILD=1\n  SYNTH_SCRIPT=/OpenROAD-flow-scripts/flow/scripts/synth.tcl\n  SYNTH_SKIP_KEEP=0\n  SYNTH_SLANG_ARGS=''\n  SYNTH_USE_SYN=0\n  TAPCELL_TCL=/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/tapcell.tcl\n  TAP_CELL_NAME=TAPCELL_ASAP7_75t_R\n  TCLLIBPATH=util/cell-veneer \n  TC_NLDM_DFF_LIB_FILE=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\n  TC_NLDM_DFF_LIB_FILE_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_TT_nldm_220123.lib\n  TC_NLDM_LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\n  TC_NLDM_LIB_FILES_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_PLACEHOLDERVT_TT_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_PLACEHOLDERVT_TT_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_PLACEHOLDERVT_TT_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_TT_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_PLACEHOLDERVT_TT_nldm_211120.lib.gz\n  TC_TEMPERATURE=0C\n  TC_VOLTAGE=0.70\n  TECH_LEF=/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\n  TEMPERATURE=100C\n  TEST_DIR=/OpenROAD-flow-scripts/flow/test\n  TIEHI_CELL_AND_PORT=TIEHIx1_ASAP7_75t_R H\n  TIELO_CELL_AND_PORT=TIELOx1_ASAP7_75t_R L\n  TIE_SEPARATION=0\n  TNS_END_PERCENT=100\n  UNSET_VARIABLES_NAMES=  RCX_RULES    DESIGN_NAME       SDC_FILE   ENABLE_RESISTANCE_AWARE   IO_PLACER_H   BC_CCS_LIB_FILES   GDS_FILES     MAKE_TRACKS   CLUSTER_FLOPS   GENERATE_ARTIFACTS_ON_FAILURE   TAP_CELL_NAME   SYNTH_SKIP_KEEP      TC_NLDM_LIB_FILES_T    STREAM_SYSTEM   SYNTH_HIERARCHICAL   LATCH_MAP_FILE    TC_VOLTAGE   TAPCELL_TCL   RTLMP_WIRELENGTH_WT   ASAP7_USE_VT   BC_VOLTAGE   RESULTS_DEF      VOLTAGE   MIN_PLACE_STEP_COEF   TCLLIBPATH   GPL_ROUTABILITY_DRIVEN    RUN_CMD   CORE_UTILIZATION   WC_TEMPERATURE   OPT_POST_GRT_WNS    ADDITIONAL_LEFS         WC_NLDM_DFF_LIB_FILE_T     RTLMP_MIN_AR   WC_LIB_FILES      DETAILED_METRICS   DETAILED_ROUTE_END_ITERATION   OBJECTS_DIR        DESIGN_NICKNAME   ENABLE_DPO   BC_TEMPERATURE   DONT_BUFFER_PORTS     RTLMP_NOTCH_WT   KEPLER_FORMAL_EXE   RECOVER_POWER   LIB_MODEL   AUTO_MEMORIES    WRAPPED_LEFS    ABC_DRIVER_CELL   DB_FILES   PWR_NETS_VOLTAGES   SYNTH_SCRIPT    MAKEFLAGS   REPORT_CLOCK_SKEW   SKIP_DETAILED_ROUTE     MAX_REPAIR_ANTENNAS_ITER_GRT   BC_LIB_FILES    MAX_REPAIR_ANTENNAS_ITER_DRT   CURDIR   TIELO_CELL_AND_PORT      OTHER_VT   ENABLE_PLACE_REPAIR_TIMING   PRIMARY_VT_TAG     DESIGN_HOME    SCRIPTS_DIR        IO_PLACER_V   CLUSTER_FLOPS_ARGS     BALANCE_ROWS   OPENROAD_HIERARCHICAL    SKIP_ANTENNA_REPAIR_PRE_GRT   ABC_AREA   MAKEFILE_LIST    MATCH_CELL_FOOTPRINT    SYNTH_USE_SYN   RTLMP_AREA_WT     HOLD_SLACK_MARGIN   BC_NLDM_LIB_FILES     SKIP_ANTENNA_REPAIR    SYNTH_INSBUF   LOG_DIR   BC_NLDM_DFF_LIB_FILE_T   CELL_PAD_IN_SITES_DETAIL_PLACEMENT    TECH_LEF   GND_NETS_VOLTAGES   FASTROUTE_TCL   SYNTH_MEMORY_MAX_BITS   SYNTH_SLANG_ARGS     REMOVE_CELLS_FOR_LEC   SKIP_ANTENNA_REPAIR_POST_DRT    VT_LIST   PLATFORM   PRIMARY_VT   LIB_FILES    SET_RC_TCL     SHELL   FILL_CELLS    MACRO_ROWS_HALO_Y    PRE_CTS_TCL   QT_QPA_PLATFORM   SDC_FILE_CLOCK_PERIOD    GLOBAL_ROUTE_USE_CUGR      BC_NLDM_DFF_LIB_FILE       TNS_END_PERCENT        SEAL_GDSOAS    FILL_CELLS_T    GPL_TIMING_DRIVEN   SYNTH_KEEP_MOCKED_MEMORIES    SKIP_INCREMENTAL_REPAIR    CELL_PAD_IN_SITES_GLOBAL_PLACEMENT   SLEW_MARGIN   BC_NLDM_LIB_FILES_T   VERILOG_DEFINES   SKIP_CTS_REPAIR_TIMING   MIN_BUF_CELL_AND_PORTS     TC_NLDM_DFF_LIB_FILE   MIN_CLK_ROUTING_LAYER   PLACE_DENSITY   HOLD_BUF_CELL   RESULTS_DIR   RTLMP_FENCE_UX    CLKGATE_MAP_FILE   REMOVE_ABC_BUFFERS   SYNTH_HIER_SEPARATOR     RTLMP_MAX_LEVEL   WRAPPED_LIBS   REPORTS_DIR   PLATFORM_DIR    PLATFORM_HOME       GDSOAS_FILES     TIEHI_CELL_AND_PORT      ROUTING_LAYER_ADJUSTMENT   STREAM_SYSTEM_EXT     RTLMP_OUTLINE_WT   TC_TEMPERATURE   RESULTS_OAS    ADDER_MAP_FILE     RTLMP_FENCE_LX   CORNERS   PLACE_SITE   TC_NLDM_DFF_LIB_FILE_T    WC_NLDM_LIB_FILES_T   TIE_SEPARATION   SYNTH_MINIMUM_KEEP_SIZE   CORE_ASPECT_RATIO   RTLMP_BOUNDARY_WT     DESIGN_DIR    MAX_PLACE_STEP_COEF   SKIP_REPORT_METRICS   TEMPERATURE    PLATFORM_TCL    WC_NLDM_DFF_LIB_FILE   TC_NLDM_LIB_FILES      SKIP_REPAIR_TIE_FANOUT   ADDITIONAL_GDSOAS    DONT_USE_CELLS    GUI_TIMING   SC_LEF   RESULTS_ODB   SYNTH_KEEP_MODULES   CTS_SNAPSHOTS   TEST_DIR   MACRO_PLACE_HALO   PUBLIC   RESULTS_GDS   WRAPPED_GDSOAS   VERILOG_TOP_PARAMS    DPO_MAX_DISPLACEMENT   WRAP_CFG   PLACE_DENSITY_LB_ADDON   GDS_FINAL_FILE   RTLMP_FENCE_UY         VERILOG_FILES      PDN_TCL   KEEP_VARS    UTILS_DIR     RTLMP_FENCE_LY   MIN_ROUTING_LAYER   CORE_MARGIN   PROCESS   PRE_GLOBAL_ROUTE_TCL   RUN_LOG_NAME_STEM   GDS_MERGED_FILE   SETUP_SLACK_MARGIN     SYNTH_GUT    BC_CCS_LIB_FILES_T   BC_CCS_DFF_LIB_FILE   SYNTH_MOCK_LARGE_MEMORIES     RTLMP_KEEP_CLUSTERING   NUM_CORES   get_variables     ABC_LOAD_IN_FF    MAX_ROUTING_LAYER   SYNTH_REPEATABLE_BUILD   CORNER   GLOBAL_ROUTE_ARGS   INFER_CLKGATES           BC_CCS_DFF_LIB_FILE_T   USE_FILL   MACRO_ROWS_HALO_X    WC_VOLTAGE    LIB_DIR         WRITE_ODB_AND_SDC_EACH_STAGE   IR_DROP_LAYER   RESULTS_V    GDS_ALLOW_EMPTY   LEC_CHECK   WC_NLDM_LIB_FILES\n  USE_FILL=0\n  UTILS_DIR=/OpenROAD-flow-scripts/flow/util\n  VERILOG_DEFINES=-DSYNTHESIS\n  VERILOG_FILES=/src/rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv /src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_sfu.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fastfp_lat.sv\n  VERILOG_TOP_PARAMS=MLAT 5 ALAT 4\n  VOLTAGE=0.63\n  VT_LIST= RVT\n  WC_LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n  WC_NLDM_DFF_LIB_FILE=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\n  WC_NLDM_DFF_LIB_FILE_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_SS_nldm_220123.lib\n  WC_NLDM_LIB_FILES=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n  WC_NLDM_LIB_FILES_T=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_PLACEHOLDERVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_PLACEHOLDERVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_PLACEHOLDERVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_PLACEHOLDERVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_PLACEHOLDERVT_SS_nldm_211120.lib.gz\n  WC_TEMPERATURE=100C\n  WC_VOLTAGE=0.63\n  WORK_HOME=/work\n  WRAPPED_GDSOAS=''\n  WRAPPED_LEFS=''\n  WRAPPED_LIBS=''\n  WRAP_CFG=/OpenROAD-flow-scripts/flow/platforms/asap7/wrapper.cfg\n  WRITE_ODB_AND_SDC_EACH_STAGE=1\n",
+    "ISSUE_VARIABLES_NAMES": "ABC_AREA ABC_DRIVER_CELL ABC_LOAD_IN_FF ADDER_MAP_FILE ADDITIONAL_GDSOAS ADDITIONAL_LEFS ASAP7_USE_VT AUTO_MEMORIES BALANCE_ROWS BC_CCS_DFF_LIB_FILE BC_CCS_DFF_LIB_FILE_T BC_CCS_LIB_FILES BC_CCS_LIB_FILES_T BC_LIB_FILES BC_NLDM_DFF_LIB_FILE BC_NLDM_DFF_LIB_FILE_T BC_NLDM_LIB_FILES BC_NLDM_LIB_FILES_T BC_TEMPERATURE BC_VOLTAGE CELL_PAD_IN_SITES_DETAIL_PLACEMENT CELL_PAD_IN_SITES_GLOBAL_PLACEMENT CLKGATE_MAP_FILE CLUSTER_FLOPS CLUSTER_FLOPS_ARGS CORE_ASPECT_RATIO CORE_MARGIN CORE_UTILIZATION CORNER CORNERS CTS_SNAPSHOTS CURDIR DB_FILES DESIGN_CONFIG DESIGN_DIR DESIGN_HOME DESIGN_NAME DESIGN_NICKNAME DETAILED_METRICS DETAILED_ROUTE_END_ITERATION DONT_BUFFER_PORTS DONT_USE_CELLS DPO_MAX_DISPLACEMENT ENABLE_DPO ENABLE_PLACE_REPAIR_TIMING ENABLE_RESISTANCE_AWARE FASTROUTE_TCL FILL_CELLS FILL_CELLS_T FLOW_VARIANT GDSOAS_FILES GDS_ALLOW_EMPTY GDS_FILES GDS_FINAL_FILE GDS_MERGED_FILE GENERATE_ARTIFACTS_ON_FAILURE GLOBAL_ROUTE_ARGS GLOBAL_ROUTE_USE_CUGR GND_NETS_VOLTAGES GPL_ROUTABILITY_DRIVEN GPL_TIMING_DRIVEN GUI_TIMING HOLD_BUF_CELL HOLD_SLACK_MARGIN INFER_CLKGATES IO_PLACER_H IO_PLACER_V IR_DROP_LAYER KEEP_VARS KEPLER_FORMAL_EXE LATCH_MAP_FILE LEC_CHECK LIB_DIR LIB_FILES LIB_MODEL LOG_DIR MACRO_PLACE_HALO MACRO_ROWS_HALO_X MACRO_ROWS_HALO_Y MAKEFILE_LIST MAKEFLAGS MAKE_TRACKS MATCH_CELL_FOOTPRINT MAX_PLACE_STEP_COEF MAX_REPAIR_ANTENNAS_ITER_DRT MAX_REPAIR_ANTENNAS_ITER_GRT MAX_ROUTING_LAYER MIN_BUF_CELL_AND_PORTS MIN_CLK_ROUTING_LAYER MIN_PLACE_STEP_COEF MIN_ROUTING_LAYER NUM_CORES OBJECTS_DIR OPENROAD_HIERARCHICAL OPT_POST_GRT_WNS OTHER_VT PDN_TCL PLACE_DENSITY PLACE_DENSITY_LB_ADDON PLACE_SITE PLATFORM PLATFORM_DIR PLATFORM_HOME PLATFORM_TCL PRE_CTS_TCL PRE_GLOBAL_ROUTE_TCL PRIMARY_VT PRIMARY_VT_TAG PROCESS PUBLIC PWR_NETS_VOLTAGES QT_QPA_PLATFORM RCX_RULES RECOVER_POWER REMOVE_ABC_BUFFERS REMOVE_CELLS_FOR_LEC REPORTS_DIR REPORT_CLOCK_SKEW RESULTS_DEF RESULTS_DIR RESULTS_GDS RESULTS_OAS RESULTS_ODB RESULTS_V ROUTING_LAYER_ADJUSTMENT RTLMP_AREA_WT RTLMP_BOUNDARY_WT RTLMP_FENCE_LX RTLMP_FENCE_LY RTLMP_FENCE_UX RTLMP_FENCE_UY RTLMP_KEEP_CLUSTERING RTLMP_MAX_LEVEL RTLMP_MIN_AR RTLMP_NOTCH_WT RTLMP_OUTLINE_WT RTLMP_WIRELENGTH_WT RUN_CMD RUN_LOG_NAME_STEM SCRIPTS_DIR SC_LEF SDC_FILE SDC_FILE_CLOCK_PERIOD SEAL_GDSOAS SETUP_SLACK_MARGIN SET_RC_TCL SHELL SKIP_ANTENNA_REPAIR SKIP_ANTENNA_REPAIR_POST_DRT SKIP_ANTENNA_REPAIR_PRE_GRT SKIP_CTS_REPAIR_TIMING SKIP_DETAILED_ROUTE SKIP_INCREMENTAL_REPAIR SKIP_REPAIR_TIE_FANOUT SKIP_REPORT_METRICS SLEW_MARGIN STREAM_SYSTEM STREAM_SYSTEM_EXT SYNTH_GUT SYNTH_HIERARCHICAL SYNTH_HIER_SEPARATOR SYNTH_INSBUF SYNTH_KEEP_MOCKED_MEMORIES SYNTH_KEEP_MODULES SYNTH_MEMORY_MAX_BITS SYNTH_MINIMUM_KEEP_SIZE SYNTH_MOCK_LARGE_MEMORIES SYNTH_REPEATABLE_BUILD SYNTH_SCRIPT SYNTH_SKIP_KEEP SYNTH_SLANG_ARGS SYNTH_USE_SYN TAPCELL_TCL TAP_CELL_NAME TCLLIBPATH TC_NLDM_DFF_LIB_FILE TC_NLDM_DFF_LIB_FILE_T TC_NLDM_LIB_FILES TC_NLDM_LIB_FILES_T TC_TEMPERATURE TC_VOLTAGE TECH_LEF TEMPERATURE TEST_DIR TIEHI_CELL_AND_PORT TIELO_CELL_AND_PORT TIE_SEPARATION TNS_END_PERCENT UNSET_VARIABLES_NAMES USE_FILL UTILS_DIR VERILOG_DEFINES VERILOG_FILES VERILOG_TOP_PARAMS VOLTAGE VT_LIST WC_LIB_FILES WC_NLDM_DFF_LIB_FILE WC_NLDM_DFF_LIB_FILE_T WC_NLDM_LIB_FILES WC_NLDM_LIB_FILES_T WC_TEMPERATURE WC_VOLTAGE WORK_HOME WRAPPED_GDSOAS WRAPPED_LEFS WRAPPED_LIBS WRAP_CFG WRITE_ODB_AND_SDC_EACH_STAGE",
+    "PLATFORM_HOME": "/OpenROAD-flow-scripts/flow/platforms",
+    "OPENSTA_EXE": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/sta",
+    "TCLLIBPATH": "util/cell-veneer ",
+    "RUN_CMD": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py",
+    "RESULTS_DEF": "",
+    "OPENROAD_NO_EXIT_CMD": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -threads 28 ",
+    "DESIGN_DIR": "/work",
+    "GDS_MERGED_FILE": "/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/6_1_merged.gds",
+    "YOSYS_DEPENDENCIES": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz      /src/rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv /src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_sfu.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fastfp_lat.sv  /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v  /work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/clock_period.txt",
+    "OPENROAD_GUI_CMD": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -gui -threads 28 ",
+    "QT_QPA_PLATFORM": "offscreen",
+    "WORK_HOME": "/work",
+    "COMMAND_LINE_ARGS": "                                                                                                                                                                                                                         WORK_HOME  DESIGN_CONFIG                                                                                                                  FLOW_VARIANT           ",
+    "TEST_DIR": "/OpenROAD-flow-scripts/flow/test",
+    "RESULTS_ODB": "1_synth.odb 2_1_floorplan.odb 2_2_floorplan_macro.odb 2_3_floorplan_tapcell.odb 2_4_floorplan_pdn.odb 2_floorplan.odb 3_1_place_gp_skip_io.odb 3_2_place_iop.odb",
+    "RESULTS_V": "1_2_yosys.v",
+    "GDS_FINAL_FILE": "/work/results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/6_final.gds",
+    "SYNTH_SCRIPT": "/OpenROAD-flow-scripts/flow/scripts/synth.tcl",
+    "RESULTS_OAS": "",
+    "KLAYOUT_CMD": "/usr/bin/klayout",
+    "UNSET_VARIABLES_NAMES": "  RCX_RULES    DESIGN_NAME       SDC_FILE   ENABLE_RESISTANCE_AWARE   IO_PLACER_H   BC_CCS_LIB_FILES   GDS_FILES     MAKE_TRACKS   CLUSTER_FLOPS   GENERATE_ARTIFACTS_ON_FAILURE   TAP_CELL_NAME   SYNTH_SKIP_KEEP      TC_NLDM_LIB_FILES_T    STREAM_SYSTEM   SYNTH_HIERARCHICAL   LATCH_MAP_FILE    TC_VOLTAGE   TAPCELL_TCL   RTLMP_WIRELENGTH_WT   ASAP7_USE_VT   BC_VOLTAGE   RESULTS_DEF      VOLTAGE   MIN_PLACE_STEP_COEF   TCLLIBPATH   GPL_ROUTABILITY_DRIVEN    RUN_CMD   CORE_UTILIZATION   WC_TEMPERATURE   OPT_POST_GRT_WNS    ADDITIONAL_LEFS         WC_NLDM_DFF_LIB_FILE_T     RTLMP_MIN_AR   WC_LIB_FILES      DETAILED_METRICS   DETAILED_ROUTE_END_ITERATION   OBJECTS_DIR        DESIGN_NICKNAME   ENABLE_DPO   BC_TEMPERATURE   DONT_BUFFER_PORTS     RTLMP_NOTCH_WT   KEPLER_FORMAL_EXE   RECOVER_POWER   LIB_MODEL   AUTO_MEMORIES    WRAPPED_LEFS    ABC_DRIVER_CELL   DB_FILES   PWR_NETS_VOLTAGES   SYNTH_SCRIPT    MAKEFLAGS   REPORT_CLOCK_SKEW   SKIP_DETAILED_ROUTE     MAX_REPAIR_ANTENNAS_ITER_GRT   BC_LIB_FILES    MAX_REPAIR_ANTENNAS_ITER_DRT   CURDIR   TIELO_CELL_AND_PORT      OTHER_VT   ENABLE_PLACE_REPAIR_TIMING   PRIMARY_VT_TAG     DESIGN_HOME    SCRIPTS_DIR        IO_PLACER_V   CLUSTER_FLOPS_ARGS     BALANCE_ROWS   OPENROAD_HIERARCHICAL    SKIP_ANTENNA_REPAIR_PRE_GRT   ABC_AREA   MAKEFILE_LIST    MATCH_CELL_FOOTPRINT    SYNTH_USE_SYN   RTLMP_AREA_WT     HOLD_SLACK_MARGIN   BC_NLDM_LIB_FILES     SKIP_ANTENNA_REPAIR    SYNTH_INSBUF   LOG_DIR   BC_NLDM_DFF_LIB_FILE_T   CELL_PAD_IN_SITES_DETAIL_PLACEMENT    TECH_LEF   GND_NETS_VOLTAGES   FASTROUTE_TCL   SYNTH_MEMORY_MAX_BITS   SYNTH_SLANG_ARGS     REMOVE_CELLS_FOR_LEC   SKIP_ANTENNA_REPAIR_POST_DRT    VT_LIST   PLATFORM   PRIMARY_VT   LIB_FILES    SET_RC_TCL     SHELL   FILL_CELLS    MACRO_ROWS_HALO_Y    PRE_CTS_TCL   QT_QPA_PLATFORM   SDC_FILE_CLOCK_PERIOD    GLOBAL_ROUTE_USE_CUGR      BC_NLDM_DFF_LIB_FILE       TNS_END_PERCENT        SEAL_GDSOAS    FILL_CELLS_T    GPL_TIMING_DRIVEN   SYNTH_KEEP_MOCKED_MEMORIES    SKIP_INCREMENTAL_REPAIR    CELL_PAD_IN_SITES_GLOBAL_PLACEMENT   SLEW_MARGIN   BC_NLDM_LIB_FILES_T   VERILOG_DEFINES   SKIP_CTS_REPAIR_TIMING   MIN_BUF_CELL_AND_PORTS     TC_NLDM_DFF_LIB_FILE   MIN_CLK_ROUTING_LAYER   PLACE_DENSITY   HOLD_BUF_CELL   RESULTS_DIR   RTLMP_FENCE_UX    CLKGATE_MAP_FILE   REMOVE_ABC_BUFFERS   SYNTH_HIER_SEPARATOR     RTLMP_MAX_LEVEL   WRAPPED_LIBS   REPORTS_DIR   PLATFORM_DIR    PLATFORM_HOME       GDSOAS_FILES     TIEHI_CELL_AND_PORT      ROUTING_LAYER_ADJUSTMENT   STREAM_SYSTEM_EXT     RTLMP_OUTLINE_WT   TC_TEMPERATURE   RESULTS_OAS    ADDER_MAP_FILE     RTLMP_FENCE_LX   CORNERS   PLACE_SITE   TC_NLDM_DFF_LIB_FILE_T    WC_NLDM_LIB_FILES_T   TIE_SEPARATION   SYNTH_MINIMUM_KEEP_SIZE   CORE_ASPECT_RATIO   RTLMP_BOUNDARY_WT     DESIGN_DIR    MAX_PLACE_STEP_COEF   SKIP_REPORT_METRICS   TEMPERATURE    PLATFORM_TCL    WC_NLDM_DFF_LIB_FILE   TC_NLDM_LIB_FILES      SKIP_REPAIR_TIE_FANOUT   ADDITIONAL_GDSOAS    DONT_USE_CELLS    GUI_TIMING   SC_LEF   RESULTS_ODB   SYNTH_KEEP_MODULES   CTS_SNAPSHOTS   TEST_DIR   MACRO_PLACE_HALO   PUBLIC   RESULTS_GDS   WRAPPED_GDSOAS   VERILOG_TOP_PARAMS    DPO_MAX_DISPLACEMENT   WRAP_CFG   PLACE_DENSITY_LB_ADDON   GDS_FINAL_FILE   RTLMP_FENCE_UY         VERILOG_FILES      PDN_TCL   KEEP_VARS    UTILS_DIR     RTLMP_FENCE_LY   MIN_ROUTING_LAYER   CORE_MARGIN   PROCESS   PRE_GLOBAL_ROUTE_TCL   RUN_LOG_NAME_STEM   GDS_MERGED_FILE   SETUP_SLACK_MARGIN     SYNTH_GUT    BC_CCS_LIB_FILES_T   BC_CCS_DFF_LIB_FILE   SYNTH_MOCK_LARGE_MEMORIES     RTLMP_KEEP_CLUSTERING   NUM_CORES   get_variables     ABC_LOAD_IN_FF    MAX_ROUTING_LAYER   SYNTH_REPEATABLE_BUILD   CORNER   GLOBAL_ROUTE_ARGS   INFER_CLKGATES           BC_CCS_DFF_LIB_FILE_T   USE_FILL   MACRO_ROWS_HALO_X    WC_VOLTAGE    LIB_DIR         WRITE_ODB_AND_SDC_EACH_STAGE   IR_DROP_LAYER   RESULTS_V    GDS_ALLOW_EMPTY   LEC_CHECK   WC_NLDM_LIB_FILES",
+    "WRAP_CFG": "/OpenROAD-flow-scripts/flow/platforms/asap7/wrapper.cfg",
+    "KLAYOUT_VERSION": "0.30.7",
+    "OPENROAD_CMD": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 28 "
+  },
+  "files": {
+    "/OpenROAD-flow-scripts/flow/scripts/synth.sh": {
+      "bytes": 915,
+      "sha256": "cde6d985d78e174c3d9804435b9eb5640db7514699352555e37b83c19b611448"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/view_cells.tcl": {
+      "bytes": 1431,
+      "sha256": "92909599ff5b7a61f24ab995043c4beb199d01c8475a4f6950cb4122a2e05886"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/defaults.py": {
+      "bytes": 389,
+      "sha256": "a3040ee6db3331b7bc04933c0cf33a56b1db4dd3843d3d33681ba205cca904ef"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/yosys.tcl": {
+      "bytes": 41,
+      "sha256": "2ecccd5ccee583cc25b192425c828f4b03dd70a640afd65e67f7dee86cd541ca"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_stdcells.tcl": {
+      "bytes": 359,
+      "sha256": "c09091218336176217026dda9c7def112b5976f6434bfaf2f347ec970b529e38"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/global_place.tcl": {
+      "bytes": 2478,
+      "sha256": "05a7a124580f8a023113ad1f4d56c15e61c3640142f4581c27d5ebaa6aa59e33"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl": {
+      "bytes": 498,
+      "sha256": "d2e1bcfa0bf358117a21db9d5ce75997ef69f4059b25a842ecbb725417a6d18a"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/yosys_keep.tcl": {
+      "bytes": 178,
+      "sha256": "baffd22be527aba0655b90b3ede49d210710bd87cc38271e3b79db4550045b5c"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_wrap_operators.tcl": {
+      "bytes": 3764,
+      "sha256": "48db93014182b6fa461f98085fd92e0e542cb0d1f28838bb108347b48f602d46"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/cdl.tcl": {
+      "bytes": 173,
+      "sha256": "c81751cc5bdb760b59656788314c38c6a90c70d13441102fb730ec3cc07545d4"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/lec_check.tcl": {
+      "bytes": 2470,
+      "sha256": "b6652ad4b597055911eae0a1d857bb1a4329c59e14610e896c2baf742c84b768"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/flow.sh": {
+      "bytes": 747,
+      "sha256": "48f3911f8f90daa20e4cb07b1821d495744125e808ba14f5a1c1051c3b39bade"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/pdn.tcl": {
+      "bytes": 598,
+      "sha256": "e074e0b502c2c9224e44d7abcb7a1476b95332a474da9a4219dc2f7657f3c87f"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/open.tcl": {
+      "bytes": 2784,
+      "sha256": "a7054b5dfa2256d51441e5cbda71fc6188e19b3d70884f7b18aeceb583851787"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout.tcl": {
+      "bytes": 619,
+      "sha256": "891474e0989e476f320e34370a64e602cc1e179298b8f424f6493a9b4b048020"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/cts.tcl": {
+      "bytes": 2364,
+      "sha256": "1831283f0c9fd1aa51dc3eb5432534ce4905daf9668535829bb7d6ae9f13fa48"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/add_routing_blk.tcl": {
+      "bytes": 1504,
+      "sha256": "36e4c4a48ecb1e798322e2bd9bcf72a2a41b64265bdea0def5a038d3749e116e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/abc_speed.script": {
+      "bytes": 240,
+      "sha256": "b9fdf10e71bed1207573261c5496df103d73aaee09d86d327cdfe6afbfa07114"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/final_connect.tcl": {
+      "bytes": 284,
+      "sha256": "cc85781e0387a787e2ac32a43db004390c5e62130f69a109b08cdaed836f4580"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/generate_abstract.tcl": {
+      "bytes": 1256,
+      "sha256": "5b40c4f2c5884e5dd77f437916b3667c571853ef22a33425d0234ce17ec76056"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/flow.tcl": {
+      "bytes": 3129,
+      "sha256": "f7e3d557024b46478e0ec47a26b57ae2dabded7236cc0a18dfd3715258676e68"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/variables.mk": {
+      "bytes": 9645,
+      "sha256": "3cba7ede6cdd606381df39dc3f4060ddc7927d4312a9cd79694490f1f19af46b"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/deleteNonClkNets.tcl": {
+      "bytes": 931,
+      "sha256": "477c5eb4948862556a37f842291ef937fad19fb762d59abee0fca7501591ea28"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_metrics.tcl": {
+      "bytes": 154,
+      "sha256": "502e9825a4161eee666f76e73a63dfa8d025541146e84e1f353c112abd428175"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_odb.tcl": {
+      "bytes": 1677,
+      "sha256": "584a79b59b5a40d63dcb242908471ffeddf5b38526a77dcb065d94bca358c044"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/non_stage_variables.py": {
+      "bytes": 665,
+      "sha256": "92b1702f98b010558c199dcf302c1d991b4c334a1910e344bfa5c223b0573f3f"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/global_route.tcl": {
+      "bytes": 5516,
+      "sha256": "aeeb5c3aa3bdef64ba569cb650fd119c3389d0f0bf7478a7e440dca3f6b50447"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/deletePowerNets.tcl": {
+      "bytes": 620,
+      "sha256": "8f4126373160c056774bbb4347d1ca654a0567764e092aee3370977c1708e013"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/util.tcl": {
+      "bytes": 10585,
+      "sha256": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth.tcl": {
+      "bytes": 11305,
+      "sha256": "81cb1177c4103778f760c73944b59c8e62a4ec966b731448bedf392081cf1a5f"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/tapcell.tcl": {
+      "bytes": 370,
+      "sha256": "f53c2103b653b94feb6f92612c357dc35fb80f2bb5adaa605d5f6a1bfde84f52"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/noop.tcl": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/read_liberty.tcl": {
+      "bytes": 1144,
+      "sha256": "2d484b96c98e9931a1e800aee5e6b765a5d3d961c7baf40d6079cad5a57c6d2b"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/variables.json": {
+      "bytes": 57066,
+      "sha256": "fed37ca34d445a0607f7ef84da53c8b568c53193090a171091b3be5e891feb38"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl": {
+      "bytes": 9206,
+      "sha256": "768c16b0fdc71293126e7642ab528d73ec96d184a6f91fb2d5fc6727222e4f25"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl": {
+      "bytes": 1940,
+      "sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/detail_route.tcl": {
+      "bytes": 3024,
+      "sha256": "e4041889c5949b6ea62f6e0605588c8bcdc55ea62bf9b71c51474bfd5d560952"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/write_ref_sdc.tcl": {
+      "bytes": 1490,
+      "sha256": "ffc128b0ff914a6d3782dceb7b665cbe40d80c876df32ce33b04966ddb243a3b"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/deleteRoutingObstructions.tcl": {
+      "bytes": 309,
+      "sha256": "a7440564abbe208094d291ec98e6b3c9f169e24b61f3eeddd754338b04d57919"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/variables.yaml": {
+      "bytes": 51219,
+      "sha256": "ace00958f198233639551983de67960f5b71842c3caf47d62108a5137cbe3a26"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/macro_place.tcl": {
+      "bytes": 380,
+      "sha256": "f6cca8e16a76e1d6f72340b4b341e6fb6bf62fe2405f302afc7a97a0eb337262"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/save_images.tcl": {
+      "bytes": 5178,
+      "sha256": "379d6b3da7004b49761695658ab0ef29fe25c09bedc4572b05be6b39608ec973"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/run_command.py": {
+      "bytes": 3809,
+      "sha256": "c6e1f733b88c4f59d342fc41e674b955c467c4a16bd454f09cf2db0297f4da97"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/density_fill.tcl": {
+      "bytes": 583,
+      "sha256": "662e85b6dee413e5c3c5633b9d16b92bf1a2191a9e1d4b66a106f31a535d5392"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/README.md": {
+      "bytes": 6034,
+      "sha256": "2e5e22a594339dabd4261788405fe9ac323cdf357ad6ef95bfa379c7391b1808"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/floorplan.tcl": {
+      "bytes": 6599,
+      "sha256": "9ad31d01c305cbb9117f1579504950dde3810cd0de1d53bc0bbe8edc8b65db77"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/escape.sh": {
+      "bytes": 84,
+      "sha256": "aae36411c58843258783030267f7eedd0d2d49d9a3cbf6930ba70e281b819a4e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/detail_place.tcl": {
+      "bytes": 1278,
+      "sha256": "575dce950d84e8e7c8c8c0ad5fdfcee5111b1447354432aa380ca57d8a2b0ad6"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/yosys_load.tcl": {
+      "bytes": 129,
+      "sha256": "bb9da6d4caefe6fa883bdb302c3b1c715dc457dddf416d42b85210d3b378ab84"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/abc_speed_gia_only.script": {
+      "bytes": 201,
+      "sha256": "f4c4302ee1e02f100238c1c8efd8718ba0b2649508ef0b6683e715ca4d701323"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/global_place_skip_io.tcl": {
+      "bytes": 890,
+      "sha256": "d8d7cfeea598ef6f7f3a0e3c575f226f1c6f46c7bc73240b5cc23377d371ff22"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/resize.tcl": {
+      "bytes": 1341,
+      "sha256": "94a124271b030d3a23caa7bcce2d46fc5b5fb997b7ec01f1fbb99ffde23dd4dd"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/abc_area.script": {
+      "bytes": 66,
+      "sha256": "58859a054b67f8334f9d20340657ef950f5acb865719c1ac303fd31f0cac03bf"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/write_verilog.tcl": {
+      "bytes": 65,
+      "sha256": "900ab49b8ae717ae1bfcee1da938ffb121613eea72dd5004ef8a04a7cbc77a50"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/abc_retime.script": {
+      "bytes": 74,
+      "sha256": "987eb470cd5f83cc8c752cf414b5011880329104594dbf5808345b83b7559904"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/load.tcl": {
+      "bytes": 1705,
+      "sha256": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_wrap_operators-booth.v": {
+      "bytes": 89,
+      "sha256": "f54c5517ad36426128ff8e8fb6d1772077319ce062731a88c968841e30ce5897"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/synth_syn.tcl": {
+      "bytes": 2721,
+      "sha256": "eed8fe51e35280bb261a69f470cf2e6cd4ad739aaff22096faa58c34e9b12c9e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/macro_place_util.tcl": {
+      "bytes": 3073,
+      "sha256": "6e713fe75ac9937ef983cbbebe2c685b53354a8f9b9c7bdf62d0bf31abc5d4ee"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/generate-variables-docs.py": {
+      "bytes": 2791,
+      "sha256": "c698368a88645fd08fabdcfc210d5b1253bf68690802e0ec9441bda294998c1e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/io_placement.tcl": {
+      "bytes": 735,
+      "sha256": "95c9b5a0901c52a586407b7601c6dd6d4f3f14c0057e99a16da140d3f165517e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/mem_dump.py": {
+      "bytes": 4726,
+      "sha256": "b3c62d62268534ce120bd6e408141891d3d526e5e427bb98198d25ad41f4e0d7"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/fillcell.tcl": {
+      "bytes": 495,
+      "sha256": "272afe7d1362a9e9edd30f3c839407218f4fcfe81c726dc47b9abf1da0989a30"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/yaml_to_json.py": {
+      "bytes": 517,
+      "sha256": "102ae2b6371dd6ae1722949304bc61abf7cd7b75439a75b120a809be43244b9c"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/floorplan_to_place.tcl": {
+      "bytes": 608,
+      "sha256": "662721482ed6dedc56115ed7ee304d8b567e200e6b30b99ff7d3e110a87d4bb2"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/write_def.tcl": {
+      "bytes": 57,
+      "sha256": "715240a6d0cb7551d0bd703016631e5a63c5a681efa4530a9f152da7df5f622e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/report_metrics.tcl": {
+      "bytes": 12680,
+      "sha256": "b314571634205e7f739126bc9e6923f7f65ea510307ed2b92ee4e4a7d890f329"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/final_report.tcl": {
+      "bytes": 337,
+      "sha256": "6635cf09989eeb9cb5d4e6f03081cfebf1dbe8d796828e6a0b34854956c93e9e"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout.sh": {
+      "bytes": 177,
+      "sha256": "0073b8046e4a7a13a03732694e2016b225e2ca4476e911e2b2deabef8b8915c4"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/bazel-orfs-auto-memories.patch": {
+      "bytes": 7225,
+      "sha256": "d47a542b3f0dc655575a13b0e1d6fc12fe7e21e304dc880d67995080e2136d76"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/extract_memories.tcl": {
+      "bytes": 593,
+      "sha256": "65e24207edb168f8ee3dd3a10c34f063e305bbb4fc6142486f18df80b20e19aa"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/idiomatic_test.py": {
+      "bytes": 1483,
+      "sha256": "0a45e2d034f0080ded4396116bb26057b11f93fa5a1d3fec60022db4f90f3ff3"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/gen_memories.py": {
+      "bytes": 4525,
+      "sha256": "0b13ece75dbf6c0933b7fe53ab89fee53d7754ebe64a1b7498ef623ec70401fa"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/gen_memories_test.py": {
+      "bytes": 6205,
+      "sha256": "5eb2407d34a4adb2f38dee4ceee9b72c9b34b2fb13e1f1276581f2da2067a234"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/detect.py": {
+      "bytes": 6727,
+      "sha256": "218a8bf8c0695176bb9633ca2fed4ee33b79a307d69c311150d449462daa5fb3"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/schema.py": {
+      "bytes": 6775,
+      "sha256": "1911e0ddc76bf70397d82632d93c8d8f299c5ac99a0599a3c63a71e8b152b128"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/detect_test.py": {
+      "bytes": 3793,
+      "sha256": "da6186a46babf17e9b9a013881d49fc8dca6d9f22a013db2f4274e3896ee54c5"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/schema_test.py": {
+      "bytes": 4660,
+      "sha256": "2cd22b5135e7440774d3b376fce913728f81f9d63f9302707d3f9fff401ea0d5"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/memories/idiomatic.py": {
+      "bytes": 1660,
+      "sha256": "1cc27256397021b9f459fd146c1c1666ce1dd521be8947fff711bdba2c0d0596"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/README.md": {
+      "bytes": 2373,
+      "sha256": "3dfde8307d3f4ba46c73c7ccf01b8ba2f392f8aabb4da9586c751d989d2ce7ac"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/test/LEFViaDataTest.rb": {
+      "bytes": 1708,
+      "sha256": "a0988aa4391cc89e7d19094f0f2de9191a9658b94da6c54b778de8025b0d3dce"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/test/GenericLayerNameMapperTest.rb": {
+      "bytes": 997,
+      "sha256": "89d180b01e10a291fa2de0c935d69984fcafa40e513675444da567e8d804739c"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/test/KLayoutLayerMapGeneratorTest.rb": {
+      "bytes": 2370,
+      "sha256": "fc54c8fccc29532f18018853cab20eb04e752645bcd3948109049073287837ef"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/test/LEFNamedObjectTest.rb": {
+      "bytes": 427,
+      "sha256": "1cd9ae28fa6d464272f15de212ef019964ab859af54c7304977398cfaa334f0a"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/test/LEFLayerTest.rb": {
+      "bytes": 1258,
+      "sha256": "a588cb1a4833b684c488e130dfea39a75124344af573f63f9eac9f5fdf6c0227"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/test/LEFViaTest.rb": {
+      "bytes": 5702,
+      "sha256": "4edf5897c7ece2402a1ff1efc8decc839753df97ea93e38b0efa7eb289f6ff67"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/LEFNamedObject.rb": {
+      "bytes": 255,
+      "sha256": "b570921797b6c038867d6f973314aee518c1452fdd3a760b79e9087e84de594b"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/KLayoutTechFileGenerator.rb": {
+      "bytes": 5765,
+      "sha256": "cf6fb9f3f849365aec6df6e40d33f3fa26aed2788e896aa8932bffd9b5b63b22"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/LEFLayer.rb": {
+      "bytes": 1332,
+      "sha256": "439df1f75a25adb072a3a7238d6f39912f53c4eb24be74f633b3642688178004"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/LEFViaData.rb": {
+      "bytes": 6769,
+      "sha256": "091009a5b136440bb9a89178cc0444e2b7e542d0bf9057fca1a6d019d72af68b"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/KLayoutLayerMapGenerator.rb": {
+      "bytes": 5672,
+      "sha256": "a12948ef97597338e0c56923766e14af7fe85f5f8b4ac3eb67ad56468184863a"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/gen_klayout_files.sh": {
+      "bytes": 4881,
+      "sha256": "a23c1efb1df71cc96a3a39ce355e6d3bc58b7021e8fed6c24069af29f66d45de"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/KLayoutLayerPropertiesFileGenerator.rb": {
+      "bytes": 1787,
+      "sha256": "00b4d90d95d1a9758a2d99dc7e1d672c1515f2df5f076d9e7220435f9bfe55f3"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/GenericLayerNameMapper.rb": {
+      "bytes": 1850,
+      "sha256": "00a7b0ffd44a4ffa41df1235991f2526e80ff4720af4b79dd6e28782f8c5ff94"
+    },
+    "/OpenROAD-flow-scripts/flow/scripts/klayout/src/LEFVia.rb": {
+      "bytes": 3565,
+      "sha256": "01f711a4e90eaca3793954230648752ae120895e3df7032ca2e86de5fbe1bd4f"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl": {
+      "bytes": 1159,
+      "sha256": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz": {
+      "bytes": 4181198,
+      "sha256": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": {
+      "bytes": 69301,
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz": {
+      "bytes": 3760577,
+      "sha256": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": {
+      "bytes": 1513373,
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": {
+      "bytes": 444914,
+      "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v": {
+      "bytes": 215,
+      "sha256": "e65a51575b36be6d1ddc330a0df9805ec5737dd987d4e2227fa058018cca00ad"
+    },
+    "/usr/bin/python3": {
+      "bytes": 5917224,
+      "sha256": "7d51cd6b48b521277f5caa4610a82126e315fa2be4df069823a8b1eeb5bd4a86"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl": {
+      "bytes": 259,
+      "sha256": "689cdf3c4b11e59b1c476f24fbca1a766e46fefc5175494e6e7d9389e8584786"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules": {
+      "bytes": 117122,
+      "sha256": "32a117e5e866d3de1406e8f18d65b6f1857781f156638941a4769e25ef5252cc"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": {
+      "bytes": 4256548,
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": {
+      "bytes": 69351,
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": {
+      "bytes": 3829689,
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": {
+      "bytes": 317193,
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": {
+      "bytes": 1510915,
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/pdn/grid_strategy-M1-M2-M5-M6.tcl": {
+      "bytes": 2006,
+      "sha256": "7eb4c880be9357ed33c352ff84c2870b9c02312db96cdf7b0a5214fb39d0a844"
+    },
+    "/work/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl": {
+      "bytes": 706,
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976"
+    },
+    "/work/hooks/pre_cts_v41x_karb_repair_buffer_cap.tcl": {
+      "bytes": 706,
+      "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef": {
+      "bytes": 20141,
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+    },
+    "/OpenROAD-flow-scripts/tools/install/kepler-formal/bin/kepler-formal": {
+      "bytes": 4870232,
+      "sha256": "9d939b40a99547835f6d5143cc45f9fb25d4bf82e0994ecae452578a91e7e27a"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v": {
+      "bytes": 315,
+      "sha256": "671d1558a6efd093ec60efd0db6a32286ca873b7bb72d05612427a123e0509dc"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl": {
+      "bytes": 290,
+      "sha256": "0513fb0efd632b4bc3c16882b09d64ce227e48f4bc71486f4d05aec62fe7b0e1"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef": {
+      "bytes": 391403,
+      "sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds": {
+      "bytes": 2041856,
+      "sha256": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263"
+    },
+    "/src/rtl/hdc/v41x/ot_hdc_v41x_w11_phys.sv": {
+      "bytes": 9308,
+      "sha256": "0527f147e6fe742cbae3a1505c4dfdbececabe1bebdeee26d475089250ead0da"
+    },
+    "/src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": {
+      "bytes": 16157,
+      "sha256": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69"
+    },
+    "/src/rtl/hdc/ot_hdc_delay.sv": {
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "/src/rtl/hdc/ot_hdc_fastfp.sv": {
+      "bytes": 19069,
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    "/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+      "bytes": 11377,
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+    },
+    "/src/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "bytes": 12112,
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    "/src/rtl/hdc/ot_hdc_sfu.sv": {
+      "bytes": 7751,
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    "/src/rtl/hdc/ot_hdc_fpu.sv": {
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "/src/rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "/src/rtl/hdc/ot_hdc_prefix.sv": {
+      "bytes": 2803,
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    "/src/rtl/hdc/ot_hdc_fastfp_lat.sv": {
+      "bytes": 5423,
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl": {
+      "bytes": 1235,
+      "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/tapcell.tcl": {
+      "bytes": 578,
+      "sha256": "582c43c5d1ceee9ede9b71afc15fb4d98cf98a4a335d3c06b0123033520ddf2e"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/KLayout/asap7.lyt": {
+      "bytes": 5331,
+      "sha256": "c0d9587a636ca54246cdbdbded3919a7e49efcf50904700335432017a6d8fba2"
+    },
+    "/OpenROAD-flow-scripts/flow/Makefile": {
+      "bytes": 34858,
+      "sha256": "036a76c4b673214f346491ff548d7bd2af2ab74de0351975197d22f081ea3216"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/config.mk": {
+      "bytes": 10149,
+      "sha256": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c"
+    },
+    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": {
+      "bytes": 121423136,
+      "sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846"
+    },
+    "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys": {
+      "bytes": 39412552,
+      "sha256": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": {
+      "bytes": 69356,
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": {
+      "bytes": 3765433,
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": {
+      "bytes": 1512690,
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": {
+      "bytes": 446864,
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/sta": {
+      "bytes": 9165184,
+      "sha256": "fc5c337829d694d040c37250320a1ee72e2f95b6f1505b0966d706bc85936c8a"
+    },
+    "/usr/bin/klayout": {
+      "bytes": 35272,
+      "sha256": "c068a1d6f8f4626e7eda4d5c3bf08dc2a6edb1fe60d0621446a927db6b22d60b"
+    }
+  },
+  "additional_source_text": {
+    "/OpenROAD-flow-scripts/flow/scripts/lec_check.tcl": "proc lec_check_enabled { } {\n  return [expr {\n    [env_var_equals LEC_CHECK 1]\n    && [info exists ::env(KEPLER_FORMAL_EXE)]\n    && [file executable $::env(KEPLER_FORMAL_EXE)]\n  }]\n}\n\nproc write_lec_verilog { filename } {\n  set remove_cells [find_physical_only_masters]\n  if { [env_var_exists_and_non_empty REMOVE_CELLS_FOR_LEC] } {\n    lappend remove_cells {*}$::env(REMOVE_CELLS_FOR_LEC)\n  }\n  set out_file $::env(RESULTS_DIR)/$filename\n  write_verilog -remove_cells $remove_cells $out_file\n\n  # Add auxiliary Verilog files (e.g., blackbox stubs) for LEC\n  if { [env_var_exists_and_non_empty LEC_AUX_VERILOG_FILES] } {\n    set out [open $out_file a]\n    foreach aux_file $::env(LEC_AUX_VERILOG_FILES) {\n      if { ![file exists $aux_file] } {\n        close $out\n        error \"LEC auxiliary Verilog file not found: $aux_file\"\n      }\n      puts $out \"\\n// ORFS auxiliary Verilog for Kepler LEC: $aux_file\"\n      set in [open $aux_file r]\n      fcopy $in $out\n      close $in\n      puts $out \"\"\n    }\n    close $out\n  }\n}\n\nproc write_lec_script { step file1 file2 } {\n  # Exclude select Liberty files from being passed to kepler-formal\n  if { [env_var_exists_and_non_empty REMOVE_LIBS_FOR_LEC] } {\n    foreach lib_to_remove $::env(REMOVE_LIBS_FOR_LEC) {\n      set remove_libs_set($lib_to_remove) 1\n    }\n    set lib_list [lmap item $::env(LIB_FILES) {\n      if { [info exists remove_libs_set($item)] } { continue }\n      set item\n    }]\n  } else {\n    set lib_list $::env(LIB_FILES)\n  }\n  set outfile [open \"$::env(OBJECTS_DIR)/${step}_lec_test.yml\" w]\n  puts $outfile \"format: verilog\"\n  puts $outfile \"input_paths:\"\n  puts $outfile \"  - $::env(RESULTS_DIR)/${file1}\"\n  puts $outfile \"  - $::env(RESULTS_DIR)/${file2}\"\n  puts $outfile \"liberty_files:\"\n  foreach libFile $lib_list {\n    puts $outfile \" - $libFile\"\n  }\n  puts $outfile \"log_file: $::env(LOG_DIR)/${step}_lec_check.log\"\n  close $outfile\n}\n\nproc run_lec_test { step file1 file2 } {\n  write_lec_script $step $file1 $file2\n  # tclint-disable-next-line command-args\n  eval exec $::env(KEPLER_FORMAL_EXE) --config $::env(OBJECTS_DIR)/${step}_lec_test.yml\n  try {\n    set count [exec grep -c \"Found difference\" $::env(LOG_DIR)/${step}_lec_check.log]\n  } trap CHILDSTATUS {results options} {\n    # This block executes if grep returns a non-zero exit code\n    set count 0\n  }\n  if { $count > 0 } {\n    error \"Repair timing output failed lec test\"\n  } else {\n    puts \"Repair timing output passed lec test\"\n  }\n}\n",
+    "/OpenROAD-flow-scripts/flow/scripts/final_connect.tcl": "utl::set_metrics_stage \"finish__{}\"\nsource $::env(SCRIPTS_DIR)/load.tcl\nerase_non_stage_variables final\nload_design 6_1_fill.odb 6_1_fill.sdc\nsource_step_tcl PRE FINAL_REPORT\n\nset_propagated_clock [all_clocks]\n\n# Ensure all OR created (rsz/cts) instances are connected\nglobal_connect\n",
+    "/OpenROAD-flow-scripts/flow/scripts/detail_route.tcl": "utl::set_metrics_stage \"detailedroute__{}\"\nsource $::env(SCRIPTS_DIR)/load.tcl\nload_design 5_1_grt.odb 5_1_grt.sdc\nsource_step_tcl PRE DETAIL_ROUTE\nif { ![grt::have_routes] } {\n  error \"Global routing failed, run `make gui_grt` and load $::global_route_congestion_report \\\n        in DRC viewer to view congestion\"\n}\n\nif { !$::env(SKIP_DETAILED_ROUTE) } {\n  erase_non_stage_variables route\n  set_propagated_clock [all_clocks]\n\n  set additional_args \"\"\n  append_env_var additional_args dbProcessNode -db_process_node 1\n  append_env_var additional_args OR_SEED -or_seed 1\n  append_env_var additional_args OR_K -or_k 1\n  append_env_var additional_args VIA_IN_PIN_MIN_LAYER -via_in_pin_bottom_layer 1\n  append_env_var additional_args VIA_IN_PIN_MAX_LAYER -via_in_pin_top_layer 1\n  append_env_var additional_args DISABLE_VIA_GEN -disable_via_gen 0\n  append_env_var additional_args REPAIR_PDN_VIA_LAYER -repair_pdn_vias 1\n  append_env_var additional_args DETAILED_ROUTE_END_ITERATION -droute_end_iter 1\n\n  append additional_args \" -verbose 1\"\n\n  # DETAILED_ROUTE_ARGS is used when debugging detailed, route, e.g. append\n  # \"-droute_end_iter 5\" to look at routing violations after only 5 iterations,\n  # speeding up iterations on a problem where detailed routing doesn't converge\n  # or converges slower than expected.\n  #\n  # If DETAILED_ROUTE_ARGS is not specified, save out progress report a\n  # few iterations after the first two iterations. The first couple of\n  # iterations would produce very large .drc reports without interesting\n  # information for the user.\n  #\n  # The idea is to have a policy that gives progress information soon without\n  # having to go spelunking in Tcl or modify configuration scripts, while\n  # not having to wait too long or generating large useless reports.\n\n  set arguments [expr {\n    [env_var_exists_and_non_empty DETAILED_ROUTE_ARGS] ? $::env(DETAILED_ROUTE_ARGS) :\n    [concat $additional_args {-drc_report_iter_step 5}]\n  }]\n\n  set all_args [concat [list \\\n    -output_drc $::env(REPORTS_DIR)/5_route_drc.rpt \\\n    -output_maze $::env(RESULTS_DIR)/maze.log] \\\n    $arguments]\n\n  log_cmd detailed_route {*}$all_args\n\n  if {\n    !$::env(SKIP_ANTENNA_REPAIR_POST_DRT) &&\n    [env_var_exists_and_non_empty MAX_REPAIR_ANTENNAS_ITER_DRT]\n  } {\n    set repair_antennas_iters 1\n    if { [repair_antennas] } {\n      detailed_route {*}$all_args\n    }\n    while {\n      [check_antennas] && $repair_antennas_iters < $::env(MAX_REPAIR_ANTENNAS_ITER_DRT)\n    } {\n      repair_antennas\n      detailed_route {*}$all_args\n      incr repair_antennas_iters\n    }\n  } else {\n    utl::metric_int \"antenna_diodes_count\" -1\n  }\n\n  source_step_tcl POST DETAIL_ROUTE\n\n  check_antennas -report_file $env(REPORTS_DIR)/drt_antennas.log\n\n  if { ![design_is_routed] } {\n    error \"Design has unrouted nets.\"\n  }\n\n  report_design_area\n\n  # Don't report metrics as we have not extracted parasitics, which will\n  # happen in final so there is no need to repeat it here.\n}\n\norfs_write_db $::env(RESULTS_DIR)/5_2_route.odb\n",
+    "/OpenROAD-flow-scripts/flow/scripts/deleteRoutingObstructions.tcl": "proc deleteRoutingObstructions { } {\n  set db [ord::get_db]\n  set chip [$db getChip]\n  set block [$chip getBlock]\n  set obstructions [$block getObstructions]\n\n  foreach obstruction $obstructions {\n    odb::dbObstruction_destroy $obstruction\n  }\n  puts \"Deleted [llength $obstructions] routing obstructions\"\n}\n",
+    "/OpenROAD-flow-scripts/flow/scripts/density_fill.tcl": "source $::env(SCRIPTS_DIR)/load.tcl\nerase_non_stage_variables final\nload_design 5_route.odb 5_route.sdc\nsource_step_tcl PRE DENSITY_FILL\n\nif { $::env(USE_FILL) } {\n  set_propagated_clock [all_clocks]\n  density_fill -rules $::env(FILL_CONFIG)\n  # The .v file is just for debugging purposes, not a result of\n  # this stage.\n  write_verilog $::env(RESULTS_DIR)/6_1_fill.v\n  orfs_write_db $::env(RESULTS_DIR)/6_1_fill.odb\n} else {\n  orfs_copy_db $::env(RESULTS_DIR)/5_route.odb $::env(RESULTS_DIR)/6_1_fill.odb\n  # There is no 5_route.v file to copy\n}\n\nsource_step_tcl POST DENSITY_FILL\n",
+    "/OpenROAD-flow-scripts/flow/scripts/fillcell.tcl": "source $::env(SCRIPTS_DIR)/load.tcl\nerase_non_stage_variables route\nif { [env_var_exists_and_non_empty FILL_CELLS] } {\n  load_design 5_2_route.odb 5_1_grt.sdc\n  source_step_tcl PRE FILLCELL\n\n  set_propagated_clock [all_clocks]\n\n  log_cmd filler_placement $::env(FILL_CELLS)\n  check_placement\n\n  report_design_area\n  orfs_write_db $::env(RESULTS_DIR)/5_3_fillcell.odb\n} else {\n  orfs_copy_db $::env(RESULTS_DIR)/5_2_route.odb $::env(RESULTS_DIR)/5_3_fillcell.odb\n}\n\nsource_step_tcl POST FILLCELL\n",
+    "/OpenROAD-flow-scripts/flow/scripts/final_report.tcl": "# Split around the 6_final.odb write so a single-process flow\n# (scripts/flow.tcl) can source the parts and perform the write itself\n# at the same point.\nsource $::env(SCRIPTS_DIR)/final_connect.tcl\norfs_write_db $::env(RESULTS_DIR)/6_final.odb\norfs_write_sdc $::env(RESULTS_DIR)/6_final.sdc\nsource $::env(SCRIPTS_DIR)/final_outputs.tcl\n"
+  },
+  "environment_export_policy": "Only ORFS-declared/referenced keys plus explicit tool paths; no raw environ, secrets excluded",
+  "source_identity": {
+    "pid": 2006920,
+    "start_ticks": 53282142
+  }
+}

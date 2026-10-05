@@ -1,0 +1,1745 @@
+{
+  "CDC": {
+    "actual_CDC_SDF_and_resetrelation_qualification": false,
+    "crossing_phase_bound_stream_edges": 7,
+    "gen": "full32+era32; no wrap/reuse beforeallaffectedoldVMversions/peerpacketsdrained. Epochrequesttokenalwaysmatchesidentity.",
+    "latency_is_positive_with3:4_arbitrary_phase": true,
+    "reset": "asyncassert/synchronous2FFreleaseeachdomain +bothreseteraACKquiescence BEFOREGO; resetdoesnoteraseacceptedbank/packet/versiondebt",
+    "scheme": "two16-entryGray-pointercontrolmailboxes; 2receiverFF sync andregisteredcapture. Full169ctx+era32+row16+seq16+shard1+opcode4 held inownedstableFIFO, no bitwisebussync"
+  },
+  "CRC": {
+    "NAND2_per_XOR2": 4,
+    "RX_quarantine": "Capture full reserved256-flit packet at wire rate; validate stored flit+packet CRC before delivery. Original packetbuffer charged. No speculative VM write.",
+    "RXstored_expected_flitCRC32_bits": 8192,
+    "TXstored_flitCRC32_bits": 8192,
+    "XOR_levels": 8,
+    "accepted_to_terminal_cycles": 10,
+    "balanced_registered_levels": [
+      {
+        "XOR2": 2339,
+        "maximum_terms_next": 84,
+        "registered_outputs": 2357
+      },
+      {
+        "XOR2": 1169,
+        "maximum_terms_next": 42,
+        "registered_outputs": 1188
+      },
+      {
+        "XOR2": 584,
+        "maximum_terms_next": 21,
+        "registered_outputs": 604
+      },
+      {
+        "XOR2": 293,
+        "maximum_terms_next": 11,
+        "registered_outputs": 311
+      },
+      {
+        "XOR2": 148,
+        "maximum_terms_next": 6,
+        "registered_outputs": 163
+      },
+      {
+        "XOR2": 68,
+        "maximum_terms_next": 3,
+        "registered_outputs": 95
+      },
+      {
+        "XOR2": 32,
+        "maximum_terms_next": 2,
+        "registered_outputs": 63
+      },
+      {
+        "XOR2": 31,
+        "maximum_terms_next": 1,
+        "registered_outputs": 32
+      }
+    ],
+    "engines": 4,
+    "extra_BUF_for_leaf_clones": 35184,
+    "input_use_max_fanout": 23,
+    "leaf_capture_edge": 1,
+    "leaf_clone_FF_total": 2932,
+    "leaf_clone_output_fanout_ceiling": 8,
+    "matrix_hex": [
+      "0x1f91caf6386f2c25de2753181954cd1ef5e1bbd961745c3ae969f40a5f513d795f513d79",
+      "0x3f2395ec70de584bbc4ea63032a99a3debc377b2c2e8b875d2d3e814bea27af3bea27af3",
+      "0x7e472bd8e1bcb097789d4c606553347bd786ef6585d170eba5a7d0297d44f5e67d44f5e6",
+      "0xfc8e57b1c379612ef13a98c0caa668f7af0ddecb0ba2e1d74b4fa052fa89ebcdfa89ebcd",
+      "0xe68d6595be9dee783c5262998c181cf1abfa064f76319f947ff6b4afaa42eae2aa42eae2",
+      "0xd28b01dd4554f0d5a683962b0164f4fda215b7478d17631216849d550bd4e8bc0bd4e8bc",
+      "0xba87c94cb2c6cd8e93207f4e1b9d24e5b1cad5567b5a9a1ec460cea048f8ec0148f8ec01",
+      "0x6a9e586f5de2b738f867ad842e6e84d59674117597c1680761a8694acea0e57bcea0e57b",
+      "0xd53cb0debbc56e71f0cf5b085cdd09ab2ce822eb2f82d00ec350d2959d41caf69d41caf6",
+      "0xb5e8ab4b4fe5f0c63fb9e508a0eede48ac31fe0f3e71fc276fc8512165d2a89465d2a894",
+      "0x74409c60a7a4cda9a15499095889718fad8247c71d97a47436f9564894f46c5094f46c50",
+      "0xe88138c14f499b5342a93212b112e31f5b048f8e3b2f48e86df2ac9129e8d8a029e8d8a0",
+      "0xce93bb74a6fc1a835b75373d7b710b2043e8a4c5172acdea328cad280c808c390c808c39",
+      "0x82b6bc1f7597192368cd3d62efb6db5e7230f2534f21c7ee8c70ae5a4650250a4650250a",
+      "0x1afcb2c8d3411e630fbd29ddc6397ba211805f7fff37d3e7f188a8bed3f1776dd3f1776d",
+      "0x35f96591a6823cc61f7a53bb8c72f7442300befffe6fa7cfe311517da7e2eedba7e2eedb",
+      "0x6bf2cb234d04798c3ef4a77718e5ee8846017dfffcdf4f9fc622a2fb4fc5ddb64fc5ddb6",
+      "0xd7e596469a08f3187de94eee31cbdd108c02fbfff9be9f3f8c4545f69f8bbb6d9f8bbb6d",
+      "0xb05ae67b0c7eca1525f5cec47ac3773fede44c2692096245f1e37fe760464ba360464ba3",
+      "0x7f2406002092b80f95ccce90ecd223612e292394456698b10aaf0bc49fddaa3e9fddaa3e",
+      "0xfe480c004125701f2b999d21d9a446c25c5247288acd3162155e17893fbb547c3fbb547c",
+      "0xe301d2f6ba25cc1b8914695baa1c409a4d45358874ee3efec3d5db182027958120279581",
+      "0xd9926f1b4c24b412cc0f81af4d6c4c2a6f6bd0c988a821c76ec2423a1f1e167a1f1e167a",
+      "0xacb514c0a026440046385046838c554a2b361a4a70241fb434ed707e616d118d616d118d",
+      "0x46fbe3777823a4255257f3951e4c678aa38d8f4d813c635280b314f69d8b1e639d8b1e63",
+      "0x8df7c6eef047484aa4afe72a3c98cf15471b1e9b0278c6a5016629ed3b163cc63b163cc6",
+      "0x47e472bd8e1bcb097789d4c606553347bd786ef6585d170eba5a7d0297d44f5297d44f5",
+      "0x8fc8e57b1c379612ef13a98c0caa668f7af0ddecb0ba2e1d74b4fa052fa89eb52fa89eb",
+      "0x11f91caf6386f2c25de2753181954cd1ef5e1bbd961745c3ae969f40a5f513d7a5f513d7",
+      "0x23f2395ec70de584bbc4ea63032a99a3debc377b2c2e8b875d2d3e814bea27af4bea27af",
+      "0x47e472bd8e1bcb097789d4c606553347bd786ef6585d170eba5a7d0297d44f5e97d44f5e",
+      "0x8fc8e57b1c379612ef13a98c0caa668f7af0ddecb0ba2e1d74b4fa052fa89ebc2fa89ebc"
+    ],
+    "ordered_packet_extend_II": 11,
+    "packet_state_feedback_not_II1": true,
+    "terminal_capture_edge": 1,
+    "total_XOR2": 18656,
+    "total_data_FF": 22312,
+    "total_valid_ASR": 40,
+    "wrong_seq_duplicate_generation": "reject without publishing or freeing matching immutable phase/packet debt"
+  },
+  "CRC_source_exactness": {
+    "PASS": true,
+    "additional_directed_random_vectors": 515,
+    "linear_basis_vectors": 288,
+    "no_FP_rounding_or_golden_payload_changed": true,
+    "source_initial_and_final_XOR": "ffffffff as in native flit function; packetextend uses previous unfinalized state"
+  },
+  "HDL_build_GO": false,
+  "ROM_ECC": false,
+  "VMguard": {
+    "selected_output_payload_words": 7680,
+    "selected_source_max_output_versions": 8,
+    "source_VM_payload_bits_not_duplicated": 245760,
+    "source_formatter_unchanged": "obase+row+pos*ops AW30; fmt==1 or(fmt==0 && row<rsplit ?pw62:pw63) ->FP32 else retainedBF16<<16. RejectAW19alias beforepublication, never reround.",
+    "version32_scope": "8retainedselectedoutputversions +3XN/ACT/EID sourceinputs +12writerowners +2link/context slots=25<32; fullprogram unknownlifetimes backpressure beforeacquisition, not drop/overwrite. Fullprogramdeadlockfree/rate needscompiledgraph enrollment.",
+    "writer_admission": "Reserveexclusivepublication service afterall12writerunit_DRAIN; gate NEW conflicting engineaccepts, do notstall unbuffered alreadyactivewriter output. All128nativeROMwe suppressed ONLYownedcapturedphase; slot0newownedpublication selected."
+  },
+  "arithmetic_golden_payload_unchanged": true,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cell_body_area_per_section_um2_per_shard": {
+    "CDC16x2": 12064.48344,
+    "CRC4engines": 17446.019760000003,
+    "CRC_metadata_memory": 9077.39136,
+    "VMformatter_guard": 1154.4443999999999,
+    "VMversion_guard32": 13699.601279999999,
+    "clock_reset_FO4leaf_FO8upper": 24534.91782,
+    "codec_header": 903.7267199999999,
+    "drain_and_phase_sequencer": 31674.947940000002,
+    "packet_memory_existing_provider_obligation": 72619.13088,
+    "raw4096": 318246.17471999995,
+    "read_token16_and_fifo": 1944.8553600000002,
+    "reader12levels": 542540.2436999999,
+    "registered_selector": 10517.7204
+  },
+  "cell_body_mm2_each_shard": 1.0564236577799997,
+  "clock_reset": {
+    "FF": 816158,
+    "clock_BUF": 233191,
+    "clock_leaf_FO": 4,
+    "reset_BUF": 7206,
+    "reset_FF": 25210,
+    "upper_FO": 8
+  },
+  "component": "FULL4096_ROW_SHARD_PARENT_V1",
+  "component_construction_complete": true,
+  "construction_cell_counts_per_shard": {
+    "CDC16x2": {
+      "BUFx4_ASAP7_75t_R": 40030,
+      "DFFASRHQNx1_ASAP7_75t_R": 390,
+      "DFFHQNx1_ASAP7_75t_R": 7616,
+      "INVx1_ASAP7_75t_R": 8006,
+      "NAND2x1_ASAP7_75t_R": 59935,
+      "TIEHIx1_ASAP7_75t_R": 390
+    },
+    "CRC4engines": {
+      "BUFx4_ASAP7_75t_R": 73472,
+      "DFFASRHQNx1_ASAP7_75t_R": 20,
+      "DFFHQNx1_ASAP7_75t_R": 11156,
+      "INVx1_ASAP7_75t_R": 11176,
+      "NAND2x1_ASAP7_75t_R": 70840,
+      "TIEHIx1_ASAP7_75t_R": 20
+    },
+    "CRC_metadata_memory": {
+      "BUFx4_ASAP7_75t_R": 40960,
+      "DFFASRHQNx1_ASAP7_75t_R": 0,
+      "DFFHQNx1_ASAP7_75t_R": 8192,
+      "INVx1_ASAP7_75t_R": 8192,
+      "NAND2x1_ASAP7_75t_R": 24576,
+      "TIEHIx1_ASAP7_75t_R": 0
+    },
+    "VMformatter_guard": {
+      "BUFx4_ASAP7_75t_R": 7094,
+      "DFFASRHQNx1_ASAP7_75t_R": 128,
+      "DFFHQNx1_ASAP7_75t_R": 62,
+      "INVx1_ASAP7_75t_R": 190,
+      "NAND2x1_ASAP7_75t_R": 4000,
+      "TIEHIx1_ASAP7_75t_R": 128
+    },
+    "VMversion_guard32": {
+      "BUFx4_ASAP7_75t_R": 41120,
+      "DFFASRHQNx1_ASAP7_75t_R": 8224,
+      "DFFHQNx1_ASAP7_75t_R": 0,
+      "INVx1_ASAP7_75t_R": 8224,
+      "NAND2x1_ASAP7_75t_R": 64768,
+      "TIEHIx1_ASAP7_75t_R": 8224
+    },
+    "clock_reset_FO4leaf_FO8upper": {
+      "BUFx4_ASAP7_75t_R": 240397
+    },
+    "codec_header": {
+      "BUFx4_ASAP7_75t_R": 3395,
+      "DFFASRHQNx1_ASAP7_75t_R": 128,
+      "DFFHQNx1_ASAP7_75t_R": 551,
+      "INVx1_ASAP7_75t_R": 679,
+      "NAND2x1_ASAP7_75t_R": 3575,
+      "TIEHIx1_ASAP7_75t_R": 128
+    },
+    "drain_and_phase_sequencer": {
+      "BUFx4_ASAP7_75t_R": 18365,
+      "DFFASRHQNx1_ASAP7_75t_R": 3673,
+      "DFFHQNx1_ASAP7_75t_R": 0,
+      "INVx1_ASAP7_75t_R": 122777,
+      "NAND2x1_ASAP7_75t_R": 261515,
+      "TIEHIx1_ASAP7_75t_R": 3673
+    },
+    "packet_memory_existing_provider_obligation": {
+      "BUFx4_ASAP7_75t_R": 327680,
+      "DFFASRHQNx1_ASAP7_75t_R": 0,
+      "DFFHQNx1_ASAP7_75t_R": 65536,
+      "INVx1_ASAP7_75t_R": 65536,
+      "NAND2x1_ASAP7_75t_R": 196608,
+      "TIEHIx1_ASAP7_75t_R": 0
+    },
+    "raw4096": {
+      "BUFx4_ASAP7_75t_R": 1433600,
+      "DFFASRHQNx1_ASAP7_75t_R": 4096,
+      "DFFHQNx1_ASAP7_75t_R": 282624,
+      "INVx1_ASAP7_75t_R": 286720,
+      "NAND2x1_ASAP7_75t_R": 860160,
+      "TIEHIx1_ASAP7_75t_R": 4096
+    },
+    "read_token16_and_fifo": {
+      "BUFx4_ASAP7_75t_R": 8160,
+      "DFFASRHQNx1_ASAP7_75t_R": 16,
+      "DFFHQNx1_ASAP7_75t_R": 1616,
+      "INVx1_ASAP7_75t_R": 1632,
+      "NAND2x1_ASAP7_75t_R": 6432,
+      "TIEHIx1_ASAP7_75t_R": 16
+    },
+    "reader12levels": {
+      "BUFx4_ASAP7_75t_R": 2137590,
+      "DFFASRHQNx1_ASAP7_75t_R": 4095,
+      "DFFHQNx1_ASAP7_75t_R": 413595,
+      "INVx1_ASAP7_75t_R": 417690,
+      "NAND2x1_ASAP7_75t_R": 2100735,
+      "TIEHIx1_ASAP7_75t_R": 4095
+    },
+    "registered_selector": {
+      "BUFx4_ASAP7_75t_R": 71340,
+      "DFFASRHQNx1_ASAP7_75t_R": 4440,
+      "DFFHQNx1_ASAP7_75t_R": 0,
+      "INVx1_ASAP7_75t_R": 4440,
+      "NAND2x1_ASAP7_75t_R": 13320,
+      "TIEHIx1_ASAP7_75t_R": 4440
+    }
+  },
+  "context_PnR_GO": false,
+  "default_off": true,
+  "defaultoff_RTL_preparation_ready": true,
+  "fixed_capacity": {
+    "CRC_engines_total_two_shards": 4,
+    "VM_writer_per_logical_owner": 1,
+    "control_CDC_entries_each_direction": 16,
+    "control_CDC_payload_bits": 238,
+    "packet_MAX256_FLIT256": true,
+    "pipeline_levels": 12,
+    "raw69_records_per_shard": 4096,
+    "read_record_bits": 102,
+    "read_seq_bits": 16,
+    "read_sink_tokens": 16,
+    "roots_per_shard": 64,
+    "rows_per_root": 64,
+    "sink_edge": 1,
+    "version_slots": 32
+  },
+  "limits": [
+    "No source RTL, HDL build or P&R launched byconstruction.",
+    "CRC9/10-cutsourcebooleanproof isnotSSFF timing; registered circuits and route caps screenedseparately.",
+    "Oneposition capacityand46509countcert: MTP6 needs6positionschedule/runtimeenrollment and serialization cost; notautomaticallycapacity for6 simultaneouspositions.",
+    "Newhome sitepacking andknowninventorynonoverlap not parentclock/PG/pin/DRTqualification; oldcaptureoverlay notcredited orsilentlydeleted.",
+    "No admittedfulltoken/persistentKV/headprovider/rate; parentall4778program criticalpath extra unitadmission stalls unknown, notzero."
+  ],
+  "new_home": {
+    "actual_local_PG_M1": "EveryoccupiedR0row VSS[y-9,y+9],VDD[y+261,y+279];0.54rowpitch; source allmasters checked in cellLEF. M2/VIA12/M8upfeed bounds required.",
+    "all_cell_runs_sitepacked_not_DRT_or_signoff": true,
+    "allocated_row_pitch_DBU": 540,
+    "gross_mm2_each_die": 2.37631325184,
+    "halo_DBU": 12960,
+    "height_um": 1021.68,
+    "known_inventory_nonoverlap_PASS": true,
+    "known_retained_rectangle_conflicts": [],
+    "named_cell_count": 9886297,
+    "new_global_clock_and_parent_PG_routes_not_installed": true,
+    "new_identical_home_per_shard_DBU": [
+      10974906,
+      14973930,
+      13300794,
+      15995610
+    ],
+    "no_other_retained_instance_removed": true,
+    "old_capture_credit_taken": 0,
+    "old_capture_overlay_bbox_DBU": [
+      10974906,
+      15562800,
+      11298906,
+      15995610
+    ],
+    "old_capture_overlay_overlap_expected": true,
+    "parent_inventory_receipts": [
+      {
+        "copy": "capture.json.gz",
+        "copy_sha256": "951910802701c2f0d7922dfd14e54da39cc4a2d39e92ea03b4a02419aa0c694d",
+        "source_commit": "e5629aefd71c1d0032178cf36544bc060bc05bdb",
+        "source_path": "results/uarch/dsrom_I66_capture_cells_20261002/model.json",
+        "source_sha256": "373f405ed8807e92d75dc4d903bb5ac3619e14ac50c467cc15fdaf74fddc3d19",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "field.json.gz",
+        "copy_sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/field.json.gz",
+        "source_sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "cfg.json.gz",
+        "copy_sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/cfg.json.gz",
+        "source_sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "bands.json.gz",
+        "copy_sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/bands.json.gz",
+        "source_sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "services.json.gz",
+        "copy_sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/services.json.gz",
+        "source_sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "frames.json.gz",
+        "copy_sha256": "d130d68fdcd0a611e4c515987f7c37f3877b03553f1286cf6f25ba64a8225403",
+        "source_commit": "3a6b71c33",
+        "source_path": "results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/model_admission.json",
+        "source_sha256": "37dceabd73575500614350935741d98ae26ae862afe43e54413a6bb34cc3f94b",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "budget.json.gz",
+        "copy_sha256": "d3daee9f2e2e052bc56272c5233accc1064d51e84c40f2123c86c042b17e45df",
+        "source_commit": "fa7b2986f38ff39b861c52a9b4797759e1794578",
+        "source_path": "/home/ubuntu/dsrom-matched-leaf-clock-20261002/results/uarch/dsrom_I66_current_spatial_envelope_20261002/model.json",
+        "source_sha256": "eebb56659db011baaf90c27e4d720d590082ec6ce44fc2e0866c1ca187a3f448",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "tracks.txt.gz",
+        "copy_sha256": "aba7bc9014c0e24fccffbb6930df9a2b4acd9fb0b20ce7107fc0e7aacb4c46ac",
+        "source_commit": "24e3ff04c",
+        "source_path": "results/uarch/dsrom_noECC_production_context_20261002/inputs/make_tracks.tcl",
+        "source_sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "tech.lef.gz",
+        "copy_sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243",
+        "source_commit": "24e3ff04c",
+        "source_path": "results/uarch/dsrom_noECC_production_context_20261002/inputs/tech.lef.gz",
+        "source_sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "cell_LEF.json.gz",
+        "copy_sha256": "007ab8c4d064f668c503257c26444ee7751fab732926f49d6517d76534d61207",
+        "source_commit": "e5629aefd71c1d0032178cf36544bc060bc05bdb",
+        "source_path": "results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_LEF.json",
+        "source_sha256": "802969ef259feebb2c8c1cab7f8b2e2f367a832605cc59d1156342b6c9153130",
+        "source_was_gzip": false
+      }
+    ],
+    "reticle33000x26000_um_rotated26x33_PASS": true,
+    "sections": [
+      {
+        "bbox_relative_DBU": [
+          0,
+          0,
+          2299968,
+          278640
+        ],
+        "rows": 516,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 1433600,
+            "first_row_offset_DBU": 0,
+            "last_row_cells": 3860,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 236,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 4096,
+            "first_row_offset_DBU": 127440,
+            "last_row_cells": 820,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 3,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 282624,
+            "first_row_offset_DBU": 129060,
+            "last_row_cells": 1596,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 133,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 286720,
+            "first_row_offset_DBU": 200880,
+            "last_row_cells": 2780,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 21,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 860160,
+            "first_row_offset_DBU": 212220,
+            "last_row_cells": 1302,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 122,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 4096,
+            "first_row_offset_DBU": 278100,
+            "last_row_cells": 4096,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "raw4096"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          282960,
+          2299968,
+          756540
+        ],
+        "rows": 877,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 2137590,
+            "first_row_offset_DBU": 282960,
+            "last_row_cells": 2106,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 352,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 4095,
+            "first_row_offset_DBU": 473040,
+            "last_row_cells": 819,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 3,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 413595,
+            "first_row_offset_DBU": 474660,
+            "last_row_cells": 569,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 195,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 417690,
+            "first_row_offset_DBU": 579960,
+            "last_row_cells": 5977,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 30,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 2100735,
+            "first_row_offset_DBU": 596160,
+            "last_row_cells": 6825,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 296,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 4095,
+            "first_row_offset_DBU": 756000,
+            "last_row_cells": 4095,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "reader12levels"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          760860,
+          2299968,
+          764640
+        ],
+        "rows": 7,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 8160,
+            "first_row_offset_DBU": 760860,
+            "last_row_cells": 2076,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 2,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 16,
+            "first_row_offset_DBU": 761940,
+            "last_row_cells": 16,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 1616,
+            "first_row_offset_DBU": 762480,
+            "last_row_cells": 1616,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 1632,
+            "first_row_offset_DBU": 763020,
+            "last_row_cells": 1632,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 6432,
+            "first_row_offset_DBU": 763560,
+            "last_row_cells": 6432,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 16,
+            "first_row_offset_DBU": 764100,
+            "last_row_cells": 16,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "read_token16_and_fifo"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          768960,
+          2299968,
+          782460
+        ],
+        "rows": 25,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 41120,
+            "first_row_offset_DBU": 768960,
+            "last_row_cells": 4616,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 7,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 8224,
+            "first_row_offset_DBU": 772740,
+            "last_row_cells": 34,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 6,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 0,
+            "first_row_offset_DBU": 775980,
+            "last_row_cells": 2129,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 8224,
+            "first_row_offset_DBU": 775980,
+            "last_row_cells": 8224,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 64768,
+            "first_row_offset_DBU": 776520,
+            "last_row_cells": 886,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 10,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 8224,
+            "first_row_offset_DBU": 781920,
+            "last_row_cells": 8224,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "VMversion_guard32"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          786780,
+          2299968,
+          790560
+        ],
+        "rows": 7,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 7094,
+            "first_row_offset_DBU": 786780,
+            "last_row_cells": 1010,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 2,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 128,
+            "first_row_offset_DBU": 787860,
+            "last_row_cells": 128,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 62,
+            "first_row_offset_DBU": 788400,
+            "last_row_cells": 62,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 190,
+            "first_row_offset_DBU": 788940,
+            "last_row_cells": 190,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 4000,
+            "first_row_offset_DBU": 789480,
+            "last_row_cells": 4000,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 128,
+            "first_row_offset_DBU": 790020,
+            "last_row_cells": 128,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "VMformatter_guard"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          794880,
+          2299968,
+          798120
+        ],
+        "rows": 6,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 3395,
+            "first_row_offset_DBU": 794880,
+            "last_row_cells": 3395,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 128,
+            "first_row_offset_DBU": 795420,
+            "last_row_cells": 128,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 551,
+            "first_row_offset_DBU": 795960,
+            "last_row_cells": 551,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 679,
+            "first_row_offset_DBU": 796500,
+            "last_row_cells": 679,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 3575,
+            "first_row_offset_DBU": 797040,
+            "last_row_cells": 3575,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 128,
+            "first_row_offset_DBU": 797580,
+            "last_row_cells": 128,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "codec_header"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          802440,
+          2299968,
+          819720
+        ],
+        "rows": 32,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 73472,
+            "first_row_offset_DBU": 802440,
+            "last_row_cells": 464,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 13,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 20,
+            "first_row_offset_DBU": 809460,
+            "last_row_cells": 20,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 11156,
+            "first_row_offset_DBU": 810000,
+            "last_row_cells": 511,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 6,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 11176,
+            "first_row_offset_DBU": 813240,
+            "last_row_cells": 11176,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 70840,
+            "first_row_offset_DBU": 813780,
+            "last_row_cells": 6958,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 10,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 20,
+            "first_row_offset_DBU": 819180,
+            "last_row_cells": 20,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "CRC4engines"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          824040,
+          2299968,
+          832680
+        ],
+        "rows": 16,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 40960,
+            "first_row_offset_DBU": 824040,
+            "last_row_cells": 4456,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 7,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 0,
+            "first_row_offset_DBU": 827820,
+            "last_row_cells": 1638,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 8192,
+            "first_row_offset_DBU": 827820,
+            "last_row_cells": 1805,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 4,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 8192,
+            "first_row_offset_DBU": 829980,
+            "last_row_cells": 8192,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 24576,
+            "first_row_offset_DBU": 830520,
+            "last_row_cells": 3282,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 4,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 0,
+            "first_row_offset_DBU": 832680,
+            "last_row_cells": 14197,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "CRC_metadata_memory"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          837000,
+          2299968,
+          900720
+        ],
+        "rows": 118,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 327680,
+            "first_row_offset_DBU": 837000,
+            "last_row_cells": 5228,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 54,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 0,
+            "first_row_offset_DBU": 866160,
+            "last_row_cells": 1638,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 65536,
+            "first_row_offset_DBU": 866160,
+            "last_row_cells": 1666,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 31,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 65536,
+            "first_row_offset_DBU": 882900,
+            "last_row_cells": 8748,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 5,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 196608,
+            "first_row_offset_DBU": 885600,
+            "last_row_cells": 4962,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 28,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 0,
+            "first_row_offset_DBU": 900720,
+            "last_row_cells": 14197,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "packet_memory_existing_provider_obligation"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          905040,
+          2299968,
+          917460
+        ],
+        "rows": 23,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 40030,
+            "first_row_offset_DBU": 905040,
+            "last_row_cells": 3526,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 7,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 390,
+            "first_row_offset_DBU": 908820,
+            "last_row_cells": 390,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 7616,
+            "first_row_offset_DBU": 909360,
+            "last_row_cells": 1229,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 4,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 8006,
+            "first_row_offset_DBU": 911520,
+            "last_row_cells": 8006,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 59935,
+            "first_row_offset_DBU": 912060,
+            "last_row_cells": 3151,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 390,
+            "first_row_offset_DBU": 916920,
+            "last_row_cells": 390,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "CDC16x2"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          921780,
+          2299968,
+          950940
+        ],
+        "rows": 54,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 18365,
+            "first_row_offset_DBU": 921780,
+            "last_row_cells": 113,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 4,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 3673,
+            "first_row_offset_DBU": 923940,
+            "last_row_cells": 397,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 3,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 0,
+            "first_row_offset_DBU": 925560,
+            "last_row_cells": 2129,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 122777,
+            "first_row_offset_DBU": 925560,
+            "last_row_cells": 9201,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 261515,
+            "first_row_offset_DBU": 930420,
+            "last_row_cells": 5987,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 37,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 3673,
+            "first_row_offset_DBU": 950400,
+            "last_row_cells": 3673,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "drain_and_phase_sequencer"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          955260,
+          2299968,
+          965520
+        ],
+        "rows": 19,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 71340,
+            "first_row_offset_DBU": 955260,
+            "last_row_cells": 4416,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 12,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1404,
+            "count": 4440,
+            "first_row_offset_DBU": 961740,
+            "last_row_cells": 1164,
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 1638,
+            "row_pitch_DBU": 540,
+            "rows": 3,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 1080,
+            "count": 0,
+            "first_row_offset_DBU": 963360,
+            "last_row_cells": 2129,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 2129,
+            "row_pitch_DBU": 540,
+            "rows": 0,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 4440,
+            "first_row_offset_DBU": 963360,
+            "last_row_cells": 4440,
+            "master": "INVx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 13320,
+            "first_row_offset_DBU": 963900,
+            "last_row_cells": 6222,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 2,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 4440,
+            "first_row_offset_DBU": 964980,
+            "last_row_cells": 4440,
+            "master": "TIEHIx1_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "registered_selector"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          969840,
+          2299968,
+          991440
+        ],
+        "rows": 40,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 240397,
+            "first_row_offset_DBU": 969840,
+            "last_row_cells": 3121,
+            "master": "BUFx4_ASAP7_75t_R",
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 40,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "clock_reset_FO4leaf_FO8upper"
+      }
+    ],
+    "site_row_grid_DBU": [
+      54,
+      270
+    ],
+    "width_um": 2325.888
+  },
+  "physical_fit": false,
+  "pinned_SU_fences": {
+    "absolute_consumer_first_and_last_time_bound": null,
+    "accepted_origin_actual_runtime_word_and_service_enrollment_required": true,
+    "all12_have_later_GU0": true,
+    "bank_rearm_after_publication_and_source_debt_not_after_SUconsumption": true,
+    "build_admitted": false,
+    "clock": "native_core_clk source transition proof only; selectedc9 clock timing/CDC phase not transferred",
+    "destination_address_version_lease_stays_until_SUread_tag_fence": true,
+    "fences": [
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 70,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 69,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "a6595825ddb77bf2eaf4e76403f33a0fe100e8f7c15a8fb0c427fb45c8e68e6a",
+        "operand": "a",
+        "producer": 66
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 70,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 69,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "a6595825ddb77bf2eaf4e76403f33a0fe100e8f7c15a8fb0c427fb45c8e68e6a",
+        "operand": "c",
+        "producer": 67
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 80,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 79,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "7cd2640c7d05a4328e7e16bfc7394fcb8d10d025f4d53523a68a61eab356f1a1",
+        "operand": "a",
+        "producer": 68
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 80,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 79,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "7cd2640c7d05a4328e7e16bfc7394fcb8d10d025f4d53523a68a61eab356f1a1",
+        "operand": "c",
+        "producer": 69
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 85,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 84,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "e0b2b843f3e017f9ca232a4c8a0c8a4345d7beb8d695f7bd7fac63fd3e672e78",
+        "operand": "a",
+        "producer": 72
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 85,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 84,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "e0b2b843f3e017f9ca232a4c8a0c8a4345d7beb8d695f7bd7fac63fd3e672e78",
+        "operand": "c",
+        "producer": 73
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 90,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 89,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "6c751d8f7ad75b20d72af939229a04e6b8cd6b3bcb760d17a323c0c780f800f0",
+        "operand": "a",
+        "producer": 82
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 90,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 89,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "6c751d8f7ad75b20d72af939229a04e6b8cd6b3bcb760d17a323c0c780f800f0",
+        "operand": "c",
+        "producer": 83
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 95,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 94,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "fe0edcfbdaa7bd9b794080e1624192d455bb27536e6d47c2ec75716b055ed6fe",
+        "operand": "a",
+        "producer": 87
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 95,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 94,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "fe0edcfbdaa7bd9b794080e1624192d455bb27536e6d47c2ec75716b055ed6fe",
+        "operand": "c",
+        "producer": 88
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 98,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 97,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "dfb42503ac4dc13fa6f3f1ebae2a376b996658fa1fcd49e49626745cc2359924",
+        "operand": "a",
+        "producer": 92
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 98,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 97,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "dfb42503ac4dc13fa6f3f1ebae2a376b996658fa1fcd49e49626745cc2359924",
+        "operand": "c",
+        "producer": 93
+      }
+    ],
+    "finite_relative_visibility_deadline_native_edges": "strictly before F; first consumer admission/read no earlier than F+7",
+    "gross_state_and_gate_obligations": {
+      "NOT_OR_AND_control_cone": "!phase_active OR retire; AND native_idle; fanout to adapter idle +WAIT condition",
+      "active_bit_existing_containment_unproven": true,
+      "contextual_clock_reset_PG_SSFF_area": null,
+      "full169comparison_counter_source_credit_CDC_and_faultlogic_not_inside_onebit": true,
+      "phase_active_reference_bit": 1,
+      "retirement_qualified_register_bits": 1
+    },
+    "hook_allowedcell_floor": {
+      "SSFF_new_CLK_pin_fF": {
+        "FF": 1.006304,
+        "SS": 0.867964
+      },
+      "SSFF_new_RESETN_pin_fF": {
+        "FF": 1.605818,
+        "SS": 1.40805
+      },
+      "body_um2": 2.2161600000000004,
+      "cell_counts": {
+        "BUFx4_ASAP7_75t_R": 4,
+        "DFFASRHQNx1_ASAP7_75t_R": 2,
+        "INVx1_ASAP7_75t_R": 6,
+        "NAND2x1_ASAP7_75t_R": 8,
+        "TIEHIx1_ASAP7_75t_R": 2
+      },
+      "control_logic": "INV(retire), NAND(active,notretire), NAND(nativeidle,enable), INV(effectiveidle)",
+      "feedback_per_ASR_twoBUF_lowerbound": true,
+      "gross_control_bits": 2,
+      "hold_closed": false,
+      "identity_compare_counters_credit_ledger_CDC_drivers_routes_clock_reset_PG_extra": true,
+      "not_a_complete_state_area_or_contextual_timing_price": true,
+      "phase_active_existing_containment_credit": 0,
+      "reserve50pct_mm2": 4.4323200000000005e-06
+    },
+    "hook_keeps_adapter_S_WAIT_until_publication_retirement": true,
+    "native_spine_s_ready_not_a_qualified_retirement_fence": true,
+    "new_SU_admission_guard_not_selected": true,
+    "new_SU_per_read_backpressure": false,
+    "one_selected_completion_hook": "DEFAULT-OFF adapter s_idle input = native_spine_idle && (!phase_active || qualified_visibility_credit_packet_retired)",
+    "phase_active_and_retirement_must_match_full169context": true,
+    "ready_hook_is_new_implementation_not_native_guarantee": true,
+    "start_with_no_active_debt_permitted": true
+  },
+  "quiet_monitor": {
+    "generation_register_and_clear_at_GO_required": true,
+    "global_registered_reduce_edges": 4,
+    "local_registered_reduce_edges": 4,
+    "logic": "32pairquiet +63nodequiet +rootquiet; pairbusy includesDRAIN127, but node/root actualfifo/pipeline/held empty exported indefaultoffsourcewrapper; simulation-onlyquiet=0 cannotbeused",
+    "signals_per_global_root": 96,
+    "synchronous_nooverlap_wired_not_an_assumed_annotation": true
+  },
+  "rate_adopted": false,
+  "sequencer": "RESET_ACK->IDLE->matchedBOTHSHARDreserve(all12writer_DRAIN,VMversion_slot,actualpair/node/rootempty)->CFG25accepted->GOmatchedloadergen->DRAIN(allrowsVMvisible+matchedpositivecredits,allread/packet/CDCdebt0,allnativeactualquiet)->RETIRE/registerqualifiedF->IDLE. VMversionretainedthroughactualSUreadR+2drain.",
+  "service": {
+    "I66_added_rearm_dependency_edges": 7896,
+    "I66_added_rearm_dependency_us": 6.58,
+    "I66_conditional_SU_front_lower_edge": 8324,
+    "I66_native_idle": 421,
+    "I66_prospective_F": 8317,
+    "I66_remote_packet_service": {
+      "ACK_wait_bound": 3889,
+      "cycles": 5202,
+      "minimum_timeout_for_this_packet_profile": 3890,
+      "packets": [
+        {
+          "ACK_wait_bound_after_last_send": 3889,
+          "CRC_II": 11,
+          "RXquarantine_verify": 957,
+          "TXcollect_and_CRC": 1226,
+          "flits": 87,
+          "previous4096_PASS": true,
+          "rows": 256,
+          "successful_cycles": 5202,
+          "timeout1024_PASS": false
+        }
+      ],
+      "timeout8192_PASS": true
+    },
+    "derived_single_timeout_candidate": 8192,
+    "matched_shard_reservation_prep_edges": 2682,
+    "normal_failure_faults_preserved_and_no_retry_job": true,
+    "previous4096_timeout_is_insufficient_for_newCRC": true,
+    "timeout32bit_counter_state_unchanged": true,
+    "timeout_is_successful_service_bound_not_relaxedclock_orretry": true,
+    "wholeprogram_token_delta": null,
+    "worst_full4096_remote_service": {
+      "ACK_wait_bound": 6257,
+      "cycles": 55882,
+      "minimum_timeout_for_this_packet_profile": 6258,
+      "packets": [
+        {
+          "ACK_wait_bound_after_last_send": 6257,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3594,
+          "flits": 256,
+          "previous4096_PASS": false,
+          "rows": 765,
+          "successful_cycles": 10107,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6257,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3594,
+          "flits": 256,
+          "previous4096_PASS": false,
+          "rows": 765,
+          "successful_cycles": 10107,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6257,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3594,
+          "flits": 256,
+          "previous4096_PASS": false,
+          "rows": 765,
+          "successful_cycles": 10107,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6257,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3594,
+          "flits": 256,
+          "previous4096_PASS": false,
+          "rows": 765,
+          "successful_cycles": 10107,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6257,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3594,
+          "flits": 256,
+          "previous4096_PASS": false,
+          "rows": 765,
+          "successful_cycles": 10107,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 3959,
+          "CRC_II": 11,
+          "RXquarantine_verify": 1012,
+          "TXcollect_and_CRC": 1296,
+          "flits": 92,
+          "previous4096_PASS": true,
+          "rows": 271,
+          "successful_cycles": 5347,
+          "timeout1024_PASS": false
+        }
+      ],
+      "timeout8192_PASS": true
+    }
+  },
+  "source_consumer_lease_Rplus2": "Lease release requiresactualsamectxSUread andmatchingR+2tag/nativeSUdrain, not firstconsumerdispatch; observercallback ABI pinnedbelow. Source12W1W3fencesV<F thenSUfront>=F+7;6nativeW2leasesremain enrolled."
+}

@@ -1,0 +1,30 @@
+test_archived_real_H1_page_row_and_two_copy_accept_source (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_both_mirror_ACKs_hold_credit_through_reverse (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_combined_H1_ACK_after_partial_fence_is_atomic_reject (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_combined_H1_ACK_needs_both_write_edges (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_distinct_dies_are_explicit (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_duplicate_ACK_cannot_publish (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_exact_archive_and_model_scope (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_finite_bounds_include_all_credit_hold_terms (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_generation_and_sequence_cannot_reuse (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_group_home_join_preserves_actual_translation_gaps (test_h4_hbm_production_owner.OwnerTests) ... FAIL
+test_missing_waits_refuse_and_source_ticks_reject (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_no_line_publication_on_first_word_or_unaccepted_capture (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_out_of_bounds_alignment_and_bitwidth_reject (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_read_still_requires_consume_and_reverse (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_same_bank_serializes_different_SM_and_nonoverlapping_ranges (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_source_RF_coordinate_exact_macro_mapping (test_h4_hbm_production_owner.OwnerTests) ... ok
+test_stale_owner_and_lease_reject (test_h4_hbm_production_owner.OwnerTests) ... ok
+
+======================================================================
+FAIL: test_group_home_join_preserves_actual_translation_gaps (test_h4_hbm_production_owner.OwnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-hbm-atomic-source-g0/tests/test_h4_hbm_production_owner.py", line 120, in test_group_home_join_preserves_actual_translation_gaps
+    self.assertEqual(x['output_current_home_index_differences_tiles'],64)
+AssertionError: 62 != 64
+
+----------------------------------------------------------------------
+Ran 17 tests in 3.363s
+
+FAILED (failures=1)

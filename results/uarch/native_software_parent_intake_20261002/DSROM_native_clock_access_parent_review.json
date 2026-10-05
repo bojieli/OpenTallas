@@ -1,0 +1,19 @@
+{
+  "status": "PASS_PARENT_NATIVE_CLOCK_ACCESS_SOURCE_SCREEN",
+  "tests_passed": 22,
+  "source_hash_entries": 47,
+  "artifact_hash_entries": 14,
+  "cold_model_byte_identical": true,
+  "parser_correction": {
+    "old_M1_C_fF_per_um": 1.0,
+    "literal_M1_C_fF_per_um": 1e-10,
+    "cause": "Earlier [\\d.E+-]+ regex accepted prefix1 of literal1e-10; uppercase E only. No original artifact rewritten.",
+    "old_budget_retained": true
+  },
+  "old_budget_failure_preserved": true,
+  "capacitance_scope": "Area-equivalent source-metal proxy, not extracted via/fringe/coupling capacitance. Literal nominal setRC is not SS/FF interconnect qualification.",
+  "full_clock_root_reset_scalar_union_qualified": false,
+  "physical_build_admitted": false,
+  "area_credit": 0,
+  "added_edges": 0
+}

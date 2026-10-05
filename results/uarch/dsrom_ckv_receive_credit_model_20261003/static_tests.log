@@ -1,0 +1,13 @@
+test_all512_permutations_both_passes_all4_ranks (__main__.ReceiveLeaseModelTests) ... ok
+test_missing_first_rank_holds_without_losing_later511 (__main__.ReceiveLeaseModelTests) ... ok
+test_model_no_stall_bound_or_installed_adoption (__main__.ReceiveLeaseModelTests) ... ok
+test_original_failures_unchanged_and_service_same_as_historical (__main__.ReceiveLeaseModelTests) ... ok
+test_pin_tamper_refuses_before_model (__main__.ReceiveLeaseModelTests) ... ok
+test_qk_take_does_not_return_lease_credit (__main__.ReceiveLeaseModelTests) ... ok
+test_reject_stale_duplicate_bad_identity_and_bounds_without_mutation (__main__.ReceiveLeaseModelTests) ... ok
+test_two_passes_need_all_publication_and_reverse_fences (__main__.ReceiveLeaseModelTests) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.023s
+
+OK

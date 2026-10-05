@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "command": "python3 -m pytest -q tests/test_qwen_hbm_row_tiles.py",
+  "tests_passed": 1,
+  "operations": 2,
+  "rows_per_operation": 2374,
+  "tiles_per_operation": 10,
+  "tail_rows": 70,
+  "coverage": [
+    "matching actual L2 commit identity required",
+    "stale commit epoch rejected",
+    "bulk backend stall retained",
+    "tile commit stall retained",
+    "sense1 then sense0 released only by matching network sense",
+    "arrival held through idle"
+  ],
+  "full_token": false,
+  "connected_SM": false,
+  "physical_qualification": false,
+  "historical_prototype": "4f8ef324e exposes a waiting level, not qualified existing GPU sense protocol; historical test scope unchanged",
+  "source_sha256": {
+    "rtl/gpu/ot_gpu_qwen_row_tiles.sv": "231a2bd37f383c2e77e7ceab9724017fd2b32b31da3354fa7aebac5b1427b119",
+    "tests/test_qwen_hbm_row_tiles.py": "85bef52e9ef748c021fa71e407c23de62fc0c5f61deea52aa4d7387ebb23fd42"
+  }
+}

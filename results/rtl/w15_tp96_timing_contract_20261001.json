@@ -1,0 +1,53 @@
+{
+  "baseline_source_commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+  "clock_contract": {
+    "conversion": "elapsed_ps = elapsed_cycles * 1112, exact integers; elapsed_ns is display only",
+    "effective_period_ps": 1112,
+    "model_generator_change": false,
+    "nominal_bench_serial_ns": "1.111111",
+    "physical_constraint_change": false,
+    "simulator_precision_ps": 1
+  },
+  "future_campaign_admission": "No current successor queued/launched. After existing runner AND binary exit, archive terminal receipt first; then require no equivalent local/remote job, a clean source pin, new build/output paths and this measurement contract. Local runner/binary process guard added.",
+  "ideal_serial_timeout_cycles": 7200000,
+  "legacy_campaign": {
+    "latency_status": "pending_unqualified",
+    "outputs_preserved": true,
+    "reason": "16-bit OP issue/done cannot establish elapsed time across wrap; neither absence of negative deltas nor later instrumentation retroactively qualifies old cycles",
+    "runner_pid": 595164,
+    "source_commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f"
+  },
+  "max_round_required_bits": 19,
+  "measurement_bits": 64,
+  "measurement_counter": "independent per-endpoint count; advances on same enabled core edges as protocol now; fatal on overflow; never drives stimuli or transport",
+  "model_round_upper_bounds_cycles": {
+    "expert_intermediate": 5001,
+    "index_candidates": 64013,
+    "w19_oreduce": 463462
+  },
+  "modeled_campaign_sum_cycles": 532476,
+  "modeled_campaign_sum_required_bits": 20,
+  "preflight_sha256": "ba25d111f2c6685badf9439eb6c3804a6fd380746be2fc951f59e02922023465",
+  "protocol_timestamp_bits": 16,
+  "schema": "w15_tp96_timing_contract_v1",
+  "scope": "testbench timing instrumentation and control only; actual96 collective interface and reduction order unchanged. Does not establish future full96 measurement, product rate, hardware adoption or physical closure.",
+  "simulation_timeout_ns": 8000000,
+  "source_sha256": {
+    "rtl/test/tb_w15_tp96_exact.sv": "13628ffd0f5d11f79fde0d4266c692a3fd43f2c5c112e6fc45ff9be98dbbe555",
+    "rtl/test/tb_w15_tp96_measure_control.sv": "b9e26bdc335878c4fe81a810be20a074a2cba92b5ee3f29233f5c615d723f481",
+    "rtl/test/w15_tp96_measure_counter.sv": "bc4eafc867dca2d3120ba7225b75f339e46595a8ad321185423f40936208e44b",
+    "tests/test_w15_tp96_measurement.py": "a324075cc168410472c2dd4dd003c96d61d0652f80f1aa2a0f1f1cc90d0b49f6",
+    "tools/w15_tp96_exact.py": "c5205999c721d3dc26900697874fe15938c6e2e7598af74a4c1bbec89f9ac2ea"
+  },
+  "timeout_required_bits": 23,
+  "timestamp_contract": {
+    "comparison": "every MEAS timestamp low16 equals corresponding legacy OP timestamp low16; exact coverage all3 operations x96 endpoints; monotonic operations",
+    "done": "last_vm + 1",
+    "elapsed_cycles": "done - issue; integer, unwrapped",
+    "first_tx": "first actual producer valid edge",
+    "first_vm": "alias of last_vm, retained existing convention; not a first-arrival measurement",
+    "issue": "first producer state edge, same OP issue convention",
+    "last_tx": "last actual producer valid edge",
+    "last_vm": "edge consuming final checked record"
+  }
+}

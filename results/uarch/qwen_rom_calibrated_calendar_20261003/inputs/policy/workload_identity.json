@@ -1,0 +1,163 @@
+{
+  "schema": "claude-review.qwen-rom-workload-identity.v1",
+  "date": "2026-10-03",
+  "reviewed_tree": "origin/main dcba5c0ab (scratch worktree /tmp/claude-policy-wt, removed)",
+  "verdict": "The finite calendar and the historical 8,460/6,222 rows share context, position, batch and KV format: 8K window, decode position 8191, batch 1, unscaled per-element FP8 E4M3 KV. They differ in how KV is delivered. The historical rows assume the KV is already on core, or streamed at PHY rate and fully overlapped. The calendar sends it through a 7x64 B on-die fill network at 1.2 GHz and serialises each layer's fill. The bytes are not double-charged and there are no cross-layer or cross-die re-reads; 150.69 MB/die/token is the minimum for this identity. The headline published in the atlas and HEADLINE_BUNDLE is a different identity: the TP2 two-reticle package with DFlash.",
+  "q1_published_figures": [
+    {
+      "figure": "8,460 tok/s",
+      "where": "docs/MICROARCH_MODEL.md:706,923,929",
+      "generator": "tools/uarch_model.py:5612-5614 qwen_product_ss -> qwen_tp_point(4,6144,'board',1.2GHz SS) tools/uarch_model.py:4890",
+      "context": 8192,
+      "position": 8191,
+      "position_basis": "as_built simulates T_ctx-1 (tools/arch_budget_qwen3.py:752-781)",
+      "batch": 1,
+      "decode": "AR",
+      "kv_format": "fp8 (tools/arch_budget_qwen3.py:62; tools/uarch_model.py:2241-2244)",
+      "kv_delivery": "not in token cycles; 'KV on core (the KV stream is priced separately)' tools/arch_budget_qwen3.py:758; the KV stream appears only as a saturated bound, tools/uarch_model.py:4923",
+      "tp": 4
+    },
+    {
+      "figure": "6,222 tok/s",
+      "where": "docs/MICROARCH_MODEL.md:707,923,929",
+      "generator": "tools/uarch_model.py:5620-5636",
+      "context": 8192,
+      "position": 8191,
+      "calibration_position": "0 (QWEN_L0_RTL position=0 tools/uarch_model.py:5571; qwen_tp_point ctx=1 tools/uarch_model.py:5595). A position-0 body ratio is applied to the ctx-8192 chain",
+      "batch": 1,
+      "decode": "AR",
+      "kv_format": "fp8",
+      "kv_delivery": "same as 8,460 (none in cycles)"
+    },
+    {
+      "figure": "9,368 (TT) / 9,384 tok/s; KV read 41.9 us, binding compute chain",
+      "where": "docs/MICROARCH_MODEL.md:703,1003",
+      "context": 8192,
+      "decode": "AR",
+      "batch": 1,
+      "kv_format": "fp8",
+      "kv_delivery": "4 stacks x 0.9 TB/s, overlapped"
+    },
+    {
+      "figure": "23,842 saturated",
+      "where": "docs/MICROARCH_MODEL.md:703,706,1003",
+      "basis": "4*0.9e12/(603,979,776/4) tools/uarch_model.py:4923",
+      "batch": "saturated"
+    },
+    {
+      "figure": "10,874 AR / 18,720 DFlash / 7,859 / 6,680 / 11,921",
+      "where": "docs/ARCHITECTURE_ATLAS.html:210,238,276-277,283,1278,1417; docs/HEADLINE_BUNDLE.md:38-72; docs/MICROARCH_MODEL.md:341",
+      "source": "results/arch/qwen3_budget.json (design_point lines 16-21: context 8192, fp8, batch 1)",
+      "package": "TP2 two-reticle, 8 stacks (stale: atlas :638 adopts option C TP4, AR only)",
+      "decode": "DFlash headline + AR",
+      "kv_delivery": "max(compute, kv_stream) tools/arch_budget_qwen3.py:601-615, i.e. perfectly overlapped at 7.2 TB/s"
+    },
+    {
+      "figure": "361.07 us (model-r4), 358.60 us (credit17 r3), 358.01 us (beat-retirement r3)",
+      "where": "results/uarch/qwen_rom_kv_credit_allocator_20261002/model-r4.json:1874; results/uarch/qwen_rom_kv_credit17_20261003/model-r3.json:1900; results/uarch/qwen_rom_kv_beat_retirement_20261003/model-r3.json:1675",
+      "context": "8192 (only in prose 'source8191'; machine-readable only in rate_risk model_r3.json:42,61 and bank_groups tools/uarch_model_qwen_kv_bank_groups.py:401)",
+      "position": 8191,
+      "batch": 1,
+      "decode": "AR (implicit)",
+      "kv_format": "fp8 (tools/uarch_model_qwen_kv_rate_risk.py:211)",
+      "kv_delivery": "cold-per-layer lease, 7 fill lanes x 64 B @1.2 GHz, next layer's fill starts at the previous layer's all-grants (model-r4.json:73,98)",
+      "adopted_rate": null
+    },
+    {
+      "figure": "retained TP4 token (rtl_token 50994)",
+      "where": "results/rtl/qwen_rom_TP4_terminal_20261002/terminal_manifest.json:11,93; original_terminal.json:3-16",
+      "context": "1 (zero KV reset)",
+      "position": 0,
+      "kv_format": "fp8 (original_terminal.json:8; RTL KV_FP8(1) rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv:134)",
+      "note": "original_terminal.json:3 claim text says 'G=5,120 TP-2' while its design_point says tp=4, G=6144"
+    },
+    {
+      "figure": "none",
+      "where": "docs/EVIDENCE_LEDGER.md, docs/PROGRAM_STATUS.md, docs/INTEGRATED_PHYSICAL_PLAN.md",
+      "note": "no Qwen ROM rate figure is published"
+    }
+  ],
+  "q2_bytes_and_gap": {
+    "logical_kv_read_per_die_token_ctx8192_pos8191": 150976512,
+    "logical_formula": "36 layers x 2 (K,V) x 2 KV heads/die x 128 dims x 8191 prior positions x 1 B",
+    "calendar_offchip_read_per_die_token": 150690816,
+    "calendar_offchip_read_formula": "36 x (4,194,304 - 8,192 K-tail-in-SRAM - 256 current V) ; tools/uarch_model_qwen_kv_rate_risk.py:226-229; model-r4.json:1880",
+    "calendar_close_write_per_die_token": 156672,
+    "the_150847488_figure": "= 4,713,984 commands x 32 B = RD 4,709,088 + WR 4,896 (model-r4.json:137,140; 32,736 cmds/stack/layer). It is read plus write commands, not '2 heads x 8,184 positions'. CURRENT_WORK_HANDOFF_2026_10_03.md:118 mislabels it as KV read bytes",
+    "cross_layer_reread": false,
+    "cross_tp_die_reread": false,
+    "k_and_v_each_layer_required": true,
+    "conclusion_minimal": "150,690,816 B/die/token is minimal for HBM-resident FP8 KV at position 8191. It is already about 0.2% under the logical total because of the tail bypass.",
+    "historical_kv_time_us": 41.86,
+    "historical_basis": "150.69 MB / (4 x 0.9 TB/s) and treated as hidden under compute (MICROARCH_MODEL.md:1003 'binding compute chain')",
+    "calendar_fill_floor_us": 281.4,
+    "calendar_fill_floor_basis": "busiest lane 9,380 beats/layer x 36 / 1.2 GHz (model-r4.json:77-86); 7 lanes x 64 B = 448 B/edge = 537.6 GB/s vs PHY 3.6 TB/s",
+    "phy_utilisation_required_per_stack_Bps": 113135616000,
+    "fill_lanes_needed_for_phy_parity": 46.9,
+    "why_7_lanes": "dimensioned to the 3,000 tok/s target (model-r4.json:66 target_s=1/3000; dimensioning.minimum_fill_integer=7), not to the PHY",
+    "calendar_decomposition_us": {
+      "fill_floor_busiest_lane": 281.4,
+      "fill_period_excess_to_last_fill_ready": 74.48,
+      "last_layer_attention": 2.56,
+      "nonlayer_and_suffix": 2.64,
+      "total": 361.07
+    },
+    "serialisation_cost": "small. The next layer's fill starts at the previous all-grants and attention (2.56 us/layer) overlaps it. The bound is fill width x efficiency, not the lease.",
+    "double_charging": "none found in bytes"
+  },
+  "q3_kv_format": {
+    "golden": "FP8 E4M3 per element, unscaled, RNE, saturating at 448; default when HDC_SU_WIDTH>1 (tools/hdc_golden.py:261-280, landed 8a91421a3 2026-09-27)",
+    "tp4_rtl_token": "FP8 (original_terminal.json:8; ot_qwen_rom_rt_die_w12.sv:134), position 0 only",
+    "quality_contract": "c_kvfp8 per-element unscaled E4M3 ACCEPTABLE: PPL -0.19%/-0.14% at 2K/8K, MMLU -0.4 pt; contract + FP8 -0.16%/-0.09% (results/quality/qwen3_8b_deployment_arithmetic.json:52)",
+    "calendar": "fp8, 1 B/element (tools/uarch_model_qwen_kv_rate_risk.py:211)",
+    "adopted": "FP8 E4M3 per element, unscaled (arch_budget_qwen3.py:62 KV_FMT_SPEC; qwen3_budget.json:18; atlas :638 'FP8 KV in attached HBM')",
+    "stale_bf16_statements": [
+      "tools/arch_budget_qwen3.py:62 comment 'a golden change: BF16 today'",
+      "tools/arch_budget_qwen3.py:1518 'BF16 KV only'",
+      "results/quality/qwen3_8b_deployment_arithmetic.json:14 'main ... still keeps a BF16 KV cache'",
+      "rtl/hdc/kv/ot_hdc_kv_stream.sv:81 HBM_FP8=0 default, SRAM BF16"
+    ],
+    "bf16_sensitivity": {
+      "offchip_read_B": 301381632,
+      "fill_floor_us": 562.8,
+      "phy_floor_us": 83.7
+    }
+  },
+  "q4_recommended_identity": {
+    "fields": {
+      "model": "qwen3-8b",
+      "design": "rom_option_c_tp4_g6144",
+      "decode_mode": "AR",
+      "speculation": "none",
+      "batch_users": 1,
+      "context_window_positions": 8192,
+      "decode_position": 8191,
+      "position_basis": "worst_case_last_of_window",
+      "kv_format": "fp8_e4m3_per_element_unscaled",
+      "kv_bytes_per_element": 1,
+      "kv_home": "attached_hbm_4_stacks_per_die",
+      "kv_on_die_reuse": "k_tail_2_tiles_per_head_plus_current_v_forward",
+      "kv_delivery_policy": "cold_per_layer_lease | prefetch_layer_ahead",
+      "kv_offchip_read_B_per_die_token": 150690816,
+      "kv_write_B_per_die_token": 156672,
+      "fill_lanes": 7,
+      "fill_bytes_per_edge": 448,
+      "stream_clock_hz": 1200000000,
+      "rate_basis": "finite_calendar_conditional | analytical_overlap | rtl_measured",
+      "numerical_evidence_position": 0
+    },
+    "rule": "A rate may be compared or replaced only when every field matches. A difference in kv_delivery_policy or rate_basis must be stated as the cause."
+  },
+  "q4_mismatched_comparisons": [
+    "docs/CURRENT_WORK_HANDOFF_2026_10_03.md:118 compares the 8,460/6,222 rows (overlapped KV, never delivered) with the cold fill calendar, and calls 150,847,488 'KV bytes' when it is read+write command bytes",
+    "tools/qwen_kv_beat_retirement_composition.py:52 and tools/uarch_model_qwen_kv_beat_retirement.py:233-247 screen 3000/6222/8460 against the calendar",
+    "docs/MICROARCH_MODEL.md:706-707,923,929: per-user AR rows carry no KV-delivery term; 6,222 applies a position-0 calibration (tools/uarch_model.py:5571,5595) at position 8191",
+    "docs/MICROARCH_MODEL.md:1003: 'KV read 41.9 us, binding compute chain' assumes PHY-rate fill; the calendar shows a fill-network floor of 281.4 us",
+    "docs/ARCHITECTURE_ATLAS.html:210,238,276-277,1278,1417 and docs/HEADLINE_BUNDLE.md:38-72 publish TP2 + DFlash headlines (results/arch/qwen3_budget.json). The adopted design is option C TP4, AR only (atlas :638)",
+    "docs/MICROARCH_MODEL.md:341 puts 10,874 (TP2) beside 9,851 (option C)",
+    "results/uarch/qwen_rom.json:335,375 hold 8460.12 for TP2 G4608 at 1.0986 GHz, the same value as the option C SS row: a value-match trap",
+    "docs/ARCHITECTURE_ATLAS.html:778 promises a layer-ahead prefetch into a 19.3 MB ring; the calendar's lease starts the next layer's fill only after the previous layer's grants (model-r4.json:73)",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/original_terminal.json:3 claim text (G=5,120 TP-2) vs design_point tp=4 G=6144 (:4-16)",
+    "Calendar records model-r4/credit17-r3/beat-retirement-r3 have no machine-readable context/position/kv_format/decode_mode/batch fields"
+  ]
+}

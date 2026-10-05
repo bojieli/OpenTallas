@@ -1,0 +1,5 @@
+SOURCE_TRACE_COMPLETE_NOT_WR_PROVIDER_DONE case=2 accepts=4 read_beats=2 WRpops=2 retained_WRcredits=2 alias_gap=1
+- /home/ubuntu/qwen-provider-observation-r5-20261002/source/tb_actual_controller.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 213ns; walltime 0.000 s; speed 589.929 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

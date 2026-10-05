@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.rtl.dshbm_dspark_inventory.v1",
+ "scope": "GPU-organised (SM-design) RTL available at origin/main 298ba9d79 for the DeepSeek-V4.1 HBM comparator's decode token, and what DSpark (V4.1's built-in MTP: mtp.0-2 = one block drafter) needs on top",
+ "available": {
+  "matrix": {"rtl": ["rtl/gpu/ot_gpu_sm_v.sv (V4.1 SM macro: bulk copy, SRAM ring, x store, SUBxNC bd_col/tc_col, BF16/FP8/FP4)", "ot_gpu_tc_col.sv", "ot_gpu_bd_col.sv", "ot_gpu_tree.sv", "ot_gpu_stack.sv", "ot_gpu_issue.sv", "ot_gpu_bulk_copy.sv", "ot_gpu_xstore.sv"],
+             "multi_column": "NC columns share one weight line (default NC=8); W19 ran the 6-position verify as 6 MMA columns",
+             "evidence": ["results/rtl/gpu_sm_exact.json", "results/rtl/gpu_sm_blockdot_exact.json", "results/rtl/w19_sm_real_ops.json (84/84 exact)", "results/rtl/w19_sm_real_ops_mtp.json (197/197 exact, NC 1/2/3/6)"],
+             "kind": "Icarus RTL simulation, bit-exact vs golden"},
+  "simd_norm_hc_sinkhorn_swiglu": {"rtl": [], "evidence": ["tools/w19_gpu_simd_contract.py, w19_gpu_norm_calendar.py, w19_gpu_elementwise_calendar.py (calendar models)", "tools/w19_hc_simd_proof.py, w19_hc_nonlinear_proof.py, w19_norm_opcode_proof.py, w19_moe_opcode_proof.py (CPU exact-semantic proofs)"], "kind": "Python only; no GPU-side RTL"},
+  "attention_indexer": {"rtl": [], "evidence": ["tools/w19_gpu_attention_dots.py, w19_gpu_attention_finish.py (calendar)", "w19_attention_opcode_proof.py (software)", "results/rtl/w15_topk_merge_hbm96_*.json (top-k merge select unit, Verilator)"], "kind": "no GPU-side RTL (HDC-side rtl/hdc/v41x/ot_hdc_v41x_attn*.sv exists, not SM-organised)"},
+  "moe_dispatch": {"rtl": ["rtl/gpu/ot_gpu_router_topk.sv (top-6 of 384, exact)", "rtl/gpu/ot_gpu_expert_fetch.sv (ids -> per-SM descriptors -> HBM -> SMEM ring)"], "evidence": ["results/rtl/w19_expert_fetch.json", "results/rtl/w19_fetch_sm.json"], "missing": "expert UNION of a multi-position pass (W19 fed 35 precomputed ids)"},
+  "collectives": {"rtl": ["rtl/gpu/ot_gpu_barrier_node.sv", "rtl/link/ot_link_nvls_switch.sv"], "evidence": ["results/rtl/gpu_supply_barrier.json", "results/rtl/w15_hbm_nvls.json"]},
+  "memory_path": {"rtl": ["rtl/gpu/ot_gpu_rf_service.sv", "ot_gpu_scratch_service.sv", "ot_gpu_full_sm_service.sv", "ot_gpu_hbm_rf_shared_context.sv", "ot_gpu_rf_visibility_fence.sv", "rtl/gpu/w6/*", "rtl/model_ready_hbm_r14/* (PC, route, tag owner, clock bridge)"], "evidence": ["results/uarch/full_sm_rf_service_20261002/short_gate.json", "results/rtl/hbm_W6_local_component_20261003"], "note": "Codex W2/W4/W5/W6 bridge work in progress on main; not modified here"},
+  "token_program": {"tools": ["tools/w19_hbm_tp96_isa.py (TP-96 program + 96-rank executor, bit-exact per layer; --mtp: the 6-position verify)", "tools/w19_hbm_token_compose.py (composition of element measurements)"], "kind": "Python executor + composition, not a cycle-accurate die"},
+  "speculative": {"rtl": [], "note": "no GPU-side MTP RTL before this work; HDC-side rtl/hdc/ot_hdc_accept.sv (model-agnostic greedy accept) and tools/rtl_hdc_v41_mtp_campaign.py target ot_hdc_core_v41 (HDC core, halted, not SM-organised)"}
+ },
+ "dspark_needs_on_top": [
+  {"need": "draft pass: 3 DSpark stages over the 5-slot block as 5 MMA columns (same SM ops as a window-only backbone layer, 128 experts top-3), the shared LM head on 5 columns, 5 serial Markov steps (rank-r head matvec + bias add + argmax)", "built": "SM passes grouped by command (tools/dshbm_dspark_sm_campaign.py on ot_gpu_sm_v, 5 columns); Markov bias add + argmax in the SM epilogue rtl/gpu/dshbm/ot_dshbm_argmax.sv; the stage/head/Markov command sequence in rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv"},
+  {"need": "6-position verify with expert-union weight streaming", "built": "rtl/gpu/dshbm/ot_dshbm_expert_union.sv (union + per-expert column masks) feeding the reused ot_gpu_expert_fetch -> HBM model -> SMEM; verify SM passes with 6 columns (experts: the columns that selected them)"},
+  {"need": "accept / commit with exact KV rollback", "built": "ot_hdc_accept (reused) + commit n <- n+1+a in ot_dshbm_dspark_ctl; rtl/gpu/dshbm/ot_dshbm_spec_state.sv: position-indexed state with rings sized W+PMAX (window, DSpark), r_max+PMAX (compressor slots), NG+PMAX (token history), linear compressed rows -> rollback is one register write"},
+  {"need": "control loop", "built": "ot_dshbm_dspark_ctl (prefill, step, draft, Markov, verify, accept, emit, commit; max_seq_len clamp)"}
+ ]
+}

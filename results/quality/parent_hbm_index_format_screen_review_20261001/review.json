@@ -1,0 +1,30 @@
+{
+  "schema": "parent.hbm-index-format-screen-review.v1",
+  "owner_commits": [
+    "89c811222cb0c23579de39a2610828c23fad0cfc",
+    "2e2ac1d019426935da58a80f286c4f4383bff9fc"
+  ],
+  "receipt_replay_json_payload_equal": true,
+  "model_hash_equal": true,
+  "focused_tests": {
+    "passed": 3
+  },
+  "independent_arithmetic": {
+    "mixtures_checked": 65,
+    "all_f32_shared_bytes": 55936,
+    "all_f32_combined_read_write_bytes": 69632,
+    "all_f32_sector_commands": 2176,
+    "descriptor_bits": 256,
+    "balanced_four_stack_floor_hypothetical": 544
+  },
+  "limitations": [
+    "750B floor requires explicit per-quad traffic scope; not a whole-device or actual service calendar",
+    "Balanced stack floor is hypothetical; source address/PC distribution unbound",
+    "Integer byte transport test does not qualify source-produced values or actual instruction consumer",
+    "Single buffer capacity only; double buffering does not fit",
+    "Score RF liveness, descriptor publication and write-visible ACK, transpose/bank service, routes and SS/FF remain unqualified"
+  ],
+  "hardware_launch": false,
+  "rate_credit": 0,
+  "admission": "FAIL_CLOSED"
+}

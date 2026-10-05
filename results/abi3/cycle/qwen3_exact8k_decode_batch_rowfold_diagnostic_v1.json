@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.abi3.decode_batch_diagnostic.v1",
+  "created_utc": "2026-09-04T13:16:47Z",
+  "status": "diagnostic_not_token_correct",
+  "model_id": "qwen3-8b",
+  "measurement": {
+    "context_tokens": 8000,
+    "phase": "decode",
+    "transactions_per_lane": 1,
+    "batch_sizes": [1, 2, 4, 8],
+    "b1_timing_source": "runtime.cycle.model.CycleModel",
+    "b2_b4_b8_timing_source": "runtime.cycle.batch.CycleBatchScheduler",
+    "cycle_definition": "architectural target cycles",
+    "seconds_definition": "makespan_cycles / process_view_clock_frequency_hz",
+    "aggregate_rate_definition": "batch_size * clock_frequency_hz / makespan_cycles",
+    "service_time_definition": "makespan_seconds / batch_size",
+    "host_wall_time_used": false
+  },
+  "correctness": {
+    "prompt_state_initialized": false,
+    "observed_token_id_per_lane": 565,
+    "observed_token_is_legal_vocabulary_id": true,
+    "oracle_generated_token_ids": [18, 24, 16, 151645],
+    "oracle_raw_decoded_text": "391<|im_end|>",
+    "oracle_visible_decoded_text": "391",
+    "official_eos_token_id": 151645,
+    "observed_matches_oracle_first_token": false,
+    "observed_reaches_eos": false,
+    "eligible_as_end_to_end_correctness": false,
+    "note": "The fresh-state timing lanes do not contain the exact 8000-token prompt KV state. Their repeated token 565 is a diagnostic result, not model-output evidence."
+  },
+  "sources": {
+    "runtime_cycle_batch_sha256": "6aeb50d2ec0cdea71834235be02d424621fc8aab273b6cd527a6a30fb8fdd8cc",
+    "runtime_cycle_model_sha256": "edc0763c2f599ac6a9d37da4331c1da84fbb753f7972ecd3722dcbf8db8d6e16",
+    "hbm_deployment_digest": "0d7897457e14666fc057ea6223cc32e65c61e39bfe5b2ff675c3b5585fe2ce8e",
+    "hbm_capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "rom_deployment_digest": "5940e5b6b5c507493fc8cf08675c43189aff8a6ecc2e4c7deeb128134893f8f9",
+    "rom_capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "asap7_cost_table_sha256": "ef384c4fafc4ba7d7be70b840362f343ceaa636f2e813e14a9b46b03a188c2bd",
+    "sky130_cost_table_sha256": "68f608b20fd8908086f38ed3c8ebb7866eed4025309a306eddb651f27d033187"
+  },
+  "targets": [
+    {
+      "backend": "hbm_sram",
+      "process_view": "asap7",
+      "clock_frequency_hz": 57959000,
+      "points": [
+        {"batch_size": 1, "makespan_cycles": 172359893, "makespan_seconds": 2.97382447937335, "lane_completion_cycles": [172359893], "aggregate_tokens_per_second": 0.3362673240926182, "service_seconds_per_token": 2.97382447937335},
+        {"batch_size": 2, "makespan_cycles": 233108723, "makespan_seconds": 4.021959022757467, "lane_completion_cycles": [228454089, 233108723], "aggregate_tokens_per_second": 0.497270108592204, "service_seconds_per_token": 2.0109795113787335},
+        {"batch_size": 4, "makespan_cycles": 457266087, "makespan_seconds": 7.889475094463328, "lane_completion_cycles": [438647499, 445698767, 452611453, 457266087], "aggregate_tokens_per_second": 0.5070045791521819, "service_seconds_per_token": 1.972368773615832},
+        {"batch_size": 8, "makespan_cycles": 931705271, "makespan_seconds": 16.075247519798477, "lane_completion_cycles": [898842272, 906172908, 907287662, 919998176, 927127596, 927128098, 927128600, 931705271], "aggregate_tokens_per_second": 0.4976595222031324, "service_seconds_per_token": 2.0094059399748097}
+      ]
+    },
+    {
+      "backend": "rom_hbm",
+      "process_view": "asap7",
+      "clock_frequency_hz": 57959000,
+      "points": [
+        {"batch_size": 1, "makespan_cycles": 148109458, "makespan_seconds": 2.555417760830932, "lane_completion_cycles": [148109458], "aggregate_tokens_per_second": 0.39132544796700297, "service_seconds_per_token": 2.555417760830932},
+        {"batch_size": 2, "makespan_cycles": 176158214, "makespan_seconds": 3.0393590986732, "lane_completion_cycles": [170239241, 176158214], "aggregate_tokens_per_second": 0.6580334653029577, "service_seconds_per_token": 1.5196795493366},
+        {"batch_size": 4, "makespan_cycles": 334095422, "makespan_seconds": 5.764340689107818, "lane_completion_cycles": [316854121, 323352466, 328176449, 334095422], "aggregate_tokens_per_second": 0.6939215108430908, "service_seconds_per_token": 1.4410851722769544},
+        {"batch_size": 8, "makespan_cycles": 663335793, "makespan_seconds": 11.444914387756862, "lane_completion_cycles": [624670517, 630708672, 641334531, 641335039, 646120028, 652161644, 658511810, 663335793], "aggregate_tokens_per_second": 0.6990004231537074, "service_seconds_per_token": 1.4306142984696077}
+      ]
+    },
+    {
+      "backend": "hbm_sram",
+      "process_view": "sky130",
+      "clock_frequency_hz": 38807100,
+      "points": [
+        {"batch_size": 1, "makespan_cycles": 172357340, "makespan_seconds": 4.441386756547127, "lane_completion_cycles": [172357340], "aggregate_tokens_per_second": 0.22515490201925836, "service_seconds_per_token": 4.441386756547127},
+        {"batch_size": 2, "makespan_cycles": 233106032, "makespan_seconds": 6.006788242357713, "lane_completion_cycles": [228451333, 233106032], "aggregate_tokens_per_second": 0.3329566349445646, "service_seconds_per_token": 3.0033941211788564},
+        {"batch_size": 4, "makespan_cycles": 457260705, "makespan_seconds": 11.782913564785826, "lane_completion_cycles": [438641968, 445693320, 452606006, 457260705], "aggregate_tokens_per_second": 0.3394746110974045, "service_seconds_per_token": 2.9457283911964565},
+        {"batch_size": 8, "makespan_cycles": 931697385, "makespan_seconds": 24.008425906599566, "lane_completion_cycles": [898834306, 906164873, 907279642, 919990210, 927119645, 927120147, 927120649, 931697385], "aggregate_tokens_per_second": 0.333216347923956, "service_seconds_per_token": 3.0010532383249457}
+      ]
+    },
+    {
+      "backend": "rom_hbm",
+      "process_view": "sky130",
+      "clock_frequency_hz": 38807100,
+      "points": [
+        {"batch_size": 1, "makespan_cycles": 148108696, "makespan_seconds": 3.816536046238961, "lane_completion_cycles": [148108696], "aggregate_tokens_per_second": 0.26201770083776854, "service_seconds_per_token": 3.816536046238961},
+        {"batch_size": 2, "makespan_cycles": 176154731, "makespan_seconds": 4.539239752519514, "lane_completion_cycles": [170235761, 176154731], "aggregate_tokens_per_second": 0.4406024156115342, "service_seconds_per_token": 2.269619876259757},
+        {"batch_size": 4, "makespan_cycles": 334089117, "makespan_seconds": 8.608968900020873, "lane_completion_cycles": [316847831, 323346167, 328170147, 334089117], "aggregate_tokens_per_second": 0.464631716812254, "service_seconds_per_token": 2.1522422250052182},
+        {"batch_size": 8, "makespan_cycles": 663323114, "makespan_seconds": 17.092828734947986, "lane_completion_cycles": [624657948, 630696019, 641321873, 641322381, 646107367, 652148974, 658499134, 663323114], "aggregate_tokens_per_second": 0.4680325371565448, "service_seconds_per_token": 2.1366035918684982}
+      ]
+    }
+  ],
+  "claim_boundary": {
+    "architectural_cycle_simulation": true,
+    "shared_resource_batch_simulation_for_b2_b4_b8": true,
+    "prefill_or_ttft_measured": false,
+    "token_correct_end_to_end_execution": false,
+    "fabricated_silicon_measurement": false,
+    "depends_on_assumed_machine_parameters": true
+  }
+}

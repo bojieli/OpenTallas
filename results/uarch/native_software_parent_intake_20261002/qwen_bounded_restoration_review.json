@@ -1,0 +1,25 @@
+{
+  "schema": "parent-Qwen-bounded-restoration-review-v1",
+  "snapshot_source": "Popper working snapshot verified hash-identical before copy; owner41eef additions separated",
+  "bounded_module": "tools/h3_qwen_bounded_native.py",
+  "bounded_module_sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+  "originals_byte_identical_to": "18ff53b4",
+  "baseline_replay": "PASS",
+  "bounded_replay": "PASS",
+  "PCs": 1737,
+  "families": 21,
+  "combined_suite": {
+    "collected": 103,
+    "initial_passed": 101,
+    "initial_failed": 2,
+    "failure_reason": "missing optional addressed provider snapshot from intake; source untouched",
+    "repair": "copy owner-reported SHA-qualified source snapshot; rerun only two affected tests",
+    "repaired_tests_passed": 2,
+    "final_verdict": "103 tests covered;101initialpass+2affectedrerunpass"
+  },
+  "make_check_figures": "PASS after readiness source pin regeneration",
+  "readiness_change": "AGENTS hash only; all4 targets G0-G5 stillblocked",
+  "handoff_correction": "Current restored baseline --verify passes; bounded_r2 handoff old-source-commit sentence is superseded by independent replay evidence",
+  "full_checkpoint_execution": false,
+  "physical_qualification": false
+}

@@ -1,0 +1,160 @@
+{
+  "checkpoint_binding": {
+    "all_four_outputs_match_qualified_prefix": true,
+    "independent_output_u32le_sha256": "16ca2e2ad0c991b6b14110ebc69de0bfed766dc3323189f78ca68d66496cec6f",
+    "positions": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "prompt_token_count": 200000,
+    "qualification_result": "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json",
+    "qualification_result_sha256": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
+    "qualification_vector": "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json",
+    "qualification_vector_sha256": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1",
+    "qualified_combination": "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le",
+    "qualified_combination_sha256": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+    "qualified_output_prefix_u32le_sha256": "16ca2e2ad0c991b6b14110ebc69de0bfed766dc3323189f78ca68d66496cec6f",
+    "stable_input_u32le_sha256": "043086cd19351ae5f743c1b814f7d833147e283b40174f517304633a09426cf7",
+    "token_ids": [
+      18042,
+      41514,
+      6897,
+      33523
+    ],
+    "workload_id": "TA-DS-CTX-200K-1"
+  },
+  "checks": 73040,
+  "counts": {
+    "checkpoint_sinkhorn_divisions": 2496,
+    "division_cases": 6641,
+    "division_categories": {
+      "checkpoint_derived": 2496,
+      "directed": 49,
+      "random_finite": 4096
+    },
+    "division_errors": {
+      "0": 6145,
+      "1": 9,
+      "2": 487
+    },
+    "sinkhorn_cases": 81,
+    "sinkhorn_categories": {
+      "checkpoint_derived": 4,
+      "directed": 6,
+      "directed_overflow": 1,
+      "invalid": 6,
+      "random_moderate": 48,
+      "random_wide": 16
+    },
+    "sinkhorn_errors": {
+      "0": 74,
+      "1": 6,
+      "2": 1
+    },
+    "successful_sinkhorn_divisions_per_case": 624
+  },
+  "log_sha256": {
+    "iverilog": "436d07943c35953df278154e24541982b5dff479914f152ec3d20c4425cd3935",
+    "verilator": "577615e26adbac1142ea1678d012c19d1eb88d7477ef81ffde23567b280213be",
+    "verilator_compile": "267394e95b3e6044998546944ec3aa723d79b4cbfa0fe7d1406e0f4141ea6462",
+    "yosys": "eb4e8ac5fe30ab22cbe69bea7a4de70a96dc4d3a16eb3e907639fbec7e5cdb33"
+  },
+  "normalized_summary": {
+    "div": {
+      "backpressure": 13262,
+      "cases": 6641,
+      "max_cycles": 33,
+      "stalls": 29696
+    },
+    "reset": {
+      "checks": 4
+    },
+    "sink": {
+      "backpressure": 150,
+      "cases": 81,
+      "checkpoint_words": 80,
+      "errors": 7,
+      "max_cycles": 21374,
+      "stalls": 1800,
+      "successes": 75
+    }
+  },
+  "schema": "opentallas.rtl.a3_hc_numeric_campaign.v1",
+  "scope": {
+    "architectural_timing": false,
+    "checkpoint_derived_positions": 4,
+    "checkpoint_derived_sinkhorn_divisions": 2496,
+    "correctly_rounded_exponential": false,
+    "correctly_rounded_sigmoid": false,
+    "divider": "all finite signed binary32 operands with RNE and gradual underflow",
+    "dual_simulator": true,
+    "eos": false,
+    "full_hc_pre": false,
+    "host_floating_point_oracle": false,
+    "independent_fraction_oracle": true,
+    "model_token_generation": false,
+    "pc14_integration": false,
+    "sinkhorn": "atomic post-stable-softmax 4x4 tail: 20 column and 19 row normalizations",
+    "stable_softmax_front_end": false,
+    "synthesizable_elaboration": true,
+    "technology_mapping_or_timing": false,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv": "a935cd5b6a82d1be73ff396ec86d9c60bfc58d31dd0012fd7c4b8bcaaa63524e",
+    "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+    "rtl/test/tb_a3_hc_numeric.sv": "45ddc16aea043e1a23557546fc9fbb5281698b0d74ae89f87fcbb29b7cf388bd",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1",
+    "tools/build_a3_hc_numeric_vectors.py": "08f0f9450d00a804974a77ad3cfde9367039443354dea4b2e6659e68573cfc2f",
+    "tools/run_a3_hc_numeric_rtl_campaign.py": "c946e4bfb98380cb783534b0bb9d3d3cde2b2cc9f2a290074324624c55a4ddc2"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "memories_after_elaboration": 0,
+    "note": "generic RTLIL elaboration only; no library mapping, PPA, frequency, latency, or TPOT claim",
+    "processes_after_elaboration": 0,
+    "top": "ot_a3_hc_sinkhorn20_rne"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "vector_sha256": {
+    "division.hex": "fb1104dd30f51822ea64ab0e7236ec48904c1fa29451d0e3202a1de86c95e1cd",
+    "index.json": "84e5d0ec5383d6ec3af8f130bfadb7c1f740531072668816ba3fa345c72bd96e",
+    "meta.hex": "51b022a0c7cf9df3ad91b454f8517901ec2d0b454caa52e76458652c8602eeaa",
+    "sinkhorn_expected.hex": "19f6e6ad0ce1788227f4487aaf41a5a709f7a8d561b05fd8b836be348e136604",
+    "sinkhorn_input.hex": "8d4a6161630f512e99fe189f1bc108430b1bff0b5c11a71c1279f6d51674baad"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.023742679972201586,
+    "iverilog_simulation": 167.2945280559361,
+    "verilator_compile": 8.241960833081976,
+    "verilator_simulation": 1.0885499400319532,
+    "yosys_elaboration": 0.4875949239358306
+  }
+}

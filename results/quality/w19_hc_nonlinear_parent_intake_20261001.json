@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.w19.hc-nonlinear-parent-intake.v1",
+  "proof_sha256": "15b40bd6cbf5856e7c4c5ba75391d3ba377ac7957d31aac02f2bd6019e2c58cf",
+  "artifacts_verified": 12,
+  "source_pins_verified": {
+    "tools/w19_hc_nonlinear_proof.py": "461908f934a74a3b332b84b8dd5a01410a8daac7155229e320791d30cbc777d9",
+    "tests/test_w19_hc_nonlinear_proof.py": "3258dee11c8a1d8571cab157d5b9a1efa2336a579953a8dbfa9a1eec83ff52a1",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w19_hc_simd_proof.py": "187b1a1d7e9d2056f31209824f5a656c097d45907a101a0778c6f029edb17c71"
+  },
+  "fixtures": 4,
+  "boundaries_replayed_against_original_golden": 1500,
+  "dot_and_pre_post_comb_output_words": "bit-exact",
+  "actual_coefficient_source_identity": "retained fixture fn/scale/base match pinned tensor hashes",
+  "activations": "synthetic BF16; real trajectory not claimed",
+  "focused_tests": {
+    "passed": 11,
+    "command": "python3 -m pytest -q tests/test_w19_hc_nonlinear_proof.py"
+  },
+  "GPU_campaign_launched": false,
+  "hardware_adopted": false,
+  "rate": null,
+  "scope": "HC mixes software only; residual hc_pre/hc_post and GPU primitive/liveness/ports/timing qualification remain pending"
+}

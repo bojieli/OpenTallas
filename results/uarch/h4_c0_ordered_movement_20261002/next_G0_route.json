@@ -1,0 +1,33 @@
+{
+  "V1_limit": "Dewey060 rejects forward execution paths even when movement present; forward leaf extension must be reviewed with owner, not relabelled source_order_live_range_stages",
+  "immutable_sources": {
+    "0601e4ac7fca0ada63252733d303cb601b24b507:tools/h3_complete_native_calendar.py": {
+      "bytes": 192572,
+      "sha256": "e4a7c9fe8c4e43c958e3aab821e76e64e333de80ea7fc286920ec8eea603a4f9"
+    },
+    "fd7220c1e55397dec90222e1f99a8bd95ae02e03:tools/h3_deepseek_streaming_linear.py": {
+      "bytes": 21837,
+      "sha256": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9"
+    },
+    "fd7220c1e55397dec90222e1f99a8bd95ae02e03:tools/h3_native_microop_adapter.py": {
+      "bytes": 10377,
+      "sha256": "cf3e7c0b6390f1586bc8f92cb0f6af8f04a48402299afbf80acf53b493a60e1a"
+    }
+  },
+  "next_required_ABI": [
+    "parent PC/rank/template bound to exact generated leaf program hash/code_index/op/attrs/shape/operand",
+    "typed workspace slice identity/base/cap/offset generation with matched provider capture ACK",
+    "scratch refill carries actual provider-backed source definition; cannot forge native dst write at later step",
+    "128-lane continuation order preserves reduction/selection and output publication",
+    "writeback ACK and future-reader/reverse retirement",
+    "full source leaf counts match existing projection; no recursive scalar fallback"
+  ],
+  "no_RTL_or_experiment_launched": true,
+  "ordered_forward_emitters": [
+    "StreamingLinear.run: quant_program/block_program/add_program/pack_program",
+    "StreamingFloat.run_float: float_x/weight8/chunk8 golden tree",
+    "StreamingGather.run_gather: rank ordered ownership mask/select",
+    "StreamingIndex.run_index: query_decode_once then row tiles"
+  ],
+  "unknowns_preserved": true
+}

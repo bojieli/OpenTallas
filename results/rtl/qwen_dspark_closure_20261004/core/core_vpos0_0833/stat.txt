@@ -1,0 +1,60 @@
+
+18. Printing statistics.
+
+=== ot_qwen_rom_core ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+  1891758        - wires
+  1891758        - wire bits
+  1874062        - public wires
+  1874062        - public wire bits
+  1869073        - ports
+  1869073        - port bits
+    18705 2.76E+03 cells
+        3        -   $scopeinfo
+      196   17.146   AND2x2_ASAP7_75t_R
+      199   17.409   AND3x1_ASAP7_75t_R
+       17    1.735   AND4x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+        9      2.1   AO211x2_ASAP7_75t_R
+     4208  368.116   AO21x1_ASAP7_75t_R
+        3    0.437   AO221x1_ASAP7_75t_R
+        1    0.175   AO222x2_ASAP7_75t_R
+       57     7.48   AO22x1_ASAP7_75t_R
+       13    3.033   AO31x2_ASAP7_75t_R
+        8    0.933   AO32x1_ASAP7_75t_R
+        2     0.35   AOI211x1_ASAP7_75t_R
+      680   79.315   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+       10    1.458   AOI22x1_ASAP7_75t_R
+       96   36.392   DFFASRHQNx1_ASAP7_75t_R
+     4689 1.37E+03   DFFHQNx1_ASAP7_75t_R
+        1    0.262   ICGx1_ASAP7_75t_R
+     1088   47.589   INVx1_ASAP7_75t_R
+       91   11.941   MAJx2_ASAP7_75t_R
+      266    23.27   NAND2x1_ASAP7_75t_R
+       41    6.576   NAND3x1_ASAP7_75t_R
+     3830  335.048   NOR2x1_ASAP7_75t_R
+        7    1.123   NOR3x1_ASAP7_75t_R
+      657   76.632   OA211x2_ASAP7_75t_R
+      532   54.296   OA21x2_ASAP7_75t_R
+     1063  185.982   OA222x2_ASAP7_75t_R
+       45    6.561   OA22x2_ASAP7_75t_R
+        6    1.312   OA31x2_ASAP7_75t_R
+        5    0.729   OA33x2_ASAP7_75t_R
+       90   10.498   OAI21x1_ASAP7_75t_R
+       78   11.372   OAI22x1_ASAP7_75t_R
+      191   16.709   OR2x2_ASAP7_75t_R
+      159   13.909   OR3x1_ASAP7_75t_R
+       32    3.266   OR4x1_ASAP7_75t_R
+       11    1.283   OR5x1_ASAP7_75t_R
+      228   36.567   XNOR2x2_ASAP7_75t_R
+       91   14.595   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_qwen_rom_core': 2763.230760
+     of which used for sequential elements: 1403.704080 (50.80%)
+

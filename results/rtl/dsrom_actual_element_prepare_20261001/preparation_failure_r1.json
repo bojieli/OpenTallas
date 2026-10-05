@@ -1,0 +1,11 @@
+{
+  "status": "FAIL_PREPARATION_ONLY",
+  "compiler_invoked": false,
+  "simulation_invoked": false,
+  "source_archive": "git base plus new files; HDL uncompiled",
+  "failures": [
+    "Authority pin enrichment used wrong path for 0917 leaf parent review; git show exited128",
+    "Model refresh aborted before writing updated new-file hashes; Python checks 3PASS/2FAIL, generator refused stale bench SHA"
+  ],
+  "resolution": "Use exact 0917 committed parent_review path and refresh model pins; no failed RTL verdict or execution exists"
+}

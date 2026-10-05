@@ -1,0 +1,187 @@
+`timescale 1ns/1ps
+// Bounded rank-two output transport with ordered acknowledgement credits;
+// the upstream reserved queue holds further beats. Acknowledgement, not request
+// acceptance, releases each outstanding transaction. Command layout is immutable until clear.
+// clear/global reset require transport quiescence; never clear an unacked write.
+// Ordered lane-local addresses are checked against the command schedule. Object
+// offsets use logical element strides, independent of padded execution width.
+module ot_a3_output_object_writer #(
+ parameter integer LANES=8,
+ parameter integer OUTSTANDING=4,
+ parameter bit PASS_FIRST=0,
+ parameter integer INTERLEAVE=3
+)(
+ input wire clk,rst_n,clear,
+ input wire command_valid,
+ output wire command_ready,
+ input wire [31:0] command_generation,command_object,command_element_base,
+ input wire [31:0] command_row_stride,command_col_stride,
+ input wire [15:0] command_rows,command_cols,command_padded_cols,
+ input wire command_fp32,
+ input wire [63:0] command_object_bytes,
+ input wire part_valid,
+ output wire part_ready,
+ input wire [LANES-1:0] part_mask,
+ input wire [32*LANES-1:0] part_address,part_data,
+ output wire write_valid,
+ input wire write_ready,
+ output reg [31:0] write_generation,write_object,
+ output reg [LANES-1:0] write_mask,
+ output reg [64*LANES-1:0] write_offset,
+ output reg [32*LANES-1:0] write_data,
+ output reg write_fp32,
+ input wire response_valid,
+ output wire response_ready,
+ input wire [31:0] response_generation,
+ input wire response_error,
+ output wire drained,
+ output reg protocol_error
+);
+ localparam [1:0] IDLE=0,CHECK=1,SEND=2;
+ localparam integer COUNT_BITS=$clog2(OUTSTANDING+1);
+ reg [COUNT_BITS-1:0] pending;
+ // The external service must acknowledge accepted writes exactly once in
+ // request order. Generation alone is not an out-of-order transaction ID.
+ wire request_fire=write_valid && write_ready;
+ wire ack_fire=response_valid && response_ready;
+ wire ack_matches=response_generation==write_generation;
+ wire retire=ack_fire && ack_matches;
+ wire response_fault=ack_fire && (!ack_matches || response_error);
+ reg [1:0] state;
+ reg active;
+ reg [31:0] expected_address;
+ reg [15:0] rows_left,cols_left,local_cols;
+ reg [15:0] rows_total,pass_cols_left,pass_remaining;
+ reg [31:0] pass_address,row_address;
+ reg [50:0] pass_offset;
+ // rows/cols are 16 bits and element strides/base are 32 bits. Even
+ // base+(rows-1)*row_stride+(cols-1)*col_stride, scaled by four,
+ // is below 2^51. Steps themselves need only 34 bits.
+ reg [50:0] row_offset,cursor_offset;
+ reg [33:0] row_step,col_step;
+ // Last legal byte start is command-invariant. Compute subtraction once,
+ // rather than adding element size to each lane on every bounds-check path.
+ reg [63:0] last_offset;
+ reg object_too_small;
+ reg [LANES-1:0] tail_mask;
+ reg beat_invalid;
+ wire enabled=rst_n && !clear;
+ assign command_ready=enabled && !active && state==IDLE;
+ // After fault, consume queued results without publishing new writes so the
+ // parent can abort and drain. An already published request must still finish.
+ // Reserve credit for both the outgoing request and its replacement. Keep
+ // response retirement off the ready path; depth-one mode still waits for ack.
+ wire replace_slot=state==SEND && write_ready && !protocol_error && pending<OUTSTANDING-1;
+ assign part_ready=enabled && active &&
+     ((state==IDLE && (protocol_error || pending<OUTSTANDING)) || replace_slot);
+ assign write_valid=enabled && state==SEND;
+ assign response_ready=enabled && (pending!=0 || request_fire);
+ assign drained=state==IDLE && pending==0;
+ wire accept_part=part_valid && part_ready;
+ wire [LANES-1:0] expected_mask=cols_left==1?tail_mask:{LANES{1'b1}};
+ integer lane;
+ reg invalid_input,invalid_bounds;
+ always @* begin
+  invalid_input=(rows_left==0 || part_mask!=expected_mask);
+  invalid_bounds=object_too_small;
+  for(integer i=0;i<LANES;i=i+1)begin
+   if(part_mask[i] && part_address[32*i+:32]!=expected_address)invalid_input=1;
+   if(write_mask[i] && write_offset[64*i+:64]>last_offset)
+    invalid_bounds=1;
+  end
+ end
+ // Payload has no reset fanout. Every published beat follows command capture
+ // and an accepted input beat. Geometry bounds keep all offset sums below 2^51.
+ always @(posedge clk)begin
+  if(!active)begin
+   write_generation<=command_generation;write_object<=command_object;
+   write_fp32<=command_fp32;
+   last_offset<=command_object_bytes-(command_fp32?64'd4:64'd2);
+   object_too_small<=command_object_bytes<(command_fp32?64'd4:64'd2);
+   expected_address<=command_element_base;
+   pass_address<=command_element_base;row_address<=command_element_base;
+   pass_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
+   rows_total<=command_rows;pass_cols_left<=command_padded_cols/LANES;
+   pass_remaining<=16'(INTERLEAVE);
+   row_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
+   cursor_offset<={19'b0,command_element_base}<<(command_fp32?2:1);
+   row_step<={2'b0,command_row_stride}<<(command_fp32?2:1);
+   col_step<={2'b0,command_col_stride}<<(command_fp32?2:1);
+   rows_left<=command_rows;local_cols<=command_padded_cols/LANES;
+   cols_left<=command_padded_cols/LANES;
+   for(lane=0;lane<LANES;lane=lane+1)
+    tail_mask[lane]<=command_cols%LANES==0 || lane<command_cols%LANES;
+  end
+  // Capture invalid payload freely while idle. State alone owns publication;
+  // remove reset/ready/error fanout from the wide data and offset register bank.
+  if(state==IDLE || replace_slot)begin
+   write_mask<=part_mask;write_data<=part_data;beat_invalid<=invalid_input;
+   for(lane=0;lane<LANES;lane=lane+1)
+    write_offset[64*lane+:64]<={13'b0,(cursor_offset+51'(col_step)*51'(lane))};
+  end
+  if(accept_part && !protocol_error)begin
+   expected_address<=expected_address+1'b1;
+   if(PASS_FIRST)begin
+    if(pass_remaining==1 || cols_left==1)begin
+     pass_remaining<=16'(INTERLEAVE);
+     if(rows_left>1)begin
+      rows_left<=rows_left-1'b1;cols_left<=pass_cols_left;
+      row_address<=row_address+{16'd0,local_cols};
+      expected_address<=row_address+{16'd0,local_cols};
+      row_offset<=row_offset+row_step;cursor_offset<=row_offset+row_step;
+     end else if(cols_left==1)rows_left<=0;
+     else begin
+      rows_left<=rows_total;pass_cols_left<=pass_cols_left-16'(INTERLEAVE);
+      cols_left<=pass_cols_left-16'(INTERLEAVE);
+      pass_address<=pass_address+32'(INTERLEAVE);
+      row_address<=pass_address+32'(INTERLEAVE);expected_address<=pass_address+32'(INTERLEAVE);
+      pass_offset<=pass_offset+51'(col_step)*51'(LANES*INTERLEAVE);
+      row_offset<=pass_offset+51'(col_step)*51'(LANES*INTERLEAVE);
+      cursor_offset<=pass_offset+51'(col_step)*51'(LANES*INTERLEAVE);
+     end
+    end else begin
+     pass_remaining<=pass_remaining-1'b1;cols_left<=cols_left-1'b1;
+     cursor_offset<=cursor_offset+51'(col_step)*51'(LANES);
+    end
+   end else if(cols_left==1)begin
+    rows_left<=rows_left-1'b1;cols_left<=local_cols;
+    row_offset<=row_offset+row_step;cursor_offset<=row_offset+row_step;
+   end else begin
+    cols_left<=cols_left-1'b1;cursor_offset<=cursor_offset+51'(col_step)*51'(LANES);
+   end
+  end
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin state<=IDLE;active<=0;protocol_error<=0;pending<=0;end
+  else if(clear)begin state<=IDLE;active<=0;protocol_error<=0;pending<=0;end
+  else begin
+   case({request_fire,retire})
+    2'b10:pending<=pending+1'b1;
+    2'b01:pending<=pending-1'b1;
+    default:begin end
+   endcase
+   if(response_fault)protocol_error<=1;
+   if(command_valid && command_ready)begin
+    active<=1;
+    if(command_rows==0 || command_cols==0 || command_padded_cols==0 ||
+       command_padded_cols%LANES!=0 || command_cols>command_padded_cols ||
+       {16'b0,command_padded_cols}-{16'b0,command_cols}>=LANES ||
+       ({1'b0,command_element_base}+33'(command_rows)*33'(command_padded_cols/LANES))>33'h100000000)
+     protocol_error<=1;
+   end
+   case(state)
+    IDLE:if(accept_part && !protocol_error)state<=CHECK;
+    CHECK:if(protocol_error || response_fault || beat_invalid || invalid_bounds)begin protocol_error<=1;state<=IDLE;end
+          else state<=SEND;
+    SEND:if(write_ready)state<=(accept_part && !protocol_error)?CHECK:IDLE;
+   endcase
+  end
+ end
+ generate if(OUTSTANDING<1 || OUTSTANDING>256)begin : bad_depth
+  initial $error("OUTSTANDING must be in 1..256");
+ end endgenerate
+ initial if(INTERLEAVE<1 || INTERLEAVE>65535)$fatal(1,"invalid output pass width");
+ generate if(LANES<1 || LANES>64 || (LANES&(LANES-1))!=0)begin : bad_lanes
+  initial $error("LANES must be a power of two in 1..64");
+ end endgenerate
+endmodule

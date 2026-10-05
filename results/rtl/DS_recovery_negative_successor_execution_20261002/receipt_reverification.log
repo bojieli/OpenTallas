@@ -1,0 +1,10 @@
+ALL27_SOURCE_BOUND_RECEIPTS_REVERIFIED
+23 positive controls: exact case/args, exit0, original semantic marker, source/binary/log/process identity PASS
+4 negative controls: exit1, exact predeclared fatal source path/line/marker, live invariant plus mutation witness PASS
+5 binary/source/tool/command phase bindings PASS
+820 materialized source files PASS
+10 frontend/CXX processes exit0 with zero resource event deltas PASS
+27 runtime processes with zero resource event deltas PASS
+Historic full27 FAIL unchanged; originals byte-identical; clean source68 execution PASS
+Runner/service exit0, inactive/MainPID0, children absent, owned reservation released PASS
+100 completed objects and5 binaries retained; no source churn, restart, timeout, FSIZE, CPU-time or AS limit

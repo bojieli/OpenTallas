@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/eos_campaign_v1.schema.json",
+  "title": "OpenTallas Qwen3 multi-question EOS campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "all_reached_eos",
+    "attention_backend",
+    "build_id",
+    "context_limit_tokens",
+    "device",
+    "device_name",
+    "eos_token_ids",
+    "maximum_new_tokens",
+    "question_count",
+    "questions",
+    "report_id",
+    "runner_sha256",
+    "schema",
+    "status",
+    "suite_id",
+    "torch_version",
+    "total_wall_time_seconds",
+    "warning_token_threshold"
+  ],
+  "properties": {
+    "all_reached_eos": {
+      "type": "boolean"
+    },
+    "attention_backend": {
+      "enum": [
+        "eager",
+        "sdpa"
+      ]
+    },
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "context_limit_tokens": {
+      "const": 8000
+    },
+    "device": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "device_name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "eos_token_ids": {
+      "prefixItems": [
+        {
+          "const": 151645
+        },
+        {
+          "const": 151643
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "maximum_new_tokens": {
+      "const": 8000
+    },
+    "question_count": {
+      "maximum": 16,
+      "minimum": 4,
+      "type": "integer"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/result"
+      },
+      "maxItems": 16,
+      "minItems": 4,
+      "type": "array"
+    },
+    "report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "runner_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.qwen3.eos_campaign.v1"
+    },
+    "status": {
+      "enum": [
+        "fail",
+        "pass"
+      ]
+    },
+    "suite_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "torch_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "total_wall_time_seconds": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "warning_token_threshold": {
+      "const": 800
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_tokens_committed",
+        "effective_maximum_new_tokens",
+        "enable_thinking",
+        "eos_token_id",
+        "generated_token_count",
+        "id",
+        "prompt_token_count",
+        "prompt_token_sha256",
+        "reached_eos_within_warning_threshold",
+        "result_id",
+        "result_path",
+        "span_count",
+        "termination",
+        "wall_time_seconds"
+      ],
+      "properties": {
+        "context_tokens_committed": {
+          "maximum": 8000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "effective_maximum_new_tokens": {
+          "maximum": 8000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "enable_thinking": {
+          "type": "boolean"
+        },
+        "eos_token_id": {
+          "anyOf": [
+            {
+              "enum": [
+                151643,
+                151645
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "generated_token_count": {
+          "maximum": 8000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "type": "string"
+        },
+        "prompt_token_count": {
+          "maximum": 8000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "prompt_token_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "reached_eos_within_warning_threshold": {
+          "type": "boolean"
+        },
+        "result_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "result_path": {
+          "pattern": "^questions/[a-z][a-z0-9_]{0,63}\\.json$",
+          "type": "string"
+        },
+        "span_count": {
+          "maximum": 8000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "termination": {
+          "enum": [
+            "context_limit",
+            "eos"
+          ]
+        },
+        "wall_time_seconds": {
+          "minimum": 0,
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.w10.parent_model_pin_refresh.v1",
+  "prior_commit": "f06189ae5",
+  "model_commit": "0a8eb4602",
+  "old_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+  "new_generator_sha256": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+  "proof": "AST equality after removing only two added W10 audit functions, CLI arguments and dispatch branches; all existing model calculations and constants unchanged.",
+  "headline_changed": false,
+  "records": [
+    {
+      "path": "results/arch/v41_stage_owner_product.json",
+      "prior_sha256": "d6377563213be4d1bb627c7a628c67c08f097c3bed249b2b43c64ca562e49a8e",
+      "updated_sha256": "8b0196e6dbb9fb0420628b0942e75549ec91e9c61f35fbd1f432ab2453852b81",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/consolidation.json",
+      "prior_sha256": "31400d360a6f803cbb5fd08bcde023ecb5c0678de2b3ef849c7861825702edc3",
+      "updated_sha256": "30d3e7d27125a8f0e4c0b99625ed9961113fe7cbc842b3a949d1ac0f239450ef",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/economics.json",
+      "prior_sha256": "07256be6c89123a660f0ffa3fa309a6557ef35b885b52f5ac9d829e5e6c35fc2",
+      "updated_sha256": "c8f5a8d5eee6ab9af5c11ed724eec29007281a81344d4b52f35ead4ee971b6af",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "prior_sha256": "812e1126438f6afc1defbee4a6237504866811b087e8f04a6ee7d514ff3ef16f",
+      "updated_sha256": "a7c0e7300d83f1cf5cc8448791450008b9db83e1e898588b0308cced303d25ce",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/v41_dedicated_units.json",
+      "prior_sha256": "d2d7461aa65e8277decb30d9d69a2e2c663543e0695e5b4b2b0b1ec781c85fe4",
+      "updated_sha256": "e7ce0d1035784453217c9e9f460edcf89821bea3e9a60aa4d9e74dc7151052d4",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/v41_vm_waterfall.json",
+      "prior_sha256": "1138d9ebd829fea472ce0024edc51c8099dec92f25b9625f77b43bdc2f162572",
+      "updated_sha256": "daa81eeb334087be1d990c9a2d30634593901e624f6504ed58796ebc2819900c",
+      "all_other_fields_identical": true
+    }
+  ],
+  "historical_failed_records_unchanged": true,
+  "baseline_latency_audit": "LAT8 discrepancy retained separately; no adoption or product repricing",
+  "validation": {
+    "model_and_recovery_tests": {
+      "passed": 61,
+      "skipped": 1,
+      "exit_code": 0,
+      "log_sha256": "6e8c2828c781d83063fc580f967a8607f4370f02b04268f210ebba46625a136f"
+    },
+    "make_check_figures": {
+      "exit_code": 0,
+      "log_sha256": "867f8c2a21c2b9e01cafa9e48b4d5bdb05c6996273c192f9b812c89da5506a73",
+      "final_number_gates": "Full ROM/HBM tokens and full die routes remain blocked; no promotion"
+    }
+  }
+}

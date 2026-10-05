@@ -1,0 +1,1336 @@
+{
+  "actual_consumer_deadline_not_supplied": true,
+  "additional_bank_or_cells": 0,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_reset_PG_or_escape_qualified": false,
+  "new_jobs": [],
+  "next_required_construction": "Assign selectedrelay/padbranches to distributedlegalMXsites near sourceANDsink underfirsthop2.88/kmetalbudget, then nativevia/PG/OBS and sourceclock/reset/loadedSSFF. Existing top-first site list cannot be treated as connected.",
+  "no_new_bank_or_buffer_count": true,
+  "physical_build_admitted": false,
+  "prior51ae_annex_charge_mm2": 0,
+  "rejection_scope": "Selected finite correction-site list and its declaredM8/M9first-hopbudget only. Full availableemptyMXrows may support a redistributedlist at unchangedcounts; no architecture impossibility claim.",
+  "schema": "DS_C9_SELECTED_CLOCK_LITERAL_FIRST_HOP_NECESSARY_ACCESS_V1",
+  "selected_selector_bank": {
+    "complete_selector_reserved_with_core_rectangle_headroom_mm2": 2.3226645088799995,
+    "core_clock70406": 70406,
+    "named_bank_bbox_DBU": [
+      3129786,
+      8953200,
+      3147930,
+      9745920
+    ],
+    "reserved_bank_mm2": 0.01438311168,
+    "source_cells_hash": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+    "source_commit": "d4a3deb550aa71afec39e0549adb0e0a7f4c2894",
+    "spare_sites": 58,
+    "transport_clock48007_not_readded": true
+  },
+  "selected_source_commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+  "shards": {
+    "0": {
+      "additional_BUF_count": 0,
+      "artifact_sha256": "0d22e43191cfc7c0835055bccb30f4459fd39a2de5c7291d1bd802c3eedb836a",
+      "branches_with_no_first_hop_site_inside_selected_metal_budget": 14704,
+      "first_relay_branches_that_cannot_use_ANY_raw_rectangle_site_under_current_budget": 102,
+      "minimum_buffer_body_to_relocate_outside_raw_um2": 10.41012,
+      "minimum_first_relay_BUF_sites_outside_raw_rectangle_at_unchanged_source_graph": 102,
+      "one_to_one_assignment_not_attempted_if_necessary_bound_fails": true,
+      "raw_bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15739920
+      ],
+      "raw_only_first_hop_cut_witnesses": [
+        {
+          "destination": "s0_r0_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r0_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r1_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r1_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r2_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r2_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r3_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r3_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s0_clock_upper_L3_0"
+        },
+        {
+          "destination": "s0_r4_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r4_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r5_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r5_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r6_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r6_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r7_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r7_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s0_clock_upper_L3_1"
+        },
+        {
+          "destination": "s0_r8_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r8_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r9_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r9_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r10_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r10_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r11_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r11_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s0_clock_upper_L3_2"
+        },
+        {
+          "destination": "s0_r12_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r12_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r13_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r13_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r14_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r14_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r15_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r15_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s0_clock_upper_L3_3"
+        },
+        {
+          "destination": "s0_r16_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r16_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r17_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r17_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r18_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r18_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r19_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r19_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s0_clock_upper_L3_4"
+        },
+        {
+          "destination": "s0_r20_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r20_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r21_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r21_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r22_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r22_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r23_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r23_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s0_clock_upper_L3_5"
+        },
+        {
+          "destination": "s0_r24_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r24_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r25_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r25_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r26_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r26_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r27_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r27_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s0_clock_upper_L3_6"
+        },
+        {
+          "destination": "s0_r28_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r28_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r29_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r29_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r30_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r30_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r31_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r31_clock_bank1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s0_clock_upper_L3_7"
+        },
+        {
+          "destination": "s0_r32_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r33_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r34_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r35_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r36_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r37_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r38_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r39_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_8_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s0_clock_upper_L3_8"
+        },
+        {
+          "destination": "s0_r40_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r41_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r42_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r43_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r44_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r45_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r46_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r47_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_9_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.868394586,
+          "source": "s0_clock_upper_L3_9"
+        },
+        {
+          "destination": "s0_r48_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r49_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r50_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r51_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r52_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r53_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r54_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r55_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_10_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.9133061699999999,
+          "source": "s0_clock_upper_L3_10"
+        },
+        {
+          "destination": "s0_r56_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r57_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r58_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r59_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r60_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r61_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r62_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_r63_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_11_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.958217754,
+          "source": "s0_clock_upper_L3_11"
+        },
+        {
+          "destination": "s0_clock_upper_L3_0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 1.003129338,
+          "source": "s0_clock_upper_L4_0"
+        },
+        {
+          "destination": "s0_clock_upper_L3_1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 1.003129338,
+          "source": "s0_clock_upper_L4_0"
+        },
+        {
+          "destination": "s0_clock_upper_L3_2",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 1.003129338,
+          "source": "s0_clock_upper_L4_0"
+        },
+        {
+          "destination": "s0_clock_upper_L3_3",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 1.003129338,
+          "source": "s0_clock_upper_L4_0"
+        },
+        {
+          "destination": "s0_clock_upper_L3_4",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 1.003129338,
+          "source": "s0_clock_upper_L4_0"
+        },
+        {
+          "destination": "s0_clock_upper_L3_5",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 1.003129338,
+          "source": "s0_clock_upper_L4_0"
+        }
+      ],
+      "relay_branches_checked": 19622,
+      "repair": "Redistribute existingselectedcount acrossallrawrows andbindtheseoutside-rawfirsthopsnearupperparents; commonowner/sites/PGmustbeexplicit. No newbank/count or totalreticlearea inference.",
+      "selected_correction_site_count": 38383,
+      "selected_site_y_range_DBU": [
+        15567390,
+        15606810
+      ],
+      "worst_first_hop_deficit": {
+        "L1_lower_bound_um": 133.671,
+        "destination": "s0_r63_seat3_b50_dataFF",
+        "first_branch_metal_budget_fF": 0.32762649999999993,
+        "nearest_A_literal_rect_DBU": [
+          11122776,
+          15606459,
+          11122813,
+          15606477
+        ],
+        "net": "s0_r63_seat3_clock_leaf6_Y",
+        "optimistic_M8_M9_metal_C_fF": 12.415866822,
+        "site": "s0.clock_correction_inventory.37996",
+        "source": "s0_r63_seat3_clock_leaf6",
+        "source_Y_literal_rect_DBU": [
+          11122093,
+          15739677,
+          11122305,
+          15739695
+        ],
+        "source_contact_stub_budget_preserved": true,
+        "source_fanout": 8
+      }
+    },
+    "1": {
+      "additional_BUF_count": 0,
+      "artifact_sha256": "27c86f97e1ff9a8e175b475c3553140fbffdcaf00ad9fbe3e8f5f8258facb775",
+      "branches_with_no_first_hop_site_inside_selected_metal_budget": 11727,
+      "first_relay_branches_that_cannot_use_ANY_raw_rectangle_site_under_current_budget": 66,
+      "minimum_buffer_body_to_relocate_outside_raw_um2": 6.73596,
+      "minimum_first_relay_BUF_sites_outside_raw_rectangle_at_unchanged_source_graph": 66,
+      "one_to_one_assignment_not_attempted_if_necessary_bound_fails": true,
+      "raw_bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15705360
+      ],
+      "raw_only_first_hop_cut_witnesses": [
+        {
+          "destination": "s1_r0_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r1_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r2_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r3_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r4_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r5_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r6_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r7_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.46419033000000004,
+          "source": "s1_clock_upper_L3_0"
+        },
+        {
+          "destination": "s1_r8_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r9_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r10_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r11_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r12_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r13_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r14_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r15_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_1_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.509101914,
+          "source": "s1_clock_upper_L3_1"
+        },
+        {
+          "destination": "s1_r16_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r17_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r18_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r19_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r20_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r21_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r22_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r23_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_2_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.554013498,
+          "source": "s1_clock_upper_L3_2"
+        },
+        {
+          "destination": "s1_r24_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r25_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r26_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r27_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r28_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r29_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r30_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r31_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_3_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.5989250819999999,
+          "source": "s1_clock_upper_L3_3"
+        },
+        {
+          "destination": "s1_r32_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r33_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r34_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r35_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r36_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r37_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r38_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r39_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_4_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.643836666,
+          "source": "s1_clock_upper_L3_4"
+        },
+        {
+          "destination": "s1_r40_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r41_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r42_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r43_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r44_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r45_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r46_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r47_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_5_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.68874825,
+          "source": "s1_clock_upper_L3_5"
+        },
+        {
+          "destination": "s1_r48_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r49_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r50_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r51_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r52_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r53_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r54_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r55_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_6_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.733659834,
+          "source": "s1_clock_upper_L3_6"
+        },
+        {
+          "destination": "s1_r56_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r57_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r58_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r59_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r60_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r61_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r62_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_r63_clock_bank0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L3_7_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.778571418,
+          "source": "s1_clock_upper_L3_7"
+        },
+        {
+          "destination": "s1_clock_upper_L3_0",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s1_clock_upper_L4_0"
+        },
+        {
+          "destination": "s1_clock_upper_L3_1",
+          "first_branch_metal_budget_fF": 0.32762649999999993,
+          "net": "s1_clock_upper_L4_0_Y",
+          "optimistic_C_to_any_point_in_raw_rectangle_fF": 0.8234830019999999,
+          "source": "s1_clock_upper_L4_0"
+        }
+      ],
+      "relay_branches_checked": 15682,
+      "repair": "Redistribute existingselectedcount acrossallrawrows andbindtheseoutside-rawfirsthopsnearupperparents; commonowner/sites/PGmustbeexplicit. No newbank/count or totalreticlearea inference.",
+      "selected_correction_site_count": 30231,
+      "selected_site_y_range_DBU": [
+        15567390,
+        15598170
+      ],
+      "worst_first_hop_deficit": {
+        "L1_lower_bound_um": 107.211,
+        "destination": "s1_r63_seat3_b18_dataFF",
+        "first_branch_metal_budget_fF": 0.32762649999999993,
+        "nearest_A_literal_rect_DBU": [
+          11027736,
+          15598359,
+          11027773,
+          15598377
+        ],
+        "net": "s1_r63_seat3_clock_leaf2_Y",
+        "optimistic_M8_M9_metal_C_fF": 9.959198706,
+        "site": "s1.clock_correction_inventory.29918",
+        "source": "s1_r63_seat3_clock_leaf2",
+        "source_Y_literal_rect_DBU": [
+          11027053,
+          15705117,
+          11027265,
+          15705135
+        ],
+        "source_contact_stub_budget_preserved": true,
+        "source_fanout": 8
+      }
+    }
+  },
+  "source_1483_control_plus46_new_clock_reset_and169_identity_union_not_qualified": true,
+  "source_627_minimum_extra_retained": true,
+  "source_origins": [
+    {
+      "commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "copy": "model.json",
+      "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0",
+      "source": "results/uarch/dsrom_capture_clock_selected_union_20261002/model.json"
+    },
+    {
+      "commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "copy": "shard0_clock_branches.json.gz",
+      "sha256": "7b7830eaf0d4cdac251759533ea60e89544daad3145be8c44984f4c93e9ed09a",
+      "source": "results/uarch/dsrom_capture_clock_selected_union_20261002/shard0_clock_branches.json.gz"
+    },
+    {
+      "commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "copy": "shard1_clock_branches.json.gz",
+      "sha256": "7512943b5cedee9fd934313331764155f15eb62544127357aedf34d9983d8f81",
+      "source": "results/uarch/dsrom_capture_clock_selected_union_20261002/shard1_clock_branches.json.gz"
+    },
+    {
+      "commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "copy": "shard0_correction_sites.json.gz",
+      "sha256": "c1c7dc2959c613706ac3affa3353ba1d70bb77953834a7ff68879c96e8501632",
+      "source": "results/uarch/dsrom_capture_clock_selected_union_20261002/shard0_correction_sites.json.gz"
+    },
+    {
+      "commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+      "copy": "shard1_correction_sites.json.gz",
+      "sha256": "33752f0d0352c86eac2d51090a358385d3fa6908a36288d2b67d6c3b61cd6d70",
+      "source": "results/uarch/dsrom_capture_clock_selected_union_20261002/shard1_correction_sites.json.gz"
+    }
+  ],
+  "source_relay_and_pad_count": 68614
+}

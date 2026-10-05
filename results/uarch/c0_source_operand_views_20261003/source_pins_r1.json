@@ -1,0 +1,65 @@
+{
+  "archived_origins_verified_against_frozen_git_objects": true,
+  "broader_predecessor_checkout_required": false,
+  "pins": [
+    {
+      "origin_commit": "cdb460f170c169fb7a0e1f76937ac7e0a575c7dc",
+      "origin_path": "results/uarch/h4_hbm_baseline_bridge_20261003/native_frame_r5/inputs/Qwen_tiled.json.gz",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/Qwen_tiled.json.gz",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    },
+    {
+      "origin_commit": "cdb460f170c169fb7a0e1f76937ac7e0a575c7dc",
+      "origin_path": "tools/h4_hbm_native_frame_emitter.py",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/popper_emitter.py",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "c2c17a5e6db2994e9e0a6c129970ea5c34fe8da7cdece5af2894734c1c04eb09"
+    },
+    {
+      "origin_commit": "194417d0227349f01a414c2a56c1175e8ebce6b0",
+      "origin_path": "tools/h3_qwen_bounded_native.py",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/qwen_provider.py",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    },
+    {
+      "origin_commit": "194417d0227349f01a414c2a56c1175e8ebce6b0",
+      "origin_path": "tools/h4_c0_parent_provider_join.py",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/parent_join.py",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a"
+    },
+    {
+      "origin_commit": "194417d0227349f01a414c2a56c1175e8ebce6b0",
+      "origin_path": "tools/h4_c0_v1_owner_lock.py",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/owner_guard.py",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "38fd7d803d856d7cd29c1e43c95254754cf907bf7d84e532e2e44f4f8bc48b22"
+    },
+    {
+      "origin_commit": "194417d0227349f01a414c2a56c1175e8ebce6b0",
+      "origin_path": "tools/h3_qwen_complete_native.py",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/qwen_arithmetic.py",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76"
+    },
+    {
+      "origin_commit": "cdb460f170c169fb7a0e1f76937ac7e0a575c7dc",
+      "origin_path": "results/uarch/h4_hbm_baseline_bridge_20261003/native_frame_r5/inputs/V1_source.py",
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/V1_source.py",
+      "scope": "self-contained frozen consumed input",
+      "sha256": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884"
+    },
+    {
+      "path": "tools/h4_c0_source_operand_views_r1.py",
+      "scope": "selected additive source in containing commit",
+      "sha256": "e342a4ffdc2cdd88653f34296edc8790e7ddec423bcb8e4a4425626476c4357d"
+    },
+    {
+      "path": "tests/test_c0_source_operand_views_r1.py",
+      "scope": "selected additive source in containing commit",
+      "sha256": "5fda45028842e42dea136fc66b857fed6f2b60690da179714610ab4cec207673"
+    }
+  ]
+}

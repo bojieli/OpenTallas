@@ -1,0 +1,97 @@
+{
+  "scope": "model_only_position0_nohardwareadoption",
+  "override_semantics": "full_extras_not_increment",
+  "rows": {
+    "55": {
+      "cycles": 84520,
+      "layer_chain_cycles": 2118,
+      "tokens_s_b1": 14197.8
+    },
+    "112": {
+      "cycles": 96889,
+      "layer_chain_cycles": 2460,
+      "tokens_s_b1": 12385.3
+    },
+    "166": {
+      "cycles": 108607,
+      "layer_chain_cycles": 2784,
+      "tokens_s_b1": 11049.0
+    },
+    "167": {
+      "cycles": 108824,
+      "layer_chain_cycles": 2790,
+      "tokens_s_b1": 11027.0
+    }
+  },
+  "existing_112plus54_product": 166,
+  "L0_attribution": {
+    "rtl": {
+      "cycles": 4669,
+      "total_cycles": 4676,
+      "collective_lat_cycles": 339,
+      "su_width": 64,
+      "groups": 6144,
+      "tp": 4,
+      "me_extra": 112,
+      "position": 0,
+      "src": "claude/w12-qwen-rom 42ecf382 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64.json (stages.L0.cycles)"
+    },
+    "model_layer_chain_cycles": 2460,
+    "model_allreduce_cycles": 442.0,
+    "model_layer_cycles": 3344.0,
+    "ratio": 1.3962,
+    "model_short_pct": 28.4,
+    "model_layer_cycles_at_rtl_collective": 3138,
+    "gap_cycles_at_rtl_collective": 1531,
+    "attribution": {
+      "body_cycles": 2687,
+      "allreduce_cycles": 991,
+      "allreduces_per_layer": 2,
+      "segments_per_allreduce": 2,
+      "segment_cycles": 497,
+      "spans": {
+        "qkv": 431,
+        "attn": 87,
+        "pv_o_me": 769,
+        "o_ar": 991,
+        "post": 69,
+        "gate_up": 528,
+        "silu": 119,
+        "down": 480,
+        "down_ar": 991,
+        "tail": 222
+      },
+      "src": "claude/w12-qwen-rom a17a3c79 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt",
+      "fix_pending": "claude/w12-qwen-rom 79783ff9 one-segment all-reduce, NOT measured (est. ~620 cycles)",
+      "model_body_cycles": 2460,
+      "body_ratio": 1.0923,
+      "allreduce_gap_cycles": 1098.0,
+      "body_gap_cycles": 227
+    },
+    "status": "ATTRIBUTED (W12b a17a3c79): body +9.2% (ME latency per op), all-reduce 2 serialized TP segments"
+  },
+  "source_sha256": {
+    "tools/qwen_rom_parent_calibration_audit.py": "c51eec2a54464bf920cfdd258a442aba59a4fa9834ca2ef483bd9827d495d46c",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "tools/hdc_timing.py": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36",
+    "tools/uarch_model_qwen_kv_credit17.py": "69b5d8a94d208ddf6fb35e719578c5cc6189efbf9c87abecd3e3af099001fdae",
+    "tools/uarch_model_qwen_kv_bank_groups.py": "0050f1be26a913427c5334e59cf7561b5a18a3ad0aa5f4aa05f23ea6a89ee30b",
+    "tools/uarch_model_qwen_kv_rate_risk.py": "3b190905af9ad00430bba363c6e48a7be106662c3d878a3ad3c97aa70ca07d36",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/original_terminal.json": "0da7a39272da4a4c404321c3fd6d0102384fe1b931f5ffe4ee19c710ecce99de",
+    "results/uarch/qwen_rom_L0_terminal_source_20261003/terminal-review-r1.json": "9dd6dac2242ab6c02bb0ab1efeeff7cef1e49be9e24e3b3b214ef91bf9343384"
+  },
+  "verified_historical_cycle_reconciliation": {
+    "measured_body_cycles": 2687,
+    "model_body_cycles": 2460,
+    "measured_full_allreduce_cycles": 991,
+    "allreduces": 2,
+    "correct_model_body_plus_measured_collectives": 4442,
+    "remaining_body_gap_cycles": 227,
+    "incorrect_existing_at_rtl_collective_formula_uses": 339,
+    "explanation": "LAT339 is link/engine parameter, not complete serialized allreduce991. Existing helper model_layer_cycles_at_rtl_collective incorrectly substitutes LAT339."
+  },
+  "adoption": false,
+  "configuration_caveat": "All extra sweep rows usectx1/UCIeMeasured/1.2GHz; historicalcomparison helperusesboard/ctx1. Not claimedphysicallyclosedcurrentTP4orctx8191 performance.",
+  "required_next": "Reprice same selectedsource using fullwire+actualarithmeticextra and matching fullcollective service; resolve per-regionbodygap before G4."
+}

@@ -1,0 +1,13 @@
+{
+  "scope": "Candidate cancellation before first retirement; does not redefine existing partial-retirement semantics.",
+  "verification": "Six tests pass: three candidates x Icarus/Verilator. Each includes 90 transactions with carry/wrap and exact latency checks, plus 21 cancellation cases: seven stage positions x discard/clear/asynchronous reset. Wait 40 cycles for stale publication, then commit a fresh operation without an extra clear and check exact rows/bytes/commit counts.",
+  "source_sha256": {
+    "tests/test_state_apply_pipeline.py": "67eab0bb9ff75ab7368441606b85f35e7966bf82a7ba581e39422a3c72a8f1c9",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "results/rtl/state_apply_pipeline/before.sv": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e",
+    "results/rtl/state_apply_pipeline/candidate.sv": "6b522c33ff70fcc582e3ca73981b16b8086a9e6f0f5e2dcb2620e54ccee0e184",
+    "results/rtl/state_apply_overlap/candidate.sv": "46daa3f8d9bb1c47dc4bf7e2e05bfd14b7840b2415afd09c6a21b8816d5a6903",
+    "results/rtl/state_apply_counter/candidate.sv": "9c45bbe2cc6b50c773b7b9139fe7bec0ead276b0cf37694215032c560f14ae40"
+  },
+  "production_changed": false
+}

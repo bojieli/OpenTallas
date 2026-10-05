@@ -1,0 +1,129 @@
+{
+  "actual_provider_implemented": false,
+  "address_tag_identity": "Actualstage/rank/shard/phase/key/source generation/opsequence+readnonce+MB/PP/row retained throughgood/corrected/poison terminal andACK; reference strings are not wirewidth proof.",
+  "clean_service_successor": "Retain2cycle/II2 for BOTHrawsidecar and main cleancheck. Historical raw_ECC5 orfullcorrector fields cannot standin for normalservice.",
+  "exceptional_correction": "Preserve fullcorrector SS2794.959717raw/1898.452515main and area floors .7996465152/.5279219712. These exceptional heldbounds4/3 beforeextraCLKq/setup/wires are not normalcleanlatency.",
+  "full_corrector_K256_output": {
+    "corrected": 1,
+    "data": 256,
+    "uncorrectable": 1
+  },
+  "full_corrector_K272_output": {
+    "corrected": 1,
+    "data": 272,
+    "uncorrectable": 1
+  },
+  "generator_sha256": "3f3107589a1cb8f7675069cd76cd3703dc8ea2f495718c78e9e8b44b21ed3ab5",
+  "historical_dependencies": [
+    "24a072f1725a316c2b4e9d2e22e055ab751f163e",
+    "c2b220163330edcc14433fb894599b4f21bc9001"
+  ],
+  "historical_model_files_UNCHANGED": true,
+  "measured_checker_ports": {
+    "256": {
+      "clean": 1,
+      "cw": 266,
+      "overall": 1,
+      "syn": 9
+    },
+    "272": {
+      "clean": 1,
+      "cw": 282,
+      "overall": 1,
+      "syn": 9
+    }
+  },
+  "measured_clean_checker_record_sha256": "044ac60cbea3b0ad55e57e7ccb1d8086053f6861fbe5e646877581b2bec17ec3",
+  "mirror_source": "Full source256data+9check+overall=266 protected bits. Physicalread/copy carrier274 includes8reservedpadding. Sourceword/mirror provenance and padding value/producer still need binding.",
+  "no_token_loss_proven": false,
+  "old274_reconciliation": "274 mainphysicalread/capture and274 sidecarphysicalread/capture remain valid carrier dimensions. It is invalid as either checker input or as fullpairedmaincapture, and tags are not macrodata.",
+  "parent_intake_scope": "Old24a/c2b logic may be retained as historical software/identity tests. Do not use its scalar274/fullcorrector profile as current typedcleanacceptedcalendar without this explicit profile and actualsource edge/port/tag receipts.",
+  "physical_context_closed": false,
+  "profile": {
+    "capture_groups": null,
+    "delivery_cycles": null,
+    "evidence_kind": "source_model",
+    "gather_cycles": null,
+    "identity_reason": "Legacy owner_lease/request_nonce strings are references, NOT counted wiretags. New109-bit capture identity proposal is not proven actualprovider tag.",
+    "main_checker_clean_output_bits": 1,
+    "main_checker_input_bits": 282,
+    "main_checker_overall_output_bits": 1,
+    "main_checker_syndrome_output_bits": 9,
+    "main_clean_check_II_cycles": 2,
+    "main_clean_check_cycles": 2,
+    "main_gathered_extra_bits": 8,
+    "main_held_capture_bits": 274,
+    "main_inline_check_bits": 2,
+    "main_macro_read_bits": 274,
+    "main_payload_bits": 272,
+    "main_port_bits_per_cycle": null,
+    "main_read_cycles": null,
+    "main_return_identity_bits": null,
+    "mirror_physical_carrier_bits": 274,
+    "mirror_protected_copy_bits": 266,
+    "sidecar_check_bits": 9,
+    "sidecar_checker_clean_output_bits": 1,
+    "sidecar_checker_input_bits": 266,
+    "sidecar_checker_overall_output_bits": 1,
+    "sidecar_checker_syndrome_output_bits": 9,
+    "sidecar_clean_check_II_cycles": 2,
+    "sidecar_clean_check_cycles": 2,
+    "sidecar_held_capture_bits": 274,
+    "sidecar_macro_read_bits": 274,
+    "sidecar_overall_bits": 1,
+    "sidecar_payload_bits": 256,
+    "sidecar_port_bits_per_cycle": null,
+    "sidecar_read_cycles": null,
+    "sidecar_reserved_padding_bits": 8,
+    "sidecar_return_identity_bits": null,
+    "tag_allocation_receipts": null,
+    "width_source_receipts": [
+      {
+        "archive": "clean_checker_measured.json",
+        "sha256": "044ac60cbea3b0ad55e57e7ccb1d8086053f6861fbe5e646877581b2bec17ec3",
+        "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+        "source_path": "results/uarch/dsrom_secded_clean_checker_20261002/terminal_r1/record.json"
+      },
+      {
+        "archive": "parent_STA_review.json",
+        "sha256": "e6089974abbd5e8344f1bac3e03b8ea98a292b4e3fc13446051996af95e526ca",
+        "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+        "source_path": "results/uarch/native_software_parent_intake_20261002/DS_clean_checker_parent_STA_review.json"
+      },
+      {
+        "archive": "element_source.sv",
+        "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+        "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+        "source_path": "rtl/v41rom/ot_v41_rom_elem_w10.sv"
+      },
+      {
+        "archive": "pair_source.sv",
+        "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+        "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+        "source_path": "rtl/v41die/ot_v41_pair_w17w10.sv"
+      },
+      {
+        "archive": "source_pair_calendar.py",
+        "sha256": "2c2764dff035ce8231045456449256099a603ac8ee112a8a87f5d867eb214b21",
+        "source_commit": "f9b61212bf257269645dc2a666e590d0089719c3",
+        "source_path": "tools/model_dsrom_issue_return_calendar.py"
+      },
+      {
+        "archive": "historical_local_join.py",
+        "sha256": "de044c7feac7b7d64488f1381a677a00b503441bac9ae8f674506df9dc1d7b79",
+        "source_commit": "24a072f1725a316c2b4e9d2e22e055ab751f163e",
+        "source_path": "tools/dsrom_par2_ecc_calendar_join.py"
+      },
+      {
+        "archive": "historical_source_join.py",
+        "sha256": "007d9749b7b36308c5dd111e35c8fe38d3b50fb5208ce6458f4266629e66c417",
+        "source_commit": "c2b220163330edcc14433fb894599b4f21bc9001",
+        "source_path": "tools/dsrom_par2_source_calendar_join.py"
+      }
+    ]
+  },
+  "profile_read_count_unit": "One legacy child raw_address request is ONE main MB codeword. New pairedrequest has TWO main274words =>548capture and TWO282checker inputs =>564; sharedrawsidecar has274capture/266check and16pairedextra checkbits.",
+  "result": "PASS_TYPED_SOURCE_CODEWORD_CAPTURE_CHECKER_WIDTHS_TAG_PORT_ACCEPTANCE_UNBOUND",
+  "schema": "opentallas.dsrom.PAR2.typed-source-width-reconciliation.v1",
+  "unbound_profile_failclosed_reason": "positive explicit source/profile input: main_return_identity_bits"
+}

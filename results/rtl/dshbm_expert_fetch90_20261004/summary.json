@@ -1,0 +1,123 @@
+{
+ "schema": "opentallas.hbm_accel.dshbm_expert_fetch90.summary.v1",
+ "target": "DS-V4.1 HBM accelerator, routed-expert fetch at position 1,048,575 (one stack, 32 PCs, 6 experts = 301,056 B a stack a task)",
+ "record": "results/rtl/dshbm_expert_fetch90_20261004/expert_fetch90.json",
+ "source_commit": "50c4c6bebef195c011134079f23dbbb177511b8f",
+ "source_dirty": false,
+ "minimum_component": "one HBM3E stack (32 PCs, refresh live, REFpb strict), Verilator; die = 4 identical stacks composed analytically",
+ "exact": {
+  "verdict": "PASS",
+  "cases": 848,
+  "scope": "every case of every variant: every released line compared, 0 DRAM violations"
+ },
+ "negative_controls": [
+  {
+   "case": "neg_corrupt_sector",
+   "verdict": "FAIL",
+   "bad": 1,
+   "viol": 0
+  },
+  {
+   "case": "neg_trcd_check_plus_1ns",
+   "verdict": "FAIL",
+   "bad": 0,
+   "viol": 128
+  },
+  {
+   "case": "neg_corrupt_sector_sel90",
+   "verdict": "FAIL",
+   "bad": 1,
+   "viol": 0
+  },
+  {
+   "case": "neg_trcd_check_plus_1ns_sel90",
+   "verdict": "FAIL",
+   "bad": 0,
+   "viol": 128
+  }
+ ],
+ "selected": "sel90 = ORDER=1 (rate-balanced w13-first line order, load-time cfg_lut) + PCPROT=1 (per-PC refresh protection) + STEER=1 (in-stream REFpb slot steering) + NWIN=300 (ramp-aware notice); all default-off, LAW=6 unchanged",
+ "before": {
+  "variant": "sel",
+  "stream_tbs_stack": {
+   "min": 0.6138,
+   "mean": 0.8598,
+   "max": 0.9187
+  },
+  "e2e_tbs_stack_mean": 0.6556,
+  "first_access_ns": {
+   "min": 127.164,
+   "mean": 136.159,
+   "max": 151.393
+  }
+ },
+ "after": {
+  "variant": "sel90",
+  "stream_tbs_stack": {
+   "min": 0.8077,
+   "mean": 0.9134,
+   "max": 0.9423
+  },
+  "e2e_tbs_stack_mean": 0.6814,
+  "first_access_ns": {
+   "min": 121.249,
+   "mean": 124.34,
+   "max": 130.311
+  },
+  "ge90_mean": true
+ },
+ "optional_deeper_landing": {
+  "variant": "sel90_law7 (128-deep landing, +32x64x259 b = 0.53 Mbit a stack)",
+  "stream_tbs_stack": {
+   "min": 0.8305,
+   "mean": 0.9397,
+   "max": 0.9671
+  },
+  "first_access_ns": {
+   "min": 121.249,
+   "mean": 124.34,
+   "max": 130.311
+  },
+  "note": "stream only; first access identical to sel90, so no token gain: not selected"
+ },
+ "ablation": {
+  "sel_notice": 0.8598,
+  "o1_notice": 0.8859,
+  "o1_pcprot_notice": 0.8898,
+  "o1_pcprot_steer_notice": 0.9025,
+  "pcprot_steer_nwin_notice": 0.8742,
+  "sel90_notice": 0.9134,
+  "sel90_law7_notice": 0.9397
+ },
+ "limiters": {
+  "fixed_per_pc": "~15 of 309 cycles a PC: 4-bank ACT ramp of the first expert (tRRD_S at the CK/2 row slot, 12 cycles) + BG tCCD_L at expert switches; caps a perfectly-aligned stack at ~0.95",
+  "landing": "R5a line order sends 8 lines a row to 4 SMs in the w13 tail and w2 phase (8 sectors/hclk vs LAND 4 a 833-ps cycle = 4.9/hclk): ORDER=1 removes it (+2.6 pt)",
+  "refresh": "REFpb at the window start (tRREFD on the first ACTs) and on the lookahead ACT group; a REFpb on a set already finished but still in `prot` landed on a still-needed set (tRFCpb 196 cycles): PCPROT/STEER/NWIN",
+  "residual_tail": "min 0.81 = 4 of 6 experts in one bank set (unavoidable same-set adjacency, tRTP+tRP+tRCD ~41 cycles each); same-set adversarial 0.53 (was 0.48)"
+ },
+ "per_token": {
+  "n_fetch": 40,
+  "token_us": 487.84,
+  "model_fetch_us": 5.33,
+  "before": {
+   "fetch_us_mean": 5.446,
+   "fetch_us_worst": 6.056
+  },
+  "after": {
+   "fetch_us_mean": 4.974,
+   "fetch_us_worst": 5.212
+  },
+  "delta_us_mean": -0.472,
+  "delta_us_worst": -0.844,
+  "delta_pct_of_token_mean": -0.097,
+  "delta_pct_of_token_worst": -0.173,
+  "vs_model_us_mean": -0.356,
+  "vs_model_us_worst": -0.118,
+  "routed_stream_tbs_die_before": 3.4392,
+  "routed_stream_tbs_die_after": 3.6536,
+  "routed_us_before": 13.638,
+  "routed_us_after": 12.838,
+  "note": "token composition (audit rule): 40 fetches x first access (w13 at every SM); the rest of each burst streams faster than the SMs consume it, so the stream fraction does not enter the token"
+ },
+ "verdict": ">=90% REACHED on the mean (91.3%, was 86.0%; min 80.8%, was 61.4%) with zero-byte-change, default-off logic; per-user gain 0.10% mean / 0.17% worst (< 1%): NOT a per-user lever (owner rule REJECT as a speed lever); adopt only as compliance with the >=90% HBM-load rule at the parent/owner decision. The measured fetch is now BELOW the model (4.974 us vs 5.33 us)."
+}

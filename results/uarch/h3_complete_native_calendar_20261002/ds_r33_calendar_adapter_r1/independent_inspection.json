@@ -1,0 +1,47 @@
+{
+  "LOAD_batch128_delta": -15360,
+  "LOAD_scalar_delta": -1966080,
+  "PCs": 2213,
+  "RoPE_refs": 264,
+  "arithmetic_delta": 0,
+  "artifact_inventory": {
+    "manifest.json": {
+      "bytes": 4379,
+      "sha256": "88d516b0a844c58226d2f3e92869ae9f38a6fb74a1a3cb3e4791320d6ced1fa2"
+    },
+    "r33_current_G0_interface.json.gz": {
+      "bytes": 3211186,
+      "sha256": "997cfe2f9ec9d55ad1fbf8f8eb81529911b3ef7ce29b5bcd2ed1925eb585806d"
+    },
+    "r33_current_catalog.json.gz": {
+      "bytes": 3452043,
+      "sha256": "32549052a636a2cb0ca0205186a8d540723f97d30ab4e1c5fc76f8e2eb9d4e4c"
+    },
+    "r33_source_overlay.json.gz": {
+      "bytes": 249918,
+      "sha256": "c1f50827fc95911911396101b718944ace12b2ab69420436ecdc5f25a64f848e"
+    },
+    "r33_window_provider_join.json.gz": {
+      "bytes": 54852,
+      "sha256": "5f4946ca704fca130c64a5ad25385be4b361fdfca3cdd9b06051d8598215337d"
+    },
+    "source_count_adapter.json.gz": {
+      "bytes": 25005,
+      "sha256": "04b83bc02e8883b9a02f2618b1a076c0ab541869f4e63a820d6f59b611f8470d"
+    },
+    "summary.json": {
+      "bytes": 2435,
+      "sha256": "87dcea4601204886bfe88dded83968cc8d4ad0213072de774a3d27d89281ed66"
+    }
+  },
+  "changed_PCs": 40,
+  "current_G0_Qwen_PCs": 1737,
+  "dispatch_hash_rebuilt": "df2a4fbbdd0204772d1c0d479bb43b22c209d933ac3745433a8c1bbe7efcb210",
+  "native_hash_rebuilt": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00",
+  "original128_reservations_retained": true,
+  "output_lease_or_ACK_invented": false,
+  "r33_C0_static_admission": null,
+  "rank_calls": 3840,
+  "status": "PASS_INDEPENDENT_R33_OVERLAY_RECONSTRUCTION_AND_SOURCE_REFERENCE",
+  "window_provider_pairs": 3840
+}

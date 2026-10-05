@@ -1,0 +1,215 @@
+{
+  "arithmetic": "Existing W8 folded-weight TP2 contract, input BF16, FP32 tree then BF16 row scale then separate rstd multiply",
+  "cases": [
+    {
+      "die": 0,
+      "file": "d0_sm0.npz",
+      "qkv_rows": [
+        0,
+        96
+      ],
+      "sha256": "76d4c9e049299836c95eeb832c31cc713f11fb9133d98254162213db3da32892",
+      "sm": 0,
+      "sources": [
+        {
+          "bf16_sha256": "51f62a7fef76cc896fe5f6d34f583271d97ee3833f00f434440516ca3b875e62",
+          "rows": [
+            0,
+            96
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 0,
+      "file": "d0_sm21.npz",
+      "qkv_rows": [
+        2016,
+        2112
+      ],
+      "sha256": "137ba4ee935471ddd5260b18e97f72bed69cb7beab3242810c4219a2f64ecbc0",
+      "sm": 21,
+      "sources": [
+        {
+          "bf16_sha256": "1d3471f0ef3200e7efee3ab6e23fd49862073fe5e38a3f6f519e7fa2d4d75e35",
+          "rows": [
+            2016,
+            2048
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        },
+        {
+          "bf16_sha256": "d3714651119eb749959d74e4d232d1fefe7e463a49636336c9d524248feefb41",
+          "rows": [
+            0,
+            64
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 0,
+      "file": "d0_sm26.npz",
+      "qkv_rows": [
+        2496,
+        2592
+      ],
+      "sha256": "3054f2fcd72e6b5951fe4dc6ac862b2ae84aeda7ca27221acec29c417aeda6a9",
+      "sm": 26,
+      "sources": [
+        {
+          "bf16_sha256": "a70d8d22f1fb626224eda4a5891bd0d3f55f1710ab47d26b2ba1a9c530a784e9",
+          "rows": [
+            448,
+            512
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        },
+        {
+          "bf16_sha256": "8fad1e3997b06cec83d4f48dcf572a60a15bedef4f3b1aa9b10844113ac115c7",
+          "rows": [
+            0,
+            32
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 0,
+      "file": "d0_sm31.npz",
+      "qkv_rows": [
+        2976,
+        3072
+      ],
+      "sha256": "9abc25a6724d975548397bacd1c83b38ba4ed68280885db54f9feca91da3157b",
+      "sm": 31,
+      "sources": [
+        {
+          "bf16_sha256": "1e622bd0a800e7c84c8673e72dc242a7b4b9cf5c45e88d082f5f3d9901b26c97",
+          "rows": [
+            416,
+            512
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 1,
+      "file": "d1_sm0.npz",
+      "qkv_rows": [
+        0,
+        96
+      ],
+      "sha256": "16d342d1d9f17693b25220e6a83cb9dfc80b8481ff91f7828961977a52014497",
+      "sm": 0,
+      "sources": [
+        {
+          "bf16_sha256": "a1121c5e56331767dd87f0eb79291a2cf6cd49c7ee81b9aacadbdb3e6280ec69",
+          "rows": [
+            2048,
+            2144
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 1,
+      "file": "d1_sm21.npz",
+      "qkv_rows": [
+        2016,
+        2112
+      ],
+      "sha256": "052d3a9444e3e7dc92064dc5c3700818fe413e6bbad42c0950dcff11192384b4",
+      "sm": 21,
+      "sources": [
+        {
+          "bf16_sha256": "2b6cc5bd4921eb4832d915b060da18e1e0d2a5694931c5ae4c18580354266cc4",
+          "rows": [
+            4064,
+            4096
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        },
+        {
+          "bf16_sha256": "669e33079a73266480e486adcf4c612cc3ae8ad903a614be6cc09c2317dfb656",
+          "rows": [
+            512,
+            576
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 1,
+      "file": "d1_sm26.npz",
+      "qkv_rows": [
+        2496,
+        2592
+      ],
+      "sha256": "d0112e4f77d43a0333464521c4e6398afe54a1f9a062e0ad0b32f4f4405bd74d",
+      "sm": 26,
+      "sources": [
+        {
+          "bf16_sha256": "9502e720fd1d8b4edb72271948101fad662a134c4bd9e5ecad685fc5d32d1c17",
+          "rows": [
+            960,
+            1024
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        },
+        {
+          "bf16_sha256": "1a4ece6ad1c3030d2442779f296a9230a44e625c69026b90953697ef1cd2c9f6",
+          "rows": [
+            512,
+            544
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ]
+    },
+    {
+      "die": 1,
+      "file": "d1_sm31.npz",
+      "qkv_rows": [
+        2976,
+        3072
+      ],
+      "sha256": "9aff0e3b804d039fb230d89b395f39d3d8f43ca231e83dce1885ed237a233ac7",
+      "sm": 31,
+      "sources": [
+        {
+          "bf16_sha256": "27c2fca2a57214c12b9a6b4459ac6c18e433dbddcb6ff0c4c80f76e8bab3eb35",
+          "rows": [
+            928,
+            1024
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ]
+    }
+  ],
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "claim_boundary": "Golden producer operands; no RTL norm, embedding, or complete token.",
+  "embedding_bf16_sha256": "6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb",
+  "layer": 0,
+  "norm_bf16_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+  "position": 0,
+  "rstd_bits": "4209fe78",
+  "schema": "opentallas.w19-qwen-hbm-checkpoint-operands.v1",
+  "source_sha256": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_qwen_int8_image_w12.py": "33d5e4a7359c793d605c6864c156d21f7edd3286187721c9e949d155ffbe8db3",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/w19_qwen_hbm_checkpoint.py": "6aa7fbe8e4cb13978f2707f5f86f8eca25adbb65f22860c1c4e197fbe641da78"
+  },
+  "split": 256,
+  "status": "real_checkpoint_producer_exact",
+  "token": 0
+}

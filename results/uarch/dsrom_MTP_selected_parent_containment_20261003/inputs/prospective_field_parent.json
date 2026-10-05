@@ -1,0 +1,2838 @@
+{
+  "CDC": {
+    "actual_CDC_SDF_and_resetrelation_qualification": false,
+    "crossing_phase_bound_stream_edges": 7,
+    "gen": "full32+era32; no wrap/reuse beforeallaffectedoldVMversions/peerpacketsdrained. Epochrequesttokenalwaysmatchesidentity.",
+    "latency_is_positive_with3:4_arbitrary_phase": true,
+    "reset": "asyncassert/synchronous2FFreleaseeachdomain +bothreseteraACKquiescence BEFOREGO; resetdoesnoteraseacceptedbank/packet/versiondebt",
+    "scheme": "two16-entryGray-pointercontrolmailboxes; 2receiverFF sync andregisteredcapture. Full169ctx+era32+row16+seq16+shard1+opcode4 held inownedstableFIFO, no bitwisebussync"
+  },
+  "CRC": {
+    "NAND2_per_XOR2": 4,
+    "RX_quarantine": "Capture full reserved256-flit packet at wire rate; validate stored flit+packet CRC before delivery. Original packetbuffer charged. No speculative VM write.",
+    "RXstored_expected_flitCRC32_bits": 8192,
+    "TXstored_flitCRC32_bits": 8192,
+    "XOR_levels": 8,
+    "accepted_to_terminal_cycles": 10,
+    "balanced_registered_levels": [
+      {
+        "XOR2": 2339,
+        "maximum_terms_next": 84,
+        "registered_outputs": 2357
+      },
+      {
+        "XOR2": 1169,
+        "maximum_terms_next": 42,
+        "registered_outputs": 1188
+      },
+      {
+        "XOR2": 584,
+        "maximum_terms_next": 21,
+        "registered_outputs": 604
+      },
+      {
+        "XOR2": 293,
+        "maximum_terms_next": 11,
+        "registered_outputs": 311
+      },
+      {
+        "XOR2": 148,
+        "maximum_terms_next": 6,
+        "registered_outputs": 163
+      },
+      {
+        "XOR2": 68,
+        "maximum_terms_next": 3,
+        "registered_outputs": 95
+      },
+      {
+        "XOR2": 32,
+        "maximum_terms_next": 2,
+        "registered_outputs": 63
+      },
+      {
+        "XOR2": 31,
+        "maximum_terms_next": 1,
+        "registered_outputs": 32
+      }
+    ],
+    "engines": 8,
+    "extra_BUF_for_leaf_clones": 70368,
+    "input_use_max_fanout": 23,
+    "leaf_capture_edge": 1,
+    "leaf_clone_FF_total": 5864,
+    "leaf_clone_output_fanout_ceiling": 8,
+    "matrix_hex": [
+      "0x1f91caf6386f2c25de2753181954cd1ef5e1bbd961745c3ae969f40a5f513d795f513d79",
+      "0x3f2395ec70de584bbc4ea63032a99a3debc377b2c2e8b875d2d3e814bea27af3bea27af3",
+      "0x7e472bd8e1bcb097789d4c606553347bd786ef6585d170eba5a7d0297d44f5e67d44f5e6",
+      "0xfc8e57b1c379612ef13a98c0caa668f7af0ddecb0ba2e1d74b4fa052fa89ebcdfa89ebcd",
+      "0xe68d6595be9dee783c5262998c181cf1abfa064f76319f947ff6b4afaa42eae2aa42eae2",
+      "0xd28b01dd4554f0d5a683962b0164f4fda215b7478d17631216849d550bd4e8bc0bd4e8bc",
+      "0xba87c94cb2c6cd8e93207f4e1b9d24e5b1cad5567b5a9a1ec460cea048f8ec0148f8ec01",
+      "0x6a9e586f5de2b738f867ad842e6e84d59674117597c1680761a8694acea0e57bcea0e57b",
+      "0xd53cb0debbc56e71f0cf5b085cdd09ab2ce822eb2f82d00ec350d2959d41caf69d41caf6",
+      "0xb5e8ab4b4fe5f0c63fb9e508a0eede48ac31fe0f3e71fc276fc8512165d2a89465d2a894",
+      "0x74409c60a7a4cda9a15499095889718fad8247c71d97a47436f9564894f46c5094f46c50",
+      "0xe88138c14f499b5342a93212b112e31f5b048f8e3b2f48e86df2ac9129e8d8a029e8d8a0",
+      "0xce93bb74a6fc1a835b75373d7b710b2043e8a4c5172acdea328cad280c808c390c808c39",
+      "0x82b6bc1f7597192368cd3d62efb6db5e7230f2534f21c7ee8c70ae5a4650250a4650250a",
+      "0x1afcb2c8d3411e630fbd29ddc6397ba211805f7fff37d3e7f188a8bed3f1776dd3f1776d",
+      "0x35f96591a6823cc61f7a53bb8c72f7442300befffe6fa7cfe311517da7e2eedba7e2eedb",
+      "0x6bf2cb234d04798c3ef4a77718e5ee8846017dfffcdf4f9fc622a2fb4fc5ddb64fc5ddb6",
+      "0xd7e596469a08f3187de94eee31cbdd108c02fbfff9be9f3f8c4545f69f8bbb6d9f8bbb6d",
+      "0xb05ae67b0c7eca1525f5cec47ac3773fede44c2692096245f1e37fe760464ba360464ba3",
+      "0x7f2406002092b80f95ccce90ecd223612e292394456698b10aaf0bc49fddaa3e9fddaa3e",
+      "0xfe480c004125701f2b999d21d9a446c25c5247288acd3162155e17893fbb547c3fbb547c",
+      "0xe301d2f6ba25cc1b8914695baa1c409a4d45358874ee3efec3d5db182027958120279581",
+      "0xd9926f1b4c24b412cc0f81af4d6c4c2a6f6bd0c988a821c76ec2423a1f1e167a1f1e167a",
+      "0xacb514c0a026440046385046838c554a2b361a4a70241fb434ed707e616d118d616d118d",
+      "0x46fbe3777823a4255257f3951e4c678aa38d8f4d813c635280b314f69d8b1e639d8b1e63",
+      "0x8df7c6eef047484aa4afe72a3c98cf15471b1e9b0278c6a5016629ed3b163cc63b163cc6",
+      "0x47e472bd8e1bcb097789d4c606553347bd786ef6585d170eba5a7d0297d44f5297d44f5",
+      "0x8fc8e57b1c379612ef13a98c0caa668f7af0ddecb0ba2e1d74b4fa052fa89eb52fa89eb",
+      "0x11f91caf6386f2c25de2753181954cd1ef5e1bbd961745c3ae969f40a5f513d7a5f513d7",
+      "0x23f2395ec70de584bbc4ea63032a99a3debc377b2c2e8b875d2d3e814bea27af4bea27af",
+      "0x47e472bd8e1bcb097789d4c606553347bd786ef6585d170eba5a7d0297d44f5e97d44f5e",
+      "0x8fc8e57b1c379612ef13a98c0caa668f7af0ddecb0ba2e1d74b4fa052fa89ebc2fa89ebc"
+    ],
+    "ordered_packet_extend_II": 11,
+    "packet_state_feedback_not_II1": true,
+    "terminal_capture_edge": 1,
+    "total_XOR2": 37312,
+    "total_data_FF": 44624,
+    "total_valid_ASR": 80,
+    "wrong_seq_duplicate_generation": "reject without publishing or freeing matching immutable phase/packet debt"
+  },
+  "CRC_source_exactness": {
+    "PASS": true,
+    "additional_directed_random_vectors": 515,
+    "linear_basis_vectors": 288,
+    "native_function_receipts": [
+      {
+        "path": "rtl/ot_stage_link_tx.sv",
+        "sha256": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90"
+      },
+      {
+        "path": "rtl/ot_stage_link_rx.sv",
+        "sha256": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a"
+      }
+    ],
+    "no_FP_rounding_or_golden_payload_changed": true,
+    "source_initial_and_final_XOR": "ffffffff as in native flit function; packetextend uses previous unfinalized state"
+  },
+  "HDL_build_GO": false,
+  "ROM_ECC": false,
+  "VMguard": {
+    "selected_output_payload_words": 7680,
+    "selected_source_max_output_versions": 8,
+    "source_VM_payload_bits_not_duplicated": 245760,
+    "source_formatter_unchanged": "obase+row+pos*ops AW30; fmt==1 or(fmt==0 && row<rsplit ?pw62:pw63) ->FP32 else retainedBF16<<16. RejectAW19alias beforepublication, never reround.",
+    "version32_scope": "8retainedselectedoutputversions +3XN/ACT/EID sourceinputs +12writerowners +2link/context slots=25<32; fullprogram unknownlifetimes backpressure beforeacquisition, not drop/overwrite. Fullprogramdeadlockfree/rate needscompiledgraph enrollment.",
+    "writer_admission": "Reserveexclusivepublication service afterall12writerunit_DRAIN; gate NEW conflicting engineaccepts, do notstall unbuffered alreadyactivewriter output. All128nativeROMwe suppressed ONLYownedcapturedphase; slot0newownedpublication selected."
+  },
+  "arithmetic_golden_payload_unchanged": true,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cell_body_area_per_section_um2_per_shard": {
+    "CDC16x2": 12064.48344,
+    "CRC4engines": 34892.039520000006,
+    "CRC_metadata_memory": 18154.78272,
+    "VMformatter_guard": 1154.4443999999999,
+    "VMversion_guard32": 13699.601279999999,
+    "clock_reset_FO4leaf_FO8upper": 27019.77264,
+    "codec_header": 1245.24864,
+    "drain_and_phase_sequencer": 32556.746339999998,
+    "packet_memory_existing_provider_obligation": 145238.26176,
+    "raw4096": 318246.17471999995,
+    "read_token16_and_fifo": 1944.8553600000002,
+    "reader12levels": 542540.2436999999,
+    "registered_selector": 10517.7204
+  },
+  "cell_body_mm2_each_shard": 1.15927437492,
+  "clock_reset": {
+    "FF": 901350,
+    "clock_BUF": 257532,
+    "clock_leaf_FO": 4,
+    "reset_BUF": 7212,
+    "reset_FF": 25230,
+    "upper_FO": 8
+  },
+  "component": "FULL4096_ROW_SHARD_PARENT_V1",
+  "component_construction_complete": false,
+  "construction_cell_counts_per_shard": {
+    "CDC16x2": {
+      "BUFx4_ASAP7_75t_R": 40030,
+      "DFFASRHQNx1_ASAP7_75t_R": 390,
+      "DFFHQNx1_ASAP7_75t_R": 7616,
+      "INVx1_ASAP7_75t_R": 8006,
+      "NAND2x1_ASAP7_75t_R": 59935,
+      "TIEHIx1_ASAP7_75t_R": 390
+    },
+    "CRC4engines": {
+      "BUFx4_ASAP7_75t_R": 146944,
+      "DFFASRHQNx1_ASAP7_75t_R": 40,
+      "DFFHQNx1_ASAP7_75t_R": 22312,
+      "INVx1_ASAP7_75t_R": 22352,
+      "NAND2x1_ASAP7_75t_R": 141680,
+      "TIEHIx1_ASAP7_75t_R": 40
+    },
+    "CRC_metadata_memory": {
+      "BUFx4_ASAP7_75t_R": 81920,
+      "DFFASRHQNx1_ASAP7_75t_R": 0,
+      "DFFHQNx1_ASAP7_75t_R": 16384,
+      "INVx1_ASAP7_75t_R": 16384,
+      "NAND2x1_ASAP7_75t_R": 49152,
+      "TIEHIx1_ASAP7_75t_R": 0
+    },
+    "VMformatter_guard": {
+      "BUFx4_ASAP7_75t_R": 7094,
+      "DFFASRHQNx1_ASAP7_75t_R": 128,
+      "DFFHQNx1_ASAP7_75t_R": 62,
+      "INVx1_ASAP7_75t_R": 190,
+      "NAND2x1_ASAP7_75t_R": 4000,
+      "TIEHIx1_ASAP7_75t_R": 128
+    },
+    "VMversion_guard32": {
+      "BUFx4_ASAP7_75t_R": 41120,
+      "DFFASRHQNx1_ASAP7_75t_R": 8224,
+      "DFFHQNx1_ASAP7_75t_R": 0,
+      "INVx1_ASAP7_75t_R": 8224,
+      "NAND2x1_ASAP7_75t_R": 64768,
+      "TIEHIx1_ASAP7_75t_R": 8224
+    },
+    "clock_reset_FO4leaf_FO8upper": {
+      "BUFx4_ASAP7_75t_R": 264744
+    },
+    "codec_header": {
+      "BUFx4_ASAP7_75t_R": 4835,
+      "DFFASRHQNx1_ASAP7_75t_R": 128,
+      "DFFHQNx1_ASAP7_75t_R": 839,
+      "INVx1_ASAP7_75t_R": 967,
+      "NAND2x1_ASAP7_75t_R": 4695,
+      "TIEHIx1_ASAP7_75t_R": 128
+    },
+    "drain_and_phase_sequencer": {
+      "BUFx4_ASAP7_75t_R": 18365,
+      "DFFASRHQNx1_ASAP7_75t_R": 3673,
+      "DFFHQNx1_ASAP7_75t_R": 0,
+      "INVx1_ASAP7_75t_R": 126809,
+      "NAND2x1_ASAP7_75t_R": 269579,
+      "TIEHIx1_ASAP7_75t_R": 3673
+    },
+    "packet_memory_existing_provider_obligation": {
+      "BUFx4_ASAP7_75t_R": 655360,
+      "DFFASRHQNx1_ASAP7_75t_R": 0,
+      "DFFHQNx1_ASAP7_75t_R": 131072,
+      "INVx1_ASAP7_75t_R": 131072,
+      "NAND2x1_ASAP7_75t_R": 393216,
+      "TIEHIx1_ASAP7_75t_R": 0
+    },
+    "raw4096": {
+      "BUFx4_ASAP7_75t_R": 1433600,
+      "DFFASRHQNx1_ASAP7_75t_R": 4096,
+      "DFFHQNx1_ASAP7_75t_R": 282624,
+      "INVx1_ASAP7_75t_R": 286720,
+      "NAND2x1_ASAP7_75t_R": 860160,
+      "TIEHIx1_ASAP7_75t_R": 4096
+    },
+    "read_token16_and_fifo": {
+      "BUFx4_ASAP7_75t_R": 8160,
+      "DFFASRHQNx1_ASAP7_75t_R": 16,
+      "DFFHQNx1_ASAP7_75t_R": 1616,
+      "INVx1_ASAP7_75t_R": 1632,
+      "NAND2x1_ASAP7_75t_R": 6432,
+      "TIEHIx1_ASAP7_75t_R": 16
+    },
+    "reader12levels": {
+      "BUFx4_ASAP7_75t_R": 2137590,
+      "DFFASRHQNx1_ASAP7_75t_R": 4095,
+      "DFFHQNx1_ASAP7_75t_R": 413595,
+      "INVx1_ASAP7_75t_R": 417690,
+      "NAND2x1_ASAP7_75t_R": 2100735,
+      "TIEHIx1_ASAP7_75t_R": 4095
+    },
+    "registered_selector": {
+      "BUFx4_ASAP7_75t_R": 71340,
+      "DFFASRHQNx1_ASAP7_75t_R": 4440,
+      "DFFHQNx1_ASAP7_75t_R": 0,
+      "INVx1_ASAP7_75t_R": 4440,
+      "NAND2x1_ASAP7_75t_R": 13320,
+      "TIEHIx1_ASAP7_75t_R": 4440
+    }
+  },
+  "context_PnR_GO": false,
+  "default_off": true,
+  "defaultoff_RTL_preparation_ready": false,
+  "finite_component_counts_and_cell_run_allocation_complete": true,
+  "fixed_capacity": {
+    "CRC_engines_total_two_shards": 8,
+    "VM_writer_per_logical_owner": 1,
+    "control_CDC_entries_each_direction": 16,
+    "control_CDC_payload_bits": 238,
+    "full_owner_credit_payload_bits": 238,
+    "packet_MAX256_FLIT256": true,
+    "packet_header_bits": 263,
+    "packet_header_flits": 2,
+    "pipeline_levels": 12,
+    "raw69_records_per_shard": 4096,
+    "read_record_bits": 102,
+    "read_seq_bits": 16,
+    "read_sink_tokens": 16,
+    "roots_per_shard": 64,
+    "rows_per_root": 64,
+    "sink_edge": 1,
+    "transport_ACK8_is_not_owner_credit": true,
+    "version_slots": 32
+  },
+  "initial_header_reset_era_omission_preserved_NOT_SELECTED": true,
+  "limits": [
+    "No source RTL, HDL build or P&R launched byconstruction.",
+    "Eight balanced XOR cuts plus capture/terminal CRC proof isnotSSFF timing; registered circuits and route caps screenedseparately.",
+    "Oneposition capacityand46509countcert: MTP6 needs6positionschedule/runtimeenrollment and serialization cost; notautomaticallycapacity for6 simultaneouspositions.",
+    "Newhome sitepacking andknowninventorynonoverlap not parentclock/PG/pin/DRTqualification; oldcaptureoverlay notcredited orsilentlydeleted.",
+    "No admittedfulltoken/persistentKV/headprovider/rate; parentall4778program criticalpath extra unitadmission stalls unknown, notzero."
+  ],
+  "native_VM_order_and_finite_grant_join": {
+    "backend_model_reference_tests_not_physical_grants": true,
+    "finite_service_inequalities": {
+      "batch_upper_if_G_and_L_proved": "1520*G + L + 593*G + 1 positive visible receipt edge, plus launch/CDC/queue; compiler census may lower only with bank/mask exclusion proof",
+      "single_publication_lower": "one actual bank write grant, then strictly later post-NBA visible receipt, then positive captured full-owner credit",
+      "source_envelope_not_actual_concurrency": true,
+      "worst_unproved_single_bank_read_demand": 1520,
+      "worst_unproved_single_bank_write_demand": 593
+    },
+    "five_unit_mask_not_barrier": true,
+    "native_VM_grant_admission": false,
+    "native_source_VM_capacity_bits": 16777216,
+    "proposed_backend": {
+      "SRAM_protection": "Existing SRAM reliability contract retained; no ROM-ECC removal applied to VM.",
+      "actual_macro_abstract": null,
+      "bank": "expanded_address[4:0]",
+      "bank_row": "expanded_address[18:5]",
+      "banks": 32,
+      "batch": "Snapshot ALL accepted logical-batch reads before any batch winner write. Per-bank serial service; literal last writer/lane wins. Do not coalesce separate accepted batches.",
+      "compiler_required": "Expanded AW19 bounds, full byte/lane masks, exact intended-alias and read-version/batch exclusions, finite nonstall preload/result reservations BEFORE dispatch.",
+      "fixed_capacity_not_extra_payload_credit": true,
+      "maximum_grant_interval": null,
+      "physical_home": null,
+      "publication": "Only surviving native source winner, post-NBA image and same full owner/era. Superseded writes have semantic retirement but ZERO visible ACK.",
+      "read_grants_per_bank_per_service_edge": 1,
+      "request_response_cycles": null,
+      "word_bits": 32,
+      "words_per_bank": 16384,
+      "write_grants_per_bank_per_service_edge": 1
+    },
+    "read_image": "Pre-edge VM for every read, including reads lexically after writes; NBA commits after the clocked block.",
+    "source_port_envelope": {
+      "MACs_per_cycle": 0,
+      "SU_readmax_includes_VM_selected_only": true,
+      "legacy_SU_ports_pruned_only_by_X_SU1": true,
+      "meaning": "Source all-enabled envelope under X_SU1 and selected R64; not observed simultaneous traffic or a required full multiport implementation. Compiler calendar may lower it only with source-bound exclusion/address proof.",
+      "read_bytes_per_chain_cycle": 6080,
+      "read_element_ports": 1520,
+      "read_payload_bits_per_chain_cycle": 48640,
+      "write_bytes_per_chain_cycle": 2372,
+      "write_element_ports": 593,
+      "write_payload_bits_per_chain_cycle": 18976
+    },
+    "source_receipt": {
+      "commit": "6b8f3affa5a11e44eb7d84c42061aabf792f22ad",
+      "path": "results/uarch/dsrom_split_vm_contract_20261003/model.json",
+      "sha256": "ae11c78f45ce1cd2a273aa1299d8d7567d8c15650c8e5eacb2d35a14f3a8ce98",
+      "unchanged_worktree_bytes": true
+    },
+    "write_image": "Last enabled write to a given expanded address wins in literal source order. Within a source loop, later lane wins. Collective bank3 wins over banks0..2 and package on the same aligned address."
+  },
+  "new_home": {
+    "actual_local_PG_M1": "EveryoccupiedR0row VSS[y-9,y+9],VDD[y+261,y+279];0.54rowpitch; source allmasters checked in cellLEF. M2/VIA12/M8upfeed bounds required.",
+    "all_cell_runs_sitepacked_not_DRT_or_signoff": true,
+    "allocated_row_pitch_DBU": 540,
+    "gross_mm2_each_die": 2.5621982208,
+    "halo_DBU": 12960,
+    "height_um": 1101.6,
+    "interlevel_reader_mux_XOR_wires_not_constructed": true,
+    "known_inventory_nonoverlap_PASS": true,
+    "known_retained_rectangle_conflicts": [],
+    "literal_PG_rail_y_DBU_by_master": {
+      "BUFx4_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "INVx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "NAND2x1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      },
+      "TIEHIx1_ASAP7_75t_R": {
+        "VDD": [
+          261,
+          279
+        ],
+        "VSS": [
+          -9,
+          9
+        ]
+      }
+    },
+    "named_cell_count": 10829840,
+    "new_global_clock_and_parent_PG_routes_not_installed": true,
+    "new_identical_home_per_shard_DBU": [
+      10974906,
+      14894010,
+      13300794,
+      15995610
+    ],
+    "no_other_retained_instance_removed": true,
+    "old_capture_credit_taken": 0,
+    "old_capture_overlay_bbox_DBU": [
+      10974906,
+      15562800,
+      11298906,
+      15995610
+    ],
+    "old_capture_overlay_overlap_expected": true,
+    "parent_inventory_receipts": [
+      {
+        "copy": "capture.json.gz",
+        "copy_sha256": "951910802701c2f0d7922dfd14e54da39cc4a2d39e92ea03b4a02419aa0c694d",
+        "source_commit": "e5629aefd71c1d0032178cf36544bc060bc05bdb",
+        "source_path": "results/uarch/dsrom_I66_capture_cells_20261002/model.json",
+        "source_sha256": "373f405ed8807e92d75dc4d903bb5ac3619e14ac50c467cc15fdaf74fddc3d19",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "field.json.gz",
+        "copy_sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/field.json.gz",
+        "source_sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "cfg.json.gz",
+        "copy_sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/cfg.json.gz",
+        "source_sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "bands.json.gz",
+        "copy_sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/bands.json.gz",
+        "source_sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "services.json.gz",
+        "copy_sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488",
+        "source_commit": "501f2b4f5c1c70ed2f1ff5e60bc4ceb076812aeb",
+        "source_path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/services.json.gz",
+        "source_sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "frames.json.gz",
+        "copy_sha256": "d130d68fdcd0a611e4c515987f7c37f3877b03553f1286cf6f25ba64a8225403",
+        "source_commit": "3a6b71c33",
+        "source_path": "results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/model_admission.json",
+        "source_sha256": "37dceabd73575500614350935741d98ae26ae862afe43e54413a6bb34cc3f94b",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "budget.json.gz",
+        "copy_sha256": "d3daee9f2e2e052bc56272c5233accc1064d51e84c40f2123c86c042b17e45df",
+        "source_commit": "fa7b2986f38ff39b861c52a9b4797759e1794578",
+        "source_path": "/home/ubuntu/dsrom-matched-leaf-clock-20261002/results/uarch/dsrom_I66_current_spatial_envelope_20261002/model.json",
+        "source_sha256": "eebb56659db011baaf90c27e4d720d590082ec6ce44fc2e0866c1ca187a3f448",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "tracks.txt.gz",
+        "copy_sha256": "aba7bc9014c0e24fccffbb6930df9a2b4acd9fb0b20ce7107fc0e7aacb4c46ac",
+        "source_commit": "24e3ff04c",
+        "source_path": "results/uarch/dsrom_noECC_production_context_20261002/inputs/make_tracks.tcl",
+        "source_sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+        "source_was_gzip": false
+      },
+      {
+        "copy": "tech.lef.gz",
+        "copy_sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243",
+        "source_commit": "24e3ff04c",
+        "source_path": "results/uarch/dsrom_noECC_production_context_20261002/inputs/tech.lef.gz",
+        "source_sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243",
+        "source_was_gzip": true
+      },
+      {
+        "copy": "cell_LEF.json.gz",
+        "copy_sha256": "007ab8c4d064f668c503257c26444ee7751fab732926f49d6517d76534d61207",
+        "source_commit": "e5629aefd71c1d0032178cf36544bc060bc05bdb",
+        "source_path": "results/uarch/dsrom_I66_capture_cells_20261002/inputs/cell_LEF.json",
+        "source_sha256": "802969ef259feebb2c8c1cab7f8b2e2f367a832605cc59d1156342b6c9153130",
+        "source_was_gzip": false
+      }
+    ],
+    "reticle33000x26000_um_rotated26x33_PASS": true,
+    "sections": [
+      {
+        "bbox_relative_DBU": [
+          0,
+          0,
+          2299968,
+          277560
+        ],
+        "rows": 514,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 282624,
+            "first_row_offset_DBU": 0,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 384,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 505,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 4096,
+            "first_row_offset_DBU": 272700,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 88,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "raw4096"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          281880,
+          2299968,
+          755460
+        ],
+        "rows": 877,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 413595,
+            "first_row_offset_DBU": 281880,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 315,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 739,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 4095,
+            "first_row_offset_DBU": 680940,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 87,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 378,
+            "count": 49140,
+            "first_row_offset_DBU": 685800,
+            "group": "BUFx4_ASAP7_75t_R",
+            "last_row_cells": 468,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 847665,
+            "first_row_offset_DBU": 690660,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 3003,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 120,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "reader12levels"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          759780,
+          2299968,
+          762480
+        ],
+        "rows": 5,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 1616,
+            "first_row_offset_DBU": 759780,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 496,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 3,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 16,
+            "first_row_offset_DBU": 761400,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 16,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 1536,
+            "first_row_offset_DBU": 761940,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 1536,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "read_token16_and_fifo"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          766800,
+          2299968,
+          779220
+        ],
+        "rows": 23,
+        "runs": [
+          {
+            "cell_width_DBU": 4590,
+            "count": 8224,
+            "first_row_offset_DBU": 766800,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 208,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 17,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 40096,
+            "first_row_offset_DBU": 775980,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 4606,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 6,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "VMversion_guard32"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          783540,
+          2299968,
+          786240
+        ],
+        "rows": 5,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 62,
+            "first_row_offset_DBU": 783540,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 62,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 128,
+            "first_row_offset_DBU": 784080,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 128,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 378,
+            "count": 6144,
+            "first_row_offset_DBU": 784620,
+            "group": "BUFx4_ASAP7_75t_R",
+            "last_row_cells": 60,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 2,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 3430,
+            "first_row_offset_DBU": 785700,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 3430,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "VMformatter_guard"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          790560,
+          2299968,
+          792720
+        ],
+        "rows": 4,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 839,
+            "first_row_offset_DBU": 790560,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 279,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 2,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 128,
+            "first_row_offset_DBU": 791640,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 128,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 1794,
+            "first_row_offset_DBU": 792180,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 1794,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "codec_header"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          797040,
+          2299968,
+          828360
+        ],
+        "rows": 58,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 22312,
+            "first_row_offset_DBU": 797040,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 472,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 40,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 40,
+            "first_row_offset_DBU": 818640,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 40,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 378,
+            "count": 35184,
+            "first_row_offset_DBU": 819180,
+            "group": "BUFx4_ASAP7_75t_R",
+            "last_row_cells": 4764,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 6,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 74624,
+            "first_row_offset_DBU": 822420,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 3644,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 11,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "CRC4engines"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          832680,
+          2299968,
+          848880
+        ],
+        "rows": 30,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 16384,
+            "first_row_offset_DBU": 832680,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 144,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 30,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "CRC_metadata_memory"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          853200,
+          2299968,
+          980100
+        ],
+        "rows": 235,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 131072,
+            "first_row_offset_DBU": 853200,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 32,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 235,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "packet_memory_existing_provider_obligation"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          984420,
+          2299968,
+          995760
+        ],
+        "rows": 21,
+        "runs": [
+          {
+            "cell_width_DBU": 4104,
+            "count": 7616,
+            "first_row_offset_DBU": 984420,
+            "group": "DFFHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 336,
+            "members": [
+              {
+                "master": "DFFHQNx1_ASAP7_75t_R",
+                "width_DBU": 1080,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1080
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1242
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2592
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2970
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3348
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3726
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 560,
+            "row_pitch_DBU": 540,
+            "rows": 14,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 4590,
+            "count": 390,
+            "first_row_offset_DBU": 991980,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 390,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 1,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 35917,
+            "first_row_offset_DBU": 992520,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 427,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 6,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "CDC16x2"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          1000080,
+          2299968,
+          1029240
+        ],
+        "rows": 54,
+        "runs": [
+          {
+            "cell_width_DBU": 4590,
+            "count": 3673,
+            "first_row_offset_DBU": 1000080,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 166,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 8,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 162,
+            "count": 123136,
+            "first_row_offset_DBU": 1004400,
+            "group": "INVx1_ASAP7_75t_R",
+            "last_row_cells": 9560,
+            "members": [
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 14197,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 324,
+            "count": 258560,
+            "first_row_offset_DBU": 1009260,
+            "group": "NAND2x1_ASAP7_75t_R",
+            "last_row_cells": 3032,
+            "members": [
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 7098,
+            "row_pitch_DBU": 540,
+            "rows": 37,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "drain_and_phase_sequencer"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          1033560,
+          2299968,
+          1043280
+        ],
+        "rows": 18,
+        "runs": [
+          {
+            "cell_width_DBU": 4590,
+            "count": 4440,
+            "first_row_offset_DBU": 1033560,
+            "group": "DFFASRHQNx1_ASAP7_75t_R_hold_restore_forward_cluster",
+            "last_row_cells": 432,
+            "members": [
+              {
+                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                "width_DBU": 1404,
+                "x_offset_DBU": 0
+              },
+              {
+                "master": "INVx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 1404
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1566
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 1890
+              },
+              {
+                "master": "NAND2x1_ASAP7_75t_R",
+                "width_DBU": 324,
+                "x_offset_DBU": 2214
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2538
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 2916
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3294
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 3672
+              },
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 4050
+              },
+              {
+                "master": "TIEHIx1_ASAP7_75t_R",
+                "width_DBU": 162,
+                "x_offset_DBU": 4428
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 501,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          },
+          {
+            "cell_width_DBU": 378,
+            "count": 49140,
+            "first_row_offset_DBU": 1038420,
+            "group": "BUFx4_ASAP7_75t_R",
+            "last_row_cells": 468,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 9,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "registered_selector"
+      },
+      {
+        "bbox_relative_DBU": [
+          0,
+          1047600,
+          2299968,
+          1071360
+        ],
+        "rows": 44,
+        "runs": [
+          {
+            "cell_width_DBU": 378,
+            "count": 264744,
+            "first_row_offset_DBU": 1047600,
+            "group": "BUFx4_ASAP7_75t_R",
+            "last_row_cells": 3132,
+            "members": [
+              {
+                "master": "BUFx4_ASAP7_75t_R",
+                "width_DBU": 378,
+                "x_offset_DBU": 0
+              }
+            ],
+            "orientation": "R0",
+            "per_row": 6084,
+            "row_pitch_DBU": 540,
+            "rows": 44,
+            "site_grid_DBU": 54
+          }
+        ],
+        "section": "clock_reset_FO4leaf_FO8upper"
+      }
+    ],
+    "site_row_grid_DBU": [
+      54,
+      270
+    ],
+    "width_um": 2325.888
+  },
+  "next_admission_gate": "Bind native VM bank/mask grants, response/visible receipts and compiler batch/address exclusions; loaded 13-edge local path and parent clock/reset/PG relays must pass before reader/CDC build.",
+  "physical_fit": false,
+  "pinned_SU_fences": {
+    "absolute_consumer_first_and_last_time_bound": null,
+    "accepted_origin_actual_runtime_word_and_service_enrollment_required": true,
+    "all12_have_later_GU0": true,
+    "bank_rearm_after_publication_and_source_debt_not_after_SUconsumption": true,
+    "build_admitted": false,
+    "clock": "native_core_clk source transition proof only; selectedc9 clock timing/CDC phase not transferred",
+    "destination_address_version_lease_stays_until_SUread_tag_fence": true,
+    "fences": [
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 70,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 69,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "a6595825ddb77bf2eaf4e76403f33a0fe100e8f7c15a8fb0c427fb45c8e68e6a",
+        "operand": "a",
+        "producer": 66
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 70,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 69,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "a6595825ddb77bf2eaf4e76403f33a0fe100e8f7c15a8fb0c427fb45c8e68e6a",
+        "operand": "c",
+        "producer": 67
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 80,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 79,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "7cd2640c7d05a4328e7e16bfc7394fcb8d10d025f4d53523a68a61eab356f1a1",
+        "operand": "a",
+        "producer": 68
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 80,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 79,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "7cd2640c7d05a4328e7e16bfc7394fcb8d10d025f4d53523a68a61eab356f1a1",
+        "operand": "c",
+        "producer": 69
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 85,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 84,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "e0b2b843f3e017f9ca232a4c8a0c8a4345d7beb8d695f7bd7fac63fd3e672e78",
+        "operand": "a",
+        "producer": 72
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 85,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 84,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "e0b2b843f3e017f9ca232a4c8a0c8a4345d7beb8d695f7bd7fac63fd3e672e78",
+        "operand": "c",
+        "producer": 73
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 90,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 89,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "6c751d8f7ad75b20d72af939229a04e6b8cd6b3bcb760d17a323c0c780f800f0",
+        "operand": "a",
+        "producer": 82
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 90,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 89,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "6c751d8f7ad75b20d72af939229a04e6b8cd6b3bcb760d17a323c0c780f800f0",
+        "operand": "c",
+        "producer": 83
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 95,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 94,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "fe0edcfbdaa7bd9b794080e1624192d455bb27536e6d47c2ec75716b055ed6fe",
+        "operand": "a",
+        "producer": 87
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 95,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 94,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "fe0edcfbdaa7bd9b794080e1624192d455bb27536e6d47c2ec75716b055ed6fe",
+        "operand": "c",
+        "producer": 88
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 98,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 97,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "dfb42503ac4dc13fa6f3f1ebae2a376b996658fa1fcd49e49626745cc2359924",
+        "operand": "a",
+        "producer": 92
+      },
+      {
+        "VMvisibility_required": "V < F, therefore V < earliest consumer/read",
+        "conditional_fence_proof_only": true,
+        "consumer": 98,
+        "consumer_front_acceptance_min_edge": "F+7",
+        "effective_adapter_idle_sample": "F: phase retired visible+capturedcredits before this sample",
+        "later_GU0": 97,
+        "later_GU0_acceptance_min_edge": "F+1",
+        "later_template_sha256": "dfb42503ac4dc13fa6f3f1ebae2a376b996658fa1fcd49e49626745cc2359924",
+        "operand": "c",
+        "producer": 93
+      }
+    ],
+    "finite_relative_visibility_deadline_native_edges": "strictly before F; first consumer admission/read no earlier than F+7",
+    "gross_state_and_gate_obligations": {
+      "NOT_OR_AND_control_cone": "!phase_active OR retire; AND native_idle; fanout to adapter idle +WAIT condition",
+      "active_bit_existing_containment_unproven": true,
+      "contextual_clock_reset_PG_SSFF_area": null,
+      "full169comparison_counter_source_credit_CDC_and_faultlogic_not_inside_onebit": true,
+      "phase_active_reference_bit": 1,
+      "retirement_qualified_register_bits": 1
+    },
+    "hook_allowedcell_floor": {
+      "SSFF_new_CLK_pin_fF": {
+        "FF": 1.006304,
+        "SS": 0.867964
+      },
+      "SSFF_new_RESETN_pin_fF": {
+        "FF": 1.605818,
+        "SS": 1.40805
+      },
+      "body_um2": 2.2161600000000004,
+      "cell_counts": {
+        "BUFx4_ASAP7_75t_R": 4,
+        "DFFASRHQNx1_ASAP7_75t_R": 2,
+        "INVx1_ASAP7_75t_R": 6,
+        "NAND2x1_ASAP7_75t_R": 8,
+        "TIEHIx1_ASAP7_75t_R": 2
+      },
+      "control_logic": "INV(retire), NAND(active,notretire), NAND(nativeidle,enable), INV(effectiveidle)",
+      "feedback_per_ASR_twoBUF_lowerbound": true,
+      "gross_control_bits": 2,
+      "hold_closed": false,
+      "identity_compare_counters_credit_ledger_CDC_drivers_routes_clock_reset_PG_extra": true,
+      "not_a_complete_state_area_or_contextual_timing_price": true,
+      "phase_active_existing_containment_credit": 0,
+      "reserve50pct_mm2": 4.4323200000000005e-06
+    },
+    "hook_keeps_adapter_S_WAIT_until_publication_retirement": true,
+    "native_spine_s_ready_not_a_qualified_retirement_fence": true,
+    "new_SU_admission_guard_not_selected": true,
+    "new_SU_per_read_backpressure": false,
+    "one_selected_completion_hook": "DEFAULT-OFF adapter s_idle input = native_spine_idle && (!phase_active || qualified_visibility_credit_packet_retired)",
+    "phase_active_and_retirement_must_match_full169context": true,
+    "ready_hook_is_new_implementation_not_native_guarantee": true,
+    "start_with_no_active_debt_permitted": true
+  },
+  "port_intensity": {
+    "MACs_per_cycle": 0,
+    "actual_directional_track_availability_after_PG_OBS": null,
+    "duplex_signal_lanes": 684,
+    "forward_data_and_integrity_bits": 330,
+    "native_VM_demand_read_bytes_per_serial_edge": 6080,
+    "native_VM_demand_write_bytes_per_serial_edge": 2372,
+    "proposed_bank_backend_peak_bytes_per_service_edge_each_direction": 128,
+    "proposed_scalar_publication_bytes_per_stream_edge": 4,
+    "proposed_scalar_read_return_bits_per_stream_edge_per_shard": 102,
+    "raw_root_ingress_bits_per_native_edge_per_shard": 4416,
+    "replica_policy": "Both physical shard dies receive identical full4096-row component cell allocation. Original field2048 pairs and8192 ROM leaves per die unchanged.",
+    "reverse_ready_ACK_credit_bits": 12,
+    "throughput_limits": "CRC packet feedback II11 and one packet credit. VM upper envelope is demand, not granted throughput. Full backend G/L and phase concurrency unbound.",
+    "wire_payload_bits_per_accepted_flit": 256
+  },
+  "quiet_monitor": {
+    "generation_register_and_clear_at_GO_required": true,
+    "global_registered_reduce_edges": 4,
+    "local_registered_reduce_edges": 4,
+    "logic": "32pairquiet +63nodequiet +rootquiet; pairbusy includesDRAIN127, but node/root actualfifo/pipeline/held empty exported indefaultoffsourcewrapper; simulation-onlyquiet=0 cannotbeused",
+    "signals_per_global_root": 96,
+    "synchronous_nooverlap_wired_not_an_assumed_annotation": true
+  },
+  "rate_adopted": false,
+  "registered_cell_screen": {
+    "FF_hold_closed": false,
+    "SS_setup_closed": false,
+    "local_branch_clock": {
+      "conservative_wire_cap_fF": 3.276801,
+      "declared_total_load_ceiling_fF": 5.76,
+      "four_sink_pin_load_fF": 2.08804,
+      "four_sink_span_um": 18.36,
+      "parent_roots_relays_vias_reset_release_and_skew_not_constructed": true,
+      "raw_bit_pitch_with_forward_BUFFERS_um": 4.104,
+      "upper_branch_wire_length_ceiling_um": 6.1872643227342765,
+      "upper_eight_BUF_pin_load_fF": 4.655728
+    },
+    "registered13_edge_reader_admitted": false,
+    "registered_local_data_paths": {
+      "CRC_XOR_and_hold_mux": {
+        "conditional_setup_screen_PASS": true,
+        "path_and_constraints_ps": 697.5076505132089,
+        "period_ps": 833.3333333333334,
+        "physical_routes_proven": false,
+        "remaining_ps": 135.82568282012448,
+        "steps": [
+          {
+            "cell_delay_upper_ps": 135.986,
+            "input_slew_ps": 320.0,
+            "load_fF": 1.44,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "output_slew_upper_ps": 40.95937092939933,
+            "positive_wire_ceiling_um": 4.8255161787365175,
+            "role": "QN capture",
+            "sink_fF": 0.578766,
+            "wire_delay_upper_ps": 0.2669413315451464
+          },
+          {
+            "cell_delay_upper_ps": 36.0015,
+            "input_slew_ps": 40.95937092939933,
+            "load_fF": 1.44,
+            "master": "INVx1_ASAP7_75t_R",
+            "output_slew_upper_ps": 43.86249139238459,
+            "positive_wire_ceiling_um": 5.203053648970444,
+            "role": "polarity restore",
+            "sink_fF": 0.511385,
+            "wire_delay_upper_ps": 0.28395063290208716
+          },
+          {
+            "cell_delay_upper_ps": 66.2139,
+            "input_slew_ps": 43.86249139238459,
+            "load_fF": 2.88,
+            "master": "BUFx4_ASAP7_75t_R",
+            "output_slew_upper_ps": 26.17350893453806,
+            "positive_wire_ceiling_um": 13.271410561703322,
+            "role": "typed forward hold repair 0",
+            "sink_fF": 0.511385,
+            "wire_delay_upper_ps": 1.2949131520627541
+          },
+          {
+            "cell_delay_upper_ps": 52.3152,
+            "input_slew_ps": 26.17350893453806,
+            "load_fF": 2.88,
+            "master": "BUFx4_ASAP7_75t_R",
+            "output_slew_upper_ps": 24.16530893453806,
+            "positive_wire_ceiling_um": 13.271410561703322,
+            "role": "typed forward hold repair 1",
+            "sink_fF": 0.511385,
+            "wire_delay_upper_ps": 1.2949131520627541
+          },
+          {
+            "cell_delay_upper_ps": 52.3152,
+            "input_slew_ps": 24.16530893453806,
+            "load_fF": 2.88,
+            "master": "BUFx4_ASAP7_75t_R",
+            "output_slew_upper_ps": 23.706013722805057,
+            "positive_wire_ceiling_um": 10.954481019750666,
+            "role": "typed forward hold repair 2",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 1.0861426012750246
+          },
+          {
+            "cell_delay_upper_ps": 42.1174,
+            "input_slew_ps": 23.706013722805057,
+            "load_fF": 2.88,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 56.28971674607236,
+            "positive_wire_ceiling_um": 5.772248214035579,
+            "role": "registered cone and feedback mux 0",
+            "sink_fF": 1.849798,
+            "wire_delay_upper_ps": 0.6191894300328896
+          },
+          {
+            "cell_delay_upper_ps": 44.0199,
+            "input_slew_ps": 56.28971674607236,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 48.75894378651809,
+            "positive_wire_ceiling_um": 2.8861241070177894,
+            "role": "registered cone and feedback mux 1",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 0.17956535750822242
+          },
+          {
+            "cell_delay_upper_ps": 44.0199,
+            "input_slew_ps": 48.75894378651809,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 48.75894378651809,
+            "positive_wire_ceiling_um": 2.8861241070177894,
+            "role": "registered cone and feedback mux 2",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 0.17956535750822242
+          },
+          {
+            "cell_delay_upper_ps": 44.0199,
+            "input_slew_ps": 48.75894378651809,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 48.75894378651809,
+            "positive_wire_ceiling_um": 2.8861241070177894,
+            "role": "registered cone and feedback mux 3",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 0.17956535750822242
+          },
+          {
+            "cell_delay_upper_ps": 44.0199,
+            "input_slew_ps": 48.75894378651809,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 48.97946910976789,
+            "positive_wire_ceiling_um": 5.11101834990895,
+            "role": "registered cone and feedback mux 4",
+            "sink_fF": 0.527811,
+            "wire_delay_upper_ps": 0.27980414080358595
+          }
+        ]
+      },
+      "reader_mux_and_hold_mux": {
+        "conditional_setup_screen_PASS": true,
+        "path_and_constraints_ps": 601.0233610831759,
+        "period_ps": 833.3333333333334,
+        "physical_routes_proven": false,
+        "remaining_ps": 232.30997225015744,
+        "steps": [
+          {
+            "cell_delay_upper_ps": 135.986,
+            "input_slew_ps": 320.0,
+            "load_fF": 1.44,
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "output_slew_upper_ps": 40.95937092939933,
+            "positive_wire_ceiling_um": 4.8255161787365175,
+            "role": "QN capture",
+            "sink_fF": 0.578766,
+            "wire_delay_upper_ps": 0.2669413315451464
+          },
+          {
+            "cell_delay_upper_ps": 36.0015,
+            "input_slew_ps": 40.95937092939933,
+            "load_fF": 1.44,
+            "master": "INVx1_ASAP7_75t_R",
+            "output_slew_upper_ps": 43.86249139238459,
+            "positive_wire_ceiling_um": 5.203053648970444,
+            "role": "polarity restore",
+            "sink_fF": 0.511385,
+            "wire_delay_upper_ps": 0.28395063290208716
+          },
+          {
+            "cell_delay_upper_ps": 66.2139,
+            "input_slew_ps": 43.86249139238459,
+            "load_fF": 2.88,
+            "master": "BUFx4_ASAP7_75t_R",
+            "output_slew_upper_ps": 26.17350893453806,
+            "positive_wire_ceiling_um": 13.271410561703322,
+            "role": "typed forward hold repair 0",
+            "sink_fF": 0.511385,
+            "wire_delay_upper_ps": 1.2949131520627541
+          },
+          {
+            "cell_delay_upper_ps": 52.3152,
+            "input_slew_ps": 26.17350893453806,
+            "load_fF": 2.88,
+            "master": "BUFx4_ASAP7_75t_R",
+            "output_slew_upper_ps": 24.16530893453806,
+            "positive_wire_ceiling_um": 13.271410561703322,
+            "role": "typed forward hold repair 1",
+            "sink_fF": 0.511385,
+            "wire_delay_upper_ps": 1.2949131520627541
+          },
+          {
+            "cell_delay_upper_ps": 52.3152,
+            "input_slew_ps": 24.16530893453806,
+            "load_fF": 2.88,
+            "master": "BUFx4_ASAP7_75t_R",
+            "output_slew_upper_ps": 23.706013722805057,
+            "positive_wire_ceiling_um": 10.954481019750666,
+            "role": "typed forward hold repair 2",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 1.0861426012750246
+          },
+          {
+            "cell_delay_upper_ps": 32.5429,
+            "input_slew_ps": 23.706013722805057,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 36.867143786518085,
+            "positive_wire_ceiling_um": 2.8861241070177894,
+            "role": "registered cone and feedback mux 0",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 0.17956535750822242
+          },
+          {
+            "cell_delay_upper_ps": 32.5429,
+            "input_slew_ps": 36.867143786518085,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 36.867143786518085,
+            "positive_wire_ceiling_um": 2.8861241070177894,
+            "role": "registered cone and feedback mux 1",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 0.17956535750822242
+          },
+          {
+            "cell_delay_upper_ps": 32.5429,
+            "input_slew_ps": 36.867143786518085,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 36.867143786518085,
+            "positive_wire_ceiling_um": 2.8861241070177894,
+            "role": "registered cone and feedback mux 2",
+            "sink_fF": 0.924899,
+            "wire_delay_upper_ps": 0.17956535750822242
+          },
+          {
+            "cell_delay_upper_ps": 32.5429,
+            "input_slew_ps": 36.867143786518085,
+            "load_fF": 1.44,
+            "master": "NAND2x1_ASAP7_75t_R",
+            "output_slew_upper_ps": 37.08766910976789,
+            "positive_wire_ceiling_um": 5.11101834990895,
+            "role": "registered cone and feedback mux 3",
+            "sink_fF": 0.527811,
+            "wire_delay_upper_ps": 0.27980414080358595
+          }
+        ]
+      }
+    },
+    "three_forward_BUF_SS_delay_included": true,
+    "typed_minimum_hold": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "direct_forward_three_BUF_margin_ps": 10.45516,
+        "only_characterized_minimum_screen": true,
+        "same_flop_feedback_two_BUF_margin_ps": 2.6725999999999956
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "direct_forward_three_BUF_margin_ps": 9.052659999999996,
+        "only_characterized_minimum_screen": true,
+        "same_flop_feedback_two_BUF_margin_ps": 1.2700999999999922
+      }
+    }
+  },
+  "reticle_accounting": {
+    "inherited_selected_caller_r7_screen_mm2": 754.9337664632458,
+    "known_rectangle_screen_not_current_global_site_fit": true,
+    "new_VM_macro_body_and_parent_route_area_unbound": true,
+    "new_clock_union_is_successor_to_existing_live_graph_not_mutation_or_claim_of_same_endpoint_set": true,
+    "new_component_home_per_die_mm2": 2.5621982208,
+    "no_existing_field_cfg_or_service_instance_removed": true,
+    "old_capture_or_packet_memory_containment_credit_mm2": 0,
+    "old_selector_WAKE_field_or_return_state_recharged": false
+  },
+  "sequencer": "RESET_ACK->IDLE->matchedBOTHSHARDreserve(all12writer_DRAIN,VMversion_slot,actualpair/node/rootempty)->CFG25accepted->GOmatchedloadergen->DRAIN(allrowsVMvisible+matchedpositivecredits,allread/packet/CDCdebt0,allnativeactualquiet)->RETIRE/registerqualifiedF->IDLE. VMversionretainedthroughactualSUreadR+2drain.",
+  "service": {
+    "I66_added_rearm_dependency_edges": 9466,
+    "I66_added_rearm_dependency_us": 7.888333333333334,
+    "I66_conditional_SU_front_lower_edge": 9894,
+    "I66_native_idle": 421,
+    "I66_prospective_F": 9887,
+    "I66_remote_packet_service": {
+      "ACK_wait_bound": 3900,
+      "cycles": 6632,
+      "minimum_timeout_for_this_packet_profile": 3901,
+      "packets": [
+        {
+          "ACK_wait_bound_after_last_send": 3900,
+          "CRC_II": 11,
+          "RXquarantine_verify": 968,
+          "TXcollect_and_CRC": 1237,
+          "flits": 88,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": true,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 256,
+          "successful_cycles": 6632,
+          "timeout1024_PASS": false
+        }
+      ],
+      "timeout8192_PASS": true
+    },
+    "derived_single_timeout_candidate": 8192,
+    "joined_delta_expression": "9466 streamedges + nativeVMgrant/response stalls + extra admitted wire/clock/CDC cuts + original phase arbitration. Apply only actual exposed dependency edges, not all ops or six positions multiplied blindly.",
+    "matched_shard_reservation_prep_edges": 2822,
+    "normal_failure_faults_preserved_and_no_retry_job": true,
+    "numeric_service_assumptions": "1337+1337 uncharacterized successful link edge envelope; full reserved packet RAM; VM exclusive scalar grant1/streamedge with postNBA1; positiveCDC7; no retransmission. Native VM G/L and physical wire stations still unbound.",
+    "previous4096_timeout_is_insufficient_for_newCRC": true,
+    "timeout32bit_counter_state_unchanged": true,
+    "timeout_is_successful_service_bound_not_relaxedclock_orretry": true,
+    "wholeprogram_token_delta": null,
+    "worst_full4096_remote_service": {
+      "ACK_wait_bound": 6254,
+      "cycles": 64462,
+      "minimum_timeout_for_this_packet_profile": 6255,
+      "packets": [
+        {
+          "ACK_wait_bound_after_last_send": 6254,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3591,
+          "flits": 256,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": false,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 762,
+          "successful_cycles": 11508,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6254,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3591,
+          "flits": 256,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": false,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 762,
+          "successful_cycles": 11508,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6254,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3591,
+          "flits": 256,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": false,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 762,
+          "successful_cycles": 11508,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6254,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3591,
+          "flits": 256,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": false,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 762,
+          "successful_cycles": 11508,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 6254,
+          "CRC_II": 11,
+          "RXquarantine_verify": 2816,
+          "TXcollect_and_CRC": 3591,
+          "flits": 256,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": false,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 762,
+          "successful_cycles": 11508,
+          "timeout1024_PASS": false
+        },
+        {
+          "ACK_wait_bound_after_last_send": 4040,
+          "CRC_II": 11,
+          "RXquarantine_verify": 1078,
+          "TXcollect_and_CRC": 1377,
+          "flits": 98,
+          "header_bits": 263,
+          "header_flits": 2,
+          "previous4096_PASS": true,
+          "reverse_full_owner_credit_service": 2745,
+          "rows": 286,
+          "successful_cycles": 6922,
+          "timeout1024_PASS": false
+        }
+      ],
+      "timeout8192_PASS": true
+    }
+  },
+  "source_consumer_lease_Rplus2": "Lease release requiresactualsamectxSUread andmatchingR+2tag/nativeSUdrain, not firstconsumerdispatch; observercallback ABI pinnedbelow. Source12W1W3fencesV<F thenSUfront>=F+7;6nativeW2leasesremain enrolled."
+}

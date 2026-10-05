@@ -1,0 +1,20 @@
+{
+ "deployment": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41_array_c8192",
+ "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+ "workload_id": "TA-DS41-CHAT-1-P32",
+ "emitted_token_ids": [
+  305
+ ],
+ "stop_reason": "failed",
+ "failure": "decode step 1 failed: GROUPED_CONCAT output view 2679 dims (128, 512) differ from the axis-0 concatenation (384, 512)",
+ "prefill_tokens": 32,
+ "decode_steps": 1,
+ "wall_seconds": 21592.0,
+ "oracle_token_ids": [
+  13806,
+  345,
+  7472,
+  49665
+ ],
+ "agrees_with_oracle": false
+}

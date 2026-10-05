@@ -1,0 +1,103 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "counter_reconciliation": {"const": "exact"},
+    "counters": {"$ref": "bf16_projection_physical_plan_v1.schema.json#/$defs/counters"},
+    "mode": {"const": "artifact_only_data_bearing_functional"},
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {"maximum": 65535, "minimum": 0, "type": "integer"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "dtype": {"const": "bf16"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "saturated_element_count": {"minimum": 0, "type": "integer"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "size_bytes": {"minimum": 2, "type": "integer"}
+      },
+      "required": ["codes", "dtype", "payload_sha256", "saturated_element_count", "shape", "size_bytes"],
+      "type": "object"
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_execution.v1"},
+    "status": {"const": "pass"},
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "trace": {
+      "items": {"$ref": "#/$defs/trace_record"},
+      "minItems": 1,
+      "type": "array"
+    },
+    "trace_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "required": ["build_id", "capability_id", "counter_reconciliation", "counters", "mode", "output", "physical_plan_id", "report_id", "request_id", "schema", "status", "timing", "trace", "trace_sha256"],
+  "title": "OpenTallas BF16 projection execution report v1",
+  "type": "object",
+  "$defs": {
+    "complete_trace": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {"minimum": 0, "type": "integer"},
+        "opcode": {"const": "COMPLETE"}
+      },
+      "required": ["command_index", "opcode"],
+      "type": "object"
+    },
+    "dma_trace": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {"minimum": 0, "type": "integer"},
+        "destination": {"minimum": 0, "type": "integer"},
+        "opcode": {"const": "DMA_HBM_TO_SRAM"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["command_index", "destination", "opcode", "payload_sha256", "size_bytes", "source"],
+      "type": "object"
+    },
+    "matmul_trace": {
+      "additionalProperties": false,
+      "properties": {
+        "accumulator_sha256": {"$ref": "#/$defs/sha256"},
+        "command_index": {"minimum": 0, "type": "integer"},
+        "flags": {"maximum": 3, "minimum": 0, "type": "integer"},
+        "k_start": {"minimum": 0, "type": "integer"},
+        "n_start": {"minimum": 0, "type": "integer"},
+        "opcode": {"const": "MATMUL_BF16_TILE"},
+        "output_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["accumulator_sha256", "command_index", "flags", "k_start", "n_start", "opcode"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "trace_record": {
+      "oneOf": [
+        {"$ref": "#/$defs/dma_trace"},
+        {"$ref": "#/$defs/matmul_trace"},
+        {"$ref": "#/$defs/complete_trace"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "authoritative": "proposal.json",
+  "supersedes": "../qwen_rom_q2_g0_20261002/proposal.json",
+  "reason": "Portable replay now checks provider hashes and revision against the archived calendar, not only internal snapshot integrity. Prior proposal remains archived with its original source hashes.",
+  "tests": "14 PASS",
+  "portable_provider_replay": "PASS",
+  "observed_utc": "2026-10-02T10:02:13.408827+00:00",
+  "local_headroom": {
+    "available_memory_MiB": 160751,
+    "available_disk_MiB": 440953,
+    "load_1m": 8.43
+  },
+  "resource_caps_are_review_only": true,
+  "live_successor_handle": null,
+  "second_position_campaign_removed": true,
+  "heavy_jobs_launched": 0,
+  "minimal_intake_order": [
+    "475004314",
+    "36c0fb00e",
+    "this commit"
+  ],
+  "dependency_note": "Previously intaken arithmetic/dimension and terminal commits need no recapture or replay merge."
+}

@@ -1,0 +1,537 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "qwen3-235b-a22b",
+ "repo": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+ "revision": "ac9c66cc9b46af7306746a9250f23d47083d689e",
+ "original_repo": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "ad59a339665ee1c68cbff06ac72c9e59f5183ebfaf3698c98737e003a870e9e2",
+ "index_sha256": "821d06bca7fdd15b787dfd5ac169815ecaf0fa0b6952e143fff472df26072f03",
+ "shards": 118,
+ "tensors": 36945,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 470187269120
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "qwen3_moe",
+ "architectures": [
+  "Qwen3MoeForCausalLM"
+ ],
+ "layers": 94,
+ "hidden": 4096,
+ "heads": 64,
+ "kv_heads": 4,
+ "head_dim": 128,
+ "vocab": 151936,
+ "tied_embeddings": false,
+ "max_context": 262144,
+ "intermediate": 12288,
+ "moe_intermediate": 1536,
+ "moe": {
+  "experts": 128,
+  "top_k": 8,
+  "shared": 0
+ },
+ "params": {
+  "dense_layers": 6752579072,
+  "routed": 227096395776,
+  "embed": 622329856,
+  "head": 622329856,
+  "mtp": 0,
+  "vision": 0,
+  "total_text": 235093634560,
+  "total_all": 235093634560,
+  "active_per_token": 21568433664,
+  "active_routed": 14193524736,
+  "head_streamed": 622329856
+ },
+ "header_bytes": {
+  "embed": 1244659712,
+  "routed": 454192791552,
+  "dense": 13505158144,
+  "head": 1244659712
+ },
+ "layer_count_in_headers": 94,
+ "kv_layers": [
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "eagle3": "nvidia/Qwen3-235B-A22B-Eagle3"
+ },
+ "quantization": null
+}

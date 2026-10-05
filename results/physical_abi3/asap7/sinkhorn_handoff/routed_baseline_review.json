@@ -1,0 +1,50 @@
+{
+  "scope": "ASAP7 TT Sinkhorn PIPELINED_DIVIDER1, baseline before handoffs, CTS12 fanout16, tested2.4ns. No current-parent closure claim.",
+  "record": "pnr_baseline_cts12_2p4ns.json",
+  "sha256": "2745660689091e179fd288d9b78f266ea32817404a7b22ef474388222b179679",
+  "metrics": {
+    "standard_cell_area_um2": 3038.27,
+    "setup_wns_ns": 0.46377999999999997,
+    "setup_violations": 0,
+    "hold_wns_ns": 0.0320207,
+    "hold_violations": 0,
+    "max_slew_violations": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 1,
+    "drc_errors": 0,
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0
+  },
+  "runner_acceptance": "pass",
+  "strict_physical_closure": false,
+  "reason": "One maximum fanout violation despite passing routed setup/hold. Runner timing/DRC/antenna verdict alone is insufficient. Historical snapshot differs from active parent.",
+  "source_manifest": [
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+      "size_bytes": 30130
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+      "size_bytes": 12418
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+      "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+      "size_bytes": 18599
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_positive_rne_pipe.sv",
+      "sha256": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+      "size_bytes": 9283
+    },
+    {
+      "path": "results/physical_abi3/asap7/sinkhorn_handoff/baseline.sv",
+      "sha256": "bd866bb68c951ac5a36c2a88a22eabe43f54a51703b0d07ce474492ad1cea5da",
+      "size_bytes": 16454
+    }
+  ],
+  "all_retained_artifacts_verified": true,
+  "all_manifest_sources_verified": true
+}

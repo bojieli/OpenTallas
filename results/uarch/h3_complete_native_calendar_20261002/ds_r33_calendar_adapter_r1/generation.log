@@ -1,0 +1,37 @@
+fatal: path 'results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz' does not exist in 'ca99e5d04fcf51130a1c0b616659b3c91728f4a9'
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tools/h3_complete_native_calendar.py", line 3998, in <module>
+    main()
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tools/h3_complete_native_calendar.py", line 3586, in main
+    bridge=decoded(folder+'bridge.json');native_raw=pinned('results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz')
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tools/h3_complete_native_calendar.py", line 3581, in pinned
+    raw=subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+  File "/usr/lib/python3.10/subprocess.py", line 421, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'show', 'ca99e5d04fcf51130a1c0b616659b3c91728f4a9:results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz']' returned non-zero exit status 128.
+Command exited with non-zero status 1
+	Command being timed: "python3 tools/h3_complete_native_calendar.py --ds-r33-calendar-source-join --out results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/run"
+	User time (seconds): 0.07
+	System time (seconds): 0.01
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 39992
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7765
+	Voluntary context switches: 8
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

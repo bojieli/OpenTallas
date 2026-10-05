@@ -1,0 +1,800 @@
+{
+  "executable_sha256": "b0bdbe4acd7715316bd802ec58ecd06d02bd00452a8a1f65871fb4f45737c7fd",
+  "build_status": {
+    "command": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--cc",
+      "--exe",
+      "--build",
+      "--top-module",
+      "tb_chip_v41x_ckv_sel_attn",
+      "--prefix",
+      "Vtb",
+      "-Mdir",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/obj",
+      "-j",
+      "16",
+      "-Wno-fatal",
+      "-Wno-WIDTH",
+      "-Wno-TIMESCALEMOD",
+      "-GENGINE=1",
+      "-GNHBM=32768",
+      "-GWIDE=1",
+      "-GNHBM=32768",
+      "-GH=16",
+      "-GD=512",
+      "-GTD=32",
+      "-GNL=4",
+      "-GTROWS=640",
+      "-GPWORDS=2",
+      "--output-split",
+      "20000",
+      "--output-split-cfuncs",
+      "2000",
+      "--unroll-count",
+      "1",
+      "--unroll-limit",
+      "131072",
+      "--hierarchical",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/results/rtl/v41_attention_elaboration_archive/tools/v41_attention_hierarchy.vlt",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_sel_collect.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/hdc/ot_hdc_fastfp.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/test/tb_chip_v41x_ckv_sel_attn.sv",
+      "/srv/opentallas-scratch/claude/dsrom-1m-measured/out/ckvb1/rtl/test/hdc_v41_harness.cpp",
+      "-CFLAGS",
+      "-O1"
+    ],
+    "source_sha256": {
+      "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv": "3ce5ca80f0a72d1b785689ae3bd854f94cc2fa96789b0a19c06d19b613ff1988",
+      "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv": "673cd79bb136b37684a128d13da23a05c6073f1f629d2f94f2ee275f698ae78a",
+      "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv": "22a8c3224c140293bfe5f8a4f957f7baa3e58b8baab37c99c62e4084486403ad",
+      "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv": "7a2cb51b8c5784c9c74c40012dae318034da05da6f9bbb5598699a94925c86cc",
+      "rtl/chip/ot_chip_v41x_ckv_sel_collect.sv": "e25d4f04685dbf3cfa4a0323f9050bbd5b0655027b47f197f4316d5bec1bd09c",
+      "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166",
+      "rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv": "a122069df0e03619fc126e052f2fb195b387a61fe995a36750e94ce9d52b9c1b",
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7",
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/test/tb_chip_v41x_ckv_sel_attn.sv": "d83cdb8f819d6757d133340d220dd23928b1f83396773b6452efbba02e96bfd0",
+      "results/rtl/v41_attention_elaboration_archive/tools/v41_attention_hierarchy.vlt": "0a274456830500e8e874bac34c7b67602663a61b02999a0e40341696297a7cf4",
+      "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1"
+    },
+    "engine": true,
+    "params": [
+      "-GENGINE=1",
+      "-GNHBM=32768",
+      "-GWIDE=1",
+      "-GNHBM=32768",
+      "-GH=16",
+      "-GD=512",
+      "-GTD=32",
+      "-GNL=4",
+      "-GTROWS=640",
+      "-GPWORDS=2"
+    ],
+    "returncode": 0,
+    "elapsed_s": 637.0,
+    "executable_sha256": "b0bdbe4acd7715316bd802ec58ecd06d02bd00452a8a1f65871fb4f45737c7fd",
+    "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "status": "build_pass"
+  },
+  "manifest_sha256": "66254fd064599e97a9044065c0f486ea71e2ca4fc5c77d5f243320a74315ad93",
+  "manifest": {
+    "scope": "Selected-CKV path vectors at the 1M token: the golden layer's real top-512 selection over the compressed rows of position 1,048,575 (owner/stack distribution of the real token); rows and q/p in the golden's stored formats (random BF16 latents: timing is data-independent, exactness is checked on every score and p.v output).",
+    "parameters": {
+      "H": 16,
+      "D": 512,
+      "TD": 32,
+      "NL": 4,
+      "TROWS": 640,
+      "TOPK": 512
+    },
+    "golden_sources": {
+      "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "tools/rtl_hdc_v41x_attn_campaign.py": "e5e4d5a8a4ffe927b470c255544234029aaa57a52eb2513e32c14ddd1dd10e99",
+      "runtime/prefill/v41_main_kv_row.py": "cd78b76bc7bd2da209b22e58f46757e7eccd0850581e985d68f6556b56e9fdb3",
+      "tools/v41_ckv_sel_attn_vectors.py": "f3804a15b2fd919ad9aa08d41a50a69bea2674d8a4ca915f7e9c938b475a9f8d"
+    },
+    "cases": [
+      {
+        "name": "L20_1m_real",
+        "window_rows": 128,
+        "compressed_rows": 1048576,
+        "n_sel": 512,
+        "T": 640,
+        "selection": "golden_1m_selection",
+        "seed": 20261004,
+        "quarter_counts": [
+          120,
+          137,
+          131,
+          124
+        ],
+        "owners_die_stack": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "owned_rows_per_die": [
+          105,
+          138,
+          141,
+          128
+        ],
+        "hbm_sectors": 22995,
+        "decoy_rows": 2043,
+        "first_ids": [
+          2426,
+          3792,
+          3793,
+          4846,
+          7169,
+          8362,
+          9513,
+          13525
+        ],
+        "last_ids": [
+          1033253,
+          1034637,
+          1043549,
+          1048575
+        ],
+        "counts": {
+          "NJOB": 1,
+          "NKV": 640,
+          "NP": 320,
+          "NSC": 640,
+          "NPV": 512
+        },
+        "expected": {
+          "scores": 10240,
+          "pv": 8192,
+          "score_faults": 4598,
+          "pv_faults": 0,
+          "macs": 10485760
+        },
+        "images": {
+          "cfg.hex": "1b91a02e1d9b9abd6bedbbcca34c8310c65fd0522176754a88f68e795d6ca27a",
+          "hdat.hex": "5a73fe45938e4358a98bb8a75a8613b126f1811c26a6e7adc7173486f81d63c4",
+          "hkey.hex": "90b5b03404b0c1419e6828c03eedff4cfb71f9c449f4726826b1c0dea7276c52",
+          "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+          "kv.hex": "811de24c8b13f7d34e26ae3123f25beca207034a035b50b3b2c579b041e5900d",
+          "p.hex": "eed9f8868f1a01913ec028768bc06508a7376ceedd4f8a3b85ab8df28ac35cc0",
+          "pv.hex": "3ad92776bfc416532196be1da7c5b665e28dfc79490333623dd74d7d224ce0b6",
+          "q.hex": "a51e789ee2b536a9ff5cdca09d6f6f67b1e4d6ac0065c9a9e299a4f8ba8c3b09",
+          "sc.hex": "237e34b41853eb7ffdfa554977946d1e65a1e080a898b77769605ac5ee2e2f31",
+          "sel.hex": "9c4e9b47779e9fcbadb399ca38818c600670e4e41c6ba670c2750b024e920d1d",
+          "win.hex": "2a0452af34c9724f79739992a0ffe41d1f7f77f1e6c68c903c2edf2198bd4dea"
+        },
+        "layer": 20,
+        "golden_selection_sha256": "342793eb611c6eb205b6691bebebdbf0113f69b8941273fb73852deeb0f770ba"
+      },
+      {
+        "name": "L2_1m_real",
+        "window_rows": 128,
+        "compressed_rows": 524288,
+        "n_sel": 512,
+        "T": 640,
+        "selection": "golden_1m_selection",
+        "seed": 20261005,
+        "quarter_counts": [
+          135,
+          132,
+          115,
+          130
+        ],
+        "owners_die_stack": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "owned_rows_per_die": [
+          97,
+          137,
+          141,
+          137
+        ],
+        "hbm_sectors": 23004,
+        "decoy_rows": 2044,
+        "first_ids": [
+          4191,
+          6996,
+          7673,
+          8359,
+          10175,
+          11348,
+          13417,
+          13557
+        ],
+        "last_ids": [
+          519120,
+          520456,
+          521161,
+          523022
+        ],
+        "counts": {
+          "NJOB": 1,
+          "NKV": 640,
+          "NP": 320,
+          "NSC": 640,
+          "NPV": 512
+        },
+        "expected": {
+          "scores": 10240,
+          "pv": 8192,
+          "score_faults": 4310,
+          "pv_faults": 0,
+          "macs": 10485760
+        },
+        "images": {
+          "cfg.hex": "2edcad88bf31691ab47de03d97df48c15c6fb5009d64ec539c45d64f2666672f",
+          "hdat.hex": "f0287a1dad1a8ee269a89cd9a674c845f7b86ca20efa5d543f9303abb66aab82",
+          "hkey.hex": "33f91df7ac67ce158b0809decc15fe14b0858da4f4ac01346b593dad46bd979e",
+          "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+          "kv.hex": "df083a25bc82070b96eecf8d961d10741a630cbd48e36d8f83fe4dd906154c4d",
+          "p.hex": "eaeab7298b326fcbcecc697146c32a155458872a04a4381918a54bb063d8f52c",
+          "pv.hex": "625a19aed6497b1a513228dc103e6de2be34449f8452e7c09b66cc6c2670266d",
+          "q.hex": "4a0e596b7ff1ebe96c5d69ece8b2fb800aed5838dac19ba331499e55b355406e",
+          "sc.hex": "5c8afd15f5a359e4e7ba690b5cda65ab6b66fb299c4245ef2ddab2d242d1e84b",
+          "sel.hex": "630fc0bdf9c110cdf33fbbb70c654ac4030fca57b33b811f4d755a567c69c5af",
+          "win.hex": "4e04ccf01f5f1bc5289482d02300bd06b90e6fc32597ea96ee2758c4b9cc38f5"
+        },
+        "layer": 2,
+        "golden_selection_sha256": "36352314e94637e8d0b8b5d354c48a1a00870bfc06fe55e06cda60bda0a0074e"
+      },
+      {
+        "name": "L24_1m_real",
+        "window_rows": 128,
+        "compressed_rows": 1048576,
+        "n_sel": 512,
+        "T": 640,
+        "selection": "golden_1m_selection",
+        "seed": 20261006,
+        "quarter_counts": [
+          125,
+          125,
+          116,
+          146
+        ],
+        "owners_die_stack": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "owned_rows_per_die": [
+          98,
+          138,
+          134,
+          142
+        ],
+        "hbm_sectors": 22842,
+        "decoy_rows": 2026,
+        "first_ids": [
+          1735,
+          4935,
+          9672,
+          10930,
+          11814,
+          15821,
+          15822,
+          16369
+        ],
+        "last_ids": [
+          1039511,
+          1041046,
+          1043549,
+          1048569
+        ],
+        "counts": {
+          "NJOB": 1,
+          "NKV": 640,
+          "NP": 320,
+          "NSC": 640,
+          "NPV": 512
+        },
+        "expected": {
+          "scores": 10240,
+          "pv": 8192,
+          "score_faults": 4493,
+          "pv_faults": 0,
+          "macs": 10485760
+        },
+        "images": {
+          "cfg.hex": "208a3a77b145db3e9497a52cd73b022b4db2ac710acac3b8b831cfc07ebbcf13",
+          "hdat.hex": "ec6e0b7431d7d33f7258897b1075b3a7d794a24f48c34d046149221ff8a8e5e1",
+          "hkey.hex": "b7e274668f035a2630802f3f1712358dc561754e81641429d0902fbc6649cd50",
+          "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+          "kv.hex": "d4939248b3df411119fcb0eb4fb2537796b145fc1529fdae0d804d18a8f8dc62",
+          "p.hex": "54684a3df5a0d355a86e8fdec7ccc7e9bae2827a8cd5b9dacbe8d4789f6df017",
+          "pv.hex": "0b72b5714dc0e6dd63210d57c6a05dbb277445c1cda31b06e572846aba04f290",
+          "q.hex": "c883844bc31c4ec0b32a84d32296602bcf0a758b857d7318186580913726502d",
+          "sc.hex": "0c7635e5970c813bd543c754b9ccfb31012018ed8f40e5af82c0bda27ddfacc5",
+          "sel.hex": "f4a5ec407653a2ddfc9e37865c75197cb587154c3fb416da526ea7ded5467984",
+          "win.hex": "25643943c1d7181571f2a57224006cdb714219c66b0afdf1886e26792bf9ef79"
+        },
+        "layer": 24,
+        "golden_selection_sha256": "4345216b6fe44788ef09f06c2df678a3728548f0db919275b263888d5393cdac"
+      }
+    ]
+  },
+  "results": [
+    {
+      "case": "L20_1m_real",
+      "tag": "real1m_lat259",
+      "plusargs": [
+        "lat=259"
+      ],
+      "pass_": true,
+      "returncode": 0,
+      "n_sel": 512,
+      "T": 640,
+      "owned_rows_per_die": [
+        105,
+        138,
+        141,
+        128
+      ],
+      "owners_die_stack": 16,
+      "cycles": {
+        "fetch_latency_last_id_to_last_row_staged": 761,
+        "last_id": 43,
+        "first_row_arrived": 298,
+        "all_rows_arrived": 732,
+        "first_ckv_row_staged": 445,
+        "last_row_staged": 804,
+        "first_qk": 29,
+        "last_qk": 805,
+        "qk_beats": 160,
+        "qk_beats_before_last_row_staged": 159,
+        "staging_overlaps_qk": true,
+        "last_score": 854,
+        "last_pv": 1072
+      },
+      "fields": {
+        "CKVSEL": {
+          "T": 640,
+          "wcount": 128,
+          "nsel": 512,
+          "npub": 1048576,
+          "nslot": 64,
+          "wide": 1,
+          "pps": 4,
+          "spp": 16,
+          "lat": 259,
+          "llink": 142,
+          "lucie": 11,
+          "ri": 2,
+          "seldelay": 0,
+          "t_job": 7,
+          "t_first_id": 8,
+          "t_last_id": 43,
+          "t_first_row": 298,
+          "t_all_rows": 732,
+          "t_first_ckv_staged": 445,
+          "t_last_staged": 804,
+          "t_first_qk": 29,
+          "t_last_qk": 805,
+          "t_last_score": 854,
+          "t_last_p": 1015,
+          "t_last_pv": 1072,
+          "qk_beats": 160,
+          "qk_beats_before_last_staged": 159,
+          "fetch_latency": 761,
+          "owned0": 105,
+          "owned1": 138,
+          "owned2": 141,
+          "owned3": 128,
+          "hbm_reads": 4608,
+          "hbm_missing": 0,
+          "hbm_max_q": 126,
+          "link_max_q": 72,
+          "collect_max_ahead": 288,
+          "faults": 0
+        },
+        "CKVROWS": {
+          "checked": 640,
+          "errors": 0,
+          "id_fc": 0,
+          "f_fc": 0,
+          "c_fc": 0,
+          "m_fc": 0
+        },
+        "V41XATTN": {
+          "jobs": 1,
+          "sc_checked": 10240,
+          "sc_errors": 0,
+          "pv_checked": 8192,
+          "pv_errors": 0,
+          "faults": 4598,
+          "cycles": 1072,
+          "timeout": 0
+        }
+      },
+      "wall_s": 170.0
+    },
+    {
+      "case": "L2_1m_real",
+      "tag": "real1m_lat259",
+      "plusargs": [
+        "lat=259"
+      ],
+      "pass_": true,
+      "returncode": 0,
+      "n_sel": 512,
+      "T": 640,
+      "owned_rows_per_die": [
+        97,
+        137,
+        141,
+        137
+      ],
+      "owners_die_stack": 16,
+      "cycles": {
+        "fetch_latency_last_id_to_last_row_staged": 750,
+        "last_id": 44,
+        "first_row_arrived": 298,
+        "all_rows_arrived": 769,
+        "first_ckv_row_staged": 445,
+        "last_row_staged": 794,
+        "first_qk": 29,
+        "last_qk": 795,
+        "qk_beats": 160,
+        "qk_beats_before_last_row_staged": 159,
+        "staging_overlaps_qk": true,
+        "last_score": 844,
+        "last_pv": 1062
+      },
+      "fields": {
+        "CKVSEL": {
+          "T": 640,
+          "wcount": 128,
+          "nsel": 512,
+          "npub": 524288,
+          "nslot": 64,
+          "wide": 1,
+          "pps": 4,
+          "spp": 16,
+          "lat": 259,
+          "llink": 142,
+          "lucie": 11,
+          "ri": 2,
+          "seldelay": 0,
+          "t_job": 7,
+          "t_first_id": 8,
+          "t_last_id": 44,
+          "t_first_row": 298,
+          "t_all_rows": 769,
+          "t_first_ckv_staged": 445,
+          "t_last_staged": 794,
+          "t_first_qk": 29,
+          "t_last_qk": 795,
+          "t_last_score": 844,
+          "t_last_p": 1005,
+          "t_last_pv": 1062,
+          "qk_beats": 160,
+          "qk_beats_before_last_staged": 159,
+          "fetch_latency": 750,
+          "owned0": 97,
+          "owned1": 137,
+          "owned2": 141,
+          "owned3": 137,
+          "hbm_reads": 4608,
+          "hbm_missing": 0,
+          "hbm_max_q": 144,
+          "link_max_q": 72,
+          "collect_max_ahead": 260,
+          "faults": 0
+        },
+        "CKVROWS": {
+          "checked": 640,
+          "errors": 0,
+          "id_fc": 0,
+          "f_fc": 0,
+          "c_fc": 0,
+          "m_fc": 0
+        },
+        "V41XATTN": {
+          "jobs": 1,
+          "sc_checked": 10240,
+          "sc_errors": 0,
+          "pv_checked": 8192,
+          "pv_errors": 0,
+          "faults": 4310,
+          "cycles": 1062,
+          "timeout": 0
+        }
+      },
+      "wall_s": 122.1
+    },
+    {
+      "case": "L24_1m_real",
+      "tag": "real1m_lat259",
+      "plusargs": [
+        "lat=259"
+      ],
+      "pass_": true,
+      "returncode": 0,
+      "n_sel": 512,
+      "T": 640,
+      "owned_rows_per_die": [
+        98,
+        138,
+        134,
+        142
+      ],
+      "owners_die_stack": 16,
+      "cycles": {
+        "fetch_latency_last_id_to_last_row_staged": 753,
+        "last_id": 43,
+        "first_row_arrived": 298,
+        "all_rows_arrived": 756,
+        "first_ckv_row_staged": 445,
+        "last_row_staged": 796,
+        "first_qk": 29,
+        "last_qk": 797,
+        "qk_beats": 160,
+        "qk_beats_before_last_row_staged": 159,
+        "staging_overlaps_qk": true,
+        "last_score": 846,
+        "last_pv": 1064
+      },
+      "fields": {
+        "CKVSEL": {
+          "T": 640,
+          "wcount": 128,
+          "nsel": 512,
+          "npub": 1048576,
+          "nslot": 64,
+          "wide": 1,
+          "pps": 4,
+          "spp": 16,
+          "lat": 259,
+          "llink": 142,
+          "lucie": 11,
+          "ri": 2,
+          "seldelay": 0,
+          "t_job": 7,
+          "t_first_id": 8,
+          "t_last_id": 43,
+          "t_first_row": 298,
+          "t_all_rows": 756,
+          "t_first_ckv_staged": 445,
+          "t_last_staged": 796,
+          "t_first_qk": 29,
+          "t_last_qk": 797,
+          "t_last_score": 846,
+          "t_last_p": 1007,
+          "t_last_pv": 1064,
+          "qk_beats": 160,
+          "qk_beats_before_last_staged": 159,
+          "fetch_latency": 753,
+          "owned0": 98,
+          "owned1": 138,
+          "owned2": 134,
+          "owned3": 142,
+          "hbm_reads": 4608,
+          "hbm_missing": 0,
+          "hbm_max_q": 144,
+          "link_max_q": 72,
+          "collect_max_ahead": 279,
+          "faults": 0
+        },
+        "CKVROWS": {
+          "checked": 640,
+          "errors": 0,
+          "id_fc": 0,
+          "f_fc": 0,
+          "c_fc": 0,
+          "m_fc": 0
+        },
+        "V41XATTN": {
+          "jobs": 1,
+          "sc_checked": 10240,
+          "sc_errors": 0,
+          "pv_checked": 8192,
+          "pv_errors": 0,
+          "faults": 4493,
+          "cycles": 1064,
+          "timeout": 0
+        }
+      },
+      "wall_s": 113.0
+    }
+  ],
+  "status": "pass"
+}

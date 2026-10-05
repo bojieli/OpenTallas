@@ -1,0 +1,1146 @@
+{
+  "F0_allocations": {
+    "DeepSeek": {
+      "SMs": 32,
+      "additional_area_demand_with_min_clock_mm2": 39.298093811600005,
+      "buffer_clock_connectivity_min_footprint_mm2": 0.6287388803999999,
+      "candidate_complete_bridge_screen_upper_mm2": 39.7685164032,
+      "candidate_cut_demand_per_SM_both_directions": 2896,
+      "clock_PG_OBS_via_enlargement": null,
+      "complete_bridge_plus_clock_screen_mm2": 40.3972552836,
+      "conservative_additional_reservation_demand_mm2": 38.669354931200004,
+      "conservative_uncredited_new_bus_margin_tracks": -2015,
+      "current_total_service_strip_residual_mm2": 1.0991614719999996,
+      "demand_replaces_old_route_only_after_exact_net_to_cut_map": true,
+      "existing_min_local_margin_tracks": 881,
+      "existing_reserved_die_mm2": 471.8800554201599,
+      "known_existing_L2_cut_capacities": [
+        12679,
+        12679,
+        12679,
+        12679
+      ],
+      "new_F0_allocation_admitted": false,
+      "old_ring_guard_um": 2.088,
+      "pipeline_cuts_to_L2_assignment": null,
+      "source_geometry_reused_without_capacity_invention": true,
+      "strip_screen_fits": false
+    },
+    "Qwen": {
+      "SMs": 32,
+      "additional_area_demand_with_min_clock_mm2": 39.27901464360001,
+      "buffer_clock_connectivity_min_footprint_mm2": 0.6287388803999999,
+      "candidate_complete_bridge_screen_upper_mm2": 39.7685164032,
+      "candidate_cut_demand_per_SM_both_directions": 2896,
+      "clock_PG_OBS_via_enlargement": null,
+      "complete_bridge_plus_clock_screen_mm2": 40.3972552836,
+      "conservative_additional_reservation_demand_mm2": 38.65027576320001,
+      "conservative_uncredited_new_bus_margin_tracks": -1358,
+      "current_total_service_strip_residual_mm2": 1.1182406399999996,
+      "demand_replaces_old_route_only_after_exact_net_to_cut_map": true,
+      "existing_min_local_margin_tracks": 1538,
+      "existing_reserved_die_mm2": 457.48399132671994,
+      "known_existing_L2_cut_capacities": [
+        12679,
+        12725,
+        12679,
+        12725
+      ],
+      "new_F0_allocation_admitted": false,
+      "old_ring_guard_um": 2.088,
+      "pipeline_cuts_to_L2_assignment": null,
+      "source_geometry_reused_without_capacity_invention": true,
+      "strip_screen_fits": false
+    }
+  },
+  "RF_CDC_source_bindings": {
+    "ACK_identity_match": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "rf.sv",
+      "attachment": "write_go capture; current ack_valid has no tag/destination echo",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "CDC_forward": {
+      "CDC_receiver_sync_edges_each": 2,
+      "actual_clock_pair": null,
+      "archive": "bridge.sv",
+      "attachment": "first(src_clk->fast_clk), route(EDGES=38), second(fast_clk->dst_clk)",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 38,
+      "source_sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+    },
+    "CDC_return": {
+      "CDC_receiver_sync_edges_each": 2,
+      "actual_clock_pair": null,
+      "archive": "bridge.sv",
+      "attachment": "reverse instance of same first/route/second chain; actual domain pairing absent",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 38,
+      "source_sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+    },
+    "RF_both_copy_accept": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "rf.sv",
+      "attachment": "write_go && wr_addr[8:7]==p; both u_operand_a/u_operand_b",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "RF_common_ACK": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "rf.sv",
+      "attachment": "if(write_go) ack_valid<=1; ack_valid && ack_ready",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "consumer": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "host_rsp_valid[sm] && host_rsp_ready[sm]; scratch_done && scratch_done_ready",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "owner_grant": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "rf_owner_grant[sm] && !collision",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "reverse_grant": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "rf_owner_grant/shared_owner_grant release after matched child reverse",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "reverse_match": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "wrapper.sv",
+      "attachment": "no source reverse identity port; add owner retained matcher",
+      "connected_owner_installed": false,
+      "leaf_exists": false,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "visibility": {
+      "CDC_receiver_sync_edges_each": null,
+      "actual_clock_pair": "leaf clk; composed clock authority required",
+      "archive": "fence.sv",
+      "attachment": "pending && host_ack_valid; vector_ACK_visible",
+      "connected_owner_installed": false,
+      "leaf_exists": true,
+      "minimum_is_not_finite_contender_upper": true,
+      "minimum_provisional_FAST_edges": 1,
+      "source_sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+    }
+  },
+  "active_route_fields": {
+    "DS_persistent_home_missing_SM_not_fabricated": true,
+    "actual_Qwen_opcode_classes": 21,
+    "actual_literal_Qwen_provider_PC_count": 1737,
+    "homeID_and_original_client_tag": "private protected root mapping; namespace proof still required",
+    "implicit": "stack/PC by physical port; exact rank-to-die/W19 ownership map required",
+    "no324bit_wire_identity": true,
+    "request": {
+      "data": 256,
+      "length": 6,
+      "parent_tag": 16,
+      "sector_address": 34,
+      "write": 1
+    },
+    "requester_not_offchip_home_SM": true,
+    "response": {
+      "beat": 5,
+      "data": 256,
+      "parent_tag": 16
+    }
+  },
+  "actual21_KV_phase_join": {
+    "KV_PV_consumer": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "consumer"
+      ]
+    },
+    "KV_SCORES_consumer": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "consumer"
+      ]
+    },
+    "KV_metadata_consumer": {
+      "actual_occurrences": 144,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "consumer"
+      ]
+    },
+    "KV_metadata_grant": {
+      "actual_occurrences": 144,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "directory_lookup",
+        "owner_grant",
+        "tag_allocate",
+        "CDC_request",
+        "backend_accept"
+      ]
+    },
+    "KV_metadata_mask_merge": {
+      "actual_occurrences": 144,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "merge"
+      ]
+    },
+    "KV_metadata_old_capture": {
+      "actual_occurrences": 144,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "SRAM_read",
+        "completion_capture"
+      ]
+    },
+    "KV_metadata_reverse": {
+      "actual_occurrences": 144,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "child_reverse",
+        "CDC_return",
+        "credit_release"
+      ]
+    },
+    "KV_metadata_write_visible": {
+      "actual_occurrences": 144,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "SRAM_write",
+        "backend_visible",
+        "completion_match",
+        "metadata_fence"
+      ]
+    },
+    "KV_parent_grant": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "owner_grant"
+      ]
+    },
+    "KV_parent_reverse": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "parent_reverse",
+        "credit_release"
+      ]
+    },
+    "KV_reader_acquire": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "directory_lookup",
+        "owner_grant",
+        "metadata_fence"
+      ]
+    },
+    "KV_sector_consumer": {
+      "actual_occurrences": 39168,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "consumer"
+      ]
+    },
+    "KV_sector_mask_merge": {
+      "actual_occurrences": 18432,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "merge"
+      ]
+    },
+    "KV_sector_old_capture": {
+      "actual_occurrences": 18432,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "SRAM_read",
+        "completion_capture"
+      ]
+    },
+    "KV_sector_read_capture": {
+      "actual_occurrences": 19584,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "SRAM_read",
+        "completion_capture"
+      ]
+    },
+    "KV_sector_reverse": {
+      "actual_occurrences": 39168,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "child_reverse",
+        "CDC_return",
+        "credit_release"
+      ]
+    },
+    "KV_sector_write_visible": {
+      "actual_occurrences": 19584,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "SRAM_write",
+        "backend_visible",
+        "completion_match"
+      ]
+    },
+    "KV_state_bitmap_visible": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "backend_visible",
+        "metadata_fence"
+      ]
+    },
+    "KV_state_record_bitmap_fence": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "metadata_fence"
+      ]
+    },
+    "KV_state_record_visible": {
+      "actual_occurrences": 72,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "backend_visible",
+        "metadata_fence"
+      ]
+    },
+    "sector_grant": {
+      "actual_occurrences": 39168,
+      "blanket_phase_count_product_is_not_an_interval_schedule": true,
+      "occurrence_key_rule": "actual emitted ID+term; same physical occurrence referenced by multiple phases is paid once",
+      "required_terms": [
+        "directory_lookup",
+        "owner_grant",
+        "tag_allocate",
+        "CDC_request",
+        "backend_accept"
+      ]
+    }
+  },
+  "authority_R4": {
+    "exact_program_ops": 2213,
+    "legacy_to_actual_PC_equivalence": false,
+    "no_automatic_delta": true,
+    "program_sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "schema": "DS_HBM_THREE_AUTHORITY_SOURCE_RECONCILIATION_R4",
+    "selected_FETCH_already_paid": true
+  },
+  "calendar": {
+    "actual_PC0_sha256": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+    "actual_event_interval_receipts": null,
+    "exact_KV_21phase_counts_reused": true,
+    "source_actual_PC0_transactions": 738816,
+    "whole_operator_ns": null,
+    "whole_token_ns": null
+  },
+  "clock": {
+    "FF_hold_uncertainty_ps": 25,
+    "SM_root_replicas": 32,
+    "SS_setup_uncertainty_ps": 60,
+    "all_control_bits_clocked_bound_is_screen_not_extracted_netlist": true,
+    "buffer_TT_geometric_area_um2": 0.43739999999999996,
+    "buffer_connectivity_min_footprint_mm2": 0.6287388803999999,
+    "buffer_instances_connectivity_min": 718723,
+    "buffer_source_table": {
+      "FF_hold_admission": false,
+      "SS_clock_slew_screen_pass": true,
+      "actual_CTS_skew": null,
+      "actual_source_FF_CLK_capacitance_ff": {
+        "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib:DFFASRHQNx1_ASAP7_75t_R/CLK": 0.433982,
+        "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib:DFFHQNx1_ASAP7_75t_R/CLK": 0.446638
+      },
+      "buffer_input_capacitance_ff": 2.18565,
+      "conditional_on_constructor_branch_lengths_and_input_slew": true,
+      "corner": "SS RVT 0.63V100C",
+      "default_via_metal_envelope_um": [
+        0.054,
+        0.054
+      ],
+      "macro_clock_pin_capacitance_ff": {
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib": 8.6838,
+        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": 8.6838
+      },
+      "max_buffered_branch_um": 8.0,
+      "segments": [
+        {
+          "Elmore_wire_delay_upper_ps": 13.770962118489601,
+          "inductive_slew_screen_pass": true,
+          "input_slew_requirement_ps": 160,
+          "kind": "buffer_fanout24",
+          "load_upper_ff": 80.377392,
+          "max_branch_um": 8.0,
+          "receiver_slew_requirement_ps": 160,
+          "slew_upper_ps": 112.81901666067714,
+          "source_SS_table_bounds_ps": {
+            "cell_fall": 107.44,
+            "cell_rise": 102.736,
+            "fall_transition": 69.9252,
+            "rise_transition": 82.5229
+          },
+          "total_wire_upper_um": 192.0
+        },
+        {
+          "Elmore_wire_delay_upper_ps": 6.6203339789952,
+          "inductive_slew_screen_pass": true,
+          "input_slew_requirement_ps": 160,
+          "kind": "actual_source_FF_fanout24",
+          "load_upper_ff": 38.641104,
+          "max_branch_um": 8.0,
+          "receiver_slew_requirement_ps": 160,
+          "slew_upper_ps": 64.47923475378944,
+          "source_SS_table_bounds_ps": {
+            "cell_fall": 94.5209,
+            "cell_rise": 87.7935,
+            "fall_transition": 45.1389,
+            "rise_transition": 49.9145
+          },
+          "total_wire_upper_um": 192.0
+        },
+        {
+          "Elmore_wire_delay_upper_ps": 111.96712771934251,
+          "inductive_slew_screen_pass": true,
+          "input_slew_requirement_ps": 160,
+          "kind": "macro_leaf1",
+          "load_upper_ff": 39.95039,
+          "max_branch_um": 215.0,
+          "receiver_slew_requirement_ps": 320,
+          "slew_upper_ps": 296.2421809825535,
+          "source_SS_table_bounds_ps": {
+            "cell_fall": 94.5209,
+            "cell_rise": 87.7935,
+            "fall_transition": 45.1389,
+            "rise_transition": 49.9145
+          },
+          "total_wire_upper_um": 215.0
+        }
+      ],
+      "source_RC_capacitance_ff_per_um": 0.145426,
+      "source_RC_resistance_kohm_per_um": 0.0214161,
+      "via_single_contact_fits_reserved_envelope": true
+    },
+    "complete_control_FF_bits_screen": 16528896,
+    "fanout24_buffer_levels_per_SM_connectivity_min": [
+      21522,
+      897,
+      38,
+      2,
+      1
+    ],
+    "incremental_full_control_clock_load_ff_ASSUMED": 7382433.051647999,
+    "new_clock_PG_OBS_via_cuts": null,
+    "qualified_skew_slew_hold": false,
+    "reusing_existing_clock_tree_not_credited": true,
+    "root_tree_buffer_count_min": 3,
+    "route_repeater_count_without_new_route_lengths": null,
+    "selected_buffer": "BUFx24_ASAP7_75t_R",
+    "serial_hz": 900000000,
+    "target_FAST_hz": 1200000000,
+    "worst_source_SS_FF_CLK_capacitance_ff": 0.446638
+  },
+  "directory_cache": {
+    "HBM_miss_cost_never_substituted_with_zero_decode": true,
+    "active_metadata": "homeID32/private immutable base64/span32/kind3/rankmask96/lifetime12+12; requesterSM from accepted endpoint",
+    "cache_hit_decode_and_identity_positive": true,
+    "capture_read32B": 2,
+    "coded_bits": 64512,
+    "entries_per_PC": 1,
+    "eviction": "source lease prevents eviction while referenced; executable directed cache used only between completed calls",
+    "raw_record_bytes": 64,
+    "total_entries": 128
+  },
+  "directory_issuer": {
+    "PC_replicas": 128,
+    "actual_generic_client_to_PC_map": null,
+    "candidate_PC_clients": 6,
+    "candidate_new_client_is_not_installed": true,
+    "incremental_footprint_mm2_ASSUMED": 0.11112837119999999,
+    "mux_demux_match_ECC_gate_equivalents_ASSUMED": 176256,
+    "new_live_home_tag_phase_counter_protected_bits": 9216,
+    "one_lookup_owner_per_PC_two_serial_sector_children": true,
+    "original_PC_write_completion_owner_fix_still_required": true,
+    "source_PC_clients": 5,
+    "source_PC_sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+  },
+  "engine_build_allowed": false,
+  "finite_sink_backpressure": "candidate two seats per38hop lane;76 held beats/lane; does not bound downstream wait or release parent",
+  "hardware_admitted": false,
+  "owner_lifecycle": "descriptor issue/capture -> grant/tag -> producer/backend acceptance -> bothcopies/commonACK -> visibility -> consumer -> matched child reverse -> parent reverse -> credit release",
+  "pipeline": {
+    "ACK_CDC": {
+      "SMs": 32,
+      "actual_clock_domain_pair": null,
+      "coded_bits": 72,
+      "depth": 16,
+      "finite_wait_upper": null,
+      "installed": false,
+      "protected_state_bits": 39168,
+      "raw_bits": 26,
+      "required_positive_occurrence_ids": [
+        "owner_grant",
+        "RF_both_copy_accept",
+        "RF_common_ACK",
+        "ACK_identity_match",
+        "CDC_forward",
+        "CDC_return",
+        "visibility",
+        "consumer",
+        "reverse_match",
+        "reverse_grant"
+      ]
+    },
+    "area_is_screen_only": true,
+    "codec_mux_control_gate_equivalents_ASSUMED": 18192384,
+    "complete_controller_bits_after_replacement": 16519680,
+    "complete_unallocated_screen_upper_mm2_ASSUMED": 39.657388032,
+    "connected_cost_source_bindings": {
+      "ACK_identity_match": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "rf.sv",
+        "attachment": "write_go capture; current ack_valid has no tag/destination echo",
+        "connected_owner_installed": false,
+        "leaf_exists": false,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+      },
+      "CDC_forward": {
+        "CDC_receiver_sync_edges_each": 2,
+        "actual_clock_pair": null,
+        "archive": "bridge.sv",
+        "attachment": "first(src_clk->fast_clk), route(EDGES=38), second(fast_clk->dst_clk)",
+        "connected_owner_installed": false,
+        "leaf_exists": true,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 38,
+        "source_sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+      },
+      "CDC_return": {
+        "CDC_receiver_sync_edges_each": 2,
+        "actual_clock_pair": null,
+        "archive": "bridge.sv",
+        "attachment": "reverse instance of same first/route/second chain; actual domain pairing absent",
+        "connected_owner_installed": false,
+        "leaf_exists": false,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 38,
+        "source_sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+      },
+      "RF_both_copy_accept": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "rf.sv",
+        "attachment": "write_go && wr_addr[8:7]==p; both u_operand_a/u_operand_b",
+        "connected_owner_installed": false,
+        "leaf_exists": true,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+      },
+      "RF_common_ACK": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "rf.sv",
+        "attachment": "if(write_go) ack_valid<=1; ack_valid && ack_ready",
+        "connected_owner_installed": false,
+        "leaf_exists": true,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+      },
+      "consumer": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "wrapper.sv",
+        "attachment": "host_rsp_valid[sm] && host_rsp_ready[sm]; scratch_done && scratch_done_ready",
+        "connected_owner_installed": false,
+        "leaf_exists": true,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+      },
+      "owner_grant": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "wrapper.sv",
+        "attachment": "rf_owner_grant[sm] && !collision",
+        "connected_owner_installed": false,
+        "leaf_exists": false,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+      },
+      "reverse_grant": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "wrapper.sv",
+        "attachment": "rf_owner_grant/shared_owner_grant release after matched child reverse",
+        "connected_owner_installed": false,
+        "leaf_exists": false,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+      },
+      "reverse_match": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "wrapper.sv",
+        "attachment": "no source reverse identity port; add owner retained matcher",
+        "connected_owner_installed": false,
+        "leaf_exists": false,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+      },
+      "visibility": {
+        "CDC_receiver_sync_edges_each": null,
+        "actual_clock_pair": "leaf clk; composed clock authority required",
+        "archive": "fence.sv",
+        "attachment": "pending && host_ack_valid; vector_ACK_visible",
+        "connected_owner_installed": false,
+        "leaf_exists": true,
+        "minimum_is_not_finite_contender_upper": true,
+        "minimum_provisional_FAST_edges": 1,
+        "source_sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+      }
+    },
+    "conservative_replacement_logic_overlap_not_deducted": true,
+    "directions": {
+      "request": {
+        "bit_boundary_per_SM": 1448,
+        "coded_bits_per_lane": 360,
+        "control_bits_per_lane": 7,
+        "data_control_protected_bits": 3589632,
+        "handshake": "per-hop registered occupancy; onehop credit dependency, no38hop combinational ready chain",
+        "lanes_per_SM": 4,
+        "payload_ECC": "code at ingress, carry protected words through registers, decode at egress; no repeated fullword codec perstage",
+        "raw_bits_per_lane": 313,
+        "seats_per_stage": 2,
+        "stages": 38
+      },
+      "return": {
+        "bit_boundary_per_SM": 1448,
+        "coded_bits_per_lane": 360,
+        "control_bits_per_lane": 7,
+        "data_control_protected_bits": 3589632,
+        "handshake": "per-hop registered occupancy; onehop credit dependency, no38hop combinational ready chain",
+        "lanes_per_SM": 4,
+        "payload_ECC": "code at ingress, carry protected words through registers, decode at egress; no repeated fullword codec perstage",
+        "raw_bits_per_lane": 277,
+        "seats_per_stage": 2,
+        "stages": 38
+      }
+    },
+    "directory_policy": {
+      "HBM_NATIVE_STATE": "no required fixed home SM or RF-style retire PC; actual requester port and producer publication/generation lease",
+      "RF": "source home SM and static birth/retire eligibility; generation/consumer/reverse lease prevents premature recycle",
+      "actual_appended4616_missing_SM_or_retire_is_not_itself_invalid": true,
+      "arbitrary_home_SM_constant_refused": true,
+      "existing_provider": "publish_state validates binding.PC/version/rank/source_result, shape/type, aperture and _leased(version)",
+      "installed_requester_receipts": null,
+      "original501strict_allkind_refusal_superseded": true,
+      "requester": "actual accepted SM endpoint port index; Peirce/Sagan actual consumer binding and physical rank mapping must pair it",
+      "spill": "offchip home locality independent of requester; source publication/read lease required"
+    },
+    "engine_build_ready": false,
+    "hardware_admitted": false,
+    "latency": {
+      "allocation_ACK_CDC_consumer_reverse_wait_upper": null,
+      "existing72wire_edges_not_recharged_without_interval_receipt": true,
+      "forward_reverse_pipeline_edges": 76,
+      "no_stall_route_edges": 38,
+      "positive_control_costs_required": true,
+      "target1p2GHz_component_ns": 63.333333333333336,
+      "whole_operator_ns": null
+    },
+    "mandatory_baseline": true,
+    "next_gates": [
+      "Peirce/Sagan actual requester/version/publication/generation lease paired with Dewey intervals",
+      "actual producer acceptance and backend/CDC/commonACK/consumer/reverse finite waits",
+      "coded4lane two-seat throughput pipeline complete32SM slot/clock/PG/cuts"
+    ],
+    "owned_RF_ACK": {
+      "accepted_echo": "tag16+RFdestination9+commonACK1 captured at actual common write_go",
+      "existing_shadow_not_double_charged": true,
+      "phase": "write_go->commonACKheld->identitymatch->visibility->consumer->reverse",
+      "proposed_identity_match_edges": 1,
+      "required_shadow_bits": 2304,
+      "source_common_ACK_is_one": true,
+      "source_identity_missing": true,
+      "source_write_to_ACK_min_edges": 1
+    },
+    "owner_retention": {
+      "no_generation_wrap_without_quiescence": true,
+      "root_metadata_reuse_needs_actual_source_connection": true,
+      "source_common_ACK_once_for_all_copies": true,
+      "stage_pop_not_parent_release": true,
+      "tag_held_until_all_consumer_and_reverse_acceptances": true
+    },
+    "parent_guard_FF_mux_footprint_mm2_ASSUMED": 9.2570750976,
+    "parent_guard_bits_upper": 4128768,
+    "parent_guard_fields": {
+      "common_ACK": 1,
+      "consumer_mask": 32,
+      "delivered_mask": 32,
+      "home_id": 32,
+      "length": 6,
+      "phase": 3,
+      "reverse_mask": 32,
+      "tag": 16,
+      "valid": 1
+    },
+    "parent_guard_gate_equivalents_ASSUMED": 11415296,
+    "parent_guard_reuse_not_credited_without_source_inventory": true,
+    "performance_opt_in": false,
+    "physical": {
+      "FF_hold_uncertainty_ps": 25,
+      "SS_setup_uncertainty_ps": 60,
+      "actual38hop_routes_for_selected32SMs": null,
+      "additional_clock_PG_OBS_via_allocation": null,
+      "coded_request_return_cuts_capacity": null,
+      "fixed1p2GHz_target_no_timing_relaxation": true
+    },
+    "pipeline_FF_control_footprint_mm2_ASSUMED": 15.102377164800002,
+    "predecessor": "501a3babc57fd7bc7b7ddb117f31b370b6cc8aba",
+    "predecessor_single_seat_pipeline_bits": 3502080,
+    "replacement_incremental_bits": 3677184,
+    "replacement_not_added_twice": true,
+    "schema": "HBM_KIND_DIRECTORY_ELASTIC_PIPELINE_R2",
+    "source_sha256": {
+      "bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+      "codec.py": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2",
+      "fence.sv": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3",
+      "fifo.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+      "model.json": "d52cf907ac8f32e7113b23b5e97a5ba7c0ae7ba2b906a706201c7412769cbd3e",
+      "provider.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+      "rf.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+      "route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+      "sm.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+      "wrapper.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    "status": "FINITE_CADENCE_DESIGN_READY_FAIL_SOURCE_RECEIPTS_PHYSICAL_CUTS",
+    "throughput": {
+      "SMs": 32,
+      "ceiling3to4_Bpc": 3072,
+      "ceiling_equalclock_Bpc": 4096,
+      "lanes_per_SM": 4,
+      "not_installed_or_measured": true,
+      "sector_payload_bytes": 32,
+      "steady_beats_per_lane_per_FASTedge": 1,
+      "with3to4_sink": 0.75
+    },
+    "total_pipeline_protected_bits": 7179264
+  },
+  "ports": {
+    "HBM_directory_miss_read32B": 2,
+    "RF_both_copy_write_events": 1,
+    "RF_local_both_mirrors_accept_bits": 8192,
+    "RF_local_pair_read_bits": 8192,
+    "RF_local_write_bits": 4096,
+    "all_replicas_mux_demux_fanout_cost_in_pipeline_screen": true,
+    "candidate_steady_pipeline_II": 1,
+    "directory_lookup_per_PC_per_accept": 1,
+    "held_route_source_II_FAST_edges": 40,
+    "partial_RMW_requires_old_capture_and_mask_merge": true,
+    "route_directions": 2,
+    "route_lanes_per_SM": 4,
+    "route_replicas_per_direction": 128,
+    "shared_physical_256bit_banks": 2,
+    "shared_read_write_bytes": 64,
+    "source_common_ACK_events_per_RF_write": 1
+  },
+  "positive21_stage_inventory": {
+    "CDC_request": {
+      "CDC_receiver_sync_edges_each": 2,
+      "FAST_edges_PROVISIONAL": 38,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 31.666666666666668,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "CDC_return": {
+      "CDC_receiver_sync_edges_each": 2,
+      "FAST_edges_PROVISIONAL": 38,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 31.666666666666668,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "RF_both_copy_write": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "RF_common_ACK": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "RF_pair_read": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 2,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 1.6666666666666667,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "SRAM_read": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 2,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 1.6666666666666667,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "SRAM_write": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "backend_accept": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "backend_visible": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "child_reverse": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 2,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 1.6666666666666667,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "completion_capture": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "completion_match": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 2,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 1.6666666666666667,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "consumer": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "credit_release": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "directory_lookup": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 4,
+      "additional_HBM_miss_ns_PROVISIONAL": 1098.298,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": true,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 3.3333333333333335,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "merge": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "metadata_fence": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "owner_grant": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 2,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 1.6666666666666667,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "parent_reverse": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 2,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 1.6666666666666667,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "refill": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": 549.149,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    },
+    "tag_allocate": {
+      "CDC_receiver_sync_edges_each": null,
+      "FAST_edges_PROVISIONAL": 1,
+      "additional_HBM_miss_ns_PROVISIONAL": null,
+      "additional_HBM_refill_ns_PROVISIONAL": null,
+      "decode_match_already_in_FAST_edges": false,
+      "finite_wait_upper_ns": null,
+      "installed_owner_admitted": false,
+      "ns_PROVISIONAL": 0.8333333333333334,
+      "positive": true,
+      "required_source_authority": "Dewey exact emitted event/hold and clock-domain receipts"
+    }
+  },
+  "runtime_directory": {
+    "DS": {
+      "HBM_reservation_bytes": 18606720,
+      "cold_all_entries_read_bytes": 18606720,
+      "cold_all_entries_reads32B": 581460,
+      "entries": 290730,
+      "immutable_home_witness_sha256": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a",
+      "miss_bytes": 64,
+      "miss_reads32B": 2,
+      "missing_home_SM": 4616,
+      "persistent_states": 4616,
+      "physical_HBM_base": null,
+      "policy": "runtime protected home descriptor; real requesting endpoint separate from offchip locality",
+      "profile": {
+        "clock_target_hz": 1200000000,
+        "cold_lookup_ns_PROVISIONAL": 1101.6313333333333,
+        "cold_serial_HBM_ns_PROVISIONAL": 1098.298,
+        "decode_FAST_edges": 2,
+        "finite_contender_wait_upper_ns": null,
+        "hardware_admitted": false,
+        "hit_decode_match_ns_PROVISIONAL": 3.3333333333333335,
+        "identity_FAST_edges": 2,
+        "refresh_episode_ns_PROVISIONAL": 350.0,
+        "scope": "serialized model episode: request+closed-page+read+burst+return; no bank/refill/PHY receipt and no finite refresh/contender upper",
+        "sector_read_ns_PROVISIONAL": 549.149
+      },
+      "reservation_load_visibility_receipt": null,
+      "witness_not_a_free_physical_issuer": true
+    },
+    "Qwen": {
+      "HBM_reservation_bytes": 1998848,
+      "cold_all_entries_read_bytes": 1998848,
+      "cold_all_entries_reads32B": 62464,
+      "entries": 31232,
+      "immutable_home_witness_sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1",
+      "miss_bytes": 64,
+      "miss_reads32B": 2,
+      "missing_home_SM": 0,
+      "persistent_states": 0,
+      "physical_HBM_base": null,
+      "policy": "runtime protected home descriptor; real requesting endpoint separate from offchip locality",
+      "profile": {
+        "clock_target_hz": 1200000000,
+        "cold_lookup_ns_PROVISIONAL": 1101.6313333333333,
+        "cold_serial_HBM_ns_PROVISIONAL": 1098.298,
+        "decode_FAST_edges": 2,
+        "finite_contender_wait_upper_ns": null,
+        "hardware_admitted": false,
+        "hit_decode_match_ns_PROVISIONAL": 3.3333333333333335,
+        "identity_FAST_edges": 2,
+        "refresh_episode_ns_PROVISIONAL": 350.0,
+        "scope": "serialized model episode: request+closed-page+read+burst+return; no bank/refill/PHY receipt and no finite refresh/contender upper",
+        "sector_read_ns_PROVISIONAL": 549.149
+      },
+      "reservation_load_visibility_receipt": null,
+      "witness_not_a_free_physical_issuer": true
+    }
+  },
+  "schema": "HBM_BRIDGE_COMPLETE_F0_R3",
+  "source_footprint_inventory_complete_but_allocation_FAIL": true,
+  "source_sha256": {
+    "DS_homes.json.gz": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a",
+    "PC.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "Qwen_homes.json.gz": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1",
+    "authority.json": "2c6691d1ca4516ea8cfe0ef22040e433ea8a98ecb0827f034d56f3133d072ebd",
+    "cadence.json": "788244eafb66c74fc23125c2913608ea50ea8c4d218670dffbd5330b941e0a5e",
+    "calendar.json": "de32ca2223f4ea8b1699824b9b8ff443c5272444da96860cc67ee0d8683ceb2a",
+    "codec.py": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2",
+    "constructor.json.gz": "f62cc27b88d740e2ad3133d14a9008e55a5012b33d065d866b5aa379d437f74b",
+    "context.json": "9097facd9fdf71d82240ad18b0d830fba4cc31a75a2a29fda7ddcde3e2eb62e8",
+    "ingress.json": "fb70742365a23ba728f000ef4c23dc4f4f681f1128c483e00d5259083536cbcf",
+    "pipeline.json": "08d13194e80ac27a5b149b455c5104104badacb9112b8c99d19ad23e3d012528",
+    "via_handoff.json": "4329d8090a8a392f01fdaff4ee41f025abbdf528122bef99e25e74594f5cb23f",
+    "vias.json.gz": "7345715dd286663c250837f496f8fd753e29a2ca877a0ba8e1c72a82c9d91f38"
+  },
+  "status": "FAIL_F0_ALLOCATION_FINITE_CALENDAR_SOURCE_CONNECTION"
+}

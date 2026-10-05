@@ -1,0 +1,1651 @@
+{
+  "Arch_source_constraints": {
+    "case_clock_slots": {
+      "bfcolumn": [
+        {
+          "actual_instance": "_742928_",
+          "bbox_DBU": [
+            276480,
+            270,
+            277884,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 0,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+          "bbox_DBU": [
+            277884,
+            270,
+            278856,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 0,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742929_",
+          "bbox_DBU": [
+            278964,
+            270,
+            280368,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 1,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[1].u_cg.u_icg",
+          "bbox_DBU": [
+            280368,
+            270,
+            281340,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 1,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742930_",
+          "bbox_DBU": [
+            281448,
+            270,
+            282852,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 2,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[2].u_cg.u_icg",
+          "bbox_DBU": [
+            282852,
+            270,
+            283824,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 2,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742931_",
+          "bbox_DBU": [
+            283932,
+            270,
+            285336,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 3,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[3].u_cg.u_icg",
+          "bbox_DBU": [
+            285336,
+            270,
+            286308,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 3,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742932_",
+          "bbox_DBU": [
+            133920,
+            4590,
+            135324,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 4,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[4].u_cg.u_icg",
+          "bbox_DBU": [
+            135324,
+            4590,
+            136296,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 4,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742933_",
+          "bbox_DBU": [
+            133920,
+            76140,
+            135324,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 5,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[5].u_cg.u_icg",
+          "bbox_DBU": [
+            135324,
+            76140,
+            136296,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 5,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742934_",
+          "bbox_DBU": [
+            272160,
+            4590,
+            273564,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 6,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[6].u_cg.u_icg",
+          "bbox_DBU": [
+            273564,
+            4590,
+            274536,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 6,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_742935_",
+          "bbox_DBU": [
+            272160,
+            76140,
+            273564,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 7,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[7].u_cg.u_icg",
+          "bbox_DBU": [
+            273564,
+            76140,
+            274536,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 7,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        }
+      ],
+      "q": [
+        {
+          "actual_instance": "_278359_",
+          "bbox_DBU": [
+            276480,
+            270,
+            277884,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 0,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+          "bbox_DBU": [
+            277884,
+            270,
+            278856,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 0,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278360_",
+          "bbox_DBU": [
+            278964,
+            270,
+            280368,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 1,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[1].u_cg.u_icg",
+          "bbox_DBU": [
+            280368,
+            270,
+            281340,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 1,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278361_",
+          "bbox_DBU": [
+            281448,
+            270,
+            282852,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 2,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[2].u_cg.u_icg",
+          "bbox_DBU": [
+            282852,
+            270,
+            283824,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 2,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278362_",
+          "bbox_DBU": [
+            283932,
+            270,
+            285336,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 3,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[3].u_cg.u_icg",
+          "bbox_DBU": [
+            285336,
+            270,
+            286308,
+            540
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 3,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278363_",
+          "bbox_DBU": [
+            133920,
+            4590,
+            135324,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 4,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[4].u_cg.u_icg",
+          "bbox_DBU": [
+            135324,
+            4590,
+            136296,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 4,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278364_",
+          "bbox_DBU": [
+            133920,
+            76140,
+            135324,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 5,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[5].u_cg.u_icg",
+          "bbox_DBU": [
+            135324,
+            76140,
+            136296,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 5,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278365_",
+          "bbox_DBU": [
+            272160,
+            4590,
+            273564,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 6,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[6].u_cg.u_icg",
+          "bbox_DBU": [
+            273564,
+            4590,
+            274536,
+            4860
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 6,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        },
+        {
+          "actual_instance": "_278366_",
+          "bbox_DBU": [
+            272160,
+            76140,
+            273564,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 7,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "role": "sourceWAKE"
+        },
+        {
+          "actual_instance": "\\g_wake.g_leaf[7].u_cg.u_icg",
+          "bbox_DBU": [
+            273564,
+            76140,
+            274536,
+            76410
+          ],
+          "included_in_mapped_area": true,
+          "leaf": 7,
+          "master": "ICGx1_ASAP7_75t_R",
+          "role": "sourceICG"
+        }
+      ]
+    },
+    "case_cut_lanes": {
+      "bfcolumn": [
+        {
+          "center_y_DBU": 156,
+          "guard_DBU": [
+            274320,
+            96,
+            278640,
+            216
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            144,
+            278640,
+            168
+          ]
+        },
+        {
+          "center_y_DBU": 396,
+          "guard_DBU": [
+            274320,
+            336,
+            278640,
+            456
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            384,
+            278640,
+            408
+          ]
+        },
+        {
+          "center_y_DBU": 684,
+          "guard_DBU": [
+            274320,
+            624,
+            278640,
+            744
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            672,
+            278640,
+            696
+          ]
+        },
+        {
+          "center_y_DBU": 924,
+          "guard_DBU": [
+            274320,
+            864,
+            278640,
+            984
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            912,
+            278640,
+            936
+          ]
+        },
+        {
+          "center_y_DBU": 1212,
+          "guard_DBU": [
+            274320,
+            1152,
+            278640,
+            1272
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            1200,
+            278640,
+            1224
+          ]
+        },
+        {
+          "center_y_DBU": 1500,
+          "guard_DBU": [
+            274320,
+            1440,
+            278640,
+            1560
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            1488,
+            278640,
+            1512
+          ]
+        }
+      ],
+      "q": [
+        {
+          "center_y_DBU": 156,
+          "guard_DBU": [
+            274320,
+            96,
+            278640,
+            216
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            144,
+            278640,
+            168
+          ]
+        },
+        {
+          "center_y_DBU": 396,
+          "guard_DBU": [
+            274320,
+            336,
+            278640,
+            456
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            384,
+            278640,
+            408
+          ]
+        },
+        {
+          "center_y_DBU": 684,
+          "guard_DBU": [
+            274320,
+            624,
+            278640,
+            744
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            672,
+            278640,
+            696
+          ]
+        },
+        {
+          "center_y_DBU": 924,
+          "guard_DBU": [
+            274320,
+            864,
+            278640,
+            984
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            912,
+            278640,
+            936
+          ]
+        },
+        {
+          "center_y_DBU": 1212,
+          "guard_DBU": [
+            274320,
+            1152,
+            278640,
+            1272
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            1200,
+            278640,
+            1224
+          ]
+        },
+        {
+          "center_y_DBU": 1500,
+          "guard_DBU": [
+            274320,
+            1440,
+            278640,
+            1560
+          ],
+          "layer": "M4",
+          "wire_DBU": [
+            274320,
+            1488,
+            278640,
+            1512
+          ]
+        }
+      ]
+    },
+    "clock_slots_not_added_again": true,
+    "installed_CTS_not_required": true,
+    "origins": {
+      "Arch_local_cuts.json.gz": {
+        "commit": "fa3e2f5d770e95d686f5ea2a03615acdf2976836",
+        "copy_SHA256": "8c69b3e938f36a2265afd5d4dc34bb46aaeeb83fabba5a8f85c742448fa0ecc9",
+        "path": "results/uarch/dsrom_noECC_production_context_20261002/local_cuts.json",
+        "raw_SHA256": "08a370a4758f9d31aa525535d1b89605d4f7b0dbfdd25af469d497f15843075a"
+      },
+      "macro_ss.lib": {
+        "commit": "cfcabf1b4977a91cd1c6554b814c84bd9b1df25e",
+        "copy_SHA256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+        "path": "results/uarch/dsrom_noECC_physical_transition_20261002/inputs/macro_ss.lib",
+        "raw_SHA256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15"
+      }
+    }
+  },
+  "FF_uncertainty_ps": 25,
+  "PDKsource": "cfcabf1b4 pinned mapping image/LEF; no container synthesis",
+  "PDKtech_matches": true,
+  "SS_uncertainty_ps": 60,
+  "area": {
+    "new_IO_reset_buffer_floor_at50pct_mm2": 1.4773525005600001,
+    "no_CLK_or_WAKE_recharge": true,
+    "no_old_mapping_area_savings": true,
+    "noncontainment_screen_mm2": 754.5076777147258,
+    "predecessor_screen_mm2": 753.0303252141658
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "capture_budget": {
+    "bfcolumn": {
+      "FF_hold_margin_from_macro_before_nonnegative_wire_ps": 410.55740000000003,
+      "all_other_internal_hold_paths_need_repair_within_remaining_slot": true,
+      "capture_setup_upper_ps": 55.6536,
+      "extra_capture_edge": 0,
+      "max_hop_um": 17.371373424211352,
+      "pin_cap_per_hop_fF": 2.88,
+      "remaining_SS_ps": 222.25024308068453,
+      "retained_arc": {
+        "actual_outnet_cap_bound_must_be_enforced": true,
+        "capture_count": 1088,
+        "cell_delay_domain": {
+          "input_slew_ps": 320,
+          "total_load_fF": 5.76
+        },
+        "constraints_not_routed_timing": true,
+        "data_arc_master_bounds": {
+          "NAND2xp33_ASAP7_75t_R": {
+            "max_cell_delay_ps": 239.022,
+            "max_output_transition_ps": 306.206
+          },
+          "OAI21xp33_ASAP7_75t_R": {
+            "max_cell_delay_ps": 219.666,
+            "max_output_transition_ps": 302.089
+          }
+        },
+        "macro_data_to_capture_comb_delay_upper_ps": 458.688,
+        "mapped_raw_gzip_SHA256": "e6e68c9bf2c97ac77f3921347f60abd7b612aaf23278d699aa4b562a781becb1",
+        "maximum_gate_depth": 2,
+        "worst_path_instances": [
+          "$abc$1284944$auto$blifparse.cc:397:parse_blif$1640413",
+          "$abc$1284944$auto$blifparse.cc:397:parse_blif$1640414"
+        ]
+      },
+      "skew_reservation_ps": 25,
+      "wire_Elmore_per_hop_ps": 1.993807861994089,
+      "wire_cap_per_hop_fF": 2.88
+    },
+    "q": {
+      "FF_hold_margin_from_macro_before_nonnegative_wire_ps": 410.55740000000003,
+      "all_other_internal_hold_paths_need_repair_within_remaining_slot": true,
+      "capture_setup_upper_ps": 55.6536,
+      "extra_capture_edge": 0,
+      "max_hop_um": 17.371373424211352,
+      "pin_cap_per_hop_fF": 2.88,
+      "remaining_SS_ps": 222.25024308068453,
+      "retained_arc": {
+        "actual_outnet_cap_bound_must_be_enforced": true,
+        "capture_count": 1088,
+        "cell_delay_domain": {
+          "input_slew_ps": 320,
+          "total_load_fF": 5.76
+        },
+        "constraints_not_routed_timing": true,
+        "data_arc_master_bounds": {
+          "NAND2xp33_ASAP7_75t_R": {
+            "max_cell_delay_ps": 239.022,
+            "max_output_transition_ps": 306.206
+          },
+          "OAI21xp33_ASAP7_75t_R": {
+            "max_cell_delay_ps": 219.666,
+            "max_output_transition_ps": 302.089
+          }
+        },
+        "macro_data_to_capture_comb_delay_upper_ps": 458.688,
+        "mapped_raw_gzip_SHA256": "8856e061a9c575d3153891ff5749189b3699bbb39259e784982080a64310581b",
+        "maximum_gate_depth": 2,
+        "worst_path_instances": [
+          "$abc$439282$auto$blifparse.cc:397:parse_blif$560727",
+          "$abc$439282$auto$blifparse.cc:397:parse_blif$560728"
+        ]
+      },
+      "skew_reservation_ps": 25,
+      "wire_Elmore_per_hop_ps": 1.993807861994089,
+      "wire_cap_per_hop_fF": 2.88
+    }
+  },
+  "cases": {
+    "bfcolumn": {
+      "activation_GO": {
+        "go": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 1.2771240000000001,
+          "positive_wire_cap_budget_fF": 10.242875999999999,
+          "sink_pins": 2
+        },
+        "go_bf": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 1
+        },
+        "xb_b": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 3,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 3
+        },
+        "xb_d": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1024,
+          "live_bits": 1024,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 1024
+        },
+        "xb_pos": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 3,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 3
+        },
+        "xb_sv": {
+          "SS_pin_load_only": true,
+          "declared_bits": 4,
+          "live_bits": 4,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 4
+        },
+        "xb_u": {
+          "SS_pin_load_only": true,
+          "declared_bits": 32,
+          "live_bits": 32,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 32
+        },
+        "xb_v": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 0.623429,
+          "positive_wire_cap_budget_fF": 10.896571,
+          "sink_pins": 1
+        },
+        "xs_b": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 3,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 3
+        },
+        "xs_e0": {
+          "SS_pin_load_only": true,
+          "declared_bits": 10,
+          "live_bits": 10,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 10
+        },
+        "xs_e1": {
+          "SS_pin_load_only": true,
+          "declared_bits": 10,
+          "live_bits": 10,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 10
+        },
+        "xs_p": {
+          "SS_pin_load_only": true,
+          "declared_bits": 8,
+          "live_bits": 8,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 8
+        },
+        "xs_pos": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 3,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 3
+        },
+        "xs_q0": {
+          "SS_pin_load_only": true,
+          "declared_bits": 256,
+          "live_bits": 256,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 256
+        },
+        "xs_q1": {
+          "SS_pin_load_only": true,
+          "declared_bits": 256,
+          "live_bits": 256,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 256
+        },
+        "xs_sv": {
+          "SS_pin_load_only": true,
+          "declared_bits": 2,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xs_v": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 0.623429,
+          "positive_wire_cap_budget_fF": 10.896571,
+          "sink_pins": 1
+        }
+      },
+      "actual_placed_parent": false,
+      "cfg_local_loader": {
+        "cfg_a": {
+          "SS_pin_load_only": true,
+          "declared_bits": 5,
+          "live_bits": 5,
+          "maximum_actual_pin_cap_fF": 11.549872,
+          "positive_wire_cap_budget_fF": 11.490127999999999,
+          "sink_pins": 43
+        },
+        "cfg_d": {
+          "SS_pin_load_only": true,
+          "declared_bits": 48,
+          "live_bits": 30,
+          "maximum_actual_pin_cap_fF": 9.211558999999998,
+          "positive_wire_cap_budget_fF": 2.308441000000002,
+          "sink_pins": 571
+        },
+        "cfg_v": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 3.1276319999999997,
+          "positive_wire_cap_budget_fF": 8.392368,
+          "sink_pins": 5
+        }
+      },
+      "clock_construction": {
+        "BUF4_total": 2179,
+        "SS_BUF4_delay_bound_ps": 179.146,
+        "SS_BUF4_slew_bound_ps": 176.317,
+        "actual_CTS_not_claimed": true,
+        "additional_skew_constraint_ps": 25,
+        "balanced_leaf_depth": 3,
+        "clock_wire_RC": {
+          "capacitance_fF_per_um": 0.145426,
+          "resistance_kohm_per_um": 0.0214161,
+          "unit_identity": "OpenROAD pinned image report_units: ps/fF/kohm/um; source setRC.tcl"
+        },
+        "incremental_cell_area_um2": 195.75108000000003,
+        "maximum_corner_slew_ps": 320,
+        "maximum_wire_segment_um": 158.431092101825,
+        "nets": {
+          "2": {
+            "BUF4_cells": 65,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                56,
+                2,
+                1
+              ],
+              "total_cells": 59
+            },
+            "source_clock_owner": "root",
+            "source_pin_cap_fF": 1288.8398679999887,
+            "source_sinks": 2441,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450018": {
+            "BUF4_cells": 1570,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                1524,
+                39,
+                1
+              ],
+              "total_cells": 1564
+            },
+            "source_clock_owner": "g_wake.g_leaf[3].u_cg.u_icg",
+            "source_pin_cap_fF": 35111.33858403072,
+            "source_sinks": 67410,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450019": {
+            "BUF4_cells": 131,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                120,
+                4,
+                1
+              ],
+              "total_cells": 125
+            },
+            "source_clock_owner": "g_wake.g_leaf[2].u_cg.u_icg",
+            "source_pin_cap_fF": 2746.2464980000545,
+            "source_sinks": 5269,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450020": {
+            "BUF4_cells": 151,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                140,
+                4,
+                1
+              ],
+              "total_cells": 145
+            },
+            "source_clock_owner": "g_wake.g_leaf[1].u_cg.u_icg",
+            "source_pin_cap_fF": 3215.6887340001576,
+            "source_sinks": 6161,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450021": {
+            "BUF4_cells": 246,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 10,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                229,
+                6,
+                1
+              ],
+              "total_cells": 236
+            },
+            "source_clock_owner": "g_wake.g_leaf[0].u_cg.u_icg",
+            "source_pin_cap_fF": 5275.779333999672,
+            "source_sinks": 10108,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450022": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[4].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450025": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[5].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450028": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[6].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "450031": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[7].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          }
+        },
+        "old_cap_only_BUF4_total": 261,
+        "root_and_branch_separate": true,
+        "source_macro_clock_min_high_low_pulse_ps": 284.741,
+        "source_macro_minimum_period_ps": 711.852,
+        "uncertainty_not_relaxed": true,
+        "wire_Elmore_bound_ps": 117.26125441557907
+      },
+      "minimum_parent_packing_row_area_at50pct_um2": 1011.6187200000002,
+      "physical_context_contract": {
+        "GO_AND2_max_ps": 84.874,
+        "GO_AND2_min_ps": 13.9294,
+        "GO_AND_before_three_buffers": true,
+        "GO_source_driver_master_is_proposed_binding_not_retained_parent_map": true,
+        "actual_parent_route_delay_UNBOUND": true,
+        "buffer_output_slew_bound_ps": 51.5806,
+        "input_arrival_FF_cell_only_lower_ps": 86.0464,
+        "input_arrival_SS_cell_only_ps": 431.9284,
+        "source_buffer": "BUFx4_ASAP7_75t_R",
+        "source_registered_driver": "DFFHQNx1_ASAP7_75t_R",
+        "total_cap_bound_fF": 11.52
+      },
+      "positive_total_cell_floor_um2": 776.13714,
+      "proposed_parent_endpoint_buffers": {
+        "BUF8_CFG_address_bits": [
+          0
+        ],
+        "BUF8_actual_last_stage_delay_ps": 78.348,
+        "BUF8_last_stage_cell_area_um2": 0.17496,
+        "allocation": "outside retained element, bind actual local loader and terminal broadcast geometry; no free inherited containment",
+        "buffer_cell_count": 4956,
+        "buffer_stages_per_live_driver": 3,
+        "cell_area_um2": 505.8093600000001,
+        "core_area_at50pct_um2": 1037.7460800000001,
+        "live_scalar_drivers": 1652,
+        "master": "BUFx4_ASAP7_75t_R",
+        "return_receiver_buffers": 128
+      },
+      "q_strip_hold_remaining_after_new_reset_core_floor_um2": null,
+      "reset": {
+        "actual_SS_pin_cap_fF": 3108.4181860000062,
+        "area_um2": 61.44012000000001,
+        "inside_element_new_area": true,
+        "no_false_path": true,
+        "positive_tree": {
+          "depth": 4,
+          "level_counts": [
+            540,
+            55,
+            6,
+            1
+          ],
+          "total_cells": 602
+        },
+        "release_recovery_removal_must_be_timed": true,
+        "wire_cap_budget_per_end_buffer_fF": 5.76
+      }
+    },
+    "q": {
+      "activation_GO": {
+        "go": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 1.2771240000000001,
+          "positive_wire_cap_budget_fF": 10.242875999999999,
+          "sink_pins": 2
+        },
+        "go_bf": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 1
+        },
+        "xb_b": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xb_d": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1024,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xb_pos": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xb_sv": {
+          "SS_pin_load_only": true,
+          "declared_bits": 4,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xb_u": {
+          "SS_pin_load_only": true,
+          "declared_bits": 32,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xb_v": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xs_b": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 3,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 3
+        },
+        "xs_e0": {
+          "SS_pin_load_only": true,
+          "declared_bits": 10,
+          "live_bits": 10,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 10
+        },
+        "xs_e1": {
+          "SS_pin_load_only": true,
+          "declared_bits": 10,
+          "live_bits": 10,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 10
+        },
+        "xs_p": {
+          "SS_pin_load_only": true,
+          "declared_bits": 8,
+          "live_bits": 8,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 8
+        },
+        "xs_pos": {
+          "SS_pin_load_only": true,
+          "declared_bits": 3,
+          "live_bits": 3,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 3
+        },
+        "xs_q0": {
+          "SS_pin_load_only": true,
+          "declared_bits": 256,
+          "live_bits": 256,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 256
+        },
+        "xs_q1": {
+          "SS_pin_load_only": true,
+          "declared_bits": 256,
+          "live_bits": 256,
+          "maximum_actual_pin_cap_fF": 0.62135,
+          "positive_wire_cap_budget_fF": 10.89865,
+          "sink_pins": 256
+        },
+        "xs_sv": {
+          "SS_pin_load_only": true,
+          "declared_bits": 2,
+          "live_bits": 0,
+          "maximum_actual_pin_cap_fF": 0.0,
+          "positive_wire_cap_budget_fF": null,
+          "sink_pins": 0
+        },
+        "xs_v": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 0.623429,
+          "positive_wire_cap_budget_fF": 10.896571,
+          "sink_pins": 1
+        }
+      },
+      "actual_placed_parent": false,
+      "cfg_local_loader": {
+        "cfg_a": {
+          "SS_pin_load_only": true,
+          "declared_bits": 5,
+          "live_bits": 5,
+          "maximum_actual_pin_cap_fF": 6.622273,
+          "positive_wire_cap_budget_fF": 4.897727,
+          "sink_pins": 40
+        },
+        "cfg_d": {
+          "SS_pin_load_only": true,
+          "declared_bits": 48,
+          "live_bits": 30,
+          "maximum_actual_pin_cap_fF": 9.212759999999998,
+          "positive_wire_cap_budget_fF": 2.307240000000002,
+          "sink_pins": 571
+        },
+        "cfg_v": {
+          "SS_pin_load_only": true,
+          "declared_bits": 1,
+          "live_bits": 1,
+          "maximum_actual_pin_cap_fF": 2.255954,
+          "positive_wire_cap_budget_fF": 9.264046,
+          "sink_pins": 4
+        }
+      },
+      "clock_construction": {
+        "BUF4_total": 731,
+        "SS_BUF4_delay_bound_ps": 179.146,
+        "SS_BUF4_slew_bound_ps": 176.317,
+        "actual_CTS_not_claimed": true,
+        "additional_skew_constraint_ps": 25,
+        "balanced_leaf_depth": 3,
+        "clock_wire_RC": {
+          "capacitance_fF_per_um": 0.145426,
+          "resistance_kohm_per_um": 0.0214161,
+          "unit_identity": "OpenROAD pinned image report_units: ps/fF/kohm/um; source setRC.tcl"
+        },
+        "incremental_cell_area_um2": 66.03282,
+        "maximum_corner_slew_ps": 320,
+        "maximum_wire_segment_um": 158.431092101825,
+        "nets": {
+          "153389": {
+            "BUF4_cells": 164,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 10,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                149,
+                4,
+                1
+              ],
+              "total_cells": 154
+            },
+            "source_clock_owner": "g_wake.g_leaf[0].u_cg.u_icg",
+            "source_pin_cap_fF": 3428.5179500002178,
+            "source_sinks": 6569,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153390": {
+            "BUF4_cells": 235,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                222,
+                6,
+                1
+              ],
+              "total_cells": 229
+            },
+            "source_clock_owner": "g_wake.g_leaf[3].u_cg.u_icg",
+            "source_pin_cap_fF": 5111.087883999937,
+            "source_sinks": 9814,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153391": {
+            "BUF4_cells": 131,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                120,
+                4,
+                1
+              ],
+              "total_cells": 125
+            },
+            "source_clock_owner": "g_wake.g_leaf[2].u_cg.u_icg",
+            "source_pin_cap_fF": 2746.2464980000423,
+            "source_sinks": 5269,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153392": {
+            "BUF4_cells": 151,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 3,
+              "level_counts": [
+                140,
+                4,
+                1
+              ],
+              "total_cells": 145
+            },
+            "source_clock_owner": "g_wake.g_leaf[1].u_cg.u_icg",
+            "source_pin_cap_fF": 3215.688734000159,
+            "source_sinks": 6161,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153393": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[4].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153396": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[5].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153399": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[6].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "153402": {
+            "BUF4_cells": 4,
+            "balanced_depth_padding_cells": 2,
+            "distribution_anchors": 1,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 1,
+              "level_counts": [
+                1
+              ],
+              "total_cells": 1
+            },
+            "source_clock_owner": "g_wake.g_leaf[7].u_cg.u_icg",
+            "source_pin_cap_fF": 10.3732,
+            "source_sinks": 1,
+            "wire_cap_per_segment_fF": 23.04
+          },
+          "2": {
+            "BUF4_cells": 34,
+            "balanced_depth_padding_cells": 0,
+            "distribution_anchors": 6,
+            "maximum_segment_L1_um": 158.431092101825,
+            "positive_tree": {
+              "depth": 2,
+              "level_counts": [
+                27,
+                1
+              ],
+              "total_cells": 28
+            },
+            "source_clock_owner": "root",
+            "source_pin_cap_fF": 611.8117560000121,
+            "source_sinks": 1144,
+            "wire_cap_per_segment_fF": 23.04
+          }
+        },
+        "old_cap_only_BUF4_total": 84,
+        "root_and_branch_separate": true,
+        "source_macro_clock_min_high_low_pulse_ps": 284.741,
+        "source_macro_minimum_period_ps": 711.852,
+        "uncertainty_not_relaxed": true,
+        "wire_Elmore_bound_ps": 117.26125441557907
+      },
+      "minimum_parent_packing_row_area_at50pct_um2": 358.23060000000004,
+      "physical_context_contract": {
+        "GO_AND2_max_ps": 84.874,
+        "GO_AND2_min_ps": 13.9294,
+        "GO_AND_before_three_buffers": true,
+        "GO_source_driver_master_is_proposed_binding_not_retained_parent_map": true,
+        "actual_parent_route_delay_UNBOUND": true,
+        "buffer_output_slew_bound_ps": 51.5806,
+        "input_arrival_FF_cell_only_lower_ps": 86.0464,
+        "input_arrival_SS_cell_only_ps": 431.9284,
+        "source_buffer": "BUFx4_ASAP7_75t_R",
+        "source_registered_driver": "DFFHQNx1_ASAP7_75t_R",
+        "total_cap_bound_fF": 11.52
+      },
+      "positive_total_cell_floor_um2": 271.4796,
+      "proposed_parent_endpoint_buffers": {
+        "BUF8_CFG_address_bits": [],
+        "BUF8_actual_last_stage_delay_ps": 78.348,
+        "BUF8_last_stage_cell_area_um2": 0.17496,
+        "allocation": "outside retained element, bind actual local loader and terminal broadcast geometry; no free inherited containment",
+        "buffer_cell_count": 1755,
+        "buffer_stages_per_live_driver": 3,
+        "cell_area_um2": 179.11530000000002,
+        "core_area_at50pct_um2": 384.35796000000005,
+        "live_scalar_drivers": 585,
+        "master": "BUFx4_ASAP7_75t_R",
+        "return_receiver_buffers": 128
+      },
+      "q_strip_hold_remaining_after_new_reset_core_floor_um2": 59.580359954718546,
+      "reset": {
+        "actual_SS_pin_cap_fF": 658.0740090000016,
+        "area_um2": 13.267800000000001,
+        "inside_element_new_area": true,
+        "no_false_path": true,
+        "positive_tree": {
+          "depth": 4,
+          "level_counts": [
+            115,
+            12,
+            2,
+            1
+          ],
+          "total_cells": 130
+        },
+        "release_recovery_removal_must_be_timed": true,
+        "wire_cap_budget_per_end_buffer_fF": 5.76
+      }
+    }
+  },
+  "concrete_constraints": {
+    "GO_FF_arrival_cell_floor_ps": 99.9758,
+    "GO_SS_arrival_cell_floor_ps": 516.8024,
+    "GO_route_and_internal_logic_setup_skew_budget_ps": 256.53093333333334,
+    "cfg_and_GO": "one cycle; no multicycle on configuration/direct decode, gates, enables, metadata, arithmetic",
+    "clock_and_reset": "no false paths; physical source retained8 WAKE plus8 ICG exactinstance names from Arch cuts",
+    "input_FF_arrival_cell_floor_ps": 86.0464,
+    "input_SS_arrival_cell_floor_ps": 431.9284,
+    "input_context_cap_max_fF": 11.52,
+    "input_context_slew_max_ps": 80,
+    "input_route_and_internal_logic_setup_skew_budget_ps": 341.40493333333336,
+    "macro_to_capture": "SETUP2 on exact four macro rd_out -> matched PP capD endpoints only, with HOLD1 companion; preserve source CE+2 capture and CE+3 lane",
+    "output_load_fF": 11.52,
+    "output_load_source": "one explicit BUF4 receiver per128 element outputs plus positive wire; actual return-node FIFO/norm behind buffer remains parent-provider context; no one-FF or zero load assumption",
+    "parent_clock": "same root, propagated eight ICG branch clocks; WAKE reset recovery/removal and gating/minpulse enabled"
+  },
+  "driver_envelope": {
+    "FF_BUF4_min_ps": 17.9418,
+    "FF_DFF_clkQ_min_ps": 32.221,
+    "SS_BUF4_max_ps": 80.8017,
+    "SS_BUF4_transition_max_ps": 51.5806,
+    "SS_DFF_clkQ_max_ps": 168.13,
+    "SS_first_BUF4_at160ps_slew_max_ps": 102.195,
+    "buffer_master_area_um2": 0.10206000000000001,
+    "domain": {
+      "input_slew_bound_ps": 80.0,
+      "reason": "positive context constraint at exact Liberty grid points, not measured parent arrivals",
+      "total_output_cap_bound_fF": 11.52
+    },
+    "not_measured_driver_arrival": true,
+    "source_DFF_output_slew_at320ps_clock_5p76fF": 97.2884
+  },
+  "generator_sha256": "46b91874cc777ac90d9b3a30b4fbe8afb1a6baf7c6ac6b7beb7132d8797b3609",
+  "latency": {
+    "existing_BST17_not_a_physical_replication_proof": true,
+    "if_contract_requires_retiming": "extra source edge must be priced at each dependent CFG/GO/activation/return call; not authorized by this model",
+    "new_register_cycles": 0,
+    "three_input_buffer_stages_are_combinational": true
+  },
+  "local_characterization": {
+    "capture_two_edge_model_G0": true,
+    "clock_and_input_buffer_construction_G0": true,
+    "fulltile_PnR_admitted": false,
+    "fulltile_geometry_G0": false,
+    "fulltoken_or_numerics_not_a_prerequisite": true,
+    "installed_CTS_not_required": true,
+    "local_constrained_capture_clock_characterization_ready": true,
+    "remaining_own_context": [
+      "actual GO-act physical arc and parent wire arrival/load within explicit budgets; clock anchors and generated-clock skew <=25ps must be honored",
+      "return receiver pin-load census and reset route/hold construction",
+      "Arch committed PG clock-cut master/source arrays proof"
+    ],
+    "source_constraints_ready_for_bound_input_cone": true
+  },
+  "macro_timing": {
+    "FF_clkQ_min_ps": 492.2447,
+    "PP_same_bank_2T_ps": 1666.6666666666667,
+    "SS_clkQ_max_ps": 839.0934,
+    "existing_capture_setup_edges": 2,
+    "extra_capture_edge_selected": false,
+    "macro_input_setup_ce_addr_bound_ps": 118.5505,
+    "macro_same_bank_minimum_period_ps": 711.852,
+    "remaining_before_capture_setup_mux_wire_skew_ps": 767.5732666666668
+  },
+  "period_ps": 833.3333333333334,
+  "schema": "opentallas.dsrom.retained-parent-IO-constraints.v1",
+  "source_input_pin_census_origin": {
+    "extraction": "read-only pin connectivity census of full retained rawJSON; every top input sink exactly once",
+    "library_SHA256": "e22e3587aeaf84011f572d073fe2cbacd0c0721bad858dcbc18657f87a92a2d5",
+    "library_corner": "SS",
+    "retained_maps": {
+      "bfcolumn": {
+        "path": "results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/terminal/bfcolumn/retained_mapped.json.gz",
+        "raw_gzip_sha256": "e6e68c9bf2c97ac77f3921347f60abd7b612aaf23278d699aa4b562a781becb1",
+        "source_commit": "3a6b71c33cf1cc976858aa856a661100aefa8b91"
+      },
+      "q": {
+        "path": "results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/terminal/q/retained_mapped.json.gz",
+        "raw_gzip_sha256": "8856e061a9c575d3153891ff5749189b3699bbb39259e784982080a64310581b",
+        "source_commit": "3a6b71c33cf1cc976858aa856a661100aefa8b91"
+      }
+    },
+    "units": "pin cap fF; 1ps library time"
+  },
+  "source_ownership": {
+    "GO": "lastBST registered go AND pair act -> go input, then existing r_go; AND path remains explicitly timed",
+    "activation": "spine final BST register outputs -> FAST g_ir registers clocked on root with WAKE_REG1; all metadata and payload aligned",
+    "busy_fault": "actual pair/spine reduction consumers; reduction receiver load must be bound, no one-FF guess",
+    "cfg": "pair c_v/c_a/c_d loader registers -> unregistered cfg_v/cfg_a/cfg_d decode/class flops; internal logic remains one-cycle timed",
+    "no_ECC": true,
+    "no_new_ACK": true,
+    "no_retiming": true,
+    "return_leaf": "each macro pv/pval/prow/pseg/pnseg/perr/ppos -> corresponding return-node a/b queue and tag norm logic; preserve FIFO RD64 and source RST1"
+  },
+  "sourcepins": {
+    "ot_v41_field_w17w10.sv": {
+      "path": "rtl/v41die/ot_v41_field_w17w10.sv",
+      "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+      "source_manifest": "retained unchanged field source snapshot; physical delivery map unqualified"
+    },
+    "ot_v41_pair_w17w10.sv": {
+      "path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+      "source_manifest": "3bc652fe5:rtl/test/dsrom_PAR2_runtime_consumer_observer/sources.json"
+    },
+    "ot_v41_ret.sv": {
+      "path": "rtl/v41rom/ot_v41_ret.sv",
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "source_manifest": "3bc652fe5:rtl/test/dsrom_PAR2_runtime_consumer_observer/sources.json"
+    },
+    "ot_v41_spine_w17w10.sv": {
+      "path": "rtl/v41die/ot_v41_spine_w17w10.sv",
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+      "source_manifest": "3bc652fe5:rtl/test/dsrom_PAR2_runtime_consumer_observer/sources.json"
+    }
+  }
+}

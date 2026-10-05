@@ -1,0 +1,653 @@
+{
+  "CDC_implementation_area_power_timing_qualified": false,
+  "actual_1152bit_bus_routing_reach_proven": false,
+  "actual_128bit_CDC_binding": false,
+  "actual_128bit_CDC_extra_state_bits": null,
+  "actual_bus_width_tracks": 1152,
+  "actual_power_qualified": false,
+  "adaptive_clock_gate_credit": 0,
+  "cases": [
+    {
+      "FF_by_role": {
+        "RX_packets": 1344,
+        "TX_packets": 1344,
+        "catalog_raw_capture": 548,
+        "credit_state": 6,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.15005191936",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 503664,
+        "additional_clock_buffers": 20998,
+        "all_state_leakage_upper_W": "0.059265883475340",
+        "clock_leak_data_pin_subtotal_W": "30.62470495562300112",
+        "conditional_cell_plus_macro_area_mm2": "0.99904119552",
+        "data_input_pin_upper_W": "5.00369624849105088",
+        "data_internal_upper_W": "18.8979823047360",
+        "explicit_MUX2_bits": 274136,
+        "macros": 8,
+        "total_NAND2_cells": 3111200,
+        "ungated_clock_W": "6.66376051892061024",
+        "unresolved_output_load_ceiling_W": "118.5851751727104",
+        "write_enable_NAND2_cells_included": 2014656
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 6,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 2688,
+        "TX_packets": 2688,
+        "catalog_raw_capture": 548,
+        "credit_state": 12,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.15403249264",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 506358,
+        "additional_clock_buffers": 21111,
+        "all_state_leakage_upper_W": "0.059550736395914",
+        "clock_leak_data_pin_subtotal_W": "30.74569559946043904",
+        "conditional_cell_plus_macro_area_mm2": "1.0030217688",
+        "data_input_pin_upper_W": "5.02144811063255976",
+        "data_internal_upper_W": "18.9656458012056",
+        "explicit_MUX2_bits": 274136,
+        "macros": 8,
+        "total_NAND2_cells": 3121976,
+        "ungated_clock_W": "6.69905095122636528",
+        "unresolved_output_load_ceiling_W": "119.0267891011584",
+        "write_enable_NAND2_cells_included": 2025432
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 6,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 86016,
+        "TX_packets": 86016,
+        "catalog_raw_capture": 548,
+        "credit_state": 270,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.40063849600",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 673272,
+        "additional_clock_buffers": 28067,
+        "all_state_leakage_upper_W": "0.077198220432358",
+        "clock_leak_data_pin_subtotal_W": "38.23670353607767336",
+        "conditional_cell_plus_macro_area_mm2": "1.24962777216",
+        "data_input_pin_upper_W": "6.12131237102150304",
+        "data_internal_upper_W": "23.1579193163232",
+        "explicit_MUX2_bits": 274136,
+        "macros": 8,
+        "total_NAND2_cells": 3789632,
+        "ungated_clock_W": "8.88027362830061232",
+        "unresolved_output_load_ceiling_W": "146.3881652158464",
+        "write_enable_NAND2_cells_included": 2693088
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 6,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 1344,
+        "TX_packets": 1344,
+        "catalog_raw_capture": 548,
+        "credit_state": 6,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.17692134304",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 503664,
+        "additional_clock_buffers": 20999,
+        "all_state_leakage_upper_W": "0.059518322300278",
+        "clock_leak_data_pin_subtotal_W": "30.78878779385849752",
+        "conditional_cell_plus_macro_area_mm2": "1.0259106192",
+        "data_input_pin_upper_W": "5.03203529464511568",
+        "data_internal_upper_W": "19.0030021931712",
+        "explicit_MUX2_bits": 278744,
+        "macros": 11,
+        "total_NAND2_cells": 3129632,
+        "ungated_clock_W": "6.69423198374190384",
+        "unresolved_output_load_ceiling_W": "119.2164175319040",
+        "write_enable_NAND2_cells_included": 2014656
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 9,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 2688,
+        "TX_packets": 2688,
+        "catalog_raw_capture": 548,
+        "credit_state": 12,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.18090191632",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 506358,
+        "additional_clock_buffers": 21112,
+        "all_state_leakage_upper_W": "0.059803175220852",
+        "clock_leak_data_pin_subtotal_W": "30.90977843769593544",
+        "conditional_cell_plus_macro_area_mm2": "1.02989119248",
+        "data_input_pin_upper_W": "5.04978715678662456",
+        "data_internal_upper_W": "19.0706656896408",
+        "explicit_MUX2_bits": 278744,
+        "macros": 11,
+        "total_NAND2_cells": 3140408,
+        "ungated_clock_W": "6.72952241604765888",
+        "unresolved_output_load_ceiling_W": "119.6580314603520",
+        "write_enable_NAND2_cells_included": 2025432
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 9,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 86016,
+        "TX_packets": 86016,
+        "catalog_raw_capture": 548,
+        "credit_state": 270,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.42750791968",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 673272,
+        "additional_clock_buffers": 28068,
+        "all_state_leakage_upper_W": "0.077450659257296",
+        "clock_leak_data_pin_subtotal_W": "38.40078637431316976",
+        "conditional_cell_plus_macro_area_mm2": "1.27649719584",
+        "data_input_pin_upper_W": "6.14965141717556784",
+        "data_internal_upper_W": "23.2629392047584",
+        "explicit_MUX2_bits": 278744,
+        "macros": 11,
+        "total_NAND2_cells": 3808064,
+        "ungated_clock_W": "8.91074509312190592",
+        "unresolved_output_load_ceiling_W": "147.0194075750400",
+        "write_enable_NAND2_cells_included": 2693088
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 9,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 1344,
+        "TX_packets": 1344,
+        "catalog_raw_capture": 548,
+        "credit_state": 6,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.23961790912",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 503664,
+        "additional_clock_buffers": 21004,
+        "all_state_leakage_upper_W": "0.060107425433800",
+        "clock_leak_data_pin_subtotal_W": "31.17195984251875072",
+        "conditional_cell_plus_macro_area_mm2": "1.08860718528",
+        "data_input_pin_upper_W": "5.09815973567126688",
+        "data_internal_upper_W": "19.2480485995200",
+        "explicit_MUX2_bits": 289496,
+        "macros": 18,
+        "total_NAND2_cells": 3172640,
+        "ungated_clock_W": "6.76564408189368384",
+        "unresolved_output_load_ceiling_W": "120.6893163700224",
+        "write_enable_NAND2_cells_included": 2014656
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 16,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 2688,
+        "TX_packets": 2688,
+        "catalog_raw_capture": 548,
+        "credit_state": 12,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.24359754928",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 506358,
+        "additional_clock_buffers": 21115,
+        "all_state_leakage_upper_W": "0.060392218947874",
+        "clock_leak_data_pin_subtotal_W": "31.29271641677311744",
+        "conditional_cell_plus_macro_area_mm2": "1.09258682544",
+        "data_input_pin_upper_W": "5.11591159781277576",
+        "data_internal_upper_W": "19.3157120959896",
+        "explicit_MUX2_bits": 289496,
+        "macros": 18,
+        "total_NAND2_cells": 3183416,
+        "ungated_clock_W": "6.80070050402286768",
+        "unresolved_output_load_ceiling_W": "121.1309302984704",
+        "write_enable_NAND2_cells_included": 2025432
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 16,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 86016,
+        "TX_packets": 86016,
+        "catalog_raw_capture": 548,
+        "credit_state": 270,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 2,
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.49020355264",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 673272,
+        "additional_clock_buffers": 28071,
+        "all_state_leakage_upper_W": "0.078039702984318",
+        "clock_leak_data_pin_subtotal_W": "38.78372435339035176",
+        "conditional_cell_plus_macro_area_mm2": "1.3391928288",
+        "data_input_pin_upper_W": "6.21577585820171904",
+        "data_internal_upper_W": "23.5079856111072",
+        "explicit_MUX2_bits": 289496,
+        "macros": 18,
+        "total_NAND2_cells": 3851072,
+        "ungated_clock_W": "8.98192318109711472",
+        "unresolved_output_load_ceiling_W": "148.4923064131584",
+        "write_enable_NAND2_cells_included": 2693088
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 16,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 1344,
+        "TX_packets": 1344,
+        "catalog_raw_capture": 1096,
+        "credit_state": 6,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 4,
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.51592967104",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 504212,
+        "additional_clock_buffers": 21040,
+        "all_state_leakage_upper_W": "0.062711320482192",
+        "clock_leak_data_pin_subtotal_W": "32.80345158781342176",
+        "conditional_cell_plus_macro_area_mm2": "1.3649189472",
+        "data_input_pin_upper_W": "5.37572749087629024",
+        "data_internal_upper_W": "20.2770046242768",
+        "explicit_MUX2_bits": 334040,
+        "macros": 49,
+        "total_NAND2_cells": 3353008,
+        "ungated_clock_W": "7.08800815217813952",
+        "unresolved_output_load_ceiling_W": "126.8991229169664",
+        "write_enable_NAND2_cells_included": 2016848
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 45,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 2688,
+        "TX_packets": 2688,
+        "catalog_raw_capture": 1096,
+        "credit_state": 12,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 4,
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.51990977776",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 506906,
+        "additional_clock_buffers": 21152,
+        "all_state_leakage_upper_W": "0.062996143699516",
+        "clock_leak_data_pin_subtotal_W": "32.92432519685932408",
+        "conditional_cell_plus_macro_area_mm2": "1.36889905392",
+        "data_input_pin_upper_W": "5.39347935301779912",
+        "data_internal_upper_W": "20.3446681207464",
+        "explicit_MUX2_bits": 334040,
+        "macros": 49,
+        "total_NAND2_cells": 3363784,
+        "ungated_clock_W": "7.12318157939560896",
+        "unresolved_output_load_ceiling_W": "127.3407368454144",
+        "write_enable_NAND2_cells_included": 2027624
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 45,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 86016,
+        "TX_packets": 86016,
+        "catalog_raw_capture": 1096,
+        "credit_state": 270,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tag_epoch_state": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_banks": 4,
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.76651624768",
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_declared_reservation": {
+        "FF_bits": 673820,
+        "additional_clock_buffers": 28109,
+        "all_state_leakage_upper_W": "0.080643657439210",
+        "clock_leak_data_pin_subtotal_W": "40.41545016826809400",
+        "conditional_cell_plus_macro_area_mm2": "1.61550552384",
+        "data_input_pin_upper_W": "6.49334361340674240",
+        "data_internal_upper_W": "24.5369416358640",
+        "explicit_MUX2_bits": 334040,
+        "macros": 49,
+        "total_NAND2_cells": 4031440,
+        "ungated_clock_W": "9.30452126155814160",
+        "unresolved_output_load_ceiling_W": "154.7021129601024",
+        "write_enable_NAND2_cells_included": 2695280
+      },
+      "old11_calendar_not_current": true,
+      "parameter_banks": 45,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    }
+  ],
+  "complete_inventory": false,
+  "forward_control_bits_per_stage": 64,
+  "historical_power_subtraction_W": 0,
+  "macro_library_source_pins": {
+    "FF": {
+      "commit": "d2c28c279",
+      "path": "physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_ff.lib",
+      "sha256": "51add7c291724dc77d33d9fbbfe5fe6293f37fa038da10f377b6c63150bf7064"
+    },
+    "LEF": {
+      "commit": "d2c28c279",
+      "path": "physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8.lef",
+      "sha256": "86004770b7b30de920c2504f940eef796f30fc1fa15865215fa94dca3047a03c"
+    },
+    "SS": {
+      "commit": "d2c28c279",
+      "path": "physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_ss.lib",
+      "sha256": "aaf35a188f02e091a24ba0112295962bfb4067fdb19cc0bb0dc66bcc93848f61"
+    },
+    "TT": {
+      "commit": "d2c28c279",
+      "path": "physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_tt.lib",
+      "sha256": "64d2c67c81ea891c883efe9472241eb2f5da2cee112c9b48ac9c4c38b278ab33"
+    }
+  },
+  "missing": [
+    "Ram sourcebound17bothway bankwave/credit calendar and actualPC absolute release/deadlines",
+    "actual1152bus routing/loads+128wideCDC registered storage/reset/drain/control",
+    "L1completeimage/catalogpublication/encodedbases",
+    "newconstructor localSU/wholegeometry and allretainedobstacles/CTS/PG/fanout/hold/capture/IR/contextualSSFF"
+  ],
+  "old11_calendar_transfer_credit": 0,
+  "old11_records_preserved": true,
+  "payload_bits_per_stage": 1024,
+  "physical_admission": false,
+  "reverse_control_bits_per_stage": 64,
+  "root_stop_credit": 0,
+  "route_basis": {
+    "forward_fast_stages": 17,
+    "reverse_ACK_serialization_fast_cycles": 1,
+    "reverse_fast_stages": 17,
+    "scope": "Conditional scalar SS reach basis from541; NOT actual1152bitCROM bus route or CDC timing proof.",
+    "source_envelope_um": "8159.616",
+    "source_reach_SS_um": "504.0"
+  },
+  "route_pipeline_FF_sum": 19648,
+  "route_pipeline_extra_FF_vs11": 6912,
+  "schema": "w10_crom_ss_route17_typed_correction_v1",
+  "small_macro_alternative_cases": [
+    {
+      "FF_by_role": {
+        "RX_packets": 1344,
+        "TX_packets": 1344,
+        "catalog_raw_capture": 1096,
+        "credit_state": 6,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tags": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_large_macros": 4,
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.264204921280",
+      "explicit_depth_alternative_adopted": false,
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_mixed_reservation": {
+        "FF_bits": 504212,
+        "NAND2_cells": 3353008,
+        "all_state_leakage_upper_W": "0.061025801175942",
+        "clock_buffers": 21079,
+        "conditional_cell_plus_macro_area_mm2": "1.113194197440",
+        "data_input_pin_full_activity_upper_W": "5.37616528586469024",
+        "data_internal_full_activity_upper_W": "20.2770046242768",
+        "macro_area_mm2": "0.134443929600",
+        "macro_clock_endpoints": 139,
+        "separate_output_load_ceiling_W": "126.8135540711424",
+        "ungated_clock_W": "6.74009451221151792"
+      },
+      "old11_calendar_not_current": true,
+      "parameter_small_macros": 135,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 2688,
+        "TX_packets": 2688,
+        "catalog_raw_capture": 1096,
+        "credit_state": 12,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tags": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_large_macros": 4,
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.268185494560",
+      "explicit_depth_alternative_adopted": false,
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_mixed_reservation": {
+        "FF_bits": 506906,
+        "NAND2_cells": 3363784,
+        "all_state_leakage_upper_W": "0.061310654096516",
+        "clock_buffers": 21192,
+        "conditional_cell_plus_macro_area_mm2": "1.117174770720",
+        "data_input_pin_full_activity_upper_W": "5.39391714800619912",
+        "data_internal_full_activity_upper_W": "20.3446681207464",
+        "macro_area_mm2": "0.134443929600",
+        "macro_clock_endpoints": 139,
+        "separate_output_load_ceiling_W": "127.2551679995904",
+        "ungated_clock_W": "6.77538494451727296"
+      },
+      "old11_calendar_not_current": true,
+      "parameter_small_macros": 135,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    },
+    {
+      "FF_by_role": {
+        "RX_packets": 86016,
+        "TX_packets": 86016,
+        "catalog_raw_capture": 1096,
+        "credit_state": 270,
+        "forward_control": 1088,
+        "payload_route": 17408,
+        "retained_staging": 475402,
+        "retained_tags": 5372,
+        "reverse_control_plusACKserial": 1152
+      },
+      "catalog_large_macros": 4,
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.514791031360",
+      "explicit_depth_alternative_adopted": false,
+      "extra_pipeline_FF_vs11": 6912,
+      "fresh_mixed_reservation": {
+        "FF_bits": 673820,
+        "NAND2_cells": 4031440,
+        "all_state_leakage_upper_W": "0.078958108429710",
+        "clock_buffers": 28147,
+        "conditional_cell_plus_macro_area_mm2": "1.363780307520",
+        "data_input_pin_full_activity_upper_W": "6.49378140839514240",
+        "data_internal_full_activity_upper_W": "24.5369416358640",
+        "macro_area_mm2": "0.134443929600",
+        "macro_clock_endpoints": 139,
+        "separate_output_load_ceiling_W": "154.6165441142784",
+        "ungated_clock_W": "8.95649061650323440"
+      },
+      "old11_calendar_not_current": true,
+      "parameter_small_macros": 135,
+      "physical_admission": false,
+      "route17_finite_calendar_us": null
+    }
+  ],
+  "source_pins": {
+    "SS_route_model": {
+      "commit": "541a1d2f",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "area": {
+      "commit": "6da3c7a60",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
+      "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "before_small": {
+      "commit": "f05904253",
+      "path": "results/uarch/w10_crom_small_macro_budget_r1/budget.json",
+      "sha256": "4ea1feb04d6d16f46667b7c0bb80b3464c505ad1ba56311c773668407c275d93"
+    },
+    "clock": {
+      "commit": "fea811df4",
+      "path": "results/uarch/w10_q_existing_icg_r1/clock.json",
+      "sha256": "19291d798b14a4f920e6da2d8c310727b5afb6b19efc36df3f850b3a84728b1f"
+    },
+    "local": {
+      "commit": "47b715428",
+      "path": "results/quality/w16_w17_crom_finite_prefetch_20261001/local_home.json",
+      "sha256": "f75149f47f51e081d003dd815cd1d610463b2bc6579d529cc17233fd4d8eda1e"
+    },
+    "old": {
+      "commit": "4276c2587",
+      "path": "results/uarch/w10_crom_actual_stage_budget_r1/budget.json",
+      "sha256": "94eeb17522f5c0caa700cad1a70b1d077ec78e3f76a056552e471591b37a5861"
+    },
+    "power": {
+      "commit": "e79394b1c",
+      "path": "results/uarch/w10_q_power_envelope_r1/power.json",
+      "sha256": "75d15a6c456b846a9a2e454383a46e91eeece71f8e537921b91e820d43a36105"
+    }
+  },
+  "standard_cell_library_inputs": {
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r2/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r2/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r2/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/INVBUF_FF.cells.lib": "2a5a7080ffa69fc1cfc7856d51da5b81c80bf18a326fdfd82e162ce2968d4001",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/INVBUF_SS.cells.lib": "4223a8bc20e3c2c59656b4863a41400153e02bf9e6841511afbb08e2dcf6341b",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/INVBUF_TT.cells.lib": "f79a842c446fed82cb91afad4fce6ccb63b33a9ad37a0566fb08aab7aa88f296",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SEQ_FF.cells.lib": "cb1c8660861d175fb22501571104a9bb1ae98818028e9c51e8a5faf23deb4aff",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SEQ_SS.cells.lib": "d1384482af90f3b85c760a8def053387cba872ceeff34af3435ba6f0e396a82d",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SEQ_TT.cells.lib": "3ec87fff4b4cbcff99a71b63db4a5de40d6d4ea3cb344b65b29736162d5a16ce",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SIMPLE_FF.cells.lib": "0241401f13211800f88cb0ce7c436234eb86072c3a8bbca087773e106799c0f5",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SIMPLE_SS.cells.lib": "4767b0907b75fb51cc16cd69fd4cacd8548c712c47bcedef4970822544a317e6",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SIMPLE_TT.cells.lib": "af60226213e49d2c3b734d19e7be7907512bd6d419af69884e886b81d8d0885f"
+  },
+  "verdict": "SS17_REACH_PIPELINE_CORRECTION_ALL_TYPED_RESERVATIONS_REPRICED_NO_11_CALENDAR_OR_FIT_ADMISSION",
+  "whole_point_power_W": null,
+  "whole_point_power_margin_W": null,
+  "whole_token_latency_cycles": null
+}

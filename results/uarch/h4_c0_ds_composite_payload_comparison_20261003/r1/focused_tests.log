@@ -1,0 +1,22 @@
+test_actual_output_byte_comparison_signed_zero (test_h4_c0_ds_selected_bf16_payload_witness.SourceBitsTests) ... ok
+test_exact_widen_preserves_zero_nan_infinity_and_subnormal_bits (test_h4_c0_ds_selected_bf16_payload_witness.SourceBitsTests) ... ok
+test_wrong_owner_shape_and_codec_refuse (test_h4_c0_ds_selected_bf16_payload_witness.SourceBitsTests) ... ok
+test_incomplete_or_nonarray_metadata_refused (test_h4_c0_ds_composite_captured_output_reference.StreamingMetadataTests) ... ok
+test_record_strings_and_chunk_boundaries_preserved (test_h4_c0_ds_composite_captured_output_reference.StreamingMetadataTests) ... ok
+test_actual_constructor_requires_reviewed_native_and_complete_compounds (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_changed_original_source_refused (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_explicit_review_and_immutable_files (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_generation_and_duplicate_identity_refusals (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_legacy_checkpoint_origin_is_explicit_and_per_field (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_metadata_inventory_does_not_open_payload (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_no_unreviewed_contract_or_expected_stimuli (test_h4_c0_ds_stage_witness_successor.ReviewedContractTests) ... ok
+test_compound_and_rank_coverage_cannot_be_omitted (test_h4_c0_ds_stage_witness.StageScopeTests) ... ok
+test_journal_location_not_source_payload_but_view_bindings_are (test_h4_c0_ds_stage_witness.StageScopeTests) ... ok
+test_missing_context_identity_refuses (test_h4_c0_ds_stage_witness.StageScopeTests) ... ok
+test_signed_zero_byte_mismatch_refuses_retry (test_h4_c0_ds_stage_witness.StageScopeTests) ... ok
+test_zero_publication_does_not_create_reference_credit (test_h4_c0_ds_stage_witness.StageScopeTests) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 12.514s
+
+OK

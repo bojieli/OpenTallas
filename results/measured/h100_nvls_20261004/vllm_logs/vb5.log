@@ -1,0 +1,9 @@
+=== stepcost tp=1 quant=auto batch=6 in=128 out=1
+Avg latency: 0.02634633979996579 seconds
+=== stepcost tp=1 quant=auto batch=6 in=128 out=257
+Avg latency: 1.9440942642000665 seconds
+=== stepcost tp=1 quant=fp8 batch=6 in=128 out=1
+Avg latency: 0.02378165039999658 seconds
+=== stepcost tp=1 quant=fp8 batch=6 in=128 out=257
+Avg latency: 1.3928921759998958 seconds
+VB5DONE

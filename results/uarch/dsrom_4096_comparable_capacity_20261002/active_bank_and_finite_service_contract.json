@@ -1,0 +1,221 @@
+{
+  "bank_budget_rows": [
+    {
+      "BF16_active_pair_budget_per_rank": 41984,
+      "BF16_exact_active_quota_distribution": {
+        "higher_count": 1025,
+        "higher_count_stages": 0,
+        "lower_count": 1024
+      },
+      "BF16_physical_spare_pairs_TP4": 0,
+      "dies": 208,
+      "golden_subtree_and_stage_order_preserved_proof": false,
+      "physical_pairs_per_die": 4773,
+      "q_active_pair_budget_per_rank": 153709,
+      "q_exact_active_quota_distribution": {
+        "higher_count": 3750,
+        "higher_count_stages": 0,
+        "lower_count": 3749
+      },
+      "q_physical_spare_pairs_TP4": 0,
+      "quota_is_budget_not_compiler_bank_ownership": true,
+      "required_payload_bits_per_die": 14437898262,
+      "spare_integer_slots_not_new_work_or_gain": true,
+      "stages": 41,
+      "usable_weight_payload_capacity_bits_per_die_at_conservative256of274": 20019412992
+    },
+    {
+      "BF16_active_pair_budget_per_rank": 41984,
+      "BF16_exact_active_quota_distribution": {
+        "higher_count": 977,
+        "higher_count_stages": 16,
+        "lower_count": 976
+      },
+      "BF16_physical_spare_pairs_TP4": 108,
+      "dies": 216,
+      "golden_subtree_and_stage_order_preserved_proof": false,
+      "physical_pairs_per_die": 4552,
+      "q_active_pair_budget_per_rank": 153709,
+      "q_exact_active_quota_distribution": {
+        "higher_count": 3575,
+        "higher_count_stages": 27,
+        "lower_count": 3574
+      },
+      "q_physical_spare_pairs_TP4": 64,
+      "quota_is_budget_not_compiler_bank_ownership": true,
+      "required_payload_bits_per_die": 13766368111,
+      "spare_integer_slots_not_new_work_or_gain": true,
+      "stages": 43,
+      "usable_weight_payload_capacity_bits_per_die_at_conservative256of274": 19092471808
+    },
+    {
+      "BF16_active_pair_budget_per_rank": 41984,
+      "BF16_exact_active_quota_distribution": {
+        "higher_count": 724,
+        "higher_count_stages": 50,
+        "lower_count": 723
+      },
+      "BF16_physical_spare_pairs_TP4": 32,
+      "dies": 276,
+      "golden_subtree_and_stage_order_preserved_proof": false,
+      "physical_pairs_per_die": 3375,
+      "q_active_pair_budget_per_rank": 153709,
+      "q_exact_active_quota_distribution": {
+        "higher_count": 2651,
+        "higher_count_stages": 9,
+        "lower_count": 2650
+      },
+      "q_physical_spare_pairs_TP4": 196,
+      "quota_is_budget_not_compiler_bank_ownership": true,
+      "required_payload_bits_per_die": 10206100496,
+      "spare_integer_slots_not_new_work_or_gain": true,
+      "stages": 58,
+      "usable_weight_payload_capacity_bits_per_die_at_conservative256of274": 14155776000
+    },
+    {
+      "BF16_active_pair_budget_per_rank": 41984,
+      "BF16_exact_active_quota_distribution": {
+        "higher_count": 637,
+        "higher_count_stages": 8,
+        "lower_count": 636
+      },
+      "BF16_physical_spare_pairs_TP4": 232,
+      "dies": 308,
+      "golden_subtree_and_stage_order_preserved_proof": false,
+      "physical_pairs_per_die": 2966,
+      "q_active_pair_budget_per_rank": 153709,
+      "q_exact_active_quota_distribution": {
+        "higher_count": 2329,
+        "higher_count_stages": 61,
+        "lower_count": 2328
+      },
+      "q_physical_spare_pairs_TP4": 20,
+      "quota_is_budget_not_compiler_bank_ownership": true,
+      "required_payload_bits_per_die": 8968997406,
+      "spare_integer_slots_not_new_work_or_gain": true,
+      "stages": 66,
+      "usable_weight_payload_capacity_bits_per_die_at_conservative256of274": 12440305664
+    },
+    {
+      "BF16_active_pair_budget_per_rank": 41984,
+      "BF16_exact_active_quota_distribution": {
+        "higher_count": 219,
+        "higher_count_stages": 128,
+        "lower_count": 218
+      },
+      "BF16_physical_spare_pairs_TP4": 256,
+      "dies": 812,
+      "golden_subtree_and_stage_order_preserved_proof": false,
+      "physical_pairs_per_die": 1020,
+      "q_active_pair_budget_per_rank": 153709,
+      "q_exact_active_quota_distribution": {
+        "higher_count": 801,
+        "higher_count_stages": 109,
+        "lower_count": 800
+      },
+      "q_physical_spare_pairs_TP4": 332,
+      "quota_is_budget_not_compiler_bank_ownership": true,
+      "required_payload_bits_per_die": 3083092858,
+      "spare_integer_slots_not_new_work_or_gain": true,
+      "stages": 192,
+      "usable_weight_payload_capacity_bits_per_die_at_conservative256of274": 4278190080
+    },
+    {
+      "BF16_active_pair_budget_per_rank": 41984,
+      "BF16_exact_active_quota_distribution": {
+        "higher_count": 188,
+        "higher_count_stages": 96,
+        "lower_count": 187
+      },
+      "BF16_physical_spare_pairs_TP4": 512,
+      "dies": 940,
+      "golden_subtree_and_stage_order_preserved_proof": false,
+      "physical_pairs_per_die": 875,
+      "q_active_pair_budget_per_rank": 153709,
+      "q_exact_active_quota_distribution": {
+        "higher_count": 687,
+        "higher_count_stages": 45,
+        "lower_count": 686
+      },
+      "q_physical_spare_pairs_TP4": 716,
+      "quota_is_budget_not_compiler_bank_ownership": true,
+      "required_payload_bits_per_die": 2642651022,
+      "spare_integer_slots_not_new_work_or_gain": true,
+      "stages": 224,
+      "usable_weight_payload_capacity_bits_per_die_at_conservative256of274": 3670016000
+    }
+  ],
+  "declared_weight_payload_model": "At most256payloadbits charged per274bit physical ROMword;4PP4096 macros/pair; masks/packing/sourceaddresses must still be compilerproved. More physical capacity is not more adopted weights or arithmetic work.",
+  "full_product_selected": false,
+  "index_1M_source_capacity": {
+    "accepted_META_events": 64,
+    "actual_retained_graph_sites": 8,
+    "all1Mscan_executed_RTL": false,
+    "batch_keys": 64,
+    "compute_issue_cycles_per_batch": 256,
+    "descriptor_events": 1,
+    "idle_cycles": 1,
+    "logical_payload_B_per_full_batch": 4352,
+    "logical_payload_B_per_key": 68,
+    "max_backend_delivery_latency_cycles_bound": false,
+    "no_stall_392_calendar_requirements": [
+      "Query and64metadata records accepted faultfree in source order before DESC",
+      "Complete4quarter/64key data beat available when the batch consumer accepts it; next beat cannot replace busy state",
+      "Every inputblock required by256issue cycles is delivered before its actual consume event; FIFO depth does not grant arbitrary response latency",
+      "All64scores retire before busy clears and metadata seats reused; headsum32cycle finish included in actual tail",
+      "Actual HBM response max latency/jitter, tag reuse and phase-visible acknowledgement must satisfy source finite WB32/GA24 windows"
+    ],
+    "nominal_calendar_cycles_per_batch": 392,
+    "nominal_calendar_is_not_finite_worstcase_service_guarantee": true,
+    "nominal_total_index_calendar_cycles_across_sites": 4114432,
+    "nominal_total_index_calendar_us_across_sites": 3428.693333333333,
+    "per_key_MACs": 4096,
+    "products_per_streaming_cycle": 1024,
+    "query_epoch_and_busy_acceptance_required": true,
+    "required_average_logical_payload_Bpc_for392calendar": 11.10204081632653,
+    "serial_calendar_sum_not_additive_token_delta": true,
+    "source_IH": 32,
+    "source_MD": 128,
+    "source_fourreader_peak_response_Bpc": 4096,
+    "source_keys_per_die_by_site": {
+      "L14.attn.idx.score": 131072,
+      "L2.attn.idx.score": 131072,
+      "L20.attn.idx.score": 262144,
+      "L24.attn.idx.score": 4096,
+      "L28.attn.idx.score": 4096,
+      "L32.attn.idx.score": 4096,
+      "L36.attn.idx.score": 4096,
+      "L8.attn.idx.score": 131072
+    },
+    "source_reader_GA": 24,
+    "source_reader_NPC": 32,
+    "source_reader_WB": 32,
+    "tail_cycles": 70
+  },
+  "new_HDL_or_PnR_invocations": 0,
+  "physical_GO": false,
+  "return_storage_scope": {
+    "embedded_strip_credit_bits": 0,
+    "partition_credit_bits": 0,
+    "physical_minimum_not_claimed": true,
+    "preserved_per_die_bits": 138469120,
+    "proportional_shrink_not_used": true,
+    "source_instance_scope_not_validated": true
+  },
+  "return_template_contract": {
+    "NB_logical_outputs_per_pair": 2,
+    "PP_does_not_create_extra_partial_outputs": true,
+    "PP_physical4096_macros_per_pair": 4,
+    "actual_return_root_replica_count_not_bound": true,
+    "cfg_e_bits": 8,
+    "finite_WAIT_FIFO_and_rootQD_visibility_bound": false,
+    "maximum_addressable_pairs_per_retained_cfg_namespace": 256,
+    "one_root_factorial_not_actual_full_die_service": true,
+    "root_result_words_pc": 1,
+    "source": "e72abea5ae169d3167dddc89543013f0e6bb3a7a:rtl/v41rom/ot_v41_rom_array.sv + ot_v41_ret.sv",
+    "source_alignment5cycle_adder_SSFF_not_certified": true
+  },
+  "schema": "opentallas.DSROM4096.active-bank-and-service-contract.v1",
+  "source_factorial_sha256": "f26b01414810679008a62d4f0fd38c989c26fcb4ed018b1900e20cd87cceb895",
+  "source_options_sha256": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154"
+}

@@ -1,0 +1,231 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.26858177553310414,
+        "met": true,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": true,
+        "setup_violating_paths": 0,
+        "setup_wns_ns": 10.378730169056995,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-29T16:19:31.012325+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib",
+        "sha256": "fb61d91c55a7f85b1989e8149d040b13ba5e7f5478f5bf0c3c16c5da30720139",
+        "size_bytes": 12918504
+      }
+    ],
+    "name": "ff",
+    "process": "fast",
+    "temperature_c": -40.0,
+    "voltage_v": 1.95
+  },
+  "design": {
+    "block": "reduction_s8_g2",
+    "clock_port": "clk",
+    "description": "Eight-source, two-group tagged deterministic reduction endpoint.",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {
+      "DATA_W": 32,
+      "GROUPS": 2,
+      "SOURCES": 8,
+      "TAG_W": 16
+    },
+    "sources": [
+      {
+        "path": "rtl/ot_reduction_tree.sv",
+        "sha256": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+        "size_bytes": 8276
+      }
+    ],
+    "top": "ot_reduction_endpoint"
+  },
+  "elapsed_seconds": 4.287,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-08-29T16:19:26.724983+00:00",
+  "git": {
+    "commit": "8ffd5ec3c6a32e90f1498278287ac0f961ae231e",
+    "worktree_dirty": true
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--block",
+      "reduction_s8_g2",
+      "--corner",
+      "ff",
+      "--clock-period-ns",
+      "20",
+      "--stages",
+      "synth,sta",
+      "--fmax-search",
+      "--force",
+      "--purpose",
+      "characterization",
+      "--output",
+      "results/physical_abi3/sky130hd/reduction_s8_g2/corner_ff.json"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 20.0,
+    "critical_path_ns": 9.621269830943005,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 103936384.44521075,
+    "fmax_search": {
+      "evaluations": 13,
+      "fmax_hz": 103906646.37239979,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 9.6240234375,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 5.0,
+          "setup_wns_ns": -4.621271052188367
+        },
+        {
+          "clock_period_ns": 7.5,
+          "setup_wns_ns": -2.121271218721825
+        },
+        {
+          "clock_period_ns": 8.75,
+          "setup_wns_ns": -0.8712710799439426
+        },
+        {
+          "clock_period_ns": 9.375,
+          "setup_wns_ns": -0.24627145464422404
+        },
+        {
+          "clock_period_ns": 9.53125,
+          "setup_wns_ns": -0.09002132627468318
+        },
+        {
+          "clock_period_ns": 9.609375,
+          "setup_wns_ns": -0.01189093301924383
+        },
+        {
+          "clock_period_ns": 9.619140625,
+          "setup_wns_ns": -0.0021307400891220456
+        },
+        {
+          "clock_period_ns": 9.6240234375,
+          "setup_wns_ns": 0.0027489122867164367
+        },
+        {
+          "clock_period_ns": 9.62890625,
+          "setup_wns_ns": 0.007639222803892753
+        },
+        {
+          "clock_period_ns": 9.6484375,
+          "setup_wns_ns": 0.027168490448584517
+        },
+        {
+          "clock_period_ns": 9.6875,
+          "setup_wns_ns": 0.06622880209485768
+        },
+        {
+          "clock_period_ns": 10.0,
+          "setup_wns_ns": 0.37872905883393937
+        },
+        {
+          "clock_period_ns": 20.0,
+          "setup_wns_ns": 10.378730169056995
+        }
+      ]
+    },
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.26858177553310414,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.26858177553310414,
+      "setup_tns": 0.0,
+      "setup_wns": 10.378730169056995
+    },
+    "sdc_clock_period_library_units": 20.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 10.378730169056995,
+    "timing_met": true
+  },
+  "status": "pass",
+  "synthesis": {
+    "abc_delay_target_ps": 20000.0,
+    "cell_area_um2": 39148.327,
+    "cell_count": 3374,
+    "cell_types_used": 56,
+    "chip_area_um2": 39135.0336,
+    "combinational_cell_count": 2754,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "283ab05ec96324fb93cef6d00e8893c7272b1c2ca0c1003ccd9761f23294af62",
+      "raw_netlist_sha256": "283ab05ec96324fb93cef6d00e8893c7272b1c2ca0c1003ccd9761f23294af62",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 18100.0,
+    "sequential_cell_count": 620,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 20.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

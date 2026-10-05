@@ -1,0 +1,76 @@
+{
+  "calendar_tool_sha256": "9085bc4790344fc95f5bd783cb071af5be385a8b9cabba17af8482e06cac91b7",
+  "current_dispatch_gzip_sha256": "df2a4fbbdd0204772d1c0d479bb43b22c209d933ac3745433a8c1bbe7efcb210",
+  "current_native_gzip_sha256": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00",
+  "current_source_context": {
+    "catalog_content_sha256": "2c5cd485ccb6e27d1da79196a840369a13e77e5dcc652fced394fd367704ffc2",
+    "dispatch_content_sha256": "4c3f228108a7fb064b6f8295f67118934430863a9c68ec8945bb30627547d2af",
+    "native_sha256": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00"
+  },
+  "derived_bulk_artifacts_stored": false,
+  "hardware_admitted": false,
+  "old_cost_fit_retained": true,
+  "schema": "H4_DS_R33_CALENDAR_SOURCE_MANIFEST_V1",
+  "source_pins": {
+    "results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "b8a380e2eb8836c57dbb6bc2a90b6e09f83f7ba652a945a94b9caae4539dafef"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/bridge.json": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "09a45837a779ac3d96c72903ace51245f2b5091f13af6a83ce64aa69b430c21c"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/initial_window_homes.json.gz": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "81ddd2ebd460ab1c3320dd2ff066b767a576a8973ffd82a3e5fae2a5445e1f80"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_cos.npy": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "43a5b18dad9d98a6c9eb362535717cc79ce28f9cb9fd0931fd815fc7daf5f707"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_sin.npy": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "c02a430d5fbf0d2dd2e9fcdf4d7e32ae88fb071f9252a5ddd43101de4d12f945"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_cos.npy": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "e7d28d1038624a5ff826c99a7744a0e87f024bd6872778e5ec18fff23e22c717"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_sin.npy": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "70a5691591cd2e7cd0c43220a2b98d15c5ab6c03e317cd9be5ef2fe3a5cd1bc6"
+    },
+    "results/uarch/ds_hbm_window_retirement_r33_20261002/source_owned_rope_bindings.json.gz": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "6c50077cd77dff8f80bc8fea44b422cdcac4a881a5e36757b86b0d326d6666ae"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/G0_both_program_interface.json.gz": {
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "sha256": "4b5608d86845c732e9602c19ffec4b0efcf22784b38d6ed994f8739bf5f6c387"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/forward_leaf_catalog.json.gz": {
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "sha256": "b916cbb8084482df35360e6efea59df94f85256157590ed1128d77c4801bb809"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/summary.json": {
+      "commit": "a67150839",
+      "sha256": "ce06333dbba0b4a1b3daa9ae5ab6ec062dcd7d41fcb8ff8a9e2a016dcfe25259"
+    },
+    "results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_milestone.json.gz": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f"
+    },
+    "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+    },
+    "tools/ds_hbm_window_contract_r33.py": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "8d84e01a4be85e3abe5307ed4193251814770286d583c5b0bcfd0414f72b004a"
+    },
+    "tools/ds_hbm_window_rope_prepare_r33.py": {
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "sha256": "609298dfa1ba9a58d1131b25f8269312e70ebf6789b610570dea9ca03aedb4f1"
+    }
+  }
+}

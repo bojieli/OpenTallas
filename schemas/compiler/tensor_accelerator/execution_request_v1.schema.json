@@ -1,0 +1,78 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/execution_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.execution_request.v1"
+    },
+    "symbols": {
+      "additionalProperties": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "type": "object"
+    },
+    "tensors": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "dtype": {
+            "enum": [
+              "bf16",
+              "fp32",
+              "i32",
+              "i8"
+            ]
+          },
+          "id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "shape": {
+            "items": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "type": "array"
+          },
+          "values": {
+            "items": {
+              "maximum": 4294967295,
+              "minimum": -2147483648,
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "dtype",
+          "id",
+          "shape",
+          "values"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "model_id",
+    "schema",
+    "symbols",
+    "tensors"
+  ],
+  "title": "OpenTallas tensor-accelerator execution request v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    }
+  }
+}

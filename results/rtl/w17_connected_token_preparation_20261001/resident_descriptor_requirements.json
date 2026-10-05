@@ -1,0 +1,62 @@
+{
+  "status": "DESCRIPTOR_REQUIREMENTS_NOT_ADOPTED",
+  "model_schema_pin": {
+    "commit": "560f57e650b7505a9a47530e603a7f032f46d069",
+    "path": "results/quality/w16_w17_physical_top_contract_20261001/integer_schema.json",
+    "sha256": "98d9264534c3f2cf0ebe02b898a325a83434b1c6214aaf8dbf146f274faae4e8"
+  },
+  "geometry": {
+    "PP_NB": 2,
+    "logical_mates_per_pair": 2,
+    "logical_words_per_mate": 8192,
+    "parity_banks_per_mate": 2,
+    "physical_banks_per_pair": 4,
+    "physical_words_per_bank": 4096,
+    "address_correspondence": "logical_address=2*physical_address+parity",
+    "historical_pair_capacity_transfer": false,
+    "actual_q_footprint_binding": null
+  },
+  "resident_key_candidate": {
+    "layer_bits": 6,
+    "expert_bits": 9,
+    "family_bits": 2,
+    "rank_implicit": true,
+    "valid_layers": 40,
+    "valid_experts": 384,
+    "valid_families": [
+      "w1",
+      "w3",
+      "w2"
+    ],
+    "invalid_family": 3,
+    "symbolic_unique_keys": 46080,
+    "actual_router_to_key_RTL_bound": false
+  },
+  "configuration": {
+    "programme_phase_bits": 6,
+    "programme_phase_entries": 64,
+    "resident_descriptor_index_bits": null,
+    "config_words_per_pair_phase": 25,
+    "config_word_bits": 48,
+    "resident_catalogue_storage_bits": null,
+    "cfg_load_ports": null,
+    "cfg_load_cycles": null,
+    "stream_address_bits": null,
+    "stream_load_cycles": null
+  },
+  "missing": [
+    "source-grounded actual q footprint and paired/mate/parity count correspondence to historical area",
+    "model-owned integer full expert and dense/HC capacity/allocator replay",
+    "dynamic actual RTL router ID to resident descriptor mapping",
+    "resident descriptor/config/stream port widths and stage latency priced",
+    "finite hardware activation/router/result readyvalid hops and golden-order merge",
+    "persistent DUT current KV producer/owner/publication profile"
+  ],
+  "symbolic_checks": {
+    "unique_global_candidate_keys": true,
+    "all16384mate_logical_addresses_roundtrip": true
+  },
+  "actual_residency_proven": false,
+  "top_build_ready": false,
+  "adopt": false
+}

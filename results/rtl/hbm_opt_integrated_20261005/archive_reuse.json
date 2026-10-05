@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.hbm-opt-integrated-archive-reuse.v1",
+  "host": "ot-epyc1tb",
+  "executable": "/srv/opentallas/jobs/ampere-qwen-hbm-final-tp4-20261005/build/qwen_hbmacc_rt",
+  "actual_readonly_binary_sha256": "4ca561b90f06c9341d460b354876c6f012ddab8cd86c63f0abeb8650640782e3",
+  "matches_committed_build_identity": true,
+  "identity_record": "results/rtl/qwen_hbm_final_tp4_20261005/terminal/build_identity.json",
+  "compiled_D": 4,
+  "compiled_N": 4,
+  "input_context": 8192,
+  "position": 8191,
+  "prior_stage_cycles": {
+    "L5": 10571,
+    "L20": 16719,
+    "head": 2791
+  },
+  "prior_total_cycles_including_wrapper": {
+    "L5": 10578,
+    "L20": 16726,
+    "head": 2798
+  },
+  "prior_records": "results/rtl/qwen_hbm_final_tp4_20261005/terminal/measured_stage_cycles.json",
+  "scope": "Retained exact final-source TP4 baseline and source-identical template donor. No rerun/rebuild to enroll.",
+  "pq_xmap_in_archive": false,
+  "reason": "Selected sources/build parameters bind Qwen matrix spine; no DS production PQ/XMAP source/parameter is present in the recorded source inventory.",
+  "candidate_reuse": "Only unchanged source+parameter+tool-compatible template archives; selected levers require an actual caller/export binding.",
+  "physical_admission": false,
+  "full_token_measured": false
+}

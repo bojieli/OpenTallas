@@ -1,0 +1,49 @@
+{
+  "answer": "No.  The token depends on the prompt, so the input IS read.",
+  "not_a_claim": [
+    "260 is not claimed correct for the AGENT-1 prompt: no oracle was generated for it, and none is needed for this question",
+    "prompt-dependence does not mean the input is read CORRECTLY -- only that it is read"
+  ],
+  "question": "The shipped V4.1 ROM wafer emits 305 where the oracle says 13806, at a first-token margin of 2.494688 -- 484x the reduced vehicle's, so too wide for amplified rounding.  One of this tree's recorded failure shapes is 'a correct-looking run whose output ignores its input', where a token id is validated and never used.  Is this that?",
+  "schema": "opentallas.result.v41_shipped_wafer_reads_its_input.v1",
+  "the_cheapest_next_step_needs_no_oracle_either": "Compare the DEVICE against ITSELF across stores.  The shipped ROM array walk at the same context and prompt is already running; if it also emits 305 the two independent stores agree and the cause is shared -- the graph or a lowering both lanes perform -- while a disagreement would make it store-specific.  That is the same instrument the reduced vehicle's diagnosis used, where the two stores correlated at r = 0.84 with each other and 0.03 and 0.01 with the oracle.",
+  "the_experiment": {
+    "prefill_tokens": 32,
+    "runs": [
+      {
+        "emitted": [
+          305
+        ],
+        "prompt_head": [
+          0,
+          128803,
+          35,
+          2237,
+          17171,
+          12927
+        ],
+        "workload": "TA-DS41-CHAT-1-P32"
+      },
+      {
+        "emitted": [
+          260
+        ],
+        "prompt_head": [
+          0,
+          128799,
+          3476,
+          477,
+          260,
+          16372
+        ],
+        "workload": "TA-DS41-AGENT-1"
+      }
+    ],
+    "same_deployment": "v41_wafer_c8192",
+    "stop_reason": "max_new_tokens",
+    "wall_seconds": 9117.5,
+    "why_it_needs_no_oracle": "Two prompts, one device, one comparison.  If the emitted token were independent of the input, an addressing defect would be established without any reference to compare against -- which is what makes this cheaper than a depth bisection and worth doing first."
+  },
+  "what_it_eliminates": "The whole addressing class.  An EMBED_LOOKUP or GATHER addressed by a launch counter rather than by the token id would emit the same token for every prompt of the same length; two prompts give 305 and 260, so the token path reads the identifiers it is given.",
+  "what_remains": "A numeric divergence: the device computes a different function from the oracle somewhere in 40 layers.  At a 2.49 first-token margin that is not rounding, so it is localisable by depth rather than attributable to ties -- the difference between this vehicle and the reduced one."
+}

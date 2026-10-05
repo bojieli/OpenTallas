@@ -1,0 +1,32 @@
+{
+  "parameters": {
+    "AW": 24,
+    "NW": 18,
+    "W": 16,
+    "G": 6144
+  },
+  "inventory": {
+    "1": {
+      "candidate_declared_storage_bits": 9849,
+      "register_only_um2_upper_inventory": 2871.9684,
+      "gross_register_only_at30pct_um2": 9573.228000000001,
+      "basis": "candidate registers only, before constant pruning; not incremental total area or slot qualification"
+    },
+    "8": {
+      "candidate_declared_storage_bits": 20055,
+      "register_only_um2_upper_inventory": 5848.0380000000005,
+      "gross_register_only_at30pct_um2": 19493.460000000003,
+      "basis": "candidate registers only, before constant pruning; not incremental total area or slot qualification"
+    }
+  },
+  "program_bytes_per_cycle": 128,
+  "decoded_bits_per_cycle": 878,
+  "external_tracks_added": 0,
+  "MACs": 0,
+  "replica_scope": "four TP-rank cores in retained runtime; physical die count not inferred",
+  "FIFO_mux": "8:1 across878bits; retained held3bitla_nx",
+  "area_mux_cts_route_unmeasured": true,
+  "actual_floorplan_slot_fit": false,
+  "added_instruction_cycles": 0,
+  "full_token_gain": null
+}

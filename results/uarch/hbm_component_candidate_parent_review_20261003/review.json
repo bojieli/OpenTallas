@@ -1,0 +1,38 @@
+{
+  "W2_independent_lint": {
+    "allocated_MB": 104.152,
+    "compiler": "Verilator 5.050",
+    "exit_code": 0,
+    "scope": "syntax/elaboration only; width casts and disabled fixture outputs warned",
+    "walltime_s": 2.196,
+    "warnings_present": true
+  },
+  "W2_mutable_protection_codec_implemented": false,
+  "W2_preparation_model_tests_PASS": 67,
+  "W2_runtime_executed_by_parent": false,
+  "W5_W10_cold_verifier": "PASS source and artifact joins; prospective routing/build admission pending",
+  "W5_W10_tests_PASS": 22,
+  "actual_native_caller_installed": false,
+  "base_main": "e17d30d2a",
+  "headline_credit_added": false,
+  "next": [
+    "One source/resource-enrolled NC6 18-case functional runtime, reuse owner launch",
+    "Price and install native parent/fragment/sector credit distinction",
+    "Implement prospective reset and all-copy drain source ports",
+    "Map protected state and qualify contextual SS/FF after functional gate"
+  ],
+  "physical_qualified": false,
+  "schema": "opentallas.hbm_component_candidate_intake.v1",
+  "source_commits": [
+    "a3dce445031112267940e18688895df710cbb596",
+    "526c760682f111e2f0261bdf811a7eab10e49d1b",
+    "fa8009aefd3ba2c211bff0307022e1e5b21f4bb1"
+  ],
+  "source_pins": {
+    "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+    "rtl/test/w2_nc6_completion_20261003/tb.sv": "8427c1342f53311e8a2963773d12a302b06982b47e275623ef94efcfe0048c56",
+    "tools/h4_hbm_w5_w10_composed_model.py": "3c09c3e6e974e1b8ffbea9b7cda465b86ae0293b7c1b589f68508fba243e247f",
+    "tools/w2_nc6_component_run.py": "774f94057ea0add7e2d4b662bc9d46270e7e124aa570fcd41aaa3c735e32648a"
+  },
+  "whole_bridge_build_admitted": false
+}

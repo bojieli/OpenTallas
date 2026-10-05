@@ -1,0 +1,818 @@
+{
+ "schema": "opentallas.qwen3-o4-rtl-gaps.v1",
+ "tool": "tools/qwen3_o4_rtl_gaps.py",
+ "doc": "docs/ARCH_QWEN3_O4_RTL_SPEC.md",
+ "status": "ADVISORY: performance requirements and gap audit (input to the RTL contract Codex owns)",
+ "design": "O4: two reticles, one package, TP-2 over UCIe, INT8 weight-only with per-output-channel BF16 scales, 8 HBM3E stacks (4 a die), 6,144 groups a die, m = 5",
+ "o4": {
+  "source": "results/arch/qwen3_8bit_design.json @ claude/qwen-o4 58d70929, configurations.O4_two_reticles_one_package",
+  "clock_hz": 1098640000.0,
+  "groups_per_die": 6144,
+  "lanes_per_die": 98304,
+  "lane_multiplier_m": 5,
+  "lane_copies_added": 4,
+  "lane_copy_mm2": 51.91,
+  "target_rom_mm2": 224.65,
+  "drafter_rom_mm2": 28.76,
+  "ucie_phy_mm2": 10.0,
+  "kv_ring_mm2": 6.2,
+  "slack_mm2": 28.21,
+  "rom_read_required_bytes_per_cycle_per_die": 98304,
+  "rom_read_headroom": 1.017,
+  "weight_sweep_ideal_cycles": 38493,
+  "weight_sweep_tiled_cycles": 38880,
+  "kv_bytes_per_token": 603979776.0,
+  "kv_floor_cycles": 92161,
+  "calibrated_chain_cycles": 104473,
+  "extra_chain_cycles": 1251,
+  "ar_step_cycles": 105724,
+  "ar_tokens_s": 10391.6,
+  "ar_binding": "compute_chain",
+  "spec_chain_cycles": 122652,
+  "plain_cycles": 123903,
+  "dflash_block": 5,
+  "tokens_per_step": 2.8591,
+  "step_cycles": 189758,
+  "draft_cycles": 26677,
+  "verify_cycles": 163071,
+  "commit_cycles": 10,
+  "dflash_tokens_s": 16553.3,
+  "speedup_over_plain": 1.867,
+  "spec_components": {
+   "weights": 38880,
+   "attention": 16128,
+   "elementwise": 9792,
+   "latency": 57132,
+   "control": 720
+  },
+  "as_built": {
+   "cycles": 104473,
+   "unit_busy": {
+    "stream": 21177,
+    "weights": 35712,
+    "attn_scores": 9216,
+    "attn_pv": 9216,
+    "lm_head": 3168
+   },
+   "layer_chain_cycles": 2807,
+   "layer_stages": [
+    [
+     "QKV projection, then q/k norm, RoPE",
+     564,
+     128
+    ],
+    [
+     "attention: scores, softmax, P.V, 1/Z",
+     873,
+     512
+    ],
+    [
+     "O projection, residual, FFN norm",
+     183,
+     88
+    ],
+    [
+     "gate/up projection, fused SiLU.up",
+     828,
+     512
+    ],
+    [
+     "down projection, residual, next norm",
+     359,
+     264
+    ]
+   ]
+  },
+  "as_built_6144_one_die_cycles": 160881,
+  "power_b_die_w_ar": 419.9,
+  "power_b_die_w_dflash": 417.4,
+  "cooling_die_limit_w_air": 374.6,
+  "capacity": {
+   "target_scales": 1400832,
+   "lm_head_scales": 151936,
+   "embedding_scales": 151936,
+   "drafter_scales": 198656,
+   "target_elements": 6945767424,
+   "lm_head_elements": 622329856,
+   "embedding_elements": 622329856,
+   "drafter_elements": 1048576000
+  }
+ },
+ "o4_file_check": {
+  "present": true,
+  "has_o4": true,
+  "mismatches": {
+   "ar_tokens_s": [
+    11007.4,
+    10391.6
+   ],
+   "ar_step_cycles": [
+    99809,
+    105724
+   ],
+   "plain_cycles": [
+    121479,
+    123903
+   ],
+   "step_cycles": [
+    167386,
+    189758
+   ],
+   "verify_cycles": [
+    143183,
+    163071
+   ],
+   "draft_cycles": [
+    24193,
+    26677
+   ],
+   "dflash_tokens_s": [
+    18765.7,
+    16553.3
+   ]
+  }
+ },
+ "requirements": {
+  "clock_hz": 1098640000.0,
+  "dies": 2,
+  "tp": 2,
+  "groups_per_die": 6144,
+  "lanes_per_die": 98304,
+  "lane_multiplier_m": 5,
+  "copy_lanes_per_die": 393216,
+  "rom": {
+   "read_bytes_per_cycle_per_die": 98304,
+   "read_bits_per_group_per_cycle": 128,
+   "read_bits_per_group_per_cycle_bf16_now": 256,
+   "read_bytes_s_per_die": 108000706560000.0,
+   "headroom": 1.017,
+   "weight_bytes_per_token_per_die": 3784048640,
+   "weight_bytes_per_layer_per_die": 96468992,
+   "ideal_sweep_cycles_per_token": 38494,
+   "scale_bytes_per_die": 1903360,
+   "note": "one INT8 code a lane a cycle; lane copies share the group's word, so m does not raise it"
+  },
+  "matrices_per_die": {
+   "qkv": {
+    "n": 3072,
+    "k": 4096,
+    "split": 256,
+    "rounds": 1,
+    "k_chunk": 16,
+    "cycles": 128,
+    "weight_bytes_int8": 12582912,
+    "scales": 3072,
+    "outputs_per_cycle_avg": 24.0,
+    "burst_outputs_per_cycle": 384
+   },
+   "o": {
+    "n": 4096,
+    "k": 2048,
+    "split": 2048,
+    "rounds": 11,
+    "k_chunk": 1,
+    "cycles": 88,
+    "weight_bytes_int8": 8388608,
+    "scales": 4096,
+    "outputs_per_cycle_avg": 46.55,
+    "burst_outputs_per_cycle": 48
+   },
+   "gate_up": {
+    "n": 12288,
+    "k": 4096,
+    "split": 64,
+    "rounds": 1,
+    "k_chunk": 64,
+    "cycles": 512,
+    "weight_bytes_int8": 50331648,
+    "scales": 12288,
+    "outputs_per_cycle_avg": 24.0,
+    "burst_outputs_per_cycle": 1536
+   },
+   "down": {
+    "n": 4096,
+    "k": 6144,
+    "split": 2048,
+    "rounds": 11,
+    "k_chunk": 3,
+    "cycles": 264,
+    "weight_bytes_int8": 25165824,
+    "scales": 4096,
+    "outputs_per_cycle_avg": 15.52,
+    "burst_outputs_per_cycle": 48
+   },
+   "lm_head": {
+    "n": 75968,
+    "k": 4096,
+    "split": 1024,
+    "rounds": 99,
+    "k_chunk": 4,
+    "cycles": 3168,
+    "weight_bytes_int8": 311164928,
+    "scales": 75968,
+    "outputs_per_cycle_avg": 23.98,
+    "burst_outputs_per_cycle": 96
+   }
+  },
+  "layer_mv_cycles": 992,
+  "scale_multiply": {
+   "outputs_per_cycle_sustained_ar": 47,
+   "outputs_per_cycle_sustained_verify_m5": 233,
+   "burst_outputs_per_cycle_max": 1536,
+   "multiplies_per_token_per_die": 923840,
+   "assumed_pipe_cycles": 4,
+   "chain_cost_cycles_per_token_if_exposed": 580
+  },
+  "attention": {
+   "macs_per_layer_per_die": 33554432,
+   "ideal_cycles_per_layer": 342,
+   "as_built_cycles_per_layer": 512,
+   "spec_chain_cycles_per_layer": 448.0,
+   "golden_splits_at_6144": {
+    "scores": 128,
+    "pv": 512
+   },
+   "query_heads_per_die": 16,
+   "kv_heads_per_die": 4
+  },
+  "kv": {
+   "heads_per_die": 4,
+   "bytes_per_layer_per_die": 8388608,
+   "bytes_per_token_per_die": 301989888,
+   "stacks_per_die": 4,
+   "sustained_bytes_s_per_die": 3600000000000.0,
+   "bytes_per_cycle_per_die": 3276.8,
+   "cycles_per_layer": 2560.0,
+   "ring_bytes_per_die": 9648608,
+   "write_bytes_per_token_per_die": 36864
+  },
+  "stream_unit": {
+   "width": 1024,
+   "elementwise_cycles_per_token": 9792,
+   "elementwise_cycles_per_verify_b5": 48960,
+   "replicated_on_both_dies": [
+    "attention and FFN RMSNorm (sum of squares over H, rsqrt)",
+    "residual adds",
+    "final norm",
+    "embedding dequantisation"
+   ]
+  },
+  "ucie": {
+   "exchanges_per_token": 73,
+   "all_reduces_per_token": 72,
+   "argmax_gathers_per_token": 1,
+   "embedding_row_handoffs_per_token": 1,
+   "all_reduce_bytes_per_direction": 16384,
+   "all_reduce_bytes_per_direction_verify_b5": 81920,
+   "embedding_row_bytes": 4098,
+   "bytes_per_token_per_direction": 1183754,
+   "hop_cycles": 10.99,
+   "transfer_cycles_fp32": 4.29,
+   "transfer_cycles_fp32_verify_b5": 21.43,
+   "per_exchange_cycles_fp32": 19.27,
+   "per_exchange_cycles_o4_bf16": 17.13,
+   "o4_budget_cycles_per_token": 1251,
+   "fp32_cycles_per_token": 1407,
+   "per_exchange_cycles_verify_b5": 36.42,
+   "verify_b5_cycles_per_step": 2659,
+   "fp32_plus_embedding_handoff_cycles_per_token": 1419,
+   "bandwidth_delay_bytes": 84000,
+   "receiver_buffer_bytes_ar": 16384,
+   "receiver_buffer_bytes_verify_b5": 81920,
+   "average_bytes_s_ar": 12301098066,
+   "link_bytes_s": 4200000000000.0,
+   "hop_sensitivity": {
+    "3ns": {
+     "cycles_per_token": 846,
+     "ar_tokens_s": 10431.5
+    },
+    "10ns": {
+     "cycles_per_token": 1407,
+     "ar_tokens_s": 10376.3
+    },
+    "30ns": {
+     "cycles_per_token": 3011,
+     "ar_tokens_s": 10221.4
+    }
+   }
+  },
+  "ar": {
+   "gate": "m = 1, B = 1",
+   "target_step_cycles": 105724,
+   "tokens_s": 10391.6,
+   "per_layer_cycles_budget": 2814.0,
+   "layer_chain_as_built": 2807,
+   "layer_engine_busy_as_built": 1504,
+   "kv_floor_cycles": 92161,
+   "kv_layer_cycles_per_die": 2560.0,
+   "binding": "compute_chain",
+   "kv_headroom_over_chain": 1.147
+  },
+  "verify": {
+   "gate": "m = 5, B = 5",
+   "step_cycles": 163071,
+   "composition": {
+    "latency": 57132,
+    "control": 1971,
+    "weights": 38880,
+    "attention": 16128,
+    "elementwise": 48960
+   },
+   "per_layer": {
+    "weights": 1080.0,
+    "attention": 448.0,
+    "elementwise_5_slots": 1360.0,
+    "latency": 1587.0
+   },
+   "macs_per_cycle_per_die": 491520,
+   "x_operands_per_group_per_cycle": 5,
+   "kv_bytes_read_once": true,
+   "new_kv_rows_per_layer_per_die": 40
+  },
+  "draft": {
+   "step_cycles": 26677,
+   "layers": 5,
+   "fc": [
+    4096,
+    20480
+   ],
+   "fc_die": [
+    2048,
+    20480
+   ],
+   "fc_die_split_rtl": 1024,
+   "fc_die_split_golden": 4096,
+   "tap_hidden_bytes_per_position": 81920,
+   "commit_cycles": 10
+  },
+  "dflash": {
+   "block": 5,
+   "tokens_per_step": 2.8591,
+   "step_cycles": 189758,
+   "tokens_s": 16553.3,
+   "acceptance_basis": "BF16 GPU measurement; 8-bit not measured"
+  },
+  "split_rule_check": [
+   {
+    "matrix": "qkv",
+    "n": 3072,
+    "k": 4096,
+    "golden": 256,
+    "rtl": 256
+   },
+   {
+    "matrix": "o",
+    "n": 4096,
+    "k": 2048,
+    "golden": 2048,
+    "rtl": 2048
+   },
+   {
+    "matrix": "gate_up",
+    "n": 12288,
+    "k": 4096,
+    "golden": 64,
+    "rtl": 64
+   },
+   {
+    "matrix": "down",
+    "n": 4096,
+    "k": 6144,
+    "golden": 2048,
+    "rtl": 2048
+   },
+   {
+    "matrix": "lm_head",
+    "n": 75968,
+    "k": 4096,
+    "golden": 1024,
+    "rtl": 1024
+   },
+   {
+    "matrix": "drafter_fc",
+    "n": 2048,
+    "k": 20480,
+    "golden": 4096,
+    "rtl": 1024
+   }
+  ],
+  "split_rule_divergent": [
+   "drafter_fc"
+  ]
+ },
+ "die_split": {
+  "tp2": {
+   "die0": "half of every layer (16 query heads, 4 KV heads, half the FFN), half the embedding and lm_head vocabulary, half the drafter",
+   "die1": "the other half",
+   "rom_mm2_per_die": 253.41,
+   "rom_read_headroom": 1.017,
+   "ar_tokens_s": 10391.6,
+   "dflash_tokens_s": 16553.3,
+   "handoff": "73 exchanges a token (section 4 figures)"
+  },
+  "layer_cut": {
+   "P": 20,
+   "die_a": "embedding + layers 0-19",
+   "die_b": "layers 20-35 + final norm + lm_head + drafter",
+   "why_drafter_on_b": "it shares the lm_head (die B) and its draft feeds die B's verify tail; its fc taps [1, 9, 17] come from die A with the verify's handoff",
+   "row": {
+    "P": 20,
+    "die_a_layers": "0-19",
+    "die_b_layers": "20-35",
+    "die_a_rom_mm2": 245.82,
+    "die_b_rom_mm2": 261.01,
+    "both_fit": true,
+    "die_a_rom_read_headroom": 1.037,
+    "die_b_rom_read_headroom": 0.997
+   },
+   "handoff_ar": {
+    "a_to_b_bytes": 16384,
+    "b_to_a_bytes": 4,
+    "cycles_per_token": 27,
+    "position": "between layer P-1 and P (A->B), and after the argmax (B->A): both serial on the token's chain"
+   },
+   "handoff_dflash_b5": {
+    "a_to_b_bytes": 204800,
+    "b_to_a_bytes": 24,
+    "cycles_per_step": 76,
+    "taps_on_die_a": [
+     1,
+     9,
+     17
+    ]
+   },
+   "ar_step_cycles": 184348,
+   "ar_tokens_s": 5959.6,
+   "ar_binding": "hbm_stream",
+   "dflash_step_cycles": 252077,
+   "dflash_tokens_s": 12461.0,
+   "vs_o4_ar": 0.574,
+   "vs_o4_dflash": 0.753,
+   "model": {
+    "ar_step_cycles": 184321,
+    "ar_binding": "hbm_stream",
+    "calibrated_chain_cycles": 160881,
+    "dflash_b5_step_cycles": 252001,
+    "dflash_b5_draft_cycles": 37251,
+    "dflash_b5_verify_cycles": 214740
+   },
+   "why_slower": "at batch 1 token t+1 needs token t, so one die works at a time: half the lanes and half the stacks serve every token; with each die's KV on its own 4 stacks the KV floor doubles (184,321 cycles) and binds"
+  },
+  "layer_cut_sweep": [
+   {
+    "P": 16,
+    "die_a_layers": "0-15",
+    "die_b_layers": "16-35",
+    "die_a_rom_mm2": 203.49,
+    "die_b_rom_mm2": 303.34,
+    "both_fit": false,
+    "die_a_rom_read_headroom": 0.83,
+    "die_b_rom_read_headroom": 1.204
+   },
+   {
+    "P": 17,
+    "die_a_layers": "0-16",
+    "die_b_layers": "17-35",
+    "die_a_rom_mm2": 214.07,
+    "die_b_rom_mm2": 292.76,
+    "both_fit": false,
+    "die_a_rom_read_headroom": 0.882,
+    "die_b_rom_read_headroom": 1.153
+   },
+   {
+    "P": 18,
+    "die_a_layers": "0-17",
+    "die_b_layers": "18-35",
+    "die_a_rom_mm2": 224.65,
+    "die_b_rom_mm2": 282.18,
+    "both_fit": false,
+    "die_a_rom_read_headroom": 0.933,
+    "die_b_rom_read_headroom": 1.101
+   },
+   {
+    "P": 19,
+    "die_a_layers": "0-18",
+    "die_b_layers": "19-35",
+    "die_a_rom_mm2": 235.24,
+    "die_b_rom_mm2": 271.59,
+    "both_fit": true,
+    "die_a_rom_read_headroom": 0.985,
+    "die_b_rom_read_headroom": 1.049
+   },
+   {
+    "P": 20,
+    "die_a_layers": "0-19",
+    "die_b_layers": "20-35",
+    "die_a_rom_mm2": 245.82,
+    "die_b_rom_mm2": 261.01,
+    "both_fit": true,
+    "die_a_rom_read_headroom": 1.037,
+    "die_b_rom_read_headroom": 0.997
+   },
+   {
+    "P": 21,
+    "die_a_layers": "0-20",
+    "die_b_layers": "21-35",
+    "die_a_rom_mm2": 256.41,
+    "die_b_rom_mm2": 250.42,
+    "both_fit": true,
+    "die_a_rom_read_headroom": 1.089,
+    "die_b_rom_read_headroom": 0.945
+   },
+   {
+    "P": 22,
+    "die_a_layers": "0-21",
+    "die_b_layers": "22-35",
+    "die_a_rom_mm2": 266.99,
+    "die_b_rom_mm2": 239.84,
+    "both_fit": true,
+    "die_a_rom_read_headroom": 1.141,
+    "die_b_rom_read_headroom": 0.893
+   },
+   {
+    "P": 23,
+    "die_a_layers": "0-22",
+    "die_b_layers": "23-35",
+    "die_a_rom_mm2": 277.57,
+    "die_b_rom_mm2": 229.26,
+    "both_fit": true,
+    "die_a_rom_read_headroom": 1.193,
+    "die_b_rom_read_headroom": 0.841
+   },
+   {
+    "P": 24,
+    "die_a_layers": "0-23",
+    "die_b_layers": "24-35",
+    "die_a_rom_mm2": 288.16,
+    "die_b_rom_mm2": 218.67,
+    "both_fit": false,
+    "die_a_rom_read_headroom": 1.245,
+    "die_b_rom_read_headroom": 0.79
+   }
+  ],
+  "recommendation": "TP-2 (every layer split) is the only split that reaches the O4 rates at batch 1; if a contiguous cut is kept, cut at P = 20"
+ },
+ "numerics": {
+  "source": "Qwen3-8B HF snapshot (layer 0, lm_head), norm-folded, TP-2 die shapes",
+  "quantiser": "tools/qwen3_deployment_quality._rtn_mse at 8 bits, one group per output row",
+  "harness_importable": true,
+  "groups": 6144,
+  "matrices": {
+   "qkv(q)": {
+    "rows": 192,
+    "k": 4096,
+    "split": 256,
+    "products_exact_fp32": true,
+    "codes_exact_in_bf16": true,
+    "scales_are_bf16": true,
+    "code_range": [
+     -128,
+     127
+    ],
+    "per_mac_golden_vs_contract_rows_differing": 145,
+    "per_mac_golden_vs_contract_max_ulp": 780,
+    "harness_equals_golden_per_mac": true,
+    "harness_vs_contract_rows_differing": 145,
+    "harness_vs_contract_max_ulp": 780,
+    "harness_vs_contract_max_rel": 4.963715241584021e-05
+   },
+   "o": {
+    "rows": 192,
+    "k": 2048,
+    "split": 2048,
+    "products_exact_fp32": true,
+    "codes_exact_in_bf16": true,
+    "scales_are_bf16": true,
+    "code_range": [
+     -128,
+     127
+    ],
+    "per_mac_golden_vs_contract_rows_differing": 143,
+    "per_mac_golden_vs_contract_max_ulp": 94,
+    "harness_equals_golden_per_mac": true,
+    "harness_vs_contract_rows_differing": 143,
+    "harness_vs_contract_max_ulp": 94,
+    "harness_vs_contract_max_rel": 1.0085384582536963e-05
+   },
+   "gate_up(gate)": {
+    "rows": 192,
+    "k": 4096,
+    "split": 64,
+    "products_exact_fp32": true,
+    "codes_exact_in_bf16": true,
+    "scales_are_bf16": true,
+    "code_range": [
+     -128,
+     127
+    ],
+    "per_mac_golden_vs_contract_rows_differing": 151,
+    "per_mac_golden_vs_contract_max_ulp": 64,
+    "harness_equals_golden_per_mac": true,
+    "harness_vs_contract_rows_differing": 151,
+    "harness_vs_contract_max_ulp": 64,
+    "harness_vs_contract_max_rel": 7.51614091260983e-06
+   },
+   "down": {
+    "rows": 192,
+    "k": 6144,
+    "split": 2048,
+    "products_exact_fp32": true,
+    "codes_exact_in_bf16": true,
+    "scales_are_bf16": true,
+    "code_range": [
+     -128,
+     127
+    ],
+    "per_mac_golden_vs_contract_rows_differing": 149,
+    "per_mac_golden_vs_contract_max_ulp": 110,
+    "harness_equals_golden_per_mac": true,
+    "harness_vs_contract_rows_differing": 149,
+    "harness_vs_contract_max_ulp": 110,
+    "harness_vs_contract_max_rel": 1.0963620514409088e-05
+   },
+   "lm_head": {
+    "rows": 192,
+    "k": 4096,
+    "split": 1024,
+    "products_exact_fp32": true,
+    "codes_exact_in_bf16": true,
+    "scales_are_bf16": true,
+    "code_range": [
+     -128,
+     127
+    ],
+    "per_mac_golden_vs_contract_rows_differing": 132,
+    "per_mac_golden_vs_contract_max_ulp": 188,
+    "harness_equals_golden_per_mac": true,
+    "harness_vs_contract_rows_differing": 132,
+    "harness_vs_contract_max_ulp": 188,
+    "harness_vs_contract_max_rel": 1.1397053207021652e-05
+   }
+  },
+  "pieces_exact": true,
+  "embedding_dequant_exact": true,
+  "tp_fold_scale_order": {
+   "rows": 192,
+   "rows_differing": 83,
+   "max_ulp": 20
+  },
+  "harness_order_rows_differing": 720,
+  "rows_checked": 960,
+  "bit_exact_with_harness_order": false,
+  "verdict": "NOT bit-exact: the harness's quantised kernel scales every product (w = code x scale) and accumulates the scaled products, the contract accumulates the unscaled INT8 x BF16 products and scales the FP32 sum once; the rounding of every accumulation step differs"
+ },
+ "numeric_contract": [
+  "C0 quantiser: offline, a model-side choice pinned in the manifest (the RTL consumes codes and scales as data); codes are clamped to [-128, 127] at quantisation, so the datapath has no saturation; the reduced vehicle uses the harness's RTN-MSE rule (_rtn_mse at 8 bits: s = bf16(amax x r / 127), r in linspace(0.5, 1, 21) by row MSE, q = clamp(round-half-even(w / s)))",
+  "C1 weights: signed INT8 codes q in [-128, 127], symmetric (no zero point), of the norm-folded BF16 matrix W' = bf16(W diag(w)) for q/k/v and gate/up, W itself for o, down, lm_head; one BF16 scale s_n per output row n (per vocabulary row for the embedding and the lm_head)",
+  "C2 products: bf16(x_k) x q_nk formed exactly in FP32 (<= 15 significant bits), the golden's K-split order: S contiguous chunks each summed sequentially from +0 in FP32 RNE, chunk sums a pairwise tree",
+  "C3 scale: y_n = fl32(T_n x s_n), one binary32 RNE multiply of the FP32 sum by the BF16 scale (gradual underflow, canonical +0, the qualified ot_fp32_mul_rne_pipe arithmetic); y_n stays FP32 -- it is NOT rounded to BF16; BF16 rounding happens only where the golden already rounds (the next matvec's input, q and the probabilities before attention) and FP8 at the KV write",
+  "C4 norm fold: q, k, v, gate, up = fl32(y_n x r) with r = rstd(x), i.e. scale first, then 1/rms",
+  "C5 embedding: x_h = q_th x s_t, exact in FP32 (no rounding)",
+  "C6 lm_head: logits_n = fl32(T_n x s_n); the argmax compares scaled logits, ties to the lower index",
+  "C7 TP-2 row-split (o, down): each die scales its partial (C3) and the partials are folded in rank order, fl32(y0 + y1) -- or fold first and scale once; the two differ (numerics.tp_fold_scale_order) and the golden must pin one"
+ ],
+ "gaps": [
+  {
+   "id": "G1",
+   "block": "ROM weight word and image",
+   "current": "wrom_q is G x W x 16 bits: one BF16 a lane (ot_hdc_core.sv, ot_hdc_matvec.sv); hdc_program.place_matrix writes BF16 top halves; 16 bits a lane also in hbm_weight_image, pack_lanes(w,16) and hdc_timing.price_hbm",
+   "required": "one signed INT8 code a lane a cycle: 128 bits a group a cycle, 98,304 B a cycle a die; image writer packs INT8 codes of the norm-folded matrices",
+   "size": "M",
+   "owner": "Codex"
+  },
+  {
+   "id": "G2",
+   "block": "Weight decode to the MAC operand",
+   "current": "{wrom[16l+:16], 16'h0}: BF16 widened to binary32 (ot_hdc_matvec.sv)",
+   "required": "INT8 code to an exact BF16/FP32 operand (every code -128..127 is exact in BF16), no rounding",
+   "size": "S",
+   "owner": "Codex"
+  },
+  {
+   "id": "G3",
+   "block": "MAC lane and accumulation",
+   "current": "ot_hdc_bmul exact BF16 x BF16 -> FP32, ot_hdc_fadd RNE circulating, K-split chunks + pairwise ot_hdc_qadd tree",
+   "required": "unchanged: INT8 x BF16 products are exact in FP32 (<= 15 significant bits), accumulation order is the golden's; a narrower INT8 x BF16 multiplier is a power lever, not a requirement",
+   "size": "none",
+   "owner": "Codex"
+  },
+  {
+   "id": "G4",
+   "block": "Per-output-channel scale multiply",
+   "current": "none: the matvec result (lvl[LG] -> o_data) is the FP32 sum",
+   "required": "one FP32 x BF16 RNE multiply per output row after the split tree and before argmax / writeback / the TP exchange; >= 47 outputs a cycle a die sustained (233 at m = 5), bursts up to (G/S) x W = 1,536; scale table 1.90 MB a die incl. lm_head, embedding and drafter",
+   "size": "M",
+   "owner": "Codex"
+  },
+  {
+   "id": "G5",
+   "block": "Lane copies (m = 5) and verify slots",
+   "current": "ot_hdc_lane_copy.sv is an area probe, instantiated nowhere; one x operand a group; no Qwen verify slots",
+   "required": "4 MAC-only copies a lane (393,216 copy lanes a die) sharing the group's weight word; 5 x operands a group a cycle; 5 accumulators and results a lane; the KV word shared by 5 slots' scores and P.V with the block's causal mask",
+   "size": "L",
+   "owner": "Codex"
+  },
+  {
+   "id": "G6",
+   "block": "Matrix engine size and split rule at 6,144 groups",
+   "current": "reduced vehicle G = 4 (8 in one campaign); spec 8,192 (a power of two); golden split_for packs ceil(tiles x S / G), the RTL floor(G / S) tiles a round",
+   "required": "6,144 groups a die (not a power of two): the golden and the RTL must choose the same K-split (they differ for the drafter fc slice: golden S = 4096, RTL rule S = 1024)",
+   "size": "S",
+   "owner": "Codex"
+  },
+  {
+   "id": "G7",
+   "block": "Stream unit",
+   "current": "ot_hdc_vstream SW lanes (reduced gates SW = 16), R-ARITH reductions, embedding row read as BF16",
+   "required": "SW = 1,024 a die; norms and residuals replicated on both dies; 5 slots' elementwise work in the verify (48,960 cycles a step at SW = 1,024); embedding row as INT8 + scale (exact product)",
+   "size": "M",
+   "owner": "Codex"
+  },
+  {
+   "id": "G8",
+   "block": "KV path per die",
+   "current": "ot_hdc_qwen_kv_system: one 32-B HBM request port, one outstanding request (phys arbiter); HBM model of 2-4 pseudo-channels of one stack; FP8 E4M3 KV",
+   "required": "4 HBM3E stacks a die at 3.6 TB/s sustained (3,277 B a cycle), its 4 KV heads; a ring of one layer of the die's KV (8.4 MB at 8K) + refresh cover (9.65 MB); 5 new rows a head a layer in the verify",
+   "size": "L",
+   "owner": "Codex"
+  },
+  {
+   "id": "G9",
+   "block": "UCIe TP-2 collectives",
+   "current": "rtl/rom ot_rom_oneshot_allreduce (N-parametric, rank-order FP32 fold, credits), ot_rom_tp_seq, ot_rom_ucie_link; run only at D = 4 with the scalar ot_hdc_core (SU_VEC = 0)",
+   "required": "TP-2 with the vector core: 2 all-reduces a layer of H FP32 partials (16 KiB a direction; 80 KiB at B = 5), argmax gather, embedding-row handoff; <= ~19 cycles exposed an exchange (1,251 cycles a token in the O4 rate); no credit round trip on the chain",
+   "size": "M",
+   "owner": "Codex"
+  },
+  {
+   "id": "G10",
+   "block": "Embedding and lm_head",
+   "current": "embedding BF16 in wrom read by the stream unit; lm_head BF16 rows, matvec argmax over the unscaled result; argmax gather in ot_rom_tp_seq",
+   "required": "INT8 rows + BF16 row scales; vocabulary split 75,968 rows a die; scale before the argmax compare; per-slot argmax for 5 verify slots and the drafter's 4 draft slots",
+   "size": "M",
+   "owner": "Codex"
+  },
+  {
+   "id": "G11",
+   "block": "DFlash drafter and accept",
+   "current": "no Qwen drafter, verify or accept RTL (ot_hdc_accept.sv is instantiated only by the V4.1 cores)",
+   "required": "drafter (fc 4096 x 20480 + 5 layers, INT8, TP-2) on the same engine and copies within 26,677 cycles a step; target hidden-state taps of 5 layers; accept/commit within 10 cycles",
+   "size": "L",
+   "owner": "Codex"
+  },
+  {
+   "id": "G12",
+   "block": "ISA and program generator",
+   "current": "ME fields carry no weight format or scale base; place_matrix BF16; --tp emits per-die images but NORM_FOLD is off for tp > 1; no slot count or drafter program",
+   "required": "8-bit images and a scale table; TP-2 program with norm fold; verify-slot and drafter programs from the same source",
+   "size": "M",
+   "owner": "Codex"
+  },
+  {
+   "id": "G13",
+   "block": "Golden model (hdc_golden.py)",
+   "current": "BF16 weights only, no quantiser; decode_token_tp unfolded norms and BF16 KV",
+   "required": "INT8 codes + per-row BF16 scales with the post-accumulation contract; TP-2 with NORM_FOLD and FP8 KV; the scale's order around the fold pinned; B = 5 verify and drafter golden",
+   "size": "M",
+   "owner": "Claude"
+  },
+  {
+   "id": "G14",
+   "block": "Quality harness 8-bit mode",
+   "current": "w8 mode (g_contract_w8, e_full_w8): codes x BF16 summed in the golden K-split order, one scale multiply after the sum; 0 of the 960 section 3.2 outputs differ from the contract (the group formats still scale every product); the 8-bit quality verdict is not yet run",
+   "required": "a per-channel INT8 mode that scales after the chunk-tree sum, bit-exact with G13; the 8-bit quality verdict (<= 2% perplexity, <= 1 MMLU point) and DFlash acceptance at 8 bits",
+   "size": "S",
+   "owner": "Claude"
+  },
+  {
+   "id": "G15",
+   "block": "Timing and performance models",
+   "current": "O4 priced per die (qwen3_8bit_design): calibrated replay of one die's TP-2 slice at 6,144 groups, 73 FP32-partial exchanges (1,407 cycles) + embedding handoff, 5-cycle scale stage, golden K-splits; the verify at m = 5 on the spec chain (a calibrated-core estimate beside it)",
+   "required": "per-die TP-2 replay at 6,144 groups with the scale stage and FP32 partials; verify at m = 5 on the calibrated core",
+   "size": "M",
+   "owner": "Claude"
+  },
+  {
+   "id": "G16",
+   "block": "Reduced vehicle",
+   "current": "every RTL gate uses the BF16 random reduced checkpoint (hidden 128, 4 layers)",
+   "required": "an INT8-quantised reduced vehicle (codes + non-trivial row scales) the golden and the gates share",
+   "size": "S",
+   "owner": "Claude"
+  },
+  {
+   "id": "G17",
+   "block": "Reduced two-die gates",
+   "current": "package TP bench at D = 4 with scalar cores; no two-die vector-core gate; no DFlash gate",
+   "required": "two gates on one program: autoregressive (m = 1) and DFlash verify (m = 5, B = 5), TP-2, bit-exact tokens and KV against the golden",
+   "size": "M",
+   "owner": "Codex"
+  }
+ ],
+ "size_legend": {
+  "none": "no RTL change",
+  "S": "a parameter or a local edit (<~100 lines)",
+  "M": "a new or reworked block within one module family",
+  "L": "a new subsystem or a cross-module datapath change"
+ }
+}

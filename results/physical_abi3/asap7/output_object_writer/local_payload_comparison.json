@@ -1,0 +1,89 @@
+{
+  "scope": "Matched prelayout only; both fail 1ns. No routed clock or power claim.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/output_object_writer/prelayout_1ns.json",
+      "sha256": "c927f1db82cf4cf81a1831bf818c6205f3e29cfdc4e74396797df31ba206e43d",
+      "synthesis": {
+        "abc_delay_target_ps": 1000.0,
+        "cell_area_um2": 1379.588,
+        "cell_count": 11187,
+        "cell_types_used": 38,
+        "chip_area_um2": 1379.58876,
+        "combinational_cell_count": 10003,
+        "dont_use_cell_count": 81,
+        "liberty_cell_count": 202,
+        "macro_count": 0,
+        "netlist_normalization": {
+          "normalized_netlist_sha256": "f178c9e01ee35ff2fb07d22fae0ff716eddd848608f1ce7c1869ebda96541fd3",
+          "raw_netlist_sha256": "f178c9e01ee35ff2fb07d22fae0ff716eddd848608f1ce7c1869ebda96541fd3",
+          "signed_declarations_stripped": 0
+        },
+        "sequential_area_um2": 345.779,
+        "sequential_cell_count": 1184,
+        "unmapped_cell_types": []
+      },
+      "static_timing": {
+        "clock_period_ns": 1.0,
+        "critical_path_ns": 11.119062073176709,
+        "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+        "fmax_hz": 89935643.26008846,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.049403387828225946,
+        "library_time_unit_ns": 0.001,
+        "raw_library_units": {
+          "hold_wns": 49.403387828225945,
+          "setup_tns": -7737588.051890784,
+          "setup_wns": -10119.062073176709
+        },
+        "sdc_clock_period_library_units": 1000.0,
+        "setup_tns_ns": -7737.588051890784,
+        "setup_violating_paths": 1108,
+        "setup_wns_ns": -10.119062073176709,
+        "timing_met": false
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/output_object_writer/prelayout_local_payload_1ns.json",
+      "sha256": "6e7ef10bcb3e72387ef9c46f026e79dca2a92f9481dccb97fec5649f63862298",
+      "synthesis": {
+        "abc_delay_target_ps": 1000.0,
+        "cell_area_um2": 1231.19,
+        "cell_count": 9842,
+        "cell_types_used": 38,
+        "chip_area_um2": 1231.19352,
+        "combinational_cell_count": 8790,
+        "dont_use_cell_count": 81,
+        "liberty_cell_count": 202,
+        "macro_count": 0,
+        "netlist_normalization": {
+          "normalized_netlist_sha256": "1c408105e2fd24778727aca3f263c3a8aa6a0cb4cca3bc784f2a05a7b3c339d5",
+          "raw_netlist_sha256": "1c408105e2fd24778727aca3f263c3a8aa6a0cb4cca3bc784f2a05a7b3c339d5",
+          "signed_declarations_stripped": 0
+        },
+        "sequential_area_um2": 307.288,
+        "sequential_cell_count": 1052,
+        "unmapped_cell_types": []
+      },
+      "static_timing": {
+        "clock_period_ns": 1.0,
+        "critical_path_ns": 7.7882446601958595,
+        "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+        "fmax_hz": 128398637.12946737,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.05260024381538553,
+        "library_time_unit_ns": 0.001,
+        "raw_library_units": {
+          "hold_wns": 52.600243815385525,
+          "setup_tns": -5007228.557586965,
+          "setup_wns": -6788.244660195859
+        },
+        "sdc_clock_period_library_units": 1000.0,
+        "setup_tns_ns": -5007.2285575869655,
+        "setup_violating_paths": 1052,
+        "setup_wns_ns": -6.7882446601958595,
+        "timing_met": false
+      }
+    }
+  ]
+}

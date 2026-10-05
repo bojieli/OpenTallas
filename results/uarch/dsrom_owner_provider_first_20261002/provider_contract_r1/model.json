@@ -1,0 +1,88 @@
+{
+  "candidate": "DS4096-TP4-S58-PAIR1",
+  "compiler_sha256": "364fadb33ae7d0015c015f8564a99044adbf782f213a5f5bb284424ccd587a6c",
+  "exact_source_provider_ABI_required": "HE packing reference HCP8 is not automatically native HROM768; CROM256 storage is not the consumer64-bit port. Both require bound adaptation and causal delivery.",
+  "hardware_admission": false,
+  "immutable_provider_tensor_boundary_read_count": 4256,
+  "input_sha256": {
+    "results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/tensor_headers.jsonl.gz": "f50af13ea93a402a6ab74c6f1302521aad99f922d8dc10fd1410978d2d62f960",
+    "results/uarch/dsrom_owner_provider_first_20261002/r1/immutable_provider_preallocation.jsonl.gz": "3897e59a03e34ffa4a69fc87f4fa5d70c77b869c311730f041731bcef1364bd6",
+    "results/uarch/dsrom_owner_provider_first_20261002/readback_r1/model.json": "6e84455f28b6a1ac30ff31a31793c331c57217e81a29187d0d08bf3dbd71f497"
+  },
+  "matrix_provider_home_routes_need_calendar": true,
+  "new_partition_or_count_selected": false,
+  "payload_bytes_read": 0,
+  "schema": "opentallas.owner.provider-contract.v1",
+  "source_pins": [
+    {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_field_w17w10.sv",
+      "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811"
+    },
+    {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "tools/v41_die_images_w17w10.py",
+      "sha256": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780"
+    },
+    {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "tools/v41_fullshape_weight_layout.py",
+      "sha256": "86e2f1fa103d1cf89ffeaaac755b81bce1d673afed9bf56651a287a0cc359dab"
+    }
+  ],
+  "storage_capacity_verdict": "PASS_SYMBOLIC_STORAGE_PLACEMENT",
+  "tensor_provider_boundary_gate": "PASS_SOURCE_SLICE_AND_PHYSICAL_ADDRESS",
+  "uniform_control": {
+    "actual_SS_FF_or_clock_calibration": false,
+    "cfg_boundary_bits": 14,
+    "cfg_broadcast_sites_per_stage": 4096,
+    "cfg_load_cycles_per_phase_from_source_CW_plus2": 27,
+    "cfg_loader_parallel_local_read_bits_per_cycle_per_stage": 196608,
+    "cfg_loader_word_width": 48,
+    "clock_target_serial_chain_GHz": 0.9,
+    "clock_target_stream_GHz": 1.2,
+    "compiled_NP": 4096,
+    "conditional_fixed4096_macro_screen_per_stage": {
+      "area_not_free_or_double_debited": true,
+      "included_in_original_pair_frame_not_proven": true,
+      "leaves_per_compiled_pair": 2,
+      "macro_body_area_all_compiled_pairs_mm2": 64.5641404416,
+      "packed_cfg_words_per_macro_word": 4,
+      "packing_mux_and_ports_not_implemented": true,
+      "physical_word_bits": 274,
+      "protected_cfg_word_bits": 55,
+      "separate_from_4_weight_macros": true
+    },
+    "config_macro_decoder_lookup_and_delivery_area_debit_mandatory": true,
+    "hold_uncertainty_ps": 25,
+    "loader_address_width": 15,
+    "loader_address_width_source_PHW6": 11,
+    "lookup_entry_bits": 32,
+    "lookup_parallel_entry_count_per_stage": 1024,
+    "no_free_config_bits_no_native_area_discount": true,
+    "original_pair_frame_inclusion_or_additional_area_not_bound": true,
+    "per_stage_minimal_width_profile_bits_per_TP_rank": 269313638400,
+    "per_stage_minimal_width_profiles_not_adopted": true,
+    "physical_fit_qualified": false,
+    "setup_uncertainty_ps": 60,
+    "source_PHW6_cfg_data_bits_per_TP_rank": 18245222400,
+    "stages": 58,
+    "uniform_cfg_data_plus_SECDED_bits_per_TP_rank": 334495744000,
+    "uniform_field_profile_selected_or_implemented": false,
+    "uniform_phase_key_table_bits_per_TP_rank": 1900544,
+    "uniform_required_PHW": 10,
+    "uniform_source_cfg_data_bits_all4_ranks": 1167694233600,
+    "uniform_source_cfg_data_bits_per_TP_rank": 291923558400
+  },
+  "whole_token_cycles": null
+}

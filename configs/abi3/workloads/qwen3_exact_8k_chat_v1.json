@@ -1,0 +1,58 @@
+{
+  "assembly": {
+    "algorithm": "maximum_corpus_character_prefix_exact_rendered_tokens_v1",
+    "content_order": [
+      "corpus_prefix",
+      "separator",
+      "canonical_query"
+    ],
+    "message_role": "user",
+    "separator": "\n\n"
+  },
+  "canonical_semantics": {
+    "enable_thinking": false,
+    "expected_visible_answer": "391",
+    "path": "testdata/compiler/tensor_accelerator_qwen_natural/workload.json",
+    "query_case_id": "arithmetic",
+    "query_messages_sha256": "a5a7c059ba9fa72c4fb6423272f6bcab6494d57df7ac0441a6a2e3a887c08e77",
+    "query_prompt_token_sha256": "a25f049ae770c0857774b904717a7554420c12bc1ad5edc860e7652810d8460a",
+    "source_sha256": "e1e7ed12fb2aa83a7c41ba3cd1d2ddd8920e763bde2e5bfb365a6ac2c3962179",
+    "workload_id": "6e416e625cc278a50c392aa7500163ac5c8b1670756f3519a658c70529c2e998"
+  },
+  "chat_template": {
+    "add_generation_prompt": true,
+    "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "template_id": "qwen3_official_chat_template"
+  },
+  "construction_id": "f4d61b13f8d935c853c8eddedd113b0a6b9f8c8754c664817ad5bef759e3dd8c",
+  "corpus": {
+    "path": "data/corpus/pg2701_moby_dick.txt",
+    "sha256": "9a6844ac0703853720010787c7b6c70b0020f1ab1862dcd74452fa46474d1215",
+    "source": {
+      "author": "Herman Melville",
+      "licence": "public domain in the United States",
+      "source": "Project Gutenberg eBook 2701",
+      "title": "Moby Dick; Or, The Whale",
+      "url": "https://www.gutenberg.org/cache/epub/2701/pg2701.txt"
+    }
+  },
+  "generation": {
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "include_eos_in_output": true,
+    "max_new_tokens": 256,
+    "selection": "greedy_lowest_token_id_argmax",
+    "stop_rule": "first_official_eos_or_exact_cap",
+    "vocabulary_size": 151669
+  },
+  "schema": "opentallas.qwen3.exact_8k_chat_construction.v1",
+  "version": "1.0.0",
+  "workload": {
+    "kind": "long_natural_chat",
+    "max_new_tokens": 256,
+    "prompt_token_count": 8000,
+    "workload_id": "TA-QW-8K-1"
+  }
+}

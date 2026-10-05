@@ -1,0 +1,67 @@
+{
+  "utc": "2026-10-01T09:47:58.305903+00:00",
+  "source_commit": "915b07c48afa40587b1475ef7f708429618bbc73",
+  "supervisor": {
+    "pid": 615596,
+    "start_ticks": "305293450",
+    "state": "S"
+  },
+  "config_sha256": "29d8cb7b980ee71950effde47b49b48153d0daa70f2627caa90a64b4d6991ea3",
+  "source_hash_receipts": {
+    "w13_chain_successor.py": "e1f81454f457f4aed1a2899786bcd2497ee96364e78eab582a50e3ff4c53e338",
+    "w13_column_corner_gate.py": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda",
+    "w13_floorplan_receipt.py": "d472794efb42cc7219455f248892374daa21a2df712b73edcdcc232294c9669e"
+  },
+  "events": [
+    {
+      "config_sha256": "29d8cb7b980ee71950effde47b49b48153d0daa70f2627caa90a64b4d6991ea3",
+      "event": "successor_start",
+      "handle": {
+        "pid": 615596,
+        "start_ticks": "305293450",
+        "state": "R"
+      },
+      "utc": "2026-10-01T09:47:58.251422+00:00"
+    },
+    {
+      "branch": "q",
+      "event": "waiting",
+      "handles": [
+        {
+          "pid": 2089594,
+          "start_ticks": "302549468",
+          "state": "S"
+        }
+      ],
+      "utc": "2026-10-01T09:47:58.288346+00:00"
+    },
+    {
+      "branch": "v",
+      "event": "waiting",
+      "handles": [
+        {
+          "pid": 1901598,
+          "start_ticks": "302086726",
+          "state": "S"
+        }
+      ],
+      "utc": "2026-10-01T09:47:58.290313+00:00"
+    }
+  ],
+  "columns_preserved": [
+    {
+      "pid": 2089594,
+      "start_ticks": "302549468",
+      "state": "S"
+    },
+    {
+      "pid": 1901598,
+      "start_ticks": "302086726",
+      "state": "S"
+    }
+  ],
+  "resource_guard": "Before any synth: unconditional fresh load1<affinityCPU AND availableRAM>=max60GiB modeled peak/leasefloor; failed guard stops && chain, records receipt, no hardware launched",
+  "current_state": "Both original column waits live; no SM lease or dispatch yet",
+  "old508_retired": true,
+  "oldbundle_unchanged": true
+}

@@ -1,0 +1,313 @@
+{
+  "schema": "opentallas.recovery.phase_output.v1",
+  "status": "PREPARATION_ONLY_NO_COMPILE",
+  "failure_commit": "85283cbde61bbc2387ae57cc3eeed0eaffc5e58f",
+  "failure_run": "/tmp/window-recovery-connected-single-run-20261002-r1",
+  "measured": {
+    "baseline": {
+      "total_bytes": 155578377,
+      "obj_bytes": 155294861,
+      "pch_bytes": 146489170,
+      "files_excluding_binary_objects_and_pch": {
+        "case0.log": {
+          "bytes": 383,
+          "sha256": "d58637d2cefd14ce3ac98c8c71a45b04f2769b2727948fc92e89e027d5ab5f27"
+        },
+        "case1.log": {
+          "bytes": 383,
+          "sha256": "138cb53d5819275b484ccc125f7e1275928bffed7e277af763bb7beef39608b1"
+        },
+        "compile.log": {
+          "bytes": 55299,
+          "sha256": "a84267d4163e5049a5b4f3e7355561a8316e5e8b8702c647893c75bc9054d3f2"
+        },
+        "case2.log": {
+          "bytes": 384,
+          "sha256": "6124210ac3a8095756d3571688371f469d8d03c7e1bba4e4e9ac752f032f811b"
+        },
+        "binary_receipt.json": {
+          "bytes": 102,
+          "sha256": "6caee93c607b8461303c7209a9935bcba358bbf0958228ac859be3d8f8fc9848"
+        },
+        "snapshot_sha256.json": {
+          "bytes": 897,
+          "sha256": "14c1a809d3ab26e1c334e8b54fe48983156132c43823e278cb37fe4dd7641521"
+        },
+        "obj/Vtb.cpp": {
+          "bytes": 2936,
+          "sha256": "87ae8efbd74607889a27cb1bd50b171c6b992670fb746d2ffa35d4aff79fde08"
+        },
+        "obj/Vtb__Syms__Slow.cpp": {
+          "bytes": 847,
+          "sha256": "6ff94def36676b716c754d94a213db70d4b89f7c94690ff93c8773a7f5b52bdf"
+        },
+        "obj/Vtb.h": {
+          "bytes": 3387,
+          "sha256": "46fd0d820ea888bc90c3c6408ee7cd89dbb59a9bcf9cd321795c3edb7ff9bdb8"
+        },
+        "obj/Vtb__Syms.h": {
+          "bytes": 911,
+          "sha256": "79a932681bb329dda09b15cf0eaf4e39b50e938519b84eca69005b614fc891fc"
+        },
+        "obj/Vtb_classes.mk": {
+          "bytes": 1779,
+          "sha256": "81060a6f4df1ee346503740ddc04770572353b352632087dd44759f0680e4d0c"
+        },
+        "obj/Vtb___024root__0.cpp": {
+          "bytes": 495254,
+          "sha256": "b80346ff75b9946966dfc3db5e2d387dd62fb918f72d13725d82ad45d4ddfa36"
+        },
+        "obj/Vtb__ConstPool__0__Slow.cpp": {
+          "bytes": 828,
+          "sha256": "80f5eab4983f9633d49e0d07f825d1a1ced5a349edaa1b5a94e1a1ebaaccd702"
+        },
+        "obj/Vtb___024root__Slow.cpp": {
+          "bytes": 663,
+          "sha256": "20a75d607f8697cd41785a2afff718f8ce7730159e33a83a8bb607ef8c54ba36"
+        },
+        "obj/Vtb__main.cpp": {
+          "bytes": 1101,
+          "sha256": "012330e660c5d37b46b5fe124a67962d26e1a1fe2285e00e1c7b9dc4d880b301"
+        },
+        "obj/Vtb__verFiles.dat": {
+          "bytes": 6588,
+          "sha256": "7387d95bea2ebbbd261e48cf1dabd304b7eabd0472ccc205f4c5210d9e545b23"
+        },
+        "obj/Vtb___024root.h": {
+          "bytes": 21602,
+          "sha256": "0523a877c2b34eba8f33dab56572798e5590819bcce0b27ea996a6aa3da5c14e"
+        },
+        "obj/Vtb___024root__2.cpp": {
+          "bytes": 494586,
+          "sha256": "5e5d0bcc396a6be155aad86db2ceb43d4a19a994c1387fb0898914a738c8c126"
+        },
+        "obj/Vtb___024root__1.cpp": {
+          "bytes": 5064831,
+          "sha256": "0cc2d727b0c47b7c5388939e95007879593966a2cd427e591ffde2f84104476c"
+        },
+        "obj/Vtb___024root__0__Slow.cpp": {
+          "bytes": 448063,
+          "sha256": "dab3d820ee1fadcdebcaef49997b8d41bf83063013a4d0766d8d87b147dcff98"
+        },
+        "obj/Vtb__pch.h": {
+          "bytes": 740,
+          "sha256": "0b2bfeba3b968f14b74b2e61496b7f5cf0de91f515fce0e19e2a94266bd0db48"
+        },
+        "obj/Vtb___024root__3.cpp": {
+          "bytes": 6059,
+          "sha256": "10716c163e05345289aa6f1bd9037cccf71099c86a1eff38cb9b195be0039add"
+        },
+        "obj/Vtb.mk": {
+          "bytes": 1915,
+          "sha256": "5f4d1383607fe86c327633cb35931ce80c1012b0625850ca7bf568dfda0a2302"
+        },
+        "sources/kv_reqmux_recovery.sv": {
+          "bytes": 13272,
+          "sha256": "d9a56fdb501df889d7a1a47c2d1debd9fcb2ee08250433c336733da0b4dcfe35"
+        },
+        "sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv": {
+          "bytes": 3883,
+          "sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a"
+        },
+        "sources/idx_hbm_recovery.sv": {
+          "bytes": 72624,
+          "sha256": "0ca7752f23094788eb7ef6e161ce18662dc4e324c290413a4908ba38cfc8ec3c"
+        },
+        "sources/hbm_karb_recovery.sv": {
+          "bytes": 27807,
+          "sha256": "3130283007da9df5002debdf5c4434d8daa8b6d87b0fee30c0253382d1bdb8f8"
+        },
+        "sources/pinned_ot_chip_v41x_window_row_codec.sv": {
+          "bytes": 4184,
+          "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+        },
+        "sources/kv_rope_reqmux_recovery.sv": {
+          "bytes": 21628,
+          "sha256": "ade91a5418b9feca302dedb8b066516293892857f5c3fed2ea5ae16a179f65cd"
+        },
+        "sources/tb.sv": {
+          "bytes": 20830,
+          "sha256": "80a1cf6e50ff2c0023472b067f1a5190c6a21d9384e597564a8f6fcc4ebd7950"
+        },
+        "sources/pinned_ot_chip_v41x_window_stage4.sv": {
+          "bytes": 5239,
+          "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d"
+        },
+        "sources/window_prefetch_recovery.sv": {
+          "bytes": 56601,
+          "sha256": "cb4d37b0a722b4cc4226779eaa5cdf9dd83d4bf104f74947ae3ad0b240538ea9"
+        }
+      },
+      "compile_complete": true
+    },
+    "discard_retirement_omitted": {
+      "total_bytes": 120359435,
+      "obj_bytes": 120081458,
+      "pch_bytes": 113155952,
+      "files_excluding_binary_objects_and_pch": {
+        "compile.log": {
+          "bytes": 51004,
+          "sha256": "cf30b5a5620722bfec7ad701c0739c5b87ab8833e1df0fbb40900f593351aaca"
+        },
+        "snapshot_sha256.json": {
+          "bytes": 897,
+          "sha256": "6acf284aa6eb61bac199be9a1799c9fe2ff55ed32080dd36c8d0456784ea94fb"
+        },
+        "obj/Vtb.cpp": {
+          "bytes": 2936,
+          "sha256": "87ae8efbd74607889a27cb1bd50b171c6b992670fb746d2ffa35d4aff79fde08"
+        },
+        "obj/Vtb__Syms__Slow.cpp": {
+          "bytes": 847,
+          "sha256": "6ff94def36676b716c754d94a213db70d4b89f7c94690ff93c8773a7f5b52bdf"
+        },
+        "obj/Vtb.h": {
+          "bytes": 3387,
+          "sha256": "46fd0d820ea888bc90c3c6408ee7cd89dbb59a9bcf9cd321795c3edb7ff9bdb8"
+        },
+        "obj/Vtb__Syms.h": {
+          "bytes": 911,
+          "sha256": "79a932681bb329dda09b15cf0eaf4e39b50e938519b84eca69005b614fc891fc"
+        },
+        "obj/Vtb_classes.mk": {
+          "bytes": 1779,
+          "sha256": "81060a6f4df1ee346503740ddc04770572353b352632087dd44759f0680e4d0c"
+        },
+        "obj/Vtb___024root__0.cpp": {
+          "bytes": 496316,
+          "sha256": "64152483e547e2c9391fb7be8ffcb02765eba4e23eccc2175a4d75b3e38c015a"
+        },
+        "obj/Vtb__ConstPool__0__Slow.cpp": {
+          "bytes": 828,
+          "sha256": "80f5eab4983f9633d49e0d07f825d1a1ced5a349edaa1b5a94e1a1ebaaccd702"
+        },
+        "obj/Vtb___024root__Slow.cpp": {
+          "bytes": 663,
+          "sha256": "20a75d607f8697cd41785a2afff718f8ce7730159e33a83a8bb607ef8c54ba36"
+        },
+        "obj/Vtb__main.cpp": {
+          "bytes": 1101,
+          "sha256": "012330e660c5d37b46b5fe124a67962d26e1a1fe2285e00e1c7b9dc4d880b301"
+        },
+        "obj/Vtb__verFiles.dat": {
+          "bytes": 7254,
+          "sha256": "0d93eb1848ce7f0ae9d0fb0c08b7fabd232e6640706ec2bd2345d88fa17656a6"
+        },
+        "obj/Vtb___024root.h": {
+          "bytes": 21602,
+          "sha256": "0523a877c2b34eba8f33dab56572798e5590819bcce0b27ea996a6aa3da5c14e"
+        },
+        "obj/Vtb___024root__2.cpp": {
+          "bytes": 494188,
+          "sha256": "ae9bc3ace6a7520c268dad4a353fcab50185a8dfd13421f09936016b310a4107"
+        },
+        "obj/Vtb___024root__1.cpp": {
+          "bytes": 5069601,
+          "sha256": "294c8d62c1dabebc5b6c336b16478cf731f0a0d4ad2f1afdc1fd4855fcff9e72"
+        },
+        "obj/Vtb___024root__0__Slow.cpp": {
+          "bytes": 448081,
+          "sha256": "99ecb61f301e949edafeab11b93bfce217415a71259ac8b141f90c49a3824218"
+        },
+        "obj/Vtb__pch.h": {
+          "bytes": 740,
+          "sha256": "0b2bfeba3b968f14b74b2e61496b7f5cf0de91f515fce0e19e2a94266bd0db48"
+        },
+        "obj/Vtb___024root__3.cpp": {
+          "bytes": 6059,
+          "sha256": "10716c163e05345289aa6f1bd9037cccf71099c86a1eff38cb9b195be0039add"
+        },
+        "obj/Vtb.mk": {
+          "bytes": 1915,
+          "sha256": "5f4d1383607fe86c327633cb35931ce80c1012b0625850ca7bf568dfda0a2302"
+        },
+        "sources/kv_reqmux_recovery.sv": {
+          "bytes": 13272,
+          "sha256": "d9a56fdb501df889d7a1a47c2d1debd9fcb2ee08250433c336733da0b4dcfe35"
+        },
+        "sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv": {
+          "bytes": 3883,
+          "sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a"
+        },
+        "sources/idx_hbm_recovery.sv": {
+          "bytes": 72624,
+          "sha256": "0ca7752f23094788eb7ef6e161ce18662dc4e324c290413a4908ba38cfc8ec3c"
+        },
+        "sources/hbm_karb_recovery.sv": {
+          "bytes": 27807,
+          "sha256": "3130283007da9df5002debdf5c4434d8daa8b6d87b0fee30c0253382d1bdb8f8"
+        },
+        "sources/pinned_ot_chip_v41x_window_row_codec.sv": {
+          "bytes": 4184,
+          "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+        },
+        "sources/kv_rope_reqmux_recovery.sv": {
+          "bytes": 21628,
+          "sha256": "ade91a5418b9feca302dedb8b066516293892857f5c3fed2ea5ae16a179f65cd"
+        },
+        "sources/tb.sv": {
+          "bytes": 20830,
+          "sha256": "80a1cf6e50ff2c0023472b067f1a5190c6a21d9384e597564a8f6fcc4ebd7950"
+        },
+        "sources/pinned_ot_chip_v41x_window_stage4.sv": {
+          "bytes": 5239,
+          "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d"
+        },
+        "sources/window_prefetch_recovery.sv": {
+          "bytes": 56609,
+          "sha256": "fc082e722560322598a1983a66fbe29fcceaba230a86546cbd378fe1beafc398"
+        }
+      },
+      "compile_complete": false
+    }
+  },
+  "unchanged_caps": {
+    "aggregate_output_bytes": 268435456,
+    "single_file_bytes": 268435456,
+    "aggregate_memory_bytes": 4294967296,
+    "swap_bytes": 0,
+    "CPUs": [
+      30,
+      31
+    ],
+    "whole_service_seconds": 180
+  },
+  "phase_protocol": [
+    "Complete every declared runtime for current binary; semantic negative requires exact SIGABRT and marker.",
+    "Close immutable source snapshot, commands/logs/runtime receipts, binary hash/size, every obj file hash/size, model/compiler/plan/GO references into new phase receipt.",
+    "Flush/fsync receipt and verify hash closure from disk. Preserve snapshots/logs/receipts and all failed phase files.",
+    "Reclaim ONLY successfully closed current newly owned phase obj tree; reject symlink/path escape/preexisting tree or absent receipt.",
+    "Start next compile only after reclamation and actual output-size check. No compile-option, mutant-source or expectation changes."
+  ],
+  "resource_projection": {
+    "observed_full_baseline_obj_bytes": 155294861,
+    "observed_baseline_non_obj_bytes": 283516,
+    "observed_partial_mutant_obj_bytes": 120081458,
+    "estimated_five_phase_retained_receipt_sources_logs_budget_bytes": 8388608,
+    "estimated_peak_bytes": 163683469,
+    "estimate_is_not_compiler_upper_bound": true,
+    "admission_predicate": "actual supervised live output <=268435456; future phases unmeasured; stop first violation without retry",
+    "healthy_added_RTL_latency_cycles": 0,
+    "hardware_change": false
+  },
+  "budget": {
+    "compiles": 5,
+    "compile_seconds": 130,
+    "runtime_seconds": 26,
+    "closure_hash_reclaim_and_supervision_reserve_seconds": 24,
+    "whole_seconds": 180
+  },
+  "uncompleted_controls": [
+    "discard_retirement_omitted",
+    "accepted_WS_intent_dropped",
+    "issue_ACK_as_visibility",
+    "provider_ghost_assumption"
+  ],
+  "limitations": [
+    "Old failed output and all old records remain untouched; new service output only is reclaimed.",
+    "Cannot guarantee mutant compile fits 30s; no cap change.",
+    "Provider projected deadline remains not causal physical visibility.",
+    "Same-wire ghost is provider assumption violation, not WINDOW detection.",
+    "Producer adapter remains separate unimplemented model; service/PHY/slot/routing gaps unchanged."
+  ]
+}

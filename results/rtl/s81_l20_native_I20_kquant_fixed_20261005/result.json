@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS_COMPONENT_EXACT",
+  "compared_words": 2048,
+  "bit_mismatches": 0,
+  "runtime_exit": 0,
+  "position": 1048575,
+  "token": 16754,
+  "source_fix": "f5753dda5",
+  "source_main": "144583002",
+  "unchanged_caller_source": "74997e5403864b5fbf96585f8c43583ea9312235",
+  "cause_and_change": "NativeQuant prepare previously supplied next-block XR data before rising. Fixed provider holds actual OLD requested 32 words and updates xr_q after eval, reproducing synchronous VM response. No arithmetic/RTL/clock/publication change.",
+  "prior_failure": "results/rtl/s81_l20_native_I20_kquant_20261005",
+  "input_source": "actual exact native I19 KVN whole512 per rank",
+  "producer": 2491,
+  "vm_output_base": 55232,
+  "upstream_scope": "I18 coefficient staging and initial prefix SIM_ONLY",
+  "window_hbm_current_visibility": false,
+  "full_token": false,
+  "physical_or_clock_claim": false,
+  "cycles": {
+    "qe_accept": 5582,
+    "native_drain": 8672,
+    "readback_complete": 18912
+  },
+  "elapsed_host_seconds": 16.366242395015433,
+  "models_regenerated": false,
+  "next_consumer": "fresh actual VM ACK import required; enclosing KV provider must establish WINDOW/HBM current ownership independently",
+  "original_639236_disposition": "source replacement, exact runtime SIGTERM after future continuation disabled; numerical verdict null, original logs/partial outputs/source retained remotely"
+}

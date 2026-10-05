@@ -1,0 +1,7 @@
+--- 4e38326d6f361bc85e660f48c59c355e2bb95274:rtl/v41die/ot_v41_pair_w17w10.sv
++++ rtl/v41die/ot_v41_pair_w17w10_rowfix_prepare.sv
+@@ -35,0 +36 @@
++    parameter integer FIX_SECOND_ROW_INDEX = 0, // mandatory row decoder repair, opt-in preparation
+@@ -142 +143 @@
+-                      .FAST(FAST), .PP(PP), .BP(BP), .FRONT_PAR(0), .INSTANCE(INSTANCE)) u_e (
++                      .FAST(FAST), .PP(PP), .BP(BP), .FRONT_PAR(0), .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX), .INSTANCE(INSTANCE)) u_e (

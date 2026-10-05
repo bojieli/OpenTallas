@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "tools/hbm_cxx_thin_archive_gate_r7.py",
+    "--object-root",
+    "/tmp/hbm-qwen-frontend-calibration-parent-20261002-r9-r1/Qwen/obj",
+    "--",
+    "/usr/bin/make",
+    "-C",
+    "/tmp/hbm-qwen-frontend-calibration-parent-20261002-r9-r1/Qwen/obj",
+    "-f",
+    "Vconnected.mk",
+    "-j16",
+    "CXX=/usr/bin/g++",
+    "LINK=/usr/bin/g++",
+    "OPT_FAST=-O0",
+    "OPT_SLOW=-O0",
+    "OPT_GLOBAL=-O0",
+    "-B",
+    "DEPS=",
+    "VM_USER_DIR=",
+    "OBJCACHE=",
+    "VPATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+    "PYTHON3=/usr/bin/python3",
+    "PERL=/usr/bin/perl",
+    "AR=/usr/bin/ar --thin"
+  ],
+  "name": "CXX",
+  "target": "Qwen",
+  "wall_limit_s": 1800
+}

@@ -1,0 +1,165 @@
+{
+  "scope": "Matched containing softmax synthesis/pre-layout STA only, before divider shared-shift change. No routed timing/area or energy claim.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/reuse0_synth_sta_1ns.json",
+      "sha256": "2b1989e2c07230785b5b6b19e896f4efa773ec3556e7d422dafd660c8e860bea",
+      "reuse": 0,
+      "area_um2": 12291.81,
+      "sequential_cells": 8907,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 8297,
+            "setup_wns_ns": -8.246145133038112,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "source_bindings": [
+        {
+          "launch_path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "matching_retained_source": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "matching_retained_source": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "sha256": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "matching_retained_source": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+        },
+        {
+          "launch_path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "matching_retained_source": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_seq.sv",
+          "matching_retained_source": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "matching_retained_source": "results/rtl/small_divider_shared_shift/before.sv",
+          "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_mul_seq.sv",
+          "matching_retained_source": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+        }
+      ],
+      "artifacts": {
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse0/stat.txt": "a3e06d239cd683a40e68a8b238959444a0d2227b7b4a1740f060619b8ac1b21b",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse0/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse0/setup_path.rpt": "08dcf07620d862c6ec07de4d16e1d49221317b277f0e4f460a2a4fe0e6fe5962",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse0/hold_path.rpt": "95ba97cd676d909f50589bdda5380040c7bc574c2e57b8d4c4e55574373c5475",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse0/synth.ys": "dd4f5d9334a14c71df1c0d5e680ac092acfb82c328c585605fea8ba4dbf12ff9",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse0/sta.tcl": "9f7bff343f0261ea944c3c65da185a929ecb8bf27a136f749385efffdc6dbef9"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/reuse1_synth_sta_1ns.json",
+      "sha256": "890e850158e2e53247e11f5bf8549d71059a3a446d0826e1fa954ab035beaeb0",
+      "reuse": 1,
+      "area_um2": 12252.096,
+      "sequential_cells": 8971,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 8257,
+            "setup_wns_ns": -8.837297151627409,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "source_bindings": [
+        {
+          "launch_path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "matching_retained_source": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "matching_retained_source": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "sha256": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37"
+        },
+        {
+          "launch_path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "matching_retained_source": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+        },
+        {
+          "launch_path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "matching_retained_source": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_seq.sv",
+          "matching_retained_source": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "matching_retained_source": "results/rtl/small_divider_shared_shift/before.sv",
+          "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff"
+        },
+        {
+          "launch_path": "rtl/lib/ot_wide_mul_seq.sv",
+          "matching_retained_source": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+        }
+      ],
+      "artifacts": {
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse1/stat.txt": "b01129e4eb305bff18e80d2825b69e0e2411ebc10265edc2110cb77e016face7",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse1/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse1/setup_path.rpt": "14ac8d924223ce59c0a6616b0dc4e10863f569f883fe7fbb93e1659d749188cb",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse1/hold_path.rpt": "1911a79fe7fc9b8d58c9723d1b076a4f81f94a58b5bc3a3bdd70d50bdcb62ae0",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse1/synth.ys": "c453c2c907041e7052ca3acede06fa5d8170275403c9d38be97b2c13dcc74695",
+        "results/rtl/softmax_exp_reuse/physical_checkpoint/reuse1/sta.tcl": "8cd8bc725f6959f0da670298c8059864300542b31c5a51be7a459e02054c0c3b"
+      }
+    }
+  ],
+  "area_change_percent": -0.3230931815574767,
+  "sequential_cell_change": 64,
+  "worst_reuse1_path": {
+    "start_and_end": "_172385_",
+    "cell_path": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "NAND2x1_ASAP7_75t_R",
+      "AND2x2_ASAP7_75t_R"
+    ],
+    "setup_slack_ns": -8.8372969,
+    "nand_delay_ns": 7.2055889,
+    "connected_cell_terminals": {
+      "_002801_": 498,
+      "_022857_": 497
+    },
+    "note": "Ideal-clock mapped-netlist path has extreme fanout/loading; do not use derived Fmax as tested clock or infer final routed regression."
+  },
+  "next_gate": "Current-source containing physical implementation and service-rate balance; divider step width and general exponential throughput remain unresolved."
+}

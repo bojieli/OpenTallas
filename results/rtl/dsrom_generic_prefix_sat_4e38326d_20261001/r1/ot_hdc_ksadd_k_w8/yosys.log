@@ -1,0 +1,390 @@
+
+-- Executing script file `run.ys' --
+
+1. Executing Verilog-2005 frontend: implementation.sv
+Parsing SystemVerilog input from `implementation.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksadd_k'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: miter.sv
+Parsing SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\proof'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     \ot_hdc_ksadd_k
+Parameter \W = 8
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+
+3.3. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+
+3.4. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+Removing unused module `\ot_hdc_ksadd_k'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 74 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$781'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$778'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$777'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$776'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$775'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$774'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$773'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$772'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$771'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$770'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$769'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$768'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$767'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$766'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$765'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$764'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$763'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$762'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$760'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$757'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$755'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$752'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$750'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$747'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$745'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$742'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$740'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$737'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$736'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$735'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$734'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$733'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$732'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$731'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$730'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$729'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$727'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$724'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$722'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$719'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$717'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$714'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$712'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$709'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$707'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$704'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$702'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$699'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$697'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$694'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$693'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$692'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$691'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$690'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$688'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$685'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$683'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$680'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$678'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$675'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$673'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$670'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$668'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$665'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$663'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$660'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$658'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$655'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$653'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$650'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$649'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$648'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:15$646'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:14$644'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$781'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$778'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$777'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$776'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$775'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$774'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$773'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$772'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$771'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$770'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$769'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$768'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$767'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$766'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$765'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$764'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[4] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$763'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[4] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$762'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$760'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$757'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$755'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$752'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$750'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$747'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$745'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$742'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$740'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$737'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$736'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$735'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$734'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$733'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$732'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$731'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[3] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$730'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[3] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$729'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$727'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$724'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$722'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$719'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$717'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$714'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$712'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$709'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$707'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$704'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$702'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$699'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$697'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$694'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$693'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$692'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[2] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$691'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[2] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$690'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$688'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$685'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$683'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$680'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$678'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$675'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$673'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$670'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$668'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$665'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$663'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$660'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$658'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$655'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$653'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$650'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[1] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$649'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[1] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$648'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\p[0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:15$646'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.\g[0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:14$644'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$781'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$778'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$777'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$776'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$775'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$774'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$773'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$772'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$771'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$770'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$769'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$768'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$767'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$766'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$765'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$764'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$763'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$762'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$760'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$757'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$755'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$752'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$750'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$747'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$745'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$742'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$740'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$737'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$736'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$735'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$734'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$733'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$732'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$731'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$730'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$729'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$727'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$724'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$722'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$719'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$717'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$714'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$712'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$709'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$707'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$704'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$702'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$699'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$697'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$694'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$693'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$692'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$691'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$690'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$688'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$685'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$683'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$680'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$678'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$675'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$673'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$670'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$668'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$665'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$663'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$660'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$658'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$655'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:22$653'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:21$650'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:25$649'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:24$648'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:15$646'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.$proc$implementation.sv:14$644'.
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+Optimizing module $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.
+<suppressed ~8 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000.
+<suppressed ~1 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 63 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 62 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 62 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 0 unused cells and 122 unused wires.
+<suppressed ~1 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 62 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing CHECK pass (checking for obvious problems).
+Checking module proof...
+Found and reported 0 problems.
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 62 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+Import show expression: { \a \b \cin \actual \expected \equal }
+
+Solving problem with 640 variables and 1678 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

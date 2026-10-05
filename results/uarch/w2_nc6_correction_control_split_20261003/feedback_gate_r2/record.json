@@ -1,0 +1,31 @@
+{
+  "scope": "narrow helper feedback gate only, not full219 controller rerun",
+  "cases": {
+    "bundled_predecessor": {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--top-module",
+        "feedback_gate",
+        "/tmp/Hubble-W2-corrector-rescue-20261003/results/uarch/w2_nc6_correction_control_split_20261003/feedback_gate_r2/feedback_gate.sv",
+        "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv"
+      ],
+      "returncode": 1,
+      "source_sha256": "a9256a6d09b857a853afd65e5a8b927a1b6b2c0c3beaa036f27a690887da4f4a",
+      "UNOPTFLAT": true
+    },
+    "split_successor": {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--lint-only",
+        "--top-module",
+        "feedback_gate",
+        "/tmp/Hubble-W2-corrector-rescue-20261003/results/uarch/w2_nc6_correction_control_split_20261003/feedback_gate_r2/feedback_gate.sv",
+        "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv"
+      ],
+      "returncode": 0,
+      "source_sha256": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+      "UNOPTFLAT": false
+    }
+  }
+}

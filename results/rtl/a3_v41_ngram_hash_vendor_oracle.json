@@ -1,0 +1,85 @@
+{
+  "claim_boundary": {
+    "establishes_the_compressed_token_map": false,
+    "establishes_the_released_pad_id": false,
+    "executes_rtl": false,
+    "runs_inside_the_rtl_campaign": false
+  },
+  "layout": {
+    "layers": [
+      {
+        "layer_id": 1,
+        "multipliers": [
+          76632096046245,
+          4839876093313,
+          35959672319349,
+          73987337458391
+        ],
+        "table_rows": 384006168
+      },
+      {
+        "layer_id": 14,
+        "multipliers": [
+          67716810739261,
+          51510806800915,
+          30921347202721,
+          82619226485591
+        ],
+        "table_rows": 384016682
+      }
+    ],
+    "released_primes_sum_equals_engram_num_embeddings": true
+  },
+  "mismatch_detail": [],
+  "mismatches": 0,
+  "records_compared": 5760,
+  "reference": {
+    "function": "ngram_row_ids",
+    "module": "runtime/reference/engram.py",
+    "sha256": "76a6a90b83b9bb641fc19f82eb865300a9d26bf38051d0a25a4334c8b80b5e24"
+  },
+  "schema": "opentallas.rtl.a3_v41_ngram_hash_vendor_oracle.v1",
+  "status": "pass",
+  "stimulus": {
+    "dead_positions": [
+      "0:5",
+      "0:6",
+      "1:17",
+      "2:0",
+      "2:39"
+    ],
+    "heads": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "length": 40,
+    "orders": [
+      2,
+      3,
+      4
+    ],
+    "pad_id": 7,
+    "sequences": 3
+  },
+  "tools": {
+    "numpy": "2.2.6",
+    "torch": "2.10.0+cu128"
+  },
+  "vendor_source": {
+    "executed_entry_point": "NgramHashState.forward",
+    "not_executed": [
+      "build_compressed_token_map (needs the vendor tokenizer)",
+      "NgramHashState.__init__",
+      "ParallelEngramEmbedding (the row read)"
+    ],
+    "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "sha256": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897",
+    "source": "SRC-DSV41-FLASH-MODEL inference/engram.py"
+  }
+}

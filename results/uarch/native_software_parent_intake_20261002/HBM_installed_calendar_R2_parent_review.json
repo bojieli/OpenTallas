@@ -1,0 +1,39 @@
+{
+  "actual_full_token_execution": false,
+  "artifact_hashes_verified": {
+    "causal_r1": 12,
+    "installed_r2": 16
+  },
+  "baseline": "63773dd57",
+  "cold_replay": "PASS_BYTE_IDENTICAL_R1_FINAL_CAUSAL_AND_R2_MODEL",
+  "correct_committed_replay_command": "python3 tools/h3_complete_native_calendar_grants_r1.py --out results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/final_causal --verify",
+  "default_replay_command": "FAIL_MISSING_UNTRACKED_INTERMEDIATE_BINDINGS_PRESERVED",
+  "files": {
+    "HBM_causal_calendar_R1_parent_default_FAIL.log": "93dea37a7e5716c0233cd30717f09e44319f94362b744b3ed79cfa99b8ab4662",
+    "HBM_causal_calendar_R1_parent_final_replay.log": "ec94a50569a966731ab9e8a1530957efb9dfcb14a9f6d93c4ae6c188b0eca8aa",
+    "HBM_installed_calendar_R2_parent_tests.log": "0f7c33063b0383e67b257e320cc1ae9c13f83b112a47cb28cd234ba7f9bc5b06"
+  },
+  "focused_tests_passed": 71,
+  "full_token_latency": null,
+  "hardware_qualified": false,
+  "open": [
+    "actual emitted contender/lease admission",
+    "held exact tag/generation completion matching",
+    "actual SRAM ACK/visibility/consumer/reverse and finite CDC",
+    "finite backend and credit-return delays",
+    "source-matched physical endpoint closure"
+  ],
+  "original_calendar_and_tests_byte_identical": true,
+  "physical_child_obligations": 10080,
+  "physical_parent_obligations": 352,
+  "production_endpoint_observations": 0,
+  "schema": "HBM_INSTALLED_CAUSAL_CALENDAR_PARENT_REVIEW_20261003",
+  "source_pins_verified": {
+    "causal_r1": 6,
+    "installed_r2": 6
+  },
+  "worker_commits": [
+    "c5e6363f8ca913e0f3ac70a303b603e15126d147",
+    "8ba7384cbb25edf55e29b99429242e392e35b24a"
+  ]
+}

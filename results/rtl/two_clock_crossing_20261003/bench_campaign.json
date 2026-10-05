@@ -1,0 +1,2339 @@
+{
+ "schema": "opentallas.two_clock_crossing_bench.v1",
+ "simulator": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad",
+ "source_sha256": {
+  "rtl/common/ot_ratio_cdc_fifo.sv": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
+  "rtl/test/two_clock/tb_ratio_cdc_fifo.cpp": "6c61d8afc099994ee189e3d730377e240ec552074f33627f80f39fb698bb834a",
+  "rtl/test/two_clock/build_tb.sh": "e78a5aee969826e3fcb4f76adbff9b55aa2b65d3cc8a987c186dda1360b0b130",
+  "rtl/test/two_clock/run_campaign.py": "17dbbabd585b5e844db5cc345e4f79fa91d9f5db4da090d9f3e9943666191fbd"
+ },
+ "words_per_run": 2000000,
+ "runs": [
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=f2s",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=sparse phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1388.9/1903.3/2222.2 lat_dst_cycles=1.250/1.713/2.000 lat_ticks={5,6,7,8} words_per_ns=0.2549 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "sparse",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1388.9/1903.3/2222.2",
+   "lat_dst_cycles": "1.250/1.713/2.000",
+   "lat_ticks": "{5,6,7,8}",
+   "words_per_ns": "0.2549"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=f2s",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=saturate phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.6000 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "saturate",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.6000"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=f2s",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=random phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.4198 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "random",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.4198"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=f2s",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=backpressure phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.0982 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "backpressure",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.0982"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=f2s",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=reset phase=1 words=2000000 accepted=2000000 delivered=1980623 flushed=19377 epochs=17443 resets_w=10238 resets_r=7705 words_per_ns=0.4593 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "reset",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1980623",
+   "flushed": "19377",
+   "epochs": "17443",
+   "resets_w": "10238",
+   "resets_r": "7705",
+   "words_per_ns": "0.4593"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=s2f",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=sparse phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1111.1/1407.7/1666.7 lat_dst_cycles=1.333/1.689/2.000 lat_ticks={4,5,6} words_per_ns=0.2065 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "sparse",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1111.1/1407.7/1666.7",
+   "lat_dst_cycles": "1.333/1.689/2.000",
+   "lat_ticks": "{4,5,6}",
+   "words_per_ns": "0.2065"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=s2f",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=saturate phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.6000 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "saturate",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.6000"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=s2f",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=random phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.4215 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "random",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.4215"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=s2f",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=backpressure phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.0935 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "backpressure",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.0935"
+  },
+  {
+   "config": "DEPTH2",
+   "argv": [
+    "+dir=s2f",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=reset phase=1 words=2000000 accepted=2000000 delivered=1981658 flushed=18342 epochs=17511 resets_w=7559 resets_r=10477 words_per_ns=0.4616 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "reset",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1981658",
+   "flushed": "18342",
+   "epochs": "17511",
+   "resets_w": "7559",
+   "resets_r": "10477",
+   "words_per_ns": "0.4616"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=sparse phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1388.9/1903.3/2222.2 lat_dst_cycles=1.250/1.713/2.000 lat_ticks={5,6,7,8} words_per_ns=0.2549 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "sparse",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1388.9/1903.3/2222.2",
+   "lat_dst_cycles": "1.250/1.713/2.000",
+   "lat_ticks": "{5,6,7,8}",
+   "words_per_ns": "0.2549"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=sparse phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1388.9/1903.3/2222.2 lat_dst_cycles=1.250/1.713/2.000 lat_ticks={5,6,7,8} words_per_ns=0.2549 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "sparse",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1388.9/1903.3/2222.2",
+   "lat_dst_cycles": "1.250/1.713/2.000",
+   "lat_ticks": "{5,6,7,8}",
+   "words_per_ns": "0.2549"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=sparse phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1388.9/1903.4/2222.2 lat_dst_cycles=1.250/1.713/2.000 lat_ticks={5,6,7,8} words_per_ns=0.2548 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "sparse",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1388.9/1903.4/2222.2",
+   "lat_dst_cycles": "1.250/1.713/2.000",
+   "lat_ticks": "{5,6,7,8}",
+   "words_per_ns": "0.2548"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=sparse phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1388.9/1902.8/2222.2 lat_dst_cycles=1.250/1.713/2.000 lat_ticks={5,6,7,8} words_per_ns=0.2548 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "sparse",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1388.9/1902.8/2222.2",
+   "lat_dst_cycles": "1.250/1.713/2.000",
+   "lat_ticks": "{5,6,7,8}",
+   "words_per_ns": "0.2548"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=saturate phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "saturate",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=saturate phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "saturate",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=saturate phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "saturate",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=saturate phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "saturate",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=random phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5238 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "random",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5238"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=random phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5233 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "random",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5233"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=random phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5235 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "random",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5235"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=random phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5233 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "random",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5233"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=backpressure phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1361 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "backpressure",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1361"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=backpressure phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1364 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "backpressure",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1364"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=backpressure phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1359 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "backpressure",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1359"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=backpressure phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1359 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "backpressure",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1359"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=reset phase=1 words=2000000 accepted=2000000 delivered=1965757 flushed=34243 epochs=13319 resets_w=7820 resets_r=5889 words_per_ns=0.5955 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "reset",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1965757",
+   "flushed": "34243",
+   "epochs": "13319",
+   "resets_w": "7820",
+   "resets_r": "5889",
+   "words_per_ns": "0.5955"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=reset phase=2 words=2000000 accepted=2000000 delivered=1965457 flushed=34543 epochs=13549 resets_w=8083 resets_r=5835 words_per_ns=0.5952 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "reset",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1965457",
+   "flushed": "34543",
+   "epochs": "13549",
+   "resets_w": "8083",
+   "resets_r": "5835",
+   "words_per_ns": "0.5952"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=reset phase=3 words=2000000 accepted=2000000 delivered=1965287 flushed=34713 epochs=13596 resets_w=8030 resets_r=5987 words_per_ns=0.5946 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "reset",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1965287",
+   "flushed": "34713",
+   "epochs": "13596",
+   "resets_w": "8030",
+   "resets_r": "5987",
+   "words_per_ns": "0.5946"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=f2s",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=reset phase=0 words=2000000 accepted=2000000 delivered=1965035 flushed=34965 epochs=13547 resets_w=7955 resets_r=5981 words_per_ns=0.5949 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "reset",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1965035",
+   "flushed": "34965",
+   "epochs": "13547",
+   "resets_w": "7955",
+   "resets_r": "5981",
+   "words_per_ns": "0.5949"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=sparse phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1111.1/1407.7/1666.7 lat_dst_cycles=1.333/1.689/2.000 lat_ticks={4,5,6} words_per_ns=0.2065 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "sparse",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1111.1/1407.7/1666.7",
+   "lat_dst_cycles": "1.333/1.689/2.000",
+   "lat_ticks": "{4,5,6}",
+   "words_per_ns": "0.2065"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=sparse phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1111.1/1408.5/1666.7 lat_dst_cycles=1.333/1.690/2.000 lat_ticks={4,5,6} words_per_ns=0.2064 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "sparse",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1111.1/1408.5/1666.7",
+   "lat_dst_cycles": "1.333/1.690/2.000",
+   "lat_ticks": "{4,5,6}",
+   "words_per_ns": "0.2064"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=sparse phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1111.1/1408.5/1666.7 lat_dst_cycles=1.333/1.690/2.000 lat_ticks={4,5,6} words_per_ns=0.2064 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "sparse",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1111.1/1408.5/1666.7",
+   "lat_dst_cycles": "1.333/1.690/2.000",
+   "lat_ticks": "{4,5,6}",
+   "words_per_ns": "0.2064"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=sparse phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1111.1/1408.0/1666.7 lat_dst_cycles=1.333/1.690/2.000 lat_ticks={4,5,6} words_per_ns=0.2064 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "sparse",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1111.1/1408.0/1666.7",
+   "lat_dst_cycles": "1.333/1.690/2.000",
+   "lat_ticks": "{4,5,6}",
+   "words_per_ns": "0.2064"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=saturate phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "saturate",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=saturate phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "saturate",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=saturate phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "saturate",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=saturate phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "saturate",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=random phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5216 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "random",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5216"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=random phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5210 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "random",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5210"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=random phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5213 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "random",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5213"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=random phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5208 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "random",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5208"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=backpressure phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1232 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "backpressure",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1232"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=backpressure phase=2 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1228 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "backpressure",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1228"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=backpressure phase=3 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1230 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "backpressure",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1230"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=backpressure phase=0 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1230 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "backpressure",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1230"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=reset phase=1 words=2000000 accepted=2000000 delivered=1978519 flushed=21481 epochs=13755 resets_w=6037 resets_r=8105 words_per_ns=0.5920 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "reset",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1978519",
+   "flushed": "21481",
+   "epochs": "13755",
+   "resets_w": "6037",
+   "resets_r": "8105",
+   "words_per_ns": "0.5920"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=2",
+    "+phase=2"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=reset phase=2 words=2000000 accepted=2000000 delivered=1978222 flushed=21778 epochs=13751 resets_w=6068 resets_r=8062 words_per_ns=0.5920 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "reset",
+   "phase": "2",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1978222",
+   "flushed": "21778",
+   "epochs": "13751",
+   "resets_w": "6068",
+   "resets_r": "8062",
+   "words_per_ns": "0.5920"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=3",
+    "+phase=3"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=reset phase=3 words=2000000 accepted=2000000 delivered=1978400 flushed=21600 epochs=13713 resets_w=5997 resets_r=8123 words_per_ns=0.5920 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "reset",
+   "phase": "3",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1978400",
+   "flushed": "21600",
+   "epochs": "13713",
+   "resets_w": "5997",
+   "resets_r": "8123",
+   "words_per_ns": "0.5920"
+  },
+  {
+   "config": "DEPTH4",
+   "argv": [
+    "+dir=s2f",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=4",
+    "+phase=0"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=reset phase=0 words=2000000 accepted=2000000 delivered=1978650 flushed=21350 epochs=13692 resets_w=6105 resets_r=8018 words_per_ns=0.5921 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "reset",
+   "phase": "0",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1978650",
+   "flushed": "21350",
+   "epochs": "13692",
+   "resets_w": "6105",
+   "resets_r": "8018",
+   "words_per_ns": "0.5921"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=f2s",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=sparse phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1388.9/1903.3/2222.2 lat_dst_cycles=1.250/1.713/2.000 lat_ticks={5,6,7,8} words_per_ns=0.2549 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "sparse",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1388.9/1903.3/2222.2",
+   "lat_dst_cycles": "1.250/1.713/2.000",
+   "lat_ticks": "{5,6,7,8}",
+   "words_per_ns": "0.2549"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=f2s",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=saturate phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "saturate",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=f2s",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=random phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5394 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "random",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5394"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=f2s",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=backpressure phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1494 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "backpressure",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1494"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=f2s",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=f2s mode=reset phase=1 words=2000000 accepted=2000000 delivered=1920995 flushed=79005 epochs=12826 resets_w=7526 resets_r=5640 words_per_ns=0.6065 errors=0 PASS\n",
+   "dir": "f2s",
+   "mode": "reset",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1920995",
+   "flushed": "79005",
+   "epochs": "12826",
+   "resets_w": "7526",
+   "resets_r": "5640",
+   "words_per_ns": "0.6065"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=s2f",
+    "+mode=sparse",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=sparse phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 lat_ps=1111.1/1407.7/1666.7 lat_dst_cycles=1.333/1.689/2.000 lat_ticks={4,5,6} words_per_ns=0.2065 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "sparse",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "lat_ps": "1111.1/1407.7/1666.7",
+   "lat_dst_cycles": "1.333/1.689/2.000",
+   "lat_ticks": "{4,5,6}",
+   "words_per_ns": "0.2065"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=s2f",
+    "+mode=saturate",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=saturate phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.9000 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "saturate",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.9000"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=s2f",
+    "+mode=random",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=random phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.5394 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "random",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.5394"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=s2f",
+    "+mode=backpressure",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=backpressure phase=1 words=2000000 accepted=2000000 delivered=2000000 flushed=0 epochs=1 resets_w=0 resets_r=0 words_per_ns=0.1533 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "backpressure",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "2000000",
+   "flushed": "0",
+   "epochs": "1",
+   "resets_w": "0",
+   "resets_r": "0",
+   "words_per_ns": "0.1533"
+  },
+  {
+   "config": "DEPTH8",
+   "argv": [
+    "+dir=s2f",
+    "+mode=reset",
+    "+words=2000000",
+    "+seed=1",
+    "+phase=1"
+   ],
+   "returncode": 0,
+   "verdict": "PASS",
+   "errors": 0,
+   "stdout_tail": "RESULT dir=s2f mode=reset phase=1 words=2000000 accepted=2000000 delivered=1976720 flushed=23280 epochs=13154 resets_w=5756 resets_r=7789 words_per_ns=0.6063 errors=0 PASS\n",
+   "dir": "s2f",
+   "mode": "reset",
+   "phase": "1",
+   "words": "2000000",
+   "accepted": "2000000",
+   "delivered": "1976720",
+   "flushed": "23280",
+   "epochs": "13154",
+   "resets_w": "5756",
+   "resets_r": "7789",
+   "words_per_ns": "0.6063"
+  }
+ ],
+ "mutants": {
+  "no_reader_peer_gate": [
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 11
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 17
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 21
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 115
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 107
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 107
+   }
+  ],
+  "no_wrst_accept_gate": [
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 118
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 144
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 142
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 154
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 140
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 136
+   }
+  ],
+  "no_hold_no_seen_rule": [
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 3846
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 3806
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 4074
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 21
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 16
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 30
+   }
+  ],
+  "no_hold_keep_seen_rule": [
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 50
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   }
+  ],
+  "wrong_slot_read": [
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 5579
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 5596
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 5779
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 12021
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 12052
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 12029
+   }
+  ],
+  "wait_ignores_peer": [
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "FAIL",
+    "errors": 11
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "FAIL",
+    "errors": 11
+   },
+   {
+    "argv": [
+     "+dir=f2s",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "FAIL",
+    "errors": 5
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=5"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=6"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   },
+   {
+    "argv": [
+     "+dir=s2f",
+     "+mode=reset",
+     "+words=50000",
+     "+seed=7"
+    ],
+    "verdict": "PASS",
+    "errors": 0
+   }
+  ]
+ },
+ "mutant_detected": {
+  "no_reader_peer_gate": true,
+  "no_wrst_accept_gate": true,
+  "no_hold_no_seen_rule": true,
+  "no_hold_keep_seen_rule": true,
+  "wrong_slot_read": true,
+  "wait_ignores_peer": true
+ },
+ "all_runs_pass": true,
+ "all_mutants_detected": true,
+ "total_words": 120000000,
+ "summary": {
+  "DEPTH2 f2s sparse": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "lat_ps": [
+    "1388.9/1903.3/2222.2"
+   ],
+   "lat_dst_cycles": [
+    "1.250/1.713/2.000"
+   ],
+   "lat_ticks": [
+    "{5,6,7,8}"
+   ],
+   "words_per_ns": [
+    "0.2549"
+   ]
+  },
+  "DEPTH2 f2s saturate": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.6000"
+   ]
+  },
+  "DEPTH2 f2s random": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.4198"
+   ]
+  },
+  "DEPTH2 f2s backpressure": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.0982"
+   ]
+  },
+  "DEPTH2 f2s reset": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 19377,
+   "resets": 17943,
+   "words_per_ns": [
+    "0.4593"
+   ]
+  },
+  "DEPTH2 s2f sparse": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "lat_ps": [
+    "1111.1/1407.7/1666.7"
+   ],
+   "lat_dst_cycles": [
+    "1.333/1.689/2.000"
+   ],
+   "lat_ticks": [
+    "{4,5,6}"
+   ],
+   "words_per_ns": [
+    "0.2065"
+   ]
+  },
+  "DEPTH2 s2f saturate": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.6000"
+   ]
+  },
+  "DEPTH2 s2f random": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.4215"
+   ]
+  },
+  "DEPTH2 s2f backpressure": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.0935"
+   ]
+  },
+  "DEPTH2 s2f reset": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 18342,
+   "resets": 18036,
+   "words_per_ns": [
+    "0.4616"
+   ]
+  },
+  "DEPTH4 f2s sparse": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "lat_ps": [
+    "1388.9/1903.3/2222.2",
+    "1388.9/1903.3/2222.2",
+    "1388.9/1903.4/2222.2",
+    "1388.9/1902.8/2222.2"
+   ],
+   "lat_dst_cycles": [
+    "1.250/1.713/2.000",
+    "1.250/1.713/2.000",
+    "1.250/1.713/2.000",
+    "1.250/1.713/2.000"
+   ],
+   "lat_ticks": [
+    "{5,6,7,8}",
+    "{5,6,7,8}",
+    "{5,6,7,8}",
+    "{5,6,7,8}"
+   ],
+   "words_per_ns": [
+    "0.2549",
+    "0.2549",
+    "0.2548",
+    "0.2548"
+   ]
+  },
+  "DEPTH4 f2s saturate": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.9000",
+    "0.9000",
+    "0.9000",
+    "0.9000"
+   ]
+  },
+  "DEPTH4 f2s random": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.5238",
+    "0.5233",
+    "0.5235",
+    "0.5233"
+   ]
+  },
+  "DEPTH4 f2s backpressure": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.1361",
+    "0.1364",
+    "0.1359",
+    "0.1359"
+   ]
+  },
+  "DEPTH4 f2s reset": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 138464,
+   "resets": 55580,
+   "words_per_ns": [
+    "0.5955",
+    "0.5952",
+    "0.5946",
+    "0.5949"
+   ]
+  },
+  "DEPTH4 s2f sparse": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "lat_ps": [
+    "1111.1/1407.7/1666.7",
+    "1111.1/1408.5/1666.7",
+    "1111.1/1408.5/1666.7",
+    "1111.1/1408.0/1666.7"
+   ],
+   "lat_dst_cycles": [
+    "1.333/1.689/2.000",
+    "1.333/1.690/2.000",
+    "1.333/1.690/2.000",
+    "1.333/1.690/2.000"
+   ],
+   "lat_ticks": [
+    "{4,5,6}",
+    "{4,5,6}",
+    "{4,5,6}",
+    "{4,5,6}"
+   ],
+   "words_per_ns": [
+    "0.2065",
+    "0.2064",
+    "0.2064",
+    "0.2064"
+   ]
+  },
+  "DEPTH4 s2f saturate": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.9000",
+    "0.9000",
+    "0.9000",
+    "0.9000"
+   ]
+  },
+  "DEPTH4 s2f random": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.5216",
+    "0.5210",
+    "0.5213",
+    "0.5208"
+   ]
+  },
+  "DEPTH4 s2f backpressure": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.1232",
+    "0.1228",
+    "0.1230",
+    "0.1230"
+   ]
+  },
+  "DEPTH4 s2f reset": {
+   "runs": 4,
+   "pass_": 4,
+   "words": 8000000,
+   "flushed": 86209,
+   "resets": 56515,
+   "words_per_ns": [
+    "0.5920",
+    "0.5920",
+    "0.5920",
+    "0.5921"
+   ]
+  },
+  "DEPTH8 f2s sparse": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "lat_ps": [
+    "1388.9/1903.3/2222.2"
+   ],
+   "lat_dst_cycles": [
+    "1.250/1.713/2.000"
+   ],
+   "lat_ticks": [
+    "{5,6,7,8}"
+   ],
+   "words_per_ns": [
+    "0.2549"
+   ]
+  },
+  "DEPTH8 f2s saturate": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.9000"
+   ]
+  },
+  "DEPTH8 f2s random": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.5394"
+   ]
+  },
+  "DEPTH8 f2s backpressure": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.1494"
+   ]
+  },
+  "DEPTH8 f2s reset": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 79005,
+   "resets": 13166,
+   "words_per_ns": [
+    "0.6065"
+   ]
+  },
+  "DEPTH8 s2f sparse": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "lat_ps": [
+    "1111.1/1407.7/1666.7"
+   ],
+   "lat_dst_cycles": [
+    "1.333/1.689/2.000"
+   ],
+   "lat_ticks": [
+    "{4,5,6}"
+   ],
+   "words_per_ns": [
+    "0.2065"
+   ]
+  },
+  "DEPTH8 s2f saturate": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.9000"
+   ]
+  },
+  "DEPTH8 s2f random": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.5394"
+   ]
+  },
+  "DEPTH8 s2f backpressure": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 0,
+   "resets": 0,
+   "words_per_ns": [
+    "0.1533"
+   ]
+  },
+  "DEPTH8 s2f reset": {
+   "runs": 1,
+   "pass_": 1,
+   "words": 2000000,
+   "flushed": 23280,
+   "resets": 13545,
+   "words_per_ns": [
+    "0.6063"
+   ]
+  }
+ },
+ "verdict": "PASS"
+}

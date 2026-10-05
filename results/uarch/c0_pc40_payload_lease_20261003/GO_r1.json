@@ -1,0 +1,38 @@
+{
+  "CPU_only_exception": "One explicitly shared Nice19 worker for user-prioritized bounded source payload proof; CPU guard negatives retained; no performance credit, no existing process or source modification",
+  "CPU_sharing": true,
+  "CPU_threads": 1,
+  "Nice": 19,
+  "conservative_guard_verdict": {
+    "admit": false,
+    "aggregate_peak_ram_gib": 16,
+    "conservative_aggregate_threads": 148,
+    "effective_ram_budget_gib": 208,
+    "live_free_after_peak_gib": 202.12957000732422,
+    "observed_compute_threads": 147,
+    "reasons": [
+      "AGGREGATE_THREADS",
+      "LIVE_CPU_LOAD"
+    ],
+    "request_threads": 1,
+    "reserved_headroom_gib": 24,
+    "reserved_threads": 0,
+    "slot_request_gib": 16,
+    "thread_cap": 28
+  },
+  "constructor_preflight_sha256": "e321fd3a7aed4a728850b4bee6506c90b57e14a71ff7f0391c5c0fdce6203916",
+  "disk_headroom_bytes": 25769803776,
+  "hardware_admitted": false,
+  "historical_executor_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "leased_RAM_capacity_GiB": 16,
+  "model_admitted_for": "bounded software source producer/leaf proof only",
+  "no_AS_cap": true,
+  "no_FSIZE_cap": true,
+  "no_wall_cap": true,
+  "observed_constructor_RSS_bytes": 1127391232,
+  "schema": "C0_PC40_PAYLOAD_GO_R1",
+  "source_commit": "81f0a7ded1725186f4323cb5553dfd15e4425aa4",
+  "source_runner_sha256": "05e64c4cca236b42135dd3d3bbd63955e0d34ce0921dc35058de8448dd190f1d",
+  "unit": "ampere-c0-pc40-payload-20261003-r1.service",
+  "whole_token": false
+}

@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.review-archive.v1",
+ "archived_utc": "2026-10-03",
+ "review_base_commit": "7b4d51a08",
+ "grade": "measured-quality pilot + model-only sensitivity",
+ "adopted": false,
+ "note": "Measured-quality pilot (greedy exact replay, real V4.1-Flash weights, 30 new agentic prompts, <=8K context, 160 new tokens) plus model-only headline sensitivity. NOT a qualified acceptance value. Archived from /tmp/claude-review-20261003/mtp; excluded: gen_out.pt (2.9 GB), drafts.json and prompts_sel.json (regenerable by select_pilot.py / v41draft.py).",
+ "files_sha256": {
+  "draft.log": "bdd9eebd64fbaa02429e9e1d397dc61686e81c11d4ceda6c7dd9358b8cd7be22",
+  "gen.log": "838e2f5d059ccdb36528aa7deae7bae5573cee9b4e19dcb31f1ce17e6d940c7f",
+  "mtp_acceptance.json": "93a04981992de9c3bbe6b1a28af5478854e0ceec53d8c0056af0093bf207189f",
+  "mtp_acceptance.md": "8a23b9928b96a1bfb5ab2075179aae1e8aa49ee290f9902ed84224466ee8843e",
+  "work/acc_stats.json": "f66080ced9e61ed79726f0c3fb8b28c53ea433182de573c73e7e78a439459315",
+  "work/acc_stats.py": "5eed7e2590576869efbf43d52d6e535e5537864d792682999082eea417c4171b",
+  "work/analysis_pilot.json": "38577d8f03a638356f7a8221d794ed7551593f397865ab293bd16cbc4738b65b",
+  "work/analyze.log": "9fed6659add35cdd5f19da09413197d720d236d508088c1ec733e93f4adac3c2",
+  "work/gen_attempt1_oom_frac015.log": "750e19979be5ce112d10dc70f407c115fb7069fa38de92dc58c76965855c9264",
+  "work/multiturn_subset.json": "ba509059e1505dcd6c48390aa2af9a4e900c4e59c71a4de4f1b1baf546516e9a",
+  "work/rates_at_measured.json": "9ba4995172117125e0c59c19192ba0e131b65e26e6bd538a422f9cb81afb5d94",
+  "work/select_pilot.py": "e3ebcef9eaa84eca57bd181913c3127ccfd6dabfe74d9634a76e05184d17d741",
+  "work/sensitivity.json": "f2127f959be7681534614bc5c1b4069fd767c37b32f30154dea3bcc26a50a800",
+  "work/sensitivity.py": "dc764880f587458bdb90ece4e86b7a7c1e12e3673487dc52f92ba7624170fe5d"
+ }
+}

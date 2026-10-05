@@ -1,0 +1,49 @@
+{
+  "ME_critical_operations_per_layer": 6,
+  "ME_token_operations": 217,
+  "actual_sustained_PHY_Bps": null,
+  "additional_scope_mismatch": "ctx1 helper auto reducerLV6 vs observedLV7;9.2percent body ratio is empirical historical calibration, not current-source proof",
+  "base_commit": "d202bd4a12a585dddd8c7271b6f0365538cc1a82",
+  "calendar_inputs": {
+    "additional_nonlayer_head_cycles": 112,
+    "corrected_prefix_cycles": 563,
+    "corrected_remaining_body_cycles": 3447,
+    "corrected_rest_cycles": 3628.76,
+    "historical_prefix_cycles": 451,
+    "historical_remaining_body_cycles": 2887,
+    "historical_rest_cycles": 3068.76,
+    "scoped_policy": "source-sized compute inputs only; rerun finite service recurrence with real owned source deadlines",
+    "unchanged_projected_AR_cycles_each": 71.0,
+    "unchanged_projected_two_AR_debit_cycles": 181.76,
+    "unchanged_serial_AR_multiplier": 1.28
+  },
+  "calendar_rate_owner": "Claude",
+  "corrected_historical_helper": {
+    "historical_incorrect_gap_cycles": 1531,
+    "historical_incorrect_helper_cycles": 3138,
+    "model_plus_full_collectives_cycles": 4442,
+    "remaining_body_gap_cycles": 227
+  },
+  "correction_scope": "historical source-sized model with explicit+55proposal; no currentSMIN6 wire/SSFF qualification",
+  "finite_service_replay_done": false,
+  "frozen_credit17_rejection_preserved": true,
+  "model": "results/uarch/qwen_rom_me_latency_semantics_20261003/model-r2.json",
+  "model_sha256": "abd3122627fa2dd43e8ce6d41f44c4f5fe6122a02ccefb3acaf2f44fc09fc40e",
+  "next_Claude_action": "Use explicit167argument and563prefix/4010body for this source-sized8K contract; replace71-cycle UCIe/two-segment calibration only through a scoped source/measurement policy. Recompose finite streaming service before any headline.",
+  "observed_vs_default": {
+    "default_model_cycles": 3344,
+    "measured_body_cycles": 2687,
+    "measured_full_AR_cycles_each": 991,
+    "model_board_AR_cycles_each": 442,
+    "model_body_cycles": 2460,
+    "observed_layer_cycles": 4669
+  },
+  "parameter": "me_lat_extra full extra, not arithmetic increment",
+  "per_layer_wire_debit_cycles": 672,
+  "prefetch_headline_admitted": false,
+  "schema": "QROM_CLAUDE_ME_AND_COLLECTIVE_CALIBRATION_HANDOFF_R1",
+  "source_address_masks_ownership_ACK_release_qualified": false,
+  "supplied_override": 167,
+  "token_wire_debit_cycles": 24304,
+  "token_wire_debit_us": 20.253333333333334
+}

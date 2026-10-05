@@ -1,0 +1,4 @@
+STATS ISO_P4095 hbm_act=2184 rd=65536 wr=136 refpb=3032 violations=0 max_landing=12 rsp_tile_stall=8118 fill_sectors=65536 wr_sectors=136 wr_lat_max=58
+PASS ISO_P4095 "P":4095,"fill_cycles":715,"fill_sectors":65536,"sectors_per_cycle":91.66,"tb_s_at_1p2ghz":3.520,"kv_ok_after_start":1171,"su_drain_wait":1106,"violations":0 : slices and token HBM codes exact
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"ISO_P4095","pass":true,"P":4095,"fill_cycles":715,"fill_sectors":65536,"sectors_per_cycle":91.66,"tb_s_at_1p2ghz":3.520,"kv_ok_after_start":1171,"su_drain_wait":1106,"violations":0,"detail":"slices and token HBM codes exact"}],"status":"pass"}

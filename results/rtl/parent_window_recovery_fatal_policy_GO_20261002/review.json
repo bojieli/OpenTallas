@@ -1,0 +1,10 @@
+{
+  "status": "PARENT_REVIEW_PASS_SINGLE_BOUNDED_GATE_AUTHORIZED",
+  "owner_commit": "5873cbd5c5b3c87a3e0bd33477300b2e528018b1",
+  "new_tests_passed": 26,
+  "plan_validation": "independently reproduced; source and runtime hashes current",
+  "fatal_policy": "nondebug Verilator exit1 only with exact pinned three-line fatal receipt and clean cap events; generic nonzero rejected",
+  "scope": "synthetic connected recovery fixture and negative controls only; no physical drain, source producer, full token or frequency qualification",
+  "prior_failures_preserved": true,
+  "automatic_retries": 0
+}

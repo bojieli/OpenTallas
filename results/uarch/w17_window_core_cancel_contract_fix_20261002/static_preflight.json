@@ -1,0 +1,60 @@
+{
+  "status": "PASS_PURE_SOURCE_RESOURCE_PLAN_CONTROLS_NO_BUILD",
+  "tests": 37,
+  "pytest_log": "pytest_attempt4.log",
+  "pytest_sha256": "81c410a9ecce90b9f6bdb3e6bdf273884cc511c179b633736afa7689584f56c0",
+  "source_default_inverse": [
+    {
+      "kind": "base",
+      "ports": 224,
+      "expected": 224,
+      "legacy_body_inverse_original": true,
+      "all_original_ANSI_ports_forwarded": true
+    },
+    {
+      "kind": "fastpp",
+      "ports": 239,
+      "expected": 239,
+      "legacy_body_inverse_original": true,
+      "all_original_ANSI_ports_forwarded": true
+    }
+  ],
+  "profile_plan_validate": true,
+  "campaign_plan_validate": true,
+  "source_pin_count": 162,
+  "geometry": {
+    "SUN": 256,
+    "SUM": 64,
+    "BL": 16,
+    "IL": 8,
+    "NBMAX": 192,
+    "CHUNK8": 1,
+    "MP": 1,
+    "AW": 30,
+    "NW": 21
+  },
+  "storage": {
+    "provider": 259,
+    "producer_receipt": 2,
+    "core_control": 8,
+    "concrete": 269,
+    "envelope": 278,
+    "older_280_plan": "superseded, preserved; never added"
+  },
+  "positive_cases": 23,
+  "negative_controls": [
+    "physical_QE_gate",
+    "PC_advance",
+    "VM_frozen_store_drop",
+    "scalar_suppression"
+  ],
+  "pure_worker_simulation": "Mocks test ordering/budget/receipt/refusal only; no actual RTL runtime credit.",
+  "source_binding_repairs": [
+    "WQR real QE input port",
+    "source-derived SU accept43",
+    "complete ANSI multidcl forwarding and explicit excluded fault inputs",
+    "AW30 masked noalias VM sink+accepted frozen-store mutant"
+  ],
+  "physical_provider": false,
+  "runtime_qualification": false
+}

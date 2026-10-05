@@ -1,0 +1,5 @@
+Oct 03 04:37:28 ubuntu kernel: dockerd invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=-500
+Oct 03 04:37:28 ubuntu kernel: [1998275]  1000 1998275 15911734 12671976 12671272      704         0 111648768  1185900             0 yosys
+Oct 03 04:37:28 ubuntu kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker.service,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-6.scope,task=yosys,pid=1998275,uid=1000
+Oct 03 04:37:28 ubuntu kernel: Out of memory: Killed process 1998275 (yosys) total-vm:63646936kB, anon-rss:50685088kB, file-rss:2816kB, shmem-rss:0kB, UID:1000 pgtables:109032kB oom_score_adj:0
+Oct 03 04:37:33 ubuntu kernel: oom_reaper: reaped process 1998275 (yosys), now anon-rss:1668kB, file-rss:212kB, shmem-rss:0kB

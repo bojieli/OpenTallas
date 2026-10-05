@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.window.actual_QDQ8.producer_freeze_cancel_gap.v1",
+  "verdict": "GAP_PRESERVED_PRODUCER_FREEZE_CANCEL_AND_PHYSICAL_RECOVERY_UNQUALIFIED",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_path": "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv",
+  "source_sha256": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+  "port_contract": "Only rst_n resets EMPTY/count/rd_idx/fault. No freeze/cancel/abort/fault input. Sticky fault is output and does not inhibit cap_ready,issue_ready,blk_v or cap/issue/drain sequential branches.",
+  "state_contract": [
+    {
+      "state": "EMPTY",
+      "cap_ready": "count<16; independent of fault",
+      "cancel": "Absent; rst_n only"
+    },
+    {
+      "state": "FILL",
+      "cap_ready": "count<16, strict sequential addresses required",
+      "cancel": "Absent; no legal partial-fill->EMPTY transition except reset"
+    },
+    {
+      "state": "FULL",
+      "issue_ready": "true independent of fault",
+      "cancel": "Absent; FULL->DRAIN on valid issue, no fault-priority cancel"
+    },
+    {
+      "state": "DRAIN",
+      "blk_v": "true independent of fault; no fault gate on handshake",
+      "cancel": "Absent; returns EMPTY after block15 accepted, regardless of downstream WC/WS ack/visibility"
+    }
+  ],
+  "counterexamples_source_contract": [
+    "Fault in FILL leaves previously captured prefix resident and still permits later valid captures. Gating new cap_v externally without discarding partial state strands FILL; subsequent producer row is not proven isolated.",
+    "Fault in FULL does not suppress issue_ready or transition on valid issue.",
+    "Fault in DRAIN does not suppress blk_v/blk_ready handshake; already accepted block/WR intents cannot be withdrawn by local reset/EMPTY.",
+    "QE emits fixed-latency outputs without cap_ready backpressure. Freeze must define drain/discard of already-issued quantizer outputs; stopping the producer alone does not stop AQ/QE pipeline."
+  ],
+  "bounded_QE_lifetime": {
+    "accept": 300,
+    "read_samples": [
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317
+    ],
+    "capture_samples": [
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332
+    ],
+    "idle_sample": 335,
+    "max_total_inflight_or_pending_capture_blocks": 16,
+    "no_actual_cancel_semantics": true
+  },
+  "healthy_local_completion_example": {
+    "predicted_last_block_accept_cycle": 871,
+    "predicted_final_WR_ack_cycle": 905,
+    "predicted_final_WRcolumn_ps": 904000,
+    "declared_shadow_visible_ps": 911274,
+    "producer_EMPTY_after_last_block": "Does not certify last WC/WS write committed/acknowledged/physically visible."
+  },
+  "separate_future_contract_not_implemented": {
+    "freeze": "Define atomic admission edge: suppress new descriptor,cap/issue/blk admissions while explicitly draining/discarding already-issued QE outputs. No fault-priority interface exists in original producer.",
+    "cancel": "Only cancel never-admitted producer content after outstanding QE suffix stopped/drained. Preserve sticky error/provenance; reset alone cannot cancel owner-mux/KARB/provider accepted intents.",
+    "restart": "Fresh producer row/context only after producer/QE local empty + WINDOW outstanding responses/owner intents physically fenced under Peirce contract. No assume reset every token.",
+    "storage_price": "Existing producer4338bits discarded logically without zeroing payload; no current cancel control. Any opt-in freeze/cancel design must price enable gating and at least explicit quiescence/ack interface; registered pending/cancel acknowledgement adds up to2bits if needed, plus upstream fault/context bookkeeping. Not selected or built here.",
+    "latency_price": "Healthy path remains0addedguardcycles. Recovery drain bound cannot be assigned from QE idle alone; finite QE suffix ends335 for declared fixture, provider WR/READ fences require separate source-composed external contract.",
+    "owner": "Peirce01a0f95d-badc-74d3-bde3-f3eb28f089b8; source/physical recovery remains independent."
+  },
+  "physical_provider_status": "Independently FAILED/UNQUALIFIED per parent; no physical write provider PASS inferred. Backend model immediate mem[] writes and delayed-visible shadow7274ps are source/oracle semantics only.",
+  "healthy_fixture_policy": "Unchanged healthy fixture stops on faults via fatal assertions. It does not exercise freeze/cancel/recovery; no source/helper/guard or expectation change.",
+  "scope": "Static gap model only; no recovery RTL, build, dispatch, physicaldrain/fulltoken or admission claim."
+}

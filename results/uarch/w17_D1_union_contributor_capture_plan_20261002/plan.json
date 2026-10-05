@@ -1,0 +1,123 @@
+{
+  "schema": "opentallas.D1.KV_union_contributors.capture_plan.v1",
+  "status": "OFFLINE_READY_PENDING_FRESH_GO_NO_EXECUTION",
+  "parent_source_mask_receipt": "259bd0994dd7dfda6f50a66ca7b42475808c1029",
+  "engine_source": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "frontend_source": "6b94aa3088dfeaa8284e66615fbd8b948f8c65c2",
+  "native_source": "a93ac5a8c2312266213cc4f119aa2bd99175f52a",
+  "source_SHA256": {
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/w17_runtime/chip/ot_chip_v41x_die.sv": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/tb_D1_scope_core.sv": "7eb722d71722fc48d10bacdc0964020e8e101533f94108dfa1fcd86b3b4aeac9",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/ot_v41_rt_die_D1_scope.sv": "be35b5ccf0d258677b11bc9cd6b0ee2869b5023b21651a3b39099413bdb4487d",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/runtime/runtime.log": "7e34b92b5fffe5da1088f3f516c661da6cb2324938078b50a407bc7c92e9975e",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/runtime/receipt.json": "a2f3120ea37e232078ce378550e6028b632edde0220ae1273a86f2dd81011098"
+  },
+  "binary": {
+    "path": "/tmp/w17-D1-native-joined-20261002-r1/D1_current_prefix",
+    "SHA256": "b7d605fa323444f14fbc60b8912b9fd894f257f36b137f78fbab882407c60153"
+  },
+  "program": {
+    "path": "/tmp/w17-D1-native-diagnostic-result-20261002-r1/input/prog.hex",
+    "SHA256": "dc93faea61a95d04d0a157d09e9c962d7f863bb9559ab92532aed61d7856d1c6"
+  },
+  "GDB": {
+    "path": "/usr/bin/gdb",
+    "SHA256": "a6222ff0f450ca040e3479c04fdb7d0f1e0cabb099688270e720b7115d933c3d",
+    "offline_exit": 0,
+    "inferior_started": false
+  },
+  "layout": {
+    "header": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core___024root.h",
+    "header_SHA256": "c66d1ceb7ab3cbf289d9a88822ad6a1cf114cbb29fa37469752d89aa57f70042",
+    "snapshot_header_entry": {
+      "SHA256": "c66d1ceb7ab3cbf289d9a88822ad6a1cf114cbb29fa37469752d89aa57f70042",
+      "bytes": 110103200,
+      "mtime_ns": 1790937998118322318
+    },
+    "pointer_cells": 838,
+    "parsed_prefix_bytes": 2368791864,
+    "first_unparsed_line": 608116,
+    "machine_code_anchors": {
+      "fault_r": "0x28021",
+      "dbg_fs": "0x5f0fc",
+      "violations": "0x27fe2",
+      "source_prime_ready": "0x2802a",
+      "bench_prime_row": "0x5f104"
+    },
+    "ABI": "x86-64 LP64. No base/virtual layout. Pointers8. CData1/SData2/IData4/QData8, VlWide=uint32 words, VlUnpacked=contiguous T array. Anonymous group alignment and trailing padding honored. Unsupported POD declarations fail closed.",
+    "ABI_source_SHA256": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.h": "c0432fe7bbb2d4100583048a2ec52ec346441ca2cba5dde41f28d952d2b6d7c5",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_types.h": "fa362d371573a489e199eb2ba90775c2e6a03e08e92f9f484ca48ccd55d3299e"
+    }
+  },
+  "inspection": {
+    "replays": 1,
+    "fatal_breakpoint": {
+      "actor": "_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2PZ59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024rootE99_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024root.Frame.actor",
+      "offset_hex": "0x91d",
+      "link_address_hex": "0x11251",
+      "frame_from_rbp_minus_hex": "0x48",
+      "root_from_frame_plus_hex": "0x40"
+    },
+    "first_prime_breakpoint": {
+      "actor": "_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__0PZ59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__0P27Vtb_D1_scope_core___024rootE99_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__0P27Vtb_D1_scope_core___024root.Frame.actor",
+      "offset_hex": "0x599",
+      "link_address_hex": "0xfd86",
+      "frame_from_rbp_minus_hex": "0x28",
+      "root_from_frame_plus_hex": "0x40",
+      "condition": "first successful bench ready sample with prime_row==0; breakpoint disables after sample",
+      "meaning": "Bench ready sample BEFORE row-loop increment, not reset-qualified DUT acceptance. Capture synchronized reset value at this phase; do not claim current fatal reset reconstructs history."
+    },
+    "all_KV_contributors": [
+      "unsupported_read",
+      "bad_block",
+      "rope_fault",
+      "descriptor_fault",
+      "pf_fault",
+      "merge_fault",
+      "schedule_fault"
+    ],
+    "window_fault": "source pf_fault|merge_fault|schedule_fault, plus invalid-region descriptor admission. Region guard source-bound true for fixed region valid1/base262144/count2176/K_MEM16777216; no bad-region branch for these pinned constants.",
+    "prefetch_fault_code": {
+      "availability": "UNAVAILABLE_NO_STORED_GENERATED_MEMBER",
+      "source_width": 5,
+      "actual_code": null,
+      "evidence": "Full generated root header contains neither fault_code, pf_fault_code nor win_code state. Unused fault-code output pruned; do not invent offset, zero, or observed code. Inspect prefetch fault plus valid/tag/user/state; inferred RTL branch code remains source-derived."
+    },
+    "fields": "offsets.json",
+    "array_selection": "row_valid/active all128bits; row tags/users slots0,1,127; block_valid slot0",
+    "no_inferior_calls_or_engine_data_writes": true,
+    "no_compiler_link_frontend": true,
+    "script": "capture_contributors.gdb"
+  },
+  "admission": {
+    "fresh_GO_required": true,
+    "fresh_memory_and_recovery_coordination_required": true,
+    "CPU": [
+      8
+    ],
+    "memory_reservation_bytes": 103079215104,
+    "MemoryMax": null,
+    "host_reserve_bytes": 34359738368,
+    "recovery_reserve_bytes": 17179869184,
+    "capacity_reservation_not_limit": true,
+    "wall_limit": null,
+    "CPU_limit": null,
+    "AS_limit": null,
+    "FS_limit": null,
+    "prior_same_binary_capture_wall_s": 57.96545637026429,
+    "prior_time_is_deadline": false
+  },
+  "scope": {
+    "synthetic_prefix_only": true,
+    "fulltoken": false,
+    "original_PC24_cause": "UNOBSERVED",
+    "service_bound": "BOUND_MISSING",
+    "I66_used": false
+  },
+  "repair_gate": "No fixture edits now. First inspect exact contributor and row-state capture; then separately prepare reset-qualified priming repair and first-row/all128-row healthy control. Engine and original FAIL unchanged."
+}

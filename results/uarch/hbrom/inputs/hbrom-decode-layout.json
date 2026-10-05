@@ -1,0 +1,148 @@
+{
+  "schema": "opentallas.hbrom.decode_layout.v1",
+  "status": "analytical proposal; no new RTL measurements",
+  "sources": [
+    {
+      "path": "rtl/gpu/ot_gpu_sm_v.sv",
+      "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_payload_assemble.sv",
+      "sha256": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qt_w10.sv",
+      "sha256": "a66e1ef60b53f60624a4c32d3bb0a52a53f4edf64ce1df061396d97a7d490f4f"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "sha256": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada"
+    },
+    {
+      "path": "results/uarch/v41_rom_depth_study.json",
+      "sha256": "2486182dfd3bfd8f37db72ee59c254222d2586292efdead2697bd71ccf095c5b"
+    },
+    {
+      "path": "results/uarch/rom_no_ecc_policy_20261002/decision.json",
+      "sha256": "503896e569f4217ac182d6067da782b7774854b5c366701b40f93828228240fc"
+    },
+    {
+      "path": "tools/uarch_model.py",
+      "sha256": "d97982d88554cf74763c90ffaffd683d04e4a9a15e21f1ef90f7efdec094302b"
+    }
+  ],
+  "selected_macro": {
+    "name": "ot_rom_4096x274_m8",
+    "word_bits": 274,
+    "rows": 4096,
+    "ecc_bits": 0,
+    "two_alternating_macros_per_stream": true,
+    "logical_stream_words_per_cycle": 1,
+    "macro_pin_capture_cycles": 2,
+    "registered_bank_select_cycles": 1,
+    "local_swizzle_register_cycles_assumed": 1,
+    "first_record_latency_assumed_cycles_excluding_pool_selection_transport": 4,
+    "warning": "Actual contextual SS/FF closure required. Two alternating macros produce one word/cycle, not two."
+  },
+  "compute_interface": {
+    "module": "ot_gpu_sm_v",
+    "physical_rsp_bits": 1088,
+    "weight_code_bits": 1024,
+    "scale_slots": 8,
+    "scale_bits_each": 8,
+    "response_tag_bits": 10,
+    "response_record_bytes": 136,
+    "formats": {
+      "0": "BF16",
+      "1": "FP8 E4M3",
+      "2": "FP4 E2M1"
+    },
+    "FP32_supported": false,
+    "NC_default": 8,
+    "columns_are_token_positions_not_additional_independent_weight_bandwidth": true,
+    "retained_unpack_pipeline": "stage1 latch line/tag, stage2 unpack plus x fragment; do not add the same pipeline twice to inherited MMA drain"
+  },
+  "conversion_rules": {
+    "FP4": "Four ROM words r0..r3; for i=0..3 place ri[127:0] at weights[256*i+:128], ri[263:136] at weights[256*i+128+:128], ri[135:128] at scale[2*i], ri[271:264] at scale[2*i+1]. Discard ri[273:272]. Existing SM zero-extends each E2M1 nibble to byte; no float conversion.",
+    "FP8": "Four ROM words; ri[255:0] -> weights[256*i+:256], ri[263:256] -> scale[i]. Zero unused scales[4:8]. Discard ri[273:264]. Existing SM zeroes unused four block lanes.",
+    "BF16": "Four ROM words; ri[255:0] -> weights[256*i+:256]. Zero all scale slots; discard ri[273:256].",
+    "FP32": "Four ROM words can convey 32 FP32 values using low256 bits per word, but existing SM lacks FP32 mode. Route to retained exact FP32 unit; do not reinterpret as BF16."
+  },
+  "formats": {
+    "fp4": {
+      "weights_per_record": 256,
+      "rom_words_per_record": 4,
+      "raw_rom_bits_per_record": 1096,
+      "meaningful_payload_bits_per_record": 1088,
+      "unused_rom_bits_per_record": 8,
+      "useful_bytes_per_macro": 139264,
+      "native_weights_per_macro_word": 64
+    },
+    "fp8": {
+      "weights_per_record": 128,
+      "rom_words_per_record": 4,
+      "raw_rom_bits_per_record": 1096,
+      "meaningful_payload_bits_per_record": 1056,
+      "unused_rom_bits_per_record": 40,
+      "useful_bytes_per_macro": 135168,
+      "native_weights_per_macro_word": 32
+    },
+    "bf16": {
+      "weights_per_record": 64,
+      "rom_words_per_record": 4,
+      "raw_rom_bits_per_record": 1096,
+      "meaningful_payload_bits_per_record": 1024,
+      "unused_rom_bits_per_record": 72,
+      "useful_bytes_per_macro": 131072,
+      "native_weights_per_macro_word": 16
+    },
+    "fp32": {
+      "weights_per_record": 32,
+      "rom_words_per_record": 4,
+      "raw_rom_bits_per_record": 1096,
+      "meaningful_payload_bits_per_record": 1024,
+      "unused_rom_bits_per_record": 72,
+      "useful_bytes_per_macro": 131072,
+      "native_weights_per_macro_word": 8
+    }
+  },
+  "mapping_obligations": [
+    "Reencode immutable words in existing SM issue order, preserving every checkpoint code/scale and golden chunk/tree assignment. Native ROM FP4 pairs sibling chunks, so blindly concatenating sequential native addresses is not proven to match SM grouping.",
+    "Do not replace FP8 weights converted to BF16 by golden (wo_a) with ordinary FP8 block-dot semantics. Either store offline exact BF16 expansion or price exact source-format conversion.",
+    "Retain address bounds, descriptor format, epoch, request identity, masks, finite credits, SRAM/link/control protection. No ROM parity or SECDED sidecars.",
+    "No implicit compression/decompression benefit: layout transform is bit-permutation and zero fill; arithmetic decoded by retained compute engine."
+  ],
+  "serialization": {
+    "128B_transport_FP4_records_per_cycle": 0.9411764705882353,
+    "128B_transport_FP8_useful_records_per_cycle": 0.9696969696969697,
+    "128B_transport_BF16_useful_records_per_cycle": 1,
+    "existing_fixed_136B_SM_record_transport_records_per_cycle": 0.9411764705882353,
+    "four_parallel_274bit_streams_records_per_cycle": 1,
+    "single_274bit_stream_records_per_cycle": 0.25,
+    "four_parallel_stream_wire_bits_per_cycle": 1096,
+    "four_parallel_stream_code_bytes_per_cycle": 128,
+    "four_parallel_stream_FP4_scale_bytes_per_cycle": 8,
+    "FP8_compact_scale_sideband_bytes_per_cycle": 4
+  },
+  "266bit_alternative": {
+    "FP4_two_blocks_fit": false,
+    "FP4_required_bits": 272,
+    "FP8_block_fits": true,
+    "BF16_16_values_fit": true,
+    "FP32_8_values_fit": true,
+    "dense_FP4_bitpacking_words_per_136B_record": 4.090225563909774,
+    "dense_FP4_bitpacking_repeat": {
+      "records": 133,
+      "words": 544
+    },
+    "caveat": "266 is not a generic no-ECC replacement width; wider released-scale payload must be accounted. Dense crossword packing adds alignment reservoir and changes source calendar."
+  },
+  "new_logic_lower_bound": {
+    "four_stream_word_capture_bits": 2192,
+    "four_stream_bank_select_mux_bits": 1096,
+    "registered_four_stream_selected_bits": 1096,
+    "registered_sm_record_bits": 1088,
+    "swizzle_bit_muxes": 0,
+    "swizzle_basis": "Fixed wires if format-specific sources selected upstream; shared runtime format adds format-select muxes to price. Address-based pool selection is separate."
+  }
+}

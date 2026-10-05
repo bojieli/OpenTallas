@@ -1,0 +1,568 @@
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:559:48: Operator ADD expects 39 bits on the RHS, but RHS's VARREF 'TT_ODD' generates 32 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  559 |     localparam [NW+TT_K:0] TT_M = ((1 << TT_K) + TT_ODD - 1) / TT_ODD;    
+      |                                                ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.032
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:559:62: Operator DIVS expects 39 bits on the RHS, but RHS's VARREF 'TT_ODD' generates 32 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  559 |     localparam [NW+TT_K:0] TT_M = ((1 << TT_K) + TT_ODD - 1) / TT_ODD;    
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:587:24: Operator VAR 'DF' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  587 |     localparam integer DF = (DEC_FAST != 0);
+      |                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:560:48: Operator ADD expects 39 bits on the RHS, but RHS's VARREF 'TT_ODD' generates 32 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  560 |     localparam [NW+TT_K:0] TT_M = ((1 << TT_K) + TT_ODD - 1) / TT_ODD;    
+      |                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:560:62: Operator DIVS expects 39 bits on the RHS, but RHS's VARREF 'TT_ODD' generates 32 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  560 |     localparam [NW+TT_K:0] TT_M = ((1 << TT_K) + TT_ODD - 1) / TT_ODD;    
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:588:24: Operator VAR 'DF' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  588 |     localparam integer DF = (DEC_FAST != 0);
+      |                        ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_core_ctx_stubs.sv:171:26: Operator ASSIGNW expects 432 bits on the Assign RHS, but Assign RHS's REPLICATE generates 456 bits.
+                                                                                                                                                                             : ... note: In instance 'tb_core_registered_admission.u1.core.g_vsu.u_su'
+  171 |     wire [FB-1:0] fields = {i_nout, i_nin, i_asrc, i_abase, i_aso, i_asi, i_bsrc, i_bbase, i_bso, i_bsi, i_csrc, i_cbase,
+      |                          ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_core_ctx_stubs.sv:193:63: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's REPLICATE generates 8 bits.
+                                                                                                                                                                              : ... note: In instance 'tb_core_registered_admission.u1.core.g_vsu.u_su'
+  193 |             if (accept) begin active <= 1; cls <= i_sfu; left <= {lfsr[9:4], 2'b11}; end
+      |                                                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_core_ctx_stubs.sv:197:46: Operator AND expects 64 bits on the RHS, but RHS's SEL generates 32 bits.
+                                                                                                                                                                              : ... note: In instance 'tb_core_registered_admission.u1.core.g_vsu.u_su'
+  197 |             kv_we <= {SW{active && lfsr[6]}} & fold[SW-1 > 31 ? 31 : SW-1:0];
+      |                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_core_ctx_stubs.sv:87:46: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's REPLICATE generates 10 bits.
+                                                                                                                                                                             : ... note: In instance 'tb_core_registered_admission.u1.core.u_me'
+   87 |             if (acc) begin active <= 1; left <= {lfsr[11:4], 2'b11}; end
+      |                                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_core_ctx_stubs.sv:93:70: Operator XOR expects 48 bits on the RHS, but RHS's SEL generates 32 bits.
+                                                                                                                                                                             : ... note: In instance 'tb_core_registered_admission.u1.core.u_me'
+   93 |             o_we <= {(GT >> SMIN){active}} & {(GT >> SMIN){lfsr[9]}} ^ fold[(GT >> SMIN)-1 > 31 ? 31 : (GT >> SMIN)-1:0];
+      |                                                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:26:34: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_log2' generates 4 bits.
+                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:26:28: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                    : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:54: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:29:33: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 18 bits.
+                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:29:56: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'shifted' generates 18 bits.
+                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:29:18: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                    : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:434:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  434 |                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:442:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  442 |     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:482:38: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  482 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:482:38: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'prog_re' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  482 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:482:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pend1' generates 1 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  482 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:544:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  544 |         dyn[1] <= tok_r * HID;
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:545:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  545 |         dyn[2] <= pos_r * HALF;
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:546:26: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  546 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:546:53: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  546 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:546:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  546 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:547:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  547 |         dyn[4] <= pos_r * HD;
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:548:25: Operator ADD expects 32 or 24 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  548 |         dyn[5] <= pos_r + 1;
+      |                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:549:44: Operator SHIFTR expects 24 bits on the LHS, but LHS's VARREF 'tt_p3' generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  549 |         dyn[6] <= (DEC_FAST != 0) ? (tt_p3 >> (TT_WT + TT_GT)) + 1'b1 : dyn_tiles_zero;    
+      |                                            ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:549:35: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'dyn_tiles_zero' generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  549 |         dyn[6] <= (DEC_FAST != 0) ? (tt_p3 >> (TT_WT + TT_GT)) + 1'b1 : dyn_tiles_zero;    
+      |                                   ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:569:15: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SHIFTR generates 57 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  569 |         tt_p3 <= tt_pm >> TT_K;
+      |               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:571:42: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  571 |     wire [4:0]    tt_sa  = TT_WT + TT_GT - ir[O_ME_SPLIT +: W_ME_SPLIT];
+      |                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:571:26: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  571 |     wire [4:0]    tt_sa  = TT_WT + TT_GT - ir[O_ME_SPLIT +: W_ME_SPLIT];
+      |                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:593:23: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  593 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:593:23: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  593 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:593:69: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  593 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                                                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:593:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  593 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:595:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  595 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:595:24: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  595 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:595:73: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  595 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:595:119: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                                  : ... note: In instance 'tb_core_registered_admission.u1.core'
+  595 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:595:18: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  595 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:597:20: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  597 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:597:20: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  597 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:597:57: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  597 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                                                         ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:597:14: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  597 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:601:47: Operator OR expects 18 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  601 |         me_row0 <= ir[O_ME_ROW0 +: W_ME_ROW0] |
+      |                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:604:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  604 |         me_wbase <= DF ? k_wbase : ir[O_ME_WBASE +: W_ME_WBASE] + dyn[ir[O_ME_D_WBASE +: W_ME_D_WBASE]];
+      |                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:606:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  606 |         me_xbase <= DF ? k_xbase : ir[O_ME_XBASE +: W_ME_XBASE] + dyn[ir[O_ME_D_XBASE +: W_ME_D_XBASE]];
+      |                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:607:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  607 |         me_obase <= DF ? k_obase : ir[O_ME_OBASE +: W_ME_OBASE] + dyn[ir[O_ME_D_OBASE +: W_ME_D_OBASE]];
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:614:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  614 |         su_nout <= ir[O_SU_NOUT +: W_SU_NOUT];
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:615:22: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  615 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:615:22: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  615 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:615:65: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  615 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:615:16: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  615 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:616:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  616 |         a_src <= ir[O_A_SRC +: W_A_SRC]; a_base <= DF ? k_a : ir[O_A_BASE +: W_A_BASE] + dyn[ir[O_A_D +: W_A_D]]; a_so <= ir[O_A_SO +: W_A_SO]; a_si <= ir[O_A_SI +: W_A_SI];
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:617:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  617 |         b_src <= ir[O_B_SRC +: W_B_SRC]; b_base <= DF ? k_b : ir[O_B_BASE +: W_B_BASE] + dyn[ir[O_B_D +: W_B_D]]; b_so <= ir[O_B_SO +: W_B_SO]; b_si <= ir[O_B_SI +: W_B_SI];
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:618:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  618 |         c_src <= ir[O_C_SRC +: W_C_SRC]; c_base <= DF ? k_c : ir[O_C_BASE +: W_C_BASE] + dyn[ir[O_C_D +: W_C_D]]; c_so <= ir[O_C_SO +: W_C_SO]; c_si <= ir[O_C_SI +: W_C_SI];
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:620:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  620 |         dst <= ir[O_DST +: W_DST]; d_base <= DF ? k_d : ir[O_D_BASE +: W_D_BASE] + dyn[ir[O_D_D +: W_D_D]]; d_so <= ir[O_D_SO +: W_D_SO]; d_si <= ir[O_D_SI +: W_D_SI];
+      |                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:645:33: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  645 |          (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:647:31: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                                 : ... note: In instance 'tb_core_registered_admission.u1.core'
+  647 |         ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_candidate.sv:643:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_core_registered_admission.u1.core'
+  643 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:433:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  433 |                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:441:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  441 |     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:481:38: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  481 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:481:38: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'prog_re' generates 1 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  481 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:481:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pend1' generates 1 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  481 |                     if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+      |                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:543:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  543 |         dyn[1] <= tok_r * HID;
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:544:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  544 |         dyn[2] <= pos_r * HALF;
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:545:26: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  545 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:545:53: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  545 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:545:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  545 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:546:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  546 |         dyn[4] <= pos_r * HD;
+      |                ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:547:25: Operator ADD expects 32 or 24 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  547 |         dyn[5] <= pos_r + 1;
+      |                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:548:44: Operator SHIFTR expects 24 bits on the LHS, but LHS's VARREF 'tt_p3' generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  548 |         dyn[6] <= (DEC_FAST != 0) ? (tt_p3 >> (TT_WT + TT_GT)) + 1'b1 : dyn_tiles_zero;    
+      |                                            ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:548:35: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'dyn_tiles_zero' generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  548 |         dyn[6] <= (DEC_FAST != 0) ? (tt_p3 >> (TT_WT + TT_GT)) + 1'b1 : dyn_tiles_zero;    
+      |                                   ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:568:15: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SHIFTR generates 57 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  568 |         tt_p3 <= tt_pm >> TT_K;
+      |               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:570:42: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  570 |     wire [4:0]    tt_sa  = TT_WT + TT_GT - ir[O_ME_SPLIT +: W_ME_SPLIT];
+      |                                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:570:26: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  570 |     wire [4:0]    tt_sa  = TT_WT + TT_GT - ir[O_ME_SPLIT +: W_ME_SPLIT];
+      |                          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:592:23: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  592 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:592:23: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  592 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:592:69: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  592 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                                                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:592:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  592 |         me_nout <= DF ? k_nout[NW-1:0] : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:594:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  594 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:594:24: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  594 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:594:73: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  594 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:594:119: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                             : ... note: In instance 'tb_core_registered_admission.u0.core'
+  594 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:594:18: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  594 |         me_tiles <= DF ? k_tiles[NW-1:0] : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:596:20: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  596 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:596:20: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  596 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:596:57: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  596 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                                                         ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:596:14: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  596 |         me_k <= DF ? k_k[NW-1:0] : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:600:47: Operator OR expects 18 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  600 |         me_row0 <= ir[O_ME_ROW0 +: W_ME_ROW0] |
+      |                                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:603:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  603 |         me_wbase <= DF ? k_wbase : ir[O_ME_WBASE +: W_ME_WBASE] + dyn[ir[O_ME_D_WBASE +: W_ME_D_WBASE]];
+      |                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:605:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  605 |         me_xbase <= DF ? k_xbase : ir[O_ME_XBASE +: W_ME_XBASE] + dyn[ir[O_ME_D_XBASE +: W_ME_D_XBASE]];
+      |                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:606:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  606 |         me_obase <= DF ? k_obase : ir[O_ME_OBASE +: W_ME_OBASE] + dyn[ir[O_ME_D_OBASE +: W_ME_D_OBASE]];
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:613:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  613 |         su_nout <= ir[O_SU_NOUT +: W_SU_NOUT];
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:614:22: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  614 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:614:22: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  614 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:614:65: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  614 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:614:16: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  614 |         su_nin <= DF ? k_nin[NW-1:0] : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:615:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  615 |         a_src <= ir[O_A_SRC +: W_A_SRC]; a_base <= DF ? k_a : ir[O_A_BASE +: W_A_BASE] + dyn[ir[O_A_D +: W_A_D]]; a_so <= ir[O_A_SO +: W_A_SO]; a_si <= ir[O_A_SI +: W_A_SI];
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:616:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  616 |         b_src <= ir[O_B_SRC +: W_B_SRC]; b_base <= DF ? k_b : ir[O_B_BASE +: W_B_BASE] + dyn[ir[O_B_D +: W_B_D]]; b_so <= ir[O_B_SO +: W_B_SO]; b_si <= ir[O_B_SI +: W_B_SI];
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:617:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  617 |         c_src <= ir[O_C_SRC +: W_C_SRC]; c_base <= DF ? k_c : ir[O_C_BASE +: W_C_BASE] + dyn[ir[O_C_D +: W_C_D]]; c_so <= ir[O_C_SO +: W_C_SO]; c_si <= ir[O_C_SI +: W_C_SI];
+      |                                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:619:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DF' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  619 |         dst <= ir[O_DST +: W_DST]; d_base <= DF ? k_d : ir[O_D_BASE +: W_D_BASE] + dyn[ir[O_D_D +: W_D_D]]; d_so <= ir[O_D_SO +: W_D_SO]; d_si <= ir[O_D_SI +: W_D_SI];
+      |                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:644:33: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  644 |          (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:646:31: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                            : ... note: In instance 'tb_core_registered_admission.u0.core'
+  646 |         ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                               ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/core_base.sv:642:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                           : ... note: In instance 'tb_core_registered_admission.u0.core'
+  642 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/test/hbm_accel_qwen/fmax/tb_core_registered_admission.sv:49:16: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's MULS generates 32 bits.
+                                                                                                                                                    : ... note: In instance 'tb_core_registered_admission'
+   49 |  rom[i][72+:24]=i*128;rom[i][193+:24]=i*64;rom[i][217]=1;
+      |                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/test/hbm_accel_qwen/fmax/tb_core_registered_admission.sv:49:38: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's MULS generates 32 bits.
+                                                                                                                                                    : ... note: In instance 'tb_core_registered_admission'
+   49 |  rom[i][72+:24]=i*128;rom[i][193+:24]=i*64;rom[i][217]=1;
+      |                                      ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_core_ctx_admission.sv:67:57: More than a 8k bit replication is probably wrong: 1572864
+                                                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1'
+   67 |         .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+      |                                                         ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_core_ctx_admission.sv:69:76: More than a 8k bit replication is probably wrong: 12288
+                                                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1'
+   69 |         .scale_re(),.scale_gre(),.scale_addr(),.scale_q({((G >> SMIN)*W*16){1'b0}}),
+      |                                                                            ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_core_ctx_admission.sv:86:50: More than a 8k bit replication is probably wrong: 65536
+                                                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1'
+   86 |         .vx_re(),.vx_addr(),.vx_q({((1<<SMAX)*32){1'b0}}),
+      |                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_core_ctx_admission.sv:87:56: More than a 8k bit replication is probably wrong: 24576
+                                                                                                                                                     : ... note: In instance 'tb_core_registered_admission.u1'
+   87 |         .tgo(),.tb(),.xl_d(),.t_lvl({((G >> TCUT)*W*32){1'b0}}),.fab_fault(fab_fault),
+      |                                                        ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/ctx_base.sv:66:57: More than a 8k bit replication is probably wrong: 1572864
+                                                                                                          : ... note: In instance 'tb_core_registered_admission.u0'
+   66 |         .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+      |                                                         ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/ctx_base.sv:68:76: More than a 8k bit replication is probably wrong: 12288
+                                                                                                          : ... note: In instance 'tb_core_registered_admission.u0'
+   68 |         .scale_re(),.scale_gre(),.scale_addr(),.scale_q({((G >> SMIN)*W*16){1'b0}}),
+      |                                                                            ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/ctx_base.sv:85:50: More than a 8k bit replication is probably wrong: 65536
+                                                                                                          : ... note: In instance 'tb_core_registered_admission.u0'
+   85 |         .vx_re(),.vx_addr(),.vx_q({((1<<SMAX)*32){1'b0}}),
+      |                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/gen/ctx_base.sv:86:56: More than a 8k bit replication is probably wrong: 24576
+                                                                                                          : ... note: In instance 'tb_core_registered_admission.u0'
+   86 |         .tgo(),.tb(),.xl_d(),.t_lvl({((G >> TCUT)*W*32){1'b0}}),.fab_fault(fab_fault),
+      |                                                        ^
+%Warning-CMPCONST: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Comparison is constant due to limited range
+                                                                                                                  : ... note: In instance 'tb_core_registered_admission.u1.core.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_core_registered_admission.u0.core.u_ch_sr.g_k.u.g'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: tb_core_registered_admission.u0.core.u_ch_sr.g_k.u.g
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: tb_core_registered_admission.u0.core.u_ch_sr.g_k.u.g
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_core_registered_admission.u0.core.u_ch_sr.g_k.u.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: tb_core_registered_admission.u0.core.u_ch_sr.g_k.u.p
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: tb_core_registered_admission.u0.core.u_ch_sr.g_k.u.p
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_hbmacc_gate_f12.sv:61:34: Signal unoptimizable: Circular combinational logic: 'tb_core_registered_admission.u0.gate.g_g2b_tree.sx'
+   61 |         (* keep *) wire [CW-1:0] sx [0:GL];
+      |                                  ^~
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_hbmacc_gate_f12.sv:61:34:      Example path: tb_core_registered_admission.u0.gate.g_g2b_tree.sx
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_hbmacc_gate_f12.sv:66:39:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_hbmacc_gate_f12.sv:61:34:      Example path: tb_core_registered_admission.u0.gate.g_g2b_tree.sx
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_gate_admission.sv:67:34: Signal unoptimizable: Circular combinational logic: 'tb_core_registered_admission.u1.gate.g_g2b_tree.sx'
+   67 |         (* keep *) wire [CW-1:0] sx [0:GL];
+      |                                  ^~
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_gate_admission.sv:67:34:      Example path: tb_core_registered_admission.u1.gate.g_g2b_tree.sx
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_gate_admission.sv:72:39:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_gate_admission.sv:67:34:      Example path: tb_core_registered_admission.u1.gate.g_g2b_tree.sx
+%Warning-UNOPTFLAT: /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'tb_core_registered_admission.u0.gate.g_opt3.g_tab[0].u_k1i.g_k.u.t'
+                                                                                                               : ... note: In instance 'tb_core_registered_admission.u0.gate.g_opt3.g_tab[0].u_k1i'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: tb_core_registered_admission.u0.gate.g_opt3.g_tab[0].u_k1i.g_k.u.t
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    /srv/opentallas-scratch/codex/hubble-hbm-fmax-qcore-20261005/rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: tb_core_registered_admission.u0.gate.g_opt3.g_tab[0].u_k1i.g_k.u.t
+make: Entering directory '/srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/obj_tp4'
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_core_registered_admission__pch.h -o Vtb_core_registered_admission__pch.h.fast.gch
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_core_registered_admission__pch.h -o Vtb_core_registered_admission__pch.h.slow.gch
+echo "" > Vtb_core_registered_admission__ALL.verilator_deplist.tmp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission.o Vtb_core_registered_admission.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__0.o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__1.o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__2.o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_hf5db421e__0.o Vtb_core_registered_admission___024root__DepSet_hf5db421e__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_hf5db421e__1.o Vtb_core_registered_admission___024root__DepSet_hf5db421e__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_hf5db421e__2.o Vtb_core_registered_admission___024root__DepSet_hf5db421e__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission___024root__DepSet_hf5db421e__3.o Vtb_core_registered_admission___024root__DepSet_hf5db421e__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kadd__K1__DepSet_hb127d6ca__0.o Vtb_core_registered_admission_ot_hdc_kadd__K1__DepSet_hb127d6ca__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kadd__K1__DepSet_h83ba89d4__0.o Vtb_core_registered_admission_ot_hdc_kadd__K1__DepSet_h83ba89d4__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__DepSet_hf8ec82fc__0.o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__DepSet_hf8ec82fc__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__DepSet_h3d73bdfe__0.o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__DepSet_h3d73bdfe__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__DepSet_h89077c3c__0.o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__DepSet_h89077c3c__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__DepSet_h4b9ae4be__0.o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__DepSet_h4b9ae4be__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__DepSet_h22ff3c2e__0.o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__DepSet_h22ff3c2e__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__DepSet_hf36324b0__0.o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__DepSet_hf36324b0__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__DepSet_h7213afe8__0.o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__DepSet_h7213afe8__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__DepSet_hc28690f2__0.o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__DepSet_hc28690f2__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__DepSet_h5f30ab89__0.o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__DepSet_h5f30ab89__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__DepSet_h95a79511__0.o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__DepSet_h95a79511__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.fast -c -o Vtb_core_registered_admission__main.o Vtb_core_registered_admission__main.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission__ConstPool_0.o Vtb_core_registered_admission__ConstPool_0.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission___024root__Slow.o Vtb_core_registered_admission___024root__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__0__Slow.o Vtb_core_registered_admission___024root__DepSet_h3f471e9c__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission___024root__DepSet_hf5db421e__0__Slow.o Vtb_core_registered_admission___024root__DepSet_hf5db421e__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kadd__K1__Slow.o Vtb_core_registered_admission_ot_hdc_kadd__K1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kadd__K1__DepSet_h83ba89d4__0__Slow.o Vtb_core_registered_admission_ot_hdc_kadd__K1__DepSet_h83ba89d4__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__Slow.o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__DepSet_h3d73bdfe__0__Slow.o Vtb_core_registered_admission_ot_hdc_kadd__W20_K1__DepSet_h3d73bdfe__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__Slow.o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__DepSet_h4b9ae4be__0__Slow.o Vtb_core_registered_admission_ot_hdc_kinc__W20_K1__DepSet_h4b9ae4be__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__Slow.o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__DepSet_hf36324b0__0__Slow.o Vtb_core_registered_admission_ot_hdc_kadd__W19_K1__DepSet_hf36324b0__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__Slow.o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__DepSet_hc28690f2__0__Slow.o Vtb_core_registered_admission_ot_hdc_kge__W18_K1__DepSet_hc28690f2__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__Slow.o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__DepSet_h95a79511__0__Slow.o Vtb_core_registered_admission_ot_hdc_kge__W19_K1__DepSet_h95a79511__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_core_registered_admission__pch.h.slow -c -o Vtb_core_registered_admission__Syms.o Vtb_core_registered_admission__Syms.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_core_registered_admission__ALL.a    -pthread -lpthread -latomic   -o Vtb_core_registered_admission
+rm Vtb_core_registered_admission__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/jobs/hubble-qcore-admission-context-r1/obj_tp4'
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 2.784 MB sources in 56 modules, into 8.338 MB in 38 C++ files needing 0.003 MB
+- Verilator: Walltime 8.301 s (elab=0.125, cvt=3.389, bld=4.702); cpu 3.698 s on 4 threads; alloced 522.008 MB

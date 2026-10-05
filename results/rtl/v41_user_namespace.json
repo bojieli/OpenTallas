@@ -1,0 +1,33 @@
+{
+  "scope": "package-controller RTL only; die host wiring, HBM capacity, scheduling and throughput not proven",
+  "source_sha256": {
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
+    "rtl/test/tb_v41_user_namespace.sv": "6b8aea7fc07d0f2a81c681c8150f03cc35561fa76e88fcebe4906f2fcc09623b"
+  },
+  "tests": {
+    "16": {
+      "distinct_users": [
+        1,
+        257,
+        865
+      ],
+      "header_user_roundtrip_checked": true,
+      "invalid_user_rejected": 866,
+      "pass": true,
+      "side_and_kv_addresses_checked": true,
+      "source_users": 866
+    },
+    "21": {
+      "distinct_users": [
+        1,
+        257,
+        865
+      ],
+      "header_user_roundtrip_checked": true,
+      "invalid_user_rejected": 866,
+      "pass": true,
+      "side_and_kv_addresses_checked": true,
+      "source_users": 866
+    }
+  }
+}

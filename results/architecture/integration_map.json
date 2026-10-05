@@ -1,0 +1,197 @@
+{
+  "numeric_contract_counterexample": {
+    "conclusion": "A fixed-point exact accumulator is not a drop-in replacement for sequential FP32 RNE, even when all terms fit. This is an arithmetic contract example, not simulation of a selected fixed-window configuration.",
+    "exact_sum": 5.960464477539063e-08,
+    "products": [
+      1.0,
+      5.960464477539063e-08,
+      -1.0
+    ],
+    "sequential_fp32": 0.0
+  },
+  "review_findings": [
+    "The G2 cluster instantiates LQ8, not the GHz compute-unit prototype or coarse cluster dispatcher.",
+    "The device top exposes engine issue/completion externally; its control closure does not close external engines.",
+    "The functional token driver uses runtime.sim.Device; token correctness does not demonstrate execution on the compute-unit prototype.",
+    "The G2 array adapter accepts one operation at a time and supports contractions; other families trap.",
+    "Weight staging uses two independent macros but globally blocks host writes during any weight read; banking alone does not implement refill/compute overlap.",
+    "The cluster gates every host write with !busy, so independent staging-bank arbitration alone cannot enable runtime refill; a separate service interface and ownership protocol are required."
+  ],
+  "roots": [
+    {
+      "direct_children": [
+        "ot_a3_microsequencer",
+        "ot_a3_program_header"
+      ],
+      "root": "ot_a3_device_top",
+      "source": "rtl/abi3/ot_a3_device_top.sv",
+      "watched_reachable": {
+        "ot_a3_g2_array_issue_adapter": false,
+        "ot_a3_g2_array_staging": false,
+        "ot_a3_lane_pipelined": false,
+        "ot_a3_lq8": false,
+        "ot_a3_microsequencer": true,
+        "ot_cluster_dispatcher": false,
+        "ot_compute_unit": false,
+        "ot_mac_lane": false,
+        "ot_mac_tile": false
+      }
+    },
+    {
+      "direct_children": [
+        "ot_a3_g2_array_issue_adapter",
+        "ot_a3_g2_array_staging",
+        "ot_a3_g2_descriptor_store",
+        "ot_a3_g2_issue_record_ram",
+        "ot_a3_g2_program_store",
+        "ot_a3_lq8",
+        "ot_a3_microsequencer"
+      ],
+      "root": "ot_a3_g2_cluster",
+      "source": "rtl/abi3/ot_a3_g2_cluster.sv",
+      "watched_reachable": {
+        "ot_a3_g2_array_issue_adapter": true,
+        "ot_a3_g2_array_staging": true,
+        "ot_a3_lane_pipelined": true,
+        "ot_a3_lq8": true,
+        "ot_a3_microsequencer": true,
+        "ot_cluster_dispatcher": false,
+        "ot_compute_unit": false,
+        "ot_mac_lane": false,
+        "ot_mac_tile": false
+      }
+    },
+    {
+      "direct_children": [
+        "ot_a3_dma_index_mover",
+        "ot_a3_mac_lane",
+        "ot_a3_mac_lane_pipe",
+        "ot_a3_selection_argmax",
+        "ot_a3_vector_add",
+        "ot_a3_vector_compress_project",
+        "ot_a3_vector_convert",
+        "ot_a3_vector_hadamard",
+        "ot_a3_vector_index_score",
+        "ot_a3_vector_mhc_post",
+        "ot_a3_vector_scale_pipe"
+      ],
+      "root": "ot_a3_engine_array",
+      "source": "rtl/abi3/ot_a3_engine_array.sv",
+      "watched_reachable": {
+        "ot_a3_g2_array_issue_adapter": false,
+        "ot_a3_g2_array_staging": false,
+        "ot_a3_lane_pipelined": false,
+        "ot_a3_lq8": false,
+        "ot_a3_microsequencer": false,
+        "ot_cluster_dispatcher": false,
+        "ot_compute_unit": false,
+        "ot_mac_lane": false,
+        "ot_mac_tile": false
+      }
+    },
+    {
+      "direct_children": [
+        "fakeram7_128x64",
+        "fakeram_256x128",
+        "ot_mac_tile"
+      ],
+      "root": "ot_compute_unit",
+      "source": "rtl/proto/ot_compute_unit.sv",
+      "watched_reachable": {
+        "ot_a3_g2_array_issue_adapter": false,
+        "ot_a3_g2_array_staging": false,
+        "ot_a3_lane_pipelined": false,
+        "ot_a3_lq8": false,
+        "ot_a3_microsequencer": false,
+        "ot_cluster_dispatcher": false,
+        "ot_compute_unit": true,
+        "ot_mac_lane": false,
+        "ot_mac_tile": true
+      }
+    },
+    {
+      "direct_children": [
+        "fakeram7_256x32",
+        "fakeram_256x128",
+        "fakeram_256x64",
+        "ot_mac_tile"
+      ],
+      "root": "ot_compute_unit_gemm",
+      "source": "rtl/proto/ot_compute_unit_gemm.sv",
+      "watched_reachable": {
+        "ot_a3_g2_array_issue_adapter": false,
+        "ot_a3_g2_array_staging": false,
+        "ot_a3_lane_pipelined": false,
+        "ot_a3_lq8": false,
+        "ot_a3_microsequencer": false,
+        "ot_cluster_dispatcher": false,
+        "ot_compute_unit": false,
+        "ot_mac_lane": false,
+        "ot_mac_tile": true
+      }
+    },
+    {
+      "direct_children": [],
+      "root": "ot_cluster_dispatcher",
+      "source": "rtl/proto/ot_cluster_dispatcher.sv",
+      "watched_reachable": {
+        "ot_a3_g2_array_issue_adapter": false,
+        "ot_a3_g2_array_staging": false,
+        "ot_a3_lane_pipelined": false,
+        "ot_a3_lq8": false,
+        "ot_a3_microsequencer": false,
+        "ot_cluster_dispatcher": true,
+        "ot_compute_unit": false,
+        "ot_mac_lane": false,
+        "ot_mac_tile": false
+      }
+    }
+  ],
+  "schema": "opentallas.architecture_integration.v1",
+  "scope": "Static source map, not parameter elaboration, workload execution, timing closure or whole-chip integration proof.",
+  "sources": {
+    "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53",
+    "rtl/abi3/ot_a3_dependence_table.sv": "7e6a7e28e4d4042f2aa5919317b8e8cecd8024f9de796b40fd22d2d59b5fa7ad",
+    "rtl/abi3/ot_a3_device_top.sv": "a4ee87c03fed30df6527f34134197b35baeda4151dc9d8f5bb5bbe66d1776b06",
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_array.sv": "fbdc4a42983158db3db4505860a1a4c48510e65217a065c75f30bc24b8613828",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "e5546f39afe3fdb6da17c189da94fc652aedcee583b3263b662a83c7b5e86b65",
+    "rtl/abi3/ot_a3_g2_array_issue_adapter.sv": "38c164e967aebb598f67dcb6a687e92d6a984319398e78fa779fe24b314aaf76",
+    "rtl/abi3/ot_a3_g2_array_staging.sv": "8a525191c355af62966958ed2e663108c99e0be78b4487b2040141b8c129b16f",
+    "rtl/abi3/ot_a3_g2_cluster.sv": "60339168a2810b2a89e48564e6a5300c0461a813a0bc41a4afb936ce9857dd39",
+    "rtl/abi3/ot_a3_g2_descriptor_store.sv": "4a3a6834829ccdcbebf16c187bf4e86279cbf3b642e691b1aa69d91df8a5c0f1",
+    "rtl/abi3/ot_a3_g2_issue_record_ram.sv": "7ed2ce5fd92488eac16df022ab8e7c3ee430ba5e700f307404e745f62e698f80",
+    "rtl/abi3/ot_a3_g2_program_store.sv": "34324981faa0f7ddb94649ddbdfc30c901edefa0cffd2ee210532cef1e173a78",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "7cabe54def8fa53d0a7c85c716487e7848dfe1bb2fa703e2f56928daf9386a15",
+    "rtl/abi3/ot_a3_issue_record_store.sv": "20677401892ecede055f553a516d5e0c3b0d6abac77ca5ff100bbf22b85b7d04",
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "d59e182e1c0b027bface225ce2da3586b48944b9b7588c20a86467dc5caf153e",
+    "rtl/abi3/ot_a3_loop_stack.sv": "cbe7590d32f08145d3039343713f6868b818594d1bbff91f5e48e89d5d90bbc5",
+    "rtl/abi3/ot_a3_lq8.sv": "82d451ca5787a86573eb3a6b334eb12793fe068a1d50e2d30a6895b76cc134a4",
+    "rtl/abi3/ot_a3_mac_lane.sv": "d664af4b8a79fd5ad932d2c6854bcfa96436305418007c703a0f72e6a740f989",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv": "7c1329ab6961e69c3f732394ae16c282806cafe9df8ed6a7d63adfea7e21f449",
+    "rtl/abi3/ot_a3_microsequencer.sv": "7edfe75fd809a63d867b8969b99409cbe8b3b8681e4f9079dbd568705b3cbe6f",
+    "rtl/abi3/ot_a3_program_header.sv": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619",
+    "rtl/abi3/ot_a3_resolver_bank.sv": "0473c9723a9ea4819b336d07b369d921e4c00dd52ef8614cc844754dcc0bd6f4",
+    "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
+    "rtl/abi3/ot_a3_shared_divider.sv": "66fb93cf7e1e98fcda129253ce362da1b5cbbbea0412f9593730e0f6ae7716d1",
+    "rtl/abi3/ot_a3_state_controller.sv": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006",
+    "rtl/abi3/ot_a3_symbol_file.sv": "e447946a9c88059c0dbfdfcd806e0fefe96ed1946ce8bd1c45b78dc81618301d",
+    "rtl/abi3/ot_a3_vector_add.sv": "a90b1956829057be9e9d8e9177a173ac1df3e227bb2b7d1e306aefa0de184afd",
+    "rtl/abi3/ot_a3_vector_compress_project.sv": "9fc09d982255e5afd165e52cf4d3c2baa053c1cbed053b1e622ffaa50a2eed37",
+    "rtl/abi3/ot_a3_vector_convert.sv": "a8586be6018ad8d1cb81904f37a1a00f1099b1978c9b79327678719b704d5fda",
+    "rtl/abi3/ot_a3_vector_hadamard.sv": "84991304d360d8f4b932d960224040953b743be0b3ba992f011e4dce2cf09969",
+    "rtl/abi3/ot_a3_vector_index_score.sv": "014055603236564f6e3829dd8f85a1328b526a1cf323b8664a657345ce241fbd",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": "676930b1078743d160888dcb15b817006aa782ee916ee0d540cf6de29172729c",
+    "rtl/abi3/ot_a3_vector_scale_pipe.sv": "d7f76f43668bcb171b74dd156d61d79b3957859ccb662db8aea3b014cbcf77a6",
+    "rtl/abi3/ot_a3_view_resolver.sv": "1ed236afcbbfba09d59e7d0437cd48a4ecf73b91ae42f3175268a75f0d265ba8",
+    "rtl/proto/ot_cluster_dispatcher.sv": "fbd1891be4120fc2efdaecb7a5c6cbf1137814e59e856c02343d59ceb7e01c31",
+    "rtl/proto/ot_compute_unit.sv": "1bba2fd4c6f2d8a942aadad1c48ea7d3f0ba6825570b1395881081565f8493d8",
+    "rtl/proto/ot_compute_unit_gemm.sv": "70d97e191275380558b0d757fb16e50142a43611bdc8bec83bfd0dcb355b776a",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv": "533f82e3f3973ee5c3eadbaa448e55e440fe4f40aa7996814819b8ec041e3949",
+    "rtl/proto/ot_mac_tile.sv": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
+    "runtime/cycle/model.py": "d711e210e9181fcd70e1d2938f4c6d78895df6f55e1fdcd776f970ace4c43827",
+    "tools/run_accelerator_tokens.py": "3ac66ff071390f5c45b685da6ec6d8ef14e17239208514217a843e387cd5521f"
+  }
+}

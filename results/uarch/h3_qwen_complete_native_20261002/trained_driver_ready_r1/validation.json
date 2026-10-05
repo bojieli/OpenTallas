@@ -1,0 +1,49 @@
+{
+  "artifact_sha256": {
+    "driver_ready.json": "849a9a45707f6630f87e2128e99e8dce4e222b89444ddbe1d67cde5c44813e46",
+    "tests_attempt1.txt": "0e4f76f994ffafd42ea0bf6bbc143b56027a13b6bc798dd4b78bc97fdd6177f9",
+    "tests_final.txt": "700bc0322b00f8e8db3ce495047983b54ab27ab59ed1fedac05f3aeba47dae24"
+  },
+  "base_source_commit": "4c0828691a61ce30402f5b26044e6ca2aebb45ad",
+  "driver_ready_status": "DRIVER_READY_REQUIRES_COMPLETE_IMAGES_AND_FRESH_RESOURCE_GO",
+  "existing_sources_byte_identical": true,
+  "full_trained_execution_performed": false,
+  "hardware_or_timing_credit": false,
+  "schema": "opentallas.Qwen.bounded-trained-driver.validation.v1",
+  "source_sha256": {
+    "tests/test_h3_qwen_bounded_native.py": "f8e62eb67266f48836c11796e20e8f0dc462db1a23c8e368b6b0c2d0f3624600",
+    "tests/test_h3_qwen_complete_native.py": "d77b41cfc08ce4bcc2158fb330c1a090ba9106cd8296edf1555a721dbf0dff50",
+    "tests/test_qwen_bounded_trained_driver.py": "ac8eb89d3800e0165198706d55b5e333748d1d138cd0df9773b839e85af91d55",
+    "tools/h3_qwen_bounded_native.py": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+    "tools/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+    "tools/prepare_qwen_trained_native.py": "02f10cad9f2e4c4d53650b6be14e250b1bacc949c033b99860b9ce5e03ef9804",
+    "tools/qwen_bounded_trained_driver.py": "4801af35bbbff11de85ee0e0a3449c49f818c4ce9c30c20287a465defe06c79b",
+    "tools/qwen_trained_byte_provider.py": "f507b8d1093ca496c1c0aceb83d6f8e2b10824a097cb31339aa1da06698b1250",
+    "tools/qwen_trained_native_run.py": "807f2bfb643e313872ec0431d999a74f6a70755e502d7b9562daf3ed40a84711"
+  },
+  "tests": {
+    "count": 6,
+    "driver_launch_checks": [
+      "exact relocated module path",
+      "required fresh GO pins before image access",
+      "actual driver delegation and immutable/mutable preflight",
+      "mutable image and misrouted KV provider rejection",
+      "all290 code/scale inventory and canonical artifact equality"
+    ],
+    "historical_failure": "tests_attempt1.txt retains test assertion KeyError peak_workspace_vectors after all PCs retired; corrected to actual RF_workspace_peak_vectors schema, no executor change",
+    "log": "tests_final.txt",
+    "status": "PASS",
+    "whole_program_raw_byte_fixture": {
+      "KV_PC_retirements": 216,
+      "PCs": 1737,
+      "checkpoint_refs": 586,
+      "checkpoint_transactions_on_KV_PCs": 0,
+      "full_trained_shapes": false,
+      "independent_reference": "after all native PC retirement",
+      "layers": 36,
+      "leases_drained": true,
+      "mutable_layer_rank_publications": 72,
+      "mutable_refs": 146
+    }
+  }
+}

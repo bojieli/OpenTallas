@@ -1,0 +1,188 @@
+{
+  "schema": "opentallas.hbrom.firstprinciples_state_placement.v1",
+  "architecture_only": true,
+  "qualified": false,
+  "source_pins": {
+    "compiler/models/deepseek-v4.1-flash/config.json": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json": "d92e08bf1b85ee2febae7e737ddb4d54d200e5235e5f5c123f87861995a238c4",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/v41_rack_design.py": "54749ca0228d85dc9d4dfca1033cc9e3ab2bf2f186b4695420368dd380c2d076"
+  },
+  "verification": "Officialtextconfig, fullsizeinferenceconfig and full1Mtokenprogram independently agree; not reducedfixturecounts",
+  "unique_compressed_sources": {
+    "2": 524288,
+    "8": 524288,
+    "14": 524288,
+    "20": 1048576
+  },
+  "unique_CKV_index_B": 933232640,
+  "formats": {
+    "CKV": "512 FP4 codes +32 E4M3block16 scales =288B",
+    "index": "128 FP4 codes +4 block32 scales =68B",
+    "window": "512 FP8 codes +16block32 scale bytes =528B"
+  },
+  "banking": {
+    "macro": "1R1W1024x256",
+    "macro_mm2": 0.012317355072,
+    "ECC": "64data+8check SECDED; everylogicalrow rounded independently, ROMnoECCpolicy irrelevant",
+    "index": "64lanes,3parallel256bitmacros/lane, separate source regions; local key ordinal modulo64. Three macros hold9\u00d772=648protectedbits. Source scan launches64different banks eachcycle.",
+    "ckv": "11banks perdepthsegment;36\u00d772bits/row, oneaddressable row/cycle",
+    "window": "19banks perdepthsegment;66\u00d772bits/row;5120rows total",
+    "writes": "independent1W port; simultaneous1R/1W subjectsameaddress semantics, forwarding/version guard orstall; no freeracy read",
+    "scratch": "Additional1MiB useful perrank allowance for selectedsets (4\u00d7147456B), scores/selector lists/compression slots/metadata; detailedlifetimefit unresolved"
+  },
+  "port_rates": {
+    "index_payload_Bpc": 4352,
+    "index_ECC_used_bits_pc": 41472,
+    "index_macro_output_bits_pc": 49152,
+    "index_payload_TBps_at1p2GHz": 5.2224,
+    "CKV_payload_Bpc": 288,
+    "CKV_macro_output_bits_pc": 2816,
+    "window_payload_Bpc": 528,
+    "window_macro_output_bits_pc": 4864
+  },
+  "macro_timing": {
+    "SS_clk_to_q_ps": 691.7716429145595,
+    "SS_min_period_ps": 671.517944835277,
+    "meaning": "analyticalmemorycompiler model, not routedSSFF; localcapture andpipelinedECC/routing addlatency, no1cycleendtoendclaim"
+  },
+  "cases": [
+    {
+      "tp": 64,
+      "max_owned_compressed_rows": 40960,
+      "max_single_source_rows": 16384,
+      "logical_persistent_payload_B": 17285120,
+      "dense_SECDED_capacity_floor_macros": 594,
+      "banked_macro_inventory": {
+        "index": 768,
+        "ckv": 440,
+        "window": 95,
+        "extra_1MiB_service_scratch_with_protection": 36
+      },
+      "total_macros": 1339,
+      "shared_scan_bank_option": {
+        "index_macros": 192,
+        "total_macros": 763,
+        "packed_macro_area_mm2": 12.31156591511616,
+        "total_with_same_9mm2_allowances": 21.311565915116162,
+        "condition": "Four source segments share64lane banks with nonoverlappingperlane addressranges; oneactive source scan atatime, exactlymatchingserialsingleuserlayers. No independentconcurrentsources credited."
+      },
+      "physical_SRAM_bytes": 43876352,
+      "raw_macro_area_mm2": 16.492938441408,
+      "packed_macro_area_mm2": 21.60574935824448,
+      "illustrative_allowance_mm2": {
+        "parallel_ECC_codecs": 4,
+        "mux_local_routing_clock": 4,
+        "protected_control_address_validity": 1
+      },
+      "total_with_unmeasured_allowances_mm2": 30.60574935824448,
+      "HBM_PHY_controller_area_removed_mm2": 46.020879,
+      "literal_area_margin_mm2": 15.41512964175552,
+      "index_scan_service_cycles_at64_keys_per_cycle": 256,
+      "index_scan_HBM_payload_floor_ns": 309.47555555555556,
+      "index_scan_SRAM_issue_ns_at1p2GHz": 213.33333333333334,
+      "CKV_random_read_guarantee": "one arbitrary288Brow/cycle; arbitrary4rowparallel requires4replicas or provedconflict-handling",
+      "four_arbitrary_CKV_reads_extra_packed_mm2": 21.2991703905024
+    },
+    {
+      "tp": 96,
+      "max_owned_compressed_rows": 27320,
+      "max_single_source_rows": 10928,
+      "logical_persistent_payload_B": 12429280,
+      "dense_SECDED_capacity_floor_macros": 427,
+      "banked_macro_inventory": {
+        "index": 768,
+        "ckv": 319,
+        "window": 95,
+        "extra_1MiB_service_scratch_with_protection": 36
+      },
+      "total_macros": 1218,
+      "shared_scan_bank_option": {
+        "index_macros": 192,
+        "total_macros": 642,
+        "packed_macro_area_mm2": 10.35914196265344,
+        "total_with_same_9mm2_allowances": 19.35914196265344,
+        "condition": "Four source segments share64lane banks with nonoverlappingperlane addressranges; oneactive source scan atatime, exactlymatchingserialsingleuserlayers. No independentconcurrentsources credited."
+      },
+      "physical_SRAM_bytes": 39911424,
+      "raw_macro_area_mm2": 15.002538477696,
+      "packed_macro_area_mm2": 19.65332540578176,
+      "illustrative_allowance_mm2": {
+        "parallel_ECC_codecs": 4,
+        "mux_local_routing_clock": 4,
+        "protected_control_address_validity": 1
+      },
+      "total_with_unmeasured_allowances_mm2": 28.65332540578176,
+      "HBM_PHY_controller_area_removed_mm2": 46.020879,
+      "literal_area_margin_mm2": 17.36755359421824,
+      "index_scan_service_cycles_at64_keys_per_cycle": 171,
+      "index_scan_HBM_payload_floor_ns": 206.4177777777778,
+      "index_scan_SRAM_issue_ns_at1p2GHz": 142.5,
+      "CKV_random_read_guarantee": "one arbitrary288Brow/cycle; arbitrary4rowparallel requires4replicas or provedconflict-handling",
+      "four_arbitrary_CKV_reads_extra_packed_mm2": 15.44189853311424
+    },
+    {
+      "tp": 128,
+      "max_owned_compressed_rows": 20480,
+      "max_single_source_rows": 8192,
+      "logical_persistent_payload_B": 9994240,
+      "dense_SECDED_capacity_floor_macros": 344,
+      "banked_macro_inventory": {
+        "index": 768,
+        "ckv": 220,
+        "window": 95,
+        "extra_1MiB_service_scratch_with_protection": 36
+      },
+      "total_macros": 1119,
+      "shared_scan_bank_option": {
+        "index_macros": 192,
+        "total_macros": 543,
+        "packed_macro_area_mm2": 8.76170418336576,
+        "total_with_same_9mm2_allowances": 17.761704183365758,
+        "condition": "Four source segments share64lane banks with nonoverlappingperlane addressranges; oneactive source scan atatime, exactlymatchingserialsingleuserlayers. No independentconcurrentsources credited."
+      },
+      "physical_SRAM_bytes": 36667392,
+      "raw_macro_area_mm2": 13.783120325568,
+      "packed_macro_area_mm2": 18.05588762649408,
+      "illustrative_allowance_mm2": {
+        "parallel_ECC_codecs": 4,
+        "mux_local_routing_clock": 4,
+        "protected_control_address_validity": 1
+      },
+      "total_with_unmeasured_allowances_mm2": 27.05588762649408,
+      "HBM_PHY_controller_area_removed_mm2": 46.020879,
+      "literal_area_margin_mm2": 18.96499137350592,
+      "index_scan_service_cycles_at64_keys_per_cycle": 128,
+      "index_scan_HBM_payload_floor_ns": 154.73777777777778,
+      "index_scan_SRAM_issue_ns_at1p2GHz": 106.66666666666667,
+      "CKV_random_read_guarantee": "one arbitrary288Brow/cycle; arbitrary4rowparallel requires4replicas or provedconflict-handling",
+      "four_arbitrary_CKV_reads_extra_packed_mm2": 10.6495851952512
+    }
+  ],
+  "ownership_and_updates": [
+    "Preserve (globalrow//8)%TP owner and source-layer sharing exactly; TP64/128 is ownershipsensitivity requiring separatelypricedcollectives",
+    "All40 windowrings retained perrank as existingprogram; no40copiesofcompressedcache",
+    "Atposition1M-1 source2/8/14 ratio2 andsource20 ratio1 can eachappendone row; max4CKV+4indexwrites acrosssystem/token; eachrank writes40windowrows (21120B/token)",
+    "Afterprefill install exactpackedrepresentation, not expandedBF16 cache; prefill engine computes allcontexttokens and distributes ownerrows beforedecode",
+    "Capacity is oneactiveuser at1M; no arbitrarybatchprovision. Longercontext/multipleusers scale state and require newcapacity/service assessment",
+    "Refill/sourceversion/candidateflags/partialcompression slots andfaultmetadata retained; scratchfit remainsopen",
+    "SRAM losesstate atpoweroff; reload/recompute policy notdecodecriticalpath but requiredsystembehavior"
+  ],
+  "critical_service_assessment": [
+    "SRAM can supply64keys/cycle5.2224TB/s through explicit192parallel32Bports peractive source; exceeds4stack3.6TB/s payload assumption",
+    "Sequentialscan has deterministicbankconflictavoidance; selectedrandomCKV reads have onlyone-guaranteedrow/cycle unlessmoreports/replicationpriced",
+    "This removes HBMdevice access/controllerstartup forresidentstate, but keeps scan arithmetic, selector, interrankselected-rowgather, ECC andlocalwire latency",
+    "Window residentservice does not remove all activation/collectivetail costs; must identify exact replacedproviders inmatchedDAG",
+    "46mm2 HBM_PHY/controller removal plausiblyfunds even deliberately fragmentedSRAM pluspositiveunmeasuredrouting/codec allowance; geometry/ports must beverifiedbeforeperformanceclaim",
+    "Externalweights/sourcearchives/Engram unaffected; ifHBMalsoowns thoseimmutabletables, replacingstateHBMrequiresseparatearchiveprovider andretainsitscost"
+  ],
+  "limits": [
+    "Areaallowances are not provenupperbounds; sourcebankfragmentation counted exactly underexplicitlayout",
+    "No RTL, synthesis, simulation orplace-and-route run",
+    "NoTPOT prediction; perport service andcapacity only"
+  ]
+}

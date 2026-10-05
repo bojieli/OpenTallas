@@ -1,0 +1,223 @@
+{
+ "bench": "rtl/test/tb_hdc_v41_xu_sink_b2b.sv",
+ "verilator": "Verilator 5.032 2025-01-01 rev (Debian 5.032-1)",
+ "configs": {
+  "xu": {
+   "off": {
+    "returncode": 0,
+    "sources": [
+     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/hdc/v41/ot_hdc_select.sv",
+     "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+     "rtl/hdc/v41/ot_hdc_v41_xu.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv"
+    ],
+    "defines": [],
+    "cases": 105,
+    "hang": 14,
+    "mismatch": 0,
+    "hang_gaps": [
+     0,
+     1
+    ]
+   },
+   "on": {
+    "returncode": 0,
+    "sources": [
+     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/hdc/v41/ot_hdc_select.sv",
+     "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+     "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv",
+     "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv"
+    ],
+    "defines": [
+     "+define+OT_MTP_SINK_HANDSHAKE=1",
+     "+define+OT_MTP_HE_TAG=1"
+    ],
+    "cases": 105,
+    "hang": 0,
+    "mismatch": 0,
+    "hang_gaps": []
+   },
+   "cases_ok_in_both": 91,
+   "cycle_identical_where_both_ok": true,
+   "on_back_to_back_c2_cycles": [
+    292,
+    293
+   ],
+   "pass": true
+  },
+  "adapt": {
+   "off": {
+    "returncode": 0,
+    "sources": [
+     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/hdc/v41/ot_hdc_select.sv",
+     "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+     "rtl/hdc/v41/ot_hdc_v41_xu.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_egather.sv"
+    ],
+    "defines": [],
+    "cases": 105,
+    "hang": 14,
+    "mismatch": 0,
+    "hang_gaps": [
+     0,
+     1
+    ]
+   },
+   "on": {
+    "returncode": 0,
+    "sources": [
+     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/hdc/v41/ot_hdc_select.sv",
+     "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+     "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv",
+     "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv",
+     "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41x_xu_adapt.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_egather.sv"
+    ],
+    "defines": [
+     "+define+OT_MTP_SINK_HANDSHAKE=1",
+     "+define+OT_MTP_HE_TAG=1"
+    ],
+    "cases": 105,
+    "hang": 0,
+    "mismatch": 0,
+    "hang_gaps": []
+   },
+   "cases_ok_in_both": 91,
+   "cycle_identical_where_both_ok": true,
+   "on_back_to_back_c2_cycles": [
+    292,
+    293
+   ],
+   "pass": true
+  },
+  "he": {
+   "off": {
+    "returncode": 0,
+    "sources": [
+     "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "rtl/hdc/ot_hdc_fpu.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_v41_hcproj.sv"
+    ],
+    "defines": [],
+    "cases": 41,
+    "bad": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40
+    ],
+    "pass_line": false
+   },
+   "on": {
+    "returncode": 0,
+    "sources": [
+     "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "rtl/hdc/ot_hdc_fpu.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_hcproj.sv"
+    ],
+    "defines": [
+     "+define+OT_MTP_SINK_HANDSHAKE=1",
+     "+define+OT_MTP_HE_TAG=1"
+    ],
+    "cases": 41,
+    "bad": [],
+    "pass_line": true
+   },
+   "pass": true
+  }
+ },
+ "pass": true,
+ "input_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv": "c1652c48bf10117c36ca6ac5737cbe5bed91e1bb10b024c8a8ccb1db91559b78",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_hcproj.sv": "d4cbe607f95c6c2acf3f6e9f569e0b1a5bdad2ca388404d306d6246df54a64b8",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv": "56894f16075b7c7c1ab79dd537272ee7161d235d07040b3b6a0481bc281200c8",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41x_xu_adapt.sv": "59a219d0f831c31a1b6f6ea21169e6a9ca20d59ba76de51fbc21e2d452ede2ae",
+  "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
+  "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+  "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+  "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+  "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
+  "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+  "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+  "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0",
+  "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
+  "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+  "rtl/test/tb_hdc_v41_hcproj_b2b.sv": "d8a1ec8468022f982b2cd23e80fc8fe60d0bef70185bc79dbadc0697945c2bac",
+  "rtl/test/tb_hdc_v41_xu_sink_b2b.sv": "4657d1763c5c2cb7891db1e7bf759620685986400f5ce24f73543431e2442caa",
+  "tools/dsrom_sink_b2b_sweep.py": "24e7ed60d57c1cbaccac8f3fbd0d513794525ae29148fe40e234fd5c431a7e0e",
+  "tools/dsrom_sink_handshake.py": "b670e2fb83d44f3da3fec78d35b297b873e978cd82c2c71bb684794779d4ba87"
+ }
+}

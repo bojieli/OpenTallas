@@ -1,0 +1,27 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "Capture pending payload in free entry independently of admission verdict; pending_count alone publishes accepted commits; full queue cannot be overwritten",
+  "sources": {
+    "rtl/abi3/ot_a3_state_controller.sv": "f60c152c5bdcae2c2db7e5fc1bc9317ed8bad1cdba4c0780afeb90b6d688ba6b",
+    "tests/test_state_cursor_modulo.py": "0471d8bcf75a6ba3d1e4ca1f57fbd90aa6dc6ab8f20d8b4ae9e90eee527c362e"
+  },
+  "added_cycles": 0,
+  "added_storage_bits": 0,
+  "payload_bits_removed_from_reset": 1088,
+  "default_slots": 16,
+  "simulators": [
+    "Icarus 11",
+    "Verilator 5.050"
+  ],
+  "arithmetic_cases_per_simulator": 255,
+  "cancellation_positions_per_simulator": 34,
+  "additional_checks": [
+    "rejected entry invisible and overwritten on next accepted commit",
+    "full 16-entry queue refuses without changing accepted payload",
+    "clear during reduction",
+    "non-ring policies",
+    "same-slot staged recurrence"
+  ],
+  "control_campaign": "results/rtl/abi3_state_payload_campaign.json",
+  "physical": "running: results/physical_abi3/asap7/state_controller/pnr_payload_capture_cts12_1ns.json"
+}

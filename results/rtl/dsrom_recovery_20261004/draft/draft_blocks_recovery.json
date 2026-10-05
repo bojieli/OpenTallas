@@ -1,0 +1,4066 @@
+{
+ "schema": "opentallas.dsrom-1m.draft-blocks.v1",
+ "variant": "recovery DP1-EP5",
+ "basis": "the as-built full-shape draft-block measurement (results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json: every element exact vs the golden draft at the 1M anchor) recomposed on the DP1-EP5 placement (results/rtl/dsrom_recovery_20261004/draft/placement.json): blocks co-located on one primary TP4 group (no stage hop into mtp.1 / mtp.2), routed experts on 5 row replicas per block (each replica's 3 phases are the measured phases of the identical L0-pair image), + the replica messages measured on the stage-hop link RTL (rlinks.json)",
+ "exact": true,
+ "block_us": [
+  29.9251,
+  27.0334,
+  27.0334
+ ],
+ "blocks_total_us": 83.992,
+ "baseline_blocks_total_us": 115.1153,
+ "per_node_old_new_us": {
+  "mtp.0": {
+   "hop_in": [
+    2.8917,
+    2.8917
+   ],
+   "experts_gu": [
+    5.96083,
+    1.19083
+   ],
+   "down": [
+    5.10667,
+    0.91583
+   ],
+   "added_hops_on_path": 0.5142,
+   "block": [
+    38.3718,
+    29.9251
+   ]
+  },
+  "mtp.1": {
+   "hop_in": [
+    2.8917,
+    0.0
+   ],
+   "experts_gu": [
+    5.96083,
+    1.19083
+   ],
+   "down": [
+    5.10667,
+    0.91583
+   ],
+   "added_hops_on_path": 0.5142,
+   "block": [
+    38.3718,
+    27.0334
+   ]
+  },
+  "mtp.2": {
+   "hop_in": [
+    2.8917,
+    0.0
+   ],
+   "experts_gu": [
+    5.96083,
+    1.19083
+   ],
+   "down": [
+    5.10667,
+    0.91583
+   ],
+   "added_hops_on_path": 0.5142,
+   "block": [
+    38.3718,
+    27.0334
+   ]
+  }
+ },
+ "stages": {
+  "mtp.0": {
+   "block_us": 29.9251,
+   "baseline_block_us": 38.3718,
+   "exact": true,
+   "critical_path": [
+    {
+     "node": "hop_in",
+     "us": 2.8917,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "attn.hc_pre",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "us": 0.08333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.scale",
+     "us": 0.06333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.quant",
+     "us": 0.94444,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.a_proj",
+     "us": 1.04083,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.a_allgather",
+     "us": 0.2858,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.sumsq",
+     "us": 0.18888,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "us": 0.06,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_quant",
+     "us": 0.27778,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wq_b",
+     "us": 0.73667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_rope",
+     "us": 0.11333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.scores.r0",
+     "us": 0.0875,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r0",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r0",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r0",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r0",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r0",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r1",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r1",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r1",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r1",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r1",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r2",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r2",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r2",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r2",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r2",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r3",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r3",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r3",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r3",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r3",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r4",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r4",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r4",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r4",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r4",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wo_a",
+     "us": 5.14167,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.z_quant",
+     "us": 0.41111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wo_b",
+     "us": 0.76083,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.out_allreduce",
+     "us": 2.458,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.hc_post",
+     "us": 0.53444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.hc_pre",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "us": 0.08333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "us": 0.06333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.router",
+     "us": 1.34917,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.softplus_sqrt",
+     "us": 0.50777,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.router_allgather",
+     "us": 0.2292,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.bias",
+     "us": 0.11333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.top6",
+     "us": 0.0,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.top6_order",
+     "us": 0.575,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.ids_hop.r0",
+     "us": 0.2242,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "ffn.experts_gu.r0",
+     "us": 1.19083,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.swiglu.r0",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.route_w.r0",
+     "us": 0.11111,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.quant2.r0",
+     "us": 0.35556,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.down.r0",
+     "us": 0.91583,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.ret_hop.r0",
+     "us": 0.29,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "ffn.combine_allreduce",
+     "us": 2.458,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.hc_post",
+     "us": 0.53444,
+     "cls": "measured"
+    }
+   ],
+   "modelled_on_path_us": 0.5271,
+   "nodes": {
+    "hop_in": {
+     "us": 2.8917,
+     "source": "stage hop ot_dsrom_link_rt RTL at 204880 B (5 rows) 3213 cyc + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.0
+    },
+    "attn.a_proj": {
+     "us": 1.04083,
+     "source": "ROM field vehicle, 1 phases (S0.a_proj.fp8), 2240 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wq_b": {
+     "us": 0.73667,
+     "source": "ROM field vehicle, 1 phases (S0.wq_b), 40960 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wo_a": {
+     "us": 5.14167,
+     "source": "ROM field vehicle, 4 phases (S0.wo_a.g0.wo_a.group0.rows0, S0.wo_a.g0.wo_a.group0.rows768, S0.wo_a.g1.wo_a.group1.rows0...), 10240 rows, + 320 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wo_b": {
+     "us": 0.76083,
+     "source": "ROM field vehicle, 1 phases (S0.wo_b), 25600 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.router": {
+     "us": 1.34917,
+     "source": "ROM field vehicle, 1 phases (S0.router), 160 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.shared_gu": {
+     "us": 1.04583,
+     "source": "ROM field vehicle, 1 phases (S0.shared_gu), 5760 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.sumsq": {
+     "us": 0.29333,
+     "source": "S0.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2889 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc.rsqrt": {
+     "us": 0.16111,
+     "source": "S0.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.pre_post": {
+     "us": 0.21,
+     "source": "S0.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2056 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc.sinkhorn": {
+     "us": 1.61179,
+     "source": "S0.attn.hc_mix: SU front wired RTL 0.2622 us + ot_hdc_sinkhorn 41 clocks at 151.9 MHz x 5 rows; CDC 0.0 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc_pre": {
+     "us": 0.24444,
+     "source": "S0.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.norm.sumsq": {
+     "us": 0.08333,
+     "source": "S0.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0833 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S0.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.norm.scale": {
+     "us": 0.06333,
+     "source": "S0.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0633 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.q_norm.sumsq": {
+     "us": 0.18888,
+     "source": "S0.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.1844 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.q_norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S0.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.q_norm.scale": {
+     "us": 0.06,
+     "source": "S0.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.0600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_norm.sumsq": {
+     "us": 0.17888,
+     "source": "S0.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.1744 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.kv_norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S0.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_norm.scale": {
+     "us": 0.05889,
+     "source": "S0.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.0589 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_rope_qdq": {
+     "us": 0.20333,
+     "source": "S0.attn.kv_norm_rope: RoPE wired RTL 0.0589 us + ot_hdc_actquant QDQ 93 cyc (+37 hub stages) on the 5 rows",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.q_rope": {
+     "us": 0.11333,
+     "source": "S0.attn.q_rope: wired RTL (BCAST 22 / RET 15) 0.1089 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r0": {
+     "us": 0.15555,
+     "source": "S0.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r0": {
+     "us": 0.17667,
+     "source": "S0.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r0": {
+     "us": 0.06111,
+     "source": "S0.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r0": {
+     "us": 0.16,
+     "source": "S0.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r0": {
+     "us": 0.17222,
+     "source": "S0.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r1": {
+     "us": 0.15555,
+     "source": "S0.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r1": {
+     "us": 0.17667,
+     "source": "S0.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r1": {
+     "us": 0.06111,
+     "source": "S0.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r1": {
+     "us": 0.16,
+     "source": "S0.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r1": {
+     "us": 0.17222,
+     "source": "S0.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r2": {
+     "us": 0.15555,
+     "source": "S0.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r2": {
+     "us": 0.17667,
+     "source": "S0.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r2": {
+     "us": 0.06111,
+     "source": "S0.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r2": {
+     "us": 0.16,
+     "source": "S0.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r2": {
+     "us": 0.17222,
+     "source": "S0.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r3": {
+     "us": 0.15555,
+     "source": "S0.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r3": {
+     "us": 0.17667,
+     "source": "S0.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r3": {
+     "us": 0.06111,
+     "source": "S0.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r3": {
+     "us": 0.16,
+     "source": "S0.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r3": {
+     "us": 0.17222,
+     "source": "S0.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r4": {
+     "us": 0.15555,
+     "source": "S0.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r4": {
+     "us": 0.17667,
+     "source": "S0.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r4": {
+     "us": 0.06111,
+     "source": "S0.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r4": {
+     "us": 0.16,
+     "source": "S0.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r4": {
+     "us": 0.17222,
+     "source": "S0.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc_post": {
+     "us": 0.53444,
+     "source": "S0.attn.hc_post: wired RTL (BCAST 22 / RET 15) 0.5300 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.sumsq": {
+     "us": 0.29333,
+     "source": "S0.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2889 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.rsqrt": {
+     "us": 0.16111,
+     "source": "S0.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.hc.pre_post": {
+     "us": 0.21,
+     "source": "S0.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2056 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.sinkhorn": {
+     "us": 1.61179,
+     "source": "S0.ffn.hc_mix: SU front wired RTL 0.2622 us + ot_hdc_sinkhorn 41 clocks at 151.9 MHz x 5 rows; CDC 0.0 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.hc_pre": {
+     "us": 0.24444,
+     "source": "S0.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.norm.sumsq": {
+     "us": 0.08333,
+     "source": "S0.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0833 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S0.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.norm.scale": {
+     "us": 0.06333,
+     "source": "S0.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0633 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.softplus_sqrt": {
+     "us": 0.50777,
+     "source": "S0.ffn.router_act: wired RTL (BCAST 22 / RET 15) 0.5033 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.bias": {
+     "us": 0.11333,
+     "source": "S0.ffn.route: wired RTL (BCAST 22 / RET 15) 0.1089 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.weights": {
+     "us": 0.23111,
+     "source": "S0.ffn.route: wired RTL (BCAST 22 / RET 15) 0.2267 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.shared_swiglu": {
+     "us": 0.22,
+     "source": "S0.ffn.shared_swiglu: wired RTL (BCAST 22 / RET 15) 0.2156 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc_post": {
+     "us": 0.53444,
+     "source": "S0.ffn.hc_post: wired RTL (BCAST 22 / RET 15) 0.5300 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.quant": {
+     "us": 0.94444,
+     "source": "ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.q_quant": {
+     "us": 0.27778,
+     "source": "ot_hdc_actquant one instance, 200 blocks (5 rows) 213 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.z_quant": {
+     "us": 0.41111,
+     "source": "ot_hdc_actquant one instance, 320 blocks (5 rows) 333 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.quant": {
+     "us": 0.94444,
+     "source": "ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.shared_quant": {
+     "us": 0.15556,
+     "source": "ot_hdc_actquant one instance, 90 blocks (5 rows) 103 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.top6": {
+     "us": 0.0,
+     "source": "inside ffn.top6_order (one unit, ascending output)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.top6_order": {
+     "us": 0.575,
+     "source": "ot_hdc_select K 3 on the 128 biased scores, 5 rows one after another (138+138+138+138+138 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r0": {
+     "us": 0.0875,
+     "source": "attention engine job 0 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r0": {
+     "us": 0.08167,
+     "source": "attention engine job 0: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r1": {
+     "us": 0.04333,
+     "source": "attention engine job 1 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r1": {
+     "us": 0.08167,
+     "source": "attention engine job 1: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r2": {
+     "us": 0.04333,
+     "source": "attention engine job 2 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r2": {
+     "us": 0.08167,
+     "source": "attention engine job 2: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r3": {
+     "us": 0.04333,
+     "source": "attention engine job 3 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r3": {
+     "us": 0.08167,
+     "source": "attention engine job 3: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r4": {
+     "us": 0.04333,
+     "source": "attention engine job 4 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r4": {
+     "us": 0.08167,
+     "source": "attention engine job 4: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.a_allgather": {
+     "us": 0.2858,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 18240 B (5 rows)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.router_allgather": {
+     "us": 0.2292,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 2560 B (5 rows x 128 FP32)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.rows_allgather": {
+     "us": 0.4658,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 67,584 B (the 128 window rows, as L0)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.out_allreduce": {
+     "us": 2.458,
+     "source": "tb_w15b_v41_tp4 S81 all_reduce 20,480 B a row x 5 rows issued one after another (102,400 B exceed one descriptor; max issue->commit 590 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.combine_allreduce": {
+     "us": 2.458,
+     "source": "tb_w15b_v41_tp4 S81 all_reduce 20,480 B a row x 5 rows issued one after another (102,400 B exceed one descriptor; max issue->commit 590 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.fn": {
+     "us": 0.95417,
+     "source": "MODELLED: uarch node price 0.1908 us a row x 5 (HE FP32 mixes [24, 20480]; no RTL bench, as in the AR composition)",
+     "exact": null,
+     "cls": "modelled",
+     "modelled_part_us": 0.95417
+    },
+    "ffn.hc.fn": {
+     "us": 0.95417,
+     "source": "MODELLED: uarch node price 0.1908 us a row x 5 (HE FP32 mixes [24, 20480]; no RTL bench, as in the AR composition)",
+     "exact": null,
+     "cls": "modelled",
+     "modelled_part_us": 0.95417
+    },
+    "ffn.shared_down": {
+     "us": 0.51917,
+     "source": "ROM field vehicle (as-built record) phase S0.shared.w2 np 4, 623 cyc incl. 80 S81 wire, on the primary",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.experts_gu.r0": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S0.exp46.gu.r0, S0.exp9.gu.r0, S0.exp98.gu.r0 back to back on replica 0 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r0": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S0.exp46.w2.r0, S0.exp9.w2.r0, S0.exp98.w2.r0 back to back on replica 0, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r0": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S0.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r0": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S0.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r0": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r0": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r0": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r0": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r0": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r0": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r1": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S0.exp54.gu.r1, S0.exp57.gu.r1, S0.exp59.gu.r1 back to back on replica 1 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r1": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S0.exp54.w2.r1, S0.exp57.w2.r1, S0.exp59.w2.r1 back to back on replica 1, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r1": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S0.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r1": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S0.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r1": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r1": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r1": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r1": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r1": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r1": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r2": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S0.exp108.gu.r2, S0.exp52.gu.r2, S0.exp57.gu.r2 back to back on replica 2 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r2": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S0.exp108.w2.r2, S0.exp52.w2.r2, S0.exp57.w2.r2 back to back on replica 2, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r2": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S0.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r2": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S0.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r2": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r2": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r2": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r2": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r2": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r2": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r3": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S0.exp104.gu.r3, S0.exp57.gu.r3, S0.exp75.gu.r3 back to back on replica 3 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r3": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S0.exp104.w2.r3, S0.exp57.w2.r3, S0.exp75.w2.r3 back to back on replica 3, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r3": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S0.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r3": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S0.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r3": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r3": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r3": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r3": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r3": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r3": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r4": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S0.exp104.gu.r4, S0.exp21.gu.r4, S0.exp75.gu.r4 back to back on replica 4 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r4": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S0.exp104.w2.r4, S0.exp21.w2.r4, S0.exp75.w2.r4 back to back on replica 4, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r4": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S0.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r4": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S0.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r4": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r4": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r4": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r4": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r4": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r4": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    }
+   }
+  },
+  "mtp.1": {
+   "block_us": 27.0334,
+   "baseline_block_us": 38.3718,
+   "exact": true,
+   "critical_path": [
+    {
+     "node": "hop_in",
+     "us": 0.0,
+     "cls": "placement"
+    },
+    {
+     "node": "attn.hc_pre",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "us": 0.08333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.scale",
+     "us": 0.06333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.quant",
+     "us": 0.94444,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.a_proj",
+     "us": 1.04083,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.a_allgather",
+     "us": 0.2858,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.sumsq",
+     "us": 0.18888,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "us": 0.06,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_quant",
+     "us": 0.27778,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wq_b",
+     "us": 0.73667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_rope",
+     "us": 0.11333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.scores.r0",
+     "us": 0.0875,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r0",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r0",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r0",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r0",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r0",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r1",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r1",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r1",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r1",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r1",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r2",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r2",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r2",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r2",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r2",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r3",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r3",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r3",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r3",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r3",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r4",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r4",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r4",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r4",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r4",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wo_a",
+     "us": 5.14167,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.z_quant",
+     "us": 0.41111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wo_b",
+     "us": 0.76083,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.out_allreduce",
+     "us": 2.458,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.hc_post",
+     "us": 0.53444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.hc_pre",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "us": 0.08333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "us": 0.06333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.router",
+     "us": 1.34917,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.softplus_sqrt",
+     "us": 0.50777,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.router_allgather",
+     "us": 0.2292,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.bias",
+     "us": 0.11333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.top6",
+     "us": 0.0,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.top6_order",
+     "us": 0.575,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.ids_hop.r0",
+     "us": 0.2242,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "ffn.experts_gu.r0",
+     "us": 1.19083,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.swiglu.r0",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.route_w.r0",
+     "us": 0.11111,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.quant2.r0",
+     "us": 0.35556,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.down.r0",
+     "us": 0.91583,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.ret_hop.r0",
+     "us": 0.29,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "ffn.combine_allreduce",
+     "us": 2.458,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.hc_post",
+     "us": 0.53444,
+     "cls": "measured"
+    }
+   ],
+   "modelled_on_path_us": 0.5271,
+   "nodes": {
+    "hop_in": {
+     "us": 0.0,
+     "source": "DP1-EP5: mtp.1 sits on the primary group that holds mtp.0's output (residual already in every rank die's hub VM): no stage hop",
+     "exact": true,
+     "cls": "placement",
+     "modelled_part_us": 0.0
+    },
+    "attn.a_proj": {
+     "us": 1.04083,
+     "source": "ROM field vehicle, 1 phases (S1.a_proj.fp8), 2240 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wq_b": {
+     "us": 0.73667,
+     "source": "ROM field vehicle, 1 phases (S1.wq_b), 40960 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wo_a": {
+     "us": 5.14167,
+     "source": "ROM field vehicle, 4 phases (S1.wo_a.g0.wo_a.group0.rows0, S1.wo_a.g0.wo_a.group0.rows768, S1.wo_a.g1.wo_a.group1.rows0...), 10240 rows, + 320 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wo_b": {
+     "us": 0.76083,
+     "source": "ROM field vehicle, 1 phases (S1.wo_b), 25600 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.router": {
+     "us": 1.34917,
+     "source": "ROM field vehicle, 1 phases (S1.router), 160 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.shared_gu": {
+     "us": 1.04583,
+     "source": "ROM field vehicle, 1 phases (S1.shared_gu), 5760 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.sumsq": {
+     "us": 0.29333,
+     "source": "S1.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2889 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc.rsqrt": {
+     "us": 0.16111,
+     "source": "S1.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.pre_post": {
+     "us": 0.21,
+     "source": "S1.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2056 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc.sinkhorn": {
+     "us": 1.61179,
+     "source": "S1.attn.hc_mix: SU front wired RTL 0.2622 us + ot_hdc_sinkhorn 41 clocks at 151.9 MHz x 5 rows; CDC 0.0 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc_pre": {
+     "us": 0.24444,
+     "source": "S1.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.norm.sumsq": {
+     "us": 0.08333,
+     "source": "S1.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0833 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S1.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.norm.scale": {
+     "us": 0.06333,
+     "source": "S1.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0633 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.q_norm.sumsq": {
+     "us": 0.18888,
+     "source": "S1.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.1844 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.q_norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S1.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.q_norm.scale": {
+     "us": 0.06,
+     "source": "S1.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.0600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_norm.sumsq": {
+     "us": 0.17888,
+     "source": "S1.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.1744 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.kv_norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S1.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_norm.scale": {
+     "us": 0.05889,
+     "source": "S1.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.0589 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_rope_qdq": {
+     "us": 0.20333,
+     "source": "S1.attn.kv_norm_rope: RoPE wired RTL 0.0589 us + ot_hdc_actquant QDQ 93 cyc (+37 hub stages) on the 5 rows",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.q_rope": {
+     "us": 0.11333,
+     "source": "S1.attn.q_rope: wired RTL (BCAST 22 / RET 15) 0.1089 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r0": {
+     "us": 0.15555,
+     "source": "S1.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r0": {
+     "us": 0.17667,
+     "source": "S1.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r0": {
+     "us": 0.06111,
+     "source": "S1.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r0": {
+     "us": 0.16,
+     "source": "S1.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r0": {
+     "us": 0.17222,
+     "source": "S1.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r1": {
+     "us": 0.15555,
+     "source": "S1.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r1": {
+     "us": 0.17667,
+     "source": "S1.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r1": {
+     "us": 0.06111,
+     "source": "S1.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r1": {
+     "us": 0.16,
+     "source": "S1.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r1": {
+     "us": 0.17222,
+     "source": "S1.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r2": {
+     "us": 0.15555,
+     "source": "S1.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r2": {
+     "us": 0.17667,
+     "source": "S1.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r2": {
+     "us": 0.06111,
+     "source": "S1.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r2": {
+     "us": 0.16,
+     "source": "S1.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r2": {
+     "us": 0.17222,
+     "source": "S1.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r3": {
+     "us": 0.15555,
+     "source": "S1.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r3": {
+     "us": 0.17667,
+     "source": "S1.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r3": {
+     "us": 0.06111,
+     "source": "S1.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r3": {
+     "us": 0.16,
+     "source": "S1.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r3": {
+     "us": 0.17222,
+     "source": "S1.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r4": {
+     "us": 0.15555,
+     "source": "S1.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r4": {
+     "us": 0.17667,
+     "source": "S1.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r4": {
+     "us": 0.06111,
+     "source": "S1.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r4": {
+     "us": 0.16,
+     "source": "S1.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r4": {
+     "us": 0.17222,
+     "source": "S1.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc_post": {
+     "us": 0.53444,
+     "source": "S1.attn.hc_post: wired RTL (BCAST 22 / RET 15) 0.5300 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.sumsq": {
+     "us": 0.29333,
+     "source": "S1.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2889 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.rsqrt": {
+     "us": 0.16111,
+     "source": "S1.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.hc.pre_post": {
+     "us": 0.21,
+     "source": "S1.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2056 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.sinkhorn": {
+     "us": 1.61179,
+     "source": "S1.ffn.hc_mix: SU front wired RTL 0.2622 us + ot_hdc_sinkhorn 41 clocks at 151.9 MHz x 5 rows; CDC 0.0 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.hc_pre": {
+     "us": 0.24444,
+     "source": "S1.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.norm.sumsq": {
+     "us": 0.08333,
+     "source": "S1.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0833 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S1.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.norm.scale": {
+     "us": 0.06333,
+     "source": "S1.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0633 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.softplus_sqrt": {
+     "us": 0.50777,
+     "source": "S1.ffn.router_act: wired RTL (BCAST 22 / RET 15) 0.5033 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.bias": {
+     "us": 0.11333,
+     "source": "S1.ffn.route: wired RTL (BCAST 22 / RET 15) 0.1089 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.weights": {
+     "us": 0.23111,
+     "source": "S1.ffn.route: wired RTL (BCAST 22 / RET 15) 0.2267 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.shared_swiglu": {
+     "us": 0.22,
+     "source": "S1.ffn.shared_swiglu: wired RTL (BCAST 22 / RET 15) 0.2156 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc_post": {
+     "us": 0.53444,
+     "source": "S1.ffn.hc_post: wired RTL (BCAST 22 / RET 15) 0.5300 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.quant": {
+     "us": 0.94444,
+     "source": "ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.q_quant": {
+     "us": 0.27778,
+     "source": "ot_hdc_actquant one instance, 200 blocks (5 rows) 213 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.z_quant": {
+     "us": 0.41111,
+     "source": "ot_hdc_actquant one instance, 320 blocks (5 rows) 333 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.quant": {
+     "us": 0.94444,
+     "source": "ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.shared_quant": {
+     "us": 0.15556,
+     "source": "ot_hdc_actquant one instance, 90 blocks (5 rows) 103 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.top6": {
+     "us": 0.0,
+     "source": "inside ffn.top6_order (one unit, ascending output)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.top6_order": {
+     "us": 0.575,
+     "source": "ot_hdc_select K 3 on the 128 biased scores, 5 rows one after another (138+138+138+138+138 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r0": {
+     "us": 0.0875,
+     "source": "attention engine job 0 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r0": {
+     "us": 0.08167,
+     "source": "attention engine job 0: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r1": {
+     "us": 0.04333,
+     "source": "attention engine job 1 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r1": {
+     "us": 0.08167,
+     "source": "attention engine job 1: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r2": {
+     "us": 0.04333,
+     "source": "attention engine job 2 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r2": {
+     "us": 0.08167,
+     "source": "attention engine job 2: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r3": {
+     "us": 0.04333,
+     "source": "attention engine job 3 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r3": {
+     "us": 0.08167,
+     "source": "attention engine job 3: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r4": {
+     "us": 0.04333,
+     "source": "attention engine job 4 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r4": {
+     "us": 0.08167,
+     "source": "attention engine job 4: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.a_allgather": {
+     "us": 0.2858,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 18240 B (5 rows)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.router_allgather": {
+     "us": 0.2292,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 2560 B (5 rows x 128 FP32)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.rows_allgather": {
+     "us": 0.4658,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 67,584 B (the 128 window rows, as L0)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.out_allreduce": {
+     "us": 2.458,
+     "source": "tb_w15b_v41_tp4 S81 all_reduce 20,480 B a row x 5 rows issued one after another (102,400 B exceed one descriptor; max issue->commit 590 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.combine_allreduce": {
+     "us": 2.458,
+     "source": "tb_w15b_v41_tp4 S81 all_reduce 20,480 B a row x 5 rows issued one after another (102,400 B exceed one descriptor; max issue->commit 590 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.fn": {
+     "us": 0.95417,
+     "source": "MODELLED: uarch node price 0.1908 us a row x 5 (HE FP32 mixes [24, 20480]; no RTL bench, as in the AR composition)",
+     "exact": null,
+     "cls": "modelled",
+     "modelled_part_us": 0.95417
+    },
+    "ffn.hc.fn": {
+     "us": 0.95417,
+     "source": "MODELLED: uarch node price 0.1908 us a row x 5 (HE FP32 mixes [24, 20480]; no RTL bench, as in the AR composition)",
+     "exact": null,
+     "cls": "modelled",
+     "modelled_part_us": 0.95417
+    },
+    "ffn.shared_down": {
+     "us": 0.51917,
+     "source": "ROM field vehicle (as-built record) phase S1.shared.w2 np 4, 623 cyc incl. 80 S81 wire, on the primary",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.experts_gu.r0": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S1.exp108.gu.r0, S1.exp47.gu.r0, S1.exp62.gu.r0 back to back on replica 0 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r0": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S1.exp108.w2.r0, S1.exp47.w2.r0, S1.exp62.w2.r0 back to back on replica 0, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r0": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S1.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r0": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S1.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r0": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r0": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r0": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r0": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r0": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r0": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r1": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S1.exp125.gu.r1, S1.exp61.gu.r1, S1.exp7.gu.r1 back to back on replica 1 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r1": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S1.exp125.w2.r1, S1.exp61.w2.r1, S1.exp7.w2.r1 back to back on replica 1, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r1": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S1.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r1": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S1.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r1": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r1": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r1": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r1": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r1": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r1": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r2": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S1.exp28.gu.r2, S1.exp46.gu.r2, S1.exp97.gu.r2 back to back on replica 2 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r2": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S1.exp28.w2.r2, S1.exp46.w2.r2, S1.exp97.w2.r2 back to back on replica 2, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r2": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S1.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r2": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S1.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r2": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r2": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r2": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r2": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r2": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r2": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r3": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S1.exp10.gu.r3, S1.exp28.gu.r3, S1.exp71.gu.r3 back to back on replica 3 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r3": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S1.exp10.w2.r3, S1.exp28.w2.r3, S1.exp71.w2.r3 back to back on replica 3, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r3": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S1.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r3": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S1.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r3": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r3": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r3": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r3": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r3": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r3": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r4": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S1.exp10.gu.r4, S1.exp71.gu.r4, S1.exp95.gu.r4 back to back on replica 4 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r4": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S1.exp10.w2.r4, S1.exp71.w2.r4, S1.exp95.w2.r4 back to back on replica 4, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r4": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S1.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r4": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S1.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r4": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r4": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r4": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r4": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r4": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r4": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    }
+   }
+  },
+  "mtp.2": {
+   "block_us": 27.0334,
+   "baseline_block_us": 38.3718,
+   "exact": true,
+   "critical_path": [
+    {
+     "node": "hop_in",
+     "us": 0.0,
+     "cls": "placement"
+    },
+    {
+     "node": "attn.hc_pre",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "us": 0.08333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.norm.scale",
+     "us": 0.06333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.quant",
+     "us": 0.94444,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.a_proj",
+     "us": 1.04083,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.a_allgather",
+     "us": 0.2858,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.sumsq",
+     "us": 0.18888,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "us": 0.06,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_quant",
+     "us": 0.27778,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wq_b",
+     "us": 0.73667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.q_rope",
+     "us": 0.11333,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.scores.r0",
+     "us": 0.0875,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r0",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r0",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r0",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r0",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r0",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r1",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r1",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r1",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r1",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r1",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r2",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r2",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r2",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r2",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r2",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r3",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r3",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r3",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r3",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r3",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.max.r4",
+     "us": 0.15555,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.exp.r4",
+     "us": 0.17667,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.den.r4",
+     "us": 0.06111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.sink.r4",
+     "us": 0.16,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.normalize.r4",
+     "us": 0.17222,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wo_a",
+     "us": 5.14167,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.z_quant",
+     "us": 0.41111,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.wo_b",
+     "us": 0.76083,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.out_allreduce",
+     "us": 2.458,
+     "cls": "measured"
+    },
+    {
+     "node": "attn.hc_post",
+     "us": 0.53444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.hc_pre",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "us": 0.08333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "us": 0.16111,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "us": 0.06333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.router",
+     "us": 1.34917,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.softplus_sqrt",
+     "us": 0.50777,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.router_allgather",
+     "us": 0.2292,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.bias",
+     "us": 0.11333,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.top6",
+     "us": 0.0,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.top6_order",
+     "us": 0.575,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.ids_hop.r0",
+     "us": 0.2242,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "ffn.experts_gu.r0",
+     "us": 1.19083,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.swiglu.r0",
+     "us": 0.24444,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.route_w.r0",
+     "us": 0.11111,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.quant2.r0",
+     "us": 0.35556,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.down.r0",
+     "us": 0.91583,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.ret_hop.r0",
+     "us": 0.29,
+     "cls": "measured+vendor_phy"
+    },
+    {
+     "node": "ffn.combine_allreduce",
+     "us": 2.458,
+     "cls": "measured"
+    },
+    {
+     "node": "ffn.hc_post",
+     "us": 0.53444,
+     "cls": "measured"
+    }
+   ],
+   "modelled_on_path_us": 0.5271,
+   "nodes": {
+    "hop_in": {
+     "us": 0.0,
+     "source": "DP1-EP5: mtp.2 sits on the primary group that holds mtp.1's output (residual already in every rank die's hub VM): no stage hop",
+     "exact": true,
+     "cls": "placement",
+     "modelled_part_us": 0.0
+    },
+    "attn.a_proj": {
+     "us": 1.04083,
+     "source": "ROM field vehicle, 1 phases (S2.a_proj.fp8), 2240 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wq_b": {
+     "us": 0.73667,
+     "source": "ROM field vehicle, 1 phases (S2.wq_b), 40960 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wo_a": {
+     "us": 5.14167,
+     "source": "ROM field vehicle, 4 phases (S2.wo_a.g0.wo_a.group0.rows0, S2.wo_a.g0.wo_a.group0.rows768, S2.wo_a.g1.wo_a.group1.rows0...), 10240 rows, + 320 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.wo_b": {
+     "us": 0.76083,
+     "source": "ROM field vehicle, 1 phases (S2.wo_b), 25600 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.router": {
+     "us": 1.34917,
+     "source": "ROM field vehicle, 1 phases (S2.router), 160 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.shared_gu": {
+     "us": 1.04583,
+     "source": "ROM field vehicle, 1 phases (S2.shared_gu), 5760 rows, + 80 S81 floorplan wire cyc",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.sumsq": {
+     "us": 0.29333,
+     "source": "S2.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2889 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc.rsqrt": {
+     "us": 0.16111,
+     "source": "S2.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.pre_post": {
+     "us": 0.21,
+     "source": "S2.attn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2056 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc.sinkhorn": {
+     "us": 1.61179,
+     "source": "S2.attn.hc_mix: SU front wired RTL 0.2622 us + ot_hdc_sinkhorn 41 clocks at 151.9 MHz x 5 rows; CDC 0.0 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc_pre": {
+     "us": 0.24444,
+     "source": "S2.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.norm.sumsq": {
+     "us": 0.08333,
+     "source": "S2.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0833 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S2.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.norm.scale": {
+     "us": 0.06333,
+     "source": "S2.attn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0633 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.q_norm.sumsq": {
+     "us": 0.18888,
+     "source": "S2.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.1844 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.q_norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S2.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.q_norm.scale": {
+     "us": 0.06,
+     "source": "S2.attn.q_norm: wired RTL (BCAST 22 / RET 15) 0.0600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_norm.sumsq": {
+     "us": 0.17888,
+     "source": "S2.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.1744 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.kv_norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S2.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_norm.scale": {
+     "us": 0.05889,
+     "source": "S2.attn.kv_norm_rope: wired RTL (BCAST 22 / RET 15) 0.0589 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.kv_rope_qdq": {
+     "us": 0.20333,
+     "source": "S2.attn.kv_norm_rope: RoPE wired RTL 0.0589 us + ot_hdc_actquant QDQ 93 cyc (+37 hub stages) on the 5 rows",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.q_rope": {
+     "us": 0.11333,
+     "source": "S2.attn.q_rope: wired RTL (BCAST 22 / RET 15) 0.1089 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r0": {
+     "us": 0.15555,
+     "source": "S2.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r0": {
+     "us": 0.17667,
+     "source": "S2.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r0": {
+     "us": 0.06111,
+     "source": "S2.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r0": {
+     "us": 0.16,
+     "source": "S2.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r0": {
+     "us": 0.17222,
+     "source": "S2.attn.softmax.r0: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r1": {
+     "us": 0.15555,
+     "source": "S2.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r1": {
+     "us": 0.17667,
+     "source": "S2.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r1": {
+     "us": 0.06111,
+     "source": "S2.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r1": {
+     "us": 0.16,
+     "source": "S2.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r1": {
+     "us": 0.17222,
+     "source": "S2.attn.softmax.r1: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r2": {
+     "us": 0.15555,
+     "source": "S2.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r2": {
+     "us": 0.17667,
+     "source": "S2.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r2": {
+     "us": 0.06111,
+     "source": "S2.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r2": {
+     "us": 0.16,
+     "source": "S2.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r2": {
+     "us": 0.17222,
+     "source": "S2.attn.softmax.r2: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r3": {
+     "us": 0.15555,
+     "source": "S2.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r3": {
+     "us": 0.17667,
+     "source": "S2.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r3": {
+     "us": 0.06111,
+     "source": "S2.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r3": {
+     "us": 0.16,
+     "source": "S2.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r3": {
+     "us": 0.17222,
+     "source": "S2.attn.softmax.r3: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.max.r4": {
+     "us": 0.15555,
+     "source": "S2.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1511 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.exp.r4": {
+     "us": 0.17667,
+     "source": "S2.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1767 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.den.r4": {
+     "us": 0.06111,
+     "source": "S2.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.0611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.sink.r4": {
+     "us": 0.16,
+     "source": "S2.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1600 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.normalize.r4": {
+     "us": 0.17222,
+     "source": "S2.attn.softmax.r4: wired RTL (BCAST 22 / RET 15) 0.1678 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.hc_post": {
+     "us": 0.53444,
+     "source": "S2.attn.hc_post: wired RTL (BCAST 22 / RET 15) 0.5300 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.sumsq": {
+     "us": 0.29333,
+     "source": "S2.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2889 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.rsqrt": {
+     "us": 0.16111,
+     "source": "S2.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.hc.pre_post": {
+     "us": 0.21,
+     "source": "S2.ffn.hc_mix: wired RTL (BCAST 22 / RET 15) 0.2056 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc.sinkhorn": {
+     "us": 1.61179,
+     "source": "S2.ffn.hc_mix: SU front wired RTL 0.2622 us + ot_hdc_sinkhorn 41 clocks at 151.9 MHz x 5 rows; CDC 0.0 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.hc_pre": {
+     "us": 0.24444,
+     "source": "S2.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.norm.sumsq": {
+     "us": 0.08333,
+     "source": "S2.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0833 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.norm.rsqrt": {
+     "us": 0.16111,
+     "source": "S2.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.1611 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.norm.scale": {
+     "us": 0.06333,
+     "source": "S2.ffn.hc_pre_norm: wired RTL (BCAST 22 / RET 15) 0.0633 us",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.softplus_sqrt": {
+     "us": 0.50777,
+     "source": "S2.ffn.router_act: wired RTL (BCAST 22 / RET 15) 0.5033 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.bias": {
+     "us": 0.11333,
+     "source": "S2.ffn.route: wired RTL (BCAST 22 / RET 15) 0.1089 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.weights": {
+     "us": 0.23111,
+     "source": "S2.ffn.route: wired RTL (BCAST 22 / RET 15) 0.2267 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.shared_swiglu": {
+     "us": 0.22,
+     "source": "S2.ffn.shared_swiglu: wired RTL (BCAST 22 / RET 15) 0.2156 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.hc_post": {
+     "us": 0.53444,
+     "source": "S2.ffn.hc_post: wired RTL (BCAST 22 / RET 15) 0.5300 us; CDC 0.00444 modelled",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "attn.quant": {
+     "us": 0.94444,
+     "source": "ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.q_quant": {
+     "us": 0.27778,
+     "source": "ot_hdc_actquant one instance, 200 blocks (5 rows) 213 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "attn.z_quant": {
+     "us": 0.41111,
+     "source": "ot_hdc_actquant one instance, 320 blocks (5 rows) 333 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.quant": {
+     "us": 0.94444,
+     "source": "ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.shared_quant": {
+     "us": 0.15556,
+     "source": "ot_hdc_actquant one instance, 90 blocks (5 rows) 103 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.top6": {
+     "us": 0.0,
+     "source": "inside ffn.top6_order (one unit, ascending output)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.top6_order": {
+     "us": 0.575,
+     "source": "ot_hdc_select K 3 on the 128 biased scores, 5 rows one after another (138+138+138+138+138 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r0": {
+     "us": 0.0875,
+     "source": "attention engine job 0 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r0": {
+     "us": 0.08167,
+     "source": "attention engine job 0: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r1": {
+     "us": 0.04333,
+     "source": "attention engine job 1 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r1": {
+     "us": 0.08167,
+     "source": "attention engine job 1: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r2": {
+     "us": 0.04333,
+     "source": "attention engine job 2 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r2": {
+     "us": 0.08167,
+     "source": "attention engine job 2: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r3": {
+     "us": 0.04333,
+     "source": "attention engine job 3 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r3": {
+     "us": 0.08167,
+     "source": "attention engine job 3: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.scores.r4": {
+     "us": 0.04333,
+     "source": "attention engine job 4 (T 133): previous job's last P.V -> last score",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.pv.r4": {
+     "us": 0.08167,
+     "source": "attention engine job 4: last score -> last P.V (P supplied by the bench)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.a_allgather": {
+     "us": 0.2858,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 18240 B (5 rows)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.router_allgather": {
+     "us": 0.2292,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 2560 B (5 rows x 128 FP32)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.rows_allgather": {
+     "us": 0.4658,
+     "source": "tb_w15b_v41_tp4 S81 all_gather 67,584 B (the 128 window rows, as L0)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.out_allreduce": {
+     "us": 2.458,
+     "source": "tb_w15b_v41_tp4 S81 all_reduce 20,480 B a row x 5 rows issued one after another (102,400 B exceed one descriptor; max issue->commit 590 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.combine_allreduce": {
+     "us": 2.458,
+     "source": "tb_w15b_v41_tp4 S81 all_reduce 20,480 B a row x 5 rows issued one after another (102,400 B exceed one descriptor; max issue->commit 590 cyc)",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "attn.hc.fn": {
+     "us": 0.95417,
+     "source": "MODELLED: uarch node price 0.1908 us a row x 5 (HE FP32 mixes [24, 20480]; no RTL bench, as in the AR composition)",
+     "exact": null,
+     "cls": "modelled",
+     "modelled_part_us": 0.95417
+    },
+    "ffn.hc.fn": {
+     "us": 0.95417,
+     "source": "MODELLED: uarch node price 0.1908 us a row x 5 (HE FP32 mixes [24, 20480]; no RTL bench, as in the AR composition)",
+     "exact": null,
+     "cls": "modelled",
+     "modelled_part_us": 0.95417
+    },
+    "ffn.shared_down": {
+     "us": 0.51917,
+     "source": "ROM field vehicle (as-built record) phase S2.shared.w2 np 4, 623 cyc incl. 80 S81 wire, on the primary",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.experts_gu.r0": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S2.exp127.gu.r0, S2.exp14.gu.r0, S2.exp47.gu.r0 back to back on replica 0 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r0": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S2.exp127.w2.r0, S2.exp14.w2.r0, S2.exp47.w2.r0 back to back on replica 0, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r0": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S2.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r0": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S2.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r0": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r0": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 0's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r0": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r0": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r0": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r0": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r1": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S2.exp102.gu.r1, S2.exp20.gu.r1, S2.exp81.gu.r1 back to back on replica 1 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r1": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S2.exp102.w2.r1, S2.exp20.w2.r1, S2.exp81.w2.r1 back to back on replica 1, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r1": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S2.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r1": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S2.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r1": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r1": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 1's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r1": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r1": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r1": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r1": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r2": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S2.exp127.gu.r2, S2.exp48.gu.r2, S2.exp88.gu.r2 back to back on replica 2 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r2": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S2.exp127.w2.r2, S2.exp48.w2.r2, S2.exp88.w2.r2 back to back on replica 2, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r2": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S2.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r2": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S2.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r2": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r2": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 2's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r2": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r2": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r2": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r2": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r3": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S2.exp110.gu.r3, S2.exp119.gu.r3, S2.exp6.gu.r3 back to back on replica 3 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r3": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S2.exp110.w2.r3, S2.exp119.w2.r3, S2.exp6.w2.r3 back to back on replica 3, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r3": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S2.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r3": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S2.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r3": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r3": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 3's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r3": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r3": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r3": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r3": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.experts_gu.r4": {
+     "us": 1.19083,
+     "source": "ROM field vehicle (as-built record) phases S2.exp52.gu.r4, S2.exp54.gu.r4, S2.exp96.gu.r4 back to back on replica 4 (identical image: L0 expert pairs), 1429 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.down.r4": {
+     "us": 0.91583,
+     "source": "ROM field vehicle (as-built record) phases S2.exp52.w2.r4, S2.exp54.w2.r4, S2.exp96.w2.r4 back to back on replica 4, 1099 cyc incl. 240 S81 wire",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.swiglu.r4": {
+     "us": 0.24444,
+     "source": "UPPER BOUND: the 5-row measured ffn.swiglu (S2.ffn.swiglu: wired RTL (BCAST 22 / RET 15) 0.2400 us; CDC 0.00444 modelled) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.00444
+    },
+    "ffn.route_w.r4": {
+     "us": 0.11111,
+     "source": "UPPER BOUND: the 5-row measured ffn.route_w (S2.ffn.route_w: wired RTL (BCAST 22 / RET 15) 0.1111 us) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.0
+    },
+    "ffn.quant2.r4": {
+     "us": 0.35556,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant2 (ot_hdc_actquant one instance, 270 blocks (5 rows) 283 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.rquant.r4": {
+     "us": 0.94444,
+     "source": "UPPER BOUND: the 5-row measured ffn.quant (ot_hdc_actquant one instance, 800 blocks (5 rows) 813 cyc at 0.9 GHz + 37 hub network stages (added arithmetically, as su.json wired_us)) charged to replica 4's one row",
+     "exact": true,
+     "cls": "measured",
+     "modelled_part_us": 0.04111
+    },
+    "ffn.x_hop.r4": {
+     "us": 0.3567,
+     "source": "ot_dsrom_link_rt RTL at 10240 B (ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die): 171 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ids_hop.r4": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 routed expert ids (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.w_hop.r4": {
+     "us": 0.2242,
+     "source": "ot_dsrom_link_rt RTL at 64 B (one row's 3 FP32 route weights (one flit) primary -> replica): 12 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    },
+    "ffn.ret_hop.r4": {
+     "us": 0.29,
+     "source": "ot_dsrom_link_rt RTL at 5120 B (one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary): 91 cyc endpoint + light-FEC/UCIe VENDOR budget 167 cyc + 90 wire",
+     "exact": true,
+     "cls": "measured+vendor_phy",
+     "modelled_part_us": 0.13917
+    }
+   }
+  }
+ },
+ "rlinks": {
+  "x_row": {
+   "role": "ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die",
+   "exact": true,
+   "payload_B": 10240,
+   "payload_flits": 160,
+   "link_rt_first_to_last_cycles": 338,
+   "vendor_channel_cycles": {
+    "board": 156,
+    "ucie_fanout": 11
+   },
+   "measured_endpoint_cycles": 171,
+   "phy_serialization_extra_cycles": 0,
+   "wire_stage_cycles": 90,
+   "total_cycles": 428,
+   "us": 0.3567,
+   "summary": "HOP_SUMMARY case=rec_x_row result=PASS bytes=10240 flits=160 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=160 rcvd=160 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=161 first_flit=179 last_flit=338 leg1_first_flit=162 leg1_last_flit=321 out_span=159 in_span=159 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=160 max_replay_occ2=29 seed=81"
+  },
+  "ids": {
+   "role": "one row's 3 routed expert ids (one flit) primary -> replica",
+   "exact": true,
+   "payload_B": 64,
+   "payload_flits": 1,
+   "link_rt_first_to_last_cycles": 179,
+   "vendor_channel_cycles": {
+    "board": 156,
+    "ucie_fanout": 11
+   },
+   "measured_endpoint_cycles": 12,
+   "phy_serialization_extra_cycles": 0,
+   "wire_stage_cycles": 90,
+   "total_cycles": 269,
+   "us": 0.2242,
+   "summary": "HOP_SUMMARY case=rec_ids result=PASS bytes=64 flits=1 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=1 rcvd=1 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=2 first_flit=179 last_flit=179 leg1_first_flit=162 leg1_last_flit=162 out_span=0 in_span=0 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=1 max_replay_occ2=1 seed=81"
+  },
+  "weights": {
+   "role": "one row's 3 FP32 route weights (one flit) primary -> replica",
+   "exact": true,
+   "payload_B": 64,
+   "payload_flits": 1,
+   "link_rt_first_to_last_cycles": 179,
+   "vendor_channel_cycles": {
+    "board": 156,
+    "ucie_fanout": 11
+   },
+   "measured_endpoint_cycles": 12,
+   "phy_serialization_extra_cycles": 0,
+   "wire_stage_cycles": 90,
+   "total_cycles": 269,
+   "us": 0.2242,
+   "summary": "HOP_SUMMARY case=rec_weights result=PASS bytes=64 flits=1 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=1 rcvd=1 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=2 first_flit=179 last_flit=179 leg1_first_flit=162 leg1_last_flit=162 out_span=0 in_span=0 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=1 max_replay_occ2=1 seed=81"
+  },
+  "ret_row": {
+   "role": "one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary",
+   "exact": true,
+   "payload_B": 5120,
+   "payload_flits": 80,
+   "link_rt_first_to_last_cycles": 258,
+   "vendor_channel_cycles": {
+    "board": 156,
+    "ucie_fanout": 11
+   },
+   "measured_endpoint_cycles": 91,
+   "phy_serialization_extra_cycles": 0,
+   "wire_stage_cycles": 90,
+   "total_cycles": 348,
+   "us": 0.29,
+   "summary": "HOP_SUMMARY case=rec_ret_row result=PASS bytes=5120 flits=80 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=80 rcvd=80 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=81 first_flit=179 last_flit=258 leg1_first_flit=162 leg1_last_flit=241 out_span=79 in_span=79 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=80 max_replay_occ2=29 seed=81"
+  }
+ },
+ "placement": {
+  "record": "results/rtl/dsrom_recovery_20261004/draft/placement.json",
+  "sha256": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
+  "name": "DP1-EP5",
+  "dies": {
+   "primary": 4,
+   "expert_replicas": 60,
+   "total": 64,
+   "baseline_draft_dies": 12,
+   "added_vs_baseline_draft": 52,
+   "die_mm2": 839.239,
+   "die_mm2_source": "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json die.decision_priced_mm2",
+   "added_silicon_mm2": 43640.4
+  }
+ },
+ "still_modelled": [
+  {
+   "term": "hc.fn (HE FP32 mixes [24, 20480], attn + ffn) x 5 rows",
+   "us": 0.9542,
+   "why": "no HE/hc-engine RTL bench (also modelled in the AR composition); off the critical path unless listed in critical_path"
+  },
+  {
+   "term": "CDC fast->slow crossings on SU nodes",
+   "us": 0.2488,
+   "why": "W18 ratio-FIFO latency, no CDC bench (as AR); includes the quantisers' 37 hub stages"
+  },
+  {
+   "term": "light-FEC PHY (130 ns) + UCIe (10 ns) inside the stage hop",
+   "us": 0.1392,
+   "why": "VENDOR BUDGET (no PHY RTL), as AR"
+  },
+  {
+   "term": "DSpark stage placement",
+   "us": null,
+   "why": "mtp.* is unowned in the S81 canonical binding; this uses L0's allocator placement on a dedicated TP4 group (an owner mapping may differ)"
+  },
+  {
+   "term": "older 127 window rows of each stage",
+   "us": null,
+   "why": "synthetic format-consistent (as the w17 1M state); timing is data-independent"
+  },
+  {
+   "term": "replica SU nodes (swiglu, route_w, quant2, quant) of ONE row",
+   "us": null,
+   "why": "charged at the measured 5-row op-major time (an upper bound: the replica issues a subset)"
+  }
+ ],
+ "source_commit": "a6a8f7fe1b09f47425788ec59fe699487f4b6247",
+ "generated_utc": "2026-10-04T20:33:24Z",
+ "inputs": {
+  "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json": "3d4837a6cbdffce831ab48dc8a7677ff7e8eae2ef03cf7e84f985129e5d01775",
+  "results/rtl/dsrom_recovery_20261004/draft/rlinks.json": "b1cd51670614f282153496f32c0f6e1e4904fffb81bf5243929fcde37f28ffd5",
+  "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
+  "tools/dsrom_1m_draft_blocks.py": "130972e72ce459e41df89b2b0c05f593431a3ada1fac087af6939228ec7ad6c0"
+ }
+}

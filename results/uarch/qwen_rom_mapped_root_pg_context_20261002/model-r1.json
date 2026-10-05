@@ -1,0 +1,340 @@
+{
+  "Euclid_committed_join": {
+    "downstream-partial-terminal.json": {
+      "commit": "fdbe8a5a7",
+      "path": "results/uarch/qwen_rom_bank5_control_20261002/retained_cell_successor_r1/downstream_partial_terminal.json",
+      "sha256": "ea1e2ec8ddc74d673822965f01f4d790e733aea337a1435aec2d5a9c509c3606"
+    },
+    "euclid-classification.json": {
+      "commit": "35116d1e99ef13a29e9863bcc3d03971d3e3ca02",
+      "path": "results/uarch/qwen_rom_bank5_control_20261002/fulltile_terminal_r1/classification.json",
+      "sha256": "5e3b3f08e98f70525041c3fa0c10dfc4a7a7912a2b5f1f0a5b7b5b643fa6bd0e"
+    },
+    "euclid-portable-replay.json": {
+      "commit": "35116d1e99ef13a29e9863bcc3d03971d3e3ca02",
+      "path": "results/uarch/qwen_rom_bank5_control_20261002/fulltile_terminal_r1/portable_replay.json",
+      "sha256": "4b47a184b6d4509dc07c2d03d941800e63310046201b559122ae01185472f06f"
+    },
+    "make_tracks.tcl": {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/openRoad/make_tracks.tcl",
+      "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+    },
+    "pdn-template.tcl": {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/openRoad/pdn/grid_strategy-M1-M2-M5-M6.tcl",
+      "sha256": "7eb4c880be9357ed33c352ff84c2870b9c02312db96cdf7b0a5214fb39d0a844"
+    },
+    "retained-r3.sv": {
+      "commit": "fdbe8a5a7",
+      "path": "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv",
+      "sha256": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41"
+    },
+    "retained-source-model-handoff.json": {
+      "commit": "fdbe8a5a7",
+      "path": "results/uarch/qwen_rom_bank5_control_20261002/retained_cell_successor_r1/source_model_handoff.json",
+      "sha256": "d304b19c66edca72e4bbb6ad65adf45fc0522f7eaceb379af8e56ccb4d7ce1b2"
+    },
+    "tech.lef": {
+      "path": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lef/asap7_tech_1x_201209.lef",
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+    }
+  },
+  "PG_binding": {
+    "PG_stripes": 641,
+    "PG_vias": 33969,
+    "half_signal_share_preserved": true,
+    "horizontal_collectors": "M6/M8",
+    "signal_lanes": 1360,
+    "turn_vias": 1360,
+    "vertical_feeds": "M5/M7"
+  },
+  "admission": {
+    "PnR": false,
+    "additional_maps": 0,
+    "complete_gate_PASS": false,
+    "contextual_SSFF": false,
+    "hardware_adoption": false,
+    "installed_CTS_precondition": false,
+    "numerical_runs": 0
+  },
+  "final53_distribution_and_full_data_wire_area_unmeasured": true,
+  "graph_gate": "FAIL_COMPLETE_MAPPED_SURVIVAL_RETAINED",
+  "mapped_loads": {
+    "caps_are_pins_only": true,
+    "census_records": 158929,
+    "census_sha256": "bf4c7d2c6b83f73116a160c9f9193944eae9daa0e2b2d9fa60060fad671ad7fc",
+    "constant_reset_set_pins": 56630,
+    "groups": {
+      "KV_clock": {
+        "ff_cap_fF": 20.7464,
+        "pins": 2,
+        "ss_cap_fF": 17.3676
+      },
+      "ROM_clock": {
+        "ff_cap_fF": 103.73199999999999,
+        "pins": 10,
+        "ss_cap_fF": 86.83800000000001
+      },
+      "direct_parent_reset": {
+        "ff_cap_fF": 45439.0290370084,
+        "pins": 56593,
+        "ss_cap_fF": 39842.8868249592
+      },
+      "distributed_reset": {
+        "ff_cap_fF": 29.70763299999999,
+        "pins": 37,
+        "ss_cap_fF": 26.048925000000015
+      },
+      "logic_clock": {
+        "ff_cap_fF": 52326.90833002949,
+        "pins": 102287,
+        "ss_cap_fF": 44968.551826032184
+      }
+    },
+    "hardware_admission": false,
+    "mapped_survival_qualified": false,
+    "original_mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+    "original_terminal": {
+      "commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+      "contextual_SSFF": false,
+      "current_SMIN6_async_reset_bits_preopt": 58160,
+      "current_SMIN6_clock_bits_preopt": 109984,
+      "error": "unmapped cell $scopeinfo",
+      "status": "FAIL_SOURCE_MAP_RETAINED",
+      "synthesis_map_only": true,
+      "tile_PR": false,
+      "work": "/tmp/qwen-fulltile-source-map-smin6-r1-20261002"
+    },
+    "persistent_KV_service_tail_clock_domain": "Independent service;384+128macro clock ports/rank remain separate from tile10ROM+2KV.",
+    "schema": "QWEN_CURRENT_MAPPED_SINK_LOADS_V1",
+    "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "wire_construction": "Prospective construction prices nominal RC separately. Failed survival forbids a complete instantiated tile."
+  },
+  "mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "next_gate": "Preserve80mask/5bank source replicas and finish semantic graph joins; source/PG allocation is now finite. Qualify setup/hold and macro timing only after graph admission.",
+  "nominal_area_with_retention_inverters_and_source_binding_um2": 86904.29411971479,
+  "retention_successor_price": {
+    "Z_literal_contract_failure_retained": true,
+    "added_FF_area_um2": 20.09124,
+    "added_FFs": 53,
+    "finite_distribution_scope": "Existing actual102299clock/56630reset plus53required control FFs; actual source handoff pinned, restorationINV never assumed free.",
+    "mapped_counts_after_retention": {
+      "clock": 102352,
+      "reset": 56683
+    },
+    "nominal_pin_loads_after_retention": {
+      "ff": {
+        "85restoring_INV_QN_load_fF": 58.11586,
+        "clock_fF": 52478.053786029486,
+        "reset_fF": 45511.29084700839
+      },
+      "ss": {
+        "85restoring_INV_QN_load_fF": 49.19511,
+        "clock_fF": 45095.75847203218,
+        "reset_fF": 39906.2490749592
+      }
+    },
+    "old_actual_FFs": 32,
+    "required_explicit_FFs": 85,
+    "restoring_INV_area_um2": 3.7179,
+    "restoring_INV_reservation": 85,
+    "source": {
+      "added_restoring_inverters": "85 explicit logical restorations; actual inversion survival/area/RC unmeasured, Ampere must price; do not assume free",
+      "admitted_mapping": false,
+      "adopted": false,
+      "all85_distinct_cell_mapping": "UNRUN pending model finite distribution/parent IO price",
+      "already_priced_copies": 85,
+      "async_reset_tested": true,
+      "base_source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "cell_retention": "keep/dont_touch on explicit named cells, not only output wires",
+      "contextual_SSFF": false,
+      "current_tests": 26,
+      "default_parameter": "ROM_REPLICA_CELL_RETENTION=0",
+      "finite_distribution_parent_IO_model": "BLOCKED pending Ampere",
+      "literal_01X_fixture": "PASS",
+      "literal_Z_fixture": "FAIL: inverted-Q cell does not preserve stored high-impedance value; detected and retained, no full fourstate claim",
+      "literal_test_modes": [
+        0,
+        1
+      ],
+      "missing_copies_not_double_charged": 53,
+      "new_map_run": false,
+      "previous_actual_counts": {
+        "mask": 30,
+        "strobe": 2
+      },
+      "required_counts": {
+        "mask": 80,
+        "strobe": 5
+      },
+      "selected_cell_reservation_um2": 125000,
+      "selected_corridor_um": 96.768,
+      "source_contract_or_equivalence": "BLOCKED pending review of actual driven control contract and full source proof",
+      "source_path": "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv",
+      "source_sha256": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+      "status": "DEFAULT_OFF_LITERAL_REPLICA_SUCCESSOR_CONTEXT_AND_Z_CONTRACT_BLOCKED",
+      "zero_new_edges": true
+    },
+    "source_contract_qualified": false,
+    "source_map_admission": false,
+    "total_retention_increment_um2": 23.80914
+  },
+  "root_allocation_sha256": "5b5a59c02eca634b350bdfad526c489c802c70df6e41431510dbdb1fc52737e1",
+  "schema": "QWEN_ACTUAL_MAPPED_ROOT_PG_CONTEXT_V1",
+  "selected_corridor_um": 96.768,
+  "selected_slot": {
+    "area_um2": 486752.7168,
+    "array_area_mm2_per_1536tile_die": 747.6521730047999,
+    "available_cell_area_um2": 130324.09504000001,
+    "cell_budget_includes_RF_arithmetic_capture_control_reset_distribution": true,
+    "complete_cell_area_ceiling_um2": 125000,
+    "complete_die_and_persistent_service_fit_proven": false,
+    "die_other_services_remaining_mm2": 67.34782699520008,
+    "h_um": 1360.8,
+    "incremental_width_area_mm2_per_1536tile_die": 76.8520617984,
+    "incremental_width_area_um2": 50033.8944,
+    "logic_utilization": 0.5,
+    "macro_halo_reservation_um2": 10000,
+    "source_async_reset_bit_budget_ceiling": 100000,
+    "source_clock_bit_budget_ceiling": 200000,
+    "w_um": 357.696
+  },
+  "source_binding": {
+    "additional_area_um2": 8.77716,
+    "input_clock_driver": "bind_clock_entry",
+    "input_reset_driver": "bind_reset_entry",
+    "new_buffers": 86,
+    "old_metadata_reset_buffers_bound": 15,
+    "raw_reset_combinational_controls": [
+      {
+        "cell": "NAND2xp33_ASAP7_75t_R",
+        "instance": "$abc$1128272$auto$blifparse.cc:397:parse_blif$1200119",
+        "pin": "A"
+      },
+      {
+        "cell": "NAND3xp33_ASAP7_75t_R",
+        "instance": "$abc$1128272$auto$blifparse.cc:397:parse_blif$1200126",
+        "pin": "B"
+      }
+    ],
+    "root_clock_branches": 5,
+    "wire_RC_is_finite": true
+  },
+  "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "startup": {
+    "additional_steady_cycles": 0,
+    "first_accept_edge3_requires_all_endpoint_constraints": true,
+    "latency_credit": false,
+    "provider_release_edges": 2
+  },
+  "timing_preflight": {
+    "ff": {
+      "actual_extracted_contextual_SSFF": false,
+      "analytical_nominal_RC_only": true,
+      "branch_max_load_fF": 25.876848,
+      "clock_arrival_minmax_ps": [
+        504.8316182293313,
+        1383.4570558619375
+      ],
+      "clock_sinks": 102299,
+      "external_reset_min_pulse_ps": 351.61324034699254,
+      "external_reset_required_deassert_minmax_ps": [
+        178.42752846053708,
+        823.1130192873161
+      ],
+      "provider_CLK_arrival_minmax_ps": [
+        161.79928482034802,
+        179.45664673026693
+      ],
+      "provider_CLK_slew_minmax_ps": [
+        11.461347724401925,
+        11.461348447067522
+      ],
+      "provider_external_reset_route_rise_minmax_ps": [
+        101.02911826972984,
+        118.68626553303189
+      ],
+      "recovery_worst": {
+        "group": "metadata",
+        "instance": "$auto$ff.cc:337:slice$664698",
+        "recovery_bound_margin_ps": 487.2230856736036,
+        "removal_bound_margin_ps": 124.93901257428323,
+        "reset_phase_minmax_ps": [
+          174.98830957428322,
+          304.27944765972984
+        ]
+      },
+      "release_relative_provider_clock_minmax_ps": [
+        133.0453630134271,
+        226.56883035440973
+      ],
+      "removal_worst": {
+        "group": "metadata",
+        "instance": "$auto$ff.cc:337:slice$664679",
+        "recovery_bound_margin_ps": 554.3014749859157,
+        "removal_bound_margin_ps": 57.860623261971135,
+        "reset_phase_minmax_ps": [
+          107.90992026197114,
+          237.20105834741776
+        ]
+      },
+      "reset_FF_sinks": 56630,
+      "reset_bound_failures": 0,
+      "scope": "Complete actual FF clock/reset feed propagation. No arithmetic data setup/hold, macro capture timing, P&R or gate PASS credit."
+    },
+    "ss": {
+      "actual_extracted_contextual_SSFF": false,
+      "analytical_nominal_RC_only": true,
+      "branch_max_load_fF": 25.312199999999994,
+      "clock_arrival_minmax_ps": [
+        1084.4920034733445,
+        3093.390776119981
+      ],
+      "clock_sinks": 102299,
+      "external_reset_min_pulse_ps": 358.32095065070484,
+      "external_reset_required_deassert_minmax_ps": [
+        261.01504127621047,
+        887.7059641448802
+      ],
+      "provider_CLK_arrival_minmax_ps": [
+        354.0283854468959,
+        380.6829890279392
+      ],
+      "provider_CLK_slew_minmax_ps": [
+        24.718459757628786,
+        24.718460128662002
+      ],
+      "provider_external_reset_route_rise_minmax_ps": [
+        219.66794775172875,
+        246.32242130201573
+      ],
+      "recovery_worst": {
+        "group": "metadata",
+        "instance": "$auto$ff.cc:337:slice$664698",
+        "recovery_bound_margin_ps": 220.87878455135785,
+        "removal_bound_margin_ps": 320.3371485298119,
+        "reset_phase_minmax_ps": [
+          370.3864455298119,
+          570.6237487819756
+        ]
+      },
+      "release_relative_provider_clock_minmax_ps": [
+        266.19355898498264,
+        412.79343684046876
+      ],
+      "removal_worst": {
+        "group": "metadata",
+        "instance": "$auto$ff.cc:337:slice$664679",
+        "recovery_bound_margin_ps": 370.35801793923054,
+        "removal_bound_margin_ps": 170.857915141939,
+        "reset_phase_minmax_ps": [
+          220.907212141939,
+          421.1445153941029
+        ]
+      },
+      "reset_FF_sinks": 56630,
+      "reset_bound_failures": 0,
+      "scope": "Complete actual FF clock/reset feed propagation. No arithmetic data setup/hold, macro capture timing, P&R or gate PASS credit."
+    }
+  }
+}

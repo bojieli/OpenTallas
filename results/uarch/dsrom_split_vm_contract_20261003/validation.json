@@ -1,0 +1,20 @@
+{
+  "cold_directory": "/tmp/dsrom-vm-contract-cold-20261003-6xou7nee",
+  "cold_model_byte_identical": true,
+  "cold_tests": 13,
+  "engine_RTL_changed": false,
+  "local_tests": 13,
+  "model_sha256": "ae11c78f45ce1cd2a273aa1299d8d7567d8c15650c8e5eacb2d35a14f3a8ce98",
+  "new_physical_jobs": false,
+  "parent_model_regression_tests": 15,
+  "parent_model_retained_byte_identical": true,
+  "pin_access_independent_tests": 7,
+  "pin_access_test_skips": 0,
+  "regenerate": "python3 tools/dsrom_split_vm_order_model.py",
+  "schema": "DS_SPLIT_VM_ORDER_VALIDATION_V1",
+  "source_9ffc_inputs_embedded": true,
+  "source_archives": 14,
+  "source_reference_is_not_executed_RTL": true,
+  "status": "SOURCE_ORDER_CONTRACT_AND_PIN_CHECKER_REVIEW_NO_BUILD",
+  "tests": "python3 tests/test_dsrom_split_vm_order_model.py -v"
+}

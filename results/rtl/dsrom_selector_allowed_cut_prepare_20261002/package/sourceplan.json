@@ -1,0 +1,26 @@
+{
+  "caller_public_ports_unchanged": true,
+  "cell_ports_source_checked": true,
+  "compile_admitted": false,
+  "component_545_behavioral_source_gate_retained": true,
+  "consumer_deadline": null,
+  "current_capture_FAIL_blocks_parent_admission": true,
+  "cut_modules": 3,
+  "default_off": true,
+  "helper_edges": [
+    99,
+    99,
+    28
+  ],
+  "installed_TT_model_files_functional_provenance_only": true,
+  "integrated_parent_runtime_admitted": false,
+  "model_sha256": "07efe35a218df085f08b687137348f37a0fe81d366881b2da6764e7e94355b35",
+  "no_unreviewed_functional_cell_standins": true,
+  "official_SEQ_UDP_and_specify_backend_compatibility_unverified": true,
+  "physical_admitted": false,
+  "source_G0_pending": [
+    "Literal-cell primitive backend and complete terminal/present port review",
+    "Priced226SETN tie and core35ASR tie/root/reset union",
+    "Actual widened terminal sites and parent capture accepteddeadline admission"
+  ]
+}

@@ -1,0 +1,77 @@
+import sys
+import shutil
+import subprocess
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import hdc_golden as G  # noqa: E402
+
+needs_checkpoint = pytest.mark.skipif(
+    not G.CHECKPOINT.exists(), reason="build the reduced checkpoint: tools/build_qwen3_reduced_model.py")
+
+
+def test_special_functions_are_within_three_ulp():
+    x = np.linspace(-87, 88, 20001).astype(np.float32)
+    assert np.max(np.abs(G.exp(x) / np.exp(x.astype(np.float64)) - 1)) < 3.6e-7
+    d = np.exp(np.random.default_rng(0).uniform(-40, 40, 5000)).astype(np.float32)
+    assert np.max(np.abs(G.reciprocal(d) * d.astype(np.float64) - 1)) < 3.6e-7
+    assert max(abs(float(G.rsqrt(v)) * np.sqrt(float(v)) - 1) for v in d[:500]) < 3.6e-7
+
+
+def test_reciprocal_finite_extreme_does_not_wrap_into_nan():
+    d = G.from_bits(np.array([0x7EF311C7, 0x7EF311C8, 0x7F7FFFFF], dtype=np.uint32))
+    with np.errstate(all="ignore"):
+        out = G.reciprocal(d)
+        silu = G.silu(np.float32(-88))
+    assert np.array_equal(G.bits(out), np.zeros(3, dtype=np.uint32))
+    assert np.isfinite(silu) and silu == 0
+
+
+def test_rtl_reciprocal_finite_extreme(tmp_path):
+    if not shutil.which("iverilog") or not shutil.which("vvp"):
+        pytest.skip("Icarus Verilog is not installed")
+    sources = [
+        "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_sfu_q.sv",
+        "rtl/test/ot_hdc_sfu_ref.sv", "rtl/test/tb_hdc_recip_extreme.sv",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    ]
+    sim = tmp_path / "recip.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_hdc_recip_extreme", "-o", str(sim),
+                    *(str(ROOT / p) for p in sources)], check=True)
+    out = subprocess.run(["vvp", "-n", str(sim)], check=True, capture_output=True, text=True).stdout
+    assert "RECIP_EXTREME full=2 short=2 reference=2" in out and "PASS" in out
+
+
+def test_bf16_rounding_is_nearest_even():
+    assert G.to_bf16(np.float32(1.0 + 2 ** -8)) == np.float32(1.0)            # tie -> even
+    assert G.to_bf16(np.float32(1.0 + 3 * 2 ** -8)) == np.float32(1.0 + 2 ** -6)
+
+
+@needs_checkpoint
+def test_golden_reproduces_the_torch_oracle_tokens():
+    model = G.Model()
+    prompt, expected = G.prompt_and_expected()
+    cache = [[] for _ in range(model.layers)]
+    for pos, tok in enumerate(prompt[:-1]):
+        model.decode_token(tok, pos, cache)
+    tok, out = prompt[-1], []
+    for i in range(3):
+        tok = int(np.argmax(model.decode_token(tok, len(prompt) - 1 + i, cache)))
+        out.append(tok)
+    assert out == expected
+
+
+def test_fp8_kv_rounding_is_e4m3_nearest_even_saturating():
+    f = lambda v: float(G.to_fp8(np.float32(v)))                               # noqa: E731
+    assert f(1.0 + 2 ** -4) == 1.0 and f(1.0 + 3 * 2 ** -4) == 1.0 + 2 ** -2     # tie -> even
+    assert f(448.0) == 448.0 and f(1e9) == 448.0 and f(-500.0) == -448.0         # saturating
+    assert f(2 ** -9) == 2 ** -9 and f(2 ** -10) == 0.0 and f(1.5 * 2 ** -9) == 2 ** -8  # subnormals
+    assert np.signbit(G.to_fp8(np.float32(-2 ** -12))) == False                  # noqa: E712  canonical +0
+    x = np.random.default_rng(0).standard_normal(4096).astype(np.float32)
+    assert np.array_equal(G.to_bf16(G.to_fp8(x)), G.to_fp8(x))                  # every E4M3 value is a BF16 value

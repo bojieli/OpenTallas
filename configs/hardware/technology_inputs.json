@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "units": "decimal SI unless a field says otherwise",
+  "source_facts": {
+    "wafer_scale": {
+      "area_mm2": 46225.0,
+      "perimeter_mm": 860.0,
+      "area_evidence": "published:Cerebras WSE-3 public architecture paper and product page",
+      "perimeter_evidence": "derived:4 * 215 mm square side from 46,225 mm2"
+    },
+    "a100_sxm_80gb": {
+      "process": "TSMC N7",
+      "hbm_generation": "HBM2e",
+      "hbm_capacity_bytes": 80000000000.0,
+      "hbm_bandwidth_bytes_s": 2039000000000.0,
+      "bf16_dense_ops_s": 312000000000000.0,
+      "fp32_ops_s": 19500000000000.0,
+      "nvlink_bidirectional_bytes_s": 600000000000.0,
+      "power_w": 400.0,
+      "evidence": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+    },
+    "b300": {
+      "process": "custom TSMC 4NP",
+      "hbm_generation": "HBM3e",
+      "hbm_capacity_bytes": 288000000000.0,
+      "hbm_bandwidth_bytes_s": 7750000000000.0,
+      "fp8_dense_ops_s": 4500000000000000.0,
+      "fp4_dense_ops_s": 13500000000000000.0,
+      "bf16_dense_ops_s": 2250000000000000.0,
+      "fp32_ops_s": 90000000000000.0,
+      "nvlink_bidirectional_bytes_s": 1800000000000.0,
+      "system_allocated_power_w": 1812.5,
+      "evidence": "published/derived:NVIDIA DGX B300 February 2026 datasheet and system guide; published system totals divided by eight except where separately labelled",
+      "fp32_evidence": "assumed:90 TOP/s per GPU is a provisional full-FP32 roof because the checked official DGX B300 datasheet and system guide do not publish one; executable sensitivity spans 19.5 to 180 TOP/s"
+    },
+    "wse2": {
+      "process": "TSMC N7",
+      "sram_bytes": 40000000000.0,
+      "sram_bandwidth_bytes_s": 20000000000000000.0,
+      "cores": 850000,
+      "evidence": "published:Cerebras WSE-2 product disclosures; node independently stated in Cerebras 2026 SEC S-1"
+    },
+    "wse3": {
+      "process": "TSMC N5",
+      "sram_bytes": 44000000000.0,
+      "sram_bandwidth_bytes_s": 21000000000000000.0,
+      "fabric_bandwidth_bytes_s": 26750000000000000.0,
+      "peak_ai_ops_s": 125000000000000000.0,
+      "cores": 900000,
+      "evidence": "published:Cerebras WSE-3 product page and public architecture paper; 125 PFLOP/s is retained as an ambiguous marketing ceiling, not a calibrated model roof"
+    },
+    "graphcore_gc200": {
+      "process": "TSMC N7",
+      "die_area_mm2": 823.0,
+      "sram_bytes": 900000000.0,
+      "sram_bandwidth_bytes_s": 47500000000000.0,
+      "fp16_ops_s": 250000000000000.0,
+      "evidence": "published:Graphcore GC200 page for node, SRAM, and FP16; public die/architecture disclosures for area and aggregate in-processor-memory bandwidth"
+    },
+    "fabricated_rom_density_anchor": {
+      "process_nm": 28.0,
+      "density_mbit_mm2": 8.928,
+      "evidence": "measured:fabricated 28nm 22Mb hybrid SRAM/ROM-CIM, DOI 10.1109/JSSC.2025.3556008"
+    },
+    "rom_bandwidth_anchor": {
+      "process_nm": 28.0,
+      "macro_area_mm2": 0.24,
+      "operations_s": 28800000000.0,
+      "operations_per_weight": 2.0,
+      "weight_bits": 8.0,
+      "derived_weight_bandwidth_density_bytes_s_mm2": 60000000000.0,
+      "evidence": "simulated:YOLoC 28nm ROM-CIM macro, DOI 10.1145/3489517.3530576; not fabricated silicon"
+    },
+    "three_d_metal_rom": {
+      "density_bytes_mm2": 20700000.0,
+      "evidence": "simulated:3D-METRO transistorless 3D-metal ROM evaluation, DOI 10.1145/3658617.3697570; not fabricated silicon"
+    }
+  },
+  "packaging_inputs": {
+    "stack_pitch_mm": {
+      "value": 12.0,
+      "evidence": "assumed:first-order HBM package plus routing keep-out pitch"
+    },
+    "hbm2e_stack": {
+      "capacity_bytes": 16000000000.0,
+      "bandwidth_bytes_s": 407800000000.0,
+      "evidence": "derived:A100 80GB and 2.039TB/s divided across five HBM2e stacks"
+    },
+    "hbm3e_stack": {
+      "capacity_bytes": 36000000000.0,
+      "bandwidth_bytes_s": 968750000000.0,
+      "evidence": "derived:B300 288GB and 7.75TB/s divided across eight HBM3e stacks"
+    }
+  },
+  "n7_architecture_attribution": {
+    "target_process_nm": 7.0,
+    "gpu_cluster_sizes": [1, 2, 4, 8, 16, 32, 64],
+    "rom_envelopes": {
+      "conservative": {
+        "density_scaling_exponent": 1.0,
+        "rom_area_fraction": 0.35,
+        "usable_rom_fraction": 0.80,
+        "bandwidth_density_scale": 1.0,
+        "hbm_stacks": 16,
+        "compute_anchor": "graphcore_gc200_area_scaled",
+        "compute_ceiling_fraction": 0.10,
+        "wafer_frequency_hz": 800000000.0,
+        "noc": "wse2_nearest_neighbor"
+      },
+      "central": {
+        "density_scaling_exponent": 1.5,
+        "rom_area_fraction": 0.48,
+        "usable_rom_fraction": 0.86,
+        "bandwidth_density_scale": 2.0,
+        "hbm_stacks": 32,
+        "compute_anchor": "graphcore_gc200_area_scaled",
+        "compute_ceiling_fraction": 0.25,
+        "wafer_frequency_hz": 900000000.0,
+        "noc": "hierarchical_64x64"
+      },
+      "aggressive": {
+        "density_scaling_exponent": 2.0,
+        "rom_area_fraction": 0.55,
+        "usable_rom_fraction": 0.90,
+        "bandwidth_density_scale": 4.0,
+        "hbm_stacks": 48,
+        "compute_anchor": "graphcore_gc200_area_scaled",
+        "compute_ceiling_fraction": 0.50,
+        "wafer_frequency_hz": 1000000000.0,
+        "noc": "coarse_reticle_exchange"
+      }
+    }
+  },
+  "leading_node_market": {
+    "target_process_nm": 4.0,
+    "gpu_cluster_sizes": [1, 2, 4, 8, 16],
+    "rom_envelopes": {
+      "conservative": {
+        "density_policy": "linear_planar_scaling",
+        "rom_area_fraction": 0.35,
+        "usable_rom_fraction": 0.80,
+        "bandwidth_density_scale": 1.5,
+        "hbm_stacks": 24,
+        "compute_anchor": "wse3_peak_ai_ops",
+        "compute_ceiling_fraction": 0.10,
+        "wafer_frequency_hz": 900000000.0,
+        "noc": "wse3_nearest_neighbor"
+      },
+      "central": {
+        "density_policy": "geometric_between_planar_and_3d_metal",
+        "rom_area_fraction": 0.48,
+        "usable_rom_fraction": 0.86,
+        "bandwidth_density_scale": 3.0,
+        "hbm_stacks": 40,
+        "compute_anchor": "wse3_peak_ai_ops",
+        "compute_ceiling_fraction": 0.30,
+        "wafer_frequency_hz": 1100000000.0,
+        "noc": "hierarchical_64x64"
+      },
+      "aggressive": {
+        "density_policy": "published_3d_metal_evaluation",
+        "rom_area_fraction": 0.55,
+        "usable_rom_fraction": 0.90,
+        "bandwidth_density_scale": 5.0,
+        "hbm_stacks": 56,
+        "compute_anchor": "wse3_peak_ai_ops",
+        "compute_ceiling_fraction": 0.50,
+        "wafer_frequency_hz": 1200000000.0,
+        "noc": "coarse_reticle_exchange"
+      }
+    }
+  },
+  "runtime_and_cost_assumptions": {
+    "a100": {
+      "hbm_capacity_utilization": 0.90,
+      "weight_bandwidth_efficiency": 0.75,
+      "kv_bandwidth_efficiency": 0.70,
+      "compute_efficiency": 0.45,
+      "load_balance_efficiency": 0.75,
+      "cost_per_gpu": 15000.0
+    },
+    "b300": {
+      "hbm_capacity_utilization": 0.90,
+      "weight_bandwidth_efficiency": 0.72,
+      "kv_bandwidth_efficiency": 0.67,
+      "compute_efficiency": 0.48,
+      "load_balance_efficiency": 0.80,
+      "cost_per_gpu": 32000.0
+    },
+    "rom_by_envelope": {
+      "conservative": {
+        "weight_bandwidth_efficiency": 0.50,
+        "kv_bandwidth_efficiency": 0.60,
+        "compute_efficiency": 0.45,
+        "load_balance_efficiency": 0.75,
+        "defect_repair_efficiency": 0.85,
+        "clock_efficiency": 0.85,
+        "sync_efficiency": 0.80,
+        "pipeline_efficiency": 0.82
+      },
+      "central": {
+        "weight_bandwidth_efficiency": 0.65,
+        "kv_bandwidth_efficiency": 0.70,
+        "compute_efficiency": 0.60,
+        "load_balance_efficiency": 0.85,
+        "defect_repair_efficiency": 0.92,
+        "clock_efficiency": 0.90,
+        "sync_efficiency": 0.88,
+        "pipeline_efficiency": 0.90
+      },
+      "aggressive": {
+        "weight_bandwidth_efficiency": 0.75,
+        "kv_bandwidth_efficiency": 0.78,
+        "compute_efficiency": 0.70,
+        "load_balance_efficiency": 0.92,
+        "defect_repair_efficiency": 0.96,
+        "clock_efficiency": 0.94,
+        "sync_efficiency": 0.94,
+        "pipeline_efficiency": 0.95
+      }
+    },
+    "wafer_cost_per_device": 100000.0,
+    "wafer_power_w": 15000.0,
+    "wafer_cooling_limit_w": 23000.0,
+    "wafer_nre": 100000000.0,
+    "production_units": 1000
+  }
+}

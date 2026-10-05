@@ -1,0 +1,32 @@
+{
+  "status": "pass",
+  "scope": "Matched current-source M6/N53/K513 static two-column versus one-column pass; unchanged three-stage adder; modeled service latency, not whole-model inference",
+  "source_manifests_match": true,
+  "current_sources_verified": true,
+  "outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth513_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2.json",
+      "sha256": "c99c120035b59c43ad6bf39e8423479e6fde2ff553a2873d729fe46f121cc8c2",
+      "pass_columns": 2,
+      "median_successful_phase_cycles": 300448.5,
+      "weight_fills": 18981,
+      "weight_bytes": 604752,
+      "activation_fills": 12312,
+      "campaign_cycles": 2121076
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth513_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols1.json",
+      "sha256": "b035e987a18b1a5078b4fac3b692e57977a0014f2492e80765f89759f2c14424",
+      "pass_columns": 1,
+      "median_successful_phase_cycles": 143226.5,
+      "weight_fills": 3591,
+      "weight_bytes": 109392,
+      "activation_fills": 21546,
+      "campaign_cycles": 1014299
+    }
+  ],
+  "phase_cycle_reduction_percent": 52.329101326849695,
+  "activation_fill_increase_percent": 75.0
+}

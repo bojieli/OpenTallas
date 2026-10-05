@@ -1,0 +1,63 @@
+{
+  "path": "/tmp/claude-1000/w19/runtime-fetch-bbf32f59",
+  "owner": "W19 owner retired checkpoints",
+  "ready_commit": "f1a463bf2",
+  "timestamp": 1790844437.3583925,
+  "live_pids": [],
+  "files": [
+    {
+      "relative_path": "full/model_preflight.json",
+      "bytes": 1979,
+      "sha256": "0a01a5415bfcdcca6bc973e1b4d3316cf048e1a8703eb47f5c089e84e90e43d0",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_d_9vmzxc/cfg.hex",
+      "bytes": 72,
+      "sha256": "ca0229a554504605e7e3f3807f49dd4b3c1a50e68c6d65e9771b50d4f6843174",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_d_9vmzxc/lines.hex",
+      "bytes": 6552,
+      "sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_d_9vmzxc/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ttnysnx9/cfg.hex",
+      "bytes": 72,
+      "sha256": "5719a5f5722d0dd494a8ddf0dffa57991985f6f4c1bd45b2dbda17680fd1ba5c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ttnysnx9/lines.hex",
+      "bytes": 6552,
+      "sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ttnysnx9/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    }
+  ],
+  "metadata_archive": "runtime-fetch-bbf32f59_checkpoint_metadata.tar.gz",
+  "metadata_blob": "ecf28c4c0f3d6627d2a9dd5387b491e284d4c52e",
+  "preserved_ref": "refs/maintenance/disk-recovery-20261001/checkpoint-runtime-fetch-bbf32f59",
+  "allocated_bytes_before": 258048,
+  "free_before": 219445522432
+}

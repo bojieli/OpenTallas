@@ -1,0 +1,66 @@
+{
+  "actual_component": {
+    "exact_helper_shared_factory_type_enrollment": true,
+    "literal_constructor": true,
+    "matching_reverse_grants": 2,
+    "payload_bytes": 32,
+    "production_native_operator_executed": false,
+    "shared_write_read_byte_exact": true
+  },
+  "actual_state_restored": false,
+  "candidate_journal_reservation_bytes": 819950818992,
+  "canonical_dependency_commits": [
+    "ed1162ae8cf884c75b77a4d79bd1ebec350d4c0f",
+    "015464bf0"
+  ],
+  "checkpoint_remaining_refusal": "KeyError: h3_complete_native_calendar_successor_r1.py in V2.scope_role_proof ROLE_PINS",
+  "constructor_preflight_performed": false,
+  "free_before_checkpoint_bytes": 29333657936,
+  "fresh_free_bytes": 849284476928,
+  "hardware_qualified": false,
+  "join_changes": [
+    "historical endpoint whole-file guard replaced by exact additive module/function object/origin plus unchanged executor AST",
+    "group run changes only calendar import to additive module",
+    "literal Original ProductionSharedFactory retained",
+    "compact provider __init__ is original; log code and original-provider closure verified"
+  ],
+  "local_dependency_snapshot_commit": "f76282efe",
+  "numerical_launch_performed": false,
+  "opt_in_api": "ds_hbm_additive_endpoint_join_r54.engine_class(prefix,finite_pc10=True,retire_unconsumed=True); install(explicit_alias_modules) before any provider or JournalBudget construction",
+  "original_R50_tests_unchanged": true,
+  "original_calendar_and_helper_byteidentical": true,
+  "physical_P_and_R_prerequisite": false,
+  "preserved_first_failure": "attempt1_failure.json",
+  "requested_checkpoint_join": [
+    "source-pinned compact budget role enrollment and exact installer aliases",
+    "quiescent lifecycle generations/last_tick/live/fault watermark preservation",
+    "complete old event/index/dictionary file inventory and hash/provenance",
+    "fresh actual checkpoint plus continuation journal/metadata storage composition"
+  ],
+  "schema": "DS_HBM_ADDITIVE_ENDPOINT_JOIN_R54",
+  "source_base": "f76282efe57aae22ff71c64c18bac215e8584d9a",
+  "source_sha256": {
+    "tests/test_ds_hbm_additive_endpoint_join_r54.py": "40e6928822c4710a2288d6feb822a34994fdc79e61c8e7943fc38eab8f09052f",
+    "tools/ds_hbm_additive_endpoint_join_r54.py": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2",
+    "tools/ds_hbm_current_calendar_adapter_r50.py": "839765749577fabbed3ffeca27ba996d6f3727f9efacc3b2b725d1709e991e1a",
+    "tools/ds_hbm_pc10_composed_engine_r46.py": "3ab2be2eb210ef74bbbabff303939e47d09111dded9f950cceb2f4fc10bb4a01",
+    "tools/ds_hbm_pc10_engine_r44.py": "96949401e4ef66977211d03d4d64821ca7cff4bd818a8701d8806344484bc31d",
+    "tools/ds_producer_checkpoint_helper_select.py": "73666cc051cfe095eeaf9e66ced54494a55b7d9845784cecd62460d3dd6c711d",
+    "tools/ds_producer_checkpoint_resume.py": "712c45c1267302e4e408fe41a9300474d00810482217e6e4713925b2768c694e",
+    "tools/ds_producer_checkpoint_resume_v2.py": "0a6ce36d0357adbb32ce16408702cfc6927608e5b6124b5ab82b8f9250d969c1",
+    "tools/h3_complete_native_calendar.py": "c0370e63dba0eadcc06c5522c28a956ddebfd10af9b8765a61fe0e4fe025b817",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "tools/h4_hbm_w19_pc10_endpoints.py": "5013e5695ef6ae80fa1988d5f5529f766d8dad60ae7254ff2139fd29834329fc",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+  },
+  "status": "READY_EXACT_ADDITIVE_ENDPOINT_COMPONENT_CHECKPOINT_COMPOSITION_HELD",
+  "tests": {
+    "combined_pass": 67,
+    "commands": [
+      "python -m pytest -q tests/test_ds_hbm_additive_endpoint_join_r54.py tests/test_ds_hbm_current_calendar_adapter_r50.py tests/test_ds_producer_checkpoint_resume_v2.py",
+      "python -m pytest -q tests/test_ds_hbm_additive_endpoint_join_r54.py"
+    ],
+    "post_group_pin_tests_pass": 4
+  }
+}

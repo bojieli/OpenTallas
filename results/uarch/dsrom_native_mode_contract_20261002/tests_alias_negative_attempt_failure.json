@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL_TEST_NEGATIVE_CONSTRUCTION",
+  "passed": 26,
+  "failed": 1,
+  "cause": "Positive SU outer stride46464 from base55744 stays aboveXN; it is not an alias. New control uses exact19bit aperture crossing to exercise potential truncation protection. Original source/program/model records preserved.",
+  "numeric_fit": false
+}

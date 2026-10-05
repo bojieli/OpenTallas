@@ -1,0 +1,730 @@
+{
+  "SSFF_admission": false,
+  "architecture_adoption": false,
+  "current_replay_source_count": 41,
+  "current_replay_sources": [
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "7a2750e869c99e384ddf8cc608fdbfabadbda9c3",
+      "path": "configs/hardware/architectures.json",
+      "role": "runtime_import_or_read",
+      "sha256": "fd3b286eebe534f52547ff7fe9e23b1d9c3024e7afb72e15f8b1824511b7d04e"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "a2aa0780b7eca07595391be4e7be3b0697b400cb",
+      "path": "configs/hardware/power_scenarios.json",
+      "role": "runtime_import_or_read",
+      "sha256": "727435b50f6acb1f6c542a095715388cf5e3ba1e4713b8ffd3cf5b48a6242a59"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "0d26462edabd62ab543f4e9d920555c413849bd7",
+      "path": "configs/hardware/technology.json",
+      "role": "runtime_import_or_read",
+      "sha256": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "82cc899eb7cecf862c6d70a985f09d82c2976cad",
+      "path": "configs/hardware/technology_inputs.json",
+      "role": "runtime_import_or_read",
+      "sha256": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "4ef75f5c968d9537d70bc60174d56d0269c239c3",
+      "path": "configs/models/candidates/deepseek-v4.1-flash.json",
+      "role": "runtime_import_or_read",
+      "sha256": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "711f077e3ea669762e3a71a40fcb6f38bf43346e",
+      "path": "configs/models/qwen3-8b.json",
+      "role": "runtime_import_or_read",
+      "sha256": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "71c1b9fd118868221030eb83a31009c29fd037dc",
+      "path": "results/arch/arch_budget_v41.json",
+      "role": "runtime_import_or_read",
+      "sha256": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "1a2309e1b2d171940f0083a483b8c1897b88c20a",
+      "path": "results/arch/qwen3_budget.json",
+      "role": "runtime_import_or_read",
+      "sha256": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "362fc605268177f97522e121ffbe94bf284c47b5",
+      "path": "results/arch/qwen_gpu_calibration.json",
+      "role": "runtime_import_or_read",
+      "sha256": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "392cc3e1e031e608f289a0fcd692749dffdedf69",
+      "path": "results/arch/v41_die_assembly.json",
+      "role": "runtime_import_or_read",
+      "sha256": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "86a9eeb45f497f9c445b83edc86857254df11c39",
+      "path": "results/arch/v41_die_placement.json",
+      "role": "runtime_import_or_read",
+      "sha256": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "62e99fa1b084bac864070c853f85f7001b131885",
+      "path": "results/floorplan/qwen_o4_rom_placement.json",
+      "role": "runtime_import_or_read",
+      "sha256": "4d8f33abd67692c5ac515326490be3a7b5561997216fb4f02ed89d622f57d43d"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "8e4c5dab0fbbe8aeab2170bbe7743b62f4b3def2",
+      "path": "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json",
+      "role": "runtime_import_or_read",
+      "sha256": "3b85a8c972bbd49062a8d43c4fc0b0a57d9c470f19eb36335b6edec2a5e50d6c"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "4ce49e43add157420abb930c15aba0c9382409f6",
+      "path": "results/rtl/hdc_v41_cand_campaign.json",
+      "role": "runtime_import_or_read",
+      "sha256": "b83aad197d0fff78cf5663d0ce4b790b7ddb24bddb83093eb4a8ad662efd4789"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "e1fe8bca7d8cbaff4278348eed7e72485c5be4a0",
+      "path": "results/rtl/hdc_v41_sinkhorn_campaign.json",
+      "role": "runtime_import_or_read",
+      "sha256": "7d4b6b697c4394c70378e7e5d6aa97b40b4762bad85c2475ef52234bcd4e541a"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "b540145aa34e28c624d0005db693ef219bd4426f",
+      "path": "results/rtl/hdc_v41_tselect_scale_campaign.json",
+      "role": "runtime_import_or_read",
+      "sha256": "ee7dde83a8d3f68b355549d54bdec5fbd6c5005c6ddb769c21a1286c8c9a592e"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "2a50b0f274666d10071aa1b65f78f9311c13b54d",
+      "path": "results/rtl/w15_collectives.json",
+      "role": "runtime_import_or_read",
+      "sha256": "11045ba5947b50fbe0bb6b73c5afc33d1587cbf0408ba63b38f77275f4f50738"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "5782cba74f8f404e67abe02e3bf345a77a52c52b",
+      "path": "results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+      "role": "runtime_import_or_read",
+      "sha256": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d"
+    },
+    {
+      "available_from_commit": "404324a8fe63f0d0f8712ab2cefba331180b1c67",
+      "git_blob": "5af26b899137f5e689b34cad600f73ed8128ba3b",
+      "path": "results/uarch/qwen_rom_me_latency_semantics_20261003/inputs/parent-calibration-audit.json",
+      "role": "runtime_import_or_read",
+      "sha256": "a82eec9c5004d716c9bc9a348710cb00adce474ad1459f6359d311f52da90525"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "64f8bc5e24baa3e52eb35156b9684b43a3f1890d",
+      "path": "src/opentallas/__init__.py",
+      "role": "runtime_import_or_read",
+      "sha256": "ef4a3e374cbbe6977e8f1cf0897c5f731a6ccf945c53a8517f2f05eaf20f7ab2"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "173676809417d8f26422edc54d3f34312c2ae628",
+      "path": "src/opentallas/analytical.py",
+      "role": "runtime_import_or_read",
+      "sha256": "016b1863bb40f6a77af52aebefd3fe58b7f47b336110d3d0b7a49f86e5480c2a"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "316946fbb422b76a5814e2059cdb2835fd604d8c",
+      "path": "src/opentallas/critical_path.py",
+      "role": "runtime_import_or_read",
+      "sha256": "7241aca955b554b7701bb4feb22c88def6ff5ac9161c9348098c611d2e08079f"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "d5d33fc136c09c9f072ffc527ad78925b0803926",
+      "path": "src/opentallas/deployment.py",
+      "role": "runtime_import_or_read",
+      "sha256": "0bc3fa600ef54277e8b83c96ac9bd2cabc22fa28f43315b75ed63cd8711cf9f4"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "112775fdf2aa391588822ed2a499d46c72d9f57d",
+      "path": "src/opentallas/noc.py",
+      "role": "runtime_import_or_read",
+      "sha256": "5257a63e494102910f8a75cbd0b00ef7fc03c4b54a13d9838bae7f10692b8afc"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "b46a88ad9b28d063995adab28af05d2288d79caa",
+      "path": "src/opentallas/operations.py",
+      "role": "runtime_import_or_read",
+      "sha256": "69b30f06c44c7ae3a5cf7e49422cb60d6ba358dde68ef0e69f344fd67d1f56ed"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "6b1aed3972e167f343f7af892784c2f222a0f875",
+      "path": "src/opentallas/roofline.py",
+      "role": "runtime_import_or_read",
+      "sha256": "99d38d95ba0f68190c7f2d8d937c3b92836ebeb9728d28e4f81ac4c006632143"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "b78aaab9e579a5c85cea068d764b094a99dc0b6e",
+      "path": "src/opentallas/schema.py",
+      "role": "runtime_import_or_read",
+      "sha256": "3db3395f04361e81a4df0eea1a23f5fe1c4eb08a6381cbc71187ead60e1ab1bb"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "b77995ccf2003f0cb972c608c7adfebd805f453d",
+      "path": "src/opentallas/workload.py",
+      "role": "runtime_import_or_read",
+      "sha256": "e5c950fc1a7789a0159db1f3b0676513ebb622e5e43ae07905fbdee1118f2613"
+    },
+    {
+      "available_from_commit": "404324a8fe63f0d0f8712ab2cefba331180b1c67",
+      "git_blob": "6c2fe502fb5adb8c84835084e5f7be59f404856d",
+      "path": "tests/test_qwen_rom_me_latency_semantics.py",
+      "role": "focused_test",
+      "sha256": "02e3df709f74f1b18b8e43506d430d08e6f314a22b3f6e53d9cc460ae45c4230"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "c95ca371a60d081bcbd32b4c20c78616a4dbdb79",
+      "path": "tools/arch_budget_qwen3.py",
+      "role": "runtime_import_or_read",
+      "sha256": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "5d208e13b086c29c6ac3499353ed06d632b6f87a",
+      "path": "tools/arch_budget_v41.py",
+      "role": "runtime_import_or_read",
+      "sha256": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "088b432901aa73fca449286e0bb80e25f3da6811",
+      "path": "tools/collective_exposure.py",
+      "role": "runtime_import_or_read",
+      "sha256": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "000090e31fabf7c752abf92704567c7da7116010",
+      "path": "tools/decode_critical_path.py",
+      "role": "runtime_import_or_read",
+      "sha256": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "c392137f458c2fe874a76870eaaab9b630998ec0",
+      "path": "tools/dflash_step_timing.py",
+      "role": "runtime_import_or_read",
+      "sha256": "7a43daf9c4f7118176aa0229b77ed2b9da4e713516d9accd6b099f1f63b76a17"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "ddc237fa2db72730eb5884100ff47a77faf8d83f",
+      "path": "tools/hdc_golden.py",
+      "role": "runtime_import_or_read",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "562f0abd2f6323b53f828562f643b4a6af13b318",
+      "path": "tools/hdc_isa.py",
+      "role": "runtime_import_or_read",
+      "sha256": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "5afae9ec0eb9987c958ef4005ca06165d3cf9eef",
+      "path": "tools/hdc_program.py",
+      "role": "runtime_import_or_read",
+      "sha256": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "73f83af73d0d285efdaf95f4e01be9dfc1312cbc",
+      "path": "tools/hdc_timing.py",
+      "role": "runtime_import_or_read",
+      "sha256": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "4c67150fd4945e4bfc63157fe20925dbf833f031",
+      "path": "tools/power_scenarios.py",
+      "role": "runtime_import_or_read",
+      "sha256": "322b344f5f8aea476d1ad1a83f85ac31f71fe612691728f905bb0eef5696767f"
+    },
+    {
+      "available_from_commit": "404324a8fe63f0d0f8712ab2cefba331180b1c67",
+      "git_blob": "0386c00abb0513c0f67a7ed1886ebd90bb59b9fa",
+      "path": "tools/qwen_rom_me_latency_semantics.py",
+      "role": "runtime_import_or_read",
+      "sha256": "9d8f2f360f96219247bc30983a911a9290f5501e0de31ddbc71fc6463a95c001"
+    },
+    {
+      "available_from_commit": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+      "git_blob": "15b76f9923fe1f1e83744f5990fe77602bbdbe3c",
+      "path": "tools/uarch_model.py",
+      "role": "runtime_import_or_read",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    }
+  ],
+  "dependency_selection": "cold Python audit-hook repository file reads and loaded repository modules for build(), plus focused test; verified in minimal copied tree",
+  "existing_consumed_historical_snapshot": "results/uarch/qwen_rom_me_latency_semantics_20261003/inputs/parent-calibration-audit.json",
+  "frozen_reviewed_commit": "404324a8fe63f0d0f8712ab2cefba331180b1c67",
+  "historical_parent_absent_count": 57,
+  "historical_parent_absent_frozen_git_proof": [
+    {
+      "current_replay_dependency": false,
+      "git_blob": "a3b7eead1b313223860c45f7c78aab96f0719e55",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/inputs/Russell-successor-observation-r1.json",
+      "sha256": "a667152887ad84b48c2e2eafe355ff735034ad97b5c54f3ee084dc402036d0ad",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "bfd421a0a1efb6e8191f4f6d7c76208c3edc5a36",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/inputs/Russell-successor-observed-model-r3.json",
+      "sha256": "a05543357ad5324c807264d27ed124c2787cacabcb182e8cd57d0ac673a63cbd",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "6420cdb582bb4b4fc9f237de7e2d221ebc5bdf4e",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/inputs/Russell-successor-observed-source.py",
+      "sha256": "a80cdd9db9b0adb572b1bcfdff3eb71e75997457d133f240dc4760c592350be6",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "f11c060d9c554328b43442312a28f852c5c8c4a9",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/inputs/ampere-dependency-r1.json",
+      "sha256": "e0a2c6f079384d3d73ee124cc78500c03a561bbc3338e5a11dd3d3c1297e2ec0",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "7ca4560a6671c2f2919490308aea5dbc37b2f24d",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/inputs/model-r4.json",
+      "sha256": "57ab30e63fc1f3c84383026c2d612ae059420a9abaed36ef9b76fa1399cf2d56",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "6821f276442315fca4856babac56b07946802199",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/model-r1.json",
+      "sha256": "0b646f778f61b83cc2f78dafbb84a460e920cb2f119fdc624acf328cd4905325",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "d4c46bf2fe75afb2ec8c73ae59e87ac92d7f9bac",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/model-r2.json",
+      "sha256": "3c5471c66f61f34995bf5ca0fcfcb2c5ca11662353fe1cbc66b52cb1ec4cdeff",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "8e5e33656a4ce37747b89b93e1d3ef3529971901",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/model-r3.json",
+      "sha256": "f0e69773ee4e9051c65be7006be09cb92b9dbe578d1b8d899fa90750d0ccae0d",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "ad8dcd291cf5239e045a6d69a8c8c600a370bf0b",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/model-r4.json",
+      "sha256": "2d030e04b63c588b5b1db1f0d24f2ab1d0a6e145bda0ce6293935306e2055547",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "69ffa62736aad8f6d68d651e0b9d91bf4c3ba280",
+      "path": "results/uarch/qwen_rom_kv_channel_shoreline_20261002/model-r5.json",
+      "sha256": "068c008d92aa864072ff47a125fd6815c45e71c190545f8066e70bdf6dee8b4f",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "bca625df45a2be6387e917887129359e17302f36",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/Russell-af7c-bound-contract-r1.json",
+      "sha256": "cb45c6c6b49464d86b154cfde7f1e85ad7afc43b1c77fa91de27610337055e0e",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "d466e0d3d6b81aa8aeb1286ff59dd78a06e3759e",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/Russell-af7c-implementation-pins-r1.json",
+      "sha256": "a2abcad3d144f72a1b868303a79279e47fd0a0862ffe2460997c0fdd67fbe6fc",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "1b8ff1a549c1208843a3d039684268ae06c75b04",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/Russell-af7c-model-r3.json",
+      "sha256": "0fd637801967dfef3ca7feeea1c34aac0a960728cf573477cb8d5d639c4b6bd8",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "23521988234c6522cee4d362909dda73cf80a85a",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/Russell-af7c-peer-contract-r1.json",
+      "sha256": "22f7f81ebf83c101a17eb2c211d14efc04bddc9d2a66fb92baf84c8e3788a34b",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "4cac02b299c596edf5b5d4e89ca5f54c744998b9",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/credit17-constructor-r1.py",
+      "sha256": "a5b4d3ecba9fc6e6141a86472dd02001d180e2a25159513225ae0cbfc83a8390",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "10060bfc7eb6991d9281eaf068a90873505fcc95",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/credit17-constructor-r2.py",
+      "sha256": "47b468110ebd4fff6ea518d5c58459b8438616ff4917c4af6be52c23af97b404",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "1274723b41092211ada512768af945fb696cc45e",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/credit17-constructor-r3.py",
+      "sha256": "e9e207fb603dfce2559a46cac25802deffdf6ebff00ff9056bf7882fd9667536",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "2d8204eefc5ef303cea3f0d3049687fb407cb864",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/model-r7.json",
+      "sha256": "92dc5be81daf5dc488e55afaa904a8994729b7455ca0d6ae647410a889112e2e",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "79d324db89cdd4e183086a9dde745db176aa556d",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/ot_hbm_r14_pc.sv",
+      "sha256": "5de049782df95ea81bf79458839e12e987fe2316c19237483788e3d578011025",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "523d8132648737e588e538219bc071cd3d728747",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/ot_hbm_r14_tag_owner.sv",
+      "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "ae3eac08c1c2852b94a3286a7c766cb9e2f4f94d",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/uarch_model_qwen_kv_bank_groups.py",
+      "sha256": "0050f1be26a913427c5334e59cf7561b5a18a3ad0aa5f4aa05f23ea6a89ee30b",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "63cd838467a6cb5e2546baaf49620adb40fa5bd3",
+      "path": "results/uarch/qwen_rom_kv_credit17_physical_20261003/inputs/uarch_model_qwen_kv_successor.py",
+      "sha256": "a88a32eae4e8fd0cb43535bd6ef24be1bbf33ca569ddf6db94a1b08a8a2e3b3b",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "12e80042a6e754bc3c1583893ae2018fe6d92954",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/dispatch-constructor-r1.py",
+      "sha256": "414acda230497220d5376df273ee3b89b7f47c4d63b54928c3d901482cf699f5",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "a7f231abc954d6ba687263f1cd16f748a4e8d865",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/model-r3.json",
+      "sha256": "7df91f3da986e6cf909ef3098580657ac8b67d863729c11ebc5ff9fc062d277d",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "ff7c6ccf355ab344d8b29692bddba3a6522855a0",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/ot_hbm_causal_command_provider.sv",
+      "sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "896eb21a8369c96c1b897363128c8dafb80f7ddc",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/ot_hbm_r14_route.sv",
+      "sha256": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "523d8132648737e588e538219bc071cd3d728747",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/ot_hbm_r14_tag_owner.sv",
+      "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "717c95769839929f47291f8d5942cb7b7fbad4c9",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/ot_hdc_qwen_kv_write_adapter.sv",
+      "sha256": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "f098b976646f8fb053be932586488f592f5fd9cc",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/peer-contract-receipt-r1.json",
+      "sha256": "af87e20aed26a4b5860e9ef8cd466c6bf3186557dee77b3d2398a3f9b8ca3202",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "ae3eac08c1c2852b94a3286a7c766cb9e2f4f94d",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/uarch_model_qwen_kv_bank_groups.py",
+      "sha256": "0050f1be26a913427c5334e59cf7561b5a18a3ad0aa5f4aa05f23ea6a89ee30b",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "8b02cd1f2f2f54179b0bd12a41a78c2fe3c47716",
+      "path": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/inputs/uarch_model_qwen_kv_credit_allocator.py",
+      "sha256": "28ace77b8f9eda67139b2cb24a7c0aa07ea76b83368194ef255a98909f3594a4",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "03f4fcd90401bb3d7c3d2414823c543f49b665d0",
+      "path": "results/uarch/qwen_rom_native_collector_clock_20261002/clock-allocation-r1.json.gz",
+      "sha256": "a28dd28d228e3441521bfad001f7a7f0c6e8c4d92cc50e1be85cebfb112a244c",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "e6c58dbcd4a32638a3dad5a3bbbd4aac859aaf99",
+      "path": "results/uarch/qwen_rom_native_collector_clock_20261002/clock-checkpoint-r1.json",
+      "sha256": "677df307f98d7821cbcb57ee9bfdb7dd8fae52fdcdc4e08a8808bc7d93599efc",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "0beafd649e5a91c21e078e570962563d1a412a73",
+      "path": "results/uarch/qwen_rom_native_collector_clock_20261002/inputs/capture-connectivity.json",
+      "sha256": "cd418d8c9b0bd4823e9484b2f92bc3c567483881778ce811b7630c0d4f0a4e8b",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "cefc21672e29fb5c5f372dbd590a18bebe84ff46",
+      "path": "results/uarch/qwen_rom_native_local_release_20261002/allocation-r1.json.gz",
+      "sha256": "b73e36f0b48cfd17147eb3627fa1828fad3970eb63735606c77da9c3cf54b7c1",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "21de9ac2c303c9e2734f5d2bf89ce2472ee74b5f",
+      "path": "results/uarch/qwen_rom_native_local_release_20261002/allocation-r2.json.gz",
+      "sha256": "8530b3d647b90e61d461dc4914895b64f74fe5c64d864dacc376a02f0002f68e",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "3944b9b2ad4b201e92edd844299ad168f40edcdb",
+      "path": "tests/test_qwen_rom_channel_aligned_context.py",
+      "sha256": "e1129b9b25a2462bcd884e4a92caca62662fa483338de31397bfd3c335021010",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "2f684a38bacb734b14bac744d28220296d3ff727",
+      "path": "tests/test_qwen_rom_channel_parent_admission.py",
+      "sha256": "3fcff19d68dc604df88374fb2993a51e227166851054088d6d876b8f1acfce90",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "05c0944dc1a8fc79053c2f2325a6ffbb855cdbd2",
+      "path": "tests/test_qwen_rom_kv_channel_shoreline.py",
+      "sha256": "b99c6408a9b3bdb99d947db0fdde1aad1825f462865e09c17f58242cb8577472",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "e9d772aac93af58a00ac9724700ddab513ce5e2d",
+      "path": "tests/test_qwen_rom_kv_credit17_physical.py",
+      "sha256": "a5d027211aedb2eeaaedd61b2f3fa535046d04b97cd7ff33a98e79641e1966a7",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "741212efa05053e335e15c19feb195cec36b7058",
+      "path": "tests/test_qwen_rom_kv_credit17_routes.py",
+      "sha256": "acfcad48c7170feb6b0bd65826f8bc99e825a9cb9f0538fad9f4c84feb2e72c1",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "fff3925fc5d07b7508c27ce08a50dc6da2251f0e",
+      "path": "tests/test_qwen_rom_kv_word_dispatch_contract.py",
+      "sha256": "60a9174b5eab119f500e005df9317a0aa2d6239f614dc16505b223da8596b13a",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "0a696173d42fda06b404bd771e541bb43d0b51e9",
+      "path": "tests/test_qwen_rom_native_release.py",
+      "sha256": "abced3c0bdf90fd5715f842fd55601001eebbffeebd0c45cdc7f9e25fb2c1fff",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "2097ac4e9912434afc79900e0031ec3333d7c08b",
+      "path": "tools/qwen_rom_channel_aligned_context.py",
+      "sha256": "de3d79450afcd280770ade04c30e4af288ee2a455f04887b2ef766b573d9e156",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "097122d539ef9559f45fc8b85e0d5f9ae45399c4",
+      "path": "tools/qwen_rom_channel_parent_admission.py",
+      "sha256": "a3379d83cf1b1a5bc26331c139ecfb1e37d1193d536b6dda323953fa27d30758",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "868a054045641e05eacd8129ae98582343104312",
+      "path": "tools/qwen_rom_channel_release_trim.py",
+      "sha256": "605a7170cfa7bda5418813ffff8e095d3bf1a5298a4c822167fc8df98f12f905",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "4388eec712e0e86db58906505dd716e6ee3f542e",
+      "path": "tools/qwen_rom_kv_channel_shoreline.py",
+      "sha256": "137c3094d08fc030c15f79629842f99c0708c45b42663985ca250d3222edd56a",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "a124789810283fc38fca592f6e198c5fc0d871be",
+      "path": "tools/qwen_rom_kv_credit17_physical.py",
+      "sha256": "15f3c966fc3011b43ab3dd5c96e3100eacf49c5f0e5e9133a2801bdf7c4c51d8",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "0d527baa11a1cc8d11c094edb83f427685d77eef",
+      "path": "tools/qwen_rom_kv_credit17_route_cuts.py",
+      "sha256": "4bd84dbb2fba4b60b9d60ad2c5ec2b12b5d6bf75d42eb2fd40ac6d045ecc5b5c",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "547afbabe249bc7a0b235a1accee9363f20ddddb",
+      "path": "tools/qwen_rom_kv_word_dispatch_contract.py",
+      "sha256": "77034639d2e7eba08484be02327afb837b4a7d3531b31000c52c1090936671d9",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "616bd2b6c6bedd0c8809384ae1189295fbce6b59",
+      "path": "tools/qwen_rom_local_release_context.py",
+      "sha256": "8989a65fc04220072df61b97944bf4cf191fae0762bc96b18cd4dcc87ce3ebee",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "80b8f7c2c330fbaadcf375134d752db00625365f",
+      "path": "tools/qwen_rom_local_release_successor.py",
+      "sha256": "ff4dd7e1a8d93d9e09deb7d955ad88d0cbd4cce2c3e2924182ce2927d69584ec",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "86437dd63394fbaac4e4ec8b76a51b516e96c478",
+      "path": "tools/qwen_rom_native_collector_clock.py",
+      "sha256": "4a4ad7356f36e2859b7bcf81be542e261c120c92c6df2ba0696d028353b5766b",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "0870512202c15eb5381f30c2de9583d7ce036840",
+      "path": "tools/qwen_rom_native_local_release.py",
+      "sha256": "bc25ecfcf8ea5b6af470b34bbfd9bdd9ed27a48fd494d51fde77f26858fda86d",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "afce6afef062ad91e3c25091a44ec3440b6b0076",
+      "path": "tools/qwen_rom_native_release_audit.py",
+      "sha256": "1a37ed97b857e4e653292601c56cc61858c9e1c1fea98c2155129a9a4b2c907e",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "3a17e72eece2034fe0f5ae45583c56eb7d5f32aa",
+      "path": "tools/qwen_rom_regional_collector_context.py",
+      "sha256": "9148bfd8aee69bec59c05580153b7ce78593ebdf22b8eef6aa5231e50c80d8b4",
+      "verified_against_frozen_git_object": true
+    },
+    {
+      "current_replay_dependency": false,
+      "git_blob": "ee7ef530b8d4638ade05cfb0152b60ffce9b7056",
+      "path": "tools/verify_qwen_rom_kv_credit17_routes.py",
+      "sha256": "eb8e1df43c7cad02fd9ae5bc885cb292d737391e656b25bb09dfc58f1dcdecbe",
+      "verified_against_frozen_git_object": true
+    }
+  ],
+  "historical_source_copies_needed_for_replay": [],
+  "model_artifact_bytes_changed": false,
+  "parent_intake_composition": "parent main plus only404 calibration commit; five legacy commits unnecessary",
+  "parent_main_commit_checked": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+  "preserved_original_broad_manifest": {
+    "interpretation": "historical broad provenance; NOT current intake completeness gate",
+    "path": "results/uarch/qwen_rom_me_latency_semantics_20261003/sourcepins-r1.json",
+    "pin_count": 238,
+    "sha256": "e2c91e5af72a78ec4c12432205b6ba0036c4b56648966b98fc98842b8b38826a"
+  },
+  "replay_script_sha256": "b750996b721670136f6683d7d8b536cbfeaa082f60db9fd98abcb4beffc4f60b",
+  "reviewed_artifacts": [
+    {
+      "path": "results/uarch/qwen_rom_me_latency_semantics_20261003/claude-handoff-r1.json",
+      "sha256": "6c20f4d0d16455b04d8c0405da2e15728ebb389fe8f2de47819e0a55d718ce5b"
+    },
+    {
+      "path": "results/uarch/qwen_rom_me_latency_semantics_20261003/focused-tests-r1.log",
+      "sha256": "c4b808d34f4db00b333696dec1f3a43a2887d8bfe0cb7af07a3cb98ff43a7830"
+    },
+    {
+      "path": "results/uarch/qwen_rom_me_latency_semantics_20261003/model-r1.json",
+      "sha256": "eca23f2e1569f5c6b703ca24f3971622ba5b9575765233c09fe7c857a77eb77e"
+    },
+    {
+      "path": "results/uarch/qwen_rom_me_latency_semantics_20261003/model-r2.json",
+      "sha256": "abd3122627fa2dd43e8ce6d41f44c4f5fe6122a02ccefb3acaf2f44fc09fc40e"
+    }
+  ],
+  "schema": "QROM_CALIBRATION_SOURCE_SELECTED_INTAKE_R1",
+  "scope": "INTAKE_ONLY; no fill RTL/model change or architecture admission"
+}

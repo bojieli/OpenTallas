@@ -1,0 +1,66 @@
+{
+  "to": [
+    "parent",
+    "Nash",
+    "Archimedes",
+    "Epicurus"
+  ],
+  "archive_commit": "2a277d7a93610cea36811ed542c3ae8c5c62ec4b",
+  "archive": "results/rtl/dsrom_PAR2_runtime_consumer_observer_20261002/runtime_r1_FAIL",
+  "independent_review_commit": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+  "journal_sha256": "503ac6f7f2a79ae8ee86f71e69f717bbd9444a9cc86037aaed2cf033ed013e5f",
+  "all_counts_and_edge_bounds_exact_independent_review_match": true,
+  "current_reticle_screen_mm2": 750.3713208672059,
+  "physical_G0": false,
+  "accepted_boundary_constraints": {
+    "cfg_command": 33,
+    "cfg_ROMread": [
+      34,
+      58
+    ],
+    "localcfgcapture": [
+      35,
+      59
+    ],
+    "fieldGO": 60,
+    "VM": [
+      45,
+      124
+    ],
+    "activation": [
+      82,
+      312
+    ],
+    "CE": [
+      85,
+      316
+    ],
+    "capture": [
+      87,
+      318
+    ],
+    "lane": [
+      88,
+      319
+    ],
+    "root": [
+      414,
+      419
+    ],
+    "VMvisible": [
+      415,
+      420
+    ],
+    "adapterretire": 422
+  },
+  "one_edge_cfg_lastcapture_to_GO": "source acceptance dependency only, no hardROM/crossing margin claim",
+  "native_CE_to_capture_to_lane": "2+1 actual; not ECCseat/ACK",
+  "root_to_VM": "registered1edge and actualpostNBA sink verified",
+  "completion_status": "functional directedPASS / originalcalendarFAIL; startup idle11 notcompletion; observer stabledrain462 not natural kernel latency",
+  "next_disjoint_tasks": {
+    "Nash": "additive completion-arm/source retirement model guards preservingFAIL; no authorized retry inferred",
+    "Archimedes": "WAKE8outputretention and completeclock/PG/hold union permap",
+    "Maxwell": "price physicalcfg/activation/root delivery against these actual receipts and fullMTP6position/drafter/commitrollback; no unboundcostzero"
+  },
+  "no_new_jobs_D1_or_PVE2_3_changes": true
+}

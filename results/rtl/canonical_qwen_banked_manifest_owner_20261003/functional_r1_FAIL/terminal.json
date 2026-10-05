@@ -1,0 +1,14 @@
+{
+  "PID": 485802,
+  "compile_rc": 0,
+  "runtime_rc": 1,
+  "compile_seconds": 58.27898867701879,
+  "elapsed_seconds": 58.76911778701469,
+  "binary_sha256": "cf91d521b37f468ffc6053c4be4b819ba1cecaddb236921c7b9b15c312d9e88e",
+  "verdict": "FAIL",
+  "source_sha256": {
+    "rtl/experimental/canonical_qwen_banked_manifest_owner_20261003/ot_gpu_qwen_banked_manifest_range_owner.sv": "eb8a74eb0386fdecf5b3c2b5dc904536e1a2f8d3f7da32a415d823ea5e927f58",
+    "rtl/test/canonical_qwen_banked_manifest_owner_20261003/tb.sv": "176519b5c9d113bef51cd87755a6d03ff0c0faaeae8014f85015affe82fc1f9d",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  }
+}

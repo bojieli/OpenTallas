@@ -1,0 +1,75 @@
+[remote_gate] worker 155.103.253.39 (floor 10 GB), job 9ebfa35966: python3 tools/run_abi3_physical.py --view asap7 --top ot_v41_rom_elem --source rtl/v41rom/ot_v41_rom_elem_q.sv --source rtl/v41rom/ot_v41_rom_elem.sv --source rtl/v41rom/ot_v41_bterm.sv --source rtl/v
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 1327716.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 1166354.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 628624.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 185867.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 143996.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 117030.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 45410.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:17, elapsed time = 00:00:04, memory = 6285.31 (MB), peak = 6337.80 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 2145746 vertical wires in 36 frboxes and 1469251 horizontal wires in 5 frboxes.
+[INFO DRT-0186] Done with 199384 vertical wires in 36 frboxes and 399104 horizontal wires in 5 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:05:09, elapsed time = 00:01:11, memory = 9450.34 (MB), peak = 9532.34 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:04, elapsed time = 00:00:04, memory = 10069.88 (MB), peak = 10069.00 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+Failed to find a path between pin g_mac\[0\].g_pp.u_rom1/rd_out[254] and source aps:
+( 386 478 3 ) (Idx) / ( 139650 123564 ) (coords)
+extBBox (xDim, yDim, zDim) = (517, 649, 7)
+Failed to find a path between pin g_mac\[0\].g_pp.u_rom1/rd_out[171] and source aps:
+( 386 508 3 ) (Idx) / ( 139650 131628 ) (coords)
+extBBox (xDim, yDim, zDim) = (517, 670, 7)
+[ERROR DRT-0255] Maze Route cannot find path of net g_mac\[0\].g_pp.rd1\[254\] in worker of routeBox ( 135660 119700 ) ( 139650 123690 ).
+[ERROR DRT-0255] Maze Route cannot find path of net g_mac\[0\].g_pp.rd1\[171\] in worker of routeBox ( 135660 127680 ) ( 139650 131670 ).
+    Completing 10% with 0 violations.
+    elapsed time = 00:01:18, memory = 22062.40 (MB).
+
+Elapsed time: 0:16.48[h:]min:sec. CPU time: user 15.43 sys 1.05 (100%). Peak memory: 1387900KB.
+Elapsed time: 10:43.01[h:]min:sec. CPU time: user 689.19 sys 39.66 (113%). Peak memory: 2007944KB.
+Elapsed time: 4:26.37[h:]min:sec. CPU time: user 347.90 sys 87.32 (163%). Peak memory: 2280628KB.
+Elapsed time: 0:03.60[h:]min:sec. CPU time: user 3.08 sys 0.52 (100%). Peak memory: 676504KB.
+Elapsed time: 0:13.27[h:]min:sec. CPU time: user 12.41 sys 0.86 (100%). Peak memory: 1221556KB.
+Elapsed time: 1:44.46[h:]min:sec. CPU time: user 764.66 sys 1.96 (733%). Peak memory: 1620756KB.
+Elapsed time: 0:04.45[h:]min:sec. CPU time: user 3.73 sys 0.73 (100%). Peak memory: 989760KB.
+Elapsed time: 20:28.02[h:]min:sec. CPU time: user 4793.63 sys 310.76 (415%). Peak memory: 5042748KB.
+Elapsed time: 5:45.50[h:]min:sec. CPU time: user 457.55 sys 122.44 (167%). Peak memory: 2468724KB.
+Elapsed time: 12:07.20[h:]min:sec. CPU time: user 821.91 sys 107.86 (127%). Peak memory: 7090732KB.
+Elapsed time: 22:10.72[h:]min:sec. CPU time: user 1745.55 sys 260.65 (150%). Peak memory: 4623204KB.
+Elapsed time: 57:37.16[h:]min:sec. CPU time: user 13663.44 sys 553.94 (411%). Peak memory: 9408568KB.
+Elapsed time: 12:25.34[h:]min:sec. CPU time: user 10377.41 sys 48.42 (1398%). Peak memory: 23060080KB.
+make[1]: *** [Makefile:589: do-5_2_route] Error 247
+make: *** [Makefile:589: /work/results/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_2_route.odb] Error 2
+
+partial record written to /tmp/claude-1000/w10pnr/rec/c8
+[remote_gate] worker 155.103.253.39 job 9ebfa35966 finished rc=1; 0 worktree files returned
+EXIT 1

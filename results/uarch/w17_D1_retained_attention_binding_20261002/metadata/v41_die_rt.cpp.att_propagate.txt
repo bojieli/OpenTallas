@@ -1,0 +1,30 @@
+    bool att_propagate() override {
+        // att_to = {job_v, T16, q_v, q_w, kv_v, kv_m, kv_w, sc_cr, p_v, p_w, pv_cr} (MSB first)
+        const auto& t = d->att_to;
+        size_t o = 0;
+        auto at = [&](int n) { size_t p = o; o += n; return p; };
+        size_t p_pv_cr = at(1), p_p_w = at(32 * 16), p_p_v = at(1), p_sc_cr = at(1), p_kv_w = at(4 * 16 * 265),
+               p_kv_m = at(4), p_kv_v = at(1), p_q_w = at(512 * 16), p_q_v = at(1), p_T = at(16), p_job_v = at(1);
+        bool ch = false;
+        auto s1 = [&](auto& dst, size_t p, int n) { uint64_t v = getb(t, p, n); if (uint64_t(dst) != v) { dst = v; ch = true; } };
+        s1(a->job_v, p_job_v, 1); s1(a->job_t, p_T, 16); s1(a->q_v, p_q_v, 1); s1(a->kv_v, p_kv_v, 1);
+        s1(a->kv_m, p_kv_m, 4); s1(a->sc_cr, p_sc_cr, 1); s1(a->p_v, p_p_v, 1); s1(a->pv_cr, p_pv_cr, 1);
+        { auto old = a->q_w; copyb(a->q_w, 0, t, p_q_w, 512 * 16); ch |= !vsame(old, a->q_w); }
+        { auto old = a->kv_w; copyb(a->kv_w, 0, t, p_kv_w, 4 * 16 * 265); ch |= !vsame(old, a->kv_w); }
+        { auto old = a->p_w; copyb(a->p_w, 0, t, p_p_w, 32 * 16); ch |= !vsame(old, a->p_w); }
+        // att_from = {job_ready, q_ready, kv_ready, p_ready, sc_row, sc_m, sc_y, sc_f, sc_v, pv_v, pv_c, pv_y, pv_f}
+        auto old = d->att_from;
+        auto& fr = d->att_from;
+        size_t q = 0;
+        auto put = [&](int n) { size_t p = q; q += n; return p; };
+        size_t p_pv_f = put(4 * 16 * 16), p_pv_y = put(4 * 16 * 16 * 32), p_pv_c = put(8), p_pvv = put(1), p_scv = put(1),
+               p_sc_f = put(4 * 16), p_sc_y = put(4 * 16 * 32), p_sc_m = put(4), p_sc_row = put(16), p_pr = put(1),
+               p_kr = put(1), p_qr = put(1), p_jr = put(1);
+        copyb(fr, p_pv_f, a->pv_f, 0, 4 * 16 * 16); copyb(fr, p_pv_y, a->pv_y, 0, 4 * 16 * 16 * 32);
+        setb(fr, p_pv_c, 8, a->pv_c); setb(fr, p_pvv, 1, a->pv_v); setb(fr, p_scv, 1, a->sc_v);
+        copyb(fr, p_sc_f, a->sc_f, 0, 4 * 16); copyb(fr, p_sc_y, a->sc_y, 0, 4 * 16 * 32);
+        setb(fr, p_sc_m, 4, a->sc_m); setb(fr, p_sc_row, 16, a->sc_row); setb(fr, p_pr, 1, a->p_ready);
+        setb(fr, p_kr, 1, a->kv_ready); setb(fr, p_qr, 1, a->q_ready); setb(fr, p_jr, 1, a->job_ready);
+        ch |= !vsame(old, fr);
+        return ch;
+    }

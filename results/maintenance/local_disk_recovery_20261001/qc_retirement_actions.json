@@ -1,0 +1,23 @@
+[
+  {
+    "path": "/tmp/claude-1000/wt/qcnam",
+    "owner_retirement": "QC owner handoff",
+    "timestamp": 1790844463.7527587,
+    "live_pids": [],
+    "manifest_references": [],
+    "head": "d2631dd9051c30d7ab1aeab6fdaab4f9200d3f5a",
+    "status_sha256": "3faa3303f1bbd496bba7389af288818011845784a307336d91c97f475d1e2b2d",
+    "status": " M tests/test_deepseek_v41_nam_quality.py\n M tools/deepseek_v41_nam_quality.py\n",
+    "preserved_head_ref": "refs/maintenance/disk-recovery-20261001/qcnam",
+    "dirty_archive_commit": "c9ad23932133f23d2a4893962c600f864ff4dd39",
+    "dirty_archive_ref": "refs/maintenance/disk-recovery-20261001/qcnam-dirty",
+    "unique_source_bytes": 80543,
+    "allocated_bytes_before": 4332900352,
+    "free_before": 219273072640,
+    "returncode": 0,
+    "stderr": "",
+    "free_after": 223607177216,
+    "path_exists": false,
+    "filesystem_free_delta": 4334104576
+  }
+]

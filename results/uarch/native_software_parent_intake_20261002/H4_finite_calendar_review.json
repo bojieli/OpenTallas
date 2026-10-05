@@ -1,0 +1,23 @@
+{
+  "status": "PASS_FINITE_COST_REPLAY_NOT_CONNECTED_TOKEN_OR_PHYSICAL",
+  "owner_commit": "6e28f1a8b",
+  "dependencies": [
+    "8020d8af9",
+    "ea1da4ec3"
+  ],
+  "parent_tests": 35,
+  "parent_cost_replay": "PASS_H4_SOURCE_PINNED_COST_REPLAY",
+  "shared_port_bytes": 64,
+  "logical_RF_bytes_per_SM": 262144,
+  "mirrored_physical_RF_bytes_per_SM": 524288,
+  "SMs_per_rank": 32,
+  "source_audit_PC_count": 3950,
+  "qualified_complete_native_family_bridges": 0,
+  "Qwen_scope": "two reduced36layer fixtures",
+  "DeepSeek_scope": "PC127 rank0 ordered source service",
+  "DS_shared_movement_count": "UNKNOWN_PENDING_BRIDGE_NOT_ZERO",
+  "hardware_clock_admission": false,
+  "trained_numerical_execution": false,
+  "physical_adoption": false,
+  "summary_sha256": "e4b7ff0edbb81a624fd283de2971e5f443808278cbd31c2676b9913f277342de"
+}

@@ -1,0 +1,18 @@
+{
+  "verdict": "INDEPENDENT_ARTIFACT_AND_SOURCE_HASH_PASS",
+  "all_source_pins_verified": true,
+  "all_five_log_hashes_verified": true,
+  "native_binary_hash_verified": true,
+  "phases_all_exit_zero": true,
+  "directed_128_lane_RF_SIMD": true,
+  "storage_exhaustive_address_coverage": true,
+  "matrix_parent_join": false,
+  "complete_token": false,
+  "SS_FF_closure": false,
+  "two_state_simulation_limit": true,
+  "compiler_warnings_retained": true,
+  "CXX_log_retained_external": "/tmp/full-sm-rf-verilator-parent-20261002-r1/cxx_build.log",
+  "native_binary_retained_external": "/tmp/full-sm-rf-verilator-parent-20261002-r1/obj/Vtb_full_service_exact",
+  "wall_seconds": 299.1745402812958,
+  "qualification": "Directed actual arithmetic plus RF service and separate exhaustive storage gate only."
+}

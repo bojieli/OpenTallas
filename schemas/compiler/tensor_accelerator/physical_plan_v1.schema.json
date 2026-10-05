@@ -1,0 +1,279 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/physical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "address_unit": {
+      "const": "byte"
+    },
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "allocations": {
+          "items": {
+            "$ref": "#/$defs/hbm_allocation"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "image": {
+          "$ref": "#/$defs/artifact"
+        },
+        "padding_bytes_must_be_zero": {
+          "const": true
+        }
+      },
+      "required": [
+        "allocations",
+        "image",
+        "padding_bytes_must_be_zero"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "physical_plan_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.physical_plan.v1"
+    },
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "allocations": {
+          "items": {
+            "$ref": "#/$defs/sram_allocation"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "banks": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "bytes_per_bank": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "capacity_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "staging": {
+          "$ref": "#/$defs/staging"
+        },
+        "word_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "allocations",
+        "banks",
+        "bytes_per_bank",
+        "capacity_bytes",
+        "staging",
+        "word_bytes"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "address_unit",
+    "capability_id",
+    "hbm",
+    "model_id",
+    "physical_plan_id",
+    "schema",
+    "sram"
+  ],
+  "title": "OpenTallas HBM and SRAM Physical Plan IR v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "hbm_allocation": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "dtype": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tensor_id": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": [
+        "address",
+        "dtype",
+        "payload_sha256",
+        "shape",
+        "size_bytes",
+        "tensor_id"
+      ],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "lifetime": {
+      "additionalProperties": false,
+      "properties": {
+        "end_operation": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "start_operation": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "end_operation",
+        "start_operation"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sram_allocation": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "bank": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "dtype": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "lifetime": {
+          "$ref": "#/$defs/lifetime"
+        },
+        "offset_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "role": {
+          "enum": [
+            "activation",
+            "input",
+            "output",
+            "state"
+          ]
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tensor_id": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": [
+        "address",
+        "bank",
+        "dtype",
+        "lifetime",
+        "offset_bytes",
+        "role",
+        "shape",
+        "size_bytes",
+        "tensor_id"
+      ],
+      "type": "object"
+    },
+    "staging": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "bank": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "id": {
+          "const": "sram.weight_staging"
+        },
+        "offset_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "address",
+        "bank",
+        "id",
+        "offset_bytes",
+        "size_bytes"
+      ],
+      "type": "object"
+    }
+  }
+}

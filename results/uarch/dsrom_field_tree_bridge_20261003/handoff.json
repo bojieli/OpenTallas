@@ -1,0 +1,56 @@
+{
+  "base_commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+  "branch": "codex/dsrom-field-tree-bridge-model-20261003",
+  "cold_replay_byteidentical": true,
+  "current_failed_evidence_overwritten": false,
+  "limits": [
+    "No actual full-program accepted traffic/violation set, F or token delta yet. Unknowns remain null, not zero.",
+    "The control port overflow witness is a failure witness for unrestricted input traffic, not evidence the admitted current program overflows.",
+    "No golden weight payload reads, engine RTL edits, selected physical changes, new P&R or ECC work.",
+    "Existing69771008-bit return storage is already charged; no replacement credit taken.",
+    "Fault fix default off; source and physical admission remain false."
+  ],
+  "live_jobs_preserved": [
+    {
+      "PID_at_readback": 2629663,
+      "host": "local",
+      "mutation": false,
+      "output": "/tmp/dsrom-global-clock-constraints-20261003-r1",
+      "status_at_readback": "active/running",
+      "unit": "dsrom-global-clock-constraints-20261003-r1.service"
+    }
+  ],
+  "model": "results/uarch/dsrom_field_tree_bridge_20261003/model.json",
+  "new_jobs": [],
+  "next_decision": "Certify source-internal queue bounds under each enrolled accepted phase. If they fail, stop before additive bridge RTL and price a source/golden-preserving rate-admission or internal flow-control successor in the same model. No buffer tuning/retry is authorized.",
+  "next_parallel_actions": [
+    {
+      "action": "Review additive uarch field-bridge resource terms, fault-tail proof and finite reserve-before-GO contract. Integrate with fixed current field homes; do not adopt uniform six-position screen as actual placed capacity. Preserve ongoing same-count global-clock solver.",
+      "owner": "Maxwell"
+    },
+    {
+      "action": "Use one identity-matched current PHW10 accepted journal collector; enroll cfg/GO, activation, actual node queues/pop/fault/root drain and native postNBA writer events. Reuse live matched artifacts if available, no duplicate full-program run. No current complete trace handle is claimed.",
+      "owner": "Hubble"
+    },
+    {
+      "action": "Consume frozen915 selected18 context/version lifetime bounds; hand off read/R+2 address-version release constraints only, without diverting active W2 HBM ownership. Capture protocol remains disjoint from this source-tree occupancy census.",
+      "owner": "Nash"
+    },
+    {
+      "action": "Own full512 CKV immutable receive lease/actualcaller integration. Deliver staged/engine-drained/owner-visible and reverse-credit/reset receipts. Do not use request accepted as owner publication or C++always-ready as physical service.",
+      "owner": "Epicurus"
+    },
+    {
+      "action": "Continue existing same-count global clock/PG/routes; block-local fault fix/reservation RTL gate and mapped source boundary can proceed independently once their own finite model and exactness gates pass. No contextual P&R from this record.",
+      "owner": "Archimedes"
+    }
+  ],
+  "originals_modified": [],
+  "owned_PVE2_PVE3_jobs": [],
+  "replay": "python3 tools/dsrom_field_tree_bridge_model.py --out /tmp/FRESH-field-bridge.json; cmp /tmp/FRESH-field-bridge.json results/uarch/dsrom_field_tree_bridge_20261003/model.json",
+  "source_findings": "results/uarch/dsrom_field_tree_bridge_20261003/source_findings.json",
+  "status": "MODEL_READY_FOR_REVIEW_NOT_ENGINE_RTL_OR_PHYSICAL_ADMISSION",
+  "tests": "python3 -m pytest -q tests/test_dsrom_field_tree_bridge_model.py",
+  "tests_PASS": 20,
+  "worktree": "/home/ubuntu/dsrom-field-tree-bridge-model-20261003"
+}

@@ -1,0 +1,22 @@
+{
+  "cases": {
+    "negative": 4,
+    "positive": 23,
+    "serial_compile_phases": 5
+  },
+  "full_token_or_physical_qualification": false,
+  "original_full27_FAIL_preserved": true,
+  "parent_focused_tests_passed": 75,
+  "resource_admission": "pending measured inventory and disjoint capacity review",
+  "review": "Exact fatal site, exit1 and live invariant/mutation witness required; unrelated failure, signals, missing witness and old receipts refuse. Existing healthy-path RTL and protocol assertions preserved.",
+  "runtime_campaign_pass": false,
+  "schema": "opentallas.DS.recovery-successor-parent-review.v1",
+  "source_sha256": {
+    "results/uarch/DS_recovery_negative_successor_20261002/contract.json": "a0a05673f05f1ccafbf2fe19cfc27d0481833ebf3edfe1ea85e6a0623c0b4b26",
+    "results/uarch/DS_recovery_negative_successor_20261002/model.json": "d15665108db679ea25574959fa2d2f550b81b9797c9e6bd1b716dfa1338e60f9",
+    "rtl/test/DS_recovery_negative_successor/tb.sv": "11ab72a3a387f5202c9e6375c50982dacbc784531175921daa4162f2ed59e738",
+    "tools/DS_recovery_negative_successor.py": "1cf2ca72fda622eb712958810795105c828a7b014be6339c381ecf89c9547faa"
+  },
+  "test_log": "results/uarch/native_software_parent_intake_20261002/DS_recovery_successor_parent_tests_PASS.log",
+  "worker_commit": "68e0a801d9d852e337453fc9ef87b1b9b47b69bd"
+}

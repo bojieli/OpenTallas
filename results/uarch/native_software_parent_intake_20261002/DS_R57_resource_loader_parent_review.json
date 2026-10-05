@@ -1,0 +1,35 @@
+{
+  "R56_all_computed_fields_equal_committed_record": true,
+  "R56_artifacts_verified": 9,
+  "R56_failure_preserved": "inspect.getsource TypeError for dynamically loaded NativeExecution module without sys.modules enrollment",
+  "R56_parent_full_projection_sha256": "8107f9d4f8de02270c0f795fb27f29f9ee0b5d17025afaefc3399df0f84d38e4",
+  "R56_record_additional_keys": [
+    "scope",
+    "source_sha256"
+  ],
+  "R56_source_pins_verified": 33,
+  "R57_artifacts_verified": 8,
+  "R57_fix": "pinned original source enrolled before exec; conflicting module/wrong source refusal; constructor guards preserved",
+  "R57_live_preflight_handle": {
+    "host": "local",
+    "out": "/tmp/kepler-ds-r57-dual-constructor-preflight-20261003",
+    "pid": 2573949
+  },
+  "R57_original_loader_pins_verified": 3,
+  "actual_constructor_terminal_verdict": "PENDING_AT_REVIEW",
+  "actual_numeric_PC10_GO": false,
+  "combined_focused_tests_passed": 21,
+  "full_token_latency": null,
+  "hardware_qualified": false,
+  "original_scope_proof_and_execution_sources_byte_identical": true,
+  "required_RAM_coexistence_bytes": 119463128716,
+  "required_disk_new_bytes": 525569405088,
+  "resource_projection_accepted_subject_to_fresh_headroom_and_actual_constructor_PASS": true,
+  "resource_scope": "actual selected PC0..10; both separate journals/checkpoint/metadata, retained producer+cold/restore/serialization coexistence; not entire token resource proof",
+  "schema": "DS_HBM_R55_R56_R57_PARENT_REVIEW_20261003",
+  "worker_commits": [
+    "a71c37d4f1c323f28562e8ba3c219cc9cb9e60bb",
+    "6f8ea7ec4ef66045fbf8c6a4e00604ce8d23f415",
+    "2fdc39f07e35e5b3ccd35b2d0b5697161d9d5b3a"
+  ]
+}

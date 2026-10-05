@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "new_tests": 27,
+  "total_tests": 199,
+  "seconds": 14.7,
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "-q",
+    "tests/test_observer_explicit_widths.py",
+    "tests/test_observer_frontend_resources.py",
+    "tests/test_observer_capped_lint.py",
+    "tests/test_observer_l0_structural.py",
+    "tests/test_observer_hierarchy_source_plan.py",
+    "tests/test_simulation_observation_wrapper.py"
+  ],
+  "compiler_executed": false,
+  "proof_scope": "Symbolic four-state bit identity for exact three source expressions, exact two-stage source inverse, pinned declaration authority; not actual elaboration or sequential qualification",
+  "semantic_negatives": "fault/state field swaps, excess padding, invalid transform, warning waiver/caplift/geometry changes rejected",
+  "pending_actual_lint": [
+    "WINDOW baseline",
+    "WINDOW wrong-path and wrong-parameter",
+    "CKV baseline",
+    "CKV wrong-path and wrong-parameter"
+  ],
+  "causal_deadlines": "BOUND_MISSING"
+}

@@ -1,0 +1,49 @@
+{
+ "answer": "27% of them sit inside a module that instantiates a CORRECTLY ROUNDED transcendental, and the first of those to route says why that matters: ot_a3_fp32_exp_pos_cr_rne closes nothing at 17.5 MHz with 373,426 cells, and its critical path is 2,150 cell arcs with 378 half-adders from reduced[40] to interval_upper[162].",
+ "not_a_claim": [
+  "that 17.5 MHz is wrong for what the block computes: a correctly-rounded exponential over a 169-bit enclosure is genuinely this much logic, and the block is not defective",
+  "that sixteen stages is a design -- it is an arc count divided by a budget",
+  "that the other 73% of uncovered modules are cheap: they are simply not behind THIS wall"
+ ],
+ "question": "the route sweep left 45 ABI 3.0 modules uncovered.  Are they 45 independent routes, or is something common holding them?",
+ "schema": "opentallas.derived.correctly_rounded_transcendental_wall.v1",
+ "the_block": {
+  "critical_path": "reduced[40] -> interval_upper[162], 2,150 cell arcs, 378 HAxp5",
+  "instantiated_by": [
+   "ot_a3_attention_epilogue"
+  ],
+  "module": "ot_a3_fp32_exp_pos_cr_rne",
+  "routed": {
+   "cells": 373426,
+   "fmax_hz": 17500000.0,
+   "max_slew_violations": 0,
+   "status": "not_met",
+   "target_clock_period_ns": 4.0
+  },
+  "why_it_is_that_shape": "FRAC_BITS 160, INT_BITS 9, SERIES_TERMS 56: a 56-term series evaluated over a 169-bit fixed-point enclosure, entirely combinational between two registers.  The width is a REQUIREMENT and not an implementation choice -- a K-term series gives a K-ulp-wide enclosure and correct rounding needs the enclosure to decide the tie, which is what the interval_upper/interval_lower pair is for."
+ },
+ "what_closing_it_would_take": "2,150 arcs against the 276.9 MHz limiter's budget is about 16x, so roughly sixteen pipeline stages through the series and its enclosure.  That is a redesign of the block rather than a cone-split, and unlike the MAC and adder cases there is no qualified pipelined twin in rtl/proto to substitute -- ot_fp32_add_rne_pipe, ot_fp32_mul_rne_pipe and ot_mac_bf16_fp32_pipe exist; no correctly-rounded transcendental does.",
+ "what_it_gates": {
+  "consequence_for_attention_sparse": "its closure contains this block, so its own fmax cannot exceed 17.5 MHz.  The +8 coverage that routing attention_sparse was expected to buy does not arrive by routing it: it arrives by pipelining the transcendentals underneath it.",
+  "fraction": 0.27,
+  "the_chain": "ot_a3_attention_sparse -> ot_a3_attention_epilogue -> ot_a3_fp32_exp_pos_cr_rne",
+  "the_other_transcendental": {
+   "instantiated_by": [
+    "ot_a3_attention_epilogue",
+    "ot_a3_attention_softmax_block",
+    "ot_a3_hc_coefficients_rne",
+    "ot_a3_hc_stable_softmax_rne",
+    "ot_a3_qwen_gqa",
+    "ot_a3_vector_engram_gate",
+    "ot_a3_vector_silu_mul",
+    "ot_a3_vector_sqrt_softplus"
+   ],
+   "instantiated_by_count": 8,
+   "module": "ot_a3_fp32_transcendental_cr_rne",
+   "status": "still in synthesis at the time of writing; its own yosys run has exceeded two hours twice"
+  },
+  "total_uncovered": 45,
+  "uncovered_modules_inside_those_eight_consumers": 12
+ },
+ "why_this_is_recorded_rather_than_fixed": "it is the largest single frequency gap in the datapath and the most expensive to close, and saying so with the number is worth more than a partial attempt.  The cone-splitting that took vector_add to 674 MHz, the decoder to 364 and index-score from 151 to 242 does not apply: there is no non-arithmetic work in this cone to move out of it."
+}

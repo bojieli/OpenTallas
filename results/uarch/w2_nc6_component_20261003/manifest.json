@@ -1,0 +1,50 @@
+[
+  {
+    "path": "tools/w2_nc6_component_preparation.py",
+    "sha256": "ff0d3561277764fa91735097fabd2592b75625a8a2c0a6ebe7b13381b33e9aed"
+  },
+  {
+    "path": "tools/w2_nc6_component_run.py",
+    "sha256": "774f94057ea0add7e2d4b662bc9d46270e7e124aa570fcd41aaa3c735e32648a"
+  },
+  {
+    "path": "tests/test_w2_nc6_component_preparation.py",
+    "sha256": "ea42fb9042bbaf55d4918ff825da9273b1da61d44ece1854094eaea89e380886"
+  },
+  {
+    "path": "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv",
+    "sha256": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94"
+  },
+  {
+    "path": "rtl/test/w2_nc6_completion_20261003/tb.sv",
+    "sha256": "8427c1342f53311e8a2963773d12a302b06982b47e275623ef94efcfe0048c56"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/HANDOFF.txt",
+    "sha256": "96410052ac627cfc359b399c9a7127994038928a55bbe1f22f8d3efa97c5fa0b"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/alternate_host_access.json",
+    "sha256": "2dd463e9062bfb9f344b4ef653e1c415e874b9208c3376956db9acdca9c13572"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/expected_cases.json",
+    "sha256": "64d2d860650b516e377791a743feb7b732c9be93b142b0125e86242ee4e305e2"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/preflight_r1.json",
+    "sha256": "171ef6c002d634fc80d1711c724806fe5df09131ce30307162b951a9fc2b0c07"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/preparation.json",
+    "sha256": "0a99b6ba29dd1741356612d654930f639b3dac2e51a5c06073a46a4bc38ec665"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/python_tests.log",
+    "sha256": "8c69ef281318cb82d000ed02b94a29c9077abba2f9870d792678c76b5e19d5ed"
+  },
+  {
+    "path": "results/uarch/w2_nc6_component_20261003/toolchain.json",
+    "sha256": "060fb2fc6ae7287a88897c932bfee7b1c1599c264bbea32fc54ee45d773a84b9"
+  }
+]

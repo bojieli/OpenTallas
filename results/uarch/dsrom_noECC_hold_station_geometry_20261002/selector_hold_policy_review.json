@@ -1,0 +1,30 @@
+{
+  "Boolean_function_both": "A",
+  "allowed_functional_master": "BUFx2_ASAP7_75t_R",
+  "allowed_new_mapping": true,
+  "area_both_um2": 0.0729,
+  "automatic_swap_admitted": false,
+  "current_master": "HB2xp67_ASAP7_75t_R",
+  "current_new_mapping_admitted": false,
+  "default_policy_match": "*xp*_ASAP7*",
+  "element_PG_transferred": false,
+  "exact_source_preservation_plan": {
+    "flow": "Keep default DONT_USE for all new optimization. If the exact source-required mapped hold-instance preservation contract is admitted, read that unchanged map, verify every manifest entry/hash and assert no new blocked-master instances; preserve only exact admitted names. Do not silently grandfather proposed new xp cells or use a broad wildcard.",
+    "raw_instance_manifest_bound": false,
+    "required_raw_input": "Frozen actual terminal mapped netlist plus source-generated hold-instance manifest with476180 unique names, masters and A/Y net identities",
+    "status": "PREPARATION_ONLY_NO_POLICY_EXCEPTION_ADMITTED"
+  },
+  "necessary_allowed_realization": "Owner must bind actual terminal hold-chain ports/loads and derive an allowed-cell implementation preserving min-delay as well as function; then reprice and independently check unchanged SS60/FF25. No wholesale master rename or assumed hold credit.",
+  "profile_scope": "Archived actual SS/FF libraries, representative input-slew envelope160ps/load1.44fF; not the actual complete476180-cell terminal timing or an adopted replacement",
+  "representative_FF_hold_delay_loss_per_cell_ps": 5.3527,
+  "representative_FF_minimum_ps": {
+    "BUFx2": 12.833,
+    "HB2xp67": 18.1857
+  },
+  "schema": "opentallas.selector.hold-master-policy-review.v1",
+  "selector_sites_and_PG_qualified": false,
+  "selector_sourceproof_commit": "8356bdb26",
+  "selector_specific_blocker": "Actual corridor cell sites, pin/via/rail exclusions and matched launch/capture clock route provider are absent; element bank-gap sites cannot qualify selector stations.",
+  "station_model_commit": "84bba5294",
+  "terminal_hold_cells": 476180
+}

@@ -1,0 +1,85 @@
+{
+  "bridge_coverage": {
+    "deepseek-v4-flash-0731": "17/28 engine operations admitted; 10 refused",
+    "deepseek-v4.1-flash": "17/31 engine operations admitted; 13 refused",
+    "deepseek-v4.1-flash-reduced-v1": "17/31 engine operations admitted; 13 refused",
+    "qwen3-8b": "12/14 engine operations admitted; 0 refused",
+    "qwen3-reduced-v1": "12/14 engine operations admitted; 0 refused"
+  },
+  "cells": {
+    "deepseek-v4-flash/hbm": {
+      "blocker": "the RTL issue bridge refuses 10 of the 28 engine operations this graph names; a refused operation raises TRAP_CAPABILITY and the program stops",
+      "deployment": "built (shipped)",
+      "product": "hbm cluster-32",
+      "rtl_token": "no"
+    },
+    "deepseek-v4-flash/rom-array": {
+      "blocker": "the RTL issue bridge refuses 10 of the 28 engine operations this graph names; a refused operation raises TRAP_CAPABILITY and the program stops",
+      "deployment": "built: deepseek-v4-flash-rom-array-32",
+      "product": "rom array, 32 nodes (class 1)",
+      "rtl_token": "no"
+    },
+    "deepseek-v4-flash/rom-wafer": {
+      "blocker": "the RTL issue bridge refuses 10 of the 28 engine operations this graph names; a refused operation raises TRAP_CAPABILITY and the program stops",
+      "deployment": "built: deepseek-v4-flash-rom-wafer",
+      "product": "rom wafer, 1 node (class 2)",
+      "rtl_token": "no"
+    },
+    "deepseek-v4.1-flash/hbm": {
+      "blocker": "the RTL issue bridge refuses 13 of the 31 engine operations this graph names",
+      "deployment": "ADMITTED this session, reduced vehicle: checker 0 findings",
+      "product": "hbm single chip (comparator)",
+      "rtl_token": "no"
+    },
+    "deepseek-v4.1-flash/rom-array": {
+      "blocker": "the RTL issue bridge refuses 13 of the 31 engine operations this graph names",
+      "deployment": "built from the RELEASED graph; the reduced vehicle refuses -- 12 routed experts do not divide 64 owners",
+      "product": "rom array, 64 nodes (class 3)",
+      "rtl_token": "no"
+    },
+    "deepseek-v4.1-flash/rom-wafer": {
+      "blocker": "the RTL issue bridge refuses 13 of the 31 engine operations this graph names",
+      "deployment": "ADMITTED this session, reduced vehicle: 63/63 verifier checks, deterministic; released graph also built",
+      "product": "rom wafer, 2 nodes (class 2)",
+      "rtl_token": "no"
+    },
+    "qwen3/hbm": {
+      "blocker": null,
+      "deployment": "built",
+      "product": "hbm single chip",
+      "rtl_token": "YES -- prefill token matches the reduced reference oracle, cycle-accurate, result injection disabled"
+    },
+    "qwen3/rom-array": {
+      "blocker": "not a product: the image fits one chip",
+      "deployment": "n/a",
+      "product": "does not exist",
+      "rtl_token": "n/a"
+    },
+    "qwen3/rom-single-chip": {
+      "blocker": null,
+      "deployment": "built, 95.4% of chip ROM",
+      "product": "rom single chip (class 0)",
+      "rtl_token": "YES -- same campaign, and the two stores agree"
+    },
+    "qwen3/rom-wafer": {
+      "blocker": "not a product: the image fits one chip",
+      "deployment": "n/a",
+      "product": "does not exist",
+      "rtl_token": "n/a"
+    }
+  },
+  "nine_cells_are_seven": {
+    "finding": "Qwen3 has no ROM wafer or ROM array product, and measurement says it should not: its ROM image is 16,389,998,848 bytes against one chip's 17,179,869,184 -- 95.4% of a single chip. A wafer or an array exists to hold an image one chip cannot, so for this model the single chip IS the ROM product. Two of the nine cells are therefore not omissions.",
+    "qwen3_rom_bytes": 16389998848,
+    "single_chip_rom_bytes": 17179869184,
+    "utilisation": 95.4
+  },
+  "question": "The standing clause asks for end-to-end token generation under the real control plane for three models on HBM, ROM wafer and ROM array. This records, per cell, whether the product exists, whether a deployment exists, whether an RTL token exists, and what blocks it.",
+  "schema": "opentallas.token_matrix.v1",
+  "summary": {
+    "cells_with_a_deployment": 7,
+    "cells_with_an_rtl_token": 2,
+    "product_cells": 7,
+    "single_remaining_blocker": "Every cell without a token is blocked by the same thing and nothing else: the RTL issue bridge admits 17 engine operations, and the two DeepSeek graphs name 28 and 31. Nine of V4-Flash's ten refusals are also V4.1's, so one body of bridge work serves five cells. No store, capability, deployment or numeric issue stands in the way of any of them."
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "archive_sha256": "db56e835e36271e840e80394ce65c58674a29e4a8a99fd92af626fe691491a50",
+    "copy": "historical_failure_receipts/failed_r1.json.gz",
+    "name": "failed_r1",
+    "raw_record_sha256": "448e68b81d1275af7cff1101c59a31846825ccf2610b6f09f1f9d1074b41cfae",
+    "scope": "Tool/preflight failure, not measured physical limitation",
+    "source_status": "FIRST_FAILURE_PRESERVED"
+  },
+  {
+    "archive_sha256": "c9eb4dd142f9982ce9c8181c5d5b02f83bc6b1b473b2f41e935ee249cbf8b22d",
+    "copy": "historical_failure_receipts/failed_r2.json.gz",
+    "name": "failed_r2",
+    "raw_record_sha256": "fb1922767c18fd817502d50181c1a60fa0fb9cf99ed31e0573518ced27c5348a",
+    "scope": "Tool/preflight failure, not measured physical limitation",
+    "source_status": "FIRST_FAILURE_PRESERVED"
+  },
+  {
+    "archive_sha256": "85d4a47c99f2a567ea6dabb72d37163531b846793a5d355d06b50b49700cee20",
+    "copy": "historical_failure_receipts/failed_r3.json.gz",
+    "name": "failed_r3",
+    "raw_record_sha256": "4d92032361d686c0532dbb9cc073306f167ef774a06e7f744c62dbe1c4d3bcc9",
+    "scope": "Tool/preflight failure, not measured physical limitation",
+    "source_status": "FIRST_FAILURE_PRESERVED"
+  }
+]

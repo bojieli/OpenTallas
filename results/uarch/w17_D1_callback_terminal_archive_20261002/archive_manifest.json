@@ -1,0 +1,88 @@
+{
+  "status": "IMMUTABLE_ACTUAL_FIXTURE_TERMINAL_ARCHIVE",
+  "source_commit": "2512aabf75df475ced8ce6ff13f0fe0e239a78e3",
+  "engine_source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "main_archive_base": "867510f889490a74540e7b9466f157006a88d428",
+  "unit": "w17-D1-callback-fixture-parent-20261002-r1.service",
+  "files": {
+    "HEALTHY.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/HEALTHY.log"
+    },
+    "HEALTHY_headroom.json": {
+      "bytes": 120,
+      "sha256": "551cf5dcdcb4f049e88b4b732d7d3e53a7ac7d9852991f3dabd110ad3ba38bbf",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/HEALTHY_headroom.json"
+    },
+    "active_stage.json": {
+      "bytes": 243,
+      "sha256": "9e40fab748de76d7c739853db3ebca64b56142a08a3ca2f2181d2775612aa64b",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/active_stage.json"
+    },
+    "binary_receipt.json": {
+      "bytes": 105,
+      "sha256": "e7a1a4f407757d039d8aec9c104eb8c574307b40abb920947aabeb8d5dc0a6f7",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/binary_receipt.json"
+    },
+    "caps_before_compile.json": {
+      "bytes": 628,
+      "sha256": "712484706feae036bed08e5622a72c546515d7bf0ed767c2346ebcb891eb16c9",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/caps_before_compile.json"
+    },
+    "compile.log": {
+      "bytes": 148472,
+      "sha256": "e8574f67319f684b5964308d78f8a3a4c30f76ef607615cd2e8d6c0f90ce4921",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/compile.log"
+    },
+    "compiler_receipt.json": {
+      "bytes": 312,
+      "sha256": "fd58c6c858dbf4413cdb1e04885e68780c3cec58ee9a13a1a8961318a706a2f0",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/compiler_receipt.json"
+    },
+    "first_failure.json": {
+      "bytes": 78,
+      "sha256": "9ee2997902179814225a584649d0cf864d67b5b0d43bb4acd91a993facbd6686",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/first_failure.json"
+    },
+    "first_failure_stage.json": {
+      "bytes": 278,
+      "sha256": "a09821695ef33af360e2d23d97afdea62d8ef4c68f526ea3864f60d831957e7f",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/first_failure_stage.json"
+    },
+    "headroom_compile.json": {
+      "bytes": 120,
+      "sha256": "5cedc970faa9e39e3a5279a801f29513f058de41549aa03990b50a6cf4df56de",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/headroom_compile.json"
+    },
+    "record.json": {
+      "bytes": 19287,
+      "sha256": "01ac90eb19a4f06a6965495bc19a94c82e9655652b7caa15adf6eed5dec6dafb",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/record.json"
+    },
+    "source_snapshot.json": {
+      "bytes": 22482,
+      "sha256": "a970c21f05b0d775147f1334ba4b7e2d22c434e6d0b972ade6accdbe9ae1cc43",
+      "original_path": "/tmp/opentallas-D1-callback-fixture-parent-20261002-r1/source_snapshot.json"
+    }
+  },
+  "scope": "Actual source fixture only; compilerPASS then firstHEALTHY stage20s cap; no retained events, no callback qualification or whole-token claim",
+  "owner": "Parent owns original job/output; collection is read-only, no restart",
+  "parent_reported_prior_poll": "inactive/dead MainPID0 ExecMainStatus0 (user report)",
+  "fresh_independent_poll": {
+    "MainPID": "0",
+    "Result": "exit-code",
+    "ExecMainStatus": "1",
+    "ActiveState": "failed",
+    "SubState": "failed"
+  },
+  "note": "Raw active_stage saysRUNNING because it is last invocation handle; first_failure and fresh unit terminal close the attempt. Preserve both without rewriting.",
+  "binary": "Receipt retained only; executable/generated objects not copied or executed",
+  "source_input_postcheck": {
+    "files": 147,
+    "mismatches": [],
+    "head": "2512aabf75df475ced8ce6ff13f0fe0e239a78e3",
+    "clean": true
+  },
+  "compile_or_runtime_started_by_collector": false
+}

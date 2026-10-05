@@ -1,0 +1,28 @@
+{
+  "observed_utc": "2026-10-01T15:46:51.961648+00:00",
+  "Qwen_source": "defc45332",
+  "Qwen_tests_passed": 16,
+  "Qwen_L0_source_blobs_verified": 8,
+  "Qwen_L0_artifact_hashes_verified": 8,
+  "HBM_geometry_tests_passed": 6,
+  "HBM_model_core_regeneration_byte_identical_with_verified_generator_metadata": true,
+  "HBM_independent_rectangles": [
+    {
+      "model": "qwen",
+      "SMs": 32,
+      "partition_regions": 69,
+      "macros": 656
+    },
+    {
+      "model": "v41",
+      "SMs": 32,
+      "partition_regions": 69,
+      "macros": 656
+    }
+  ],
+  "old_failure_preserved_SHA": "f309ca1690d09d7c4249b4fc550db70e99f2d203f8730a195ac093efdd21dcee",
+  "DS_owner_full_terminal_matches_parent_backup": true,
+  "complete_model_calendar_qualified": false,
+  "contextual_SS_FF_qualified": false,
+  "hardware_admission": false
+}

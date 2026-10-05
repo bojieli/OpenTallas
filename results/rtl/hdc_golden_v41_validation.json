@@ -1,0 +1,325 @@
+{
+ "schema": "opentallas.rtl.hdc_golden_v41_validation.v1",
+ "golden": "tools/hdc_golden_v41.py",
+ "producer": "tools/hdc_golden_v41_validate.py",
+ "fixture": "build/models/deepseek-v4.1-flash-reduced-v2 (the committed oracle's lock results/abi3/deepseek_v41_reduced_v2_checkpoint.lock.json)",
+ "oracle": "the release's inference/model.py on the FP8 expert path, as results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json",
+ "prompt": [
+  0,
+  3563,
+  3745,
+  418,
+  170,
+  16,
+  3564,
+  3582
+ ],
+ "oracle_self_consistency": {
+  "chunked_prefill_tokens": [
+   3118,
+   3583,
+   2357,
+   276,
+   3270,
+   44,
+   790,
+   223,
+   2498,
+   1741,
+   858,
+   2588,
+   983,
+   1289,
+   2967,
+   2084
+  ],
+  "chunked_reproduces_committed_oracle": true,
+  "one_position_per_call_tokens": [
+   3328,
+   3483,
+   3807,
+   2409,
+   3506,
+   2375,
+   2322,
+   993,
+   2252,
+   18,
+   894,
+   2433,
+   1033,
+   2543,
+   1109,
+   3449
+  ],
+  "first_token_agrees": false,
+  "chunked_first_margin": 0.17267
+ },
+ "teacher_forced_on_oracle_path": {
+  "bf16_elements_compared": 1207040,
+  "bf16_elements_differing": 1443,
+  "differing_tensors": {
+   "block1@22": 500,
+   "L1.ffn@22": 134,
+   "L7.attn@21": 118,
+   "L33.attn@14": 111,
+   "block33@14": 95,
+   "L36.attn@22": 88,
+   "L33.ffn@14": 80,
+   "L1.attn@22": 68,
+   "block7@21": 57,
+   "L24.attn@11": 55,
+   "L30.attn@20": 35,
+   "L1.ffn_norm@22": 21,
+   "L7.ffn_norm@21": 18,
+   "block36@22": 7,
+   "block30@20": 6,
+   "block24@11": 5,
+   "L33.attn@19": 5,
+   "L16.attn_norm@4": 4,
+   "L33.ffn_norm@14": 4,
+   "block2@15": 4,
+   "block37@8": 3,
+   "L36.ffn_norm@22": 3,
+   "L30.ffn_norm@20": 2,
+   "block39@1": 1,
+   "block16@4": 1,
+   "block33@4": 1,
+   "block9@6": 1,
+   "block11@7": 1,
+   "block20@9": 1,
+   "block5@11": 1,
+   "L24.ffn_norm@11": 1,
+   "block7@12": 1,
+   "block10@13": 1,
+   "block14@13": 1,
+   "block33@13": 1,
+   "block11@15": 1,
+   "block3@16": 1,
+   "block16@16": 1,
+   "block17@16": 1,
+   "block26@16": 1,
+   "block4@17": 1,
+   "block6@17": 1,
+   "block11@20": 1
+  },
+  "logits": [
+   {
+    "step": 0,
+    "golden_argmax": 3118,
+    "oracle_argmax": 3118,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 1,
+    "golden_argmax": 3583,
+    "oracle_argmax": 3583,
+    "max_abs_logit_difference": 1.1920928955078125e-07
+   },
+   {
+    "step": 2,
+    "golden_argmax": 2357,
+    "oracle_argmax": 2357,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 3,
+    "golden_argmax": 276,
+    "oracle_argmax": 276,
+    "max_abs_logit_difference": 1.1920928955078125e-07
+   },
+   {
+    "step": 4,
+    "golden_argmax": 3270,
+    "oracle_argmax": 3270,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 5,
+    "golden_argmax": 44,
+    "oracle_argmax": 44,
+    "max_abs_logit_difference": 2.384185791015625e-07
+   },
+   {
+    "step": 6,
+    "golden_argmax": 790,
+    "oracle_argmax": 790,
+    "max_abs_logit_difference": 1.4901161193847656e-07
+   },
+   {
+    "step": 7,
+    "golden_argmax": 223,
+    "oracle_argmax": 223,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 8,
+    "golden_argmax": 2498,
+    "oracle_argmax": 2498,
+    "max_abs_logit_difference": 1.1920928955078125e-07
+   },
+   {
+    "step": 9,
+    "golden_argmax": 1741,
+    "oracle_argmax": 1741,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 10,
+    "golden_argmax": 858,
+    "oracle_argmax": 858,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 11,
+    "golden_argmax": 2588,
+    "oracle_argmax": 2588,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 12,
+    "golden_argmax": 983,
+    "oracle_argmax": 983,
+    "max_abs_logit_difference": 2.384185791015625e-07
+   },
+   {
+    "step": 13,
+    "golden_argmax": 1289,
+    "oracle_argmax": 1289,
+    "max_abs_logit_difference": 1.1920928955078125e-07
+   },
+   {
+    "step": 14,
+    "golden_argmax": 2967,
+    "oracle_argmax": 2967,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   },
+   {
+    "step": 15,
+    "golden_argmax": 2084,
+    "oracle_argmax": 2084,
+    "max_abs_logit_difference": 1.7881393432617188e-07
+   }
+  ]
+ },
+ "free_running": {
+  "specified_two_pass_attention": {
+   "tokens": [
+    3118,
+    2400,
+    318,
+    3128,
+    2266,
+    2613,
+    1348,
+    1524,
+    25,
+    2866,
+    1663,
+    3814,
+    974,
+    3169,
+    2555,
+    3468
+   ],
+   "oracle_tokens": [
+    3118,
+    3583,
+    2357,
+    276,
+    3270,
+    44,
+    790,
+    223,
+    2498,
+    1741,
+    858,
+    2588,
+    983,
+    1289,
+    2967,
+    2084
+   ],
+   "leading_tokens_agreeing": 1,
+   "margins": [
+    0.17267,
+    0.03898,
+    0.00563,
+    0.09653,
+    0.05513,
+    0.05283,
+    0.04221,
+    0.09507,
+    0.06516,
+    0.09528,
+    0.13306,
+    0.04206,
+    0.02465,
+    0.05376,
+    0.00548,
+    0.02903
+   ]
+  },
+  "release_decode_block_order": {
+   "tokens": [
+    3118,
+    3583,
+    2357,
+    276,
+    3270,
+    44,
+    790,
+    367,
+    1730,
+    2552,
+    3338,
+    2691,
+    472,
+    2139,
+    20,
+    2574
+   ],
+   "oracle_tokens": [
+    3118,
+    3583,
+    2357,
+    276,
+    3270,
+    44,
+    790,
+    223,
+    2498,
+    1741,
+    858,
+    2588,
+    983,
+    1289,
+    2967,
+    2084
+   ],
+   "leading_tokens_agreeing": 7,
+   "margins": [
+    0.17267,
+    0.05919,
+    0.16455,
+    0.04249,
+    0.07454,
+    0.06911,
+    0.05907,
+    0.04178,
+    0.00753,
+    0.00905,
+    0.07962,
+    0.06311,
+    0.15583,
+    0.05109,
+    0.04528,
+    0.14774
+   ]
+  }
+ },
+ "not_a_claim": [
+  "not an RTL measurement: the golden is a NumPy specification",
+  "the fixture's weights are random; its token is decided by rounding order, which is what oracle_self_consistency measures"
+ ]
+}

@@ -1,0 +1,261 @@
+{
+  "clock_domains": [
+    "aon_cfg_clk",
+    "core_clk",
+    "hbm_clk[*]",
+    "stage_link_clk[*]",
+    "test_clk"
+  ],
+  "interfaces": [
+    {
+      "clock": "aon_cfg_clk",
+      "fields": [
+        {"lsb": 0, "name": "opcode", "width": 8},
+        {"lsb": 8, "name": "flags", "width": 8},
+        {"lsb": 16, "name": "abi_major", "width": 8},
+        {"lsb": 24, "name": "abi_minor", "width": 8},
+        {"lsb": 32, "name": "epoch_id", "width": 8},
+        {"lsb": 40, "name": "schedule_id", "width": 8},
+        {"lsb": 48, "name": "session_id", "width": 24},
+        {"lsb": 72, "name": "position", "width": 20},
+        {"lsb": 92, "name": "context_tokens_minus_one", "width": 20},
+        {"lsb": 112, "name": "batch_size_minus_one", "width": 16},
+        {"lsb": 128, "name": "first_layer", "width": 7},
+        {"lsb": 135, "name": "last_layer", "width": 7},
+        {"lsb": 142, "name": "draft_tokens", "width": 4},
+        {"lsb": 146, "name": "model_image_slot", "width": 8},
+        {"lsb": 154, "name": "activation_address_64b_units", "width": 48},
+        {"lsb": 202, "name": "user_cookie", "width": 32},
+        {"lsb": 234, "name": "reserved_zero", "width": 6},
+        {"lsb": 240, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_no_combinational_ready_to_valid_path",
+      "id": "IF-HOST-CMD",
+      "width_bits": 256
+    },
+    {
+      "clock": "aon_cfg_clk",
+      "fields": [
+        {"lsb": 0, "name": "status", "width": 8},
+        {"lsb": 8, "name": "opcode", "width": 8},
+        {"lsb": 16, "name": "epoch_id", "width": 8},
+        {"lsb": 24, "name": "error_source", "width": 8},
+        {"lsb": 32, "name": "session_id", "width": 24},
+        {"lsb": 56, "name": "position", "width": 20},
+        {"lsb": 76, "name": "user_cookie", "width": 32},
+        {"lsb": 108, "name": "syndrome_class", "width": 4},
+        {"lsb": 112, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_response_order_matches_accepted_commands",
+      "id": "IF-HOST-RSP",
+      "width_bits": 128
+    },
+    {
+      "clock": "aon_cfg_clk",
+      "fields": [
+        {"lsb": 0, "name": "operation", "width": 2},
+        {"lsb": 2, "name": "size_log2_bytes", "width": 3},
+        {"lsb": 5, "name": "reserved_zero", "width": 3},
+        {"lsb": 8, "name": "address", "width": 16},
+        {"lsb": 24, "name": "write_strobe", "width": 8},
+        {"lsb": 32, "name": "write_data", "width": 64},
+        {"lsb": 96, "name": "tag", "width": 16},
+        {"lsb": 112, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_one_response_per_request",
+      "id": "IF-CSR-REQ",
+      "width_bits": 128
+    },
+    {
+      "clock": "aon_cfg_clk",
+      "fields": [
+        {"lsb": 0, "name": "status", "width": 8},
+        {"lsb": 8, "name": "reserved_zero", "width": 8},
+        {"lsb": 16, "name": "read_data", "width": 64},
+        {"lsb": 80, "name": "tag", "width": 16},
+        {"lsb": 96, "name": "syndrome", "width": 16},
+        {"lsb": 112, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_response_order_matches_requests",
+      "id": "IF-CSR-RSP",
+      "width_bits": 128
+    },
+    {
+      "clock": "core_clk",
+      "fields": [
+        {"lsb": 0, "name": "payload", "width": 176},
+        {"lsb": 176, "name": "flit_type", "width": 4},
+        {"lsb": 180, "name": "source_tile", "width": 12},
+        {"lsb": 192, "name": "destination_tile", "width": 12},
+        {"lsb": 204, "name": "epoch_id", "width": 8},
+        {"lsb": 212, "name": "transaction_id", "width": 16},
+        {"lsb": 228, "name": "sequence", "width": 8},
+        {"lsb": 236, "name": "last", "width": 1},
+        {"lsb": 237, "name": "poison", "width": 1},
+        {"lsb": 238, "name": "reserved_zero", "width": 2},
+        {"lsb": 240, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "admission_credit_then_static_tdma_no_link_backpressure",
+      "id": "IF-NOC-FLIT",
+      "width_bits": 256
+    },
+    {
+      "clock": "core_clk_to_hbm_clk_async_fifo",
+      "fields": [
+        {"lsb": 0, "name": "byte_address", "width": 64},
+        {"lsb": 64, "name": "session_id", "width": 24},
+        {"lsb": 88, "name": "tag", "width": 12},
+        {"lsb": 100, "name": "burst_beats_minus_one", "width": 16},
+        {"lsb": 116, "name": "operation", "width": 2},
+        {"lsb": 118, "name": "size_log2_bytes", "width": 6},
+        {"lsb": 124, "name": "stage_id", "width": 4}
+      ],
+      "flow_control": "ready_valid_tagged_up_to_4096_outstanding",
+      "id": "IF-HBM-REQ",
+      "width_bits": 128
+    },
+    {
+      "clock": "hbm_clk_to_core_clk_async_fifo",
+      "fields": [
+        {"lsb": 0, "name": "read_or_write_response_data", "width": 512},
+        {"lsb": 512, "name": "byte_valid", "width": 64},
+        {"lsb": 576, "name": "tag", "width": 12},
+        {"lsb": 588, "name": "last", "width": 1},
+        {"lsb": 589, "name": "error", "width": 3},
+        {"lsb": 592, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_tagged_out_of_order_across_tags_in_order_within_tag",
+      "id": "IF-HBM-RSP",
+      "width_bits": 608
+    },
+    {
+      "clock": "core_clk",
+      "fields": [
+        {"lsb": 0, "name": "expert_ids", "width": 160},
+        {"lsb": 160, "name": "transaction_id", "width": 16},
+        {"lsb": 176, "name": "epoch_id", "width": 8},
+        {"lsb": 184, "name": "layer_id", "width": 7},
+        {"lsb": 191, "name": "top_k_count", "width": 5},
+        {"lsb": 196, "name": "flags", "width": 4},
+        {"lsb": 200, "name": "reserved_zero", "width": 8},
+        {"lsb": 208, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_route_precedes_first_activation_beat",
+      "id": "IF-TILE-ROUTE",
+      "width_bits": 224
+    },
+    {
+      "clock": "core_clk",
+      "fields": [
+        {"lsb": 0, "name": "activation_payload", "width": 176},
+        {"lsb": 176, "name": "transaction_id", "width": 16},
+        {"lsb": 192, "name": "word_index", "width": 32},
+        {"lsb": 224, "name": "sequence", "width": 8},
+        {"lsb": 232, "name": "last", "width": 1},
+        {"lsb": 233, "name": "poison", "width": 1},
+        {"lsb": 234, "name": "reserved_zero", "width": 6},
+        {"lsb": 240, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_stable_while_stalled",
+      "id": "IF-TILE-ACT",
+      "width_bits": 256
+    },
+    {
+      "clock": "core_clk",
+      "fields": [
+        {"lsb": 0, "name": "partial_sum", "width": 32},
+        {"lsb": 32, "name": "transaction_id", "width": 16},
+        {"lsb": 48, "name": "tile_id", "width": 12},
+        {"lsb": 60, "name": "sequence", "width": 8},
+        {"lsb": 68, "name": "last", "width": 1},
+        {"lsb": 69, "name": "poison", "width": 1},
+        {"lsb": 70, "name": "status", "width": 4},
+        {"lsb": 74, "name": "reserved_zero", "width": 38},
+        {"lsb": 112, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_stable_while_stalled",
+      "id": "IF-TILE-RESULT",
+      "width_bits": 128
+    },
+    {
+      "clock": "stage_link_clk[*]",
+      "fields": [
+        {"lsb": 0, "name": "noc_flit", "width": 256},
+        {"lsb": 256, "name": "packet_crc32c", "width": 32}
+      ],
+      "flow_control": "packet_credit_crc_retry_max_two_then_abort",
+      "id": "IF-STAGE-LINK",
+      "width_bits": 288
+    },
+    {
+      "clock": "aon_cfg_clk",
+      "fields": [
+        {"lsb": 0, "name": "event_code", "width": 12},
+        {"lsb": 12, "name": "severity", "width": 2},
+        {"lsb": 14, "name": "source", "width": 10},
+        {"lsb": 24, "name": "epoch_id", "width": 8},
+        {"lsb": 32, "name": "transaction_id", "width": 16},
+        {"lsb": 48, "name": "timestamp_low", "width": 48},
+        {"lsb": 96, "name": "syndrome", "width": 16},
+        {"lsb": 112, "name": "crc16_ccitt", "width": 16}
+      ],
+      "flow_control": "ready_valid_lossless_for_fatal_and_uncorrectable_events",
+      "id": "IF-TELEMETRY",
+      "width_bits": 128
+    }
+  ],
+  "opcodes": {
+    "0x00": "NOP",
+    "0x01": "CONFIGURE_SESSION",
+    "0x02": "RELEASE_SESSION",
+    "0x10": "DECODE_STEP",
+    "0x11": "SPECULATIVE_VERIFY",
+    "0x20": "LOAD_SCHEDULE_SHADOW",
+    "0x21": "COMMIT_SCHEDULE_EPOCH",
+    "0x22": "LOAD_REPAIR_MAP",
+    "0x30": "RUN_BIST",
+    "0x31": "READ_DIAGNOSTIC",
+    "0x40": "QUIESCE",
+    "0x41": "RESUME",
+    "0x7f": "ABORT_TRANSACTION"
+  },
+  "registers": [
+    {"access": "RO", "address": "0x0000", "name": "IP_ID", "reset": "0x4f54504e54414c4c"},
+    {"access": "RO", "address": "0x0008", "name": "SPEC_VERSION", "reset": "0x0001000000000000"},
+    {"access": "RO", "address": "0x0010", "name": "CAPABILITIES", "reset": "parameterized"},
+    {"access": "RO", "address": "0x0018", "name": "STATUS", "reset": "0x0"},
+    {"access": "RW", "address": "0x0020", "name": "CONTROL", "reset": "0x0"},
+    {"access": "RW1C", "address": "0x0028", "name": "ERROR_STATUS", "reset": "0x0"},
+    {"access": "RW", "address": "0x0030", "name": "ERROR_MASK", "reset": "0x0"},
+    {"access": "RO", "address": "0x0038", "name": "FIRST_ERROR", "reset": "0x0"},
+    {"access": "RO", "address": "0x0040", "name": "HEARTBEAT", "reset": "0x0"},
+    {"access": "RO", "address": "0x0048", "name": "POWER_THERMAL_STATE", "reset": "0x0"},
+    {"access": "RO", "address": "0x0050", "name": "IMAGE_ID_WORD0", "reset": "mask_programmed"},
+    {"access": "RO", "address": "0x0058", "name": "IMAGE_ID_WORD1", "reset": "mask_programmed"},
+    {"access": "RO", "address": "0x0060", "name": "IMAGE_ID_WORD2", "reset": "mask_programmed"},
+    {"access": "RO", "address": "0x0068", "name": "IMAGE_ID_WORD3", "reset": "mask_programmed"},
+    {"access": "RW", "address": "0x0100-0x01ff", "name": "SESSION_WINDOW", "reset": "0x0"},
+    {"access": "RW", "address": "0x0400-0x07ff", "name": "SCHEDULE_SHADOW_WINDOW", "reset": "0x0"},
+    {"access": "RW", "address": "0x0800-0x0bff", "name": "REPAIR_MAP_WINDOW", "reset": "0x0"},
+    {"access": "RO", "address": "0x0c00-0x0fff", "name": "RAS_DFT_WINDOW", "reset": "implementation_defined_ro"}
+  ],
+  "schema_version": 1,
+  "status_codes": {
+    "0x00": "SUCCESS",
+    "0x01": "BAD_OPCODE",
+    "0x02": "BAD_VERSION",
+    "0x03": "BAD_FIELD",
+    "0x04": "BAD_CRC",
+    "0x05": "BUSY",
+    "0x06": "NO_CREDIT",
+    "0x07": "EPOCH_MISMATCH",
+    "0x08": "IMAGE_MISMATCH",
+    "0x09": "CAPACITY_ERROR",
+    "0x0a": "INTEGRITY_ERROR",
+    "0x0b": "TIMEOUT",
+    "0x0c": "THERMAL_ABORT",
+    "0x0d": "REPAIR_EXHAUSTED",
+    "0x0e": "ABORTED",
+    "0x0f": "INTERNAL_ERROR"
+  }
+}

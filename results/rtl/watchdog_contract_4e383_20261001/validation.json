@@ -1,0 +1,18 @@
+{
+  "base_commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "model_current_negative_replay_matches_retained": true,
+  "model_sha256": {
+    "tests/test_watchdog_contract_model.py": "8bba16173ae3e7e8790994e7c6a086ce08665b6662ecb5bc4db4f6c06959b1be",
+    "tools/derive_watchdog_contract.py": "a238ce06cb6fa78347a839fc2d32cf12dd062fe58a073d8ae2aaa7a51179e998",
+    "tools/watchdog_contract_model.py": "48d0881d2b5b4ef0c4a219c8ceb0989acc65218e22c40c59902c62b1b2f227c1"
+  },
+  "scope": "No live driver implementation, edits, restart, new simulation/hardware jobs, payload reads, P&R, hardware admission or actual live deadlock verdict",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_pins_verified": 14,
+  "status": "PASS_STANDALONE_WATCHDOG_CONTRACT_MODEL_ONLY",
+  "tests": {
+    "command": "python3 -m pytest -q tests/test_watchdog_contract_model.py",
+    "log": "pytest_final.log",
+    "passed": 34
+  }
+}

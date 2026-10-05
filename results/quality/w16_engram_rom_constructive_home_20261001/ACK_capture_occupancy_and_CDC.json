@@ -1,0 +1,434 @@
+{
+  "L1_generated_source": null,
+  "RTL_or_PnR_runs": false,
+  "actual_capture_CDC_extra_FF": null,
+  "actual_source": {
+    "FF_recipe": "payload_hold WIDTH + payload_capture WIDTH + response_hold RESPONSE_W + src_response RESPONSE_W +15 scalar FF",
+    "commit": "1fa3b30f088eea87a801605ba22a276835214b5e",
+    "duplication_credit": null,
+    "generic_75request_48response_FF": 261,
+    "instantiated_Engram_binding": null,
+    "ordered_event_binding": "Destination ready captures response and raises held ACK1; source synchronizes ACK1 and captures held response while clearing REQ; destination synchronizes REQ0 before lowering ACK; source_ready requires synchronized ACK0. src_done at ACK1 is NOT reusable credit.",
+    "path": "rtl/lib/ot_cdc_mailbox.sv",
+    "reset_limitation": "Destination reset may replay an outstanding request. Exactly-once irreversible row consumption needs shared reset or idempotence/retirement protocol; absent for Engram.",
+    "scalar_destination7": [
+      "acknowledge_level",
+      "destination_valid",
+      "destination_online",
+      "request_sync1",
+      "request_sync2",
+      "src_online_sync1",
+      "src_online_sync2"
+    ],
+    "scalar_source8": [
+      "request_level",
+      "source_waiting",
+      "source_online",
+      "ack_sync1",
+      "ack_sync2",
+      "dst_online_sync1",
+      "dst_online_sync2",
+      "src_done"
+    ],
+    "sha256": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76",
+    "timing_aligned_settled_equal_clock": {
+      "ack_sync1": 5,
+      "ack_sync1_zero": 11,
+      "ack_sync2": 6,
+      "ack_sync2_zero_ready": 12,
+      "destination_ACK0": 10,
+      "destination_capture": 3,
+      "destination_consume_ACK1": 4,
+      "next_src_accept": 13,
+      "request_sync1": 1,
+      "request_sync1_zero": 8,
+      "request_sync2": 2,
+      "request_sync2_zero": 9,
+      "src_accept": 0,
+      "src_done_REQ0": 7
+    },
+    "timing_scope": "Illustrative exact nonblocking-register edge calendar with settled online state and immediately ready destination. Clock phase/ratio, CDC uncertainty, setup/hold/route and Engram placement remain unbound; no latency admission."
+  },
+  "all_hop_drain_provider": null,
+  "checkpoint_reads": 0,
+  "correction": {
+    "corrected_label": "Conditional chosen depth-two reservation, NOT architecture minimum.",
+    "minimum_actual_extra_FF": null,
+    "power_scope": "Refusal applies to the conditional depth-two reservation; it establishes no minimal-architecture infeasibility.",
+    "prior_101FF_label": "Incorrectly called a lower bound in ddc evidence; retain original immutable record.",
+    "prior_power_ref": "e851c57ae",
+    "reason": "Locked tag48 may bind level ACKs only with actual immutable endpoint context, ordered four-phase wire, reset and drain proof. Python object receipts are not extra hardware cells or free hardware comparators.",
+    "tag_deduplication_credit": false
+  },
+  "generator_sha256": "79bae82b1c240de5f0cd7f8cec91474b493252bf501f741e15a1c22b781e7154",
+  "maximum_pending_receipts": 1,
+  "occupancy_one_witness": [
+    "start",
+    "fragment0",
+    "fragment1",
+    "consume"
+  ],
+  "physical_admission": false,
+  "proof": [
+    "Only consume and peer_observe_request append.",
+    "Consume moves FULL to DRAIN so cannot append twice; ACK1 is the sole pending event.",
+    "observe_ack pops ACK1 atomically before the modeled REQclear event can be delivered.",
+    "peer_observe_request requires that clear event and consumed receiver, then clears peerACK and RXphase, excluding duplicate ACK0 append.",
+    "observe_ack pops ACK0 before sender IDLE permits next start; reset rejects a nonempty queue.",
+    "Thus occupancy <=1 is inductive in the sequential reference transition system, including idle delays and reuse. Atomicity here is a software contract, not an asynchronous hardware proof."
+  ],
+  "reachable_signature_count": 15,
+  "reference_pin": "ddc93f3789ef2b3b7d1313a5512797334a3a3f3f",
+  "required_actual_inventory": [
+    "Source-owned final word/row consumer acceptance publication and locked word27,row29,shard,imageSHA,E32 context.",
+    "Every per-hop ACK/REQ synchronizer/capture/holding register, online/reset state, feedback enable, comparator and serializer gate with actual instantiation.",
+    "Ordered transport return-to-zero and finite reset/replay protection; all-hop backend/queue/consumer drain certificate.",
+    "Full source register calendar, CDC phase bounds, routed control/return bandwidth and CTS/data costs."
+  ],
+  "schema": "opentallas.engram.ACK-reference-occupancy-and-source-CDC.v1",
+  "transitions": [
+    {
+      "action": "start",
+      "after": [
+        1,
+        0,
+        0,
+        false,
+        false
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        false,
+        false
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "reset_assumed_drained",
+      "after": [
+        0,
+        0,
+        0,
+        false,
+        false
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        false,
+        false
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "fragment0",
+      "after": [
+        1,
+        1,
+        0,
+        true,
+        false
+      ],
+      "before": [
+        1,
+        0,
+        0,
+        false,
+        false
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "fragment1",
+      "after": [
+        1,
+        2,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        1,
+        0,
+        true,
+        false
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "consume",
+      "after": [
+        1,
+        3,
+        1,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        2,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 1,
+      "occupancy_before": 0
+    },
+    {
+      "action": "observe_ack",
+      "after": [
+        2,
+        3,
+        1,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        3,
+        1,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 1
+    },
+    {
+      "action": "peer_observe_clear",
+      "after": [
+        2,
+        0,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        2,
+        3,
+        1,
+        true,
+        true
+      ],
+      "occupancy_after": 1,
+      "occupancy_before": 0
+    },
+    {
+      "action": "observe_ack",
+      "after": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        2,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 1
+    },
+    {
+      "action": "start",
+      "after": [
+        1,
+        0,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "reset_assumed_drained",
+      "after": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "fragment0",
+      "after": [
+        1,
+        1,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "start",
+      "after": [
+        1,
+        0,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "reset_assumed_drained",
+      "after": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "fragment1",
+      "after": [
+        1,
+        2,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        1,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "fragment0",
+      "after": [
+        1,
+        1,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        0,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "consume",
+      "after": [
+        1,
+        3,
+        1,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        2,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 1,
+      "occupancy_before": 0
+    },
+    {
+      "action": "fragment1",
+      "after": [
+        1,
+        2,
+        0,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        1,
+        0,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 0
+    },
+    {
+      "action": "observe_ack",
+      "after": [
+        2,
+        3,
+        1,
+        true,
+        true
+      ],
+      "before": [
+        1,
+        3,
+        1,
+        true,
+        true
+      ],
+      "occupancy_after": 0,
+      "occupancy_before": 1
+    }
+  ],
+  "valid_transition_count": 18
+}

@@ -1,0 +1,338 @@
+{
+  "architectures": {
+    "hbm_comparator": {
+      "description": "Qwen matched HBM comparator: KV through ot_hdc_kv_stream and weights through ot_hdc_wstream; weight-window banks are not macro mapped here",
+      "hard_macros": [
+        {
+          "area_mm2_per_stack": 10.0,
+          "name": "HBM3E PHY",
+          "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack (assumed)",
+          "status": "external IP, not a compiler output; footprint only"
+        }
+      ],
+      "macro_area_mm2": 0.0692,
+      "macro_instances": 11,
+      "memories": [
+        {
+          "area_um2": 30655.8,
+          "bits": 1024,
+          "column_tiles": 4,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": 256,
+          "fmax_mhz_ss": 1414.2,
+          "fmax_mhz_tt": 1789.0,
+          "holds": "program",
+          "instances": 4,
+          "macro": "ot_rom_4096x266_m8",
+          "macro_area_um2": 7663.948,
+          "memory": "program ROM",
+          "note": "",
+          "ports": "1R",
+          "replicas": 1,
+          "source": "rtl/test/tb_hdc_core.sv:21-26",
+          "words": 4096
+        },
+        {
+          "area_um2": 2391.6,
+          "bits": 64,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": 64,
+          "fmax_mhz_ss": 1574.9,
+          "fmax_mhz_tt": 2054.1,
+          "holds": "FP32 constant pairs",
+          "instances": 1,
+          "macro": "ot_rom_4096x72_m8",
+          "macro_area_um2": 2391.587,
+          "memory": "constant ROM",
+          "note": "",
+          "ports": "1R",
+          "replicas": 1,
+          "source": "rtl/test/tb_hdc_core.sv",
+          "words": 4096
+        },
+        {
+          "bits": 32,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "holds": "activations",
+          "macro": "register_file",
+          "memory": "vector memory",
+          "note": "no macro organisation keeps the schedule; a banked 1R1W version with stalls exists on an unmerged branch (rtl/hdc/ot_hdc_vmem_banked.sv, 4 x 64 x 512 = ot_sram_1r1w_64x512_m1_r2c2, pin-limited at 2.5 Mb/mm2)",
+          "ports": "7R/6W per cycle (measured peak 7R/4W)",
+          "replicas": 1,
+          "source": "rtl/hdc/ot_hdc_core.sv:66-89",
+          "words": 4096
+        },
+        {
+          "area_um2": 28366.8,
+          "bits": 256,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "fmax_mhz_ss": 2085.9,
+          "fmax_mhz_tt": 2631.8,
+          "holds": "HBM KV prefetch window",
+          "instances": 4,
+          "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+          "macro_area_um2": 7091.712,
+          "memory": "KV prefetch window",
+          "note": "G = 4 banks; full KV capacity is in HBM",
+          "ports": "1R1W per bank, concurrent",
+          "replicas": 4,
+          "source": "rtl/hdc/kv/ot_hdc_kv_stream.sv:109-114",
+          "words": 256
+        },
+        {
+          "area_um2": 7783.2,
+          "bits": 256,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "fmax_mhz_ss": 2297.9,
+          "fmax_mhz_tt": 2978.6,
+          "holds": "open and previous K tile",
+          "instances": 2,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+          "macro_area_um2": 3891.577,
+          "memory": "KV tail",
+          "note": "",
+          "ports": "1R1W per bank, 16-bit lane mask",
+          "replicas": 2,
+          "source": "rtl/hdc/kv/ot_hdc_kv_stream.sv:115-121",
+          "words": 128
+        },
+        {
+          "bits": 280,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "holds": "tail-to-HBM and V write combining",
+          "macro": "register_file",
+          "memory": "flush / V write-combine FIFOs",
+          "note": "",
+          "ports": "1R1W",
+          "replicas": 1,
+          "source": "rtl/hdc/kv/ot_hdc_kv_stream.sv:538-582",
+          "words": 4
+        },
+        {
+          "bits": 1024,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "holds": "weights",
+          "macro": null,
+          "memory": "weight ROM",
+          "note": "streamed from HBM by rtl/hdc/hbm/ot_hdc_wstream.sv; no on-die weight ROM. The streamer's BF*WS weight-window SRAM banks are not macro mapped here",
+          "ports": "1R",
+          "replicas": 1,
+          "source": "HBM",
+          "words": null
+        }
+      ],
+      "slowest_macro_fmax_mhz": {
+        "ss": 1414.2,
+        "tt": 1789.0
+      }
+    },
+    "qwen3_8b_rom_reticle": {
+      "description": "one die, weights in mask ROM and KV in HBM through ot_hdc_kv_stream (rtl/chip/ot_chip_hdc_tile.sv)",
+      "macro_area_mm2": 0.4194,
+      "macro_instances": 35,
+      "memories": [
+        {
+          "area_um2": 30655.8,
+          "bits": 1024,
+          "column_tiles": 4,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": 256,
+          "fmax_mhz_ss": 1414.2,
+          "fmax_mhz_tt": 1789.0,
+          "holds": "program",
+          "instances": 4,
+          "macro": "ot_rom_4096x266_m8",
+          "macro_area_um2": 7663.948,
+          "memory": "program ROM",
+          "note": "",
+          "ports": "1R",
+          "replicas": 1,
+          "source": "rtl/test/tb_hdc_core.sv:21-26",
+          "words": 4096
+        },
+        {
+          "area_um2": 2391.6,
+          "bits": 64,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": 64,
+          "fmax_mhz_ss": 1574.9,
+          "fmax_mhz_tt": 2054.1,
+          "holds": "FP32 constant pairs",
+          "instances": 1,
+          "macro": "ot_rom_4096x72_m8",
+          "macro_area_um2": 2391.587,
+          "memory": "constant ROM",
+          "note": "",
+          "ports": "1R",
+          "replicas": 1,
+          "source": "rtl/test/tb_hdc_core.sv",
+          "words": 4096
+        },
+        {
+          "bits": 32,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "holds": "activations",
+          "macro": "register_file",
+          "memory": "vector memory",
+          "note": "no macro organisation keeps the schedule; a banked 1R1W version with stalls exists on an unmerged branch (rtl/hdc/ot_hdc_vmem_banked.sv, 4 x 64 x 512 = ot_sram_1r1w_64x512_m1_r2c2, pin-limited at 2.5 Mb/mm2)",
+          "ports": "7R/6W per cycle (measured peak 7R/4W)",
+          "replicas": 1,
+          "source": "rtl/hdc/ot_hdc_core.sv:66-89",
+          "words": 4096
+        },
+        {
+          "area_um2": 28366.8,
+          "bits": 256,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "fmax_mhz_ss": 2085.9,
+          "fmax_mhz_tt": 2631.8,
+          "holds": "HBM KV prefetch window",
+          "instances": 4,
+          "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+          "macro_area_um2": 7091.712,
+          "memory": "KV prefetch window",
+          "note": "G = 4 banks; full KV capacity is in HBM",
+          "ports": "1R1W per bank, concurrent",
+          "replicas": 4,
+          "source": "rtl/hdc/kv/ot_hdc_kv_stream.sv:109-114",
+          "words": 256
+        },
+        {
+          "area_um2": 7783.2,
+          "bits": 256,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "fmax_mhz_ss": 2297.9,
+          "fmax_mhz_tt": 2978.6,
+          "holds": "open and previous K tile",
+          "instances": 2,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+          "macro_area_um2": 3891.577,
+          "memory": "KV tail",
+          "note": "",
+          "ports": "1R1W per bank, 16-bit lane mask",
+          "replicas": 2,
+          "source": "rtl/hdc/kv/ot_hdc_kv_stream.sv:115-121",
+          "words": 128
+        },
+        {
+          "bits": 280,
+          "column_tiles": 1,
+          "depth_tiles": 1,
+          "ecc_data_bits_per_tile": null,
+          "holds": "tail-to-HBM and V write combining",
+          "macro": "register_file",
+          "memory": "flush / V write-combine FIFOs",
+          "note": "",
+          "ports": "1R1W",
+          "replicas": 1,
+          "source": "rtl/hdc/kv/ot_hdc_kv_stream.sv:538-582",
+          "words": 4
+        },
+        {
+          "area_um2": 350160.7,
+          "bits": 1024,
+          "column_tiles": 4,
+          "depth_tiles": 6,
+          "ecc_data_bits_per_tile": 256,
+          "fmax_mhz_ss": 1017.5,
+          "fmax_mhz_tt": 1298.1,
+          "holds": "reduced BF16 weight-image capacity proxy",
+          "instances": 24,
+          "macro": "ot_rom_8192x266_m8",
+          "macro_area_um2": 14590.031,
+          "memory": "weight ROM",
+          "note": "current tile has WSA=17; its production bank geometry remains open",
+          "ports": "1R",
+          "replicas": 1,
+          "source": "rtl/chip/ot_chip_hdc_tile.sv:183",
+          "words": 49152
+        }
+      ],
+      "slowest_macro_fmax_mhz": {
+        "ss": 1017.5,
+        "tt": 1298.1
+      },
+      "status": "partial_adopted_tile_map_reduced_rom_capacity_proxy"
+    }
+  },
+  "claim_boundary": "macro counts and areas from the compiled ASAP7 abstracts; ASAP7 is predictive, the full-model rows are capacity arithmetic at the compiled density, not a floorplan",
+  "full_scale_weight_rom": {
+    "ot_rom_16384x266_m16": {
+      "cases": {
+        "Qwen3-8B BF16 weights": {
+          "bytes": 16381470720,
+          "fraction_of_815_mm2_reticle": 1.088,
+          "full_sweep_time_us_tt": 16.785,
+          "instances": 31246,
+          "macro_area_mm2": 886.4,
+          "source": "configs/models/qwen3-8b.json checkpoint_bytes",
+          "sweep_bandwidth_bytes_s_tt": 975975059200000.0
+        },
+        "Qwen3-8B at 4 bits per weight": {
+          "bytes": 4095367680,
+          "fraction_of_815_mm2_reticle": 0.272,
+          "full_sweep_time_us_tt": 16.784,
+          "instances": 7812,
+          "macro_area_mm2": 221.6,
+          "source": "BF16 checkpoint / 4",
+          "sweep_bandwidth_bytes_s_tt": 244009382400000.0
+        }
+      },
+      "data_bits_per_instance": 4194304,
+      "ecc": "SECDED (266,256): 3.9% check bits"
+    },
+    "ot_rom_8192x266_m8": {
+      "cases": {
+        "Qwen3-8B BF16 weights": {
+          "bytes": 16381470720,
+          "fraction_of_815_mm2_reticle": 1.119,
+          "full_sweep_time_us_tt": 6.311,
+          "instances": 62491,
+          "macro_area_mm2": 911.7,
+          "source": "configs/models/qwen3-8b.json checkpoint_bytes",
+          "sweep_bandwidth_bytes_s_tt": 2595826147200000.0
+        },
+        "Qwen3-8B at 4 bits per weight": {
+          "bytes": 4095367680,
+          "fraction_of_815_mm2_reticle": 0.28,
+          "full_sweep_time_us_tt": 6.311,
+          "instances": 15623,
+          "macro_area_mm2": 227.9,
+          "source": "BF16 checkpoint / 4",
+          "sweep_bandwidth_bytes_s_tt": 648966921599999.9
+        }
+      },
+      "data_bits_per_instance": 2097152,
+      "ecc": "SECDED (266,256): 3.9% check bits"
+    }
+  },
+  "generated_by": "tools/mem_compiler/memory_plan.py",
+  "macro_index_sha256": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "schema": "opentallas.memory-plan.v1",
+  "unmapped_architectures": {
+    "deepseek_v41_flash": {
+      "core": "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+      "kv_storage": "HBM with row staging; no full-cache SRAM macro allocation",
+      "reason": "KV HBM prefetch, dedicated engine banks and physical port mapping are not yet closed",
+      "status": "pending_adopted_tile_memory_characterization"
+    }
+  }
+}

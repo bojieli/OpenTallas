@@ -1,0 +1,156 @@
+--- reviewed r3 affinity runner
++++ LAT8 admission runner
+@@ -3,13 +3,13 @@
+ import argparse,gzip,hashlib,importlib.util,json,os,re,resource,shutil,signal,subprocess,sys,threading,time,traceback
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[1]
+-PREPARED_SOURCE_COMMIT='6649e1759b9bdd170a8abba15cc0f70aefd15fa8'
+-PREP='results/rtl/dsrom_upstream_pair_cadence_prepare_20261002'
+-BASE='results/rtl/dsrom_upstream_pair_cadence_runner_prepare_r3_20261002'
++PREPARED_SOURCE_COMMIT='dc1c9fbb49306480a30d552f80d3c364c173f020'
++PREP='results/rtl/dsrom_cadence_admission_prepare_20261002'
++BASE='results/rtl/dsrom_cadence_admission_runner_prepare_20261002'
+ PLAN_PATH=BASE+'/runner_plan.json';GO_PATH=BASE+'/parent_GO.json'
+-RUNNER_PATH='tools/run_dsrom_upstream_pair_cadence_r3.py'
++RUNNER_PATH='tools/run_dsrom_cadence_admission.py'
+ VERILATOR='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator'
+-GO_KIND='BOUNDED_ACTUAL_UPSTREAM_PAIR_CADENCE_AFFINITY_ONLY'
++GO_KIND='BOUNDED_D2_LAT8_IMAGE_ADMISSION_SELECTED_PAIR_ONLY'
+ CLAIMS_DIR=Path('/tmp/opentallas-dsrom-upstream-pair-go-claims')
+ def sha(data):return hashlib.sha256(data).hexdigest()
+ def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT)
+@@ -17,7 +17,7 @@
+  with path.open('x') as f:
+   json.dump(data,f,indent=2,sort_keys=True);f.write('\n');f.flush();os.fsync(f.fileno())
+ def prep_module():
+- s=importlib.util.spec_from_file_location('cadence_prepare',ROOT/'tools/prepare_dsrom_upstream_pair_cadence.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
++ s=importlib.util.spec_from_file_location('cadence_prepare',ROOT/'tools/prepare_dsrom_cadence_admission.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+ def package_sha(pins):return sha(json.dumps(pins,sort_keys=True,separators=(',',':')).encode())
+ def reviewed_plan():
+  p=json.loads((ROOT/PLAN_PATH).read_text())
+@@ -27,9 +27,11 @@
+  return p
+ 
+ def source_preflight():
+- p=reviewed_plan();source=json.loads((ROOT/PREP/'sourceplan.json').read_text());m=prep_module()
+- m.JOIN.verify() # Full267-original preservation plus shared primitive/join authorities.
+- # The original immutable 6649 source plan itself binds its complete source inputs.
++ p=reviewed_plan();
++ if p.get('admitted_cases')!=['existing_fast8'] or p.get('cases')!=['existing_fast8'] or p.get('compiled_LAT')!=8:raise ValueError('STALE_IMAGE_ADMISSION: runner case/LAT changed')
++ source=json.loads((ROOT/PREP/'sourceplan.json').read_text());m=prep_module()
++ m.OLD.JOIN.verify() # Full267-original preservation plus shared primitive/join authorities.
++ # The immutable dc1c source plan binds every source input and LAT8 image.
+  for path,h in source['input_source_sha256'].items():
+   data=(ROOT/path).read_bytes()
+   if sha(data)!=h or data!=git('show',PREPARED_SOURCE_COMMIT+':'+path):raise ValueError('source changed '+path)
+@@ -84,7 +86,7 @@
+  if not isinstance(go_commit,str) or not re.fullmatch('[0-9a-f]{40}',go_commit):raise ValueError('full GO commit required')
+  source,p=source_preflight();raw=git('show',go_commit+':'+GO_PATH);go=json.loads(raw)
+  if go.get('GO')!=GO_KIND:raise ValueError('fresh explicit GO required')
+- required={'source_prepare_commit':PREPARED_SOURCE_COMMIT,'sourceplan_sha256':sha((ROOT/PREP/'sourceplan.json').read_bytes()),'model_sha256':sha((ROOT/PREP/'model.json').read_bytes()),'bench_sha256':sha((ROOT/'rtl/test/tb_dsrom_upstream_pair_cadence.sv').read_bytes()),'runner_sha256':sha((ROOT/RUNNER_PATH).read_bytes()),'runner_plan_sha256':sha((ROOT/PLAN_PATH).read_bytes()),'runner_sourceplan_sha256':sha((ROOT/BASE/'sourceplan.json').read_bytes()),'generated_package_sha256':p['generated_package_sha256'],'expected_contract_sha256':sha((ROOT/BASE/'expected_contract.json').read_bytes()),'limits':p['caps'],'cases':['production5','existing_fast8'],'continue_control_after_negative_failure':True,'claims':p['claim_limits']}
++ required={'source_prepare_commit':PREPARED_SOURCE_COMMIT,'sourceplan_sha256':sha((ROOT/PREP/'sourceplan.json').read_bytes()),'model_sha256':sha((ROOT/PREP/'model.json').read_bytes()),'bench_sha256':sha((ROOT/'rtl/test/tb_dsrom_upstream_pair_cadence_admission_prepare.sv').read_bytes()),'runner_sha256':sha((ROOT/RUNNER_PATH).read_bytes()),'runner_plan_sha256':sha((ROOT/PLAN_PATH).read_bytes()),'runner_sourceplan_sha256':sha((ROOT/BASE/'sourceplan.json').read_bytes()),'generated_package_sha256':p['generated_package_sha256'],'expected_contract_sha256':sha((ROOT/BASE/'expected_contract.json').read_bytes()),'limits':p['caps'],'cases':['existing_fast8'],'continue_control_after_negative_failure':False,'claims':p['claim_limits']}
+  for key,value in required.items():
+   if go.get(key)!=value:raise ValueError('GO pin/policy mismatch '+key)
+  prepared=go.get('prepared_commit')
+@@ -94,69 +96,10 @@
+   if (ROOT/path).read_bytes()!=git('show',prepared+':'+path):raise ValueError('reviewed prepared file changed '+path)
+  return source,p,raw
+ 
+-# Anchored whole-line grammar: foreign/malformed/duplicate diagnostic markers fail.
+-PATTERNS={
+- 'EDGE':r'EDGE cycle=(\d+) adapt=(\d+) spine=(\d+) smpos=(\d+) smi=(\d+) have0=(\d+) have1=(\d+) sok=(\d+) adv=(\d+) cfg=(\d+) go=(\d+) xs=(\d+) u=(\d+) b=(\d+) pos=(\d+) sv=(\d+) cnt=(\d+) npush=(\d+) pop=(\d+) issue=(\d+) hazard=(\d+) gate=(\d+)',
+- 'EMITTED':r'EMITTED cycle=(\d+) p=(\d+) b=(\d+) pos=(\d+) q0=([0-9a-fA-F]{64}) e0=([0-9a-fA-F]{3}) q1=([0-9a-fA-F]{64}) e1=([0-9a-fA-F]{3})',
+- 'PUBLIC':r'PUBLIC row=(\d+) seg=(\d+) nseg=(\d+) pos=(\d+) value=([0-9a-fA-F]{8}) err=(\d+)',
+- 'FIRST_FAULT':r'FIRST_FAULT cycle=(\d+) pos=(\d+) cnt=(\d+) npush=(\d+) pop=(\d+) issue=(\d+) hazard=(\d+) overflow=(\d+) gate=(\d+) emitted=(\d+) pushes=(\d+) pops=(\d+) issues=(\d+) pairfault=(\d+) spinefault=(\d+)',
+- 'FIRST_FAULT_SOURCE':r'FIRST_FAULT_SOURCE wpos=(\d+) npos=(\d+) slot=(\d+) ca=(\d+) cd=([0-9a-fA-F]{12}) row0=([0-9a-fA-F]{4}) row1=([0-9a-fA-F]{4})',
+- 'REPRODUCED_FIRST_XFIFO_OVERFLOW':r'REPRODUCED_FIRST_XFIFO_OVERFLOW profile=(\d+) cycle=(\d+)',
+- 'PASS_EXISTING_FAST_PROFILE':r'PASS_EXISTING_FAST_PROFILE rows=(\d+) emitted=(\d+) pushes=(\d+) pops=(\d+) issues=(\d+)'}
+-EDGE_KEYS='cycle adapt spine smpos smi have0 have1 sok adv cfg go xs u b pos sv cnt npush pop issue hazard gate'.split()
++# Qualified prior public/FIFO control checker plus strict source loader recurrence.
+ def completion(text,case,p,rc):
+- parsed={k:[] for k in PATTERNS};events=[];errors=[]
+- if case not in ('production5','existing_fast8'):return dict(valid=False,errors=['foreign case'])
+- fatal=bool(re.search(r'%Error|%Fatal|Assertion failed|Aborting|core dumped|Segmentation fault|\bDIFF\b|STATIC_WITNESS_NOT_REPRODUCED|FIRST_FAULT_DIFFERENT_CAUSE|CONTROL_FIRST_FAULT|PUBLIC_ORACLE_DIFFERENCE|OTHER_FAULT|UPSTREAM_ADAPTER_FAULT|CONTROL_COVERAGE|EMITTED_ORDER',text))
+- for line in text.splitlines():
+-  key=line.split(' ',1)[0];m=re.fullmatch(PATTERNS.get(key,r'(?!)'),line)
+-  if m:parsed[key].append(m.groups());events.append((key,m.groups()))
+-  elif any(marker in line for marker in (*PATTERNS,'PASS','REPRODUCED','FIRST_FAULT')):errors.append('malformed/foreign marker '+line)
+- edges=[dict(zip(EDGE_KEYS,map(int,e))) for e in parsed['EDGE']]
+- if not edges or [e['cycle'] for e in edges]!=list(range(3,3+len(edges))):errors.append('missing/duplicate/out-of-order edge')
+- emitted=parsed['EMITTED'];xs=[e for e in edges if e['xs']]
+- if len(emitted)>16:errors.append('too many emitted slices')
+- if len(emitted)!=len(xs):errors.append('emitted/edge count mismatch')
+- qword=p['expected_contract']['activation_qword'];exp=p['expected_contract']['activation_e10']
+- for index,(a,e) in enumerate(zip(emitted,xs)):
+-  cy,u,b,pos=map(int,a[:4])
+-  if [cy,u,b,pos]!=[e['cycle'],e['u'],e['b'],e['pos']] or [u,b,pos,e['sv']]!=[0,index%8,index//8,3] or a[4].lower()!=qword or a[6].lower()!=qword or int(a[5],16)!=exp or int(a[7],16)!=exp:errors.append('emitted order/operand mismatch')
+- q=0;first_overflow=[];pushes=pops=issues=0;last_issue=-100
+- for e in edges:
+-  if e['cnt']!=q:errors.append('FIFO recurrence mismatch cycle='+str(e['cycle']))
+-  if any(e[k] not in (0,1) for k in ('xs','cfg','go','npush','pop','issue','hazard','gate')):errors.append('invalid boolean')
+-  if e['pop']>e['issue'] or (e['issue'] and (e['cnt']==0 or e['hazard'])):errors.append('illegal issue/pop')
+-  if e['gate']:
+-   if e['issue']:
+-    if e['cycle']-last_issue<8:errors.append('LAT8 slot recurrence')
+-    last_issue=e['cycle']
+-   pushes+=e['npush'];pops+=e['pop'];issues+=e['issue']
+-   # Actual element sees root-registered go one cycle later. Before data arrival
+-   # this reset can only clear the already-zero queue; no go-dependent shortcut.
+-   q+=e['npush']-e['pop']
+-   if q>4:first_overflow.append(e['cycle'])
+-   if q<0:errors.append('FIFO underflow')
+- pubs=[]
+- for row,seg,nseg,pos,value,err in parsed['PUBLIC']:
+-  a=[int(row),int(seg),int(nseg),int(pos),int(value,16),int(err)];pubs.append(a)
+-  if a[:3]!=[256,0,1] or a[3] not in (0,1) or a[4:]!=[int(p['expected_contract']['public_oracle']['FP32'],16),0]:errors.append('public bits/flags/tag mismatch')
+- if [a[3] for a in pubs]!=list(range(len(pubs))) or len(pubs)>2:errors.append('public order/duplicate')
+- if case=='production5':
+-  for key in ('FIRST_FAULT','FIRST_FAULT_SOURCE','REPRODUCED_FIRST_XFIFO_OVERFLOW'):
+-   if len(parsed[key])!=1:errors.append('missing/duplicate '+key)
+-  if parsed['PASS_EXISTING_FAST_PROFILE']:errors.append('foreign control terminal')
+-  if len(parsed['FIRST_FAULT'])==len(parsed['FIRST_FAULT_SOURCE'])==len(parsed['REPRODUCED_FIRST_XFIFO_OVERFLOW'])==1 and edges:
+-   f=list(map(int,parsed['FIRST_FAULT'][0]));e=edges[-1];terminal=list(map(int,parsed['REPRODUCED_FIRST_XFIFO_OVERFLOW'][0]));src=parsed['FIRST_FAULT_SOURCE'][0]
+-   if f[1] not in (0,1):errors.append('fault position out of bounds')
+-   if f[0]!=e['cycle'] or f[2:9]!=[e['cnt'],e['npush'],e['pop'],e['issue'],e['hazard'],1,e['gate']] or f[9:13]!=[len(emitted),pushes,pops,issues] or f[13:]!=[1,0] or terminal!=[5,e['cycle']] or first_overflow!=[e['cycle']] or (e['cnt'],e['npush'],e['pop'],e['gate'])!=(4,1,0,1):errors.append('fault ownership/counters/inequality mismatch')
+-   if int(src[0])>1 or int(src[1])>1 or int(src[2])!=0 or int(src[3])>=25 or int(src[5],16)!=256 or int(src[6],16)!=0x8080:errors.append('fault source config/walker mismatch')
+-   if [k for k,v in events[-3:]]!=['FIRST_FAULT','FIRST_FAULT_SOURCE','REPRODUCED_FIRST_XFIFO_OVERFLOW']:errors.append('fault terminal order')
+- else:
+-  if any(parsed[k] for k in ('FIRST_FAULT','FIRST_FAULT_SOURCE','REPRODUCED_FIRST_XFIFO_OVERFLOW')):errors.append('foreign fault markers')
+-  if parsed['PASS_EXISTING_FAST_PROFILE']!=[('2','16','16','16','16')]:errors.append('control exact terminal counts')
+-  if len(edges)!=p['expected_contract']['control_edge_count'] or len(emitted)!=16 or [pushes,pops,issues]!=[16,16,16] or first_overflow or q!=0 or pubs!=[[256,0,1,0,0x44000000,0],[256,0,1,1,0x44000000,0]]:errors.append('control exact events/values/counts')
+-  if not events or events[-1][0]!='PASS_EXISTING_FAST_PROFILE':errors.append('control terminal order')
+- return dict(valid=rc==0 and not fatal and not errors,returncode=rc,fatal=fatal,errors=errors,edge_samples=len(edges),emitted_slices=len(emitted),pushes=pushes,pops=pops,issues=issues,public_rows=pubs,first_fault=parsed['FIRST_FAULT'],first_fault_source=parsed['FIRST_FAULT_SOURCE'],first_overflow_cycles=first_overflow,interpretation='actual upstream selected full-row pair diagnostic only; no field/physical/fulltoken qualification')
++ if case!='existing_fast8':return dict(valid=False,errors=['STALE_IMAGE_ADMISSION: foreign case'])
++ return prep_module().completion(text,p,rc)
+ 
+ def metrics(cg):
+  # Optional/absent kernel interfaces are data, never a reason to lose a receipt.
+@@ -275,8 +218,8 @@
+   build=run('shared','build',p['compile_argv'])
+   if build['returncode']:record['status']='FAIL_BUILD_UNQUALIFIED'
+   else:
+-   for case in ('production5','existing_fast8'):run(case,'simulate',p['simulate_argv'][case])
+-   record['status']='PASS_BOUNDED_CADENCE_DIAGNOSTIC_ONLY' if all(e['completion']['valid'] for e in record['runs'][1:]) else 'FAIL_UNQUALIFIED'
++   for case in ('existing_fast8',):run(case,'simulate',p['simulate_argv'][case])
++   record['status']='PASS_BOUNDED_LAT8_ADMISSION_SELECTED_PAIR_ONLY' if all(e['completion']['valid'] for e in record['runs'][1:]) else 'FAIL_UNQUALIFIED'
+  except Exception as error:
+   record['status']='FAIL_RUNNER';record['exception']=repr(error);record['original_traceback']=traceback.format_exc()
+  finally:
+@@ -288,7 +231,7 @@
+     record['artifact_inventory_failure']=repr(error);record['status']='FAIL_RUNNER'
+    write(a.output/'record.json',record)
+   finally:stop.set();whole.cancel()
+- return 0 if record['status']=='PASS_BOUNDED_CADENCE_DIAGNOSTIC_ONLY' else 1
++ return 0 if record['status']=='PASS_BOUNDED_LAT8_ADMISSION_SELECTED_PAIR_ONLY' else 1
+ 
+ def service_argv(a,unit,p):
+  argv=['systemd-run','--user','--wait','--pipe','--unit='+unit]
+@@ -318,7 +261,7 @@
+  fresh_launcher_paths(a.output)
+  source,p,raw=verify(a.go_commit)
+  if git('status','--porcelain').strip():raise RuntimeError('clean pinned worktree required')
+- tool_preflight(p);host=host_preflight(p);unit='dsrom-upstream-pair-cadence-'+str(os.getpid());argv=service_argv(a,unit,p)
++ tool_preflight(p);host=host_preflight(p);unit='dsrom-lat8-image-admission-'+str(os.getpid());argv=service_argv(a,unit,p)
+  write(Path(str(a.output)+'_host_admission.json'),host)
+  claim_GO(raw,unit) # Exclusive local approval claim; never retry same approval.
+  proc=subprocess.Popen(argv,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)

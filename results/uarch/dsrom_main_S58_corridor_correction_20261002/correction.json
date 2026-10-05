@@ -1,0 +1,76 @@
+{
+  "BF1024_indivisible_floor": false,
+  "band_growth_um": 308.8800000000001,
+  "band_width_um": 9974.880000000001,
+  "candidate_id": "DS4096-TP4-S58-PAIR1",
+  "corrected_budget_mm2": 439.73083585993,
+  "corrected_margin_mm2": -2.4233123538459154,
+  "generator_sha256": "e40923a33c244bdd9a5d7b7041ffdb816f96198613f3e135a23ce9c116104a48",
+  "grid_planes": [
+    {
+      "layer": "M2",
+      "unique_Y_phase_pitch_DBU": [
+        [
+          0,
+          270
+        ],
+        [
+          45,
+          270
+        ],
+        [
+          81,
+          270
+        ],
+        [
+          117,
+          270
+        ],
+        [
+          153,
+          270
+        ],
+        [
+          189,
+          270
+        ],
+        [
+          225,
+          270
+        ]
+      ]
+    },
+    {
+      "layer": "M4",
+      "unique_Y_phase_pitch_DBU": [
+        [
+          12,
+          48
+        ]
+      ]
+    }
+  ],
+  "input_receipt_sha256": "f643f129c521a80d0ba8ebf2d9908d58b9294f8ee53a07b0078a66239877bcc9",
+  "local_C1_identifier_is_alias": true,
+  "main_pin": "839fd4fc198b33ad658445244e48720fb47ab373",
+  "native_combined_tracks": 42752,
+  "native_request_tracks": 7040,
+  "native_response_tracks": 35712,
+  "new_band_height_um": 1831.6800000000003,
+  "new_corridor_debit_mm2": 3.0810409344000016,
+  "new_jobs": 0,
+  "no_double_debit": "Existing service and collector halo allocation not charged again; only increased clear route band area debited. Clock/PG policy unchanged.",
+  "no_parameter_sweep": true,
+  "old_band_height_um": 1522.8000000000002,
+  "old_budget_mm2": 442.81187679433,
+  "old_conditional_margin_mm2": 0.6577285805540782,
+  "ownership_map_executable": false,
+  "physical_GO": false,
+  "same_candidate_count": true,
+  "schema": "opentallas.DSROM.S58.selfcontained-correction.v1",
+  "scope": "Prospective nativeAW31/LEN6/BEAT5 interface; retainedDSAW30/LEN4/BEAT4 unchanged. Source grid capacity screen not routing closure; DS adapter state/area remains unbound.",
+  "signal_reserve_fraction": 0.5,
+  "tracks_per_um_before_reserve": 46.75925925925925,
+  "unchanged_field_need_mm2": 442.1541482137759,
+  "verdict": "FAIL_S58_SAME_BASIS_CAPACITY_AFTER_NATIVE_BIDIRECTIONAL_CORRIDOR_DEBIT"
+}

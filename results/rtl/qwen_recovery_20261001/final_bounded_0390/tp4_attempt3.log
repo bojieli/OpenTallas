@@ -1,0 +1,63 @@
+F.F...............                                                       [100%]
+=================================== FAILURES ===================================
+_______________________ test_tp2_su64_calibration_claim ________________________
+
+    def test_tp2_su64_calibration_claim():
+        import json
+        p = ROOT / "results/rtl/qwen_rom_w12_runtime/terminal_20261001/rt64_token.json"
+>       claim = runtime_claim(json.loads(p.read_text())["design_point"])
+
+tests/test_qwen_rom_rt_metadata.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-currentmain-bounded-20261001/results/rtl/qwen_rom_w12_runtime/terminal_20261001/rt64_token.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-currentmain-bounded-20261001/results/rtl/qwen_rom_w12_runtime/terminal_20261001/rt64_token.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_______________________ test_tp2_su64_calibration_claim ________________________
+
+    def test_tp2_su64_calibration_claim():
+        import json
+        p = ROOT / "results/rtl/qwen_rom_w12_runtime/terminal_20261001/rt64_token.json"
+>       claim = runtime_claim(json.loads(p.read_text())["design_point"])
+
+tests/test_qwen_rom_rt_metadata_w12.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-currentmain-bounded-20261001/results/rtl/qwen_rom_w12_runtime/terminal_20261001/rt64_token.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-currentmain-bounded-20261001/results/rtl/qwen_rom_w12_runtime/terminal_20261001/rt64_token.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_qwen_rom_rt_metadata.py::test_tp2_su64_calibration_claim - ...
+FAILED tests/test_qwen_rom_rt_metadata_w12.py::test_tp2_su64_calibration_claim

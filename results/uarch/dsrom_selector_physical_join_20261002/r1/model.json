@@ -1,0 +1,1309 @@
+{
+  "archive_manifest_sha256": "411792684b1b98f6be9cd5bf61261fd799064791cce0422a70424bf1c5a74076",
+  "archived_origins": {
+    "enable_construction_WIP.json.gz": {
+      "archive_bytes": 100605,
+      "archive_sha256": "a783330f2e281bbccf25311879e309fd76be16f8eb7d73f691e9b9d353b63494",
+      "commit": null,
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 2673205,
+      "original_sha256": "b87ff3f788e71cee8a4350c98870e98c1e3233a00805b1c02161493cc4b00ece",
+      "owner_worktree": "/home/ubuntu/w17-noecc-complete-map-receipt",
+      "path": "results/uarch/dsrom_noECC_enable_distribution_20261002/model.json",
+      "qualification": "UNCOMMITTED_OWNER_SNAPSHOT_ONLY"
+    },
+    "enable_diagnosis.json.gz": {
+      "archive_bytes": 19761,
+      "archive_sha256": "9e91d2a137a2b1f50f463864d215bde76006be9f7d25a593edf38cf7d77db4bb",
+      "commit": "b8e4e82d794563c8ebc7e5194774385984596dd9",
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 1013050,
+      "original_sha256": "d58f521c1f9edbb3d704cd4a961b43bc08102fc2bdef9d4d2639e6a7fac02dbd",
+      "path": "results/uarch/dsrom_noECC_slew_enable_diagnosis_20261002/model.json"
+    },
+    "enable_terminal.json": {
+      "archive_bytes": 871,
+      "archive_sha256": "d6b789013867bb9e1aa4bb97e828d173451911c874b9d203e2da1be5f01c2650",
+      "commit": "b8e4e82d794563c8ebc7e5194774385984596dd9",
+      "gzip_exact_byte_archive": false,
+      "original_bytes": 871,
+      "original_sha256": "d6b789013867bb9e1aa4bb97e828d173451911c874b9d203e2da1be5f01c2650",
+      "path": "results/uarch/dsrom_noECC_slew_enable_diagnosis_20261002/terminal/record.json"
+    },
+    "fixed_caller.sv.gz": {
+      "archive_bytes": 4479,
+      "archive_sha256": "be1247ba596bab6513ae7580e62d3cf25199a6bcf0cccbce0297c1a3ddf91c48",
+      "commit": "6430309068468c41954abf25355ba35505675f82",
+      "format": "text",
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 15436,
+      "original_sha256": "03a371a5ab3cfb85700563186a83c2aacaa0611465ce09ca3fbd1eb32691902f",
+      "path": "results/rtl/topk_station_caller_fence_prepare_20261002/package_r3/ot_w15_coll_dma_station_prepare.sv"
+    },
+    "fixed_caller_plan.json.gz": {
+      "archive_bytes": 990,
+      "archive_sha256": "737610b82dff68a93c2421615847ef4b62e004019b470d11c3a9f5a271c1370e",
+      "commit": "6430309068468c41954abf25355ba35505675f82",
+      "format": "json",
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 1836,
+      "original_sha256": "7127f21707a16c6d9f5e75b9a51d4db2790dd52676b2adc89cf798f1161b2366",
+      "path": "results/rtl/topk_station_caller_fence_prepare_20261002/package_r3/sourceplan.json"
+    },
+    "fixed_station.json.gz": {
+      "archive_bytes": 18842,
+      "archive_sha256": "53d805790f05deceb44673515e0a568cb47eb2251814f8c7f8445913875068c7",
+      "commit": "6430309068468c41954abf25355ba35505675f82",
+      "format": "json",
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 141082,
+      "original_sha256": "1589f533c2212363c87b1fc286295444ff1b836680ba1daa92f6a5c2c017919e",
+      "path": "results/uarch/topk_buffered_station_source_model_20261002/model_r2.json"
+    },
+    "fixed_tracks.json.gz": {
+      "archive_bytes": 48454,
+      "archive_sha256": "ebae8612f09a98fcf9f03873e651ccc6bcdd569b16e3fb286cc57db6008f8b49",
+      "commit": "6430309068468c41954abf25355ba35505675f82",
+      "format": "json",
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 878297,
+      "original_sha256": "aea66889167d55ce300f0f07cb36e0c5b90ca73b1d0fef8caa40ebeddff14409",
+      "path": "results/uarch/topk_finite_track_turn_model_20261002/model_r2.json"
+    },
+    "selected_caller_r5_WIP.json.gz": {
+      "archive_bytes": 9434,
+      "archive_sha256": "652e1f68144a86e58b1cb2761ab0775163ec8a94977301fffffd173005fe13ed",
+      "commit": null,
+      "gzip_exact_byte_archive": true,
+      "original_bytes": 390756,
+      "original_sha256": "00c1344ccd37e1aad4366086111e789d597374db473d6bd72fe73d431cb851f8",
+      "owner_worktree": "/home/ubuntu/w17-noecc-complete-map-receipt",
+      "path": "results/uarch/dsrom_noECC_enable_distribution_20261002/inputs/Maxwell_selected_caller_r5_WIP.json",
+      "qualification": "UNCOMMITTED_OWNER_SNAPSHOT_ONLY"
+    }
+  },
+  "area_increment_floor_mm2": 1.43831148876,
+  "area_increment_without_unearned_decode_removal_credit_mm2": 1.4387892461999998,
+  "area_ownership": {
+    "caller_guard_50pct_mm2": 3.32424e-06,
+    "local_enable_replacement_2048_50pct_mm2": 0.08014381056000001,
+    "selector_station_50pct_mm2": 0.5956084256399999,
+    "shared_BST_replica_FF_50pct_mm2": 0.0019035648,
+    "shared_broadcast_BUFFER_50pct_mm2": 0.7606523635200001
+  },
+  "baseline_control_fault_preserved": [
+    -8448.49707,
+    -8448.49707,
+    -8448.49707,
+    -8448.49707
+  ],
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "concrete_admission_deficits": [
+    {
+      "gate": "FF hold",
+      "owner": "Archimedes",
+      "required": "Repair/price source-bound min path; retain same source edge, verify existing fanout routes and SS setup.",
+      "scope": "same-edge valid/bank clone D",
+      "status": "FAIL_CONDITIONAL_SOURCE_SCREEN"
+    },
+    {
+      "gate": "clock/reset",
+      "owner": "Archimedes/Maxwell",
+      "required": "Join actual leaf clock/RESETN routes including recovery/removal; no existing WAKE debit reuse.",
+      "scope": "8 new clock and4 reset pins per pair",
+      "status": "OPEN"
+    },
+    {
+      "gate": "PG/pin escape",
+      "owner": "Archimedes",
+      "required": "Legal source sites, LEF58 enclosure/spacing against PG/OBS, then extracted SS/FF timing.",
+      "scope": "local enable roots/leaves and capture cells",
+      "status": "OPEN"
+    },
+    {
+      "gate": "same-edge broadcast",
+      "owner": "Maxwell",
+      "required": "Actual common predecessor D/clock/reset fanout and min/max routes; no extra source service assumed.",
+      "scope": "3264 final BST replicas",
+      "status": "OPEN"
+    },
+    {
+      "gate": "placed clock/PG/RC",
+      "owner": "Epicurus/Archimedes/Maxwell",
+      "required": "Map preferred track nodes to disjoint legal cell sites and actual matched global clock; 193.64um fanout-floor reach is not15mm route closure.",
+      "scope": "fixed226 selector transport",
+      "status": "OPEN"
+    },
+    {
+      "gate": "source equivalence",
+      "owner": "Epicurus",
+      "required": "Balanced core implementation and actual fence gate must preserve exact stable selection and final VM write/drain order.",
+      "scope": "full N4 NMAX2048 selector/caller",
+      "status": "OPEN"
+    }
+  ],
+  "enable": {
+    "bfcolumn": {
+      "added_clock_pin_fF": {
+        "ff": 4.100648,
+        "ss": 3.52248
+      },
+      "added_reset_pin_fF": {
+        "ff": 3.211636,
+        "ss": 2.8161
+      },
+      "cell_collisions": [],
+      "conditional_old_decode_credit_um2": 0.11664000000000001,
+      "decode_removal_credit_requires_all_sinks_rewired": true,
+      "existing_WAKE_ICG_collisions": [],
+      "gross_reservation_50pct_um2": 39.366,
+      "local_enable_SS_margin_ps": 138.02535602688897,
+      "macro_collisions": [],
+      "preferred_cells": 3418,
+      "replica_D_paths": [
+        {
+          "FF_hold_margin_ps": -14.177920000000007,
+          "SS_margin_ps": 264.1599545112356,
+          "added_stage": 0,
+          "full_path_source": {
+            "SS_FF_complete_D_path": {
+              "ff": {
+                "FF_hold_margin_ps": -14.177920000000007,
+                "FF_hold_upper_ps": 34.5862,
+                "SS_complete_margin_ps": null,
+                "actual_predecessor_FF": {
+                  "delay_ps": 74.71850858291667,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 2.362218,
+                  "master": "DFFASRHQNx1_ASAP7_75t_R",
+                  "slew_ps": 24.191596852500002
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 20.91742158972222,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.462699,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 25.684698534999995
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 16.432988501388888,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.83927,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 20.386854241666665
+                  },
+                  {
+                    "delay_ps": 28.861,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 35.5562
+                  }
+                ],
+                "minimum_cell_delay_ps": 70.40827999999999,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 44.132493960572916,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 44.078516,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 26.0336136934375
+                },
+                "setup_upper_ps": 34.7653,
+                "wire_delay_upper_ps": 74.47197513747999
+              },
+              "ss": {
+                "FF_hold_margin_ps": null,
+                "FF_hold_upper_ps": 73.8049,
+                "SS_complete_margin_ps": 264.1599545112356,
+                "actual_predecessor_FF": {
+                  "delay_ps": 156.68031997500003,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 2.012292,
+                  "master": "DFFASRHQNx1_ASAP7_75t_R",
+                  "slew_ps": 51.088864057500004
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 33.711041360555555,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.2621310000000001,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 40.61356524125
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 26.914301822222225,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.73432,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 32.8263737
+                  },
+                  {
+                    "delay_ps": 49.924,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 60.0869
+                  }
+                ],
+                "minimum_cell_delay_ps": 134.91980999999998,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 73.674538445,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 43.696044,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 44.654607485781256
+                },
+                "setup_upper_ps": 69.4434,
+                "wire_delay_upper_ps": 73.82577721931999
+              }
+            },
+            "actual_mapped_driver": {
+              "connections": {
+                "A": "_081203_",
+                "Y": "pp_last_v"
+              },
+              "instance": "_364837_",
+              "master": "INVx1_ASAP7_75t_R"
+            },
+            "actual_predecessor_FF": {
+              "connections": {
+                "CLK": "leaf_clk[0]",
+                "D": "issue",
+                "QN": "_081203_",
+                "RESETN": "rst_n",
+                "SETN": "1'h1"
+              },
+              "instance": "_740188_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R"
+            },
+            "added_D_load_FF_fF": 2.493716,
+            "added_D_load_SS_fF": 2.111244,
+            "layer": "M8",
+            "maximum_source_to_replica_L1_um": 200,
+            "maximum_total_network_wire_um": 400,
+            "original_D": "pp_last_v",
+            "original_FF": "_740189_",
+            "proposed_buffer": "BUFx24_ASAP7_75t_R",
+            "role": "valid",
+            "source_predecessor_clock_and_all_other_driver_sinks_must_be_bound": true,
+            "two_hold_buffers_per_D_network": "INVx1_ASAP7_75t_R noninverting pair, HB2 source-table supported until exact contextual FF hold replaces this model",
+            "wire_cap_fF": 41.5848
+          },
+          "includes_existing_pin_sinks": true,
+          "original_D": "pp_last_v",
+          "original_driver": {
+            "connections": {
+              "A": "_081203_",
+              "Y": "pp_last_v"
+            },
+            "instance": "_364837_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          "other_fanout_wire_extracted": false,
+          "predecessor": {
+            "connections": {
+              "CLK": "leaf_clk[0]",
+              "D": "issue",
+              "QN": "_081203_",
+              "RESETN": "rst_n",
+              "SETN": "1'h1"
+            },
+            "instance": "_740188_",
+            "master": "DFFASRHQNx1_ASAP7_75t_R"
+          },
+          "role": "valid",
+          "same_edge": true
+        },
+        {
+          "FF_hold_margin_ps": -15.58042000000001,
+          "SS_margin_ps": 306.800373369769,
+          "added_stage": 0,
+          "full_path_source": {
+            "SS_FF_complete_D_path": {
+              "ff": {
+                "FF_hold_margin_ps": -15.58042000000001,
+                "FF_hold_upper_ps": 31.6873,
+                "SS_complete_margin_ps": null,
+                "actual_predecessor_FF": {
+                  "delay_ps": 61.19211705694444,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 0.83927,
+                  "master": "DFFHQNx1_ASAP7_75t_R",
+                  "slew_ps": 13.926757949999999
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 20.90576937222222,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.46062,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 25.6702183
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 16.432988501388888,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.83927,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 20.386854241666665
+                  },
+                  {
+                    "delay_ps": 28.861,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 35.5562
+                  }
+                ],
+                "minimum_cell_delay_ps": 66.10687999999999,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 44.13095994010417,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 44.0702,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 26.030293140625
+                },
+                "setup_upper_ps": 30.7678,
+                "wire_delay_upper_ps": 74.45792500599998
+              },
+              "ss": {
+                "FF_hold_margin_ps": null,
+                "FF_hold_upper_ps": 69.2473,
+                "SS_complete_margin_ps": 306.800373369769,
+                "actual_predecessor_FF": {
+                  "delay_ps": 127.89420266666667,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 0.73432,
+                  "master": "DFFHQNx1_ASAP7_75t_R",
+                  "slew_ps": 31.07192367777778
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 33.67131513,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.259046,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 40.5680499225
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 26.914301822222225,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.73432,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 32.8263737
+                  },
+                  {
+                    "delay_ps": 49.924,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 60.0869
+                  }
+                ],
+                "minimum_cell_delay_ps": 128.40221,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 73.67061192555556,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 43.683704,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 44.64590569697917
+                },
+                "setup_upper_ps": 55.6536,
+                "wire_delay_upper_ps": 73.80492841911999
+              }
+            },
+            "actual_mapped_driver": {
+              "connections": {
+                "A": "_094880_",
+                "Y": "i1_bk"
+              },
+              "instance": "_371955_",
+              "master": "INVx1_ASAP7_75t_R"
+            },
+            "actual_predecessor_FF": {
+              "connections": {
+                "CLK": "leaf_clk[0]",
+                "D": "a_ctr[0]",
+                "QN": "_094880_"
+              },
+              "instance": "_741311_",
+              "master": "DFFHQNx1_ASAP7_75t_R"
+            },
+            "added_D_load_FF_fF": 2.4854,
+            "added_D_load_SS_fF": 2.098904,
+            "layer": "M8",
+            "maximum_source_to_replica_L1_um": 200,
+            "maximum_total_network_wire_um": 400,
+            "original_D": "i1_bk",
+            "original_FF": "_740763_",
+            "proposed_buffer": "BUFx24_ASAP7_75t_R",
+            "role": "bank",
+            "source_predecessor_clock_and_all_other_driver_sinks_must_be_bound": true,
+            "two_hold_buffers_per_D_network": "INVx1_ASAP7_75t_R noninverting pair, HB2 source-table supported until exact contextual FF hold replaces this model",
+            "wire_cap_fF": 41.5848
+          },
+          "includes_existing_pin_sinks": true,
+          "original_D": "i1_bk",
+          "original_driver": {
+            "connections": {
+              "A": "_094880_",
+              "Y": "i1_bk"
+            },
+            "instance": "_371955_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          "other_fanout_wire_extracted": false,
+          "predecessor": {
+            "connections": {
+              "CLK": "leaf_clk[0]",
+              "D": "a_ctr[0]",
+              "QN": "_094880_"
+            },
+            "instance": "_741311_",
+            "master": "DFFHQNx1_ASAP7_75t_R"
+          },
+          "role": "bank",
+          "same_edge": true
+        }
+      ],
+      "replica_connections": [
+        {
+          "instance": "enable_s1b1_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b1_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_081202_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_740189_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s1b1_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b1_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_094874_"
+          },
+          "original_instance": "_740763_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s1b0_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b0_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_081202_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_740189_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s1b0_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b0_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_094874_"
+          },
+          "original_instance": "_740763_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b1_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b1_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_081202_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_740189_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b1_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b1_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_094874_"
+          },
+          "original_instance": "_740763_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b0_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b0_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_081202_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_740189_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b0_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b0_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_094874_"
+          },
+          "original_instance": "_740763_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        }
+      ],
+      "reservation_50pct_um2": 39.13272
+    },
+    "q": {
+      "added_clock_pin_fF": {
+        "ff": 4.100648,
+        "ss": 3.52248
+      },
+      "added_reset_pin_fF": {
+        "ff": 3.211636,
+        "ss": 2.8161
+      },
+      "cell_collisions": [],
+      "conditional_old_decode_credit_um2": 0.11664000000000001,
+      "decode_removal_credit_requires_all_sinks_rewired": true,
+      "existing_WAKE_ICG_collisions": [],
+      "gross_reservation_50pct_um2": 39.366,
+      "local_enable_SS_margin_ps": 138.02535602688897,
+      "macro_collisions": [],
+      "preferred_cells": 3418,
+      "replica_D_paths": [
+        {
+          "FF_hold_margin_ps": -14.177920000000007,
+          "SS_margin_ps": 267.6356803883189,
+          "added_stage": 0,
+          "full_path_source": {
+            "SS_FF_complete_D_path": {
+              "ff": {
+                "FF_hold_margin_ps": -14.177920000000007,
+                "FF_hold_upper_ps": 34.5862,
+                "SS_complete_margin_ps": null,
+                "actual_predecessor_FF": {
+                  "delay_ps": 73.00575518076388,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 1.969691,
+                  "master": "DFFASRHQNx1_ASAP7_75t_R",
+                  "slew_ps": 22.04498164625
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 20.91742158972222,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.462699,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 25.684698534999995
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 16.432988501388888,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.83927,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 20.386854241666665
+                  },
+                  {
+                    "delay_ps": 28.861,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 35.5562
+                  }
+                ],
+                "minimum_cell_delay_ps": 70.40827999999999,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 44.132493960572916,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 44.078516,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 26.0336136934375
+                },
+                "setup_upper_ps": 34.7653,
+                "wire_delay_upper_ps": 74.47197513747999
+              },
+              "ss": {
+                "FF_hold_margin_ps": null,
+                "FF_hold_upper_ps": 73.8049,
+                "SS_complete_margin_ps": 267.6356803883189,
+                "actual_predecessor_FF": {
+                  "delay_ps": 153.20459409791667,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 1.659003,
+                  "master": "DFFASRHQNx1_ASAP7_75t_R",
+                  "slew_ps": 47.30673357479167
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 33.711041360555555,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.2621310000000001,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 40.61356524125
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 26.914301822222225,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.73432,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 32.8263737
+                  },
+                  {
+                    "delay_ps": 49.924,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 60.0869
+                  }
+                ],
+                "minimum_cell_delay_ps": 134.91980999999998,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 73.674538445,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 43.696044,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 44.654607485781256
+                },
+                "setup_upper_ps": 69.4434,
+                "wire_delay_upper_ps": 73.82577721931999
+              }
+            },
+            "actual_mapped_driver": {
+              "connections": {
+                "A": "_027000_",
+                "Y": "pp_last_v"
+              },
+              "instance": "_137705_",
+              "master": "INVx1_ASAP7_75t_R"
+            },
+            "actual_predecessor_FF": {
+              "connections": {
+                "CLK": "leaf_clk[0]",
+                "D": "issue",
+                "QN": "_027000_",
+                "RESETN": "rst_n",
+                "SETN": "1'h1"
+              },
+              "instance": "_276688_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R"
+            },
+            "added_D_load_FF_fF": 2.493716,
+            "added_D_load_SS_fF": 2.111244,
+            "layer": "M8",
+            "maximum_source_to_replica_L1_um": 200,
+            "maximum_total_network_wire_um": 400,
+            "original_D": "pp_last_v",
+            "original_FF": "_276689_",
+            "proposed_buffer": "BUFx24_ASAP7_75t_R",
+            "role": "valid",
+            "source_predecessor_clock_and_all_other_driver_sinks_must_be_bound": true,
+            "two_hold_buffers_per_D_network": "INVx1_ASAP7_75t_R noninverting pair, HB2 source-table supported until exact contextual FF hold replaces this model",
+            "wire_cap_fF": 41.5848
+          },
+          "includes_existing_pin_sinks": true,
+          "original_D": "pp_last_v",
+          "original_driver": {
+            "connections": {
+              "A": "_027000_",
+              "Y": "pp_last_v"
+            },
+            "instance": "_137705_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          "other_fanout_wire_extracted": false,
+          "predecessor": {
+            "connections": {
+              "CLK": "leaf_clk[0]",
+              "D": "issue",
+              "QN": "_027000_",
+              "RESETN": "rst_n",
+              "SETN": "1'h1"
+            },
+            "instance": "_276688_",
+            "master": "DFFASRHQNx1_ASAP7_75t_R"
+          },
+          "role": "valid",
+          "same_edge": true
+        },
+        {
+          "FF_hold_margin_ps": -15.58042000000001,
+          "SS_margin_ps": 306.800373369769,
+          "added_stage": 0,
+          "full_path_source": {
+            "SS_FF_complete_D_path": {
+              "ff": {
+                "FF_hold_margin_ps": -15.58042000000001,
+                "FF_hold_upper_ps": 31.6873,
+                "SS_complete_margin_ps": null,
+                "actual_predecessor_FF": {
+                  "delay_ps": 61.19211705694444,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 0.83927,
+                  "master": "DFFHQNx1_ASAP7_75t_R",
+                  "slew_ps": 13.926757949999999
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 20.90576937222222,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.46062,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 25.6702183
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 16.432988501388888,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.83927,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 20.386854241666665
+                  },
+                  {
+                    "delay_ps": 28.861,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 35.5562
+                  }
+                ],
+                "minimum_cell_delay_ps": 66.10687999999999,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 44.13095994010417,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 44.0702,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 26.030293140625
+                },
+                "setup_upper_ps": 30.7678,
+                "wire_delay_upper_ps": 74.45792500599998
+              },
+              "ss": {
+                "FF_hold_margin_ps": null,
+                "FF_hold_upper_ps": 69.2473,
+                "SS_complete_margin_ps": 306.800373369769,
+                "actual_predecessor_FF": {
+                  "delay_ps": 127.89420266666667,
+                  "input_slew_envelope_ps": 320,
+                  "load_envelope_fF": 0.73432,
+                  "master": "DFFHQNx1_ASAP7_75t_R",
+                  "slew_ps": 31.07192367777778
+                },
+                "actual_source_inverter": {
+                  "delay_ps": 33.67131513,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 1.259046,
+                  "master": "INVx1_ASAP7_75t_R",
+                  "slew_ps": 40.5680499225
+                },
+                "all_existing_predecessor_and_inverter_pin_sinks_included": true,
+                "hold_buffers": [
+                  {
+                    "delay_ps": 26.914301822222225,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 0.73432,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 32.8263737
+                  },
+                  {
+                    "delay_ps": 49.924,
+                    "input_slew_envelope_ps": 80,
+                    "load_envelope_fF": 2.88,
+                    "master": "INVx1_ASAP7_75t_R",
+                    "slew_ps": 60.0869
+                  }
+                ],
+                "minimum_cell_delay_ps": 128.40221,
+                "predecessor_other_wire_cap_ENVELOPE_fF": 0.155554,
+                "predecessor_physical_other_fanout_routes_need_context_check": true,
+                "root_buffer": {
+                  "delay_ps": 73.67061192555556,
+                  "input_slew_envelope_ps": 80,
+                  "load_envelope_fF": 43.683704,
+                  "master": "BUFx24_ASAP7_75t_R",
+                  "slew_ps": 44.64590569697917
+                },
+                "setup_upper_ps": 55.6536,
+                "wire_delay_upper_ps": 73.80492841911999
+              }
+            },
+            "actual_mapped_driver": {
+              "connections": {
+                "A": "_029385_",
+                "Y": "i1_bk"
+              },
+              "instance": "_138835_",
+              "master": "INVx1_ASAP7_75t_R"
+            },
+            "actual_predecessor_FF": {
+              "connections": {
+                "CLK": "leaf_clk[0]",
+                "D": "a_ctr[0]",
+                "QN": "_029385_"
+              },
+              "instance": "_277809_",
+              "master": "DFFHQNx1_ASAP7_75t_R"
+            },
+            "added_D_load_FF_fF": 2.4854,
+            "added_D_load_SS_fF": 2.098904,
+            "layer": "M8",
+            "maximum_source_to_replica_L1_um": 200,
+            "maximum_total_network_wire_um": 400,
+            "original_D": "i1_bk",
+            "original_FF": "_277261_",
+            "proposed_buffer": "BUFx24_ASAP7_75t_R",
+            "role": "bank",
+            "source_predecessor_clock_and_all_other_driver_sinks_must_be_bound": true,
+            "two_hold_buffers_per_D_network": "INVx1_ASAP7_75t_R noninverting pair, HB2 source-table supported until exact contextual FF hold replaces this model",
+            "wire_cap_fF": 41.5848
+          },
+          "includes_existing_pin_sinks": true,
+          "original_D": "i1_bk",
+          "original_driver": {
+            "connections": {
+              "A": "_029385_",
+              "Y": "i1_bk"
+            },
+            "instance": "_138835_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          "other_fanout_wire_extracted": false,
+          "predecessor": {
+            "connections": {
+              "CLK": "leaf_clk[0]",
+              "D": "a_ctr[0]",
+              "QN": "_029385_"
+            },
+            "instance": "_277809_",
+            "master": "DFFHQNx1_ASAP7_75t_R"
+          },
+          "role": "bank",
+          "same_edge": true
+        }
+      ],
+      "replica_connections": [
+        {
+          "instance": "enable_s1b1_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b1_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_026999_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_276689_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s1b1_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b1_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_029379_"
+          },
+          "original_instance": "_277261_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s1b0_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b0_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_026999_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_276689_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s1b0_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s1b0_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_029379_"
+          },
+          "original_instance": "_277261_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b1_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b1_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_026999_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_276689_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b1_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b1_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_029379_"
+          },
+          "original_instance": "_277261_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b0_valid",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b0_valid",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "pp_last_v",
+            "QN": "_026999_",
+            "RESETN": "rst_n",
+            "SETN": "1'h1"
+          },
+          "original_instance": "_276689_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        },
+        {
+          "instance": "enable_s0b0_bank",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "new_QN": "local_enable_s0b0_bank",
+          "original_connections": {
+            "CLK": "leaf_clk[0]",
+            "D": "i1_bk",
+            "QN": "_029379_"
+          },
+          "original_instance": "_277261_",
+          "unchanged_D_CLK_RESETN_SETN": true
+        }
+      ],
+      "reservation_50pct_um2": 39.13272
+    }
+  },
+  "fixed_sourcepins": {
+    "caller": [
+      "results/rtl/topk_station_caller_fence_prepare_20261002/package_r3/ot_w15_coll_dma_station_prepare.sv",
+      "03a371a5ab3cfb85700563186a83c2aacaa0611465ce09ca3fbd1eb32691902f"
+    ],
+    "caller_plan": [
+      "results/rtl/topk_station_caller_fence_prepare_20261002/package_r3/sourceplan.json",
+      "7127f21707a16c6d9f5e75b9a51d4db2790dd52676b2adc89cf798f1161b2366"
+    ],
+    "station": [
+      "results/uarch/topk_buffered_station_source_model_20261002/model_r2.json",
+      "1589f533c2212363c87b1fc286295444ff1b836680ba1daa92f6a5c2c017919e"
+    ],
+    "tracks": [
+      "results/uarch/topk_finite_track_turn_model_20261002/model_r2.json",
+      "aea66889167d55ce300f0f07cb36e0c5b90ca73b1d0fef8caa40ebeddff14409"
+    ]
+  },
+  "geometry": {
+    "BF_pairs": 362,
+    "CB": 14,
+    "DIG": 8,
+    "LDW": 4,
+    "N": 4,
+    "NMAX": 2048,
+    "NP": 2048,
+    "P": 64,
+    "PAR": 2,
+    "PF": 64,
+    "S": 58,
+    "q_pairs": 1686
+  },
+  "no_engine_or_physical_job_launched": true,
+  "no_variant_sweep": true,
+  "owner_snapshot_is_not_adopted_source": true,
+  "partial_budget_scope": "Distinct selector/local-enable/broadcast/BST/guard floors only; global clock/reset, hold repair, PG/escape and route detours not priced here. Existing parent reservation not added again.",
+  "physical_admission": false,
+  "schema": "opentallas.selector.fixed226.physical-join.v1",
+  "state_ownership": {
+    "existing_WAKE_new_charge_bits": 0,
+    "local_enable_new_FF": 16384,
+    "selector_transport_data_FF": 475954,
+    "selector_transport_valid_ASR": 226,
+    "shared_BST_new_FF": 3264
+  },
+  "station": {
+    "ASR_valid_nodes": 226,
+    "caller_fence_RTL_verified": false,
+    "cell_master_dimensions": {
+      "BUF": {
+        "area_um2": 0.10206000000000001,
+        "height_um": 0.27,
+        "master": "BUFx4_ASAP7_75t_R",
+        "width_um": 0.378
+      },
+      "INV": {
+        "area_um2": 0.04374,
+        "height_um": 0.27,
+        "master": "INVx1_ASAP7_75t_R",
+        "width_um": 0.162
+      },
+      "data_FF": {
+        "area_um2": 0.2916,
+        "height_um": 0.27,
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "width_um": 1.08
+      },
+      "hold": {
+        "area_um2": 0.0729,
+        "height_um": 0.27,
+        "master": "HB2xp67_ASAP7_75t_R",
+        "width_um": 0.27
+      },
+      "valid_FF": {
+        "area_um2": 0.37908000000000003,
+        "height_um": 0.27,
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "width_um": 1.404
+      }
+    },
+    "clock_contract": {
+      "BUF_cells": 48007,
+      "actual_clock_skew_unqualified": true,
+      "clock_spatial_distribution_and_matching_launch_tree_unpriced": true,
+      "clock_wire_hop_ceiling_um": 32.2734276509315,
+      "declared_fanout_tree_only_max_spatial_reach_um": 193.64056590558903,
+      "global_root_to_station_wire_paths_not_in_pin_fanout_floor": true,
+      "leaf_to_root_counts": [
+        43154,
+        4361,
+        441,
+        45,
+        5,
+        1
+      ],
+      "load_ceiling_per_BUF_fF": 11.52,
+      "matching_launch_and_capture_clock_tree_required": true,
+      "max_levels": 6,
+      "maximum_buffer_output_plus_wire_slew_ps": 81.196451996302,
+      "pin_load_budget_fF": 5.76,
+      "root_input_slew_ps_max": 160,
+      "unequal_depth_branches_must_be_padded_and_priced": true,
+      "wire_load_budget_fF": 5.76
+    },
+    "core_state_bits": 698354,
+    "cycles_per_call": 226,
+    "formed_write_data_nodes": 59164,
+    "input_edges": 99,
+    "ninecall_cycles": 2034,
+    "packet_mapping_rows": 4210,
+    "preferred_data_station_nodes": 416790,
+    "return_edges": 99,
+    "source_calendar_calls": [
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 2,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 8,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 14,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 20,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 256,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 1075,
+        "consumer": "CAND -> mask at subsequent layers",
+        "dependency": "same blocking COLL request",
+        "k": 2048,
+        "layer": 20,
+        "load_service_plus_transport_cycles": 1301,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local candidate block maxima/scores and IDs",
+        "runtime_n": 2048,
+        "uninterrupted_service_envelope_edges": 819
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 24,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 28,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 32,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      },
+      {
+        "accepted_load_min_edges": 64,
+        "added_service_edges": 142,
+        "additional_transport_cycles": 226,
+        "burst_load_plus_service_envelope_edges": 403,
+        "consumer": "SELG -> selected KV gather",
+        "dependency": "blocking COLL request; successor fetch waits for coll_busy low",
+        "k": 512,
+        "layer": 36,
+        "load_service_plus_transport_cycles": 629,
+        "original_deadline": "consumer dependent and blocking; no independent numerical cycle deadline encoded. +cycles delays successor fetch. Full transport/source-image legality remains separate.",
+        "producer": "local top-512 selected scores and local IDs",
+        "runtime_n": 512,
+        "uninterrupted_service_envelope_edges": 339
+      }
+    ],
+    "write_edges": 28,
+    "write_packet_lsb_fields": [
+      [
+        "done",
+        1
+      ],
+      [
+        "data",
+        2048
+      ],
+      [
+        "addr",
+        60
+      ],
+      [
+        "we",
+        4
+      ]
+    ],
+    "write_sites_require_actual_VM_endpoint_coordinates": true
+  },
+  "station_mapping_artifact": {
+    "bytes": 1780190,
+    "scope": "4210 source packet bits,99 preferred logical nodes each; no placed-cell or extracted-RC claim",
+    "sha256": "7ad430b45b2c3576096d71fea124b4ad05b8068a495167dc37b1d3e6ec42afd8",
+    "uncompressed_sha256": "71d77ea18d4820a7a2db4a692c1d746b3de4688a5143e8fcaa93d6e6a81780d9"
+  }
+}

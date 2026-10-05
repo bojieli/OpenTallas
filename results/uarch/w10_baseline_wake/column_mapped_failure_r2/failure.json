@@ -1,0 +1,19 @@
+{
+  "verdict": "FAIL_DISTINCT_WAKE_REGISTER_STRUCTURE",
+  "source_commit": "b046de7f0",
+  "netlist_sha256": "014f8c901904c53ef9ae5dfa10c397ba81bc6ac8c67734a276093952c980189d",
+  "preserved_full_netlist": "/home/ubuntu/w10-w18-recovery/baseline_wake/column_mapped_failure_r2/1_2_yosys.v",
+  "mapped_flops": 91726,
+  "macro_count": 4,
+  "icg_count": 8,
+  "distinct_wake_flops": [
+    "\\g_wake.g_leaf[0].wake$_DFF_PN1_"
+  ],
+  "required_distinct_wake_flops": 8,
+  "raw_cone_sha256": "5b47b25848070e9d1ee2c280cab7b48e4c932b7a9ad921586ec9d7df25783105",
+  "adopted": false,
+  "cts_route_allowed": false,
+  "cause": "identical wake FFs merged despite RTL wire-level keep/dont_touch; guard rejects correctly",
+  "job": "same .78 column_r2 floorplan-only still live; no restart",
+  "next_gate": "preserve already modeled wake register cells before synthesis optimization, then exact/source and structural gates; no physical timing retry"
+}

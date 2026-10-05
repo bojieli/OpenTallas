@@ -1,0 +1,22 @@
+{
+  "CPU_primitive_as_RTL_credit": false,
+  "calendar_sha256": "1cc4d757759dec4772689b2bca37b03e1ad45d3ee4e912803a1a9e0021603072",
+  "hardware_clock_admission": false,
+  "proof": {
+    "native_RTL_cost_credit": false,
+    "payload_executed": false,
+    "physical_workspace_admission": false,
+    "primitive_batches128": 1189792,
+    "source_stages": 3999,
+    "status": "PASS_ORDERED_SOURCE_STAGE_PORT_CREDIT_LIFETIME_AND_COST_PROOF",
+    "transport_scope": "whole operand reload per result128batch conservative upper; exact indexed traffic remains provider-bound"
+  },
+  "schema": "H3_ORDERED_NATIVE_SM_STAGE_CALENDAR_V1",
+  "scope": "ordered native stage/relative workspace/finite issue template; no payload or hardware execution",
+  "source_sha256": {
+    "results/uarch/h3_complete_native_calendar_20261002/ds_finite_sm_services_fd722/PC127_rank0_provider_bindings.json": "066f3ac90c84aa0c6dbfe38d10122869fc28987c63fc02fb4cf6cdfc3171b35c",
+    "results/uarch/h3_complete_native_calendar_20261002/ds_finite_sm_services_fd722/PC127_rank0_template.json.gz": "dcddf1462567a342858e703f5bc2991b4561ac38da95388fc13a11031b98c1e0",
+    "tools/h3_complete_native_calendar.py": "df52234e6041bb8ccff8516022ee2bde4d0767dbc5ddd5e0f3bd46edd2247f84"
+  },
+  "status": "PASS_ORDERED_NATIVE_STAGE_FINITE_SM_SOFTWARE_RESERVATION"
+}

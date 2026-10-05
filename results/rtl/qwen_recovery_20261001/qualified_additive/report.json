@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.qwen-qualified-additive.v1",
+  "candidate": "614d063ce",
+  "equivalent_recovery_tip": "106e65de5",
+  "base": "89eace61f",
+  "tree_equal": true,
+  "net_additions_only": true,
+  "originals_unchanged": 29,
+  "original_shared_adder_export_sha256": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee",
+  "source_isolation": "PASS",
+  "regressions": {
+    "TP2": "15 PASS",
+    "TP4": "10 PASS",
+    "base_builder": "3 PASS",
+    "companion_tile_lint": "PASS",
+    "companion_collective": "PASS, 993->630 cycles; exact 16384 lane checks/case; negative faults1111"
+  },
+  "original_hbm_preflight_source_pins_at_1cd9": "all match",
+  "hbm_calibration": "Corrected sparse checkout includes both measured column-area records; fresh design exactly matches original preflight. Added explicit input pins and refusal on missing anchors. Earlier sparse-area fallback preflights are historical setup artifacts, not calibration or adoption gates.",
+  "still_pending": {
+    "old_partition": {
+      "source": "7b84a63f5",
+      "pid": 430287,
+      "terminal": false,
+      "scope": "pre-isolation only"
+    },
+    "companion_partition": "queued serially after old job; no pass yet",
+    "TP4_token": "live original through L8, full pending",
+    "segmented_L0": "live original compile, pending",
+    "physical": "i518/i560/spine live; whole context SS/FF and routing pending",
+    "Qwen_HBM": "producer/component preparation only, full token pending"
+  },
+  "adoption": false,
+  "landing": "Parent may take independent1cd9 first; otherwise additive614d063ce + this qualification successor. Exclude64b84a3f4 and do not land659b78178 alone.",
+  "failed_setup_logs_retained": true
+}

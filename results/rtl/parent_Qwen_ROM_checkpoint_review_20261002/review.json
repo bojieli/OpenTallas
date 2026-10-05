@@ -1,0 +1,18 @@
+{
+  "time_utc": "2026-10-02T03:51:51.499953+00:00",
+  "owner_source_commit": "18416f481da4c6783a6cd43c066fc6334d4d307b",
+  "parent_intake": "6dbe4a353",
+  "tests": "28passed1.36s",
+  "initial_sparse_failures": "Two historical physical records absent on disk; hydrated unchanged tracked records, rerun28PASS",
+  "capture_archive": "/tmp/qwen-rom-parent-capture-20261002-r1.json",
+  "capture_sha256": "6d57532820ed6ec1af5fc9ef1d0ec4d7f65de6886504c2ef94f2144c1353f3e9",
+  "capture_bytes": 11811905,
+  "checkpoint_scope": "28layers x4dies =112 checkpoints;4096 FP32words each",
+  "actual_runtime_checkpoint_exact": true,
+  "terminal_status": "pending",
+  "full_token_qualified": false,
+  "current_intake_source_joined": false,
+  "physical_qualified": false,
+  "prior_failures_retained": true,
+  "next": "Original token normalfinish/head then source-artifact join and terminal verification; physical source reconciliation remains mandatory."
+}

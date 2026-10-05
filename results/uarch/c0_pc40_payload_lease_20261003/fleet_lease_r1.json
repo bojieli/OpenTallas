@@ -1,0 +1,48 @@
+{
+  "AS_cap": null,
+  "FSIZE_cap": null,
+  "RAM_capacity_GiB": 16,
+  "existing_leases": [],
+  "held_lock_files": [
+    "/tmp/claude-1000/agd_slots/ot-pve1.1",
+    "/tmp/claude-1000/agd_slots/ot-pve1.2",
+    "/tmp/claude-1000/queue/fleet-admission-guard-20261002/thread-leases/ot-pve1.3369578"
+  ],
+  "lease": {
+    "CPU_sharing": true,
+    "authorization": "User-directed one actual released checkpoint PC40 native leaf payload proof; one shared Nice19 CPU, originals/live jobs unchanged; resource reservation not a process memory cap",
+    "cwd": "/tmp/opentallas-c0-pc40-payload-lease-20261003",
+    "host": "ot-pve1",
+    "pid": 3369578,
+    "slot_gib": 16,
+    "source_head": "81f0a7ded1725186f4323cb5553dfd15e4425aa4",
+    "threads": 1,
+    "time": 1791007403.583097
+  },
+  "observed": {
+    "compute_threads": 147,
+    "cpus": 28,
+    "free_gib": 218.12957000732422,
+    "load": 58.8544921875,
+    "observed_at": 1791007403.494848,
+    "total_gib": 235.94449615478516
+  },
+  "pricing": {
+    "admit": false,
+    "aggregate_peak_ram_gib": 16,
+    "conservative_aggregate_threads": 148,
+    "effective_ram_budget_gib": 208,
+    "live_free_after_peak_gib": 202.12957000732422,
+    "observed_compute_threads": 147,
+    "reasons": [
+      "AGGREGATE_THREADS",
+      "LIVE_CPU_LOAD"
+    ],
+    "request_threads": 1,
+    "reserved_headroom_gib": 24,
+    "reserved_threads": 0,
+    "slot_request_gib": 16,
+    "thread_cap": 28
+  },
+  "wall_cap": null
+}

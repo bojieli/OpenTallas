@@ -1,0 +1,388 @@
+{
+ "schema": "opentallas.rtl.w17_die_l0_images.v1",
+ "status": "input_only",
+ "claim_boundary": "Die image sets and bench contract for the full-shape L0 RTL run; expected VMs from the passing ISA executor. No RTL verdict.",
+ "contexts": {
+  "1048576": {
+   "context": 1048576,
+   "position": 1048575,
+   "isa_verdict": "pass",
+   "isa_regions": {
+    "L0.attn_norm": true,
+    "L0.attn": true,
+    "L0.ffn_norm": true,
+    "L0.router": true,
+    "L0.ffn": true,
+    "block0": true,
+    "h_out": true,
+    "pre0": true,
+    "pre_out": true
+   },
+   "ranks": {
+    "0": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_r0",
+     "manifest_sha256": "8e168f83d1da1136d6b272794dfa877e1648195fc943a7a2c60639885b5a903e",
+     "images": {
+      "crom.hex": "00624168cc5d115e8fd55e165d7e2080c7ff3c8ecb74dd854dcb51867e25a7a5",
+      "expect_vm.hex": "0dc672e440c8b8d32622b02b360bccfc6ea2fe460595f45cf57eb66ab662a024",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "1a3e9492284aa8d57a4153cbae4b5949fdf9d6451e5f7c8dcd581aa7559de928",
+      "hbm_s0_with_current_row.hex": "3736ec9e96a10b92262af35d795297600b1519a56a6dd938ab0bd82ac273dc6f",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "423e7a84d77079272a27caa893bbe3270a1ffd219bb00a1d12ae696c9d5f025d",
+      "weight_ops.json": "a753b3831093aee4b2af3fbb7971627506b3a9fb4a94dcf292db406c1094665f"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "1": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_r1",
+     "manifest_sha256": "9cbf2eadbd4655f20eac4eb970224c50d142111218eda4ff7854ed3e63faece7",
+     "images": {
+      "crom.hex": "297012ec20c9e0a41b4b4753df9503b52d8f01f206aecd4753bf0857f1c22c6e",
+      "expect_vm.hex": "8403d29a1ec4b7812fc4053784a62f18aa572c3e3ccd096b8f897b7dcb4da1a9",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "1a3e9492284aa8d57a4153cbae4b5949fdf9d6451e5f7c8dcd581aa7559de928",
+      "hbm_s0_with_current_row.hex": "3736ec9e96a10b92262af35d795297600b1519a56a6dd938ab0bd82ac273dc6f",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "423e7a84d77079272a27caa893bbe3270a1ffd219bb00a1d12ae696c9d5f025d",
+      "weight_ops.json": "2dda01611f5ee46191b071c7aa43590d0ff7e0b86395be0ebada5d193075804c"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "2": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_r2",
+     "manifest_sha256": "9f645a763f5f5a372cc75c76adff26207c389d054b2e732dc51696bffcfacb69",
+     "images": {
+      "crom.hex": "59a85634d7db638df267c1e5bd5ea95272fc3086ab7a0c48a91d1c46a0ef0b62",
+      "expect_vm.hex": "5e9656bbd282fd7c67ab1402439c2743ddb0f5e2e998a4236b4be3762be1da50",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "1a3e9492284aa8d57a4153cbae4b5949fdf9d6451e5f7c8dcd581aa7559de928",
+      "hbm_s0_with_current_row.hex": "3736ec9e96a10b92262af35d795297600b1519a56a6dd938ab0bd82ac273dc6f",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "423e7a84d77079272a27caa893bbe3270a1ffd219bb00a1d12ae696c9d5f025d",
+      "weight_ops.json": "0fc9c9326c8c4b0d13b56db2eed88f5cd336be07e2c5760b6d2241da9bde957f"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "3": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_r3",
+     "manifest_sha256": "a682b75521886224cca37c69996a7f9ce590cff02884451936d8b3d04024b908",
+     "images": {
+      "crom.hex": "94932791048130c97261b53f73be148593c7c34962467614a2ecaa6aeb264a10",
+      "expect_vm.hex": "82b77881ea4058d44fc7a554004afb0ec4059f46ca0a068f40264ee4906dbd16",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "1a3e9492284aa8d57a4153cbae4b5949fdf9d6451e5f7c8dcd581aa7559de928",
+      "hbm_s0_with_current_row.hex": "3736ec9e96a10b92262af35d795297600b1519a56a6dd938ab0bd82ac273dc6f",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "423e7a84d77079272a27caa893bbe3270a1ffd219bb00a1d12ae696c9d5f025d",
+      "weight_ops.json": "089f4674e58d5226e54f29311bc36a99ea503d49c682529001e340d01814dbcc"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    }
+   },
+   "bench": {
+    "FULL_SHAPE": 1,
+    "N_TP": 4,
+    "X_ROM": 1,
+    "X_HE": 1,
+    "X_ATT": 1,
+    "SUN": 16,
+    "VM_AW": 19,
+    "K_MEM": 4194304,
+    "WIN_STACK": 0,
+    "WINDOW_HBM_ATTENTION": 1,
+    "ROPE_MAX_POS": 1048576,
+    "HHW": 8,
+    "HBAW": 16,
+    "CROM_AW": 15,
+    "PROG_AW": 14,
+    "inputs_common": {
+     "window_region_base": 262144,
+     "window_region_count": 2176,
+     "rope_plain_base": 524288,
+     "rope_reserved_end": 524288
+    }
+   },
+   "sources": {
+    "bind": "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm.json",
+    "bind_sha256": "a3a65e5028161183b9f08033ea7feb4d3589d15916893380327578539f4dbb93",
+    "layout_sha256": "3ead56a4e4efa76d149d85b3831f0eec27b83aa30f1f973bdbe9a94316ba4648",
+    "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a"
+   }
+  },
+  "200000": {
+   "context": 200000,
+   "position": 199999,
+   "isa_verdict": "pass",
+   "isa_regions": {
+    "L0.attn_norm": true,
+    "L0.attn": true,
+    "L0.ffn_norm": true,
+    "L0.router": true,
+    "L0.ffn": true,
+    "block0": true,
+    "h_out": true,
+    "pre0": true,
+    "pre_out": true
+   },
+   "ranks": {
+    "0": {
+     "dir": "/home/ubuntu/w17work/die/ctx200000_r0",
+     "manifest_sha256": "8d2c6d6d2f0c7337a380088fdfcfdf4ae2a3a9951e6e54ed624cc323d7e856ef",
+     "images": {
+      "crom.hex": "00624168cc5d115e8fd55e165d7e2080c7ff3c8ecb74dd854dcb51867e25a7a5",
+      "expect_vm.hex": "c00beb7d0ab0fd94ef3f7d4fd805d0d1ce30679054260906c6d9e494347644dd",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "a7eebfc87c4242e1a9617063e3256a5fc5342da3a0b7a2bdacfb8e99fdc13334",
+      "hbm_s0_with_current_row.hex": "becc7ed5b2387ccc5a7d5f53665cac59598870d93beb514727f27ceaa81a81f5",
+      "hbm_s1.hex": "463bf392c8ef631cfd3cec3c325eded44de0cc399209c403d232f4b3327b0818",
+      "hbm_s2.hex": "912f794c896873605b05e24a3c218ba98623ba3d77c8c82eff5062a2ff33697b",
+      "hbm_s3.hex": "ba9f922ae54ec383cba7f20a1fb63eb6f81d7d15e773c4e1f6d7fcc7ca7e66dc",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "6af18f7d50854304c27e679f225a91a3f41aa2ec678bc6dbb17dca0ca23ba69d",
+      "weight_ops.json": "d8816192fd6ff8aa398e4b72e4379f3e5d1a004867ba455adf801680f2daeb0e"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "1": {
+     "dir": "/home/ubuntu/w17work/die/ctx200000_r1",
+     "manifest_sha256": "ee031125b2769a76f4e901d144cc5dca6272166ea70d968db6f57e2ce7f88cda",
+     "images": {
+      "crom.hex": "297012ec20c9e0a41b4b4753df9503b52d8f01f206aecd4753bf0857f1c22c6e",
+      "expect_vm.hex": "d06345eb303821c8b6b0f57fafd8593c6201d6002035c07cd24a7e2794a2294a",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "a7eebfc87c4242e1a9617063e3256a5fc5342da3a0b7a2bdacfb8e99fdc13334",
+      "hbm_s0_with_current_row.hex": "becc7ed5b2387ccc5a7d5f53665cac59598870d93beb514727f27ceaa81a81f5",
+      "hbm_s1.hex": "463bf392c8ef631cfd3cec3c325eded44de0cc399209c403d232f4b3327b0818",
+      "hbm_s2.hex": "912f794c896873605b05e24a3c218ba98623ba3d77c8c82eff5062a2ff33697b",
+      "hbm_s3.hex": "ba9f922ae54ec383cba7f20a1fb63eb6f81d7d15e773c4e1f6d7fcc7ca7e66dc",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "6af18f7d50854304c27e679f225a91a3f41aa2ec678bc6dbb17dca0ca23ba69d",
+      "weight_ops.json": "2b0e67bee5c58b5d45a803b264f82df6887eaee428a9a762860d1f42996053bd"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "2": {
+     "dir": "/home/ubuntu/w17work/die/ctx200000_r2",
+     "manifest_sha256": "7189e3cf46a55b173d322592de5908c5c422d320a608ce487c5fa30cc033d00d",
+     "images": {
+      "crom.hex": "59a85634d7db638df267c1e5bd5ea95272fc3086ab7a0c48a91d1c46a0ef0b62",
+      "expect_vm.hex": "bd080216550a124c8b6c91a3ad1267ff5f480f12281136fa135454445d08938f",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "a7eebfc87c4242e1a9617063e3256a5fc5342da3a0b7a2bdacfb8e99fdc13334",
+      "hbm_s0_with_current_row.hex": "becc7ed5b2387ccc5a7d5f53665cac59598870d93beb514727f27ceaa81a81f5",
+      "hbm_s1.hex": "463bf392c8ef631cfd3cec3c325eded44de0cc399209c403d232f4b3327b0818",
+      "hbm_s2.hex": "912f794c896873605b05e24a3c218ba98623ba3d77c8c82eff5062a2ff33697b",
+      "hbm_s3.hex": "ba9f922ae54ec383cba7f20a1fb63eb6f81d7d15e773c4e1f6d7fcc7ca7e66dc",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "6af18f7d50854304c27e679f225a91a3f41aa2ec678bc6dbb17dca0ca23ba69d",
+      "weight_ops.json": "daf4ce548169b50be12b45cfb9447c7d61fa64a0afa88448d84cde71ef79969f"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "3": {
+     "dir": "/home/ubuntu/w17work/die/ctx200000_r3",
+     "manifest_sha256": "b8f77a2125abd251b311b34d53b5b2b95c923e95a7280ab43891c499ded7f1f5",
+     "images": {
+      "crom.hex": "94932791048130c97261b53f73be148593c7c34962467614a2ecaa6aeb264a10",
+      "expect_vm.hex": "c27be873e58dbc2589a78b26a6e062b62d2f355043053ec9371a3acb41e0ca1f",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "a7eebfc87c4242e1a9617063e3256a5fc5342da3a0b7a2bdacfb8e99fdc13334",
+      "hbm_s0_with_current_row.hex": "becc7ed5b2387ccc5a7d5f53665cac59598870d93beb514727f27ceaa81a81f5",
+      "hbm_s1.hex": "463bf392c8ef631cfd3cec3c325eded44de0cc399209c403d232f4b3327b0818",
+      "hbm_s2.hex": "912f794c896873605b05e24a3c218ba98623ba3d77c8c82eff5062a2ff33697b",
+      "hbm_s3.hex": "ba9f922ae54ec383cba7f20a1fb63eb6f81d7d15e773c4e1f6d7fcc7ca7e66dc",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "6af18f7d50854304c27e679f225a91a3f41aa2ec678bc6dbb17dca0ca23ba69d",
+      "weight_ops.json": "c0df0ac0617c2c188868e4eedb619361eecf885202896917ca21c9f71b049494"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    }
+   },
+   "bench": {
+    "FULL_SHAPE": 1,
+    "N_TP": 4,
+    "X_ROM": 1,
+    "X_HE": 1,
+    "X_ATT": 1,
+    "SUN": 16,
+    "VM_AW": 19,
+    "K_MEM": 4194304,
+    "WIN_STACK": 0,
+    "WINDOW_HBM_ATTENTION": 1,
+    "ROPE_MAX_POS": 1048576,
+    "HHW": 8,
+    "HBAW": 16,
+    "CROM_AW": 15,
+    "PROG_AW": 14,
+    "inputs_common": {
+     "window_region_base": 262144,
+     "window_region_count": 2176,
+     "rope_plain_base": 524288,
+     "rope_reserved_end": 524288
+    }
+   },
+   "sources": {
+    "bind": "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json",
+    "bind_sha256": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04",
+    "layout_sha256": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
+    "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a"
+   }
+  },
+  "1048576_seed20260930": {
+   "context": 1048576,
+   "position": 1048575,
+   "seed": 20260930,
+   "isa_verdict": "pass",
+   "isa_regions": {
+    "L0.attn_norm": true,
+    "L0.attn": true,
+    "L0.ffn_norm": true,
+    "L0.router": true,
+    "L0.ffn": true,
+    "block0": true,
+    "h_out": true,
+    "pre0": true,
+    "pre_out": true
+   },
+   "ranks": {
+    "0": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r0",
+     "manifest_sha256": "3d6019feb715258f452a9b1ac30746a2eea86e9b2315e094ac54c7db677e52be",
+     "images": {
+      "crom.hex": "00624168cc5d115e8fd55e165d7e2080c7ff3c8ecb74dd854dcb51867e25a7a5",
+      "expect_vm.hex": "a8cfdb6c56f1ad511666888cdce03f2598eba55a0c1a52fe12f5aeceb508671d",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "hbm_s0_with_current_row.hex": "e7c21eccaf1a0c57a9478e0128eb836dfc178e08b1a033a8d745ac72a2c28613",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "be6b1b627eae8b2e050794d821b29a8dde29ebf4a9f375172408649e23b9a1b6",
+      "weight_ops.json": "5f2bed4562fa691b1786c7df12b9db2d4da5c55a537203e5fa2d3a2fad38b7db"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "1": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r1",
+     "manifest_sha256": "b9eb674b51f5f79698cebb94a5dd7d68835e549ed721911918921f1913d6eedb",
+     "images": {
+      "crom.hex": "297012ec20c9e0a41b4b4753df9503b52d8f01f206aecd4753bf0857f1c22c6e",
+      "expect_vm.hex": "a2abf67c02765b285e0cfd898f2fbd3cfe4b3dd454e50edd3862690238432795",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "hbm_s0_with_current_row.hex": "e7c21eccaf1a0c57a9478e0128eb836dfc178e08b1a033a8d745ac72a2c28613",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "be6b1b627eae8b2e050794d821b29a8dde29ebf4a9f375172408649e23b9a1b6",
+      "weight_ops.json": "6fdb168880d71df6f5a7e8426fd5bf97eb5878b48b2863783b108b65ed7ba191"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "2": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r2",
+     "manifest_sha256": "6aa28481e6353de03169859ea8082fb5f93b6db1289f0318d92f64999bbb0009",
+     "images": {
+      "crom.hex": "59a85634d7db638df267c1e5bd5ea95272fc3086ab7a0c48a91d1c46a0ef0b62",
+      "expect_vm.hex": "e36ea9196e0ea9b18a65e81dfe56ddfda5adf0deab94f4561f7c05809d693882",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "hbm_s0_with_current_row.hex": "e7c21eccaf1a0c57a9478e0128eb836dfc178e08b1a033a8d745ac72a2c28613",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "be6b1b627eae8b2e050794d821b29a8dde29ebf4a9f375172408649e23b9a1b6",
+      "weight_ops.json": "87bc2c6eaa0b444a2e309117bd0a8b6798b32bd4150508862184ee2ce9471aac"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    },
+    "3": {
+     "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r3",
+     "manifest_sha256": "6a4b018c4186e7f88eeebc8c96c17929b2d93fb9761f228128dfafd0c714e0d7",
+     "images": {
+      "crom.hex": "94932791048130c97261b53f73be148593c7c34962467614a2ecaa6aeb264a10",
+      "expect_vm.hex": "a6d774d274e57bcd421cfededb79d82e6de326ab91a184e50bcb5b178c76bfdc",
+      "hbank.hex": "62db8427cf128e4f94251b646e9dd57687c4ecc52948b65db91e377a70f76d51",
+      "hbm_s0.hex": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "hbm_s0_with_current_row.hex": "e7c21eccaf1a0c57a9478e0128eb836dfc178e08b1a033a8d745ac72a2c28613",
+      "hbm_s1.hex": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "hbm_s2.hex": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "hbm_s3.hex": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+      "vm_init.hex": "be6b1b627eae8b2e050794d821b29a8dde29ebf4a9f375172408649e23b9a1b6",
+      "weight_ops.json": "0ee5a32875728eac2e7363785f6d394911658f68ec137e0d35789967a973a7f8"
+     },
+     "weight_ops": 30,
+     "expect_vm_elements": 129902
+    }
+   },
+   "bench": {
+    "FULL_SHAPE": 1,
+    "N_TP": 4,
+    "X_ROM": 1,
+    "X_HE": 1,
+    "X_ATT": 1,
+    "SUN": 16,
+    "VM_AW": 19,
+    "K_MEM": 16777216,
+    "WIN_STACK": 0,
+    "WINDOW_HBM_ATTENTION": 1,
+    "ROPE_MAX_POS": 1048576,
+    "HHW": 8,
+    "HBAW": 16,
+    "CROM_AW": 15,
+    "PROG_AW": 14,
+    "inputs_common": {
+     "window_region_base": 262144,
+     "window_region_count": 2176,
+     "rope_plain_base": 524288,
+     "rope_reserved_end": 524288
+    }
+   },
+   "sources": {
+    "bind": "results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json",
+    "bind_sha256": "28fb8443f1c1589908f77f51445bf4af3e9e5571836c981f505d27bec8c6e438",
+    "layout_sha256": "c3f9ba1d9f532476bbf63353b9aea36be465be2379b939baa57bbfe98002800f",
+    "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a"
+   }
+  }
+ },
+ "headline": "1048576_seed20260930",
+ "source_sha256": {
+  "tools/v41_die_l0_images.py": "d36bfbf834daae0c2634287740839ff7879333a941d0429082c15c9880c6b227",
+  "tools/v41_fullshape_isa.py": "3a99c3c64a657097f8f956ede00144dbbe0d0820e512d8fa9faac9ec78430c49",
+  "tools/rtl_hdc_v41x_attn_campaign.py": "40997353c2e0375e728335580b9f8f87198c08c78a87988b6834dc032a487d2f",
+  "tools/v41_fullshape_weight_layout.py": "083fd31df8515de35899faad7a1a0db51c8583d10a94faee903bdc1e988fd45b",
+  "tools/rtl_v41_fullshape_layer_campaign.py": "9989fa437ba45523d09ae13f28457019f700068d5dab62a01cf3433c774db728",
+  "results/rtl/hdc_v41x_fullshape_l0_program.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+  "results/rtl/w17_l0_fullshape_isa.json": "8b3445accf95c70578cd3fb84c8cf791908190f9d52f2b25de82b48688418b63",
+  "results/rtl/w17_v41_1m_reference_token.json": "ea7256eb1ac7a7895441f5a31dfb8ce5d05224d7c860e21c4b9c6ce1e6da8e56"
+ }
+}

@@ -1,0 +1,72 @@
+{
+  "artifacts": [
+    {
+      "bytes": 2037,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/HANDOFF.md",
+      "sha256": "edaa478b0ea279e6f7c06666051200e197227a9473fd0349f46c78af29d19975"
+    },
+    {
+      "bytes": 57,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/cold_replay.log",
+      "sha256": "62d4292a21ef399e6daa8efbee3d8c390db1626409a4c1bc073e12db3b5c5ae8"
+    },
+    {
+      "bytes": 771,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/draft_ast_failure.log",
+      "sha256": "7cf459c80a01307643618301e93dd735fb626606bacdb7a884d2470fc00b6d2f"
+    },
+    {
+      "bytes": 841,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/handoff.json",
+      "sha256": "33eff23531e84c3da591cb11df6bb148791f1bc20f38c1f45566520c4ee47290"
+    },
+    {
+      "bytes": 980,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/input_manifest.json",
+      "sha256": "08544077bd807941f90833ed1b71d886dc2e84399473ba1818af88c2ac7fcfee"
+    },
+    {
+      "bytes": 99903,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/inputs/manifest.json.gz",
+      "sha256": "2c7d0d38d9e5c1a2b049ba14eecfe8bae91eaaf2e96629f418b4ade9693c1c01"
+    },
+    {
+      "bytes": 14342060,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/inputs/native.json.gz",
+      "sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264"
+    },
+    {
+      "bytes": 4033,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/inputs/r30.py",
+      "sha256": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823"
+    },
+    {
+      "bytes": 4183,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/inputs/r41.py",
+      "sha256": "feaba8f44842282ad9c2cd314f0640a196f56dbd6ec546527d23942d5dcbe3f1"
+    },
+    {
+      "bytes": 109,
+      "path": "results/uarch/h4_hbm_pc10_r41_lineage_20261002/tests.log",
+      "sha256": "0ac181784172047aecee98a549f69782a01bf68ad4480d760b25d4519c3b2ac5"
+    }
+  ],
+  "cold_replay": "cold_replay.log",
+  "hardware_admitted": false,
+  "production_execution_claimed": false,
+  "schema": "HBM_PC10_R41_LINEAGE_VALIDATION_V1",
+  "source_pins": [
+    {
+      "bytes": 4632,
+      "path": "tools/h4_hbm_pc10_r41_lineage.py",
+      "sha256": "d868b2f6f7cd00e67f74d2b35ceaa9f941676a47c90c7e958731d2a944206a38"
+    },
+    {
+      "bytes": 3238,
+      "path": "tests/test_h4_hbm_pc10_r41_lineage.py",
+      "sha256": "afc029b92810b35b966dbf5b92728b0cd37e632d3fd6e632918bceeac7fbbaa6"
+    }
+  ],
+  "tests": 9,
+  "tests_log": "tests.log"
+}

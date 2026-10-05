@@ -1,0 +1,68 @@
+{
+ "active": {
+  "ao_element": {
+   "total_w": 0.00014274362715934472,
+   "instances": 745
+  },
+  "ao_sched_ctrl": {
+   "total_w": 0.00014577073193257069,
+   "instances": 188
+  },
+  "domain": {
+   "total_w": 0.10717840055206199,
+   "instances": 31104
+  },
+  "root_clock": {
+   "total_w": 0.0009021856512845261,
+   "instances": 65
+  },
+  "unnamed": {
+   "total_w": 0.008070929103301969,
+   "instances": 309945
+  }
+ },
+ "pg_idle": {
+  "ao_element": {
+   "total_w": 0.00013161135667257582,
+   "instances": 745
+  },
+  "ao_sched_ctrl": {
+   "total_w": 0.00014543658528444188,
+   "instances": 188
+  },
+  "domain": {
+   "total_w": 0.00021973084998834654,
+   "instances": 31104
+  },
+  "root_clock": {
+   "total_w": 0.0006419348900889021,
+   "instances": 65
+  },
+  "unnamed": {
+   "total_w": 0.00048119591240398246,
+   "instances": 309945
+  }
+ },
+ "cg_idle": {
+  "ao_element": {
+   "total_w": 0.00014274362715934472,
+   "instances": 745
+  },
+  "ao_sched_ctrl": {
+   "total_w": 0.00014194721404626738,
+   "instances": 188
+  },
+  "domain": {
+   "total_w": 0.0017451390270780982,
+   "instances": 31104
+  },
+  "root_clock": {
+   "total_w": 0.0008344175146913768,
+   "instances": 65
+  },
+  "unnamed": {
+   "total_w": 0.0005190327650336571,
+   "instances": 309945
+  }
+ }
+}

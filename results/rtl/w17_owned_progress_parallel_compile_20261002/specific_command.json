@@ -1,0 +1,21 @@
+{
+  "command_argv": [
+    "python3",
+    "tools/run_w17_owned_progress_compile_phase.py",
+    "--plan",
+    "results/rtl/w17_owned_progress_parallel_compile_20261002/parallel_compile_plan.json",
+    "--go",
+    "EXTERNAL_REVIEWED_GO.json",
+    "--phase",
+    "0",
+    "--scratch",
+    "FRESH_EXTERNAL_NATIVE_BUILD_SCRATCH"
+  ],
+  "subsequent": "Same command with ordered --phase1..15; each requires prior success, creates exclusive handle/receipt, refuses retry after failure.",
+  "dispatch": "remote_gate from a clean fully populated source worktree, native dispatcher mode; pin endpoint via excluding all other hosts without fleet mutation, declare88GiB wholejob floor. Current dry preparation owner is sparse and must not be dispatched unchanged.",
+  "docker_memory_enforcement": true,
+  "supervisor_PID": null,
+  "output_handle": null,
+  "full_design_run_invoked": false,
+  "native_helper_handle": "/tmp/w17-owned-progress-native-helper-20261002-r2/receipt.json"
+}

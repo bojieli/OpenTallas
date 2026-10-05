@@ -1,0 +1,368 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.05255668837817666,
+        "met": true,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": true,
+        "setup_violating_paths": 0,
+        "setup_wns_ns": 2.9535174424277804,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-14T09:50:31.063588+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 5108.922,
+    "block": "ot_a3_vector_scale",
+    "cells": 34641,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": 8.5,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "fmax_basis": "static_timing.fmax_hz (pre-layout)",
+    "fmax_hz": 180294446.0061036,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+        "size_bytes": 30130
+      },
+      {
+        "path": "rtl/abi3/ot_a3_pkg.sv",
+        "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+        "size_bytes": 19703
+      },
+      {
+        "path": "rtl/abi3/ot_a3_format_pkg.sv",
+        "sha256": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+        "size_bytes": 7072
+      },
+      {
+        "path": "rtl/abi3/ot_a3_lane_pkg.sv",
+        "sha256": "44694da13878488ee43610615fb92d13db9dc0c07367cef7814e90ee2da3200f",
+        "size_bytes": 30643
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "rtl/abi3/ot_a3_hc_projection_pkg.sv",
+        "sha256": "d3591df9b9bde7997922756734d61eec5ed32245e4e3a718a2a43b42e9468d6a",
+        "size_bytes": 11209
+      },
+      {
+        "path": "rtl/abi3/ot_a3_vector_scale.sv",
+        "sha256": "42063b0ae30faa3f9de063e825e1f7e14468bb5a0fb2eefc23f121c77c800d71",
+        "size_bytes": 10513
+      }
+    ],
+    "top": "ot_a3_vector_scale"
+  },
+  "elapsed_seconds": 139.402,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-09-14T09:48:11.662004+00:00",
+  "git": {
+    "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/abi3/deepseek_v41_ds41_p3_build_attempt.json",
+      "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+      "results/derived/abi3_iso_area_three_level_audit.json",
+      "results/physical_abi3/asap7/frequency_inventory/"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M compiler/backends/rom/common/program.py",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/route_block_max/physical.json",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical.json",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical_artifacts/1_2_yosys.v",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/route_candidate_mask/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/1_2_yosys.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M rtl/abi3/ot_a3_engine_issue_bridge.sv",
+      " M rtl/abi3/ot_a3_lane_pipelined.sv",
+      " M rtl/abi3/ot_a3_loop_stack.sv"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--clock-port",
+      "clk",
+      "--false-path-from",
+      "rst_n",
+      "--stages",
+      "synth,sta",
+      "--fmax-search",
+      "--purpose",
+      "characterization",
+      "--top",
+      "ot_a3_vector_scale",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_format_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_lane_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_hc_projection_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_vector_scale.sv",
+      "--clock-period-ns",
+      "8.5",
+      "--output",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/out/vs_fix_sta_m8p5.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": "ed31ca722315a60b84ee03dd5d1502f4beabeaa4",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "506b526b028c0f429d1835b2650a4316a62297c38ab0e600d3549f907afb0380",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 8.5,
+    "critical_path_ns": 5.54648255757222,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 180294446.0061036,
+    "fmax_search": {
+      "evaluations": 12,
+      "fmax_hz": 207887123.7882556,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 4.810302734375,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 4.25,
+          "setup_wns_ns": -0.4464824083860003
+        },
+        {
+          "clock_period_ns": 4.78125,
+          "setup_wns_ns": -0.021482815612337874
+        },
+        {
+          "clock_period_ns": 4.7978515625,
+          "setup_wns_ns": -0.008202771827917165
+        },
+        {
+          "clock_period_ns": 4.80615234375,
+          "setup_wns_ns": -0.0015627499357068109
+        },
+        {
+          "clock_period_ns": 4.810302734375,
+          "setup_wns_ns": 0.0017572610103983662
+        },
+        {
+          "clock_period_ns": 4.814453125,
+          "setup_wns_ns": 0.005077271956503543
+        },
+        {
+          "clock_period_ns": 4.84765625,
+          "setup_wns_ns": 0.0316453531311542
+        },
+        {
+          "clock_period_ns": 4.9140625,
+          "setup_wns_ns": 0.08476508417962542
+        },
+        {
+          "clock_period_ns": 5.046875,
+          "setup_wns_ns": 0.19102097757739794
+        },
+        {
+          "clock_period_ns": 5.3125,
+          "setup_wns_ns": 0.40351722125053613
+        },
+        {
+          "clock_period_ns": 6.375,
+          "setup_wns_ns": 1.253517294976284
+        },
+        {
+          "clock_period_ns": 8.5,
+          "setup_wns_ns": 2.9535174424277804
+        }
+      ]
+    },
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.05255668837817666,
+    "library_time_unit_ns": 0.001,
+    "raw_library_units": {
+      "hold_wns": 52.55668837817666,
+      "setup_tns": 0.0,
+      "setup_wns": 2953.51744242778
+    },
+    "sdc_clock_period_library_units": 8500.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 2.9535174424277804,
+    "timing_met": true
+  },
+  "status": "pass",
+  "synthesis": {
+    "abc_delay_target_ps": 8500.0,
+    "cell_area_um2": 5108.922,
+    "cell_count": 34641,
+    "cell_types_used": 39,
+    "chip_area_um2": 5107.70934,
+    "combinational_cell_count": 26127,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "ad632ef04b4fb7e4e28869611788ed104c4cb6d26cfd114c23e628897a144315",
+      "raw_netlist_sha256": "ad632ef04b4fb7e4e28869611788ed104c4cb6d26cfd114c23e628897a144315",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 2512.064,
+    "sequential_cell_count": 8514,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 8.5,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

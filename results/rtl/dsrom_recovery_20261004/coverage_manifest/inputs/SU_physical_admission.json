@@ -1,0 +1,266 @@
+{
+  "schema": "opentallas.dsrom-su.physical-admission.v1",
+  "admission": "BLOCKED",
+  "adoption": false,
+  "composed_gain_pct": null,
+  "one_percent_criterion_verified": false,
+  "matching_routed_NORM_context_record": null,
+  "matching_routed_SwiGLU_context_record": null,
+  "legacy_slot_contract": {
+    "source": "/home/ubuntu/wt-dsrom-physcost/tools/dsrom_s81_fulldie.py",
+    "sha256": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955",
+    "slabs": [
+      "sp_su_s",
+      "sp_su_n"
+    ],
+    "domain": "serial_0p9",
+    "VM_faces_bits": 1024,
+    "candidate_slot": null,
+    "candidate_clock_connection": null,
+    "fit": "UNASSIGNED; old serial slabs are not a binding for dedicated1.2GHz fusion",
+    "width_ratio_note": "bus-width contract comparison only, not automatically128/96cycle serialisation; physical mapping/supply calendar is missing"
+  },
+  "norm": [
+    {
+      "variant": "hc",
+      "params": {
+        "N": 1024,
+        "D": 5120,
+        "HC": 1,
+        "RD": 0,
+        "QUANT": 1,
+        "RW": 9,
+        "BW": 9,
+        "HUB_IN": 33,
+        "HUB_OUT": 23
+      },
+      "cost": {
+        "replicas_per_die": 1,
+        "lanes": 1024,
+        "input_bits_per_cycle": 131072,
+        "gain_load_bytes_per_cycle": 4096,
+        "normalised_output_bits_per_cycle": 32768,
+        "quant_output_bits_per_cycle": 24896,
+        "retained_x_bits": 163840,
+        "retained_gain_bits": 163840,
+        "gain_load_cycles_per_row_if_cold": 5,
+        "gain_load_overlap_measured": false,
+        "coefficient_fanout": 1024,
+        "x_gain_read_selection": {
+          "banks": 1024,
+          "words_per_bank": 5,
+          "word_bits": 32,
+          "selectors_per_bank": 2
+        },
+        "area_um2": null,
+        "routing_tracks": null,
+        "floorplan_fit": null,
+        "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced"
+      },
+      "required_input_to_legacy_face_ratio": 128.0,
+      "physical_area_um2": null,
+      "corridor_capacity_bits_per_cycle": null,
+      "hardening_element": "MISSING: lane logic is inline generate in ot_dsrom_su_norm; factoring must be model-priced first, not a parameter-sized full-engine substitute"
+    },
+    {
+      "variant": "q",
+      "params": {
+        "N": 256,
+        "D": 1280,
+        "HC": 0,
+        "RD": 0,
+        "QUANT": 1,
+        "RW": 9,
+        "BW": 9,
+        "HUB_IN": 33,
+        "HUB_OUT": 23
+      },
+      "cost": {
+        "replicas_per_die": 1,
+        "lanes": 256,
+        "input_bits_per_cycle": 8192,
+        "gain_load_bytes_per_cycle": 1024,
+        "normalised_output_bits_per_cycle": 8192,
+        "quant_output_bits_per_cycle": 6224,
+        "retained_x_bits": 40960,
+        "retained_gain_bits": 40960,
+        "gain_load_cycles_per_row_if_cold": 5,
+        "gain_load_overlap_measured": false,
+        "coefficient_fanout": 256,
+        "x_gain_read_selection": {
+          "banks": 256,
+          "words_per_bank": 5,
+          "word_bits": 32,
+          "selectors_per_bank": 2
+        },
+        "area_um2": null,
+        "routing_tracks": null,
+        "floorplan_fit": null,
+        "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced"
+      },
+      "required_input_to_legacy_face_ratio": 8.0,
+      "physical_area_um2": null,
+      "corridor_capacity_bits_per_cycle": null,
+      "hardening_element": "MISSING: lane logic is inline generate in ot_dsrom_su_norm; factoring must be model-priced first, not a parameter-sized full-engine substitute"
+    },
+    {
+      "variant": "kv",
+      "params": {
+        "N": 512,
+        "D": 512,
+        "HC": 0,
+        "RD": 64,
+        "QUANT": 1,
+        "RW": 9,
+        "BW": 9,
+        "HUB_IN": 33,
+        "HUB_OUT": 23
+      },
+      "cost": {
+        "replicas_per_die": 1,
+        "lanes": 512,
+        "input_bits_per_cycle": 16384,
+        "gain_load_bytes_per_cycle": 2048,
+        "normalised_output_bits_per_cycle": 16384,
+        "quant_output_bits_per_cycle": 12448,
+        "retained_x_bits": 16384,
+        "retained_gain_bits": 16384,
+        "gain_load_cycles_per_row_if_cold": 1,
+        "gain_load_overlap_measured": false,
+        "coefficient_fanout": 512,
+        "x_gain_read_selection": {
+          "banks": 512,
+          "words_per_bank": 1,
+          "word_bits": 32,
+          "selectors_per_bank": 2
+        },
+        "area_um2": null,
+        "routing_tracks": null,
+        "floorplan_fit": null,
+        "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced"
+      },
+      "required_input_to_legacy_face_ratio": 16.0,
+      "physical_area_um2": null,
+      "corridor_capacity_bits_per_cycle": null,
+      "hardening_element": "MISSING: lane logic is inline generate in ot_dsrom_su_norm; factoring must be model-priced first, not a parameter-sized full-engine substitute"
+    }
+  ],
+  "existing_norm_screens": [
+    {
+      "top": "ot_dsrom_su_norm",
+      "params": {
+        "N": 32,
+        "D": 256,
+        "HC": 1,
+        "RD": 0,
+        "QUANT": 1,
+        "RW": 1,
+        "BW": 1
+      },
+      "path": "ot-agidock128:/srv/opentallas-scratch/claude/dsrom-suchains/norm/screen_hc",
+      "matching_full_shape": false,
+      "status": "existing synthesis live1143502"
+    },
+    {
+      "top": "ot_dsrom_su_norm",
+      "params": {
+        "N": 64,
+        "D": 64,
+        "HC": 0,
+        "RD": 64,
+        "QUANT": 1,
+        "RW": 1,
+        "BW": 1
+      },
+      "path": "ot-agidock128:/srv/opentallas-scratch/claude/dsrom-suchains/norm/screen_kv",
+      "matching_full_shape": false,
+      "status": "existing synthesis live1143504"
+    }
+  ],
+  "swiglu": {
+    "source": "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+    "source_sha256": "93f300c826814b3b623c3b209ccd07507dd46253086cdd15fb32779b4f58c38a",
+    "params": {
+      "W": 1024,
+      "LM": 5,
+      "LA": 4,
+      "NIN": 33,
+      "NOUT": 23
+    },
+    "replicas": 1024,
+    "quantiser_replicas": 32,
+    "input_bits_per_cycle": 98304,
+    "output_payload_bits_per_cycle": 24897,
+    "input_wire_register_bits": 3244032,
+    "output_wire_register_bits": 572631,
+    "input_to_legacy_face_ratio": 96,
+    "prelayout_lane_screen": {
+      "top": "ot_dsrom_su_swiglu_lane",
+      "params": {},
+      "period_ps": 833.0,
+      "ss_setup_wns_ps": -395.3,
+      "ff_hold_wns_ps": -0.9,
+      "cell_area_um2": 15053.52924,
+      "ss_fmax_prelayout_hz": 814101741,
+      "worst_start": "u_div.f2_sig[0]$_DFF_P_",
+      "worst_end": "u_div.y[0]$_SDFF_PP0_",
+      "worst_slack_by_stage_ps": {
+        "u_div.y": -395.35,
+        "u_div.r_rem": -258.91,
+        "u_exp.a_r1.genblk1.g_keep4.u.u.u_k1.g_r.r": -250.42,
+        "u_exp.a_r.genblk1.g_keep4.u.u.u_k1.g_r.r": -225.47,
+        "u_div.r_q": -155.37,
+        "u_exp.g_h.u_a.genblk1.g_keep4.u.u.u_k1.g_r.r": -147.99,
+        "u_div.fault": -133.31,
+        "u_exp.g_h.u_a.genblk1.g_keep4.u.u.u_k3.g_r.r": -133.15,
+        "u_exp.a_r.genblk1.g_keep4.u.u.u_k3.g_r.r": -124.92,
+        "u_exp.nint": -109.88,
+        "u_den.genblk1.g_keep4.u.u.u_k3.g_r.r": -108.37,
+        "u_exp.g_h.u_m.genblk1.genblk1.g_l5.u.u.y": -102.67,
+        "u_exp.a_r1.genblk1.g_keep4.u.u.u_k3.g_r.r": -97.5,
+        "u_div.d_e": -95.46,
+        "g_w.u_m2.genblk1.genblk1.g_l5.u.u.y": -79.06,
+        "u_exp.g_h.u_m.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r": -65.04,
+        "u_div.d_mb": -46.02,
+        "u_div.d_ma": -43.36,
+        "u_exp.g_h.u_m.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r": -42.91,
+        "u_m1.genblk1.genblk1.g_l5.u.u.y": -36.03,
+        "u_div.e_mb3": -23.4,
+        "u_exp.m_t.genblk1.genblk1.g_l5.u.u.y": -10.69,
+        "u_exp.g_h.u_a.genblk1.g_keep4.u.u.u_k5.g_r.r": -2.15,
+        "u_exp.m_t.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r": -0.46,
+        "u_exp.a_r.genblk1.g_keep4.u.u.u_k5.g_r.r": 1.06,
+        "u_den.genblk1.g_keep4.u.u.u_k5.g_r.r": 1.25,
+        "u_exp.a_r1.genblk1.g_keep4.u.u.u_k5.g_r.r": 5.3,
+        "g_w.u_m2.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r": 7.59,
+        "u_div.f2_sig": 9.6,
+        "g_w.u_m2.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r": 18.5
+      },
+      "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock"
+    },
+    "replicated_lane_area_mm2_ESTIMATE": 15.41481394176,
+    "quantiser_area_um2": null,
+    "fanout_and_corridor_cost": null,
+    "cold_parameter_availability": "cached limits and per-element weights; no real producer/preload contract priced",
+    "minimal_existing_hardening_module_if_admitted": {
+      "top": "ot_dsrom_su_swiglu",
+      "W": 32,
+      "LM": 5,
+      "LA": 4,
+      "ROUTED": 1,
+      "NIN": 33,
+      "NOUT": 23,
+      "replicate_count": 32,
+      "slot": null,
+      "purpose": "one full quantiser block and32actualselected lanes; NOTlaunchpermission"
+    }
+  },
+  "HCPOST_M6A5_credit": false,
+  "remaining_required_before_hardening": [
+    "Maxwell same-source DAG including CDC and actual gain/input availability once",
+    "area including state/quantisers/fanout/muxes and assigned slot",
+    "actual finite ingress/egress corridor capacity, credit/calendar pricing",
+    "composed per-user gain>=1%; exact source-selected block and routing contract"
+  ],
+  "status": "ESTIMATE source counts; UNKNOWN area/slot/corridor is not admissible"
+}

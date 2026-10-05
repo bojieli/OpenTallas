@@ -1,0 +1,72 @@
+{
+  "scope": "ADDITIVE_CURRENT_STATE_HANDOFF_NO_REWRITE_NO_EXECUTION",
+  "immutable_D1_commit": "f69cd549c59ee35f56d6c71282f62c98398bd33f",
+  "historical_proposal_commit": "3e90da3c1ebd16b052e40f02615a2991bdd95752",
+  "current_resource_proposal_commit": "8f9bf400ecb8122b1bb613bcf6448e877480cf14",
+  "clarification": "The3e90 status and next_actions in the immutable D1 tool/record describe historical state. Current resource proposal is8f9; old180s whole/145s compile/256MiB aggregate is withdrawn as unjustified. The source-controlled D1 numerical calendar and terminal admission facts are unchanged.",
+  "current_status": "MODEL_REVIEW_PENDING_FRESH_GO_NO_EXECUTION",
+  "current_caps_proposal": {
+    "memory_GiB": 12,
+    "workers": 2,
+    "affinity": [
+      30,
+      31
+    ],
+    "swap_max": 0,
+    "compile_seconds": 750,
+    "runtime_cases": 5,
+    "runtime_seconds_each": 20,
+    "reserve_seconds": 50,
+    "whole_seconds": 900,
+    "aggregate_output_bytes": 2147483648,
+    "per_file_bytes": 268435456
+  },
+  "writer_fixture_coordination": {
+    "owner": "Hubble",
+    "thread": "01a0f95d-bab7-79d2-957a-66038ae5ec3e",
+    "boundary": "Separate actual32-intent WC/WS case with source-bound synthetic capture into actual u_blocks; no synthetic write ACKs. Preserve original read baseline reset/start/calendar.",
+    "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "inputs": {
+      "capture_first_cycle": 300,
+      "capture_vectors": 16,
+      "full_cycle": 315,
+      "drain_issue_cycle": 317,
+      "first_source_block": 317,
+      "own_slot": 127,
+      "base_sector": 262144,
+      "MEM_MODE": 0,
+      "MEM_WORDS": 264320,
+      "TAGW": 17,
+      "LENW": 4,
+      "BEATW": 4,
+      "NPC": 32,
+      "REFPB": 3,
+      "CLK_PS": 1000
+    },
+    "expected": {
+      "block_accepts": 16,
+      "write_accepts": 32,
+      "qualified_ACKs": 32,
+      "last_WRcolumn_ps": 1104000,
+      "last_ACK_pre_NBA_cycle": 1105,
+      "logical_publish_after_NBA_cycle": 1105
+    },
+    "visibility": "Projected1111274ps is oracle only; ACK is not physical visibility.",
+    "next": "Hubble confirm fixture ownership/path/hash and exact stimulus/reset sampling; exchange source-only diff/calendar before freshGO. No parallel build."
+  },
+  "other_remaining": [
+    "Freeze actual me_ready/kv_ok/kvd_v/win_idle taps and qualified accepted read/return/write/ACK ledgers.",
+    "Bind compiler/source/options/model/fixture hashes and reviewed caps to freshGO.",
+    "Fresh fleet headroom and reservation check before any authorized launch."
+  ],
+  "pins": {
+    "results/uarch/w17_D1_PC24_inputs_20261002/record.json": "2f8c03fd6964268fc19d3fcfac4504bce702e9eafcdc447c145e28381c2de510",
+    "results/uarch/w17_owner_progress_memory_proposal_20261002/model.json": "b9e95c911a1aaf3ab429b86a1ad387831f90a1c96362763895b5271566740278",
+    "results/uarch/w17_owner_progress_resource_r2_20261002/model.json": "d9cac55e26920360a97b5f517fdfb75cf599fb9d5ca45e4373d3e4cf06cd3294"
+  },
+  "original_record_and_tool_changed": false,
+  "new_executions": 0,
+  "causal_original_deadlock_proved": false,
+  "full_L0_restart": false,
+  "physical_visibility_qualified": false
+}

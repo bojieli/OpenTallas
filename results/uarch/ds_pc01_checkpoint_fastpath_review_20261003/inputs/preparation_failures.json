@@ -1,0 +1,15 @@
+[
+  {
+    "stage": "metadata_slice_first_attempt",
+    "error": "ValueError max() arg is an empty sequence",
+    "reason": "unconsumed version has no explicit read; corrected metadata retains last_use=None, not fabricated consumer",
+    "constructors": 0,
+    "numeric_runs": 0
+  },
+  {
+    "stage": "cache_inventory_display",
+    "error": "SyntaxError unmatched closing parenthesis",
+    "constructors": 0,
+    "numeric_runs": 0
+  }
+]

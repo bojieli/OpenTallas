@@ -1,0 +1,11 @@
+test_all40_source_bindings_and64_distinct_tiles (tools.test_h4_c0_group_operand_tiles.GroupTileTests) ... ok
+test_all64_tile_bits_match_source_group_flatten (tools.test_h4_c0_group_operand_tiles.GroupTileTests) ... ok
+test_bounded_scratch_and_positive_service_no_latency_claim (tools.test_h4_c0_group_operand_tiles.GroupTileTests) ... ok
+test_contributor_rank_and_LOAD_layout_not_reassociated (tools.test_h4_c0_group_operand_tiles.GroupTileTests) ... ok
+test_native_tree_and_BF16_round_control_bits (tools.test_h4_c0_group_operand_tiles.GroupTileTests) ... ok
+test_unbounded_or_old_tile_rejected (tools.test_h4_c0_group_operand_tiles.GroupTileTests) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.097s
+
+OK

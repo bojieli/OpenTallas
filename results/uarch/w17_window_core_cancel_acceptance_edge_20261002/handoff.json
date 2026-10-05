@@ -1,0 +1,31 @@
+{
+  "status": "READY_PARENT_REVIEW_NOT_GO",
+  "runner": "tools/w17_window_core_cancel_acceptance_edge_run.py",
+  "generator": "tools/w17_window_core_cancel_acceptance_edge_prepare.py",
+  "analytical_model": "tools/w17_window_core_cancel_acceptance_edge_model.py",
+  "bench": "rtl/test/w17_window_core_cancel_join_acceptance_edge/tb.sv",
+  "active_plan": "results/uarch/w17_window_core_cancel_acceptance_edge_20261002/plan_r3/plan.json",
+  "GO_template": "results/uarch/w17_window_core_cancel_acceptance_edge_20261002/plan_r3/parent_GO_template.json",
+  "plan_sha256": "9f6328d22b792a2fbddeb9234f3882862bb98111155478438c3fd2b6e980ef0d",
+  "runner_sha256": "91fd06bfab6830072d0602840bbafd5a41f3aea377c7db91e65c6c92623d3556",
+  "new_tests": 18,
+  "combined_tests": 58,
+  "tests_scope": "Mocked compile/runtime controls plus source-bound analytical checks only. No HDL compiler or actual DUT executed.",
+  "source_pins": 166,
+  "positive_cases": 23,
+  "mutants": 4,
+  "old_bench_SHA": "f60856cec47c3ce6eb514ba8ebcf5ebc18c4aafad1becb350ffc525156197ec6",
+  "new_bench_SHA": "b2fadf5b014e5e21ed91982514ba0e218aaf3b2a39e6600f318d255b4074dc9d",
+  "only_additive_observer": true,
+  "fresh_binary_required": true,
+  "old_binary_reuse": false,
+  "old_failure_unchanged": true,
+  "superseded_preparation": {
+    "plan_r1": "Static inspection found stale old profile_reuse lookup in PASS receipt; corrected before execution. Not authorization.",
+    "plan_r2": "Fatal policy isolated into a private module instance to preserve old runner assertion-line policies under combined imports. No execution.",
+    "active": "plan_r3"
+  },
+  "physical_provider": false,
+  "fulltoken": false,
+  "no_compile_no_runtime_no_service": true
+}

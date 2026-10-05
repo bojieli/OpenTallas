@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.hbm-tc-nested-parent-review.v1",
+  "owner_commit": "d8fe3fd2140ff953a47bf9277360f3689e8c61ee",
+  "intake_commit": "e041631f2",
+  "focused_tests_passed": 7,
+  "deterministic_reproduction": "PASS",
+  "artifact_sha_verified": 4,
+  "source_event_count": 20492,
+  "source_phase_count": 50,
+  "source_RF_join": "7c46371ad",
+  "hardware_admission": false,
+  "failed_TC_column_qualification": "FAIL_UNCHANGED",
+  "routing_qualification": false,
+  "scope": "Bound source-event mapping and geometry rejection; successor graph TCdispatch still unimplemented; no contextualSSFF/rate credit"
+}

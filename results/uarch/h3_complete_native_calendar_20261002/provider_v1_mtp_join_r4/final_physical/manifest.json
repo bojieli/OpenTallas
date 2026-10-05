@@ -1,0 +1,93 @@
+{
+  "hardware_admitted": false,
+  "schema": "H4_PROVIDER_V1_MTP_SOURCE_MANIFEST_V1",
+  "source_pins": {
+    "results/speculative/v41_flash_dspark_onpolicy_greedy.json": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d"
+    },
+    "results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json": {
+      "commit": "f240f42fbeb67e402e922b4a4aae30b8a8873ce1",
+      "sha256": "b8a380e2eb8836c57dbb6bc2a90b6e09f83f7ba652a945a94b9caae4539dafef"
+    },
+    "results/uarch/full_sm_rf_service_20261002/model_final.json": {
+      "commit": "6ce60f8ea4a8eb7ce809d90840415bddc5cd0cd8",
+      "sha256": "6707df368b3fde7bb8e481efd5a0d7f35051cc569562dd3af7e3e8534b4fc2c9"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/bounded_provider_milestone/Qwen_tiled.json.gz": {
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/full_program_costs.json.gz": {
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "sha256": "b22b329c20d184ec335448dbd7385f1439752f3ee81b7e2a0868fd8a2e4b2eaf"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/h4_actual_config_e844/run_r3/repriced_intervals.json.gz": {
+      "commit": "6e28f1a8b48ea0182aed59a09d65540a1b0b96b3",
+      "sha256": "cb190e8dccb456e4f352d1c8332440c0f0ff894797dfb756e357700fa8d1577a"
+    },
+    "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz": {
+      "commit": "91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6",
+      "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+    },
+    "results/uarch/h4_c0_bridge_model_20261002/model.json": {
+      "commit": "655f22b2b",
+      "sha256": "96a64c5f7f17bac9498c7101a0004791820a84d681c1651d518177109de20a1e"
+    },
+    "results/uarch/h4_v1_g0_model_20261002/intake/run/model.json": {
+      "commit": "f7fa8e290d419f6de3356385c0b55ded768c2090",
+      "sha256": "9538e72448ad2ddd438faf483dfc6a8f5a76decb31a6057647f4daed033c27b0"
+    },
+    "results/uarch/h4_v1_g0_model_20261002/physical_join_r1/final/model.json": {
+      "commit": "620c078de78cc55ddb5562b1d5d7171d8ef944ca",
+      "sha256": "0bfc2397f1c7d48390a67c0b62504007e266ccdebb093f5481d1711f27288d94"
+    },
+    "results/uarch/qwen_hbm_interface_geometry_20261002/deepseek_floorplan_r11.json": {
+      "commit": "56506fb5bacb993107ff11f7df45f6f03363f667",
+      "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca"
+    },
+    "results/uarch/qwen_hbm_interface_geometry_20261002/qwen_floorplan_r11.json": {
+      "commit": "56506fb5bacb993107ff11f7df45f6f03363f667",
+      "sha256": "97a6d79ee1ba22fbc89f70f90745d3799a64b3e45ed651312da540e91539e3ab"
+    },
+    "rtl/gpu/ot_gpu_rf_service.sv": {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    "tools/build_dspark_draft_graph.py": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "4c41737f4ad15d3ef15da2e580aa7e27a91ea31c1eae23786f70fd6618561718"
+    },
+    "tools/ds_hbm_finite_state_homes_r30.py": {
+      "commit": "f240f42fbeb67e402e922b4a4aae30b8a8873ce1",
+      "sha256": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823"
+    },
+    "tools/h3_complete_native_calendar.py": {
+      "sha256": "f878c84e7ec57c8f5b32aff43b22e370d714d481f62ba4acc1d08b2ee2e33628"
+    },
+    "tools/h4_c0_bridge.py": {
+      "commit": "655f22b2b",
+      "sha256": "19904b9fa7481e5ba0e27e9d4f17b1308abf3ee2df20a553f5c5ae5b0add996c"
+    },
+    "tools/h4_v1_g0_model.py": {
+      "commit": "f7fa8e290d419f6de3356385c0b55ded768c2090",
+      "sha256": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884"
+    },
+    "tools/h4_v1_physical_join.py": {
+      "commit": "620c078de78cc55ddb5562b1d5d7171d8ef944ca",
+      "sha256": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda"
+    },
+    "tools/uarch_model.py": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "tools/w19_hbm_tp96_isa.py": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+    },
+    "tools/w19_v41_mtp_golden.py": {
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "sha256": "76eb65ab3692693acf680981523581e1c37393620e98f53191061d1c835aedad"
+    }
+  }
+}

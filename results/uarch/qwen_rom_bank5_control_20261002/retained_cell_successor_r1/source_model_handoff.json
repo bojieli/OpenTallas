@@ -1,0 +1,38 @@
+{
+  "status": "DEFAULT_OFF_LITERAL_REPLICA_SUCCESSOR_CONTEXT_AND_Z_CONTRACT_BLOCKED",
+  "source_path": "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv",
+  "source_sha256": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+  "base_source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "cell": "DFFASRHQNx1_ASAP7_75t_R",
+  "cell_retention": "keep/dont_touch on explicit named cells, not only output wires",
+  "required_counts": {
+    "mask": 80,
+    "strobe": 5
+  },
+  "previous_actual_counts": {
+    "mask": 30,
+    "strobe": 2
+  },
+  "new_map_run": false,
+  "default_parameter": "ROM_REPLICA_CELL_RETENTION=0",
+  "zero_new_edges": true,
+  "already_priced_copies": 85,
+  "missing_copies_not_double_charged": 53,
+  "selected_cell_reservation_um2": 125000,
+  "selected_corridor_um": 96.768,
+  "literal_01X_fixture": "PASS",
+  "literal_Z_fixture": "FAIL: inverted-Q cell does not preserve stored high-impedance value; detected and retained, no full fourstate claim",
+  "source_contract_or_equivalence": "BLOCKED pending review of actual driven control contract and full source proof",
+  "finite_distribution_parent_IO_model": "BLOCKED pending Ampere",
+  "admitted_mapping": false,
+  "adopted": false,
+  "contextual_SSFF": false,
+  "literal_test_modes": [
+    0,
+    1
+  ],
+  "async_reset_tested": true,
+  "current_tests": 26,
+  "all85_distinct_cell_mapping": "UNRUN pending model finite distribution/parent IO price",
+  "added_restoring_inverters": "85 explicit logical restorations; actual inversion survival/area/RC unmeasured, Ampere must price; do not assume free"
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.engram.a21-duplicate-consume-failure.v1",
+  "source_commit": "a21f1cdd19dfd8ae27112d69cdbcb19d6e5d5c58",
+  "source_path": "tools/engram_two_fragment_contract.py",
+  "source_sha256": "36dcb2c806a9b8c270265615acdaf69d94cdc243f1aededb701809d2a563ddec",
+  "verdict": "FAIL_EXACTLY_ONCE_CONSUMER_RETIREMENT",
+  "reproducer": "rx.put(f0);rx.put(f1);a=rx.consume();b=rx.consume();assert a==b and rx.ack and rx.word is not None",
+  "duplicate_returns_same_word": true,
+  "ACK_true_but_published_word_retained": true,
+  "gate_scope": "Software receiver; no RTL/external provider claim. Old384-word codec PASS remains packet-only, not lease admission.",
+  "checkpoint_reads": 0,
+  "RTL_or_PnR_runs": false
+}

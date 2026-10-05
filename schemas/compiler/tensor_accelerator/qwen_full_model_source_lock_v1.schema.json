@@ -1,0 +1,67 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_source_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "additionalProperties": false,
+      "properties": {
+        "capability": {"$ref": "#/$defs/artifact"},
+        "checkpoint_lock": {"$ref": "#/$defs/artifact"},
+        "model_graph": {"$ref": "#/$defs/artifact"},
+        "semantic_check": {"$ref": "#/$defs/artifact"},
+        "semantic_coverage": {"$ref": "#/$defs/artifact"},
+        "semantic_kernel_ir": {"$ref": "#/$defs/artifact"}
+      },
+      "required": [
+        "capability",
+        "checkpoint_lock",
+        "model_graph",
+        "semantic_check",
+        "semantic_coverage",
+        "semantic_kernel_ir"
+      ],
+      "type": "object"
+    },
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "compiler_version": {"const": "tensor-accelerator-qwen-full-model-physical-0.1.0"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_source_lock.v1"},
+    "semantic_check_id": {"$ref": "#/$defs/sha256"},
+    "semantic_coverage_report_id": {"$ref": "#/$defs/sha256"},
+    "semantic_kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "artifacts",
+    "capability_id",
+    "checkpoint_lock_id",
+    "compiler_version",
+    "graph_id",
+    "schema",
+    "semantic_check_id",
+    "semantic_coverage_report_id",
+    "semantic_kernel_ir_id",
+    "source_lock_id"
+  ],
+  "title": "Qwen complete-model physical source lock v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "path": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "type": "string"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

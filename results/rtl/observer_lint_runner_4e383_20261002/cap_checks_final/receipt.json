@@ -1,0 +1,129 @@
+{
+  "status": "CAP_VERIFIED_WITH_SMALL_PYTHON_CHILDREN_NO_COMPILER_EXECUTION",
+  "probes": [
+    {
+      "name": "limits",
+      "argv": [
+        "/home/ubuntu/bin/python",
+        "-c",
+        "import os,resource,json; print(json.dumps(dict(affinity=sorted(os.sched_getaffinity(0)),address_space=resource.getrlimit(resource.RLIMIT_AS),core=resource.getrlimit(resource.RLIMIT_CORE))))"
+      ],
+      "child_pid": 2723600,
+      "reap_pending": false,
+      "returncode": 0,
+      "cap_reason": null,
+      "seconds": 0.015,
+      "peak_rss_kib": 9984,
+      "log_bytes": 80,
+      "log_sha256": "3ade391b9eecfbaf15815da80a642fc2590c9a2094d82deda5a890429cbe651f",
+      "limits": {
+        "address_space_bytes": 4294967296,
+        "wall_seconds": 2,
+        "cpu_affinity": [
+          0,
+          1
+        ],
+        "log_bytes": 16777216,
+        "core_bytes": 0
+      },
+      "success": true
+    },
+    {
+      "name": "wall_negative",
+      "argv": [
+        "/home/ubuntu/bin/python",
+        "-c",
+        "import time; time.sleep(20)"
+      ],
+      "child_pid": 2723601,
+      "reap_pending": false,
+      "returncode": -9,
+      "cap_reason": "WALL_CAP",
+      "seconds": 0.161,
+      "peak_rss_kib": 9872,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "limits": {
+        "address_space_bytes": 4294967296,
+        "wall_seconds": 0.15,
+        "cpu_affinity": [
+          0,
+          1
+        ],
+        "log_bytes": 16777216,
+        "core_bytes": 0
+      },
+      "success": false
+    },
+    {
+      "name": "log_negative",
+      "argv": [
+        "/home/ubuntu/bin/python",
+        "-c",
+        "import os; os.write(1,b\"x\"*65536)"
+      ],
+      "child_pid": 2723602,
+      "reap_pending": false,
+      "returncode": -9,
+      "cap_reason": "LOG_CAP",
+      "seconds": 0.024,
+      "peak_rss_kib": 9872,
+      "log_bytes": 1024,
+      "log_sha256": "49abd65bbf7f7e40c7055093ed2e3fd75f2f602f2c5fcf955c213e3135eb03f7",
+      "limits": {
+        "address_space_bytes": 4294967296,
+        "wall_seconds": 2,
+        "cpu_affinity": [
+          0,
+          1
+        ],
+        "log_bytes": 1024,
+        "core_bytes": 0
+      },
+      "success": false
+    },
+    {
+      "name": "memory_negative",
+      "argv": [
+        "/home/ubuntu/bin/python",
+        "-c",
+        "a=bytearray(128*1024**2)"
+      ],
+      "child_pid": 2723603,
+      "reap_pending": false,
+      "returncode": 1,
+      "cap_reason": null,
+      "seconds": 0.042,
+      "peak_rss_kib": 25848,
+      "log_bytes": 86,
+      "log_sha256": "38f453979bab240d789e4f6aca8c94daadeced572fc316aa457637897c9d23bd",
+      "limits": {
+        "address_space_bytes": 67108864,
+        "wall_seconds": 2,
+        "cpu_affinity": [
+          0,
+          1
+        ],
+        "log_bytes": 16777216,
+        "core_bytes": 0
+      },
+      "success": false
+    }
+  ],
+  "compiler_execution": false,
+  "limits_observed": {
+    "affinity": [
+      0,
+      1
+    ],
+    "address_space": [
+      4294967296,
+      4294967296
+    ],
+    "core": [
+      0,
+      0
+    ]
+  },
+  "scope": "Direct frontend gets hard address-space4GiB and inherited two-CPU affinity; total gate stdout+stderr capped16MiB, baseline60s/mutant30s enforced by same tested supervisor; no compiler cost measurement"
+}

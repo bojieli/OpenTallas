@@ -1,0 +1,635 @@
+{
+ "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+ "census": {
+  "calls": 1149,
+  "crossing_calls": 1050,
+  "local_calls": 99,
+  "per_alias": [
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "exp.w1",
+    "calls": 240,
+    "calls_per_layer": 6.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "experts_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": true
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 73728,
+    "alias": "exp.w2",
+    "calls": 240,
+    "calls_per_layer": 6.0,
+    "crosses": true,
+    "input_VM_words": 2304,
+    "layers": 40,
+    "model_key": "down",
+    "remote_result_bits_per_call": 44160,
+    "remote_rows": 640,
+    "selected_choice": true
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "exp.w3",
+    "calls": 240,
+    "calls_per_layer": 6.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "experts_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": true
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "gate",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "router",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "shared.w1",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "shared_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 73728,
+    "alias": "shared.w2",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 2304,
+    "layers": 40,
+    "model_key": "down",
+    "remote_result_bits_per_call": 44160,
+    "remote_rows": 640,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "shared.w3",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "shared_gu",
+    "remote_result_bits_per_call": 17664,
+    "remote_rows": 256,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "wkv",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 131072,
+    "alias": "wo_a.group0",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 4096,
+    "layers": 40,
+    "model_key": "wo_a",
+    "remote_result_bits_per_call": 35328,
+    "remote_rows": 512,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 131072,
+    "alias": "wo_a.group1",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 4096,
+    "layers": 40,
+    "model_key": "wo_a",
+    "remote_result_bits_per_call": 35328,
+    "remote_rows": 512,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 65536,
+    "alias": "wo_b",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 2048,
+    "layers": 40,
+    "model_key": "wo_b",
+    "remote_result_bits_per_call": 176640,
+    "remote_rows": 2560,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 163840,
+    "alias": "wq_a",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 5120,
+    "layers": 40,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 8832,
+    "remote_rows": 128,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 40960,
+    "alias": "wq_b",
+    "calls": 40,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 1280,
+    "layers": 40,
+    "model_key": "wq_b",
+    "remote_result_bits_per_call": 282624,
+    "remote_rows": 4096,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "indexer.weights_proj",
+    "calls": 8,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 8,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 40960,
+    "alias": "indexer.wq_b",
+    "calls": 8,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 1280,
+    "layers": 8,
+    "model_key": "wq_b",
+    "remote_result_bits_per_call": 141312,
+    "remote_rows": 2048,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "compressor.wkv",
+    "calls": 4,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 4,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "indexer.wk",
+    "calls": 4,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 512,
+    "layers": 4,
+    "model_key": "cmp.wk",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 0,
+    "alias": "compressor.wgate",
+    "calls": 3,
+    "calls_per_layer": 1.0,
+    "crosses": false,
+    "input_VM_words": 5120,
+    "layers": 3,
+    "model_key": "a_proj",
+    "remote_result_bits_per_call": 0,
+    "remote_rows": 0,
+    "selected_choice": false
+   },
+   {
+    "activation_bits_per_call_vm_word_bound": 196608,
+    "alias": "engram.wkv",
+    "calls": 2,
+    "calls_per_layer": 1.0,
+    "crosses": true,
+    "input_VM_words": 6144,
+    "layers": 2,
+    "model_key": "wkv",
+    "remote_result_bits_per_call": 220800,
+    "remote_rows": 3200,
+    "selected_choice": false
+   }
+  ],
+  "per_model_key": {
+   "a_proj": {
+    "calls": 95,
+    "crosses": true,
+    "crossing_calls": 40
+   },
+   "cmp.wk": {
+    "calls": 4,
+    "crosses": false,
+    "crossing_calls": 0
+   },
+   "down": {
+    "calls": 280,
+    "crosses": true,
+    "crossing_calls": 280
+   },
+   "experts_gu": {
+    "calls": 480,
+    "crosses": true,
+    "crossing_calls": 480
+   },
+   "router": {
+    "calls": 40,
+    "crosses": false,
+    "crossing_calls": 0
+   },
+   "shared_gu": {
+    "calls": 80,
+    "crosses": true,
+    "crossing_calls": 80
+   },
+   "wkv": {
+    "calls": 2,
+    "crosses": true,
+    "crossing_calls": 2
+   },
+   "wo_a": {
+    "calls": 80,
+    "crosses": true,
+    "crossing_calls": 80
+   },
+   "wo_b": {
+    "calls": 40,
+    "crosses": true,
+    "crossing_calls": 40
+   },
+   "wq_b": {
+    "calls": 48,
+    "crosses": true,
+    "crossing_calls": 48
+   }
+  },
+  "source": "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz"
+ },
+ "clock_hz": 1200000000.0,
+ "default_off": true,
+ "endpoint_wires_in_all_mappings": true,
+ "link": {
+  "bandwidth": {
+   "headroom": 4.592422502870264,
+   "need_bytes_s": 914550000000.0,
+   "serialisation_exposed_s": 0.0,
+   "ucie_bytes_s": 4200000000000.0
+  },
+  "link_core_s": 8.5e-09,
+  "one_way_ns": {
+   "layer_split": 65.17,
+   "mirror_full": 65.17,
+   "mirror_hub": 65.17,
+   "owner": 65.17,
+   "owner_board": 205.0,
+   "owner_edge": 65.17
+  },
+  "ss_reach_um": 504.0,
+  "stage_period_ps": 833.0,
+  "ucie_bytes_s": 4200000000000.0,
+  "ucie_hop_s": 1e-08,
+  "ucie_ondie_routing_replaced_s": 1.5e-09,
+  "vm_to_serdes_stages": 45,
+  "vm_to_ucie_stages": 34
+ },
+ "model_extension": "par2-boundary",
+ "results": [
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": 0.0,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2535.5,
+   "ar_token_us": 394.4,
+   "ar_wire_correction_us": 4.339,
+   "cfg": {},
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "historical_without_endpoint_wires": {
+    "ar_tok_s": 2563.7,
+    "mtp_tok_s": 3809.4
+   },
+   "id": "base_S58",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": 0.0,
+   "mtp_tok_s": 3791.0,
+   "note": "unified model as pinned: no PAR2 term",
+   "one_way_ns": null,
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": 0.0,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2649.7,
+   "ar_token_us": 377.4,
+   "ar_wire_correction_us": 4.349,
+   "cfg": {},
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "historical_without_endpoint_wires": {
+    "ar_tok_s": 2680.6,
+    "mtp_tok_s": 4176.7
+   },
+   "id": "base_S58",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": 0.0,
+   "mtp_tok_s": 4154.5,
+   "note": "unified model as pinned: no PAR2 term",
+   "one_way_ns": null,
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.37,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2323.2,
+   "ar_token_us": 430.44,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 960,
+   "id": "owner_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.07,
+   "mtp_tok_s": 3523.1,
+   "note": "as designed, fc4 quad",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 36.029,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 70.494,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 724,
+   "ar_delta_pct_vs_base": -8.71,
+   "ar_saturated_tok_s": 80833.5,
+   "ar_tok_s": 2418.8,
+   "ar_token_us": 413.43,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "owner",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 960,
+   "id": "owner_fc4",
+   "layer_dies": 232,
+   "mtp_delta_pct_vs_base": -7.69,
+   "mtp_tok_s": 3834.9,
+   "note": "as designed, fc4 quad",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 36.029,
+      "collectives": 177,
+      "field": 240,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 282,
+     "hops": 58,
+     "on_path": {
+      "added_s_on_path": 70.494,
+      "collectives": 137,
+      "field": 280,
+      "hops": 58
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 57,
+   "stages": 58
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -13.01,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2205.7,
+   "ar_token_us": 453.37,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 1048576,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_fc4",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -28.06,
+   "mtp_tok_s": 2727.3,
+   "note": "no row split: die pair = consecutive packed groups, odd hops in-package UCIe",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": -16.451,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 12.801,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  },
+  {
+   "BF16_pairs_per_die": 362,
+   "ar_delta_pct_vs_base": -13.51,
+   "ar_saturated_tok_s": 41486.1,
+   "ar_tok_s": 2291.7,
+   "ar_token_us": 436.36,
+   "cfg": {
+    "board": "fc4",
+    "board_hop_s": 1.3e-07,
+    "credit_overlap": false,
+    "edge_root_extra_stages": 24,
+    "field_term": true,
+    "link_core_s": 8.5e-09,
+    "mode": "layer_split",
+    "split": "rows",
+    "ucie_bytes_s": 4200000000000.0,
+    "vm_serdes_stages": 45,
+    "vm_ucie_stages": 34
+   },
+   "ctx": 200000,
+   "hbm_stacks": 1888,
+   "id": "layer_split_S116_fc4",
+   "layer_dies": 464,
+   "mtp_delta_pct_vs_base": -29.94,
+   "mtp_tok_s": 2910.5,
+   "note": "no row split: die pair = consecutive packed groups, odd hops in-package UCIe",
+   "one_way_ns": 65.17,
+   "par2_passes": [
+    {
+     "P": 1,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": -16.451,
+      "collectives": 177,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    },
+    {
+     "P": 6,
+     "collectives": 210,
+     "field": 0,
+     "hops": 116,
+     "on_path": {
+      "added_s_on_path": 12.801,
+      "collectives": 137,
+      "field": 0,
+      "hops": 116
+     },
+     "one_way_s": 65.17
+    }
+   ],
+   "stage_hops": 115,
+   "stages": 116
+  }
+ ],
+ "schema": "opentallas.dsrom.hub-edge-wires.v2",
+ "scope": "Analytical; dataflow levels 1-5 only; golden rounding/reduction order unchanged in every mode (row split cuts no reduction; mirrored hubs compute bit-identical chains; layer split moves whole matrices).  No RTL/P&R; not adopted.",
+ "source_sha256": {
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+  "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz": "a723482a46ab7843a83399f666c9c3571c499891d02a449c6d8d89eb356eb2b3",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+  "tools/dsrom_par2_boundary.py": "b83fb9ef170f7216910bba2107813e5955646cf6e4932763ddece9dbcb6b1595",
+  "tools/uarch_model.py": "0721987d48fac483cf3c32d274a8e9ceb6cf081d89db07b9108c4f6f15c16b82",
+  "tools/uarch_model_par2_boundary.py": "805a13b575698e3533f44e0d6bc72422c5892090c1a01e484c721960ca51d360"
+ },
+ "wire_source": {
+  "path": "results/physical_abi3/asap7/chip/v41_w18/shrink_p5_interim/shrunk_die.json",
+  "revision": "996f7982ce92a534e54722867ef8bba56b2cf417",
+  "sha256": "87e4170066f87d0532672a06bbc67621543017c326f8d1f4a3e119f79848c94c"
+ }
+}

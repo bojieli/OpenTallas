@@ -1,0 +1,152 @@
+--- rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv
++++ idx_hbm_recovery.sv_enabled
+@@ -113,7 +113,9 @@
+     parameter integer SHARE_W_NUM = 0,
+     parameter integer SHARE_DEN = 5,
+     parameter integer MEM_MODE = 1,
+-    parameter         MEMFILE  = ""
++    parameter         MEMFILE  = "",
++    parameter bit OPT_RECOVERY = 0,
++    parameter integer SELECT_STACK = 2
+ ) (
+     input  wire                 clk,
+     input  wire                 rst_n,
+@@ -131,6 +133,13 @@
+     output reg  [NPC*TAGW-1:0]  rsp_tag,
+     output reg  [NPC*BEATW-1:0] rsp_beat,
+     output reg  [NPC*DW-1:0]    rsp_data
++,
++    input wire rec_freeze,
++    input wire rec_token,
++    input wire rec_commit,
++    output wire rec_owner_empty,
++    output wire rec_visible_empty,
++    output wire rec_token_ack
+ );
+     initial begin
+         if (SHARE_W_NUM < 0 || SHARE_W_NUM >= SHARE_DEN || SHARE_DEN < 2)
+@@ -146,6 +155,33 @@
+     localparam integer NB = 32;
+     localparam integer ROW_SHIFT = 2 + LPC + 5 + 3;
+ 
++    // Simulation-provider watermark only: no healthy publication timer.
++    reg [3:0] rec_reads [0:NPC-1];
++    reg [1:0] rec_writes [0:NPC-1];
++    longint rec_visible_at;
++    reg rec_visible_valid, rec_ack_pending;
++    function automatic rec_mine(input [TAGW-1:0] t);
++        rec_mine = t[TAGW-1 -: 3] == 3'b100;
++    endfunction
++    function automatic rec_zero();
++        integer z;
++        begin
++            rec_zero = 1;
++            for (z=0; z<NPC; z=z+1)
++                if (rec_reads[z] != 0 || rec_writes[z] != 0 ||
++                    (rsp_v[z] && rec_mine(rsp_tag[z*TAGW +: TAGW])) ||
++                    (req_v[z] && rec_mine(req_tag[z*TAGW +: TAGW])))
++                    rec_zero = 0;
++        end
++    endfunction
++    assign rec_owner_empty = rec_freeze && !rec_ack_pending && rec_zero();
++    assign rec_visible_empty = !rec_visible_valid;
++    assign rec_token_ack = (rec_owner_empty && rec_visible_empty) ? rec_token : !rec_token;
++    initial if (SELECT_STACK != 2 || NPC != 32 || TAGW != 17 || LENW != 4 ||
++        BEATW != 4 || AW != 30 || DW != 256 || QD != 64 || RQD != 32 ||
++        RW != 16 || MAXSKIP != 16 || REFPB != 3 || MEM_WORDS != 264320 ||
++        CWL_PS != 6250 || BURST_PS != 1024 || MEM_MODE != 0 || CLK_PS != 1000)
++        $fatal(1,"recovery finite simulation provider geometry");
+     // backing store (sector granularity); public for the testbench
+     reg [DW-1:0] mem [0:MEM_WORDS-1];
+ 
+@@ -356,10 +392,12 @@
+     longint now;
+     always @(posedge clk) begin
+         if (!rst_n) begin
++            rec_visible_at = 0; rec_visible_valid = 0; rec_ack_pending = 0;
+             cyc <= 0; rsp_v <= 0; wr_done <= 0;
+             for (p = 0; p < NPC; p = p + 1) q_free[p] <= 0;
+             for (p = 0; p < NPC; p = p + 1) begin
+                 share_phase[p]=0; share_w_services[p]=0; share_k_services[p]=0; share_both_services[p]=0; share_both[p]=0;
++                rec_reads[p]=0; rec_writes[p]=0;
+                 q_rp[p] = 0; q_n[p] = 0; r_rp[p] = 0; r_n[p] = 0; h_sched[p] = 1'b0; h_skip[p] = 0;
+                 last_act[p] = -1000000; last_col[p] = -1000000; last_rd[p] = -1; last_wr[p] = -1;
+                 last_wr_bg_valid[p] = 1'b0;
+@@ -379,15 +417,33 @@
+             cyc <= cyc + 1;
+             wr_done <= 0;
+             now = cyc * CLK_PS;
++            rec_ack_pending = 0;
+             // responses taken this cycle (rsp_v is the registered offer)
+             for (p = 0; p < NPC; p = p + 1)
+                 if (rsp_v[p] && rsp_rdy[p]) begin
++                    if (rec_mine(rsp_tag[p*TAGW +: TAGW])) begin
++                        if (rec_reads[p] == 0) $fatal(1,"owner return underflow");
++                        rec_reads[p] = rec_reads[p] - 1'b1;
++                    end
+                     r_rp[p] = (r_rp[p] + 1) % RQD; r_n[p] = r_n[p] - 1;
+                 end
+             // requests
+             for (j = 0; j < NPC; j = j + 1) begin
+                 if (req_v[j] && !req_rdy[j]) st_bp_cycles = st_bp_cycles + 1;
+                 if (req_v[j] && req_rdy[j]) begin
++                    if (rec_mine(req_tag[j*TAGW +: TAGW])) begin
++                        if (req_addr[j*AW +: AW] >= MEM_WORDS)
++                            $fatal(1,"owner address allocation alias");
++                        if (req_len[j*LENW +: LENW] != 1)
++                            $fatal(1,"owner request must be one sector");
++                        if (req_we[j]) begin
++                            if (rec_writes[j] != 0) $fatal(1,"owner write overflow");
++                            rec_writes[j] = rec_writes[j] + 1'b1;
++                        end else begin
++                            if (rec_reads[j] == 8) $fatal(1,"owner read overflow");
++                            rec_reads[j] = rec_reads[j] + 1'b1;
++                        end
++                    end
+                     for (i = 0; i < req_len[j*LENW +: LENW]; i = i + 1) begin
+                         p = pc_of(req_addr[j*AW +: AW] + i);
+                         if (p != j) begin
+@@ -476,6 +532,14 @@
+                                 share_phase[p]=(share_phase[p]+1)%SHARE_DEN;
+                             end
+                             if (q_we[p][slot]) begin
++                                if (rec_mine(q_tag[p][slot])) begin
++                                    if (rec_writes[p] == 0) $fatal(1,"owner issue underflow");
++                                    rec_writes[p] = rec_writes[p] - 1'b1;
++                                    rec_ack_pending = 1;
++                                    if (h_tcol[p] + CWL_PS + BURST_PS > rec_visible_at)
++                                        rec_visible_at = h_tcol[p] + CWL_PS + BURST_PS;
++                                    rec_visible_valid = 1;
++                                end
+                                 for (integer byte_i=0; byte_i<DW/8; byte_i=byte_i+1)
+                                     if (q_strb[p][slot][byte_i])
+                                         mem[q_addr[p][slot] % MEM_WORDS][8*byte_i +: 8] =
+@@ -497,6 +561,28 @@
+                     end
+                 end
+             end
++            // Owner-only invariant: registers remain finite; q/r aliases
++            // are checked by the independent bench oracle, not extra ledgers.
++            begin : rec_population
++                integer z, x, qr, qw, rr, nr, nw;
++                nr=0; nw=0;
++                for(z=0;z<NPC;z=z+1) begin
++                    qr=0; qw=0; rr=0;
++                    for(x=0;x<q_n[z];x=x+1)
++                        if(rec_mine(q_tag[z][(q_rp[z]+x)%QD])) begin
++                            if(q_we[z][(q_rp[z]+x)%QD]) qw=qw+1; else qr=qr+1;
++                        end
++                    for(x=0;x<r_n[z];x=x+1)
++                        if(rec_mine(r_tag[z][(r_rp[z]+x)%RQD])) rr=rr+1;
++                    if(rec_reads[z] != qr+rr || rec_writes[z] != qw)
++                        $fatal(1,"owner ledger versus ring provenance");
++                    nr=nr+rec_reads[z]; nw=nw+rec_writes[z];
++                end
++                if(nr>8 || nw>1 || now<0) $fatal(1,"owner population/time bound");
++            end
++            if (rec_visible_valid && now >= rec_visible_at) rec_visible_valid = 0;
++            if (rec_commit && !(rec_owner_empty && rec_visible_empty))
++                $fatal(1,"backend commit before visibility/owner drain");
+             // registered outputs for the next cycle
+             for (p = 0; p < NPC; p = p + 1) begin
+                 rsp_v[p] <= (r_n[p] > 0) && (r_t[p][r_rp[p]] <= (cyc + 1) * CLK_PS);

@@ -1,0 +1,21 @@
+{
+  "systemd": {
+    "RuntimeMaxUSec": "3min",
+    "OOMPolicy": "stop",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/w17-recovery-probe-20261002-r3.service",
+    "MemoryMax": "4294967296",
+    "MemorySwapMax": "0",
+    "LimitFSIZE": "268435456",
+    "LimitCORE": "0",
+    "CPUAffinity": "30-31",
+    "KillMode": "control-group",
+    "KillSignal": "9"
+  },
+  "kernel_cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/w17-recovery-probe-20261002-r3.service",
+  "memory_max": "4294967296",
+  "swap_max": "0",
+  "affinity": [
+    30,
+    31
+  ]
+}

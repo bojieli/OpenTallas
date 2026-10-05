@@ -1,0 +1,134 @@
+{
+  "schema": "opentallas.qcnam.greedy-release-intake.v1",
+  "observed_utc": "2026-10-01T11:07:43.922020+00:00",
+  "source_commit": "d2631dd9051c30d7ab1aeab6fdaab4f9200d3f5a",
+  "original_observation_sha256": "49ce6c145e36adbea37158b93089833e71c93b3e58aef1d3bded6dbcf4f7ea68",
+  "source_snapshot_scripts_match_observation": true,
+  "gen": {
+    "files": {
+      "gen.json": {
+        "sha256": "94811cf7b95c3bb200f7e498fca2ae77dffbdbb3537ffd7eda1543e53ece8897",
+        "bytes": 23155,
+        "original_path": "/tmp/claude-1000/qcnam/runs/gen/gen.json"
+      },
+      "status": {
+        "sha256": "c4095be92e3f050be26ca6c6bad34d42dfd05ff8c3bd1d7dbdd8aa2934ab7208",
+        "bytes": 67,
+        "original_path": "/tmp/claude-1000/qcnam/runs/gen/status"
+      },
+      "log.txt": {
+        "sha256": "2aa66028ebc08ad2851230cd82b29be9b8e2888c264f3b98490c3e901d8b6dcc",
+        "bytes": 642,
+        "original_path": "/tmp/claude-1000/qcnam/runs/gen/log.txt"
+      }
+    },
+    "status": "start 2026-10-01T08:30:45+00:00\nend rc=0 2026-10-01T10:33:06+00:00\n",
+    "prompts": 8,
+    "prompt_tokens": 128,
+    "generated_tokens_per_prompt": 128,
+    "complete": true
+  },
+  "release_event_files": {
+    "1790850786656674863_readiness.json": {
+      "sha256": "e426f47c289864673c9de22e767fcc4da7eb58b52e8a217148dd4ceb133f1670",
+      "bytes": 1941,
+      "original_path": "/tmp/claude-1000/qcnam/admission-watch/1790850786656674863_readiness.json"
+    },
+    "1790850786893841210_release_attempt.json": {
+      "sha256": "0c8bb57597ddfc298cd46975cb44480bb88fbe072984279645faf60a33c7e3ae",
+      "bytes": 1947,
+      "original_path": "/tmp/claude-1000/qcnam/admission-watch/1790850786893841210_release_attempt.json"
+    },
+    "1790850791974029150_post_release_handles.json": {
+      "sha256": "c287613fda996b0f624369c9a9fcc31497435560e4d5c4ec1a584ad5b868e9ba",
+      "bytes": 2187,
+      "original_path": "/tmp/claude-1000/qcnam/admission-watch/1790850791974029150_post_release_handles.json"
+    }
+  },
+  "release_utc": "2026-10-01T10:33:06.893841+00:00",
+  "released_supervisor": {
+    "pid": 2637360,
+    "start_ticks": "303668157"
+  },
+  "release_watcher": {
+    "pid": 434818,
+    "source_commit": "0a7d9daed2ab72cde68cec5ab900e6f30eef8206",
+    "terminal": true,
+    "explanation": "Released existing supervisor, wrote post-release handles, then exited normally; absent PID is not a restart reason."
+  },
+  "completed_absent_pids": {
+    "greedy": 366429,
+    "mmlu1000": 2637424
+  },
+  "current_long": {
+    "live_handles": [
+      {
+        "pid": 727204,
+        "argv": [
+          "/bin/bash",
+          "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+        ],
+        "cwd": "/tmp/claude-1000/wt/qcnam-run",
+        "start_ticks": "305564319"
+      },
+      {
+        "pid": 727205,
+        "argv": [
+          "/usr/bin/python3",
+          "tools/deepseek_v41_nam_quality.py",
+          "--work",
+          "/tmp/claude-1000/qcnam/runs/long/work",
+          "--out",
+          "/tmp/claude-1000/qcnam/runs/long/run.json",
+          "--raw-out",
+          "/tmp/claude-1000/qcnam/runs/long/raw.json",
+          "--partial",
+          "/tmp/claude-1000/qcnam/runs/long/partial.json",
+          "--resume",
+          "--windows",
+          "4",
+          "--ctx",
+          "8192",
+          "--batch",
+          "1",
+          "--modes",
+          "a,a2,b,b_nam",
+          "--tf-chunks",
+          "0",
+          "--gen-file",
+          "/tmp/claude-1000/qcnam/runs/gen/gen.json"
+        ],
+        "cwd": "/tmp/claude-1000/wt/qcnam-run",
+        "start_ticks": "305564319"
+      },
+      {
+        "pid": 2637360,
+        "argv": [
+          "/bin/bash",
+          "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+        ],
+        "cwd": "/tmp",
+        "start_ticks": "303668157"
+      }
+    ],
+    "last_completed_checkpoint_layer": 30,
+    "last_logged_layer": "see retained live log; a logged layer may precede checkpoint replacement",
+    "run_status": "start 2026-10-01T10:33:06+00:00\n",
+    "complete": false
+  },
+  "finalization_watcher": {
+    "pid": 431062,
+    "state": "T",
+    "start_ticks": "304917012",
+    "wchan": "do_signal_stop",
+    "last_events_utc": "2026-10-01T10:58:48.434914+00:00",
+    "action": "Observed stopped (T); no signal, resume, duplicate launch or finalization performed."
+  },
+  "root_available_bytes": 251526926336,
+  "core_failure_policy": "Mandatory S3/S3b/S4/S4b FAIL from core remains irreversible under unchanged rule; variant ineligible for performance/adoption.",
+  "full_gate_complete": false,
+  "finalized": false,
+  "adopted": false,
+  "next_useful_action": "Monitor existing long PID727205 to terminal outputs, validate provenance and complete all-lane readiness, then obtain immutable final FAIL from original pinned finalizer. Finalization watcher431062 is stopped; parent owns publication. No evaluation rerun or source/threshold change.",
+  "archive_policy": "Byte-identical completed greedy artifacts and immutable release events archived; prior core/MMLU archives unchanged; all live checkpoint work retained."
+}

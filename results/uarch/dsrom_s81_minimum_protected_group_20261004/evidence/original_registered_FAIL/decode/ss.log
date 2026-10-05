@@ -1,0 +1,228 @@
+OpenSTA 2.6.0 aa598a2f14 Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13156, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13189, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13222, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13255, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13288, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13321, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13354, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 14748, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 14781, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 14814, timing group from output port.
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+Startpoint: _3871_ (rising edge-triggered flip-flop clocked by core)
+Endpoint: _3913_ (rising edge-triggered flip-flop clocked by core)
+Path Group: core
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+               0.000000    0.000000    0.000000 ^ _3871_/CLK (DFFHQNx1_ASAP7_75t_R)
+  11.675912  177.181778  147.350708  147.350708 ^ _3871_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                  _0033_ (net)
+             177.181778    0.000000  147.350708 ^ _1956_/A (INVx1_ASAP7_75t_R)
+  12.589953  154.204468  130.163239  277.513947 v _1956_/Y (INVx1_ASAP7_75t_R)
+                                                  _1292_ (net)
+             154.204468    0.000000  277.513947 v _2100_/B (NAND2x1_ASAP7_75t_R)
+   0.924352   51.662495   43.794384  321.308350 ^ _2100_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1371_ (net)
+              51.662495    0.000000  321.308350 ^ _2101_/B (NAND2x1_ASAP7_75t_R)
+   1.816864   30.756363   26.952911  348.261261 v _2101_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1372_ (net)
+              30.756363    0.000000  348.261261 v _2225_/A (NAND2x1_ASAP7_75t_R)
+   0.924899   27.778879   25.411341  373.672607 ^ _2225_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1496_ (net)
+              27.778879    0.000000  373.672607 ^ _2227_/A (NAND2x1_ASAP7_75t_R)
+   1.502556   22.377871   20.080687  393.753296 v _2227_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1498_ (net)
+              22.377871    0.000000  393.753296 v _2228_/A (INVx1_ASAP7_75t_R)
+   0.924352   20.244551   17.229191  410.982483 ^ _2228_/Y (INVx1_ASAP7_75t_R)
+                                                  _1499_ (net)
+              20.244551    0.000000  410.982483 ^ _2229_/B (NAND2x1_ASAP7_75t_R)
+   0.892420   23.867491   14.583446  425.565918 v _2229_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1500_ (net)
+              23.867491    0.000000  425.565918 v _2231_/A (NAND2x1_ASAP7_75t_R)
+   1.848704   38.305969   29.236086  454.802002 ^ _2231_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1502_ (net)
+              38.305969    0.000000  454.802002 ^ _2239_/B (NAND2x1_ASAP7_75t_R)
+   0.892420   20.126762   18.464703  473.266693 v _2239_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1510_ (net)
+              20.126762    0.000000  473.266693 v _2241_/A (NAND2x1_ASAP7_75t_R)
+   1.503118   32.760731   25.580372  498.847076 ^ _2241_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1512_ (net)
+              32.760731    0.000000  498.847076 ^ _2242_/A (INVx1_ASAP7_75t_R)
+   0.924444   17.900835   17.697178  516.544250 v _2242_/Y (INVx1_ASAP7_75t_R)
+                                                  _1513_ (net)
+              17.900835    0.000000  516.544250 v _2244_/B (NAND2x1_ASAP7_75t_R)
+   0.924352   26.214542   18.160141  534.704407 ^ _2244_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1515_ (net)
+              26.214542    0.000000  534.704407 ^ _2245_/B (NAND2x1_ASAP7_75t_R)
+   1.848888   24.915468   20.923153  555.627563 v _2245_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1516_ (net)
+              24.915468    0.000000  555.627563 v _2247_/B (NAND2x1_ASAP7_75t_R)
+   0.924899   27.210833   20.377478  576.005005 ^ _2247_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1518_ (net)
+              27.210833    0.000000  576.005005 ^ _2252_/A (NAND2x1_ASAP7_75t_R)
+   1.848888   25.176950   21.572355  597.577393 v _2252_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1523_ (net)
+              25.176950    0.000000  597.577393 v _2255_/B (NAND2x1_ASAP7_75t_R)
+   0.924899   27.743979   20.455748  618.033142 ^ _2255_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1526_ (net)
+              27.743979    0.000000  618.033142 ^ _2257_/A (NAND2x1_ASAP7_75t_R)
+   1.784840   24.759621   21.394442  639.427551 v _2257_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1528_ (net)
+              24.759621    0.000000  639.427551 v _2443_/A (NAND2x1_ASAP7_75t_R)
+   2.428564   46.346325   33.374580  672.802124 ^ _2443_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1714_ (net)
+              46.346325    0.000000  672.802124 ^ _2444_/A (INVx1_ASAP7_75t_R)
+   1.784840   28.750612   27.055080  699.857239 v _2444_/Y (INVx1_ASAP7_75t_R)
+                                                  _1715_ (net)
+              28.750612    0.000000  699.857239 v _2645_/A (NAND2x1_ASAP7_75t_R)
+   2.428564   47.078369   34.878044  734.735291 ^ _2645_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1916_ (net)
+              47.078369    0.000000  734.735291 ^ _2646_/A (INVx1_ASAP7_75t_R)
+   1.784840   28.932302   27.229496  761.964783 v _2646_/Y (INVx1_ASAP7_75t_R)
+                                                  _1917_ (net)
+              28.932302    0.000000  761.964783 v _2797_/A (NAND2x1_ASAP7_75t_R)
+   2.428564   47.111698   34.946491  796.911255 ^ _2797_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0284_ (net)
+              47.111698    0.000000  796.911255 ^ _2798_/A (INVx1_ASAP7_75t_R)
+   2.677260   36.527901   32.810143  829.721436 v _2798_/Y (INVx1_ASAP7_75t_R)
+                                                  _0285_ (net)
+              36.527901    0.000000  829.721436 v _2913_/A (NAND2x1_ASAP7_75t_R)
+   1.849798   40.991692   33.971046  863.692444 ^ _2913_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0400_ (net)
+              40.991692    0.000000  863.692444 ^ _3218_/A (NAND2x1_ASAP7_75t_R)
+   0.924444   21.842766   19.624636  883.317078 v _3218_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0704_ (net)
+              21.842766    0.000000  883.317078 v _3219_/B (NAND2x1_ASAP7_75t_R)
+  14.444592  215.177368  106.787582  990.104675 ^ _3219_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0705_ (net)
+             215.177368    0.000000  990.104675 ^ _3220_/A (INVx1_ASAP7_75t_R)
+  13.834638  175.150208  148.149719 1138.254395 v _3220_/Y (INVx1_ASAP7_75t_R)
+                                                  _0706_ (net)
+             175.150208    0.000000 1138.254395 v _3269_/A (NAND2x1_ASAP7_75t_R)
+   0.578766   53.590591   49.255711 1187.510132 ^ _3269_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0755_ (net)
+              53.590591    0.000000 1187.510132 ^ _3270_/A (INVx1_ASAP7_75t_R)
+  15.267213  154.470779   96.932022 1284.442139 v _3270_/Y (INVx1_ASAP7_75t_R)
+                                                  _0756_ (net)
+             154.470779    0.000000 1284.442139 v _3271_/B (NAND2x1_ASAP7_75t_R)
+   0.924352   51.712646   43.832382 1328.274536 ^ _3271_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0757_ (net)
+              51.712646    0.000000 1328.274536 ^ _3272_/B (NAND2x1_ASAP7_75t_R)
+   0.578112   19.955627   17.966406 1346.240845 v _3272_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0758_ (net)
+              19.955627    0.000000 1346.240845 v _3273_/A (INVx1_ASAP7_75t_R)
+   0.924899   19.521870   16.565638 1362.806519 ^ _3273_/Y (INVx1_ASAP7_75t_R)
+                                                  _0759_ (net)
+              19.521870    0.000000 1362.806519 ^ _3285_/A (NAND2x1_ASAP7_75t_R)
+   0.924444   15.803315   15.525470 1378.332031 v _3285_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0771_ (net)
+              15.803315    0.000000 1378.332031 v _3286_/B (NAND2x1_ASAP7_75t_R)
+   0.924899   37.110252   17.422174 1395.754150 ^ _3286_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0772_ (net)
+              37.110252    0.000000 1395.754150 ^ _3303_/A (NAND2x1_ASAP7_75t_R)
+   0.578112   16.050205   17.010614 1412.764771 v _3303_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0789_ (net)
+              16.050205    0.000000 1412.764771 v _3304_/A (INVx1_ASAP7_75t_R)
+   0.924352   18.626007   15.182300 1427.947144 ^ _3304_/Y (INVx1_ASAP7_75t_R)
+                                                  _0790_ (net)
+              18.626007    0.000000 1427.947144 ^ _3305_/B (NAND2x1_ASAP7_75t_R)
+   0.892420   15.247978   14.109936 1442.057007 v _3305_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0791_ (net)
+              15.247978    0.000000 1442.057007 v _3360_/A (NAND2x1_ASAP7_75t_R)
+   0.924352   24.346056   19.992674 1462.049683 ^ _3360_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0846_ (net)
+              24.346056    0.000000 1462.049683 ^ _3361_/B (NAND2x1_ASAP7_75t_R)
+   0.892420   18.464382   15.464851 1477.514526 v _3361_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0847_ (net)
+              18.464382    0.000000 1477.514526 v _3476_/A (NAND2x1_ASAP7_75t_R)
+  59.192986  848.199707  394.142059 1871.656616 ^ _3476_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0962_ (net)
+             848.199707    0.000000 1871.656616 ^ _3477_/B (NAND2x1_ASAP7_75t_R)
+   0.892420  131.796600   61.300076 1932.956665 v _3477_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0963_ (net)
+             131.796600    0.000000 1932.956665 v _3479_/A (NAND2x1_ASAP7_75t_R)
+   0.524726   45.344391   42.471138 1975.427856 ^ _3479_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0000_[2] (net)
+              45.344391    0.000000 1975.427856 ^ _3913_/D (DFFHQNx1_ASAP7_75t_R)
+                                    1975.427856   data arrival time
+
+               0.000000 1111.111084 1111.111084   clock core (rise edge)
+                           0.000000 1111.111084   clock network delay (ideal)
+                         -60.000000 1051.111084   clock uncertainty
+                           0.000000 1051.111084   clock reconvergence pessimism
+                                    1051.111084 ^ _3913_/CLK (DFFHQNx1_ASAP7_75t_R)
+                         -30.518587 1020.592529   library setup time
+                                    1020.592529   data required time
+---------------------------------------------------------------------------------------
+                                    1020.592529   data required time
+                                    -1975.427856   data arrival time
+---------------------------------------------------------------------------------------
+                                    -954.835327   slack (VIOLATED)
+
+
+Startpoint: _3884_ (rising edge-triggered flip-flop clocked by core)
+Endpoint: _3950_ (rising edge-triggered flip-flop clocked by core)
+Path Group: core
+Path Type: min
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+               0.000000    0.000000    0.000000 ^ _3884_/CLK (DFFHQNx1_ASAP7_75t_R)
+   1.937957   45.905807   79.057579   79.057579 ^ _3884_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                  _0046_ (net)
+              45.905807    0.000000   79.057579 ^ _1969_/A (INVx1_ASAP7_75t_R)
+   2.790017   37.160942   33.155716  112.213295 v _1969_/Y (INVx1_ASAP7_75t_R)
+                                                  _1305_ (net)
+              37.160942    0.000000  112.213295 v _3703_/A (NAND2x1_ASAP7_75t_R)
+   0.505996   15.621563   24.488619  136.701920 ^ _3703_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _1152_ (net)
+              15.621563    0.000000  136.701920 ^ _3704_/B (NAND2x1_ASAP7_75t_R)
+   0.442001    9.705787   11.017187  147.719101 v _3704_/Y (NAND2x1_ASAP7_75t_R)
+                                                  _0000_[43] (net)
+               9.705787    0.000000  147.719101 v _3950_/D (DFFHQNx1_ASAP7_75t_R)
+                                     147.719101   data arrival time
+
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                          25.000000   25.000000   clock uncertainty
+                           0.000000   25.000000   clock reconvergence pessimism
+                                      25.000000 ^ _3950_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          14.079597   39.079597   library hold time
+                                      39.079597   data required time
+---------------------------------------------------------------------------------------
+                                      39.079597   data required time
+                                    -147.719101   data arrival time
+---------------------------------------------------------------------------------------
+                                     108.639503   slack (MET)
+
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+_3477_/B                              320.00  848.20 -528.20 (VIOLATED)
+
+max capacitance
+
+Pin                                    Limit     Cap   Slack
+------------------------------------------------------------
+_3476_/Y                               46.08   59.19  -13.11 (VIOLATED)
+

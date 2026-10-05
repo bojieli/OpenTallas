@@ -1,0 +1,26 @@
+{
+  "authorized_phase": "frontend_only",
+  "caps": {
+    "affinity": [
+      14,
+      15
+    ],
+    "frontend_seconds": 900,
+    "memory_bytes": 68719476736,
+    "output_bytes": 4294967296,
+    "pids_max": 48,
+    "swap_bytes": 0,
+    "systemd_whole_seconds": 960
+  },
+  "host": "localhost",
+  "output_root": "/tmp/w17-D1-scope-parent-frontend-20261002-r2",
+  "parallel_memory_reservation_bytes": 34359738368,
+  "plan_sha256": "122784c4e73d0cfef533613f8aac23c66a7ff9922ee78f55cfe99b4d701db36a",
+  "review": "71 old and scope-aware source tests pass; exactly20observation scope substitutions plus module namespace; engine source byte-identical; oldfrontendFAILretained",
+  "runner_sha256": "e66227d8b3f7340c752176fce1bebf4b4e76c0bdec9d439074d134da2f8cbf5e",
+  "runtime_authorized": false,
+  "schema": "opentallas.D1.parent-frontend.GO.v1",
+  "scope": "Full source frontend only; no native runtime, numerical, original-cause, token or physical credit",
+  "source_commit": "6b94aa3088dfeaa8284e66615fbd8b948f8c65c2",
+  "source_root": "/tmp/opentallas-D1-parent-scope-frontend-20261002-r2"
+}

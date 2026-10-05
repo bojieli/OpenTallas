@@ -1,0 +1,14 @@
+{
+  "attempts": [
+    {
+      "status": "ERROR",
+      "stage": "initial_source_parse",
+      "reason": "numeric prefix in identifier; corrected before sizing/audit execution; no geometry or model change"
+    },
+    {
+      "status": "ERROR",
+      "stage": "model_receipt_compare",
+      "reason": "tuple/list representation mismatch; canonicalized comparison without changing sizing or geometry"
+    }
+  ]
+}

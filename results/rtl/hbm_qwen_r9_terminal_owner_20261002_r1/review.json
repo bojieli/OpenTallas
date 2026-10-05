@@ -1,0 +1,162 @@
+{
+  "GO_commit": "12a58eaaa706940d3db815d0acd137c55424b171",
+  "admitted_caps": {
+    "aggregate_output_bytes": 8589934592,
+    "build_jobs": 16,
+    "cpus": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "disk_headroom_bytes": 12884901888,
+    "kill_grace_s": 5,
+    "memory_bytes": 103079215104,
+    "per_file_bytes": 1073741824,
+    "poll_s": 1,
+    "sequential_targets": true,
+    "swap_bytes": 0,
+    "whole_wall_s": 3030
+  },
+  "all_original_output_files_preserved": true,
+  "complete_archive_or_binary": false,
+  "failure": "Qwen/CXX failed: OUTPUT_CAP",
+  "generated_extension_bytes": {
+    ".cpp": 5606561614,
+    ".d": 5656191,
+    ".dat": 6795312,
+    ".gch": 536103522,
+    ".h": 48434588,
+    ".mk": 1465458,
+    ".o": 2378600400
+  },
+  "generated_extension_counts": {
+    ".cpp": 35684,
+    ".d": 18763,
+    ".dat": 1,
+    ".gch": 2,
+    ".h": 53,
+    ".mk": 2,
+    ".o": 18759
+  },
+  "generated_files_not_copied_to_git": true,
+  "generated_files_retained_externally_at_original_output": true,
+  "inventory_files": 73277,
+  "inventory_hash_wall_s": 5.692978396080434,
+  "inventory_sha256": "5b8acf0323673debfd03c047b3353fa6206ec17a1673eb88edc7570faa885358",
+  "memory_terminal_observation": {
+    "memory.current": "9282805760",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "103079215104",
+    "memory.peak": "76751917056",
+    "memory.swap.max": "0"
+  },
+  "original_output": "/tmp/hbm-qwen-frontend-calibration-parent-20261002-r9-r1",
+  "output_bytes_complete_inventory": 8597419225,
+  "output_bytes_verdict_before_verdict_write": 8597410957,
+  "partial_objects_reuse": false,
+  "phases": [
+    {
+      "exit_code": 0,
+      "name": "frontend",
+      "termination_reason": null,
+      "wall_limit_s": 1200,
+      "wall_s": 729.9991151602007
+    },
+    {
+      "exit_code": -15,
+      "name": "CXX",
+      "termination_reason": "OUTPUT_CAP",
+      "wall_limit_s": 1800,
+      "wall_s": 926.2784835076891
+    }
+  ],
+  "physical_credit": false,
+  "proposal_sha256": "42846b1bc9e2605416bcc8f86320bc1afbdabd72cf63ab5f39d0f2136649ea23",
+  "raw_pins": {
+    "GO.json": {
+      "bytes": 1790,
+      "path": "GO.json",
+      "sha256": "20694619187c775751cd36fba71cc48b570933ecd9bfa0d89046a82894686444"
+    },
+    "Qwen-CXX-end.json": {
+      "bytes": 973,
+      "path": "Qwen-CXX-end.json",
+      "sha256": "ab0b7d1df9356d79145770e1d020e04925746da54877cbaf78be78194faf42b5"
+    },
+    "Qwen-CXX-start.json": {
+      "bytes": 832,
+      "path": "Qwen-CXX-start.json",
+      "sha256": "0cd03c830bc2f391c6c4ddbac4cb4361da5d71ccd65ce0edc09fb6d3d117a444"
+    },
+    "Qwen-frontend-end.json": {
+      "bytes": 1891,
+      "path": "Qwen-frontend-end.json",
+      "sha256": "07c1b9abdebd1380710d8848d1b238da8aef1ce2de11c6db7fdde3e7a20fe8f8"
+    },
+    "Qwen-frontend-start.json": {
+      "bytes": 1761,
+      "path": "Qwen-frontend-start.json",
+      "sha256": "0d8fc5720dd7847fb2dda83be5fe8fc43a98b288f16e191548fa710be2000c8f"
+    },
+    "Qwen/CXX-memory.jsonl": {
+      "bytes": 108752,
+      "path": "Qwen/CXX-memory.jsonl",
+      "sha256": "e65f0f6d8486ac771117bc2e3a208eb165a267b368ea159f510b6ff622d441c0"
+    },
+    "Qwen/CXX.log": {
+      "bytes": 13459189,
+      "path": "Qwen/CXX.log",
+      "sha256": "d38a6989eeb44a67a79efad91cc9b1bc52f7ba51680434e4c8d2dd330e25455a"
+    },
+    "Qwen/frontend-memory.jsonl": {
+      "bytes": 147731,
+      "path": "Qwen/frontend-memory.jsonl",
+      "sha256": "ca4f6699fc80acc9d6096955eaaf0415e4b03fc9134478f75957ee2be9f64461"
+    },
+    "Qwen/frontend.log": {
+      "bytes": 35800,
+      "path": "Qwen/frontend.log",
+      "sha256": "6ae027fd2535693a40f105c1a76aa2c1d73ae7ce9ca05083f744b118f76bcccf"
+    },
+    "progress-Qwen-frontend.json": {
+      "bytes": 6542,
+      "path": "progress-Qwen-frontend.json",
+      "sha256": "c2681f6d73577a924a7cb514fbd8a44f6c261584839fa1a82ff0c23e91548ccc"
+    },
+    "proposal.json": {
+      "bytes": 24939,
+      "path": "proposal.json",
+      "sha256": "42846b1bc9e2605416bcc8f86320bc1afbdabd72cf63ab5f39d0f2136649ea23"
+    },
+    "run_start.json": {
+      "bytes": 3672,
+      "path": "run_start.json",
+      "sha256": "50163e41843e1be6a7612468a2aba9fc1b1e142660b8639674d0b0a3d532e591"
+    },
+    "verdict.json": {
+      "bytes": 8268,
+      "path": "verdict.json",
+      "sha256": "050e1ea327f12c2f8c9d543ac0b5a42a3c4dc42412717eb53e8282225a109c9c"
+    }
+  },
+  "retry": false,
+  "schema": "opentallas.H1.Qwen.r9.terminal-owner.v1",
+  "scope": "Frontend PASS only; cold CXX resource failure, no DUT runtime or numerical verdict",
+  "source_commit": "575a9d988e444d38f9fdaef8a1004799319ab76d",
+  "token_credit": false,
+  "verdict": "FAIL_INCOMPLETE",
+  "whole_wall_s": 1656.3732512709685
+}

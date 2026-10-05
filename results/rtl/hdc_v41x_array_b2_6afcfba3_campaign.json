@@ -1,0 +1,347 @@
+{
+  "schema": "opentallas.hdc-v41x-array-hcp-gate.v1",
+  "status": "pass",
+  "simulation_build_note": "Verilator generated RTL; 576 fast C++ TUs OPT_FAST=-O1, slow TUs -O0, g++ harness compiled with final -O0; linked 2e6ea463891080c926c68ba5a3d00b98b228f95d0f84af9ed937e78a496ce8eb",
+  "claim_boundary": "This PASS was executed on source snapshot 6afcfba3 (b324403a plus a simulation-time harness hook); it does not establish a pass for later source revisions. Functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories are behavioral and the link PHY is a delay-line stand-in (60 cycles point-to-point, 30, 109 or 228 cycles per switched half-link; the 109-cycle setting represents about 209.76 ns over two half-links at an assumed 0.92 ns cycle before router latency; credit return is immediate in the link RTL); per-user persistent state uses base offsets in behavioral memories; Engram history restore is testbench logic. Clock rate is not claimed.",
+  "vehicle": "deepseek-v4.1-flash-reduced-v2 (40 layers, vocab 4040)",
+  "configurations": [
+    {
+      "name": "b2_p2p",
+      "body_packages": 2,
+      "lm_head_packages": 0,
+      "lm_head_multicast": false,
+      "shared_state": "relay",
+      "fabric": "p2p",
+      "stall_percent": 0,
+      "link_flit_bytes": 64,
+      "link_credits_flits": 32,
+      "link_delay_sweep_cycles_per_half": [
+        60
+      ],
+      "prompt_tokens": 3,
+      "generated_tokens_per_user": 1,
+      "steps_per_user": 3,
+      "prompts": [
+        [
+          0,
+          3563,
+          3745
+        ],
+        [
+          3118,
+          3583,
+          2357
+        ]
+      ],
+      "golden_generated": [
+        [
+          2047
+        ],
+        [
+          1917
+        ]
+      ],
+      "layers_per_package": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        [
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39
+        ]
+      ],
+      "hop_words": [
+        41,
+        0
+      ],
+      "relayed_items": {},
+      "side_messages": {},
+      "engram_hashing_packages": [
+        0
+      ],
+      "program_instructions": [
+        2015,
+        1982
+      ],
+      "isa_pipeline": [
+        {
+          "logits_bit_exact_every_step": true,
+          "argmax_and_value_every_step": true
+        },
+        {
+          "logits_bit_exact_every_step": true,
+          "argmax_and_value_every_step": true
+        }
+      ],
+      "timing_model_cycles_per_position": [
+        [
+          152277,
+          159629,
+          157333
+        ],
+        [
+          164155,
+          165915,
+          167675
+        ]
+      ],
+      "runs": [
+        {
+          "packages": 2,
+          "users": 1,
+          "generated_tokens": 1,
+          "token_mismatches": 0,
+          "logit_mismatches": 0,
+          "lm_head_steps_checked": 3,
+          "state_mismatches": 0,
+          "total_cycles": 967618,
+          "token_steps": 3,
+          "cycles_per_token_step": 322539.3,
+          "users_completed": 1,
+          "link_credit_stalls": 102,
+          "per_package": [
+            {
+              "package": 0,
+              "busy": 469203,
+              "side_wait": 0,
+              "send_wait": 0,
+              "starved": 498410,
+              "jobs": 3,
+              "state_mismatches": 0
+            },
+            {
+              "package": 1,
+              "busy": 497775,
+              "side_wait": 0,
+              "send_wait": 0,
+              "starved": 469838,
+              "jobs": 3,
+              "state_mismatches": 0
+            }
+          ],
+          "tokens": [
+            {
+              "user": 0,
+              "position": 0,
+              "token": 2815,
+              "cycle": 316634
+            },
+            {
+              "user": 0,
+              "position": 1,
+              "token": 3537,
+              "cycle": 642370
+            },
+            {
+              "user": 0,
+              "position": 2,
+              "token": 2047,
+              "cycle": 967618
+            }
+          ],
+          "pass": true,
+          "link_channel_cycles": 60,
+          "two_half_link_cycles_before_router": null,
+          "two_half_link_ns_at_assumed_0p92ns_before_router": null,
+          "bottleneck_package": 1,
+          "bottleneck_busy_cycles_per_token_step": 165925.0
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "log": [
+    "b2_p2p: ISA pipeline [{'logits_bit_exact_every_step': True, 'argmax_and_value_every_step': True}, {'logits_bit_exact_every_step': True, 'argmax_and_value_every_step': True}] (30 s)",
+    "b2_p2p: built (0 s)",
+    "b2_p2p u1 ch60: PASS 967618 cycles (1957 s)"
+  ],
+  "input_sha256": {
+    "rtl/test/tb_hdc_v41x_array.sv": "13bb19e8822538fc0913b5ae4fa5612a0961712f669fb8d844c48a1ef1d7c9b9",
+    "rtl/test/hdc_v41x_array_harness.cpp": "081c199d6679f96a4ce302c68b82f5922ebb292b3d387ed8e211fd7960e8436f",
+    "rtl/rom/ot_rom_pkg_link.sv": "d6b50e8e7d0387019710fbf2469143bdd280bfd761563462e11b1abe9ca124cd",
+    "rtl/rom/ot_rom_fabric_router.sv": "f4c2f0737c03cec072c8cabc23a873090a441d0ffdef26d3dc1a93e9f8e60277",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
+    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "fc694e30596d4a906cfcf95c75f56a062d96e857d296a595c3e4e71dcd442da7",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_accept.sv": "818aee526340a90bb8d2910fd5b3a2989f7123c75a2d2064f85dfafc1ebc280b",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
+    "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41/ot_hdc_fp4qdq.sv": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": "5a6cc941af82d6b74e0be17578c852ca3863fb439f1eb47da7612aebfcb8d77c",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
+    "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc",
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "9c7ab79f939056953bbbc79469afbe89814faf78b0acd8a2ea8be8aab03ed661",
+    "rtl/hdc/v41/ot_hdc_v41_xu.sv": "74dbce40a66467ff37f073ef2f68be378b7d297eaae38d320d13420aadea153c",
+    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "b96f2f75fd9d9bc26f4e0b03915958cccd13e3274e197679f09f68668ae3cca6",
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "302db959961034636d8028ee8ccb4868acb8d7744591574abea0d68566184afd",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+    "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21",
+    "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "5358f668fa3115cabd4f50a82bbc6fc603ccec661b11a3bf68623085341f536e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": "a7efc680c563abca19a59f4b83c8f1f6a6d5c33390b46cdac4f354b7a9c44630",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv": "2372df2af1c5176c5275461c3a2944f4c2365c613f0b9f626b7cbf784bef81b5",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "94d0d16aff5cb5d366fd189b64058c18f02aec242e1b414084eef5de1806eeb0",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "6b82064724a1f07e4bcbf4e7a787d017fc20699be1158831e9efe78bd4c03afc",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "87a3ae848a137aabbab8354563cc5acd7c1bfdcde0e471a7ce37f70198223c02",
+    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "50b064308d64bacd94be46ab6888c218749d4f75fe4007f73907740f1069dd1b",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "8434131c2b192687732b1ca2f8cfde9bcbbb0bccecc8d00ce7269f0b6178334d",
+    "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788",
+    "tools/hdc_golden_v41.py": "ba257b599ffe411032e403a4e96976038c83f78dbb83dd2c4e1e44f428e9eac2",
+    "tools/hdc_isa_v41.py": "ea490831b84faeb5eb971f3af9760bf435a154da1902fc6575590221a323e705",
+    "tools/hdc_program_v41.py": "04f5b2ec29e72963b20a1c46f28e8cfb209399273d8d21c571a8267c8e78e332",
+    "tools/hdc_timing_v41.py": "8298c22e3e1265bdd60e82f2e97dea4145d8c93f2627a74c80705588e892a127",
+    "tools/hdc_timing_v41x.py": "972a76897d4612059506656ba1efd745be23b9309e08041c784acaba54de607d",
+    "tools/hdc_images_v41x.py": "42989b07a65e85bf4406774d8b049f9e4d38ef0b259187f7a744fc97024ffcc3",
+    "tools/rtl_hdc_v41x_decode_campaign.py": "529d2ec6aa866eb1444067999cc3d865460e6311895f2ac0de3eef1be30e1e9c",
+    "tools/hdc_program_v41_array.py": "5b55bbd879596532781722341681c0290cf3d968bf7435837a2a0482e438b7b7",
+    "tools/rtl_hdc_v41x_array_campaign.py": "5ab603d0317ed6cc1a856bd4d2bb16d221a395292cee51dab012f8cae156639c"
+  },
+  "provenance": {
+    "source_snapshot_commit": "6afcfba39b4d6e2b92252030b24986d26e36e4ce",
+    "generated_cpp_rtl_commit": "b324403af85795421b6119b8509246cc2343bb5d",
+    "generated_cpp_note": "Generated RTL C++ comes from b324403a; the C++ harness was recompiled after the simulation-time hook at 6afcfba3. The harness bytes also match main cherry-pick 9613cf4e.",
+    "verilator_version": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad",
+    "binary_sha256": "2e6ea463891080c926c68ba5a3d00b98b228f95d0f84af9ed937e78a496ce8eb",
+    "build_stamp": "70a91da48281282b0e206787cd91f85ac7e7f7086dcf13904ef813ee21a5796e",
+    "image_sha256": {
+      "cfg_b2_p2p/expect_kv00_0.hex": "e66e4a7fa7d163748a564123024d7f42de319c8e3af01e42bc4e7c4a05731462",
+      "cfg_b2_p2p/expect_kv00_1.hex": "0e8aa90c3b04f68e211e10bf73c978a1c2d15c6824b36c9802af75fcedb2b5c6",
+      "cfg_b2_p2p/expect_kv01_0.hex": "77055cbe797b21d6c8b3ad3f97658e2eb6bf6ef6af3a1651366b325c47631ef9",
+      "cfg_b2_p2p/expect_kv01_1.hex": "94db9b9d733fd7c9e8cff0f61e6a72ac3ba3bd9b9fa2ec52f4a95c7da8d19b02",
+      "cfg_b2_p2p/expect_logits.hex": "d9516ee3d3106e1ace1db77400d351039e38bc4e4d8b3463243112a1094f1d48",
+      "cfg_b2_p2p/expect_tokens.hex": "a21a5fe3e382b9841f78ab7449066c13cd6f231edeaf4ef89cbedf8ac0f55392",
+      "cfg_b2_p2p/expect_vm00_0.hex": "2eff6ee4c2050ad88f5ab9b363bbb47998820e03f5a3f724a92898a513dac243",
+      "cfg_b2_p2p/expect_vm00_1.hex": "65cd9cb466ff3114609e0a18331c6db86ea65ad4a4416caf12cc7834463fe405",
+      "cfg_b2_p2p/expect_vm01_0.hex": "a65f8b149da73e3fc7ee2d25d14dc391cc98d787286e76119b56d52b476d7746",
+      "cfg_b2_p2p/expect_vm01_1.hex": "4ffc215ab3e8a596fb79e5ee8d0f1174bc5be2fe23a820171b671941e1b74a6e",
+      "cfg_b2_p2p/prog_stage00.hex": "7846fbf6a4b399c131430bc5cefb409f27c52ae5ebad71fed985417be94739b4",
+      "cfg_b2_p2p/prog_stage00_tags.txt": "dde5949512ef8767592fed6b885553fb6921342347d5d9446a6e575c80d3ed2f",
+      "cfg_b2_p2p/prog_stage01.hex": "f9d62b45cdea3877121f39560b6b7a9a8bc2c3661adf824ea251145ae93243c0",
+      "cfg_b2_p2p/prog_stage01_tags.txt": "61ceed74d9f3ba3c61f3d306c405a49b57d2c956104892bbc2294a25eb5b5561",
+      "cfg_b2_p2p/prompts.hex": "629689d860b553dc41b784c00027fd62dac8ab134752810bbb120ed093251e1d",
+      "roms/crom.hex": "03dcd11176a51cc3a7d11980c0e8fb782655fbe056f6f06fd2abb2f47167f418",
+      "roms/erom.hex": "6e84b7c8a40bf076475900d020495237375f7a52ca72e9908f9056a6f2710e7c",
+      "roms/hbank.hex": "984e2e8112757647868c4d162fc1938f516b2d37b751a7d9c327f64a9a9bd98a",
+      "roms/hrom.hex": "36b9ef72e36132d631c00109bea16720a6eb7cc8bb6d33a205de9b6ac5e28f12",
+      "roms/prog.hex": "c7e8bdc5c8b0aabeac9a9479004280ac931ff6bf282a91e5d90db14cdcbbd5ad",
+      "roms/prog_tags.txt": "451d4d69670a11747f73f28dc519dd93ef94d908844c314b9e7ed464e69f28d6",
+      "roms/qrom.hex": "c0df6de5d8e866d184a4a6f6c9e2648a069fcf49e2b0e894e91c94b2601bffd2",
+      "roms/wrom.hex": "b3bdd54bdd945e9ee9b981d4175ae3fd6081eadc0b8c22a16b65a999b7cb3bb9"
+    },
+    "simulator_command": [
+      "stdbuf",
+      "-oL",
+      "/tmp/codex_v41x_array_current/work/obj_b2_p2p/Vtb_hdc_v41x_array",
+      "+DIR=/tmp/codex_v41x_array_current/work/cfg_b2_p2p",
+      "+ROMS=/tmp/codex_v41x_array_current/work/roms",
+      "+NUSERS=1",
+      "+NPROMPT=3",
+      "+NGEN=1",
+      "+LINK_CH=60",
+      "+HB=1000000"
+    ],
+    "campaign_command": [
+      "python3",
+      "tools/rtl_hdc_v41x_array_campaign.py",
+      "--only",
+      "b2_p2p",
+      "--reuse",
+      "--scratch",
+      "/tmp/codex_v41x_array_current/work",
+      "--output",
+      "/tmp/codex_v41x_array_current/record.json"
+    ],
+    "wall_seconds": 1957,
+    "simulator_log_sha256": "6d8cee3217c9a75460a7aebd56ea7cb967c295b8e20078065791753e5cfebb98",
+    "worker": "ot-pve2"
+  },
+  "comparison_to_historical_b2": {
+    "historical_source_snapshot_commit": "d03622c966983f4614765cb98cac49601b0415ba",
+    "historical_result": "results/rtl/hdc_v41x_array_b2_campaign.json",
+    "changed_source_file_count": 10,
+    "changed_source_files": [
+      "rtl/test/tb_hdc_v41x_array.sv",
+      "rtl/test/hdc_v41x_array_harness.cpp",
+      "rtl/rom/ot_rom_pkg_link.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+      "tools/hdc_golden.py",
+      "tools/hdc_timing_v41x.py",
+      "tools/rtl_hdc_v41x_decode_campaign.py",
+      "tools/rtl_hdc_v41x_array_campaign.py"
+    ],
+    "same_regenerated_image_sha256": true,
+    "same_tokens_cycles_mismatch_counters_link_stalls_and_per_package_stats": true,
+    "new_record_fields": "link_channel_cycles=60 and two null switched-hop fields; all preexisting run fields match the historical result"
+  }
+}

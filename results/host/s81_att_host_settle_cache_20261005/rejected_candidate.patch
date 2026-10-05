@@ -1,0 +1,93 @@
+diff --git a/tools/runtime/dsrom/s81_minimum_attention_cut.hpp b/tools/runtime/dsrom/s81_minimum_attention_cut.hpp
+index 7b009b6e2..0058836f1 100644
+--- a/tools/runtime/dsrom/s81_minimum_attention_cut.hpp
++++ b/tools/runtime/dsrom/s81_minimum_attention_cut.hpp
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include "s81_minimum_runtime.hpp"
++#include <cstdlib>
+ #include <memory>
+ #include <stdexcept>
+ #include <type_traits>
+@@ -17,6 +18,27 @@ class DsromS81MinimumAttentionCut : public std::enable_shared_from_this<
+     Endpoint& endpoint;
+     long prepared=-1;
+     bool stopped=false;
++    // HOST-only memoization of repeated settled LOW evaluations. This never
++    // suppresses a rising/falling edge or any VM/KV participant evaluation.
++    bool cache_settle=false,endpoint_settled=false,endpoint_inputs_dirty=true;
++    bool reset_seen=false,cold_complete=false,activity_seen=false;
++    bool settled_clock=false,settled_reset=false;
++    void evaluated_endpoint() {
++        endpoint_settled=true;endpoint_inputs_dirty=false;
++        settled_clock=bool(endpoint.clk);settled_reset=bool(endpoint.rst_n);
++    }
++    void settle_endpoint() {
++        // After the first request/credit/GO, use the original evaluation path
++        // forever. Idle pins alone never authorize suppressing accepted debt.
++        const bool dormant=cache_settle&&cold_complete&&!activity_seen&&
++            endpoint.rst_n&&!endpoint.clk&&adapter.ready&&adapter.idle&&
++            !adapter.go&&!adapter.fault&&endpoint.job_ready&&
++            !endpoint.sc_v&&!endpoint.pv_v;
++        if(!dormant||!endpoint_settled||endpoint_inputs_dirty||
++           settled_clock!=bool(endpoint.clk)||settled_reset!=bool(endpoint.rst_n)) {
++            endpoint.eval();evaluated_endpoint();
++        }
++    }
+     template<class Bus> static bool bit(const Bus& b,unsigned i) {
+         if constexpr(std::is_integral<Bus>::value)return (uint64_t(b)>>i)&1u;
+         else return (b[i/32]>>(i%32))&1u;
+@@ -52,11 +74,14 @@ class DsromS81MinimumAttentionCut : public std::enable_shared_from_this<
+     }
+     bool propagate() {
+         bool changed=false;unsigned a=0;
+-        auto take=[&](auto& dst,unsigned n){changed|=copy(dst,0,adapter.att_to,a,n);a+=n;};
++        auto take=[&](auto& dst,unsigned n){const bool c=copy(dst,0,adapter.att_to,a,n);
++            changed|=c;endpoint_inputs_dirty|=c;a+=n;};
+         take(endpoint.pv_cr,1);take(endpoint.p_w,512);take(endpoint.p_v,1);
+         take(endpoint.sc_cr,1);take(endpoint.kv_w,16960);take(endpoint.kv_m,4);
+         take(endpoint.kv_v,1);take(endpoint.q_w,8192);take(endpoint.q_v,1);
+         take(endpoint.job_t,16);take(endpoint.job_v,1);
++        activity_seen|=bool(adapter.go)||bool(endpoint.job_v)||bool(endpoint.q_v)||
++            bool(endpoint.kv_v)||bool(endpoint.p_v)||bool(endpoint.sc_cr)||bool(endpoint.pv_cr);
+         if(a!=25690)throw std::runtime_error("selected ATT input bus extent differs");
+         unsigned b=0;
+         auto put=[&](const auto& src,unsigned n){changed|=copy(adapter.att_from,b,src,0,n);b+=n;};
+@@ -71,6 +96,12 @@ class DsromS81MinimumAttentionCut : public std::enable_shared_from_this<
+ public:
+     DsromS81MinimumAttentionCut(DsromS81MinimumRuntime& r,Adapter& a,Endpoint& e)
+     :runtime(r),adapter(a),endpoint(e) {
++        const char* cache=std::getenv("DSROM_S81_ATT_HOST_SETTLE_CACHE");
++        if(cache&&*cache) {
++            if((cache[0]!='0'&&cache[0]!='1')||cache[1])
++                throw std::runtime_error("ATT host settle cache selector must be 0 or 1");
++            cache_settle=cache[0]=='1';
++        }
+         if(!r.context||!r.cycle||a.contextp()!=r.context||e.contextp()!=r.context)
+             throw std::runtime_error("ATT cut requires borrowed SAME-context actual models");
+         static_assert(sizeof(a.att_to)==803*sizeof(uint32_t),"ATT adapter input width");
+@@ -89,7 +120,7 @@ public:
+             // Same 64-settle guard as the existing W17 attention host; no
+             // clock, ready override, added pipeline, or numerical substitution.
+             for(unsigned i=0;i<64;++i) {
+-                bool changed=propagate();endpoint.eval();adapter.eval();
++                bool changed=propagate();settle_endpoint();adapter.eval();
+                 if(!changed&&!propagate())return;
+             }
+             throw std::runtime_error("actual ATT cut combinational join did not settle");
+@@ -111,10 +142,14 @@ public:
+                 // Input fields were frozen in prepare. Do NOT propagate here:
+                 // the adapter may already have evaluated this SAME rising edge.
+                 self->endpoint.rst_n=released;self->endpoint.clk=1;self->endpoint.eval();
++                self->evaluated_endpoint();
+             },
+             [self](bool released){
+                 self->endpoint.rst_n=released;self->endpoint.clk=0;self->endpoint.eval();
+-                if(!released)self->prepared=-1;
++                self->evaluated_endpoint();
++                if(!released){self->prepared=-1;self->reset_seen=true;self->cold_complete=false;
++                    self->activity_seen=false;}
++                else self->cold_complete=self->reset_seen;
+             },
+             [self](){return self->stopped||bool(self->adapter.fault);}};
+     }

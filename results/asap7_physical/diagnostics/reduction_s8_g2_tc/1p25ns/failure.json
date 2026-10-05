@@ -1,0 +1,408 @@
+{
+  "acceptance_failures": [
+    "setup_wns_ns=-0.870789 < 0.0",
+    "setup_tns_ns=-15.3251 < 0.0",
+    "setup_violations=30.0 > 0.0"
+  ],
+  "campaign_id": "opentallas-asap7-predictive-physical-v1",
+  "canonical": false,
+  "case": {
+    "async_reset_ports": [
+      "rst_n"
+    ],
+    "clock_period_ns": 1.25,
+    "clock_port": "clk",
+    "core_utilization_percent": 35,
+    "corner": "TC",
+    "description": "Eight-source, two-group tagged deterministic reduction endpoint used as a local NoC/reduction representative.",
+    "equivalence_method": "state_relation_transition_cec",
+    "name": "reduction_s8_g2_tc",
+    "parameters": {
+      "DATA_W": 32,
+      "GROUPS": 2,
+      "SOURCES": 8,
+      "TAG_W": 16
+    },
+    "place_density": 0.6,
+    "primary_vt": "RVT",
+    "sources": {
+      "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5"
+    },
+    "state_aliases": {
+      "expected[0][1]": "expected[0][0]",
+      "expected[0][2]": "expected[0][0]",
+      "expected[0][3]": "expected[0][0]",
+      "expected[0][4]": "expected[0][0]",
+      "expected[0][5]": "expected[0][0]",
+      "expected[0][6]": "expected[0][0]",
+      "expected[0][7]": "expected[0][0]",
+      "expected[1][1]": "expected[1][0]",
+      "expected[1][2]": "expected[1][0]",
+      "expected[1][3]": "expected[1][0]",
+      "expected[1][4]": "expected[1][0]",
+      "expected[1][5]": "expected[1][0]",
+      "expected[1][6]": "expected[1][0]",
+      "expected[1][7]": "expected[1][0]"
+    },
+    "temperature_c": 0,
+    "top": "ot_reduction_endpoint",
+    "voltage_v": 0.7
+  },
+  "claim_boundary": [
+    "ASAP7 is a predictive research PDK and is not tied to a foundry.",
+    "The three cases contain no ROM or SRAM macro; bundled ASAP7 FakeRAM collateral is forbidden and unused.",
+    "The numeric cases implement signed integer DV only, not OpenTallas target MXFP4 x FP8, FP8 x FP8, BF16, or FP32 arithmetic.",
+    "Passing results constrain public digital-cell and routed-wire plausibility only; they do not validate target ROM density, energy, sense margin, power delivery, package, HBM, yield, or manufacturability.",
+    "The reported TC model is the ASAP7 library's nominal model condition and has no calibrated error bar against TSMC N7 or N4."
+  ],
+  "copied_artifacts": {
+    "1_2_yosys.raw.v": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/1_2_yosys.raw.v",
+      "sha256": "cd2e90d930e327de4fa2ce71442fdccc0bb69bd45c78f3cba1161f0f09795099",
+      "size_bytes": 983592
+    },
+    "5_route_drc.rpt": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/5_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "6_finish.rpt": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/6_finish.rpt",
+      "sha256": "ccfa1c4922da228a2b96ad00642e3863b1fe22c6b1a4450041b8d410863befc0",
+      "size_bytes": 54212
+    },
+    "config.mk": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/config.mk",
+      "sha256": "3ee0f6f919f1099a8ec0e1b87f41a6eef27bda40eaf1f32c0a56a90131126ea3",
+      "size_bytes": 740
+    },
+    "constraint.sdc": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/constraint.sdc",
+      "sha256": "dcaec96632f667e999e495de2d72c360854f36be10de46154623cf8388f1dd36",
+      "size_bytes": 379
+    },
+    "equivalence_mapped_gate_transition.aag": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition.aag",
+      "sha256": "26f2689a511ee6f679ec0d029c576440abc226a23fabc41bbd73f2072e4a40e8",
+      "size_bytes": 179494
+    },
+    "equivalence_mapped_gate_transition.aig": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition.aig",
+      "sha256": "cf5649f850e47631ac5b3310b3ea3d00b9efd0bc4e987b89eb426f2b245b4bf5",
+      "size_bytes": 62906
+    },
+    "equivalence_mapped_gate_transition.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition.json",
+      "sha256": "15ec110f0258485b6f8f84861ed5c0756777408b22d31da605835303c0e6aa0f",
+      "size_bytes": 11678757
+    },
+    "equivalence_mapped_gate_transition_aiger.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition_aiger.log",
+      "sha256": "356bd376a694b9fa4b9d3a67c97365c6731be9d0cc0cf636d206ab3cf5c0af0a",
+      "size_bytes": 97315
+    },
+    "equivalence_mapped_gate_transition_aiger.ys": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition_aiger.ys",
+      "sha256": "ddfb1e01d5794d3bb13724354bdd25f90fe8e62c1afdfd52a5ef001b5a67f6d8",
+      "size_bytes": 885
+    },
+    "equivalence_mapped_gate_transition_normalize.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition_normalize.log",
+      "sha256": "f3d1ab6d5b0d452f055a9648b7f545ac12e716cd8482b45d4f9b2d02934a975a",
+      "size_bytes": 67618
+    },
+    "equivalence_mapped_gate_transition_normalize.ys": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition_normalize.ys",
+      "sha256": "ee448ba4470b16e1a6ab2b695d896aa2a2d4e890f191b160bb110b80037ee908",
+      "size_bytes": 1420
+    },
+    "equivalence_mapped_gate_transition_normalized.il": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition_normalized.il",
+      "sha256": "0110fa2a220551603cb5c5263f48fb32bf19fd4dac721b9328aaa20ced90e5ed",
+      "size_bytes": 10068343
+    },
+    "equivalence_mapped_gate_transition_normalized.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gate_transition_normalized.json",
+      "sha256": "838d77cf2c648d0cf0d816b7826fb2209fbc6aa04ae6be8643147788996b1b61",
+      "size_bytes": 20749967
+    },
+    "equivalence_mapped_gold_transition.aag": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition.aag",
+      "sha256": "bbe6693e394fdbad1bd0f53867eb02a9feacfa509bedb0581a55e4743d01bf5c",
+      "size_bytes": 164208
+    },
+    "equivalence_mapped_gold_transition.aig": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition.aig",
+      "sha256": "51541a6f811ef06031813414677bcc4de9a6ce97dea5ade90eb16b969a28c523",
+      "size_bytes": 60439
+    },
+    "equivalence_mapped_gold_transition.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition.json",
+      "sha256": "a11def392d08428e5324c4b80e77192c230f0897ad732adf2d699ae1d5ae3ff6",
+      "size_bytes": 1344157
+    },
+    "equivalence_mapped_gold_transition_aiger.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_aiger.log",
+      "sha256": "b7767a9e78e95ae057360c4e53ce0b3d34cc2c1947fb71ea7a8b1d64bbd68615",
+      "size_bytes": 107907
+    },
+    "equivalence_mapped_gold_transition_aiger.ys": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_aiger.ys",
+      "sha256": "7d0c54710c3a8b900fcaf694f3c95f0207d13a03e668e55e24f82b6e411c9127",
+      "size_bytes": 885
+    },
+    "equivalence_mapped_gold_transition_normalize.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_normalize.log",
+      "sha256": "2565c2647fbd9113910d5794839833100087e533c614c22417b852c2f40504e4",
+      "size_bytes": 45619
+    },
+    "equivalence_mapped_gold_transition_normalize.ys": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_normalize.ys",
+      "sha256": "d59a0235a383265abde997a87b78b06b3992a211d4ee3bd70f09203b0bc6b04e",
+      "size_bytes": 741
+    },
+    "equivalence_mapped_gold_transition_normalized.il": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_normalized.il",
+      "sha256": "9ee1ad5332d8ef89b9efb6d34bedf2fc6d4898621eda52f0118c2253895b9236",
+      "size_bytes": 1204139
+    },
+    "equivalence_mapped_gold_transition_normalized.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_normalized.json",
+      "sha256": "cfeb210dd2c17076d21da5bc98225f7d5efec9ed3d7111f4b0309c55262966d3",
+      "size_bytes": 2116227
+    },
+    "equivalence_mapped_gold_transition_pre_state.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_gold_transition_pre_state.json",
+      "sha256": "86a290664024bb1a6a7117803ad2961cf2167686ee49c6a47843d8f33d2adad8",
+      "size_bytes": 603159
+    },
+    "equivalence_mapped_state_relation.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_state_relation.json",
+      "sha256": "cccc25ad625c569950c0389f1a10a649b78a390de20bd0322df2b3a28484d59f",
+      "size_bytes": 838
+    },
+    "equivalence_mapped_transition_abc_cec.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/equivalence_mapped_transition_abc_cec.log",
+      "sha256": "a370690cb004d94b39fb4d7eb44f7cb61245656315e2ad41eb7a4df946aef98f",
+      "size_bytes": 168
+    },
+    "metadata.json": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/metadata.json",
+      "sha256": "4cfb65d3adca35c8246c42d932fe1162b352cee786f2bda3375ddfbc4835e44b",
+      "size_bytes": 23851
+    },
+    "openroad_flow.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/openroad_flow.log",
+      "sha256": "fb3408fd9edf76a8c45c427eea419cf879b24ecad9fc55994324afde180c2b60",
+      "size_bytes": 151018
+    },
+    "openroad_synthesis.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/openroad_synthesis.log",
+      "sha256": "ec3d5e421ed6ebf24c4b5a46cfee50a9baf667d3b02f2af88343ea505a8c105d",
+      "size_bytes": 20973
+    },
+    "unconstrained_check.log": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "unconstrained_check.tcl": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/unconstrained_check.tcl",
+      "sha256": "2a13ee64445c175c69d28090bce8a8ca60aa7161327cb141e076b990c9c8e13d",
+      "size_bytes": 841
+    },
+    "unconstrained_endpoints.rpt": {
+      "path": "results/asap7_physical/diagnostics/reduction_s8_g2_tc/1p25ns/artifacts/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  },
+  "final_artifact_manifests": {
+    "6_final.def": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/results/asap7/opentallas_reduction_s8_g2_tc/base/6_final.def",
+      "sha256": "c794968d1d7e3f0aa57e5f90c490ef26d031dfd7d640442dfe50c04482dac990",
+      "size_bytes": 7972868
+    },
+    "6_final.gds": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/results/asap7/opentallas_reduction_s8_g2_tc/base/6_final.gds",
+      "sha256": "0e13db2ac849154e23282d8c013be768a15d6c35accbc364b489186dc84622ef",
+      "size_bytes": 9504052
+    },
+    "6_final.odb": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/results/asap7/opentallas_reduction_s8_g2_tc/base/6_final.odb",
+      "sha256": "3335b96b480d3b510a41590ba2a0725a994b8f4b1baab2584c63ae477803a6e9",
+      "size_bytes": 15194905
+    },
+    "6_final.sdc": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/results/asap7/opentallas_reduction_s8_g2_tc/base/6_final.sdc",
+      "sha256": "4018d67a9ea8526b691849761357df1f916de533cf83c3ae64ea7e2372509395",
+      "size_bytes": 13871
+    },
+    "6_final.spef": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/results/asap7/opentallas_reduction_s8_g2_tc/base/6_final.spef",
+      "sha256": "1b16f9efe2692106bacd0dbdbc8e162cf5ada3e9ffe8250d1fc61c97d628c3bb",
+      "size_bytes": 8177206
+    },
+    "6_final.v": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/results/asap7/opentallas_reduction_s8_g2_tc/base/6_final.v",
+      "sha256": "8b6a9c3b2a2690571c5bf949c50a2976cfb8272455b7a42dbc599465e6a70060",
+      "size_bytes": 869533
+    }
+  },
+  "generated_at": "2026-08-28T10:44:03+00:00",
+  "git": {
+    "dirty_paths": [
+      " M configs/pdk/asap7_physical_lock.json",
+      "?? results/asap7_physical/REPORT.md",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/1_2_yosys.raw.v",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/5_route_drc.rpt",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/6_finish.rpt",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/config.mk",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/constraint.sdc",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_abc_cec.log",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.aag",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.aig",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.log",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.ys",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate_state.json",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.aag",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.aig",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.log",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.ys",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold_state.json",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/metadata.json",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/openroad_flow.log",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/openroad_synthesis.log",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/unconstrained_check.log",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/unconstrained_check.tcl",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/unconstrained_endpoints.rpt",
+      "?? results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/failure.json",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/1_2_yosys.raw.v",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/1_2_yosys.v",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/5_route_drc.rpt",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.def",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.gds",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.odb",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.sdc",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.spef",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.v",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/6_finish.rpt",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/config.mk",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/constraint.sdc",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_abc_cec.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gate.aag",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gate.aig",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gate.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gate.ys",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gate_state.json",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gold.aag",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gold.aig",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gold.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gold.ys",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_mapped_gold_state.json",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_abc_cec.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gate.aag",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gate.aig",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gate.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gate.ys",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gate_state.json",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gold.aag",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gold.aig",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gold.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gold.ys",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/equivalence_postroute_gold_state.json",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/ff_to_nextstate.v",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/metadata.json",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/openroad_flow.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/openroad_synthesis.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/unconstrained_check.log",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/unconstrained_check.tcl",
+      "?? results/asap7_physical/numeric_e4_l16_tc/artifacts/unconstrained_endpoints.rpt",
+      "?? results/asap7_physical/numeric_e4_l16_tc/physical.json",
+      "?? results/asap7_physical/physical.json"
+    ],
+    "head": "6b5e6cf4580c709024a7365d25abe22d103be7b3",
+    "selected_sources": [
+      "rtl/ot_reduction_tree.sv"
+    ],
+    "selected_sources_match_index": true,
+    "worktree_clean": false
+  },
+  "lock": {
+    "path": "configs/pdk/asap7_physical_lock.json",
+    "sha256": "20254fc5361fa1109f366154da979b4a1563f2dddcb446edc09ea24ffccff395",
+    "size_bytes": 8332
+  },
+  "metrics": {
+    "antenna_violating_nets": 0.0,
+    "antenna_violating_pins": 0.0,
+    "clock_count": 1.0,
+    "clock_period_ns": 1.25,
+    "core_area_um2": 2240.22,
+    "die_area_um2": 2651.22,
+    "drc_errors": 0.0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_hz": 471523000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0.0,
+    "hold_wns_ns": 0.056515300000000004,
+    "raw_timing_ps": {
+      "hold_tns_ns": 0.0,
+      "hold_wns_ns": 56.5153,
+      "setup_tns_ns": -15325.1,
+      "setup_wns_ns": -870.789
+    },
+    "sdc_clock_period_ps": 1250.0,
+    "setup_tns_ns": -15.3251,
+    "setup_violations": 30.0,
+    "setup_wns_ns": -0.870789,
+    "standard_cell_area_um2": 987.314,
+    "utilization_fraction": 0.440722,
+    "vias": 69142.0,
+    "wirelength_um": 23047.0
+  },
+  "runner": {
+    "path": "tools/run_asap7_physical.py",
+    "sha256": "7db0636b3931499818a2ce4d46dcf7b8f79b1d92d9b4b9fa0213f3f830e1cb5c",
+    "size_bytes": 79700
+  },
+  "schema_version": 1,
+  "source_inventory": [
+    {
+      "path": "rtl/ot_reduction_tree.sv",
+      "sha256": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+      "size_bytes": 8276
+    }
+  ],
+  "status": "fail",
+  "unconstrained_endpoint_audit": {
+    "acceptance_max": 0,
+    "artifact": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "log": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "script": {
+      "path": "build/asap7_physical/reduction_s8_g2_tc/unconstrained_check.tcl",
+      "sha256": "2a13ee64445c175c69d28090bce8a8ca60aa7161327cb141e076b990c9c8e13d",
+      "size_bytes": 841
+    },
+    "status": "pass",
+    "unconstrained_endpoint_report_lines": 0
+  }
+}

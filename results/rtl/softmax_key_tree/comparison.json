@@ -1,0 +1,134 @@
+{
+  "scope": "Isolated leaf-key maximum tree; production unchanged. No added state or cycles.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_baseline_synth_sta_1ns.json",
+      "record_sha256": "8ba0ecd3f813a0a8a4c3379a07b87451caf7bf0ebccf6b7db3bb8af97b14020f",
+      "area_um2": 10969.284,
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+          "size_bytes": 3047
+        },
+        {
+          "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "sha256": "a6113740db44bf1f3ebe7e550ede74d696e68312d8d439d9d0d16de0eb697975",
+          "size_bytes": 20461
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+          "size_bytes": 31759
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+          "size_bytes": 11904
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+          "size_bytes": 6360
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        },
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+          "size_bytes": 11118
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 6482,
+            "setup_wns_ns": -9.969061171987859,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_synth_sta_1ns.json",
+      "record_sha256": "32b34739d62644e2d35b9585debda0e9b4ef611b8c6464a979ee3de37786c6c8",
+      "area_um2": 10476.368,
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+          "size_bytes": 3047
+        },
+        {
+          "path": "results/rtl/softmax_key_tree/candidate.sv",
+          "sha256": "679b2dc85593eae5a70f20066654963d42253a01fbea3d82e03b727b0733ee2d",
+          "size_bytes": 20710
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+          "size_bytes": 31759
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+          "size_bytes": 11904
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+          "size_bytes": 6360
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        },
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+          "size_bytes": 11118
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 6430,
+            "setup_wns_ns": -10.142146718575376,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_reduction_percent": 4.49360231716126,
+  "validation": "16 tests pass: baseline/candidate in both simulators at LANES1/3/64/65, 256 random maximum patterns and 24 controller transactions each. Real softmax nine numerical cases/two refusals pass, unchanged 767158 cycles,276 evaluations,121 hits.",
+  "decision": "Mapped area improves but global prelayout slack regresses slightly; matched current-source baseline/candidate routes launched before integration.",
+  "physical_pending": [
+    "results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_cts12_1ns.json",
+    "results/physical_abi3/asap7/a3_attention_softmax_block/key_tree_baseline_cts12_1ns.json"
+  ]
+}

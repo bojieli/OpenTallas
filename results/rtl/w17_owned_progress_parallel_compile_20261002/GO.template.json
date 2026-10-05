@@ -1,0 +1,29 @@
+{
+  "schema": "w17.owned_progress.native_compile_GO.v1",
+  "plan_sha256": "df887bd5bf4b7dc2081cda01af0aaa68bd106b2d445e58b42cb714a5d08cd2ca",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "phase_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "scope": "NATIVE_COMPILE_ONLY",
+  "execution_allowed": false,
+  "owner_interface_policy": "ORIGINAL_4E_OBSERVATION_ONLY_NO_CANCELLATION_SELECTION",
+  "independent_review": "REQUIRED",
+  "phase_runner": "tools/run_w17_owned_progress_compile_phase.py",
+  "no_runtime_or_hardware_credit": true
+}

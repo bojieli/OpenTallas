@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.w17.pp_parent_binding.v1",
+  "source_commit": "787e3cd6999c36843ed9631f6d2de37d8afbbd39",
+  "component_record": "results/rtl/w17_pp_dpi_r2_pass.json",
+  "all_measured_adapter_inputs_identical": true,
+  "prior_tracked_files_modified": 0,
+  "syntax_checks": "three new Python tools parse successfully",
+  "default_parameters": {
+    "FAST": 0,
+    "PP": 0,
+    "BP": 0,
+    "FRONT_PAR": 0
+  },
+  "qualification": "PP DPI adapter only; composed FAST/PP checkpoint gate PID532447 remains live and pending; no full token or physical qualification",
+  "adopted": false
+}

@@ -1,0 +1,53 @@
+{
+  "record": "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns.json",
+  "record_sha256": "91117b81c8c097648404931ac75a53f095018dcc065a3455b2ce3c37604443d7",
+  "sources": [
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+      "size_bytes": 6561
+    }
+  ],
+  "artifacts": {
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/1_2_yosys.v": "5100e41b37f78e8f290f562fb424c069cb3c853c0eefe5801cd5149476a22590",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/6_final.v": "6900b7ddb827fbbd7a6eae67ccae7818fa3143ccf33955968762a7666b7c048a",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/6_finish.rpt": "9b4ec8860cc7d6bbdaeeac76133c841325f31c3d2e00be50e36c86e368df000f",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/config.mk": "ca9d22568a637e9be4cd190616377ecea2f165b4f0019d03919125b7cb412d56",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/metadata.json": "c592d1c74c4b6f020d8a6a76a2c0dd974a0cff7b867ca098ca4f693a521df6b0",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.055285,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 19.0,
+        "setup_wns_ns": -1.6756700000000002,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 338.402,
+  "scope": "WIDTH168 DIVISOR_BITS6 STEP10 final extracted ASAP7 TT 1 ns; standalone only.",
+  "critical_setup_path": {
+    "start": "rem[2]",
+    "end": "rem[4]"
+  },
+  "decision": "Default step10 does not meet 1 ns. Step4 meets the standalone target but requires containing-engine throughput qualification before consumer default selection."
+}

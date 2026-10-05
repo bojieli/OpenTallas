@@ -1,0 +1,9 @@
+{
+  "source_commit": "4fdc3ca6c2b13ae3fe683e71ca6223ce9b2d93fe",
+  "generator_path": "tools/w19_attention_retained_fixture.py",
+  "generator_sha256": "4572162c8e1b41d2d33dcc9b9026132a9fdea4eeec388e74d4ace28b6b2b3890",
+  "fixture_sha256": "68ba211d605a123946bd711154c7d1e291b2541ddf976b4c30de9268d457f3d3",
+  "numeric_VM": "CPU proof only; no production execution",
+  "FMAX_MIN_wrapper_pricing": "explicit IEEE operandpolicy proven; nativeGPUmax cannotreplace withoutgate; ordinary compare/select/NaN detection instruction calendar/area still unpriced",
+  "production_cos_sin": "fixturecoefficients only; actual production port/provider remains unqualified"
+}

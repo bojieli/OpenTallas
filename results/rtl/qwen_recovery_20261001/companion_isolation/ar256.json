@@ -1,0 +1,101 @@
+{
+  "cases": {
+    "bad_last": {
+      "cycles": 630,
+      "link_stalls": 0,
+      "seq_fault": "1111"
+    },
+    "one256": {
+      "cycles": 630,
+      "link_stalls": 0,
+      "seq_fault": "0000"
+    },
+    "split128": {
+      "cycles": 993,
+      "link_stalls": 0,
+      "seq_fault": "0000"
+    }
+  },
+  "claim_boundary": "Real sequencer, VM word ports, rank-order FP32 collective and links; stub core handshake. No full-layer/token claim or SS/FF sign-off; opt-in production setting remains unchanged.",
+  "cycles_saved_per_vector": 363,
+  "design_point": {
+    "depth": 1024,
+    "elements": 4096,
+    "lanes": 16,
+    "lat": 339,
+    "tp": 4
+  },
+  "runs": {
+    "bad_last": {
+      "command": [
+        "vvp",
+        "/home/ubuntu/qwen-recovery-jobs/ar256_companion/gate.vvp",
+        "+VEC=/home/ubuntu/qwen-recovery-jobs/ar256_companion",
+        "+SPLIT=0",
+        "+INJECT_LAST=1"
+      ],
+      "log_sha256": "30cd62f3685caab31890bf191d5719127ab61c13b0ea027587590f2bbec3561f",
+      "returncode": 0,
+      "wall_seconds": 5.306
+    },
+    "compile": {
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_qwen_tp4_ar256",
+        "-o",
+        "/home/ubuntu/qwen-recovery-jobs/ar256_companion/gate.vvp",
+        "/home/ubuntu/qwen-integration-20261001/rtl/rom/ot_qwen_tp_seq_w12.sv",
+        "/home/ubuntu/qwen-integration-20261001/rtl/rom/ot_rom_oneshot_allreduce.sv",
+        "/home/ubuntu/qwen-integration-20261001/rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "/home/ubuntu/qwen-integration-20261001/rtl/test/tb_qwen_tp4_ar256.sv"
+      ],
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "wall_seconds": 0.423
+    },
+    "one256": {
+      "command": [
+        "vvp",
+        "/home/ubuntu/qwen-recovery-jobs/ar256_companion/gate.vvp",
+        "+VEC=/home/ubuntu/qwen-recovery-jobs/ar256_companion",
+        "+SPLIT=0",
+        "+INJECT_LAST=0"
+      ],
+      "log_sha256": "82c80b0fc74839052a5e0b36e0274258a3c8795c6a112fe865a4dd838b3e5862",
+      "returncode": 0,
+      "wall_seconds": 5.934
+    },
+    "split128": {
+      "command": [
+        "vvp",
+        "/home/ubuntu/qwen-recovery-jobs/ar256_companion/gate.vvp",
+        "+VEC=/home/ubuntu/qwen-recovery-jobs/ar256_companion",
+        "+SPLIT=1",
+        "+INJECT_LAST=0"
+      ],
+      "log_sha256": "b2e268e2dc59359465b5392471727ad54c2a3c176de43f32d25a2f85d8f3fc73",
+      "returncode": 0,
+      "wall_seconds": 10.346
+    }
+  },
+  "schema": "opentallas.qwen-tp4-ar256-gate.v1",
+  "source_sha256": {
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+    "rtl/test/tb_qwen_tp4_ar256.sv": "3376aa66f22304e9ed7bb9d3321d1d858d56e4989704f28a53b7dd97c4104617",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/qwen_tp4_ar256_gate.py": "b232ee753a13d6e847029b87c4b6488990ceb16103cc60b151ab73d5a232d086"
+  },
+  "source_stable": true,
+  "status": "pass",
+  "vector_sha256": {
+    "part_die0.hex": "d632656a42c58a6803ed2b0f88089f4ea121444e4fddb4affe3c51076b9d9b6b",
+    "part_die1.hex": "473be88e234314d4b2d4b49cdd0382af7c3079b6570842a8e0a867e8e47650a2",
+    "part_die2.hex": "729a0338bccb290ea196953bb21b30678572d681281e4fa62034eafbe8c7c070",
+    "part_die3.hex": "f067290939c72f2d6ad4f18a957685d62e3099dd8f8e9370b0159a925bb3927b",
+    "sum.hex": "3cecc7b0acfe956ee72368d59be495cf23a73dd226d9aa71d49129c35291feea"
+  }
+}

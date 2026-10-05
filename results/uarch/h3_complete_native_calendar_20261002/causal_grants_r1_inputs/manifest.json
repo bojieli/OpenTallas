@@ -1,0 +1,27 @@
+{
+  "Qwen_tiled.json.gz": {
+    "bytes": 3783521,
+    "canonical_path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz",
+    "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "source_commit": "4466270448",
+    "source_path": "results/uarch/h4_hbm_qwen_observed_kv_cache_20261002/inputs/Qwen_tiled.json.gz"
+  },
+  "directory.json.gz": {
+    "bytes": 1178050,
+    "sha256": "9f0d0371f5568c7540969336a88acc7a2cdd1037f98d4d7d29b16632b5dc8624",
+    "source_commit": "4466270448",
+    "source_path": "results/uarch/h4_hbm_qwen_observed_kv_cache_20261002/directory.json.gz"
+  },
+  "model.json": {
+    "bytes": 2577,
+    "sha256": "7db51d60f5a6db01b1a5ad826472fddf752f53861741c9b87e4ad7cd236288b8",
+    "source_commit": "4466270448",
+    "source_path": "results/uarch/h4_hbm_qwen_observed_kv_cache_20261002/model.json"
+  },
+  "owner.py": {
+    "bytes": 19487,
+    "sha256": "9e82c6800ca30721fc2f9c6a102a8b22f235e7be6da337b9bf7d2484e9a276d3",
+    "source_commit": "4466270448",
+    "source_path": "tools/h4_hbm_qwen_observed_kv_cache.py"
+  }
+}

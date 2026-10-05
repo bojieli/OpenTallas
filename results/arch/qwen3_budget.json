@@ -1,0 +1,4606 @@
+{
+ "schema": "opentallas.arch-budget-qwen3.v1",
+ "tool": "tools/arch_budget_qwen3.py",
+ "model": "Qwen3-8B",
+ "shape": {
+  "H": 4096,
+  "L": 36,
+  "NH": 32,
+  "KV": 8,
+  "HD": 128,
+  "FF": 12288,
+  "V": 151936
+ },
+ "clock_hz": 1098640000.0,
+ "clock_basis": "slowest routed Qwen3 token-path unit (ot_hdc_matvec, ot_hdc_stream; ASAP7 TT)",
+ "design_point": {
+  "context": 8192,
+  "kv_format": "fp8",
+  "batch": 1,
+  "decision": "user: 8k is the target context; users' KV lives in HBM beside the ROM dies; 8-bit weights on a two-reticle package"
+ },
+ "floorplan": {
+  "die_mm2": 815.0,
+  "node": "N6",
+  "compute_mm2_8192_groups": 146.7,
+  "interconnect_mm2": 65.2,
+  "overhead_mm2": 81.5,
+  "source": "opentallas.roofline.taalas_hc1_anchor on configs/models/qwen3-8b.json (the HC1-class reticle split: compute share 18%, interconnect 8%, overhead 10% of 815 mm2); the compute share scales with the MAC groups a die"
+ },
+ "rom_design": {
+  "groups": 12288,
+  "lanes": 196608,
+  "dies": 2,
+  "groups_per_die": 6144,
+  "lanes_per_die": 98304,
+  "mac_um2_asap7": 1071.8171875,
+  "kv_hbm": {
+   "stacks": 8,
+   "stacks_per_die": 4,
+   "basis": "each die's free edge at 60% use holds 4 stacks of 12 mm (the other die takes one edge); all 8 carry KV (the ROM dies have no weight traffic), each die streaming its own KV heads from its own 4 stacks"
+  }
+ },
+ "hbm_design": {
+  "stacks": 8,
+  "stacks_per_die": 4,
+  "dies": 2,
+  "stack_bytes_s": 1000000000000.0,
+  "efficiency": 0.9,
+  "phy_mm2_per_stack": 10.0,
+  "basis": "HBM3E 1.0 TB/s a stack (B200: 8 TB/s over 8 stacks), 0.90 sustained (configs/hardware/technology.json efficiencies.hbm_bandwidth); the comparator is the ROM package's silicon, two reticles, each carrying the stacks its free edge holds: 2 x (26 + 33) mm less the edge shared with the other die, at 60% edge use and 12 mm a stack = 4 a die (B200: 4 a die, 8 a package)",
+  "groups": 12288,
+  "lanes": 196608
+ },
+ "workload": {
+  "8192": {
+   "context": 8192,
+   "macs": {
+    "qkv": 905969664,
+    "o": 603979776,
+    "gate_up": 3623878656,
+    "down": 1811939328,
+    "lm_head": 622329856,
+    "attn_scores": 1207959552,
+    "attn_pv": 1207959552
+   },
+   "weight_macs": 7568097280,
+   "attention_macs": 2415919104,
+   "bytes": {
+    "weights_rom_format": 7568097280.0,
+    "weights_bf16": 15136194560,
+    "weights_fp8": 7568097280,
+    "kv_read": 1207959552,
+    "kv_write": 147456,
+    "kv_capacity": 1207959552
+   },
+   "elementwise": {
+    "embedding_copy": 4096,
+    "norm_scale": 299008,
+    "qk_norm": 368640,
+    "rope": 184320,
+    "kv_write": 73728,
+    "softmax": 28311552,
+    "silu_mul": 442368,
+    "residual": 294912,
+    "rsqrt_recip": 2665
+   },
+   "elementwise_total": 29981289,
+   "reductions": {
+    "sum_of_squares_H": [
+     73,
+     4096
+    ],
+    "qk_norm_HD": [
+     1440,
+     128
+    ],
+    "softmax_max_T": [
+     1152,
+     8192
+    ],
+    "softmax_sum_T": [
+     1152,
+     8192
+    ],
+    "argmax_V": [
+     1,
+     151936
+    ]
+   }
+  },
+  "2048": {
+   "context": 2048,
+   "macs": {
+    "qkv": 905969664,
+    "o": 603979776,
+    "gate_up": 3623878656,
+    "down": 1811939328,
+    "lm_head": 622329856,
+    "attn_scores": 301989888,
+    "attn_pv": 301989888
+   },
+   "weight_macs": 7568097280,
+   "attention_macs": 603979776,
+   "bytes": {
+    "weights_rom_format": 7568097280.0,
+    "weights_bf16": 15136194560,
+    "weights_fp8": 7568097280,
+    "kv_read": 301989888,
+    "kv_write": 147456,
+    "kv_capacity": 301989888
+   },
+   "elementwise": {
+    "embedding_copy": 4096,
+    "norm_scale": 299008,
+    "qk_norm": 368640,
+    "rope": 184320,
+    "kv_write": 73728,
+    "softmax": 7077888,
+    "silu_mul": 442368,
+    "residual": 294912,
+    "rsqrt_recip": 2665
+   },
+   "elementwise_total": 8747625,
+   "reductions": {
+    "sum_of_squares_H": [
+     73,
+     4096
+    ],
+    "qk_norm_HD": [
+     1440,
+     128
+    ],
+    "softmax_max_T": [
+     1152,
+     2048
+    ],
+    "softmax_sum_T": [
+     1152,
+     2048
+    ],
+    "argmax_V": [
+     1,
+     151936
+    ]
+   }
+  }
+ },
+ "package": {
+  "dies": 2,
+  "groups_per_die": 6144,
+  "lanes_per_die": 98304,
+  "weight_format": "int8_per_channel",
+  "weight_bits": 8,
+  "hbm_stacks": 8,
+  "stacks_per_die": 4,
+  "decision": "user 2026-09-28: 8-bit weights; two reticles in one package (O4 of results/arch/qwen3_8bit_design.json), 8 HBM3E stacks, 6,144 groups a die",
+  "evidence": "results/arch/qwen3_8bit_design.json (why 8-bit does not fit one reticle, and the options priced)"
+ },
+ "rom_capacity": {
+  "format": "int8_per_channel",
+  "weight_bits": 8,
+  "select_cells_per_mm2": 36475869.80920314,
+  "storage_rom_bits_per_mm2": 58361391.69472503,
+  "cim_cell_area_multiplier": 1.6,
+  "rows": {
+   "target": {
+    "elements": 6945767424,
+    "scales": 1400832,
+    "scale_bytes": 2801664,
+    "cells": 13898371072.0,
+    "norms": 308224,
+    "mm2": 381.02918846621543,
+    "bytes": 6949185536
+   },
+   "lm_head": {
+    "elements": 622329856,
+    "scales": 151936,
+    "scale_bytes": 303872,
+    "cells": 1245267456.0,
+    "norms": 0,
+    "mm2": 34.13948625526154,
+    "bytes": 622633728
+   },
+   "embedding": {
+    "elements": 622329856,
+    "scales": 151936,
+    "scale_bytes": 303872,
+    "cells": 1245267456.0,
+    "norms": 0,
+    "mm2": 34.13948625526154,
+    "bytes": 622633728
+   },
+   "drafter": {
+    "elements": 1048576000,
+    "scales": 198656,
+    "scale_bytes": 397312,
+    "cells": 2098148352.0,
+    "norms": 50432,
+    "mm2": 57.52154405021539,
+    "bytes": 1049074176
+   }
+  },
+  "target_mm2": 449.3081609767385,
+  "drafter_mm2": 57.52154405021539,
+  "swept_scale_bytes": 3105536,
+  "weight_bytes_per_mac": 1.0004103456767406,
+  "basis": "INT8 weight-only, one BF16 scale an output channel (the embedding: one a token row); an 8-bit weight is 2 select cells, a scale or norm 4; select cells a mm2 = N6 storage ROM bits a mm2 / cim_cell_area_multiplier (src/opentallas/roofline.py, technology.json)"
+ },
+ "die_split": {
+  "kind": "tensor-parallel 2 (TP-2: every layer split across both dies)",
+  "dies": [
+   {
+    "die": 0,
+    "layers": "0-35 (all 36)",
+    "query_heads": [
+     0,
+     15
+    ],
+    "kv_heads": [
+     0,
+     3
+    ],
+    "ffn_columns": [
+     0,
+     6143
+    ],
+    "vocabulary_rows": [
+     0,
+     75967
+    ],
+    "embedding": "half the table a die by rows; the owning die hands the emitted token's INT8 row (and its scale) to the other once a token",
+    "kv": "its own KV heads' K and V, streamed from its own 4 stacks"
+   },
+   {
+    "die": 1,
+    "layers": "0-35 (all 36)",
+    "query_heads": [
+     16,
+     31
+    ],
+    "kv_heads": [
+     4,
+     7
+    ],
+    "ffn_columns": [
+     6144,
+     12287
+    ],
+    "vocabulary_rows": [
+     75968,
+     151935
+    ],
+    "embedding": "half the table a die by rows; the owning die hands the emitted token's INT8 row (and its scale) to the other once a token",
+    "kv": "its own KV heads' K and V, streamed from its own 4 stacks"
+   }
+  ],
+  "exchanges_per_token": 73,
+  "exchanges": [
+   "after O (row-parallel): all-reduce of the H-element FP32 partial sum",
+   "after down (row-parallel): all-reduce of the H-element FP32 partial sum",
+   "after the lm_head halves: the argmax candidates of each half, once a token (priced as an all-reduce exchange, an upper bound)",
+   "then the embedding-row handoff of the emitted token (hop + one INT8 row)"
+  ],
+  "replicated": "RMSNorm, the residual adds, RoPE of the die's own heads, and the sampler run on both dies on the full H-element vector after each all-reduce",
+  "why_not_a_layer_cut": "a contiguous cut (layers 0-19 on die A, 20-35 on die B) runs each layer on one die's groups and streams each layer's KV from its die's 4 stacks, so the KV floor doubles and binds: results/arch/qwen3_8bit_design.json o4_contiguous_cut_scenario (layer_cut_alternative)"
+ },
+ "ucie": {
+  "link": {
+   "hop_latency_s": 1e-08,
+   "hop_latency_range_s": [
+    3e-09,
+    3e-08
+   ],
+   "bytes_s_per_direction": 4200000000000.0,
+   "j_per_bit": 5e-13,
+   "phy_mm2_per_die": 10.0,
+   "source": "configs/hardware/technology.json links.rom_package_ucie (hop_latency_s, bytes_s); configs/hardware/power_scenarios.json die.link_j_per_bit.ucie"
+  },
+  "exchange": {
+   "exchanges_per_token": 73,
+   "bytes_per_exchange_per_direction": 16384,
+   "bytes_per_token_per_direction": 1183754,
+   "hop_latency_cycles": 10.99,
+   "transfer_cycles": 4.29,
+   "add_cycles": 4,
+   "cycles_per_exchange": 19.27,
+   "exchange_cycles": 1407,
+   "embedding_handoff_cycles": 12.06,
+   "cycles_per_token": 1419,
+   "energy_j_per_token": 9.470032e-06,
+   "partials": "FP32 (the golden's rank-order fold of the dies' FP32 matvec outputs)",
+   "on_critical_path": "yes: each exchange sits between a row-parallel matrix and the next stage (residual + RMSNorm), so all of its latency is on the token's chain"
+  },
+  "exchange_at_hop_range": [
+   850,
+   3045
+  ],
+  "dflash_block5": {
+   "verify": {
+    "exchanges": 73,
+    "slots": 5,
+    "per_exchange_cycles": 36.42,
+    "exchange_cycles": 2659,
+    "embedding_handoff_cycles": 16.35,
+    "cycles": 2675,
+    "bytes_per_direction": 5918770,
+    "partial_bytes_per_slot": 16384
+   },
+   "draft": {
+    "exchanges": 12,
+    "slots": 5,
+    "per_exchange_cycles": 36.42,
+    "exchange_cycles": 437,
+    "embedding_handoff_cycles": 12.06,
+    "cycles": 450,
+    "bytes_per_direction": 864298,
+    "partial_bytes_per_slot": 16384
+   }
+  }
+ },
+ "die_shape": {
+  "NH": 16,
+  "KV": 4,
+  "FF": 6144,
+  "V": 75968,
+  "H": 4096
+ },
+ "area": {
+  "die_mm2": 815.0,
+  "dies": 2,
+  "groups_per_die": 6144,
+  "lanes_per_die": 98304,
+  "compute_mm2": 110.02,
+  "interconnect_mm2": 65.2,
+  "overhead_mm2": 81.5,
+  "hbm_phy_mm2": 40.0,
+  "ucie_phy_mm2": 10.0,
+  "kv_prefetch_buffer_mm2": 6.4,
+  "kv_prefetch_buffer_bytes": 19297216.0,
+  "target_rom_mm2": 224.65,
+  "drafter_rom_mm2": 28.76,
+  "stream_unit_spill_mm2": 12.8,
+  "lane_copy_mm2": 51.91,
+  "lane_copies_added": 4,
+  "lane_multiplier_m": 5,
+  "slack_mm2": 28.01,
+  "fits": true,
+  "package": {
+   "dies": 2,
+   "logic_silicon_mm2": 1630.0,
+   "hbm_stacks": 8,
+   "target_rom_mm2": 449.31,
+   "drafter_rom_mm2": 57.52,
+   "rom_mask_sets": 2,
+   "interposer": "CoWoS-L-class two-reticle interposer (~3.3 reticles, the B200 class)"
+  },
+  "rom_read": {
+   "groups_per_die": 6144,
+   "required_bytes_per_cycle_per_die": 98304.0,
+   "swept_rom_mm2_per_die": 207.58,
+   "read_density_bytes_s_per_mm2": 705555555555.5555,
+   "efficiency": 0.75,
+   "available_bytes_s_per_die": 109846711853390.78,
+   "required_bytes_s_per_die": 108000706560000.0,
+   "headroom": 1.017,
+   "next_step_groups": 6656,
+   "next_step_headroom": 0.939,
+   "basis": "one 8-bit weight a lane a cycle from the die's swept ROM (its half of the layers' and the lm_head's weights; the embedding is a lookup); available = swept mm2 x the 8-bit read density (taalas_hc1_anchor at 8 bits a parameter) x rom_read_bandwidth efficiency; groups a die in steps of 512 (the tiling rule's power-of-two splits)"
+  },
+  "beachfront_mm_free": 51.0,
+  "stacks_per_die_by_beachfront": 4,
+  "stacks_note": "each die's free edge (the perimeter less the edge it shares with the other die) at 60% use and 12 mm a stack: 4 a die, 8 a package, as on B200",
+  "lane_copy_basis": "routed ot_hdc_lane_copy (16 lanes: the exact BF16 multiplier, the circulating FP32 adder and its interleave registers, sharing the group's weight word; the split tree, result port and argmax shared): 8,449 um2, closed at 1.2 GHz (results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json)"
+ },
+ "roofline_rom": {
+  "8192": {
+   "weights_mac": {
+    "cycles": 38493,
+    "us": 35.037
+   },
+   "attention_mac": {
+    "cycles": 12288,
+    "us": 11.185
+   },
+   "kv_hbm_read": {
+    "cycles": 92161,
+    "us": 83.886
+   },
+   "elementwise": {
+    "cycles": 29279,
+    "us": 26.65
+   }
+  },
+  "2048": {
+   "weights_mac": {
+    "cycles": 38493,
+    "us": 35.037
+   },
+   "attention_mac": {
+    "cycles": 3072,
+    "us": 2.796
+   },
+   "kv_hbm_read": {
+    "cycles": 23040,
+    "us": 20.972
+   },
+   "elementwise": {
+    "cycles": 8543,
+    "us": 7.776
+   }
+  }
+ },
+ "hbm_comparator": {
+  "8192": {
+   "bf16": {
+    "weight_format": "bf16",
+    "kv_format": "fp8",
+    "bytes_per_token": 15740174336.0,
+    "sustained_bytes_s": 7200000000000.0,
+    "token_s": 0.0021861353244444445,
+    "tokens_s": 457.4,
+    "mac_rate_needed": 3461861301712.0776,
+    "lanes_needed_at_clock": 3152,
+    "hbm_bytes_per_cycle": 6554
+   },
+   "fp8": {
+    "weight_format": "fp8",
+    "kv_format": "fp8",
+    "bytes_per_token": 8172077056.0,
+    "sustained_bytes_s": 7200000000000.0,
+    "token_s": 0.0011350107022222223,
+    "tokens_s": 881.0,
+    "mac_rate_needed": 6667864245845.896,
+    "lanes_needed_at_clock": 6070,
+    "hbm_bytes_per_cycle": 6554
+   },
+   "rom_format_int8": {
+    "weight_format": "rom_format_int8",
+    "kv_format": "fp8",
+    "bytes_per_token": 8175182592.0,
+    "sustained_bytes_s": 7200000000000.0,
+    "token_s": 0.0011354420266666667,
+    "tokens_s": 880.7,
+    "mac_rate_needed": 6665331300284.675,
+    "lanes_needed_at_clock": 6067,
+    "hbm_bytes_per_cycle": 6554
+   }
+  },
+  "2048": {
+   "bf16": {
+    "weight_format": "bf16",
+    "kv_format": "fp8",
+    "bytes_per_token": 15287189504.0,
+    "sustained_bytes_s": 7200000000000.0,
+    "token_s": 0.0021232207644444443,
+    "tokens_s": 471.0,
+    "mac_rate_needed": 3564442005624.529,
+    "lanes_needed_at_clock": 3245,
+    "hbm_bytes_per_cycle": 6554
+   },
+   "fp8": {
+    "weight_format": "fp8",
+    "kv_format": "fp8",
+    "bytes_per_token": 7719092224.0,
+    "sustained_bytes_s": 7200000000000.0,
+    "token_s": 0.0010720961422222223,
+    "tokens_s": 932.8,
+    "mac_rate_needed": 7059159138762.4795,
+    "lanes_needed_at_clock": 6426,
+    "hbm_bytes_per_cycle": 6554
+   },
+   "rom_format_int8": {
+    "weight_format": "rom_format_int8",
+    "kv_format": "fp8",
+    "bytes_per_token": 7722197760.0,
+    "sustained_bytes_s": 7200000000000.0,
+    "token_s": 0.0010725274666666667,
+    "tokens_s": 932.4,
+    "mac_rate_needed": 7056320248395.192,
+    "lanes_needed_at_clock": 6423,
+    "hbm_bytes_per_cycle": 6554
+   }
+  }
+ },
+ "dependency_chain": {
+  "8192/as_built_units": {
+   "context": 8192,
+   "su_width": 1,
+   "attention_mapping": "as_built",
+   "chained_elementwise": false,
+   "layer_cycles": 559037,
+   "token_cycles": 20129919,
+   "components": {
+    "weights": 38880,
+    "attention": 4792320,
+    "elementwise": 15244632,
+    "latency": 51912,
+    "control": 756,
+    "ucie": 1419
+   },
+   "ucie_exchange_cycles": 1419,
+   "tokens_s": 54.6,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 2560,
+     "exposed_latency": 50
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 20,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 2560,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 2560,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 2048,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 131072,
+     "exposed_latency": 50
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 131072,
+     "exposed_latency": 142
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 16,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 131072,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 131072,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 88,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 50
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 512,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 6144,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 264,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 50
+    }
+   ]
+  },
+  "8192/spec_widths_reference_graph": {
+   "context": 8192,
+   "su_width": 1024,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 3458,
+   "token_cycles": 129075,
+   "components": {
+    "weights": 38880,
+    "attention": 15552,
+    "elementwise": 9756,
+    "latency": 62712,
+    "control": 756,
+    "ucie": 1419
+   },
+   "ucie_exchange_cycles": 1419,
+   "tokens_s": 8511.6,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 3,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 128,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 128,
+     "exposed_latency": 202
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 176,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 88,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 512,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 264,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    }
+   ]
+  },
+  "8192/spec": {
+   "context": 8192,
+   "su_width": 1024,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 3257,
+   "token_cycles": 121839,
+   "components": {
+    "weights": 38880,
+    "attention": 18432,
+    "elementwise": 5112,
+    "latency": 57276,
+    "control": 720,
+    "ucie": 1419
+   },
+   "ucie_exchange_cycles": 1419,
+   "tokens_s": 9017.1,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 3,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "scores.max",
+     "kind": "mvred",
+     "throughput": 0,
+     "exposed_latency": 34
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 128,
+     "exposed_latency": 202
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "pv.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 88,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 512,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 264,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    }
+   ]
+  },
+  "2048/as_built_units": {
+   "context": 2048,
+   "su_width": 1,
+   "attention_mapping": "as_built",
+   "chained_elementwise": false,
+   "layer_cycles": 165821,
+   "token_cycles": 5974143,
+   "components": {
+    "weights": 38880,
+    "attention": 1253376,
+    "elementwise": 4627800,
+    "latency": 51912,
+    "control": 756,
+    "ucie": 1419
+   },
+   "ucie_exchange_cycles": 1419,
+   "tokens_s": 183.9,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 2560,
+     "exposed_latency": 50
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 20,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 2560,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 2560,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 2048,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 32768,
+     "exposed_latency": 50
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 32768,
+     "exposed_latency": 142
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 16,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 32768,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 32768,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 88,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 50
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 512,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 6144,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 264,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 50
+    }
+   ]
+  },
+  "2048/spec_widths_reference_graph": {
+   "context": 2048,
+   "su_width": 1024,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 2946,
+   "token_cycles": 110643,
+   "components": {
+    "weights": 38880,
+    "attention": 4032,
+    "elementwise": 2844,
+    "latency": 62712,
+    "control": 756,
+    "ucie": 1419
+   },
+   "ucie_exchange_cycles": 1419,
+   "tokens_s": 9929.6,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 3,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 32,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 32,
+     "exposed_latency": 202
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 48,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 88,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 512,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 264,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    }
+   ]
+  },
+  "2048/spec": {
+   "context": 2048,
+   "su_width": 1024,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 2777,
+   "token_cycles": 104559,
+   "components": {
+    "weights": 38880,
+    "attention": 4608,
+    "elementwise": 1656,
+    "latency": 57276,
+    "control": 720,
+    "ucie": 1419
+   },
+   "ucie_exchange_cycles": 1419,
+   "tokens_s": 10507.4,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 3,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "scores.max",
+     "kind": "mvred",
+     "throughput": 0,
+     "exposed_latency": 34
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 32,
+     "exposed_latency": 202
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "pv.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 88,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 512,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 264,
+     "exposed_latency": 73
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4,
+     "exposed_latency": 110
+    }
+   ]
+  }
+ },
+ "budget": {
+  "context": 8192,
+  "kv_format": "fp8",
+  "weight_sweep_ideal_cycles": 38493,
+  "weight_sweep_tiled_cycles": 38880,
+  "weight_tiling_efficiency": 0.9901,
+  "target_cycles": 97011,
+  "target_tokens_s": 11324.9,
+  "ceiling_tokens_s": 28541.0,
+  "binding": "kv_stream",
+  "shares": {
+   "attention": 0.15,
+   "elementwise": 0.1,
+   "latency": 0.3,
+   "control": 0.03,
+   "weights": 0.3968
+  },
+  "cycles": {
+   "attention": 14552,
+   "elementwise": 9701,
+   "latency": 29103,
+   "control": 2910,
+   "weights": 38493
+  },
+  "targets": {
+   "8192/bf16": {
+    "context": 8192,
+    "kv_format": "bf16",
+    "kv_stream_cycles": 184321,
+    "target_cycles": 194022,
+    "target_tokens_s": 5662.4,
+    "binding": "kv_stream"
+   },
+   "8192/fp8": {
+    "context": 8192,
+    "kv_format": "fp8",
+    "kv_stream_cycles": 92161,
+    "target_cycles": 97011,
+    "target_tokens_s": 11324.9,
+    "binding": "kv_stream"
+   },
+   "8192/int4": {
+    "context": 8192,
+    "kv_format": "int4",
+    "kv_stream_cycles": 46080,
+    "target_cycles": 69988,
+    "target_tokens_s": 15697.6,
+    "binding": "weights"
+   },
+   "2048/bf16": {
+    "context": 2048,
+    "kv_format": "bf16",
+    "kv_stream_cycles": 46080,
+    "target_cycles": 69988,
+    "target_tokens_s": 15697.6,
+    "binding": "weights"
+   },
+   "2048/fp8": {
+    "context": 2048,
+    "kv_format": "fp8",
+    "kv_stream_cycles": 23040,
+    "target_cycles": 69988,
+    "target_tokens_s": 15697.6,
+    "binding": "weights"
+   },
+   "2048/int4": {
+    "context": 2048,
+    "kv_format": "int4",
+    "kv_stream_cycles": 11520,
+    "target_cycles": 69988,
+    "target_tokens_s": 15697.6,
+    "binding": "weights"
+   }
+  }
+ },
+ "requirements": {
+  "mac_lanes": {
+   "requirement": 196608,
+   "per_die": 98304,
+   "basis": "6,144 groups of 16 a die on 2 dies: the most each die's half of the 8-bit ROM can feed (area.rom_read: headroom 1.017; 6,656 groups a die would be 0.939)"
+  },
+  "lane_multiplier": {
+   "requirement": 5,
+   "basis": "MAC-only lane copies in the area each die has left after its ROM (area ledger); they serve speculative slots and batched users"
+  },
+  "weight_tiling_efficiency": {
+   "requirement": ">= 0.90 of the ideal sweep (split/tile quantisation)"
+  },
+  "rom_read_bytes_per_cycle": {
+   "requirement": 196608,
+   "per_die": 98304,
+   "basis": "one 8-bit weight per lane per cycle; lane copies share the word"
+  },
+  "ucie": {
+   "exchanges_per_token": 73,
+   "bytes_per_exchange_per_direction": 16384,
+   "cycles_per_token": 1419,
+   "requirement": "one FP32 H-vector each way per exchange (the golden's rank-order fold), latency on the chain, plus the emitted token's embedding row once a token: hop <= 10 ns (technology.json links.rom_package_ucie), the received partial added in the pipelined FP32 adder; credit-controlled so a stalled receiver never drops a flit"
+  },
+  "attention_lanes_min": {
+   "requirement": 166020,
+   "basis": "2.416e+09 MACs in 14552 cycles"
+  },
+  "kv_hbm": {
+   "stacks": 8,
+   "stacks_per_die": 4,
+   "format": "fp8",
+   "bytes_per_token": 603979776.0,
+   "sustained_bytes_s": 7200000000000.0,
+   "stream_cycles": 92161,
+   "efficiency_min": "0.90 of raw peak with refresh on (REFab measured 0.904 / 0.910)",
+   "controller_queue_beats_per_pseudo_channel_min": 512,
+   "prefetch": "layer l+1's KV (positions < t) streams while layer l computes; the token's own K/V row is kept on die (tail buffer) and written back behind the stream",
+   "prefetch_buffer_bytes": 19297216.0,
+   "streamer": "rtl/hdc/kv/ot_hdc_kv_stream.sv extended to the K-split attention word order"
+  },
+  "stream_unit_elements_per_cycle": {
+   "requirement": 2048,
+   "basis": "the spec chain's exposed elementwise cycles at 8k within 9701"
+  },
+  "reduction_tree": {
+   "requirement": "lane partials + a 11-level cross-lane pairwise tree"
+  },
+  "exposed_latency_per_dependent_stage_max": {
+   "requirement": 40,
+   "stages_per_layer": 20,
+   "basis": "29103 cycles over 36 layers x 20 dependent stages"
+  },
+  "instruction_issue": {
+   "requirement": "<= 2910 control cycles a token exposed",
+   "per_instruction_max": 0.64
+  },
+  "argmax": {
+   "requirement": "streaming compare tree over each result word (as built)"
+  },
+  "vector_buffer": {
+   "requirement_elements": 262144,
+   "basis": "score/probability rows (NH x T at 8k) and gate/up outputs"
+  }
+ },
+ "rom_token": {
+  "8192/bf16": {
+   "cycles": 184321,
+   "compute_cycles": 121839,
+   "kv_stream_cycles": 184321,
+   "tokens_s": 5960.5,
+   "binding": "kv_stream"
+  },
+  "8192/fp8": {
+   "cycles": 121839,
+   "compute_cycles": 121839,
+   "kv_stream_cycles": 92161,
+   "tokens_s": 9017.1,
+   "binding": "compute"
+  },
+  "8192/int4": {
+   "cycles": 121839,
+   "compute_cycles": 121839,
+   "kv_stream_cycles": 46080,
+   "tokens_s": 9017.1,
+   "binding": "compute"
+  },
+  "2048/bf16": {
+   "cycles": 104559,
+   "compute_cycles": 104559,
+   "kv_stream_cycles": 46080,
+   "tokens_s": 10507.4,
+   "binding": "compute"
+  },
+  "2048/fp8": {
+   "cycles": 104559,
+   "compute_cycles": 104559,
+   "kv_stream_cycles": 23040,
+   "tokens_s": 10507.4,
+   "binding": "compute"
+  },
+  "2048/int4": {
+   "cycles": 104559,
+   "compute_cycles": 104559,
+   "kv_stream_cycles": 11520,
+   "tokens_s": 10507.4,
+   "binding": "compute"
+  }
+ },
+ "baseline_as_built": {
+  "source": "tools/arch_budget_qwen3.py as_built() at commit 92f2c723 (the RTL before the Qwen3 spec work: 1-wide stream unit, 2-bit me_split on 7,680 groups, attention unsplit)",
+  "as_built_calibrated": {
+   "2048": {
+    "context": 2048,
+    "groups": 7680,
+    "su_width": 1,
+    "max_split": 8,
+    "instructions": 4540,
+    "cycles": 14499553,
+    "unit_busy": {
+     "stream": 8710761,
+     "weights": 884736,
+     "attn_scores": 147456,
+     "attn_pv": 4718592,
+     "lm_head": 8192
+    },
+    "sequencer_stalls": {
+     "barrier_su": 7795326,
+     "chase": 269102,
+     "barrier_me": 5667732,
+     "unit_busy": 736416
+    },
+    "seq_gap_total": 22700
+   },
+   "8192": {
+    "context": 8192,
+    "groups": 7680,
+    "su_width": 1,
+    "max_split": 8,
+    "instructions": 4540,
+    "cycles": 49888993,
+    "unit_busy": {
+     "stream": 29944425,
+     "weights": 884736,
+     "attn_scores": 147456,
+     "attn_pv": 18874368,
+     "lm_head": 8192
+    },
+    "sequencer_stalls": {
+     "barrier_su": 29028990,
+     "chase": 269102,
+     "barrier_me": 19823508,
+     "unit_busy": 736416
+    },
+    "seq_gap_total": 22700
+   }
+  },
+  "as_built_split_uncapped": {
+   "context": 2048,
+   "groups": 7680,
+   "su_width": 1,
+   "max_split": null,
+   "instructions": 4540,
+   "cycles": 13714305,
+   "unit_busy": {
+    "stream": 8710761,
+    "weights": 61056,
+    "attn_scores": 147456,
+    "attn_pv": 4718592,
+    "lm_head": 5120
+   },
+   "sequencer_stalls": {
+    "barrier_su": 7795326,
+    "chase": 310606,
+    "barrier_me": 4844052,
+    "unit_busy": 736416
+   },
+   "seq_gap_total": 22700
+  }
+ },
+ "as_built_calibrated": {
+  "8192": {
+   "context": 8192,
+   "groups": 6144,
+   "su_width": 1024,
+   "reducer_time_levels": 3,
+   "max_split": null,
+   "shape": "one die's TP-2 slice",
+   "instructions": 904,
+   "sequencer_cycles": 98533,
+   "scale_multiply_cycles": 1085,
+   "ucie_exchange_cycles": 1419,
+   "cycles": 101037,
+   "layer_chain": {
+    "layer": 18,
+    "cycles": 2642,
+    "stages": [
+     {
+      "stage": "QKV projection, then q/k norm, RoPE",
+      "cycles": 480,
+      "engine_busy": 128,
+      "exposed": 352
+     },
+     {
+      "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
+      "cycles": 852,
+      "engine_busy": 512,
+      "exposed": 340
+     },
+     {
+      "stage": "O projection, residual, FFN norm",
+      "cycles": 183,
+      "engine_busy": 88,
+      "exposed": 95
+     },
+     {
+      "stage": "gate/up projection, fused SiLU\u00b7up",
+      "cycles": 768,
+      "engine_busy": 512,
+      "exposed": 256
+     },
+     {
+      "stage": "down projection, residual, next norm",
+      "cycles": 359,
+      "engine_busy": 264,
+      "exposed": 95
+     }
+    ]
+   },
+   "unit_busy": {
+    "stream": 10809,
+    "weights": 35712,
+    "attn_scores": 9216,
+    "attn_pv": 9216,
+    "lm_head": 3168
+   },
+   "sequencer_stalls": {
+    "chase": 30913,
+    "wait_su": 14370,
+    "barrier_me": 30528,
+    "unit_busy": 10656,
+    "wait_me": 7920
+   },
+   "seq_gap_total": 904
+  },
+  "2048": {
+   "context": 2048,
+   "groups": 6144,
+   "su_width": 1024,
+   "reducer_time_levels": 2,
+   "max_split": null,
+   "shape": "one die's TP-2 slice",
+   "instructions": 904,
+   "sequencer_cycles": 82833,
+   "scale_multiply_cycles": 1085,
+   "ucie_exchange_cycles": 1419,
+   "cycles": 85337,
+   "layer_chain": {
+    "layer": 18,
+    "cycles": 2206,
+    "stages": [
+     {
+      "stage": "QKV projection, then q/k norm, RoPE",
+      "cycles": 476,
+      "engine_busy": 128,
+      "exposed": 348
+     },
+     {
+      "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
+      "cycles": 420,
+      "engine_busy": 128,
+      "exposed": 292
+     },
+     {
+      "stage": "O projection, residual, FFN norm",
+      "cycles": 183,
+      "engine_busy": 88,
+      "exposed": 95
+     },
+     {
+      "stage": "gate/up projection, fused SiLU\u00b7up",
+      "cycles": 768,
+      "engine_busy": 512,
+      "exposed": 256
+     },
+     {
+      "stage": "down projection, residual, next norm",
+      "cycles": 359,
+      "engine_busy": 264,
+      "exposed": 95
+     }
+    ]
+   },
+   "unit_busy": {
+    "stream": 7353,
+    "weights": 35712,
+    "attn_scores": 2304,
+    "attn_pv": 2304,
+    "lm_head": 3168
+   },
+   "sequencer_stalls": {
+    "chase": 29185,
+    "wait_su": 15518,
+    "barrier_me": 25776,
+    "unit_busy": 3744,
+    "wait_me": 4464
+   },
+   "seq_gap_total": 904
+  }
+ },
+ "layer_cut_alternative": {
+  "P": 20,
+  "die_a": "embedding + layers 0-19",
+  "die_b": "layers 20-35 + final norm + lm_head + drafter",
+  "ar_step_cycles": 184348,
+  "ar_binding": "hbm_stream",
+  "ar_handoff_cycles": 27,
+  "ar_tokens_s": 5959.6,
+  "dflash_block": 5,
+  "dflash_step_cycles": 259467,
+  "dflash_handoff_cycles": 76,
+  "dflash_tokens_s": 12106.1,
+  "vs_tp2_ar": 0.541,
+  "vs_tp2_dflash": 0.645,
+  "recorded": {
+   "ar_tokens_s": 5959.6,
+   "dflash_tokens_s": 12461.0,
+   "source": "results/arch/qwen3_o4_rtl_gaps.json#die_split.layer_cut (O4 pair model, no scale stage)"
+  },
+  "adopted": false,
+  "note": "a scenario, not the design point: TP-2 is the only split that reaches the O4 rates at batch 1",
+  "source": "results/arch/qwen3_8bit_design.json#o4_contiguous_cut_scenario",
+  "verdict": "rejected: TP-2 is the only split that reaches the O4 rates at batch 1"
+ },
+ "gap": [
+  {
+   "block": "stream unit",
+   "requirement": "2048 elements/cycle",
+   "as_built": "vector stream unit, SW lanes (landed: RTL parameter; 1024 at the spec), R-ARITH reducer; one a die, 2,048 lanes in the package (the chain model prices the split elementwise work on one)",
+   "cycles_baseline_2k": 8710761,
+   "cycles_head_8k": 10809,
+   "status": "MEETS"
+  },
+  {
+   "block": "attention P.V",
+   "requirement": "K-split over positions across every free group",
+   "as_built": "interleaved K-split over positions (landed)",
+   "cycles_baseline_2k": 4718592,
+   "cycles_head_8k": 9216,
+   "status": "MEETS"
+  },
+  {
+   "block": "attention Q.K",
+   "requirement": "K-split over head_dim across free groups",
+   "as_built": "interleaved K-split over head_dim (landed)",
+   "cycles_baseline_2k": 147456,
+   "cycles_head_8k": 9216,
+   "status": "MEETS"
+  },
+  {
+   "block": "dependency handling",
+   "requirement": "<= 40 cycles exposed a stage",
+   "as_built": "per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across units; still whole-op granular within a unit",
+   "cycles_baseline_2k": 13463058,
+   "cycles_head_8k": 83731,
+   "status": "MISS"
+  },
+  {
+   "block": "softmax",
+   "requirement": "one stream-unit pass over the scores, 1/Z beside P.V",
+   "as_built": "landed: the row max on the engine's result path (me_rmax), one exp pass, normalise-after-sum (1/Z on 32 x 128 beside P.V), P.V chasing the exp pass by rows",
+   "cycles_baseline_2k": null,
+   "cycles_head_8k": null,
+   "status": "MEETS"
+  },
+  {
+   "block": "sequencer issue",
+   "requirement": "<= 2910 control cycles a token exposed",
+   "as_built": "prefetched issue pipeline: 904 instructions at gap 1 (landed)",
+   "cycles_baseline_2k": 22700,
+   "cycles_head_8k": 904,
+   "status": "MEETS"
+  },
+  {
+   "block": "matrix engine (weights)",
+   "requirement": ">= 0.90 of the ideal sweep (split/tile quantisation); 12288 groups and a 4-bit K-split field",
+   "as_built": "4-bit me_split (landed); the reticle's groups are the RTL parameter G",
+   "cycles_baseline_2k": 892928,
+   "cycles_head_8k": 38880,
+   "status": "MEETS"
+  },
+  {
+   "block": "KV in HBM (ROM package)",
+   "requirement": "8 stacks (4 a die), 604 MB/token FP8 KV, streamed with prefetch",
+   "as_built": "KV streamer (ot_hdc_kv_stream) exists for the unsplit attention order; BF16 KV only",
+   "cycles_baseline_2k": null,
+   "cycles_head_8k": 92161,
+   "status": "MISS"
+  }
+ ],
+ "hbm_requirements": {
+  "stacks": 8,
+  "sustained_efficiency_min": 0.9,
+  "address_map": "refresh-aware: pseudo-channels interleaved at the stream's word size and refresh phases staggered, so no weight op meets the same refresh on every channel",
+  "efficiency_measured_with_refresh": true,
+  "controller_queue_beats_per_pseudo_channel_min": 512,
+  "controller_queue_basis": "bandwidth x tRFC (350 ns) = ~350 beats; on the V4.1 HBM vehicle a refreshing channel's full 64-beat queue stalled the in-order stream for ~tRFC (up to 15% of a token); neutral for Qwen3 (+0.1%)",
+  "refresh_policy": "0.90 of RAW peak with refresh on: REFab (tRFC 350 ns / tREFI 3.9 us, 9.0% floor) meets it as measured on the Qwen3 reduced vehicle (0.904 / 0.910 at 1 / 2 pseudo-channels); REFpb is allowed only with a record showing >= 0.90; a refreshing channel must not stall requests to other channels",
+  "longest_weight_free_interval_cycles": 1313,
+  "prefetch_buffer_bytes_min": 8604821,
+  "hbm_bytes_per_cycle": 6554,
+  "per_context": {
+   "8192": {
+    "bf16": {
+     "tokens_s_target": 434.5,
+     "tokens_s_bound": 457.4,
+     "mac_lanes_min": 6304
+    },
+    "fp8": {
+     "tokens_s_target": 836.9,
+     "tokens_s_bound": 881.0,
+     "mac_lanes_min": 12140
+    },
+    "rom_format_int8": {
+     "tokens_s_target": 836.7,
+     "tokens_s_bound": 880.7,
+     "mac_lanes_min": 12134
+    }
+   },
+   "2048": {
+    "bf16": {
+     "tokens_s_target": 447.4,
+     "tokens_s_bound": 471.0,
+     "mac_lanes_min": 6490
+    },
+    "fp8": {
+     "tokens_s_target": 886.2,
+     "tokens_s_bound": 932.8,
+     "mac_lanes_min": 12852
+    },
+    "rom_format_int8": {
+     "tokens_s_target": 885.8,
+     "tokens_s_bound": 932.4,
+     "mac_lanes_min": 12846
+    }
+   }
+  },
+  "note": "95% of the byte bound: the stream stalls only at the token start (the first weights' latency)"
+ },
+ "dflash": {
+  "source": "results/speculative/dflash_step_timing.json",
+  "source_sha256": "d80f80368e940e442a42f4c90a84ed2c4b6dbf38191f92bb5b316b4fcd6cc2bc",
+  "acceptance": "results/speculative/dflash_block_acceptance.json",
+  "tau_convention": "primary workloads, cycle-weighted (the convention of the atlas's pooled 4.1)",
+  "tau_band": "mean of the primary workloads' tau (each workload weighted equally)",
+  "tau_design_point": 2.8591,
+  "block_design_point": 5,
+  "drafter_parameters": 1048626432,
+  "rom": {
+   "8192/fp8/m1": {
+    "context": 8192,
+    "kv_format": "fp8",
+    "lane_multiplier": 1,
+    "plain_tokens_s": 9017.1,
+    "sweep": [
+     {
+      "block": 1,
+      "tokens_per_step": 1.0,
+      "tokens_per_step_band": 1.0,
+      "step_cycles": 121839,
+      "draft_cycles": 0,
+      "verify_cycles": 121839,
+      "commit_cycles": 0,
+      "tokens_s": 9017.1,
+      "tokens_s_band": 9017.1,
+      "speedup": 1.0,
+      "draft_weight_macs": 0,
+      "draft_attention_macs": 0,
+      "verify_weight_macs": 7568097280,
+      "verify_attention_macs": 2415919104,
+      "macs_per_step": 9984016384
+     },
+     {
+      "block": 2,
+      "tokens_per_step": 1.7361,
+      "tokens_per_step_band": 1.7517,
+      "step_cycles": 214917,
+      "draft_cycles": 30334,
+      "verify_cycles": 184577,
+      "commit_cycles": 6,
+      "tokens_s": 8874.8,
+      "tokens_s_band": 8954.6,
+      "speedup": 0.984,
+      "draft_weight_macs": 2803367936,
+      "draft_attention_macs": 671252480,
+      "verify_weight_macs": 15136194560,
+      "verify_attention_macs": 4831838208,
+      "macs_per_step": 23442653184
+     },
+     {
+      "block": 3,
+      "tokens_per_step": 2.2654,
+      "tokens_per_step_band": 2.3207,
+      "step_cycles": 289995,
+      "draft_cycles": 42672,
+      "verify_cycles": 247315,
+      "commit_cycles": 8,
+      "tokens_s": 8582.4,
+      "tokens_s_band": 8791.9,
+      "speedup": 0.952,
+      "draft_weight_macs": 4516216832,
+      "draft_attention_macs": 1007001600,
+      "verify_weight_macs": 22704291840,
+      "verify_attention_macs": 7247757312,
+      "macs_per_step": 35475267584
+     },
+     {
+      "block": 4,
+      "tokens_per_step": 2.6256,
+      "tokens_per_step_band": 2.7447,
+      "step_cycles": 365070,
+      "draft_cycles": 55009,
+      "verify_cycles": 310053,
+      "commit_cycles": 8,
+      "tokens_s": 7901.5,
+      "tokens_s_band": 8259.9,
+      "speedup": 0.876,
+      "draft_weight_macs": 6229065728,
+      "draft_attention_macs": 1342832640,
+      "verify_weight_macs": 30272389120,
+      "verify_attention_macs": 9663676416,
+      "macs_per_step": 47507963904
+     },
+     {
+      "block": 5,
+      "tokens_per_step": 2.8591,
+      "tokens_per_step_band": 3.0823,
+      "step_cycles": 440148,
+      "draft_cycles": 67347,
+      "verify_cycles": 372791,
+      "commit_cycles": 10,
+      "tokens_s": 7136.5,
+      "tokens_s_band": 7693.6,
+      "speedup": 0.791,
+      "draft_weight_macs": 7941914624,
+      "draft_attention_macs": 1678745600,
+      "verify_weight_macs": 37840486400,
+      "verify_attention_macs": 12079595520,
+      "macs_per_step": 59540742144
+     },
+     {
+      "block": 6,
+      "tokens_per_step": 3.0335,
+      "tokens_per_step_band": 3.3344,
+      "step_cycles": 515223,
+      "draft_cycles": 79684,
+      "verify_cycles": 435529,
+      "commit_cycles": 10,
+      "tokens_s": 6468.5,
+      "tokens_s_band": 7110.1,
+      "speedup": 0.717,
+      "draft_weight_macs": 9654763520,
+      "draft_attention_macs": 2014740480,
+      "verify_weight_macs": 45408583680,
+      "verify_attention_macs": 14495514624,
+      "macs_per_step": 71573602304
+     },
+     {
+      "block": 8,
+      "tokens_per_step": 3.2956,
+      "tokens_per_step_band": 3.7478,
+      "step_cycles": 665374,
+      "draft_cycles": 104359,
+      "verify_cycles": 561005,
+      "commit_cycles": 10,
+      "tokens_s": 5441.6,
+      "tokens_s_band": 6188.2,
+      "speedup": 0.603,
+      "draft_weight_macs": 13080461312,
+      "draft_attention_macs": 2686976000,
+      "verify_weight_macs": 60544778240,
+      "verify_attention_macs": 19327352832,
+      "macs_per_step": 95639568384
+     },
+     {
+      "block": 12,
+      "tokens_per_step": 3.4927,
+      "tokens_per_step_band": 4.2393,
+      "step_cycles": 965678,
+      "draft_cycles": 153709,
+      "verify_cycles": 811957,
+      "commit_cycles": 12,
+      "tokens_s": 3973.6,
+      "tokens_s_band": 4823.0,
+      "speedup": 0.441,
+      "draft_weight_macs": 19931856896,
+      "draft_attention_macs": 4032430080,
+      "verify_weight_macs": 90817167360,
+      "verify_attention_macs": 28991029248,
+      "macs_per_step": 143772483584
+     },
+     {
+      "block": 16,
+      "tokens_per_step": 3.6559,
+      "tokens_per_step_band": 4.6623,
+      "step_cycles": 1265978,
+      "draft_cycles": 203058,
+      "verify_cycles": 1062908,
+      "commit_cycles": 12,
+      "tokens_s": 3172.7,
+      "tokens_s_band": 4046.0,
+      "speedup": 0.352,
+      "draft_weight_macs": 26783252480,
+      "draft_attention_macs": 5379194880,
+      "verify_weight_macs": 121089556480,
+      "verify_attention_macs": 38654705664,
+      "macs_per_step": 191906709504
+     }
+    ],
+    "best": {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 121839,
+     "draft_cycles": 0,
+     "verify_cycles": 121839,
+     "commit_cycles": 0,
+     "tokens_s": 9017.1,
+     "tokens_s_band": 9017.1,
+     "speedup": 1.0,
+     "draft_weight_macs": 0,
+     "draft_attention_macs": 0,
+     "verify_weight_macs": 7568097280,
+     "verify_attention_macs": 2415919104,
+     "macs_per_step": 9984016384
+    }
+   },
+   "8192/fp8/m5": {
+    "context": 8192,
+    "kv_format": "fp8",
+    "lane_multiplier": 5,
+    "plain_tokens_s": 9017.1,
+    "sweep": [
+     {
+      "block": 1,
+      "tokens_per_step": 1.0,
+      "tokens_per_step_band": 1.0,
+      "step_cycles": 121839,
+      "draft_cycles": 0,
+      "verify_cycles": 121839,
+      "commit_cycles": 0,
+      "tokens_s": 9017.1,
+      "tokens_s_band": 9017.1,
+      "speedup": 1.0,
+      "draft_weight_macs": 0,
+      "draft_attention_macs": 0,
+      "verify_weight_macs": 7568097280,
+      "verify_attention_macs": 2415919104,
+      "macs_per_step": 9984016384
+     },
+     {
+      "block": 2,
+      "tokens_per_step": 1.7361,
+      "tokens_per_step_band": 1.7517,
+      "step_cycles": 149205,
+      "draft_cycles": 21934,
+      "verify_cycles": 127265,
+      "commit_cycles": 6,
+      "tokens_s": 12783.4,
+      "tokens_s_band": 12898.3,
+      "speedup": 1.418,
+      "draft_weight_macs": 2803367936,
+      "draft_attention_macs": 671252480,
+      "verify_weight_macs": 15136194560,
+      "verify_attention_macs": 4831838208,
+      "macs_per_step": 23442653184
+     },
+     {
+      "block": 3,
+      "tokens_per_step": 2.2654,
+      "tokens_per_step_band": 2.3207,
+      "step_cycles": 155403,
+      "draft_cycles": 22704,
+      "verify_cycles": 132691,
+      "commit_cycles": 8,
+      "tokens_s": 16015.5,
+      "tokens_s_band": 16406.5,
+      "speedup": 1.776,
+      "draft_weight_macs": 4516216832,
+      "draft_attention_macs": 1007001600,
+      "verify_weight_macs": 22704291840,
+      "verify_attention_macs": 7247757312,
+      "macs_per_step": 35475267584
+     },
+     {
+      "block": 4,
+      "tokens_per_step": 2.6256,
+      "tokens_per_step_band": 2.7447,
+      "step_cycles": 161598,
+      "draft_cycles": 23473,
+      "verify_cycles": 138117,
+      "commit_cycles": 8,
+      "tokens_s": 17850.4,
+      "tokens_s_band": 18660.1,
+      "speedup": 1.98,
+      "draft_weight_macs": 6229065728,
+      "draft_attention_macs": 1342832640,
+      "verify_weight_macs": 30272389120,
+      "verify_attention_macs": 9663676416,
+      "macs_per_step": 47507963904
+     },
+     {
+      "block": 5,
+      "tokens_per_step": 2.8591,
+      "tokens_per_step_band": 3.0823,
+      "step_cycles": 167796,
+      "draft_cycles": 24243,
+      "verify_cycles": 143543,
+      "commit_cycles": 10,
+      "tokens_s": 18719.9,
+      "tokens_s_band": 20181.3,
+      "speedup": 2.076,
+      "draft_weight_macs": 7941914624,
+      "draft_attention_macs": 1678745600,
+      "verify_weight_macs": 37840486400,
+      "verify_attention_macs": 12079595520,
+      "macs_per_step": 59540742144
+     },
+     {
+      "block": 6,
+      "tokens_per_step": 3.0335,
+      "tokens_per_step_band": 3.3344,
+      "step_cycles": 239703,
+      "draft_cycles": 33412,
+      "verify_cycles": 206281,
+      "commit_cycles": 10,
+      "tokens_s": 13903.6,
+      "tokens_s_band": 15282.7,
+      "speedup": 1.542,
+      "draft_weight_macs": 9654763520,
+      "draft_attention_macs": 2014740480,
+      "verify_weight_macs": 45408583680,
+      "verify_attention_macs": 14495514624,
+      "macs_per_step": 71573602304
+     },
+     {
+      "block": 8,
+      "tokens_per_step": 3.2956,
+      "tokens_per_step_band": 3.7478,
+      "step_cycles": 255262,
+      "draft_cycles": 38119,
+      "verify_cycles": 217133,
+      "commit_cycles": 10,
+      "tokens_s": 14184.2,
+      "tokens_s_band": 16130.4,
+      "speedup": 1.573,
+      "draft_weight_macs": 13080461312,
+      "draft_attention_macs": 2686976000,
+      "verify_weight_macs": 60544778240,
+      "verify_attention_macs": 19327352832,
+      "macs_per_step": 95639568384
+     },
+     {
+      "block": 12,
+      "tokens_per_step": 3.4927,
+      "tokens_per_step_band": 4.2393,
+      "step_cycles": 348926,
+      "draft_cycles": 52765,
+      "verify_cycles": 296149,
+      "commit_cycles": 12,
+      "tokens_s": 10997.2,
+      "tokens_s_band": 13348.0,
+      "speedup": 1.22,
+      "draft_weight_macs": 19931856896,
+      "draft_attention_macs": 4032430080,
+      "verify_weight_macs": 90817167360,
+      "verify_attention_macs": 28991029248,
+      "macs_per_step": 143772483584
+     },
+     {
+      "block": 16,
+      "tokens_per_step": 3.6559,
+      "tokens_per_step_band": 4.6623,
+      "step_cycles": 439418,
+      "draft_cycles": 64242,
+      "verify_cycles": 375164,
+      "commit_cycles": 12,
+      "tokens_s": 9140.5,
+      "tokens_s_band": 11656.8,
+      "speedup": 1.014,
+      "draft_weight_macs": 26783252480,
+      "draft_attention_macs": 5379194880,
+      "verify_weight_macs": 121089556480,
+      "verify_attention_macs": 38654705664,
+      "macs_per_step": 191906709504
+     }
+    ],
+    "best": {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 167796,
+     "draft_cycles": 24243,
+     "verify_cycles": 143543,
+     "commit_cycles": 10,
+     "tokens_s": 18719.9,
+     "tokens_s_band": 20181.3,
+     "speedup": 2.076,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 1678745600,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 12079595520,
+     "macs_per_step": 59540742144
+    }
+   },
+   "2048/fp8/m1": {
+    "context": 2048,
+    "kv_format": "fp8",
+    "lane_multiplier": 1,
+    "plain_tokens_s": 10507.4,
+    "sweep": [
+     {
+      "block": 1,
+      "tokens_per_step": 1.0,
+      "tokens_per_step_band": 1.0,
+      "step_cycles": 104559,
+      "draft_cycles": 0,
+      "verify_cycles": 104559,
+      "commit_cycles": 0,
+      "tokens_s": 10507.4,
+      "tokens_s_band": 10507.4,
+      "speedup": 1.0,
+      "draft_weight_macs": 0,
+      "draft_attention_macs": 0,
+      "verify_weight_macs": 7568097280,
+      "verify_attention_macs": 603979776,
+      "macs_per_step": 8172077056
+     },
+     {
+      "block": 2,
+      "tokens_per_step": 1.7361,
+      "tokens_per_step_band": 1.7517,
+      "step_cycles": 175557,
+      "draft_cycles": 25534,
+      "verify_cycles": 150017,
+      "commit_cycles": 6,
+      "tokens_s": 10864.6,
+      "tokens_s_band": 10962.2,
+      "speedup": 1.034,
+      "draft_weight_macs": 2803367936,
+      "draft_attention_macs": 167936000,
+      "verify_weight_macs": 15136194560,
+      "verify_attention_macs": 1207959552,
+      "macs_per_step": 19315458048
+     },
+     {
+      "block": 3,
+      "tokens_per_step": 2.2654,
+      "tokens_per_step_band": 2.3207,
+      "step_cycles": 230955,
+      "draft_cycles": 35472,
+      "verify_cycles": 195475,
+      "commit_cycles": 8,
+      "tokens_s": 10776.4,
+      "tokens_s_band": 11039.4,
+      "speedup": 1.026,
+      "draft_weight_macs": 4516216832,
+      "draft_attention_macs": 252026880,
+      "verify_weight_macs": 22704291840,
+      "verify_attention_macs": 1811939328,
+      "macs_per_step": 29284474880
+     },
+     {
+      "block": 4,
+      "tokens_per_step": 2.6256,
+      "tokens_per_step_band": 2.7447,
+      "step_cycles": 286350,
+      "draft_cycles": 45409,
+      "verify_cycles": 240933,
+      "commit_cycles": 8,
+      "tokens_s": 10073.6,
+      "tokens_s_band": 10530.6,
+      "speedup": 0.959,
+      "draft_weight_macs": 6229065728,
+      "draft_attention_macs": 336199680,
+      "verify_weight_macs": 30272389120,
+      "verify_attention_macs": 2415919104,
+      "macs_per_step": 39253573632
+     },
+     {
+      "block": 5,
+      "tokens_per_step": 2.8591,
+      "tokens_per_step_band": 3.0823,
+      "step_cycles": 341748,
+      "draft_cycles": 55347,
+      "verify_cycles": 286391,
+      "commit_cycles": 10,
+      "tokens_s": 9191.3,
+      "tokens_s_band": 9908.9,
+      "speedup": 0.875,
+      "draft_weight_macs": 7941914624,
+      "draft_attention_macs": 420454400,
+      "verify_weight_macs": 37840486400,
+      "verify_attention_macs": 3019898880,
+      "macs_per_step": 49222754304
+     },
+     {
+      "block": 6,
+      "tokens_per_step": 3.0335,
+      "tokens_per_step_band": 3.3344,
+      "step_cycles": 397143,
+      "draft_cycles": 65284,
+      "verify_cycles": 331849,
+      "commit_cycles": 10,
+      "tokens_s": 8391.7,
+      "tokens_s_band": 9224.1,
+      "speedup": 0.799,
+      "draft_weight_macs": 9654763520,
+      "draft_attention_macs": 504791040,
+      "verify_weight_macs": 45408583680,
+      "verify_attention_macs": 3623878656,
+      "macs_per_step": 59192016896
+     },
+     {
+      "block": 8,
+      "tokens_per_step": 3.2956,
+      "tokens_per_step_band": 3.7478,
+      "step_cycles": 507934,
+      "draft_cycles": 85159,
+      "verify_cycles": 422765,
+      "commit_cycles": 10,
+      "tokens_s": 7128.2,
+      "tokens_s_band": 8106.3,
+      "speedup": 0.678,
+      "draft_weight_macs": 13080461312,
+      "draft_attention_macs": 673710080,
+      "verify_weight_macs": 60544778240,
+      "verify_attention_macs": 4831838208,
+      "macs_per_step": 79130787840
+     },
+     {
+      "block": 12,
+      "tokens_per_step": 3.4927,
+      "tokens_per_step_band": 4.2393,
+      "step_cycles": 729518,
+      "draft_cycles": 124909,
+      "verify_cycles": 604597,
+      "commit_cycles": 12,
+      "tokens_s": 5259.9,
+      "tokens_s_band": 6384.3,
+      "speedup": 0.501,
+      "draft_weight_macs": 19931856896,
+      "draft_attention_macs": 1012531200,
+      "verify_weight_macs": 90817167360,
+      "verify_attention_macs": 7247757312,
+      "macs_per_step": 119009312768
+     },
+     {
+      "block": 16,
+      "tokens_per_step": 3.6559,
+      "tokens_per_step_band": 4.6623,
+      "step_cycles": 951098,
+      "draft_cycles": 164658,
+      "verify_cycles": 786428,
+      "commit_cycles": 12,
+      "tokens_s": 4223.0,
+      "tokens_s_band": 5385.6,
+      "speedup": 0.402,
+      "draft_weight_macs": 26783252480,
+      "draft_attention_macs": 1352663040,
+      "verify_weight_macs": 121089556480,
+      "verify_attention_macs": 9663676416,
+      "macs_per_step": 158889148416
+     }
+    ],
+    "best": {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 175557,
+     "draft_cycles": 25534,
+     "verify_cycles": 150017,
+     "commit_cycles": 6,
+     "tokens_s": 10864.6,
+     "tokens_s_band": 10962.2,
+     "speedup": 1.034,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 167936000,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 1207959552,
+     "macs_per_step": 19315458048
+    }
+   },
+   "2048/fp8/m5": {
+    "context": 2048,
+    "kv_format": "fp8",
+    "lane_multiplier": 5,
+    "plain_tokens_s": 10507.4,
+    "sweep": [
+     {
+      "block": 1,
+      "tokens_per_step": 1.0,
+      "tokens_per_step_band": 1.0,
+      "step_cycles": 104559,
+      "draft_cycles": 0,
+      "verify_cycles": 104559,
+      "commit_cycles": 0,
+      "tokens_s": 10507.4,
+      "tokens_s_band": 10507.4,
+      "speedup": 1.0,
+      "draft_weight_macs": 0,
+      "draft_attention_macs": 0,
+      "verify_weight_macs": 7568097280,
+      "verify_attention_macs": 603979776,
+      "macs_per_step": 8172077056
+     },
+     {
+      "block": 2,
+      "tokens_per_step": 1.7361,
+      "tokens_per_step_band": 1.7517,
+      "step_cycles": 125589,
+      "draft_cycles": 19054,
+      "verify_cycles": 106529,
+      "commit_cycles": 6,
+      "tokens_s": 15187.2,
+      "tokens_s_band": 15323.7,
+      "speedup": 1.445,
+      "draft_weight_macs": 2803367936,
+      "draft_attention_macs": 167936000,
+      "verify_weight_macs": 15136194560,
+      "verify_attention_macs": 1207959552,
+      "macs_per_step": 19315458048
+     },
+     {
+      "block": 3,
+      "tokens_per_step": 2.2654,
+      "tokens_per_step_band": 2.3207,
+      "step_cycles": 127851,
+      "draft_cycles": 19344,
+      "verify_cycles": 108499,
+      "commit_cycles": 8,
+      "tokens_s": 19466.9,
+      "tokens_s_band": 19942.1,
+      "speedup": 1.853,
+      "draft_weight_macs": 4516216832,
+      "draft_attention_macs": 252026880,
+      "verify_weight_macs": 22704291840,
+      "verify_attention_macs": 1811939328,
+      "macs_per_step": 29284474880
+     },
+     {
+      "block": 4,
+      "tokens_per_step": 2.6256,
+      "tokens_per_step_band": 2.7447,
+      "step_cycles": 130110,
+      "draft_cycles": 19633,
+      "verify_cycles": 110469,
+      "commit_cycles": 8,
+      "tokens_s": 22170.4,
+      "tokens_s_band": 23176.1,
+      "speedup": 2.11,
+      "draft_weight_macs": 6229065728,
+      "draft_attention_macs": 336199680,
+      "verify_weight_macs": 30272389120,
+      "verify_attention_macs": 2415919104,
+      "macs_per_step": 39253573632
+     },
+     {
+      "block": 5,
+      "tokens_per_step": 2.8591,
+      "tokens_per_step_band": 3.0823,
+      "step_cycles": 132372,
+      "draft_cycles": 19923,
+      "verify_cycles": 112439,
+      "commit_cycles": 10,
+      "tokens_s": 23729.5,
+      "tokens_s_band": 25582.0,
+      "speedup": 2.258,
+      "draft_weight_macs": 7941914624,
+      "draft_attention_macs": 420454400,
+      "verify_weight_macs": 37840486400,
+      "verify_attention_macs": 3019898880,
+      "macs_per_step": 49222754304
+     },
+     {
+      "block": 6,
+      "tokens_per_step": 3.0335,
+      "tokens_per_step_band": 3.3344,
+      "step_cycles": 184599,
+      "draft_cycles": 26692,
+      "verify_cycles": 157897,
+      "commit_cycles": 10,
+      "tokens_s": 18053.9,
+      "tokens_s_band": 19844.7,
+      "speedup": 1.718,
+      "draft_weight_macs": 9654763520,
+      "draft_attention_macs": 504791040,
+      "verify_weight_macs": 45408583680,
+      "verify_attention_macs": 3623878656,
+      "macs_per_step": 59192016896
+     },
+     {
+      "block": 8,
+      "tokens_per_step": 3.2956,
+      "tokens_per_step_band": 3.7478,
+      "step_cycles": 192286,
+      "draft_cycles": 30439,
+      "verify_cycles": 161837,
+      "commit_cycles": 10,
+      "tokens_s": 18829.6,
+      "tokens_s_band": 21413.3,
+      "speedup": 1.792,
+      "draft_weight_macs": 13080461312,
+      "draft_attention_macs": 673710080,
+      "verify_weight_macs": 60544778240,
+      "verify_attention_macs": 4831838208,
+      "macs_per_step": 79130787840
+     },
+     {
+      "block": 12,
+      "tokens_per_step": 3.4927,
+      "tokens_per_step_band": 4.2393,
+      "step_cycles": 254462,
+      "draft_cycles": 41245,
+      "verify_cycles": 213205,
+      "commit_cycles": 12,
+      "tokens_s": 15079.7,
+      "tokens_s_band": 18303.2,
+      "speedup": 1.435,
+      "draft_weight_macs": 19931856896,
+      "draft_attention_macs": 1012531200,
+      "verify_weight_macs": 90817167360,
+      "verify_attention_macs": 7247757312,
+      "macs_per_step": 119009312768
+     },
+     {
+      "block": 16,
+      "tokens_per_step": 3.6559,
+      "tokens_per_step_band": 4.6623,
+      "step_cycles": 313466,
+      "draft_cycles": 48882,
+      "verify_cycles": 264572,
+      "commit_cycles": 12,
+      "tokens_s": 12813.2,
+      "tokens_s_band": 16340.5,
+      "speedup": 1.219,
+      "draft_weight_macs": 26783252480,
+      "draft_attention_macs": 1352663040,
+      "verify_weight_macs": 121089556480,
+      "verify_attention_macs": 9663676416,
+      "macs_per_step": 158889148416
+     }
+    ],
+    "best": {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 132372,
+     "draft_cycles": 19923,
+     "verify_cycles": 112439,
+     "commit_cycles": 10,
+     "tokens_s": 23729.5,
+     "tokens_s_band": 25582.0,
+     "speedup": 2.258,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 420454400,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 3019898880,
+     "macs_per_step": 49222754304
+    }
+   }
+  },
+  "hbm": {
+   "bf16": {
+    "context": 8192,
+    "tokens_s_plain": 457.4,
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_s": 0.0026619499999999997,
+    "draft_s": 0.00047580999999999996,
+    "verify_s": 0.0021861399999999996,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1373.4,
+    "tokens_s_band": 1751.5,
+    "speedup": 3.002,
+    "macs_per_step": 191906709504,
+    "mac_lanes_min": 66511,
+    "block16_tokens_s": 1373.4
+   },
+   "fp8": {
+    "context": 8192,
+    "tokens_s_plain": 881.0,
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_s": 0.00137875,
+    "draft_s": 0.00024372999999999997,
+    "verify_s": 0.0011350099999999999,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 2651.6,
+    "tokens_s_band": 3381.5,
+    "speedup": 3.01,
+    "macs_per_step": 191906709504,
+    "mac_lanes_min": 128107,
+    "block16_tokens_s": 2651.6
+   },
+   "rom_format_int8": {
+    "context": 8192,
+    "tokens_s_plain": 880.7,
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_s": 0.0013792799999999999,
+    "draft_s": 0.00024381999999999998,
+    "verify_s": 0.00113544,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 2650.6,
+    "tokens_s_band": 3380.3,
+    "speedup": 3.01,
+    "macs_per_step": 191906709504,
+    "mac_lanes_min": 128058,
+    "block16_tokens_s": 2650.6
+   }
+  },
+  "requirements": [
+   "lane multiplier m (one weight or KV word feeds m slots)",
+   "the draft phase is serial with the verify: the drafter's layers, fc, K/V projections and the shared lm_head over the draft slots run on the same engine before each verify",
+   "KV-shared verify attention: one K/V read serves every slot, the causal mask per slot",
+   "slot-parallel non-weight work: one op over all slots (the stream unit's lanes take slots), never serial ops",
+   "16 DYN banks (token, pos + j); CTL TOKX/AMAX/DYN/ACCEPT/END; the shared accept unit",
+   "KV ring >= 17 entries; rollback is a commit pointer"
+  ]
+ },
+ "batch": {
+  "per_context": {
+   "8192": {
+    "rom": [
+     {
+      "lane_multiplier": 1,
+      "batch": 1,
+      "step_cycles": 121839,
+      "per_user_tokens_s": 9017.1,
+      "total_tokens_s": 9017.1,
+      "binding": "compute",
+      "energy_per_token_mj": 232.05,
+      "energy_per_token_mj_matrix_engine_only": 106.53
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 2,
+      "step_cycles": 184321,
+      "per_user_tokens_s": 5960.5,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 4,
+      "step_cycles": 368642,
+      "per_user_tokens_s": 2980.2,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 8,
+      "step_cycles": 737285,
+      "per_user_tokens_s": 1490.1,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 16,
+      "step_cycles": 1474570,
+      "per_user_tokens_s": 745.1,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 32,
+      "step_cycles": 2949139,
+      "per_user_tokens_s": 372.5,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 64,
+      "step_cycles": 5898279,
+      "per_user_tokens_s": 186.3,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 128,
+      "step_cycles": 11796557,
+      "per_user_tokens_s": 93.1,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 1,
+      "step_cycles": 121839,
+      "per_user_tokens_s": 9017.1,
+      "total_tokens_s": 9017.1,
+      "binding": "compute",
+      "energy_per_token_mj": 232.05,
+      "energy_per_token_mj_matrix_engine_only": 106.53
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 2,
+      "step_cycles": 184321,
+      "per_user_tokens_s": 5960.5,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 4,
+      "step_cycles": 368642,
+      "per_user_tokens_s": 2980.2,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 8,
+      "step_cycles": 737285,
+      "per_user_tokens_s": 1490.1,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 16,
+      "step_cycles": 1474570,
+      "per_user_tokens_s": 745.1,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 32,
+      "step_cycles": 2949139,
+      "per_user_tokens_s": 372.5,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 64,
+      "step_cycles": 5898279,
+      "per_user_tokens_s": 186.3,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 128,
+      "step_cycles": 11796557,
+      "per_user_tokens_s": 93.1,
+      "total_tokens_s": 11920.9,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 231.97,
+      "energy_per_token_mj_matrix_engine_only": 106.44
+     }
+    ],
+    "hbm": {
+     "bf16": [
+      {
+       "batch": 1,
+       "step_cycles": 2401776,
+       "per_user_tokens_s": 457.4,
+       "total_tokens_s": 457.4,
+       "energy_per_token_mj": 1882.78,
+       "energy_per_token_mj_matrix_engine_only": 1757.25,
+       "binding": "bytes"
+      },
+      {
+       "batch": 2,
+       "step_cycles": 2493936,
+       "per_user_tokens_s": 440.5,
+       "total_tokens_s": 881.0,
+       "energy_per_token_mj": 1056.94,
+       "energy_per_token_mj_matrix_engine_only": 931.42,
+       "binding": "bytes"
+      },
+      {
+       "batch": 4,
+       "step_cycles": 2678258,
+       "per_user_tokens_s": 410.2,
+       "total_tokens_s": 1640.8,
+       "energy_per_token_mj": 644.03,
+       "energy_per_token_mj_matrix_engine_only": 518.5,
+       "binding": "bytes"
+      },
+      {
+       "batch": 8,
+       "step_cycles": 3046900,
+       "per_user_tokens_s": 360.6,
+       "total_tokens_s": 2884.6,
+       "energy_per_token_mj": 437.57,
+       "energy_per_token_mj_matrix_engine_only": 312.04,
+       "binding": "bytes"
+      },
+      {
+       "batch": 16,
+       "step_cycles": 3784185,
+       "per_user_tokens_s": 290.3,
+       "total_tokens_s": 4645.2,
+       "energy_per_token_mj": 334.34,
+       "energy_per_token_mj_matrix_engine_only": 208.82,
+       "binding": "bytes"
+      },
+      {
+       "batch": 32,
+       "step_cycles": 5258754,
+       "per_user_tokens_s": 208.9,
+       "total_tokens_s": 6685.3,
+       "energy_per_token_mj": 282.73,
+       "energy_per_token_mj_matrix_engine_only": 157.2,
+       "binding": "bytes"
+      },
+      {
+       "batch": 64,
+       "step_cycles": 8207894,
+       "per_user_tokens_s": 133.9,
+       "total_tokens_s": 8566.5,
+       "energy_per_token_mj": 256.92,
+       "energy_per_token_mj_matrix_engine_only": 131.39,
+       "binding": "bytes"
+      },
+      {
+       "batch": 128,
+       "step_cycles": 14106172,
+       "per_user_tokens_s": 77.9,
+       "total_tokens_s": 9969.1,
+       "energy_per_token_mj": 244.02,
+       "energy_per_token_mj_matrix_engine_only": 118.49,
+       "binding": "bytes"
+      }
+     ],
+     "fp8": [
+      {
+       "batch": 1,
+       "step_cycles": 1246968,
+       "per_user_tokens_s": 881.0,
+       "total_tokens_s": 881.0,
+       "energy_per_token_mj": 1056.94,
+       "energy_per_token_mj_matrix_engine_only": 931.42,
+       "binding": "bytes"
+      },
+      {
+       "batch": 2,
+       "step_cycles": 1339129,
+       "per_user_tokens_s": 820.4,
+       "total_tokens_s": 1640.8,
+       "energy_per_token_mj": 644.03,
+       "energy_per_token_mj_matrix_engine_only": 518.5,
+       "binding": "bytes"
+      },
+      {
+       "batch": 4,
+       "step_cycles": 1523450,
+       "per_user_tokens_s": 721.2,
+       "total_tokens_s": 2884.6,
+       "energy_per_token_mj": 437.57,
+       "energy_per_token_mj_matrix_engine_only": 312.04,
+       "binding": "bytes"
+      },
+      {
+       "batch": 8,
+       "step_cycles": 1892092,
+       "per_user_tokens_s": 580.6,
+       "total_tokens_s": 4645.2,
+       "energy_per_token_mj": 334.34,
+       "energy_per_token_mj_matrix_engine_only": 208.82,
+       "binding": "bytes"
+      },
+      {
+       "batch": 16,
+       "step_cycles": 2629377,
+       "per_user_tokens_s": 417.8,
+       "total_tokens_s": 6685.3,
+       "energy_per_token_mj": 282.73,
+       "energy_per_token_mj_matrix_engine_only": 157.2,
+       "binding": "bytes"
+      },
+      {
+       "batch": 32,
+       "step_cycles": 4103947,
+       "per_user_tokens_s": 267.7,
+       "total_tokens_s": 8566.5,
+       "energy_per_token_mj": 256.92,
+       "energy_per_token_mj_matrix_engine_only": 131.39,
+       "binding": "bytes"
+      },
+      {
+       "batch": 64,
+       "step_cycles": 7053086,
+       "per_user_tokens_s": 155.8,
+       "total_tokens_s": 9969.1,
+       "energy_per_token_mj": 244.02,
+       "energy_per_token_mj_matrix_engine_only": 118.49,
+       "binding": "bytes"
+      },
+      {
+       "batch": 128,
+       "step_cycles": 12951365,
+       "per_user_tokens_s": 84.8,
+       "total_tokens_s": 10858.0,
+       "energy_per_token_mj": 237.57,
+       "energy_per_token_mj_matrix_engine_only": 112.04,
+       "binding": "bytes"
+      }
+     ],
+     "rom_format_int8": [
+      {
+       "batch": 1,
+       "step_cycles": 1247442,
+       "per_user_tokens_s": 880.7,
+       "total_tokens_s": 880.7,
+       "energy_per_token_mj": 1057.28,
+       "energy_per_token_mj_matrix_engine_only": 931.76,
+       "binding": "bytes"
+      },
+      {
+       "batch": 2,
+       "step_cycles": 1339603,
+       "per_user_tokens_s": 820.1,
+       "total_tokens_s": 1640.2,
+       "energy_per_token_mj": 644.2,
+       "energy_per_token_mj_matrix_engine_only": 518.67,
+       "binding": "bytes"
+      },
+      {
+       "batch": 4,
+       "step_cycles": 1523924,
+       "per_user_tokens_s": 720.9,
+       "total_tokens_s": 2883.7,
+       "energy_per_token_mj": 437.66,
+       "energy_per_token_mj_matrix_engine_only": 312.13,
+       "binding": "bytes"
+      },
+      {
+       "batch": 8,
+       "step_cycles": 1892566,
+       "per_user_tokens_s": 580.5,
+       "total_tokens_s": 4644.0,
+       "energy_per_token_mj": 334.39,
+       "energy_per_token_mj_matrix_engine_only": 208.86,
+       "binding": "bytes"
+      },
+      {
+       "batch": 16,
+       "step_cycles": 2629851,
+       "per_user_tokens_s": 417.8,
+       "total_tokens_s": 6684.1,
+       "energy_per_token_mj": 282.75,
+       "energy_per_token_mj_matrix_engine_only": 157.22,
+       "binding": "bytes"
+      },
+      {
+       "batch": 32,
+       "step_cycles": 4104421,
+       "per_user_tokens_s": 267.7,
+       "total_tokens_s": 8565.5,
+       "energy_per_token_mj": 256.93,
+       "energy_per_token_mj_matrix_engine_only": 131.4,
+       "binding": "bytes"
+      },
+      {
+       "batch": 64,
+       "step_cycles": 7053560,
+       "per_user_tokens_s": 155.8,
+       "total_tokens_s": 9968.4,
+       "energy_per_token_mj": 244.02,
+       "energy_per_token_mj_matrix_engine_only": 118.5,
+       "binding": "bytes"
+      },
+      {
+       "batch": 128,
+       "step_cycles": 12951839,
+       "per_user_tokens_s": 84.8,
+       "total_tokens_s": 10857.6,
+       "energy_per_token_mj": 237.57,
+       "energy_per_token_mj_matrix_engine_only": 112.04,
+       "binding": "bytes"
+      }
+     ]
+    },
+    "kv_format": "fp8"
+   },
+   "2048": {
+    "rom": [
+     {
+      "lane_multiplier": 1,
+      "batch": 1,
+      "step_cycles": 104559,
+      "per_user_tokens_s": 10507.4,
+      "total_tokens_s": 10507.4,
+      "binding": "compute",
+      "energy_per_token_mj": 152.59,
+      "energy_per_token_mj_matrix_engine_only": 49.85
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 2,
+      "step_cycles": 149703,
+      "per_user_tokens_s": 7338.8,
+      "total_tokens_s": 14677.6,
+      "binding": "compute",
+      "energy_per_token_mj": 152.51,
+      "energy_per_token_mj_matrix_engine_only": 49.77
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 4,
+      "step_cycles": 239991,
+      "per_user_tokens_s": 4577.8,
+      "total_tokens_s": 18311.4,
+      "binding": "compute",
+      "energy_per_token_mj": 152.47,
+      "energy_per_token_mj_matrix_engine_only": 49.73
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 8,
+      "step_cycles": 420567,
+      "per_user_tokens_s": 2612.3,
+      "total_tokens_s": 20898.3,
+      "binding": "compute",
+      "energy_per_token_mj": 152.45,
+      "energy_per_token_mj_matrix_engine_only": 49.71
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 16,
+      "step_cycles": 781719,
+      "per_user_tokens_s": 1405.4,
+      "total_tokens_s": 22486.6,
+      "binding": "compute",
+      "energy_per_token_mj": 152.44,
+      "energy_per_token_mj_matrix_engine_only": 49.69
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 32,
+      "step_cycles": 1504023,
+      "per_user_tokens_s": 730.5,
+      "total_tokens_s": 23375.0,
+      "binding": "compute",
+      "energy_per_token_mj": 152.44,
+      "energy_per_token_mj_matrix_engine_only": 49.69
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 64,
+      "step_cycles": 2948631,
+      "per_user_tokens_s": 372.6,
+      "total_tokens_s": 23846.0,
+      "binding": "compute",
+      "energy_per_token_mj": 152.43,
+      "energy_per_token_mj_matrix_engine_only": 49.69
+     },
+     {
+      "lane_multiplier": 1,
+      "batch": 128,
+      "step_cycles": 5837847,
+      "per_user_tokens_s": 188.2,
+      "total_tokens_s": 24088.7,
+      "binding": "compute",
+      "energy_per_token_mj": 152.43,
+      "energy_per_token_mj_matrix_engine_only": 49.69
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 1,
+      "step_cycles": 104559,
+      "per_user_tokens_s": 10507.4,
+      "total_tokens_s": 10507.4,
+      "binding": "compute",
+      "energy_per_token_mj": 152.59,
+      "energy_per_token_mj_matrix_engine_only": 49.85
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 2,
+      "step_cycles": 110823,
+      "per_user_tokens_s": 9913.5,
+      "total_tokens_s": 19826.9,
+      "binding": "compute",
+      "energy_per_token_mj": 152.46,
+      "energy_per_token_mj_matrix_engine_only": 49.71
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 4,
+      "step_cycles": 123351,
+      "per_user_tokens_s": 8906.6,
+      "total_tokens_s": 35626.5,
+      "binding": "compute",
+      "energy_per_token_mj": 152.39,
+      "energy_per_token_mj_matrix_engine_only": 49.65
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 8,
+      "step_cycles": 187287,
+      "per_user_tokens_s": 5866.1,
+      "total_tokens_s": 46928.6,
+      "binding": "compute",
+      "energy_per_token_mj": 152.37,
+      "energy_per_token_mj_matrix_engine_only": 49.63
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 16,
+      "step_cycles": 368642,
+      "per_user_tokens_s": 2980.2,
+      "total_tokens_s": 47683.7,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 152.37,
+      "energy_per_token_mj_matrix_engine_only": 49.62
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 32,
+      "step_cycles": 737285,
+      "per_user_tokens_s": 1490.1,
+      "total_tokens_s": 47683.7,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 152.37,
+      "energy_per_token_mj_matrix_engine_only": 49.62
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 64,
+      "step_cycles": 1474570,
+      "per_user_tokens_s": 745.1,
+      "total_tokens_s": 47683.7,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 152.37,
+      "energy_per_token_mj_matrix_engine_only": 49.62
+     },
+     {
+      "lane_multiplier": 5,
+      "batch": 128,
+      "step_cycles": 2949139,
+      "per_user_tokens_s": 372.5,
+      "total_tokens_s": 47683.7,
+      "binding": "kv_stream",
+      "energy_per_token_mj": 152.37,
+      "energy_per_token_mj_matrix_engine_only": 49.62
+     }
+    ],
+    "hbm": {
+     "bf16": [
+      {
+       "batch": 1,
+       "step_cycles": 2332655,
+       "per_user_tokens_s": 471.0,
+       "total_tokens_s": 471.0,
+       "energy_per_token_mj": 1803.36,
+       "energy_per_token_mj_matrix_engine_only": 1700.62,
+       "binding": "bytes"
+      },
+      {
+       "batch": 2,
+       "step_cycles": 2355695,
+       "per_user_tokens_s": 466.4,
+       "total_tokens_s": 932.8,
+       "energy_per_token_mj": 977.53,
+       "energy_per_token_mj_matrix_engine_only": 874.79,
+       "binding": "bytes"
+      },
+      {
+       "batch": 4,
+       "step_cycles": 2401776,
+       "per_user_tokens_s": 457.4,
+       "total_tokens_s": 1829.7,
+       "energy_per_token_mj": 564.62,
+       "energy_per_token_mj_matrix_engine_only": 461.87,
+       "binding": "bytes"
+      },
+      {
+       "batch": 8,
+       "step_cycles": 2493936,
+       "per_user_tokens_s": 440.5,
+       "total_tokens_s": 3524.2,
+       "energy_per_token_mj": 358.16,
+       "energy_per_token_mj_matrix_engine_only": 255.41,
+       "binding": "bytes"
+      },
+      {
+       "batch": 16,
+       "step_cycles": 2678258,
+       "per_user_tokens_s": 410.2,
+       "total_tokens_s": 6563.3,
+       "energy_per_token_mj": 254.93,
+       "energy_per_token_mj_matrix_engine_only": 152.18,
+       "binding": "bytes"
+      },
+      {
+       "batch": 32,
+       "step_cycles": 3046900,
+       "per_user_tokens_s": 360.6,
+       "total_tokens_s": 11538.4,
+       "energy_per_token_mj": 203.32,
+       "energy_per_token_mj_matrix_engine_only": 100.57,
+       "binding": "bytes"
+      },
+      {
+       "batch": 64,
+       "step_cycles": 3784185,
+       "per_user_tokens_s": 290.3,
+       "total_tokens_s": 18580.7,
+       "energy_per_token_mj": 177.51,
+       "energy_per_token_mj_matrix_engine_only": 74.76,
+       "binding": "bytes"
+      },
+      {
+       "batch": 128,
+       "step_cycles": 5320363,
+       "per_user_tokens_s": 206.5,
+       "total_tokens_s": 26431.6,
+       "energy_per_token_mj": 164.61,
+       "energy_per_token_mj_matrix_engine_only": 61.86,
+       "binding": "macs"
+      }
+     ],
+     "fp8": [
+      {
+       "batch": 1,
+       "step_cycles": 1177848,
+       "per_user_tokens_s": 932.8,
+       "total_tokens_s": 932.8,
+       "energy_per_token_mj": 977.53,
+       "energy_per_token_mj_matrix_engine_only": 874.79,
+       "binding": "bytes"
+      },
+      {
+       "batch": 2,
+       "step_cycles": 1200888,
+       "per_user_tokens_s": 914.9,
+       "total_tokens_s": 1829.7,
+       "energy_per_token_mj": 564.62,
+       "energy_per_token_mj_matrix_engine_only": 461.87,
+       "binding": "bytes"
+      },
+      {
+       "batch": 4,
+       "step_cycles": 1246968,
+       "per_user_tokens_s": 881.0,
+       "total_tokens_s": 3524.2,
+       "energy_per_token_mj": 358.16,
+       "energy_per_token_mj_matrix_engine_only": 255.41,
+       "binding": "bytes"
+      },
+      {
+       "batch": 8,
+       "step_cycles": 1339129,
+       "per_user_tokens_s": 820.4,
+       "total_tokens_s": 6563.3,
+       "energy_per_token_mj": 254.93,
+       "energy_per_token_mj_matrix_engine_only": 152.18,
+       "binding": "bytes"
+      },
+      {
+       "batch": 16,
+       "step_cycles": 1523450,
+       "per_user_tokens_s": 721.2,
+       "total_tokens_s": 11538.4,
+       "energy_per_token_mj": 203.32,
+       "energy_per_token_mj_matrix_engine_only": 100.57,
+       "binding": "bytes"
+      },
+      {
+       "batch": 32,
+       "step_cycles": 1892092,
+       "per_user_tokens_s": 580.6,
+       "total_tokens_s": 18580.7,
+       "energy_per_token_mj": 177.51,
+       "energy_per_token_mj_matrix_engine_only": 74.76,
+       "binding": "bytes"
+      },
+      {
+       "batch": 64,
+       "step_cycles": 2660181,
+       "per_user_tokens_s": 413.0,
+       "total_tokens_s": 26431.6,
+       "energy_per_token_mj": 164.61,
+       "energy_per_token_mj_matrix_engine_only": 61.86,
+       "binding": "macs"
+      },
+      {
+       "batch": 128,
+       "step_cycles": 5320363,
+       "per_user_tokens_s": 206.5,
+       "total_tokens_s": 26431.6,
+       "energy_per_token_mj": 158.15,
+       "energy_per_token_mj_matrix_engine_only": 55.41,
+       "binding": "macs"
+      }
+     ],
+     "rom_format_int8": [
+      {
+       "batch": 1,
+       "step_cycles": 1178322,
+       "per_user_tokens_s": 932.4,
+       "total_tokens_s": 932.4,
+       "energy_per_token_mj": 977.87,
+       "energy_per_token_mj_matrix_engine_only": 875.12,
+       "binding": "bytes"
+      },
+      {
+       "batch": 2,
+       "step_cycles": 1201362,
+       "per_user_tokens_s": 914.5,
+       "total_tokens_s": 1829.0,
+       "energy_per_token_mj": 564.79,
+       "energy_per_token_mj_matrix_engine_only": 462.04,
+       "binding": "bytes"
+      },
+      {
+       "batch": 4,
+       "step_cycles": 1247442,
+       "per_user_tokens_s": 880.7,
+       "total_tokens_s": 3522.9,
+       "energy_per_token_mj": 358.24,
+       "energy_per_token_mj_matrix_engine_only": 255.5,
+       "binding": "bytes"
+      },
+      {
+       "batch": 8,
+       "step_cycles": 1339603,
+       "per_user_tokens_s": 820.1,
+       "total_tokens_s": 6561.0,
+       "energy_per_token_mj": 254.97,
+       "energy_per_token_mj_matrix_engine_only": 152.23,
+       "binding": "bytes"
+      },
+      {
+       "batch": 16,
+       "step_cycles": 1523924,
+       "per_user_tokens_s": 720.9,
+       "total_tokens_s": 11534.9,
+       "energy_per_token_mj": 203.34,
+       "energy_per_token_mj_matrix_engine_only": 100.59,
+       "binding": "bytes"
+      },
+      {
+       "batch": 32,
+       "step_cycles": 1892566,
+       "per_user_tokens_s": 580.5,
+       "total_tokens_s": 18576.1,
+       "energy_per_token_mj": 177.52,
+       "energy_per_token_mj_matrix_engine_only": 74.77,
+       "binding": "bytes"
+      },
+      {
+       "batch": 64,
+       "step_cycles": 2660181,
+       "per_user_tokens_s": 413.0,
+       "total_tokens_s": 26431.6,
+       "energy_per_token_mj": 164.61,
+       "energy_per_token_mj_matrix_engine_only": 61.86,
+       "binding": "macs"
+      },
+      {
+       "batch": 128,
+       "step_cycles": 5320363,
+       "per_user_tokens_s": 206.5,
+       "total_tokens_s": 26431.6,
+       "energy_per_token_mj": 158.16,
+       "energy_per_token_mj_matrix_engine_only": 55.41,
+       "binding": "macs"
+      }
+     ]
+    },
+    "kv_format": "fp8"
+   }
+  },
+  "note": "HBM comparator rows at 196,608 lanes on 8 stacks and the same KV format as the ROM package",
+  "lane_copies_serve_batch": "yes: one weight word feeding m users' MACs is the DFlash lane multiplier",
+  "energy_basis": "scenario A of configs/hardware/power_scenarios.json: logic at the measured reduced step on the routed ASAP7 core, 16.55 pJ/MAC whole step (upper), 3.97 pJ/MAC the matrix engine alone (lower); ROM 0.08 pJ/B, the whole HBM path 109.12 pJ/B, ROM leakage; no clock or stream-unit energy. A ranking of batch sizes, not the power figure: power_production prices die, package and wall"
+ },
+ "power": {
+  "cooling": {
+   "air": {
+    "reference": "b200_hgx",
+    "die_limit_w": 374.56,
+    "package_limit_w": 1000.0,
+    "dies_per_package": 2
+   },
+   "liquid": {
+    "reference": "gb200_nvl72",
+    "die_limit_w": 474.56,
+    "package_limit_w": 1200.0,
+    "dies_per_package": 2
+   }
+  },
+  "cooling_class": "liquid",
+  "basis": "per-class die limit of a shipping two-die package (configs/hardware/power_scenarios.json cooling); the design class is liquid (GB200 NVL72-class, user decision), air a sensitivity; every energy from the same file; per die",
+  "target_tokens_s": 11324.9,
+  "macs_per_token": 9984016384,
+  "points": {
+   "ar_batch1": {
+    "macs_per_step": 9984016384,
+    "tokens_per_step": 1,
+    "die_static_w": 99.1,
+    "die_non_mac_dynamic_mj_per_token": 27.929,
+    "at": {
+     "design": {
+      "tokens_s": 10873.6,
+      "mac_rate_per_s": 54281301701939.68,
+      "die_w_without_macs": 402.8,
+      "die_energy_budget_mj_per_token": {
+       "air": 34.45,
+       "liquid": 43.64
+      },
+      "pj_per_mac_that_fits": {
+       "air": -0.521,
+       "liquid": 1.322
+      }
+     },
+     "target": {
+      "tokens_s": 11324.9,
+      "mac_rate_per_s": 56533993573580.8,
+      "die_w_without_macs": 415.4,
+      "die_energy_budget_mj_per_token": {
+       "air": 33.07,
+       "liquid": 41.9
+      },
+      "pj_per_mac_that_fits": {
+       "air": -0.723,
+       "liquid": 1.046
+      }
+     }
+    },
+    "rate_cap_with_free_macs": {
+     "air": 9861.9,
+     "liquid": 13442.4
+    },
+    "lanes": {
+     "A_measured_implementation": {
+      "pj_per_mac_w8": 3.9743577368555187,
+      "pj_per_mac_bf16": 3.9743577368555187,
+      "energy_per_token_mj": 130.44,
+      "die_w_at_design_rate": 618.6,
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 5766.0,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 7859.4,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      }
+     },
+     "B_proposed_production": {
+      "pj_per_mac_w8": 0.59,
+      "pj_per_mac_bf16": 0.59,
+      "energy_per_token_mj": 96.651,
+      "die_w_at_design_rate": 434.8,
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 8921.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 10873.6,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 434.8
+       }
+      }
+     },
+     "B_gpu_tensor_sensitivity": {
+      "pj_per_mac_w8": 1.4,
+      "pj_per_mac_bf16": 1.4,
+      "energy_per_token_mj": 104.738,
+      "die_w_at_design_rate": 478.8,
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 7888.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 10751.9,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      }
+     }
+    }
+   },
+   "dflash": {
+    "macs_per_step": 59540742144,
+    "tokens_per_step": 2.8591,
+    "die_static_w": 118.5,
+    "die_non_mac_dynamic_mj_per_token": 11.918,
+    "at": {
+     "design": {
+      "tokens_s": 18719.9,
+      "mac_rate_per_s": 194920739913597.94,
+      "die_w_without_macs": 341.6,
+      "die_energy_budget_mj_per_token": {
+       "air": 20.01,
+       "liquid": 25.35
+      },
+      "pj_per_mac_that_fits": {
+       "air": 0.169,
+       "liquid": 0.682
+      }
+     }
+    },
+    "rate_cap_with_free_macs": {
+     "air": 21483.4,
+     "liquid": 29873.8
+    },
+    "lanes": {
+     "A_measured_implementation": {
+      "pj_per_mac_w8": 3.9743577368555187,
+      "pj_per_mac_bf16": 3.9743577368555187,
+      "energy_per_token_mj": 125.905,
+      "die_w_at_design_rate": 1116.3,
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 4803.7,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 6679.9,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      }
+     },
+     "B_proposed_production": {
+      "pj_per_mac_w8": 0.59,
+      "pj_per_mac_bf16": 0.59,
+      "energy_per_token_mj": 55.425,
+      "die_w_at_design_rate": 456.6,
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 14176.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 18719.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 456.6
+       }
+      }
+     },
+     "B_gpu_tensor_sensitivity": {
+      "pj_per_mac_w8": 1.4,
+      "pj_per_mac_bf16": 1.4,
+      "energy_per_token_mj": 72.294,
+      "die_w_at_design_rate": 614.5,
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 9663.6,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 13437.8,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      }
+     }
+    }
+   }
+  },
+  "stack_w_at_target": 188.8,
+  "mac_requirements": [
+   "the lane takes the ROM's weight format: an INT8 weight (exact in BF16) x a BF16 activation into FP32, the per-output-channel BF16 scale applied once per output row after accumulation -- the routed exact BF16 lane with a weight decode, no datapath change (a golden change: the INT8 per-channel checkpoint)",
+   "operand isolation and clock gating of idle lanes: groups outside an op's tiles, masked elements, idle lane copies",
+   "accumulation width FP32 (the golden's order), products exact",
+   "at the design rate the die's non-MAC power leaves 1.322 pJ/MAC for autoregressive decoding and 0.682 pJ/MAC for the best DFlash configuration under the 474.6 W per-die liquid limit (negative: the die is over the limit with free MACs; the die's share of the HBM path binds)"
+  ]
+ },
+ "power_production": {
+  "basis": "two power scenarios on the sourced inputs of configs/hardware/power_scenarios.json (read through tools/power_scenarios.py): A = every MAC at the routed ASAP7 matrix engine's 3.97 pJ/MAC, B = the derived floating-point production lane (0.59 pJ an 8-bit-weight MAC (BF16 multiplier + FP32 add), the same for BF16 attention); HBM path 13.64 pJ/bit = 10.19 on the die + 3.45 in the stacks; KV read from HBM on the ROM package and the comparator alike; cooling per shipping two-die package class, the design class liquid (GB200 NVL72 1,200 W -> 474.6 W a die; B200 HGX 1,000 W air -> 374.6 W a die as the sensitivity), each less its 8 stacks at peak; wall = package through VR 0.87 and PSU 0.96 with CDU and fans",
+  "inputs": {
+   "source": "configs/hardware/power_scenarios.json via tools/power_scenarios.py (die, memory, MAC lane, cooling); configs/hardware/technology.json (die-to-wall conversion, B200 reference only)",
+   "mac_pj": {
+    "A_measured_implementation": {
+     "w4a8": 3.9743577368555187,
+     "fp8": 3.9743577368555187,
+     "bf16": 3.9743577368555187
+    },
+    "B_proposed_production": {
+     "w4a8": 0.45,
+     "fp8": 0.59,
+     "bf16": 0.59
+    },
+    "B_gpu_tensor_sensitivity": {
+     "w4a8": 1.4,
+     "fp8": 1.4,
+     "bf16": 1.4
+    }
+   },
+   "hbm_pj_per_bit": {
+    "total": 13.64,
+    "die": 10.190000000000001,
+    "stack": 3.45,
+    "stack_high": 3.92
+   },
+   "hbm_idle_w_stack": 2.8,
+   "leak_w_mm2": {
+    "logic": 0.1,
+    "rom_array": 0.0067,
+    "sram_array": 0.005
+   },
+   "clock_j_mm2_cycle": 8.5e-11,
+   "clock_mult": {
+    "logic": 1.0,
+    "rom_array": 0.15,
+    "sram_array": 0.15,
+    "source": "configs/hardware/technology.json power.clock_region_multiplier (assumed)"
+   },
+   "rom_read_j_b": 8e-14,
+   "delivery_j_b": 2.3e-13,
+   "sram_j_b": 2.6e-12,
+   "stream_fp32_op_j": 1.69e-12,
+   "cooling": {
+    "air": {
+     "reference": "b200_hgx",
+     "die_limit_w": 374.56,
+     "package_limit_w": 1000.0,
+     "dies_per_package": 2
+    },
+    "liquid": {
+     "reference": "gb200_nvl72",
+     "die_limit_w": 474.56,
+     "package_limit_w": 1200.0,
+     "dies_per_package": 2
+    }
+   },
+   "psu": 0.96,
+   "vr": 0.87,
+   "cdu": 0.006,
+   "fans": 0.03,
+   "margin": 1.2,
+   "b200": {
+    "tdp_hgx_w": 1000.0,
+    "tdp_nvl72_w": 1200.0,
+    "wall_saturated_w": 1300.0,
+    "decode_measured_w": 689.0,
+    "hbm_bytes_s": 8000000000000.0,
+    "efficiency": 0.9
+   }
+  },
+  "design_point": {
+   "context": 8192,
+   "kv_format_bytes_per_elem": 1,
+   "clock_hz": 1098640000.0,
+   "hbm_stacks": 8,
+   "dies_per_package": 2,
+   "weight_bits": 8,
+   "drafter_weight_bits": 8,
+   "weight_scale_bytes": 3105536,
+   "weight_mac_format": "fp8",
+   "ar_batch1": {
+    "step_cycles": 101037,
+    "tokens_per_step": 1,
+    "lane_copies_on": 0,
+    "users": 1,
+    "slots": 1,
+    "drafter": false
+   },
+   "dflash": {
+    "from_record": "results/speculative/dflash_step_timing.json",
+    "select": "rom['<context>/fp8/m<lane_multiplier_m>'].best",
+    "basis": "the serial draft + verify + commit step at the measured per-block acceptance (primary workloads, cycle-weighted tau); block, tokens per step, step cycles (draft phase included) and MAC counts (drafter included) are read from the record by tools/power_scenarios.dflash_point, never restated here.",
+    "users": 1,
+    "drafter": true,
+    "record_key": "8192/fp8/m5",
+    "tau": 2.8591,
+    "block": 5,
+    "slots": 5,
+    "tokens_per_step": 2.8591,
+    "tokens_per_step_band": 3.0823,
+    "step_cycles": 167796,
+    "draft_cycles": 24243,
+    "verify_cycles": 143543,
+    "commit_cycles": 10,
+    "record_tokens_s": 18719.9,
+    "record_tokens_s_band": 20181.3,
+    "lane_copies_on": 4,
+    "draft_weight_macs": 7941914624,
+    "draft_attention_macs": 1678745600,
+    "verify_weight_macs": 37840486400,
+    "verify_attention_macs": 12079595520,
+    "macs_per_step": 59540742144
+   },
+   "area_mm2": {
+    "compute": 220.04,
+    "interconnect": 130.4,
+    "overhead": 163.0,
+    "hbm_phy": 80.0,
+    "ucie_phy": 20.0,
+    "stream_unit_spill": 25.6,
+    "lane_copy": 103.82,
+    "lane_multiplier_m": 5,
+    "rom": 449.3,
+    "drafter_rom": 57.52,
+    "sram": 12.8
+   },
+   "kv_bound_batch2": {
+    "step_cycles": 184321,
+    "tokens_per_step": 2,
+    "users": 2,
+    "slots": 1,
+    "drafter": false,
+    "lane_copies_on": 1
+   },
+   "batch128": {
+    "step_cycles": 11796557,
+    "tokens_per_step": 128,
+    "users": 128,
+    "slots": 1,
+    "drafter": false,
+    "lane_copies_on": 4
+   }
+  },
+  "scenarios": {
+   "A_measured_implementation": {
+    "mac_pj": {
+     "w4a8": 3.9743577368555187,
+     "fp8": 3.9743577368555187,
+     "bf16": 3.9743577368555187
+    },
+    "rom": {
+     "ar_batch1": {
+      "step_cycles": 101037,
+      "tokens_per_step": 1,
+      "tokens_s": 10873.6,
+      "energy_per_token_mj": 130.44,
+      "die_energy_per_token_mj": 113.771,
+      "stack_energy_per_token_mj": 16.67,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.6017,
+       "weight_read_and_delivery": 2.3471,
+       "kv_ring_sram_and_delivery": 3.2796,
+       "stream_unit": 0.9861,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.0095,
+       "leakage": 10.0143,
+       "clock": 6.1576,
+       "hbm_idle": 2.06
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 33.48,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 5766.0,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 7859.4,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 618.6,
+      "dies": 2,
+      "stacks_w": 181.3,
+      "package_w": 1418.4,
+      "wall_w": 1759.4
+     },
+     "dflash_block5": {
+      "step_cycles": 167796,
+      "tokens_per_step": 2.8591,
+      "tokens_s": 18719.9,
+      "energy_per_token_mj": 125.905,
+      "die_energy_per_token_mj": 119.264,
+      "stack_energy_per_token_mj": 6.64,
+      "die_components_mj_per_token": {
+       "mac_weights": 63.6409,
+       "mac_attention": 19.1251,
+       "weight_read_and_delivery": 0.9346,
+       "kv_ring_sram_and_delivery": 1.3064,
+       "stream_unit": 1.964,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.019,
+       "leakage": 5.8169,
+       "clock": 5.6483,
+       "hbm_idle": 1.1966
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 52.87,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 4803.7,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 6679.9,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 1116.3,
+      "dies": 2,
+      "stacks_w": 124.3,
+      "package_w": 2356.9,
+      "wall_w": 2923.6
+     },
+     "kv_bound_batch2": {
+      "step_cycles": 184321,
+      "tokens_per_step": 2,
+      "tokens_s": 11920.9,
+      "energy_per_token_mj": 128.478,
+      "die_energy_per_token_mj": 111.809,
+      "stack_energy_per_token_mj": 16.67,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.6017,
+       "weight_read_and_delivery": 1.1735,
+       "kv_ring_sram_and_delivery": 3.2796,
+       "stream_unit": 0.9861,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.0095,
+       "leakage": 9.1345,
+       "clock": 6.4299,
+       "hbm_idle": 1.879
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 38.33,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 5734.9,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 7854.4,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 666.4,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1531.6,
+      "wall_w": 1899.8
+     },
+     "batch128": {
+      "step_cycles": 11796557,
+      "tokens_per_step": 128,
+      "tokens_s": 11920.9,
+      "energy_per_token_mj": 130.222,
+      "die_energy_per_token_mj": 113.552,
+      "stack_energy_per_token_mj": 16.67,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.6017,
+       "weight_read_and_delivery": 0.4767,
+       "kv_ring_sram_and_delivery": 3.2796,
+       "stream_unit": 0.9861,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.0095,
+       "leakage": 9.1345,
+       "clock": 8.8698,
+       "hbm_idle": 1.879
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 52.87,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 5467.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 7602.3,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 676.8,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1552.4,
+      "wall_w": 1925.6
+     }
+    },
+    "hbm_comparator": {
+     "batch1": {
+      "weight_format": "rom_format_int8",
+      "tokens_s": 880.7,
+      "binding": "bytes",
+      "energy_per_token_mj": 1317.976,
+      "die_energy_per_token_mj": 1092.341,
+      "stack_energy_per_token_mj": 225.635,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.6017,
+       "operand_delivery": 1.8803,
+       "stream_unit": 0.9861,
+       "ucie_exchange": 0.0095,
+       "hbm_controller_phy_io": 666.4409,
+       "leakage": 185.0771,
+       "clock": 172.8331,
+       "hbm_idle": 25.4339
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 580.4,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 862.5,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 481.0,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1160.8,
+      "wall_w": 1439.8
+     },
+     "batch16": {
+      "weight_format": "rom_format_int8",
+      "tokens_s": 6684.1,
+      "binding": "bytes",
+      "energy_per_token_mj": 208.975,
+      "die_energy_per_token_mj": 179.245,
+      "stack_energy_per_token_mj": 29.73,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.6017,
+       "operand_delivery": 0.2478,
+       "stream_unit": 0.9861,
+       "ucie_exchange": 0.0095,
+       "hbm_controller_phy_io": 87.8117,
+       "leakage": 24.3862,
+       "clock": 22.7729,
+       "hbm_idle": 3.3512
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 3196.5,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 4750.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 599.0,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1396.8,
+      "wall_w": 1732.6
+     },
+     "batch128": {
+      "weight_format": "rom_format_int8",
+      "tokens_s": 10857.6,
+      "binding": "bytes",
+      "energy_per_token_mj": 144.284,
+      "die_energy_per_token_mj": 125.981,
+      "stack_energy_per_token_mj": 18.302,
+      "die_components_mj_per_token": {
+       "mac_weights": 30.0783,
+       "mac_attention": 9.6017,
+       "operand_delivery": 0.1525,
+       "stream_unit": 0.9861,
+       "ucie_exchange": 0.0095,
+       "hbm_controller_phy_io": 54.0583,
+       "leakage": 15.0125,
+       "clock": 14.0194,
+       "hbm_idle": 2.0631
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 4336.8,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 6444.6,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 683.9,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1566.6,
+      "wall_w": 1943.2
+     }
+    },
+    "worst_case": {
+     "die_w": 2683.0,
+     "dies": 2,
+     "stacks_w": 220.8,
+     "package_w": 5586.7,
+     "wall_w": 6929.9,
+     "provisioned_w_per_die": 4013.5,
+     "basis": "saturated hardwired schedule, per die of the package: every lane copy MACs every cycle (BF16 lane energy), the die's 1,024-lane stream unit and ROM read path run every cycle, its 4 stacks at full raw bandwidth (the die's share of the HBM path on the die), clock on every mm2, leakage, stack idle; provisioned = 1.2 x (die + stacks) / (VR x PSU)"
+    },
+    "ratios_batch1": {
+     "hbm_over_rom": 10.1,
+     "rom_over_hbm_capped_rate": {
+      "liquid": 9.1123,
+      "air": 9.9345
+     },
+     "b200_measured_over_rom": 6.0
+    }
+   },
+   "B_proposed_production": {
+    "mac_pj": {
+     "w4a8": 0.45,
+     "fp8": 0.59,
+     "bf16": 0.59
+    },
+    "rom": {
+     "ar_batch1": {
+      "step_cycles": 101037,
+      "tokens_per_step": 1,
+      "tokens_s": 10873.6,
+      "energy_per_token_mj": 96.651,
+      "die_energy_per_token_mj": 79.981,
+      "stack_energy_per_token_mj": 16.67,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.4652,
+       "mac_attention": 1.4254,
+       "weight_read_and_delivery": 2.3471,
+       "kv_ring_sram_and_delivery": 3.2796,
+       "stream_unit": 0.9861,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.0095,
+       "leakage": 10.0143,
+       "clock": 6.1576,
+       "hbm_idle": 2.06
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 33.48,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 8921.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 10873.6,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 434.8
+       }
+      },
+      "die_w": 434.8,
+      "dies": 2,
+      "stacks_w": 181.3,
+      "package_w": 1050.9,
+      "wall_w": 1303.6
+     },
+     "dflash_block5": {
+      "step_cycles": 167796,
+      "tokens_per_step": 2.8591,
+      "tokens_s": 18719.9,
+      "energy_per_token_mj": 55.425,
+      "die_energy_per_token_mj": 48.785,
+      "stack_energy_per_token_mj": 6.64,
+      "die_components_mj_per_token": {
+       "mac_weights": 9.4476,
+       "mac_attention": 2.8392,
+       "weight_read_and_delivery": 0.9346,
+       "kv_ring_sram_and_delivery": 1.3064,
+       "stream_unit": 1.964,
+       "hbm_controller_phy_io": 19.6128,
+       "ucie_exchange": 0.019,
+       "leakage": 5.8169,
+       "clock": 5.6483,
+       "hbm_idle": 1.1966
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 52.87,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 14176.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 18719.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 456.6
+       }
+      },
+      "die_w": 456.6,
+      "dies": 2,
+      "stacks_w": 124.3,
+      "package_w": 1037.6,
+      "wall_w": 1287.0
+     },
+     "kv_bound_batch2": {
+      "step_cycles": 184321,
+      "tokens_per_step": 2,
+      "tokens_s": 11920.9,
+      "energy_per_token_mj": 94.689,
+      "die_energy_per_token_mj": 78.019,
+      "stack_energy_per_token_mj": 16.67,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.4652,
+       "mac_attention": 1.4254,
+       "weight_read_and_delivery": 1.1735,
+       "kv_ring_sram_and_delivery": 3.2796,
+       "stream_unit": 0.9861,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.0095,
+       "leakage": 9.1345,
+       "clock": 6.4299,
+       "hbm_idle": 1.879
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 38.33,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 8933.9,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 11920.9,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 465.0
+       }
+      },
+      "die_w": 465.0,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1128.8,
+      "wall_w": 1400.2
+     },
+     "batch128": {
+      "step_cycles": 11796557,
+      "tokens_per_step": 128,
+      "tokens_s": 11920.9,
+      "energy_per_token_mj": 96.432,
+      "die_energy_per_token_mj": 79.762,
+      "stack_energy_per_token_mj": 16.67,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.4652,
+       "mac_attention": 1.4254,
+       "weight_read_and_delivery": 0.4767,
+       "kv_ring_sram_and_delivery": 3.2796,
+       "stream_unit": 0.9861,
+       "hbm_controller_phy_io": 49.2364,
+       "ucie_exchange": 0.0095,
+       "leakage": 9.1345,
+       "clock": 8.8698,
+       "hbm_idle": 1.879
+      },
+      "die_static_w": {
+       "leakage_w": 54.45,
+       "clock_w": 52.87,
+       "hbm_idle_w": 11.2
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 8552.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 11892.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 475.4,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1149.6,
+      "wall_w": 1425.9
+     }
+    },
+    "hbm_comparator": {
+     "batch1": {
+      "weight_format": "rom_format_int8",
+      "tokens_s": 880.7,
+      "binding": "bytes",
+      "energy_per_token_mj": 1284.186,
+      "die_energy_per_token_mj": 1058.551,
+      "stack_energy_per_token_mj": 225.635,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.4652,
+       "mac_attention": 1.4254,
+       "operand_delivery": 1.8803,
+       "stream_unit": 0.9861,
+       "ucie_exchange": 0.0095,
+       "hbm_controller_phy_io": 666.4409,
+       "leakage": 185.0771,
+       "clock": 172.8331,
+       "hbm_idle": 25.4339
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 609.4,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 880.7,
+        "binds": false,
+        "bound_by": "die",
+        "die_w_at_cap": 466.1
+       }
+      },
+      "die_w": 466.1,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1131.0,
+      "wall_w": 1402.9
+     },
+     "batch16": {
+      "weight_format": "rom_format_int8",
+      "tokens_s": 6684.1,
+      "binding": "bytes",
+      "energy_per_token_mj": 175.186,
+      "die_energy_per_token_mj": 145.456,
+      "stack_energy_per_token_mj": 29.73,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.4652,
+       "mac_attention": 1.4254,
+       "operand_delivery": 0.2478,
+       "stream_unit": 0.9861,
+       "ucie_exchange": 0.0095,
+       "hbm_controller_phy_io": 87.8117,
+       "leakage": 24.3862,
+       "clock": 22.7729,
+       "hbm_idle": 3.3512
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 4334.1,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 6440.6,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 486.1,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1171.0,
+      "wall_w": 1452.5
+     },
+     "batch128": {
+      "weight_format": "rom_format_int8",
+      "tokens_s": 10857.6,
+      "binding": "bytes",
+      "energy_per_token_mj": 110.494,
+      "die_energy_per_token_mj": 92.192,
+      "stack_energy_per_token_mj": 18.302,
+      "die_components_mj_per_token": {
+       "mac_weights": 4.4652,
+       "mac_attention": 1.4254,
+       "operand_delivery": 0.1525,
+       "stream_unit": 0.9861,
+       "ucie_exchange": 0.0095,
+       "hbm_controller_phy_io": 54.0583,
+       "leakage": 15.0125,
+       "clock": 14.0194,
+       "hbm_idle": 2.0631
+      },
+      "cooling": {
+       "air": {
+        "reference": "b200_hgx",
+        "die_limit_w": 374.6,
+        "package_limit_w": 1000.0,
+        "capped_tokens_s": 6735.2,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 374.6
+       },
+       "liquid": {
+        "reference": "gb200_nvl72",
+        "die_limit_w": 474.6,
+        "package_limit_w": 1200.0,
+        "capped_tokens_s": 10008.7,
+        "binds": true,
+        "bound_by": "die",
+        "die_w_at_cap": 474.6
+       }
+      },
+      "die_w": 500.5,
+      "dies": 2,
+      "stacks_w": 198.7,
+      "package_w": 1199.7,
+      "wall_w": 1488.1
+     }
+    },
+    "worst_case": {
+     "die_w": 855.4,
+     "dies": 2,
+     "stacks_w": 220.8,
+     "package_w": 1931.6,
+     "wall_w": 2396.0,
+     "provisioned_w_per_die": 1387.6,
+     "basis": "saturated hardwired schedule, per die of the package: every lane copy MACs every cycle (BF16 lane energy), the die's 1,024-lane stream unit and ROM read path run every cycle, its 4 stacks at full raw bandwidth (the die's share of the HBM path on the die), clock on every mm2, leakage, stack idle; provisioned = 1.2 x (die + stacks) / (VR x PSU)"
+    },
+    "ratios_batch1": {
+     "hbm_over_rom": 13.29,
+     "rom_over_hbm_capped_rate": {
+      "liquid": 12.3465,
+      "air": 14.6392
+     },
+     "b200_measured_over_rom": 8.09
+    }
+   }
+  },
+  "b200": {
+   "tokens_s_batch1_fp8": 881.0,
+   "energy_per_token_mj_at_measured_decode_draw": 782.0,
+   "energy_per_token_mj_at_saturated_wall": 1475.5,
+   "basis": "illustration, not a matched ratio: the measured B200 decode draw (689 W, arXiv:2609.11133) over the HBM-roofline batch-1 rate (8 TB/s x 0.90 over FP8 weights + FP8 KV at 8K); the saturated wall figure (1.30 kW a GPU, MLPerf v5.1) is the upper bound. The B200 is the iso-silicon GPU: two reticle-limited dies and 8 HBM3E stacks, as the ROM package",
+   "tdp_hgx_w": 1000.0,
+   "tdp_nvl72_w": 1200.0,
+   "wall_saturated_w": 1300.0,
+   "decode_measured_w": 689.0,
+   "hbm_bytes_s": 8000000000000.0,
+   "efficiency": 0.9
+  }
+ }
+}

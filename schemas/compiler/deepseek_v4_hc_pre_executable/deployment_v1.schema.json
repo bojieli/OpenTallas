@@ -1,0 +1,325 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_executable/deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": { "$ref": "#/$defs/artifact" },
+      "maxItems": 18,
+      "minItems": 18,
+      "type": "array"
+    },
+    "build_id": { "$ref": "#/$defs/sha256" },
+    "claim_boundary": {
+      "items": false,
+      "maxItems": 5,
+      "minItems": 5,
+      "prefixItems": [
+        {
+          "const": "Packages the exact HC_PRE plus COMPLETE program, deterministic disassembly, hash-bound program contract, independently checked logical schedule and certificate, and all three verified F32 parameter resources."
+        },
+        { "const": "Program packaged, execution not yet evidenced." },
+        {
+          "const": "Contains no activation, expected result, callback, fallback arithmetic, runtime execution, or execution-success claim."
+        },
+        {
+          "const": "The logical schedule establishes instruction order, register causality, and resource identity only; it establishes no cycles, latency, bandwidth, throughput, energy, area, density, routing, or PPA result."
+        },
+        {
+          "const": "Publication is atomic create-once within a caller-trusted output parent; concurrent mutation by the same filesystem owner is outside the package threat boundary."
+        }
+      ],
+      "type": "array"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "name": { "const": "opentallas-deepseek-v4-hc-pre-executable-packager" },
+        "version": { "const": "0.1.0" }
+      },
+      "required": ["name", "version"],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_coverage": { "const": "execution_coverage.json" },
+        "execution_request_schema": { "const": "interfaces/execution_request_v1.schema.json" },
+        "execution_result_schema": { "const": "interfaces/execution_result_v1.schema.json" },
+        "logical_schedule": { "const": "schedule/logical_schedule.json" },
+        "logical_schedule_certificate": {
+          "const": "schedule/logical_schedule_certificate.json"
+        },
+        "parameter_deployment": { "const": "parameters/deployment_manifest.json" },
+        "program": { "const": "program/hc_pre.bin" },
+        "program_contract": { "const": "program/program_contract.json" },
+        "program_disassembly": { "const": "program/hc_pre.disassembly.txt" }
+      },
+      "required": [
+        "execution_coverage",
+        "execution_request_schema",
+        "execution_result_schema",
+        "logical_schedule",
+        "logical_schedule_certificate",
+        "parameter_deployment",
+        "program",
+        "program_contract",
+        "program_disassembly"
+      ],
+      "type": "object"
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "parameter_build_id": { "$ref": "#/$defs/sha256" },
+    "program_contract_id": { "$ref": "#/$defs/sha256" },
+    "program_sha256": {
+      "const": "7811e26fae1162677a425795294e776caded0e6cd44383986bb34b9bf9c15739"
+    },
+    "schedule_certificate_id": {
+      "const": "c4c0e29e7caf015bfc4dba54a7ea4e974b1c935f9c3926163ed4a23147bd1e32"
+    },
+    "schedule_id": {
+      "const": "40015466a3736ad3c94d84029e1ad1d65d4a80ad9ad75511a1d81626e573c4f9"
+    },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_executable.v1" },
+    "site": { "$ref": "#/$defs/site" },
+    "source": { "$ref": "#/$defs/source" },
+    "status": { "const": "program_packaged_execution_not_yet_evidenced" }
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "claim_boundary",
+    "compiler",
+    "entrypoint",
+    "model_id",
+    "parameter_build_id",
+    "program_contract_id",
+    "program_sha256",
+    "schedule_certificate_id",
+    "schedule_id",
+    "schema",
+    "site",
+    "source",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE executable deployment v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "path": { "const": "execution_coverage.json" },
+                "role": { "const": "execution_coverage" },
+                "size_bytes": { "const": 641 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "interfaces/execution_request_v1.schema.json" },
+                "role": { "const": "execution_request_schema" },
+                "size_bytes": { "const": 1586 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "interfaces/execution_result_v1.schema.json" },
+                "role": { "const": "execution_result_schema" },
+                "size_bytes": { "const": 12203 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/counter_contract.json" },
+                "role": { "const": "parameter_counter_contract" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/deployment_manifest.json" },
+                "role": { "const": "parameter_deployment_manifest" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/model.ir.json" },
+                "role": { "const": "parameter_semantic_ir" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/numeric_profile.json" },
+                "role": { "const": "parameter_numeric_profile" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/operator_coverage.json" },
+                "role": { "const": "parameter_operator_coverage" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/roundtrip_report.json" },
+                "role": { "const": "parameter_roundtrip_report" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "parameters/tensor_manifest.json" },
+                "role": { "const": "parameter_tensor_manifest" }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "$ref": "#/$defs/payloadPath" },
+                "role": { "enum": ["hc_base_parameter", "hc_projection_parameter", "hc_scale_parameter"] }
+              },
+              "required": ["path", "role"]
+            },
+            {
+              "properties": {
+                "path": { "const": "program/hc_pre.bin" },
+                "role": { "const": "microcode_program" },
+                "size_bytes": { "const": 136 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "program/hc_pre.disassembly.txt" },
+                "role": { "const": "microcode_disassembly" },
+                "size_bytes": { "const": 429 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "program/program_contract.json" },
+                "role": { "const": "program_contract" },
+                "size_bytes": { "const": 1363 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "schedule/logical_schedule.json" },
+                "role": { "const": "logical_schedule" },
+                "size_bytes": { "const": 4670 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            },
+            {
+              "properties": {
+                "path": { "const": "schedule/logical_schedule_certificate.json" },
+                "role": { "const": "logical_schedule_certificate" },
+                "size_bytes": { "const": 1644 }
+              },
+              "required": ["path", "role", "size_bytes"]
+            }
+          ]
+        },
+        {
+          "if": { "properties": { "role": { "const": "hc_base_parameter" } }, "required": ["role"] },
+          "then": { "properties": { "size_bytes": { "const": 96 } } }
+        },
+        {
+          "if": { "properties": { "role": { "const": "hc_projection_parameter" } }, "required": ["role"] },
+          "then": { "properties": { "size_bytes": { "const": 1572864 } } }
+        },
+        {
+          "if": { "properties": { "role": { "const": "hc_scale_parameter" } }, "required": ["role"] },
+          "then": { "properties": { "size_bytes": { "const": 12 } } }
+        }
+      ],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "role": { "type": "string" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size_bytes": { "maximum": 1572864, "minimum": 1, "type": "integer" }
+      },
+      "required": ["path", "role", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "path": {
+      "minLength": 1,
+      "not": { "pattern": "(^/|(^|/)\\.\\.?(/|$)|\\\\|\\u0000)" },
+      "type": "string"
+    },
+    "payloadPath": {
+      "pattern": "^parameters/payloads/sha256/[0-9a-f]{64}\\.f32le$",
+      "type": "string"
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "site": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": { "const": "attention" },
+        "layer": { "const": 0 },
+        "scope": { "const": "main" }
+      },
+      "required": ["branch", "layer", "scope"],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "evidence_scope": { "const": "official_checkpoint" } },
+            "required": ["evidence_scope"]
+          },
+          "then": {
+            "properties": {
+              "application_status": { "const": "partial_official_transform_application_not_release_evidence" },
+              "repository": { "const": "deepseek-ai/DeepSeek-V4-Flash-0731" },
+              "revision": { "const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062" }
+            }
+          },
+          "else": {
+            "properties": {
+              "application_status": { "const": "development_fixture_application_not_release_evidence" }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "application_id": { "$ref": "#/$defs/sha256" },
+        "application_status": {
+          "enum": [
+            "development_fixture_application_not_release_evidence",
+            "partial_official_transform_application_not_release_evidence"
+          ]
+        },
+        "checkpoint_lock_id": { "$ref": "#/$defs/sha256" },
+        "evidence_scope": { "enum": ["development_fixture", "official_checkpoint"] },
+        "repository": { "minLength": 1, "type": "string" },
+        "revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "verification_id": { "$ref": "#/$defs/sha256" }
+      },
+      "required": [
+        "application_id",
+        "application_status",
+        "checkpoint_lock_id",
+        "evidence_scope",
+        "repository",
+        "revision",
+        "verification_id"
+      ],
+      "type": "object"
+    }
+  }
+}

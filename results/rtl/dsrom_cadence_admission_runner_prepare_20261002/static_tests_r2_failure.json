@@ -1,0 +1,19 @@
+{
+  "status": "STATIC_EXPECTATION_FAILURE_NOT_HDL",
+  "tests": 12,
+  "failures": 1,
+  "test": "test_single_build_single_sim_no_retry",
+  "observed_timer_seconds": [
+    659,
+    600,
+    60
+  ],
+  "incorrect_expected_timer_seconds": [
+    660,
+    600,
+    60
+  ],
+  "source_reason": "whole remaining timer deducts one mocked elapsed second before setup; total660s policy unchanged",
+  "correction": "Assert659s remaining timer plus fixedRuntimeMax660s",
+  "RTL_changed": false
+}

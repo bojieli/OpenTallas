@@ -1,0 +1,9 @@
+{
+  "status": "PASS_STATIC_MODEL_AND_AUDIT_5_TESTS",
+  "command": "python3 -m pytest -q tests/test_w17_window_epoch9_visibility_audit.py",
+  "WR_phases": 1000,
+  "guard_added": false,
+  "RTL_compiled": false,
+  "preserved_test_matcher_failure": "Initial static test falsely matched the string no-force epochs in an error message. Replaced string search with assignment/force-token regex; no RTL change to resolve test.",
+  "prior_model_attempt1": "FAIL_STATIC_EDGE_ORDER_PRESERVED"
+}

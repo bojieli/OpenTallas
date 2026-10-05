@@ -1,0 +1,109 @@
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:39:23: Operator VAR 'FIRST' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+   39 |     parameter integer FIRST  = 0,
+      |                       ^~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:66:22: Operator VAR 'SELF8' expects 8 bits on the Initial value, but Initial value's VARREF 'SELF' generates 32 bits.
+                                                                                                                            : ... note: In instance 'DsromHeadStream.dut.u_native'
+   66 |     localparam [7:0] SELF8 = SELF;
+      |                      ^~~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:67:22: Operator VAR 'NEXT8' expects 8 bits on the Initial value, but Initial value's VARREF 'NEXT' generates 32 bits.
+                                                                                                                            : ... note: In instance 'DsromHeadStream.dut.u_native'
+   67 |     localparam [7:0] NEXT8 = NEXT;
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:82:29: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pend' generates 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+   82 |     assign lg_ready = (pend < DEPTH);
+      |                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:160:39: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'f_wp' generates 4 bits.
+                                                                                                                              : ... note: In instance 'DsromHeadStream.dut.u_native'
+  160 |             if (f_push) f_wp <= (f_wp == DEPTH - 1) ? 0 : f_wp + 1'b1;
+      |                                       ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:161:37: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'f_rp' generates 4 bits.
+                                                                                                                              : ... note: In instance 'DsromHeadStream.dut.u_native'
+  161 |             if (jn)   f_rp <= (f_rp == DEPTH - 1) ? 0 : f_rp + 1'b1;
+      |                                     ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:165:64: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  165 |             if (jn && FIRST == 0 && u_data[H_TAG +: 8] != f_tag[f_rp]) fault <= 1'b1;
+      |                                                                ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:172:18: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  172 |             f_val[f_wp] <= n_val; f_id[f_wp] <= n_id; f_ok[f_wp] <= n_ok; f_tag[f_wp] <= tst[8 * LV +: 8];
+      |                  ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:172:39: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  172 |             f_val[f_wp] <= n_val; f_id[f_wp] <= n_id; f_ok[f_wp] <= n_ok; f_tag[f_wp] <= tst[8 * LV +: 8];
+      |                                       ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:172:59: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  172 |             f_val[f_wp] <= n_val; f_id[f_wp] <= n_id; f_ok[f_wp] <= n_ok; f_tag[f_wp] <= tst[8 * LV +: 8];
+      |                                                           ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:172:80: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  172 |             f_val[f_wp] <= n_val; f_id[f_wp] <= n_id; f_ok[f_wp] <= n_ok; f_tag[f_wp] <= tst[8 * LV +: 8];
+      |                                                                                ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:184:32: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  184 |     wire        loc_wins = f_ok[f_rp] && (!up_ok || okey(f_val[f_rp]) > okey(up_val) || (okey(f_val[f_rp])==okey(up_val) && f_id[f_rp]<up_id));
+      |                                ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:184:63: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  184 |     wire        loc_wins = f_ok[f_rp] && (!up_ok || okey(f_val[f_rp]) > okey(up_val) || (okey(f_val[f_rp])==okey(up_val) && f_id[f_rp]<up_id));
+      |                                                               ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:184:100: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                              : ... note: In instance 'DsromHeadStream.dut.u_native'
+  184 |     wire        loc_wins = f_ok[f_rp] && (!up_ok || okey(f_val[f_rp]) > okey(up_val) || (okey(f_val[f_rp])==okey(up_val) && f_id[f_rp]<up_id));
+      |                                                                                                    ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:184:129: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                              : ... note: In instance 'DsromHeadStream.dut.u_native'
+  184 |     wire        loc_wins = f_ok[f_rp] && (!up_ok || okey(f_val[f_rp]) > okey(up_val) || (okey(f_val[f_rp])==okey(up_val) && f_id[f_rp]<up_id));
+      |                                                                                                                                 ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:192:36: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  192 |         rec[H_TAG +: 8]     = f_tag[f_rp];
+      |                                    ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:193:48: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  193 |         rec[H_ARG_VAL +: 32] = loc_wins ? f_val[f_rp] : up_val;
+      |                                                ^
+%Warning-WIDTHTRUNC: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv:194:47: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                                                                             : ... note: In instance 'DsromHeadStream.dut.u_native'
+  194 |         rec[H_ARG_ID +: 32]  = loc_wins ? f_id[f_rp]  : up_id;
+      |                                               ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv:47:37: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 30 bits.
+                                                                                                                                 : ... note: In instance 'DsromHeadStream.dut'
+   47 |             ids[32*j+:32]=RANK*32320+write_address[AW*j+:AW]-base;
+      |                                     ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv:47:61: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'base' generates 30 bits.
+                                                                                                                                 : ... note: In instance 'DsromHeadStream.dut'
+   47 |             ids[32*j+:32]=RANK*32320+write_address[AW*j+:AW]-base;
+      |                                                             ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv:50:81: Operator ADD expects 30 bits on the RHS, but RHS's VARREF 'expected' generates 21 bits.
+                                                                                                                                 : ... note: In instance 'DsromHeadStream.dut'
+   50 |                 if(write_address[AW*j+:AW]<base || write_address[AW*j+:AW]>=base+expected) range_fault=1;
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv:62:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'seen' generates 21 bits.
+                                                                                                                                 : ... note: In instance 'DsromHeadStream.dut'
+   62 |         .lg_tag(8'd0),.lg_last(seen+accepted==expected),
+      |                                    ^
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv:62:45: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'expected' generates 21 bits.
+                                                                                                                                 : ... note: In instance 'DsromHeadStream.dut'
+   62 |         .lg_tag(8'd0),.lg_last(seen+accepted==expected),
+      |                                             ^~
+%Warning-WIDTHEXPAND: /home/ubuntu/hubble-s81-head-stream-ecd454b9e/rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv:80:68: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'seen' generates 21 bits.
+                                                                                                                                 : ... note: In instance 'DsromHeadStream.dut'
+   80 |                 if(native_fault || range_fault || nonfinite || seen+accepted>expected || ((|mask)&&!native_ready)) fault<=1;
+      |                                                                    ^
+make: Entering directory '/home/ubuntu/hubble-s81-head-stream-native3-20261004-r1/rank3'
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include VDsromHeadStreamR3.cpp VDsromHeadStreamR3___024root__0.cpp VDsromHeadStreamR3__ConstPool__0__Slow.cpp VDsromHeadStreamR3___024root__Slow.cpp VDsromHeadStreamR3___024root__0__Slow.cpp VDsromHeadStreamR3___024unit__Slow.cpp VDsromHeadStreamR3__Syms__Slow.cpp > VDsromHeadStreamR3__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -c -o VDsromHeadStreamR3__ALL.o VDsromHeadStreamR3__ALL.cpp
+rm libverilated.verilator_deplist.tmp VDsromHeadStreamR3__ALL.verilator_deplist.tmp libVDsromHeadStreamR3.verilator_deplist.tmp
+make: Leaving directory '/home/ubuntu/hubble-s81-head-stream-native3-20261004-r1/rank3'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.141 MB sources in 7 modules, into 0.318 MB in 7 C++ files needing 0.005 MB
+- Verilator: Walltime 4.452 s (elab=0.006, cvt=0.048, bld=4.382); cpu 0.070 s on 4 threads; allocated 40.168 MB

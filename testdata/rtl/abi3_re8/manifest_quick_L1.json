@@ -1,0 +1,3898 @@
+{
+  "adder_stages": 1,
+  "case_stride": 16,
+  "cases": [
+    {
+      "expected": {
+        "adds": 31,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "exact_sum": 16777247,
+        "root": "0x4b80000f",
+        "sequential_ascending": "0x4b800000",
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 0,
+      "leaves_in_chain": 32,
+      "mode_name": null,
+      "name": "worked_example_k4096",
+      "note": "P_0 = 2**24, P_1..P_31 = 1.0: stage 1 [8,8,8,8] -> stage 2 [4] = 0x4B80000F (the flat 32-leaf recurrence; sequential ascending would give 0x4B800000, the exact sum 16,777,247)",
+      "rate": false,
+      "shape": "K=4096",
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 31,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "root": "0x5d9279c4",
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 1,
+      "leaves_in_chain": 32,
+      "mode_name": null,
+      "name": "chain_k4096_0",
+      "note": "32 random leaves through 4 + 1 endpoints",
+      "rate": false,
+      "shape": "K=4096",
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 31,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "root": "0xdcf2405d",
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 2,
+      "leaves_in_chain": 32,
+      "mode_name": null,
+      "name": "chain_k4096_1",
+      "note": "32 random leaves through 4 + 1 endpoints",
+      "rate": false,
+      "shape": "K=4096",
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 95,
+        "combines": 15,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 15
+      },
+      "extras": {
+        "root": "0xdd5156ca",
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 3,
+      "leaves_in_chain": 96,
+      "mode_name": null,
+      "name": "chain_k12288_0",
+      "note": "96 random leaves through 12 + 2 + 1 endpoints",
+      "rate": false,
+      "shape": "K=12288",
+      "stream": true,
+      "vectors": 15
+    },
+    {
+      "expected": {
+        "adds": 95,
+        "combines": 15,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 15
+      },
+      "extras": {
+        "root": "0xde4ee181",
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 4,
+      "leaves_in_chain": 96,
+      "mode_name": null,
+      "name": "chain_k12288_1",
+      "note": "96 random leaves through 12 + 2 + 1 endpoints",
+      "rate": false,
+      "shape": "K=12288",
+      "stream": true,
+      "vectors": 15
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              0
+            ],
+            "groups": [
+              1
+            ]
+          }
+        ]
+      },
+      "id": 5,
+      "leaves_in_chain": 1,
+      "mode_name": null,
+      "name": "chain_n1",
+      "note": "1 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 1,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 6,
+      "leaves_in_chain": 2,
+      "mode_name": null,
+      "name": "chain_n2",
+      "note": "2 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 2,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 7,
+      "leaves_in_chain": 3,
+      "mode_name": null,
+      "name": "chain_n3",
+      "note": "3 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 3,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 8,
+      "leaves_in_chain": 4,
+      "mode_name": null,
+      "name": "chain_n4",
+      "note": "4 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 4,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 9,
+      "leaves_in_chain": 5,
+      "mode_name": null,
+      "name": "chain_n5",
+      "note": "5 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 5,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 10,
+      "leaves_in_chain": 6,
+      "mode_name": null,
+      "name": "chain_n6",
+      "note": "6 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 6,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 11,
+      "leaves_in_chain": 7,
+      "mode_name": null,
+      "name": "chain_n7",
+      "note": "7 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 7,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 12,
+      "leaves_in_chain": 8,
+      "mode_name": null,
+      "name": "chain_n8",
+      "note": "8 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 8,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 13,
+      "leaves_in_chain": 9,
+      "mode_name": null,
+      "name": "chain_n9",
+      "note": "9 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 9,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 14,
+      "leaves_in_chain": 10,
+      "mode_name": null,
+      "name": "chain_n10",
+      "note": "10 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 10,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 15,
+      "leaves_in_chain": 11,
+      "mode_name": null,
+      "name": "chain_n11",
+      "note": "11 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 11,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 16,
+      "leaves_in_chain": 12,
+      "mode_name": null,
+      "name": "chain_n12",
+      "note": "12 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 12,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 17,
+      "leaves_in_chain": 13,
+      "mode_name": null,
+      "name": "chain_n13",
+      "note": "13 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 13,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 18,
+      "leaves_in_chain": 14,
+      "mode_name": null,
+      "name": "chain_n14",
+      "note": "14 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 14,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 19,
+      "leaves_in_chain": 15,
+      "mode_name": null,
+      "name": "chain_n15",
+      "note": "15 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 15,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              1
+            ],
+            "groups": [
+              2
+            ]
+          }
+        ]
+      },
+      "id": 20,
+      "leaves_in_chain": 16,
+      "mode_name": null,
+      "name": "chain_n16",
+      "note": "16 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 16,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 21,
+      "leaves_in_chain": 17,
+      "mode_name": null,
+      "name": "chain_n17",
+      "note": "17 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 17,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 22,
+      "leaves_in_chain": 18,
+      "mode_name": null,
+      "name": "chain_n18",
+      "note": "18 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 18,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 23,
+      "leaves_in_chain": 19,
+      "mode_name": null,
+      "name": "chain_n19",
+      "note": "19 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 19,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 24,
+      "leaves_in_chain": 20,
+      "mode_name": null,
+      "name": "chain_n20",
+      "note": "20 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 20,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 25,
+      "leaves_in_chain": 21,
+      "mode_name": null,
+      "name": "chain_n21",
+      "note": "21 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 21,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 26,
+      "leaves_in_chain": 22,
+      "mode_name": null,
+      "name": "chain_n22",
+      "note": "22 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 22,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 27,
+      "leaves_in_chain": 23,
+      "mode_name": null,
+      "name": "chain_n23",
+      "note": "23 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 23,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              2
+            ],
+            "groups": [
+              3
+            ]
+          }
+        ]
+      },
+      "id": 28,
+      "leaves_in_chain": 24,
+      "mode_name": null,
+      "name": "chain_n24",
+      "note": "24 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 24,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 29,
+      "leaves_in_chain": 25,
+      "mode_name": null,
+      "name": "chain_n25",
+      "note": "25 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 25,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 30,
+      "leaves_in_chain": 26,
+      "mode_name": null,
+      "name": "chain_n26",
+      "note": "26 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 26,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 31,
+      "leaves_in_chain": 27,
+      "mode_name": null,
+      "name": "chain_n27",
+      "note": "27 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 27,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 32,
+      "leaves_in_chain": 28,
+      "mode_name": null,
+      "name": "chain_n28",
+      "note": "28 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 28,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 33,
+      "leaves_in_chain": 29,
+      "mode_name": null,
+      "name": "chain_n29",
+      "note": "29 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 29,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 34,
+      "leaves_in_chain": 30,
+      "mode_name": null,
+      "name": "chain_n30",
+      "note": "30 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 30,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 35,
+      "leaves_in_chain": 31,
+      "mode_name": null,
+      "name": "chain_n31",
+      "note": "31 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 31,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              3
+            ],
+            "groups": [
+              4
+            ]
+          }
+        ]
+      },
+      "id": 36,
+      "leaves_in_chain": 32,
+      "mode_name": null,
+      "name": "chain_n32",
+      "note": "32 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 32,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 37,
+      "leaves_in_chain": 33,
+      "mode_name": null,
+      "name": "chain_n33",
+      "note": "33 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 33,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 38,
+      "leaves_in_chain": 34,
+      "mode_name": null,
+      "name": "chain_n34",
+      "note": "34 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 34,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 39,
+      "leaves_in_chain": 35,
+      "mode_name": null,
+      "name": "chain_n35",
+      "note": "35 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 35,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 40,
+      "leaves_in_chain": 36,
+      "mode_name": null,
+      "name": "chain_n36",
+      "note": "36 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 36,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 41,
+      "leaves_in_chain": 37,
+      "mode_name": null,
+      "name": "chain_n37",
+      "note": "37 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 37,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 42,
+      "leaves_in_chain": 38,
+      "mode_name": null,
+      "name": "chain_n38",
+      "note": "38 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 38,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 43,
+      "leaves_in_chain": 39,
+      "mode_name": null,
+      "name": "chain_n39",
+      "note": "39 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 39,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              4
+            ],
+            "groups": [
+              5
+            ]
+          }
+        ]
+      },
+      "id": 44,
+      "leaves_in_chain": 40,
+      "mode_name": null,
+      "name": "chain_n40",
+      "note": "40 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 40,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 45,
+      "leaves_in_chain": 41,
+      "mode_name": null,
+      "name": "chain_n41",
+      "note": "41 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 41,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 46,
+      "leaves_in_chain": 42,
+      "mode_name": null,
+      "name": "chain_n42",
+      "note": "42 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 42,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 47,
+      "leaves_in_chain": 43,
+      "mode_name": null,
+      "name": "chain_n43",
+      "note": "43 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 43,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 48,
+      "leaves_in_chain": 44,
+      "mode_name": null,
+      "name": "chain_n44",
+      "note": "44 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 44,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 49,
+      "leaves_in_chain": 45,
+      "mode_name": null,
+      "name": "chain_n45",
+      "note": "45 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 45,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 50,
+      "leaves_in_chain": 46,
+      "mode_name": null,
+      "name": "chain_n46",
+      "note": "46 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 46,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 51,
+      "leaves_in_chain": 47,
+      "mode_name": null,
+      "name": "chain_n47",
+      "note": "47 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 47,
+        "combines": 7,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 7
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              5
+            ],
+            "groups": [
+              6
+            ]
+          }
+        ]
+      },
+      "id": 52,
+      "leaves_in_chain": 48,
+      "mode_name": null,
+      "name": "chain_n48",
+      "note": "48 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 7
+    },
+    {
+      "expected": {
+        "adds": 48,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 53,
+      "leaves_in_chain": 49,
+      "mode_name": null,
+      "name": "chain_n49",
+      "note": "49 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 49,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 54,
+      "leaves_in_chain": 50,
+      "mode_name": null,
+      "name": "chain_n50",
+      "note": "50 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 50,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 55,
+      "leaves_in_chain": 51,
+      "mode_name": null,
+      "name": "chain_n51",
+      "note": "51 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 51,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 56,
+      "leaves_in_chain": 52,
+      "mode_name": null,
+      "name": "chain_n52",
+      "note": "52 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 52,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 57,
+      "leaves_in_chain": 53,
+      "mode_name": null,
+      "name": "chain_n53",
+      "note": "53 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 53,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 58,
+      "leaves_in_chain": 54,
+      "mode_name": null,
+      "name": "chain_n54",
+      "note": "54 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 54,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 59,
+      "leaves_in_chain": 55,
+      "mode_name": null,
+      "name": "chain_n55",
+      "note": "55 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 55,
+        "combines": 8,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 8
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              6
+            ],
+            "groups": [
+              7
+            ]
+          }
+        ]
+      },
+      "id": 60,
+      "leaves_in_chain": 56,
+      "mode_name": null,
+      "name": "chain_n56",
+      "note": "56 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 8
+    },
+    {
+      "expected": {
+        "adds": 56,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              0
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              1
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 61,
+      "leaves_in_chain": 57,
+      "mode_name": null,
+      "name": "chain_n57",
+      "note": "57 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 57,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              1
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              2
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 62,
+      "leaves_in_chain": 58,
+      "mode_name": null,
+      "name": "chain_n58",
+      "note": "58 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 58,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              2
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              3
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 63,
+      "leaves_in_chain": 59,
+      "mode_name": null,
+      "name": "chain_n59",
+      "note": "59 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 59,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              3
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              4
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 64,
+      "leaves_in_chain": 60,
+      "mode_name": null,
+      "name": "chain_n60",
+      "note": "60 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 60,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              4
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              5
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 65,
+      "leaves_in_chain": 61,
+      "mode_name": null,
+      "name": "chain_n61",
+      "note": "61 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 61,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              5
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              6
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 66,
+      "leaves_in_chain": 62,
+      "mode_name": null,
+      "name": "chain_n62",
+      "note": "62 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 62,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              6
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              7
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 67,
+      "leaves_in_chain": 63,
+      "mode_name": null,
+      "name": "chain_n63",
+      "note": "63 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 63,
+        "combines": 9,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 9
+      },
+      "extras": {
+        "stages": [
+          {
+            "adds": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "groups": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ]
+          },
+          {
+            "adds": [
+              7
+            ],
+            "groups": [
+              8
+            ]
+          }
+        ]
+      },
+      "id": 68,
+      "leaves_in_chain": 64,
+      "mode_name": null,
+      "name": "chain_n64",
+      "note": "64 leaves: every endpoint count and carry pattern the chain produces",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 9
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 69,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_1",
+      "note": "1 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 4,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 70,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_2",
+      "note": "2 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 8,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 71,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_3",
+      "note": "3 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 12,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 72,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_4",
+      "note": "4 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 16,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 73,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_5",
+      "note": "5 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 20,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 74,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_6",
+      "note": "6 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 24,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 75,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_7",
+      "note": "7 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 28,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 76,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "count_8",
+      "note": "8 valid leaves, 4 random vectors",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 2,
+        "combines": 1,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 1
+      },
+      "extras": {},
+      "id": 77,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "invalid_slots_ignored",
+      "note": "count 3 with NaN in the five invalid slots: no fault, 1 + 2 + 3 = 6",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 9,
+        "combines": 3,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 3
+      },
+      "extras": {},
+      "id": 78,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "negative_zero_leaves",
+      "note": "-0.0 leaves and a count-1 pass-through: every result is +0.0",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 38,
+        "combines": 6,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 6
+      },
+      "extras": {},
+      "id": 79,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "subnormal_sums",
+      "note": "sums inside and across the binary32 subnormal range, ties to even on the grid",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 31,
+        "combines": 5,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 5
+      },
+      "extras": {},
+      "id": 80,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "cancellation_and_ties",
+      "note": "x + (-x) at every level, equal exponents, half-ulp ties rounding to even",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 5
+    },
+    {
+      "expected": {
+        "adds": 20,
+        "combines": 4,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 4
+      },
+      "extras": {},
+      "id": 81,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "near_overflow",
+      "note": "results just below 2**128 without a fault",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 4
+    },
+    {
+      "expected": {
+        "adds": 112,
+        "combines": 16,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 16
+      },
+      "extras": {},
+      "id": 82,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "mixed_magnitudes",
+      "note": "random vectors over 2**-140 .. 2**100 with mixed signs and zeros",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 16
+    },
+    {
+      "expected": {
+        "adds": 7,
+        "combines": 1,
+        "error_code": 3,
+        "error_detail": 25,
+        "error_level": 1,
+        "error_tag": 458,
+        "outputs": 1
+      },
+      "extras": {},
+      "id": 83,
+      "leaves_in_chain": 0,
+      "mode_name": "add_range_level1",
+      "name": "fault_add_range_level1",
+      "note": "2**128 reached at level 1 (leaves 0 + 1)",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 0,
+        "error_code": 3,
+        "error_detail": 25,
+        "error_level": 1,
+        "error_tag": 460,
+        "outputs": 0
+      },
+      "extras": {},
+      "id": 84,
+      "leaves_in_chain": 0,
+      "mode_name": "add_range_tie_level1",
+      "name": "fault_add_range_tie",
+      "note": "the largest finite plus exactly half an ulp: the tie rounds to even, which is 2**128 (round_pack refuses it)",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 0,
+        "error_code": 3,
+        "error_detail": 25,
+        "error_level": 1,
+        "error_tag": 461,
+        "outputs": 0
+      },
+      "extras": {},
+      "id": 85,
+      "leaves_in_chain": 0,
+      "mode_name": "add_range_level2",
+      "name": "fault_add_range_level2",
+      "note": "finite level-1 sums whose level-2 sum reaches 2**128",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 0,
+        "error_code": 3,
+        "error_detail": 25,
+        "error_level": 2,
+        "error_tag": 462,
+        "outputs": 0
+      },
+      "extras": {},
+      "id": 86,
+      "leaves_in_chain": 0,
+      "mode_name": "add_range_level3",
+      "name": "fault_add_range_level3",
+      "note": "finite level-2 sums whose level-3 sum reaches 2**128",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 7,
+        "combines": 1,
+        "error_code": 1,
+        "error_detail": 24,
+        "error_level": 0,
+        "error_tag": 464,
+        "outputs": 1
+      },
+      "extras": {},
+      "id": 87,
+      "leaves_in_chain": 0,
+      "mode_name": "leaf_nonfinite_nan",
+      "name": "fault_leaf_nan",
+      "note": "a NaN leaf in a valid slot",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 2
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 0,
+        "error_code": 1,
+        "error_detail": 24,
+        "error_level": 0,
+        "error_tag": 465,
+        "outputs": 0
+      },
+      "extras": {},
+      "id": 88,
+      "leaves_in_chain": 0,
+      "mode_name": "leaf_nonfinite_infinity",
+      "name": "fault_leaf_infinity",
+      "note": "an infinity leaf in the last valid slot",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 0,
+        "error_code": 7,
+        "error_detail": 26,
+        "error_level": 0,
+        "error_tag": 466,
+        "outputs": 0
+      },
+      "extras": {},
+      "id": 89,
+      "leaves_in_chain": 0,
+      "mode_name": "leaf_count_zero",
+      "name": "fault_leaf_count_zero",
+      "note": "count 0 is refused",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 0,
+        "combines": 0,
+        "error_code": 7,
+        "error_detail": 26,
+        "error_level": 0,
+        "error_tag": 467,
+        "outputs": 0
+      },
+      "extras": {},
+      "id": 90,
+      "leaves_in_chain": 0,
+      "mode_name": "leaf_count_over",
+      "name": "fault_leaf_count_over",
+      "note": "count 9 exceeds LEAVES",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 1
+    },
+    {
+      "expected": {
+        "adds": 21,
+        "combines": 3,
+        "error_code": 1,
+        "error_detail": 24,
+        "error_level": 0,
+        "error_tag": 471,
+        "outputs": 3
+      },
+      "extras": {},
+      "id": 91,
+      "leaves_in_chain": 0,
+      "mode_name": "fault_mid_stream",
+      "name": "fault_mid_stream",
+      "note": "vector 3 of 6 holds an infinity: vectors 0..2 emitted, 3..5 dropped",
+      "rate": false,
+      "shape": null,
+      "stream": true,
+      "vectors": 6
+    },
+    {
+      "expected": {
+        "adds": 7,
+        "combines": 1,
+        "error_code": 3,
+        "error_detail": 25,
+        "error_level": 1,
+        "error_tag": 475,
+        "outputs": 1
+      },
+      "extras": {},
+      "id": 92,
+      "leaves_in_chain": 0,
+      "mode_name": "fault_single_step",
+      "name": "fault_single_step",
+      "note": "the endpoint stops after the fault and ignores the next vector until clear",
+      "rate": false,
+      "shape": null,
+      "stream": false,
+      "vectors": 3
+    },
+    {
+      "expected": {
+        "adds": 448,
+        "combines": 64,
+        "error_code": 0,
+        "error_detail": 0,
+        "error_level": 0,
+        "error_tag": 0,
+        "outputs": 64
+      },
+      "extras": {},
+      "id": 93,
+      "leaves_in_chain": 0,
+      "mode_name": null,
+      "name": "rate_stream",
+      "note": "64 full vectors back to back: one combine per cycle, latency measured",
+      "rate": true,
+      "shape": null,
+      "stream": true,
+      "vectors": 64
+    }
+  ],
+  "failure_modes": {
+    "add_range_level1": {
+      "case": 83,
+      "class_name": "accumulate_range",
+      "detail_name": "tree_add_range",
+      "error_code": 3,
+      "error_detail": 25,
+      "error_level": 1,
+      "error_tag": 458,
+      "name": "fault_add_range_level1"
+    },
+    "add_range_level2": {
+      "case": 85,
+      "class_name": "accumulate_range",
+      "detail_name": "tree_add_range",
+      "error_code": 3,
+      "error_detail": 25,
+      "error_level": 1,
+      "error_tag": 461,
+      "name": "fault_add_range_level2"
+    },
+    "add_range_level3": {
+      "case": 86,
+      "class_name": "accumulate_range",
+      "detail_name": "tree_add_range",
+      "error_code": 3,
+      "error_detail": 25,
+      "error_level": 2,
+      "error_tag": 462,
+      "name": "fault_add_range_level3"
+    },
+    "add_range_tie_level1": {
+      "case": 84,
+      "class_name": "accumulate_range",
+      "detail_name": "tree_add_range",
+      "error_code": 3,
+      "error_detail": 25,
+      "error_level": 1,
+      "error_tag": 460,
+      "name": "fault_add_range_tie"
+    },
+    "fault_mid_stream": {
+      "case": 91,
+      "class_name": "operand_nonfinite",
+      "detail_name": "tree_leaf_nonfinite",
+      "error_code": 1,
+      "error_detail": 24,
+      "error_level": 0,
+      "error_tag": 471,
+      "name": "fault_mid_stream"
+    },
+    "fault_single_step": {
+      "case": 92,
+      "class_name": "accumulate_range",
+      "detail_name": "tree_add_range",
+      "error_code": 3,
+      "error_detail": 25,
+      "error_level": 1,
+      "error_tag": 475,
+      "name": "fault_single_step"
+    },
+    "leaf_count_over": {
+      "case": 90,
+      "class_name": "shape",
+      "detail_name": "tree_leaf_count",
+      "error_code": 7,
+      "error_detail": 26,
+      "error_level": 0,
+      "error_tag": 467,
+      "name": "fault_leaf_count_over"
+    },
+    "leaf_count_zero": {
+      "case": 89,
+      "class_name": "shape",
+      "detail_name": "tree_leaf_count",
+      "error_code": 7,
+      "error_detail": 26,
+      "error_level": 0,
+      "error_tag": 466,
+      "name": "fault_leaf_count_zero"
+    },
+    "leaf_nonfinite_infinity": {
+      "case": 88,
+      "class_name": "operand_nonfinite",
+      "detail_name": "tree_leaf_nonfinite",
+      "error_code": 1,
+      "error_detail": 24,
+      "error_level": 0,
+      "error_tag": 465,
+      "name": "fault_leaf_infinity"
+    },
+    "leaf_nonfinite_nan": {
+      "case": 87,
+      "class_name": "operand_nonfinite",
+      "detail_name": "tree_leaf_nonfinite",
+      "error_code": 1,
+      "error_detail": 24,
+      "error_level": 0,
+      "error_tag": 464,
+      "name": "fault_leaf_nan"
+    }
+  },
+  "image_sha256": {
+    "re8_case.hex": "38f61f31df42cfcd34f9e9ee42ef657611225ab9469c7d79908b074492fecba4",
+    "re8_meta.hex": "04f48cdf050d145108718dd3c2d495e114ab56a11aff31e4c2f1b6ee39a8ad56",
+    "re8_vec.hex": "f18948d701bfe163cc1f4899c0abf688c2c211ccd2f1c26e0abb8820fe47739a"
+  },
+  "leaves": 8,
+  "profile": "quick",
+  "rate_cases": [
+    {
+      "case": 93,
+      "vectors": 64
+    }
+  ],
+  "reference": {
+    "chained_shapes": "K = 4,096: [8,8,8,8] then [4]; K = 12,288: 12 x [8] then [8,4] then [2]",
+    "model": "tools/am_e1_lane_reference.py (re8_combine, re8_chain, pairwise_tree)",
+    "numeric_authority": "runtime/reference/formats.py (fractions.Fraction, encode_binary32_rne), pinned to np.add float32",
+    "signed_zero": "a -0.0 leaf is canonicalised to +0.0 by the endpoint; the reference is given the canonical leaf",
+    "source_of_truth": "runtime/sim/engines/reduction.py::ordered_sum, ReductionOrder.PAIRWISE_TREE"
+  },
+  "required_marker_prefix": "PASS: ABI3 re8 cases=94 vectors=540 outputs=526 faults=10 adds=3113 combines=526",
+  "schema": "opentallas.rtl.abi3_re8_vectors.v1",
+  "seed": 20260905,
+  "suite": "re8",
+  "totals": {
+    "adds": 3113,
+    "combines": 526,
+    "faults": 10,
+    "outputs": 526,
+    "vectors": 540
+  },
+  "vec_stride": 12
+}

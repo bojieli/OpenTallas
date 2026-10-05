@@ -1,0 +1,67 @@
+{
+  "checkpoint_reads": 0,
+  "finite_ACK_rule": {
+    "protocol": "lossless ordered fourphase LEVEL:REQ1 -> complete2fragments -> consumeraccept exactlyonce -> ACK1 -> sourceREQ0 -> peerACK0 -> sourceobservesACK0 -> localwordcreditreleased",
+    "reset": "No reset while currentword/ACK/context islive; changing epoch/image requires\u5168hop/backend/consumerdrain and barriers. Softwaredrain flag is an assumption, NOT an actual sourceproof.",
+    "source_owner_fullrow_rule": "All8wordcredits PLUS finalrowconsumeraccept and reverseROWACK/visibility/drain before rowlease reuse; Ram independent rowchecker remains authority.",
+    "stale_pulse_limitation": "A21onebit pulse was unbound. E32 metadata alone does not qualify ACKlevels. Orderedlossless registered/CDC paths, allhopACK0/REQ0 and zeroqueue/backend/consumerdrain are mandatory actual provider gates.",
+    "state6": "RXphase2 EMPTY/HALF/FULL/DRAIN +senderFSM2 IDLE/WAIT_ACK1/WAIT_ACK0 +TXfragmentphase1 +peerACKlevel1; consumedonce encodedRXDRAIN; no uncounted boolcontrol."
+  },
+  "full_program_critical_path": null,
+  "headline_rate": null,
+  "inventory": {
+    "home_image_session_bits": 293,
+    "home_root_rowlease_bits": 92,
+    "homes": 192,
+    "macros": 1500067,
+    "old_FF_retained": 2073625150,
+    "request_setup_beats": 3,
+    "request_state_bits_per_hop": 112,
+    "response_fragments_per_word": 2,
+    "response_state_bits_per_hop": 366,
+    "ungated_FF_bits": 4361491198
+  },
+  "jobs_launched": 0,
+  "old2360cycle_E8_calendar_applies": false,
+  "physical_admission": false,
+  "power_allocation": {
+    "PHY_delta_rule": "Reconcile new PHY/IO against included44.296W interface reservation; no duplicate charge or automatic fit/qualification.",
+    "all_home_clock_W": "69546.81207661084905840",
+    "allocation_is_not_physical_minimum": true,
+    "conditional_subtotal_W": "455.07986549969251600",
+    "contextual_clock_tree_RC_IR_SSFF_qualified": false,
+    "current_serialized_data_and_added_control_logic_bound": false,
+    "included_hub_interface_idle_W": "44.296",
+    "maximum_home_E32_clock_leak_W": "369.11544919969251600",
+    "remaining_before_new_costs_W": "19.48013450030748400",
+    "retained_hub_all_unit_dynamic_upper_W": "26.1233664",
+    "retained_hub_static_W": "59.841049900"
+  },
+  "preserved_generation_failure": {
+    "actual_epoch32_A": 7,
+    "actual_epoch32_B": 263,
+    "consequence": "E8 alone cannot identify fullgeneration; drainedreuse/provider proof or fullE32 setup is mandatory.",
+    "new48tag_equal": false,
+    "old24tag_equal": true,
+    "same_low8epoch": 7
+  },
+  "schema": "opentallas.w17.DSROM-E32-retained-hub-power-join.v1",
+  "scope": "FreshE32 FF/clock/leak and retained historical hub allocation only. Comparator/serializer/control and image/setup/drain/provider calendar remain mandatory.",
+  "source_pins": {
+    "E32_contract": {
+      "commit": "9ef36f654",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/epoch32_fragment_contract.json",
+      "sha256": "4776cbe6d90d4c1d68b0f9b91fb45b776042414e0fc3fb376486dd717ab2a163"
+    },
+    "E32_power": {
+      "commit": "e3a1a53db",
+      "path": "results/uarch/w10_engram_epoch32_power_r1/budget.json",
+      "sha256": "ec3ee79c411d0cd8b5de14502ab6cfedce3ad31f0f4bea6ec9a86dc9f0fafc20"
+    },
+    "retained_hub": {
+      "commit": "fea811df4",
+      "path": "results/uarch/w10_q_existing_icg_r1/phases.json",
+      "sha256": "da6aa5674f5eb4506347ff5e33944d352df3a0be5ea20ec1a120e2dfe6371117"
+    }
+  }
+}

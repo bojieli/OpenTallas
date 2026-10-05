@@ -1,0 +1,157 @@
+{
+  "MTP_agentic_receipts_assumed": false,
+  "artifact_inventory": {
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/input_manifest.json": {
+      "bytes": 6721,
+      "sha256": "c8a36921f0f509aef818ffb5be486ecd89fd097048614a4757ba2bb9d5692646"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/Claude_service_term.json": {
+      "bytes": 14016,
+      "sha256": "2ab70ca3332fb8ce1650015e29fa57d9b9e67e7f1393982258066ca328f71d0e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/deepseek-v4.1-flash.json": {
+      "bytes": 23974,
+      "sha256": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/frozen_input_w15_topk_merge_hbm96_p1024f64.json": {
+      "bytes": 2145,
+      "sha256": "693cd1ee2e9cead40ef14423fd69ce4c4f9f5b318e7ecdc7b059bdda059a6271"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/hbm_gpu.json": {
+      "bytes": 18553,
+      "sha256": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/required_spec.json": {
+      "bytes": 646,
+      "sha256": "17e5e251bc8f70b76cf37fe08c8a228e364a1e7de5d297e32aa4b55dad473f51"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/selected_composer.py": {
+      "bytes": 21542,
+      "sha256": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/selected_select.json": {
+      "bytes": 2146,
+      "sha256": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/uarch_model.py.gz": {
+      "bytes": 134848,
+      "sha256": "b36a7f89b1651c847e949f0c68c47483db21df973627853480abdc34f97a6b1f"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w15_hbm_nvls.json": {
+      "bytes": 74109,
+      "sha256": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w15_historical.json": {
+      "bytes": 56876,
+      "sha256": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_expert_fetch.json": {
+      "bytes": 23186,
+      "sha256": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_ar.json": {
+      "bytes": 12529,
+      "sha256": "ab41e0ad471686a602162980e16d4e48d83764088049cbaf2419373fb6fd1ca2"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_ar_fused_wsel.json": {
+      "bytes": 16136,
+      "sha256": "616cdee74260e489d17185d894674d694fc1d810fe74ed3028b2124a8649df57"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_ar_fused_wsel256.json": {
+      "bytes": 16140,
+      "sha256": "785b2a30a534e7cacad52d242c8019db6a0a42b0574a34ef39e69227117904bc"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_ar_wsel.json": {
+      "bytes": 16136,
+      "sha256": "bd53b22aec0387dae94daefa1ea895ecaded7f0eb380204a873855c34c6d7602"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_ar_wsel256.json": {
+      "bytes": 16140,
+      "sha256": "8f35771f9421cee64d647c40ea78482f4b2d1bc7f9ec3716eac3ef79d422da23"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_compose.py": {
+      "bytes": 17422,
+      "sha256": "532e750860030c2142cc514da714582083a70519f28dff0fc49cdd7d46ca936a"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_mtp_fused_wsel.json": {
+      "bytes": 16237,
+      "sha256": "cff694cc5354e3e2ea1015756e9fe44f9ce2717b4f98361dc6c88dce0a2bec97"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_mtp_fused_wsel256.json": {
+      "bytes": 16237,
+      "sha256": "f01a6090835fbb9a7660f5dd04ff805a581be5b22b470dc2284a1b23183a624b"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_mtp_wsel.json": {
+      "bytes": 16201,
+      "sha256": "df0a892efee9eb2cfd4dad84e8213bccbcf50156279d5ff343ccebbb3f5cd73b"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_token_mtp_wsel256.json": {
+      "bytes": 16203,
+      "sha256": "925d15203d10a3526c5ab7901cf096c729b1a65a22c9f43e74b9e3345bbc0abe"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_hbm_tp96_program_oreduce.json.gz": {
+      "bytes": 132668,
+      "sha256": "eeceaae3f86f410011d791be762b1b9295521f98375ade9c3b9976741362b16a"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_sm_real_ops.json": {
+      "bytes": 59813,
+      "sha256": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/inputs/w19_sm_real_ops_oreduce.json": {
+      "bytes": 21582,
+      "sha256": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/reconciliation.json": {
+      "bytes": 67479,
+      "sha256": "2c6691d1ca4516ea8cfe0ef22040e433ea8a98ecb0827f034d56f3133d072ebd"
+    },
+    "results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/reconciliation_pre_dedup_unadopted.json": {
+      "bytes": 58552,
+      "sha256": "fd875736ac3c2d791fa13b13aa21ebbe31bb56af462a57ff1a11fa3f106f8054"
+    }
+  },
+  "authoritative_headline_selected": false,
+  "branch": "codex/h3-physical-grants-20261002",
+  "commands": [
+    "python -m pytest -q -o addopts=\"\" tests/test_h3_complete_native_calendar_authority_r4.py tests/test_h3_complete_native_calendar_owner_join_r3.py",
+    "python tools/h3_complete_native_calendar_authority_r4.py --verify"
+  ],
+  "dependency": "b8290b552d914763961f0fd206b8a6d62b46e61c only for combined owner tests; authority tool replay self-contained",
+  "findings": [
+    "Three different source authorities: legacy356.9us, historical495.23us, selected fused442.14us/unfused458.46us",
+    "Legacy1.0339GHz analytical arch-DAG vs W19 fast1.2/serial0.9GHz source2213op TP96 oreduce program",
+    "All8 frozen wide records and exact pinned inputs/sources restored; canonical current files missing at frozen snapshot",
+    "W19 already pays40*133.2ns=5.328us refresh-postponed fetch; do not add it again",
+    "Historical to selected: collective-43.27us; unfused local quantizer recipe+6.50us; lane-local fusion-16.32us",
+    "Selected exacttopk419cycles N96/NMAX512/P1024/PF256; divide by chosenfitclock is composition, not select SSFF qualification",
+    "Historical W15df011 pin recovered fromd5ce14e7; currentc26c3 has different bytes; current numeric gather fit equal but source currency distinct",
+    "Current cons_headline_table and cons system ratios select HBM_W19; hbm_gpu and v41_hbm_chain reference/speculation rows retain legacy basis",
+    "749.7B product slots and grouped reduce extrapolation lack installed literal64B96-endpoint service qualification"
+  ],
+  "full_owner_bridge": false,
+  "hardware_qualified": false,
+  "headline_changed": false,
+  "next_primary_step": "Read501a actual source route acceptingII40 and11bfdf source-selected41dependency proof; compose source requester/state-kind leases and actual producer/read/commonACK/visibility/consumer/reverse/CDC pipeline calendar. No synthetic SM map; price causal waits once; unknown until installed bounded service proved.",
+  "parent_doc_milestone_reported": "01b669ac4",
+  "schema": "DS_HBM_AUTHORITY_RECONCILIATION_R4_HANDOFF",
+  "snapshot_main": "8047fb353f9e3c20402c759cf7b2f8bbcd8eb65e",
+  "source_sha256": {
+    "tests/test_h3_complete_native_calendar_authority_r4.py": "7dd311b7385093b55c9f82d943f6b86ec4814c76982635a5aa8fa8575799711e",
+    "tools/h3_complete_native_calendar_authority_r4.py": "d6dba46e1e66c04866c991e74aa1981b333ba4874f43395d1523748d228aa7d5"
+  },
+  "state": {
+    "existing_untracked_R1_intermediates_preserved": true,
+    "live_owned_jobs": [],
+    "main_modified": false,
+    "pinned_originals_modified": false
+  },
+  "validation": {
+    "analytical_historical_and_selected_unfused_fused_cost_replay": "PASS",
+    "byte_exact_authority_replay": "PASS",
+    "combined_tests_passed": 29,
+    "combined_wall_seconds": 27.25,
+    "new_tests": 6,
+    "numerical_jobs_launched": 0
+  },
+  "worktree": "/home/ubuntu/OpenTallas-h3-physical-grants"
+}

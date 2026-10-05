@@ -1,0 +1,62 @@
+{
+  "SSFF_qualified": false,
+  "actual_cell_keep_dont_touch": true,
+  "cases": {
+    "bfcolumn": {
+      "actual_PG_CTS_installed": false,
+      "frame_growth_um2_replace_once": 0.0,
+      "margin_before_CTS_wires_PGvias_um2": 9060.968880593238,
+      "outline_DBU": [
+        0,
+        0,
+        1002890,
+        157680
+      ],
+      "physical_macros": 4
+    },
+    "q": {
+      "actual_PG_CTS_installed": false,
+      "frame_growth_um2_replace_once": 3310.2432,
+      "margin_before_CTS_wires_PGvias_um2": 416.5214399547185,
+      "outline_DBU": [
+        0,
+        0,
+        510840,
+        151200
+      ],
+      "physical_macros": 4
+    }
+  },
+  "context_model_replay_byteidentical": true,
+  "exact_additive_dependencies": [
+    "5279d0f85",
+    "2daf2ed9f",
+    "6ddd84845"
+  ],
+  "independent_actual_mapped_counts": {
+    "bfcolumn": {
+      "FF": 8,
+      "FF_outputs": 8,
+      "WAKE_nets": 8
+    },
+    "q": {
+      "FF": 8,
+      "FF_outputs": 8,
+      "WAKE_nets": 8
+    }
+  },
+  "original_collapsed_a910_failure_preserved": true,
+  "parent_focused_context_tests_passed": 35,
+  "physical_G0_admitted": false,
+  "remaining": [
+    "CTS: actual8 root/localWAKE placement, eightICG branch buffering, skew/slew/minpulse",
+    "PG: translatedmacro pins/OBS/halo, extend qnewbottomstrip PDN and install via/spacing/pinescape union",
+    "IO: source-parent CFG/VM/root endpoint drivingcell arrival/slew and receiver load",
+    "SSFF: macroclkQ+selectedcaptureenables+onecyclecapture-to-lane, with endpoint-narrow multicycle only",
+    "Maxwell: replace qframe once +3310.2432um2/pair; retainBFgrowth and fullselector1.68242mm2"
+  ],
+  "schema": "opentallas.DS.WAKE-retention-parent-review.v1",
+  "source_to_retained_annotation_only_connectivity_verified": true,
+  "terminal_hashes_verified": 21,
+  "worker": "3a6b71c33cf1cc976858aa856a661100aefa8b91"
+}

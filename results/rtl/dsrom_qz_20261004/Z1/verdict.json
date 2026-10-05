@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.dsrom_qz.verdict.v1",
+ "date": "2026-10-04",
+ "run": "Z1",
+ "verdict": "REJECTED_NO_RESCUE",
+ "one_line": "QZ (zero-cycle) Z1 fails physically: global route GRT-0116 congestion (6 overflow gcells, M5/M7) after a post-CTS SS screen of -71.8 ps; no routed DB, so no SS/FF signoff; no L closes in this campaign.",
+ "source_commit": "d9d009f4d (route); gate a8962c913 (only the QZ_MUTANT_Z branch differs)",
+ "params": {
+  "NB": 2,
+  "MTP": 1,
+  "EARLY": 1,
+  "FAST": 1,
+  "PP": 1,
+  "QTIMING_FIX": 1,
+  "QPIPE": 1,
+  "QP_XS": 1,
+  "QP_CAP": 0,
+  "QP_P1": 1,
+  "QP_CSAM": 10,
+  "QZ": 1,
+  "QZ_NS": 8,
+  "QZ_NE": 4
+ },
+ "added_cycles_over_qpipe": 0,
+ "total_L": 2,
+ "flow": {
+  "launcher": "results/rtl/dsrom_qz_20261004/launch.sh",
+  "host": "ot-epyc1tb",
+  "threads": 20,
+  "frame": "C 510.84x126.9",
+  "corner": "SS (ORFS WC) 0.833 ns",
+  "uncertainty_ps": {
+   "setup": 60,
+   "hold": 25
+  },
+  "hold_corners": "WC,BC",
+  "io_budget_unchanged": {
+   "in_min": 0.36,
+   "in_max": 0.727,
+   "out_min": -0.56,
+   "out_max": -0.193
+  }
+ },
+ "synthesis_check": "1_2_yosys.v holds p0_xq in both g_mac[0] and g_mac[1] lanes (4 x 256) and 71 ot_v41_kreg references: the per-macro copies now exist (R_cap0: g_mac[0] only)",
+ "post_cts_SS": {
+  "wns_ps": -71.85,
+  "tns_ps": -378.8,
+  "violating_endpoints": 53,
+  "groups": {
+   "fault output port (OR of 12 sticky fault bits across both halves, out max -0.193 ns)": -71.8,
+   "walker w_h / w_lu_r (single-cycle recurrence)": -47.4,
+   "x-need match r_dp": -24.7,
+   "walker wA / wB": -7.3,
+   "lane p0_wq": -3.8,
+   "a_ctr": -0.5
+  },
+  "compare": {
+   "R_cap1_post_CTS_SS_wns_ps": -231.2,
+   "R_cap0_routed_SS_wns_ps": -236.4
+  }
+ },
+ "global_route": {
+  "status": "FAIL GRT-0116",
+  "overflow": {
+   "M5": "0/1/3",
+   "M7": "0/1/3",
+   "total": "0/2/6"
+  },
+  "nets": 179479,
+  "wirelength_um": 1159934,
+  "usage_pct": {
+   "M2": 47.58,
+   "M3": 51.6,
+   "M4": 23.02,
+   "M5": 14.33,
+   "M6": 13.8,
+   "M7": 4.3
+  },
+  "tool_hint": "reduce layer adjustment 25% -> 22%"
+ },
+ "ff_hold": "not measured (no routed DB). R_cap0 analysis: output-port hold is infeasible under the corner-invariant -0.56 ns budget for any RTL (FF/SS ratio 0.56 < 0.646 required); with a corner-consistent -322 ps FF budget R_cap0 outputs meet (+23.0 ps) and internal FF hold is -44.2 ps (hold repaired at SS only). Budget change is an owner decision, not applied.",
+ "minimum_L_closing": null,
+ "not_done": "no flow-knob retry (owner rule: no rescue loops). Remaining blockers if reopened: GRT congestion from the un-merged second-half lanes, fault-port OR (-72 ps), walker recurrence (-47 ps at CTS, -111 ps post-route in R_cap0), and the FF output budget decision."
+}

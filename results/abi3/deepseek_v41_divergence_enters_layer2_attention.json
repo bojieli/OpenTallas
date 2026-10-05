@@ -1,0 +1,253 @@
+{
+  "answer": "IT IS NOT ACCUMULATION AND IT HAS A SITE. The divergence enters inside LAYER 2's ATTENTION, and only at prompt positions above zero. Every tap through layer 2's attention-norm input sits within a few BF16 ulps; the very next tap, layer 2's FFN-norm input, collapses -- cosine 0.99989 -> 0.89489 at position 7, a 44.8x jump in relative difference in one sublayer. At position 0 the same tap is 0.9999975 and there is no step at all. Layer 2 is the first layer with a nonzero compress_ratio and the first kv_source_layer, and a fault that appears only once a position has history is a fault on the compressed-KV path rather than a rounding difference, which would show at position 0 too.",
+  "device": {
+    "capability": "configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json",
+    "deployment": "the published shipped V4.1 HBM c512 cell, 8 nodes",
+    "taps": 32,
+    "workload": "build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json"
+  },
+  "measured": [
+    {
+      "oracle_checkpoint": "L00.attn_norm",
+      "position_0": {
+        "cosine": 1.0000000000000002,
+        "max_abs_diff": 0.0,
+        "relative": 0.0
+      },
+      "position_3": {
+        "cosine": 1.0,
+        "max_abs_diff": 0.0,
+        "relative": 0.0
+      },
+      "position_5": {
+        "cosine": 1.0000000000000002,
+        "max_abs_diff": 0.0,
+        "relative": 0.0
+      },
+      "position_7": {
+        "cosine": 1.0000000000000002,
+        "max_abs_diff": 0.0,
+        "relative": 0.0
+      },
+      "tap": 0
+    },
+    {
+      "oracle_checkpoint": "L00.ffn_norm",
+      "position_0": {
+        "cosine": 0.9999999080333303,
+        "max_abs_diff": 0.00048828125,
+        "relative": 0.0017985611510791368
+      },
+      "position_3": {
+        "cosine": 0.9999977985151212,
+        "max_abs_diff": 0.001953125,
+        "relative": 0.003424657534246575
+      },
+      "position_5": {
+        "cosine": 0.999997914666294,
+        "max_abs_diff": 0.001953125,
+        "relative": 0.003048780487804878
+      },
+      "position_7": {
+        "cosine": 0.9999984207858629,
+        "max_abs_diff": 0.00390625,
+        "relative": 0.006756756756756757
+      },
+      "tap": 1
+    },
+    {
+      "oracle_checkpoint": "L01.attn_norm",
+      "position_0": {
+        "cosine": 0.9999993379605532,
+        "max_abs_diff": 0.0234375,
+        "relative": 0.004658385093167702
+      },
+      "position_3": {
+        "cosine": 0.9999679866450185,
+        "max_abs_diff": 0.005859375,
+        "relative": 0.0057692307692307696
+      },
+      "position_5": {
+        "cosine": 0.9999734068349639,
+        "max_abs_diff": 0.01171875,
+        "relative": 0.01171875
+      },
+      "position_7": {
+        "cosine": 0.9999583686219148,
+        "max_abs_diff": 0.00390625,
+        "relative": 0.004016064257028112
+      },
+      "tap": 2
+    },
+    {
+      "oracle_checkpoint": "L01.ffn_norm",
+      "position_0": {
+        "cosine": 0.9999904174883791,
+        "max_abs_diff": 0.015625,
+        "relative": 0.00641025641025641
+      },
+      "position_3": {
+        "cosine": 0.9998418867318729,
+        "max_abs_diff": 0.015625,
+        "relative": 0.015037593984962405
+      },
+      "position_5": {
+        "cosine": 0.9999286381116663,
+        "max_abs_diff": 0.030029296875,
+        "relative": 0.01931532663316583
+      },
+      "position_7": {
+        "cosine": 0.9998156331481993,
+        "max_abs_diff": 0.0078125,
+        "relative": 0.013333333333333334
+      },
+      "tap": 3
+    },
+    {
+      "oracle_checkpoint": "L02.attn_norm",
+      "position_0": {
+        "cosine": 0.9999977357421836,
+        "max_abs_diff": 0.125,
+        "relative": 0.003787878787878788
+      },
+      "position_3": {
+        "cosine": 0.999705528448125,
+        "max_abs_diff": 0.01904296875,
+        "relative": 0.017663043478260868
+      },
+      "position_5": {
+        "cosine": 0.9999071728478196,
+        "max_abs_diff": 0.01953125,
+        "relative": 0.016891891891891893
+      },
+      "position_7": {
+        "cosine": 0.9998856461565189,
+        "max_abs_diff": 0.0078125,
+        "relative": 0.012658227848101266
+      },
+      "tap": 4
+    },
+    {
+      "oracle_checkpoint": "L02.ffn_norm",
+      "position_0": {
+        "cosine": 0.9999975349751743,
+        "max_abs_diff": 0.25,
+        "relative": 0.004651162790697674
+      },
+      "position_3": {
+        "cosine": 0.9436062811914931,
+        "max_abs_diff": 0.30908203125,
+        "relative": 0.3714788732394366
+      },
+      "position_5": {
+        "cosine": 0.9337593802783157,
+        "max_abs_diff": 0.5625,
+        "relative": 0.33962264150943394
+      },
+      "position_7": {
+        "cosine": 0.8948930972332604,
+        "max_abs_diff": 0.314453125,
+        "relative": 0.5669014084507042
+      },
+      "tap": 5
+    },
+    {
+      "oracle_checkpoint": "L03.attn_norm",
+      "position_0": {
+        "cosine": 0.9999931111399666,
+        "max_abs_diff": 0.25,
+        "relative": 0.0047169811320754715
+      },
+      "position_3": {
+        "cosine": 0.9560912549955306,
+        "max_abs_diff": 0.41015625,
+        "relative": 0.5023923444976076
+      },
+      "position_5": {
+        "cosine": 0.9289835228671628,
+        "max_abs_diff": 0.357421875,
+        "relative": 0.46683673469387754
+      },
+      "position_7": {
+        "cosine": 0.9171732708221736,
+        "max_abs_diff": 0.1486072540283203,
+        "relative": 0.475543212890625
+      },
+      "tap": 6
+    },
+    {
+      "oracle_checkpoint": "L03.ffn_norm",
+      "position_0": {
+        "cosine": 0.9980271384463935,
+        "max_abs_diff": 1.9375,
+        "relative": 0.06275303643724696
+      },
+      "position_3": {
+        "cosine": 0.8262298458525325,
+        "max_abs_diff": 0.8671875,
+        "relative": 1.150259067357513
+      },
+      "position_5": {
+        "cosine": 0.8314114572856263,
+        "max_abs_diff": 0.9921875,
+        "relative": 1.1091703056768558
+      },
+      "position_7": {
+        "cosine": 0.7293152377418787,
+        "max_abs_diff": 0.755859375,
+        "relative": 1.6058091286307055
+      },
+      "tap": 7
+    },
+    {
+      "oracle_checkpoint": "L04.attn_norm",
+      "position_0": {
+        "cosine": 0.9993302750540449,
+        "max_abs_diff": 2.25,
+        "relative": 0.036885245901639344
+      },
+      "position_3": {
+        "cosine": 0.9072628923193645,
+        "max_abs_diff": 0.39453125,
+        "relative": 0.6011904761904762
+      },
+      "position_5": {
+        "cosine": 0.837531506856775,
+        "max_abs_diff": 0.38671875,
+        "relative": 0.518324607329843
+      },
+      "position_7": {
+        "cosine": 0.794558600788756,
+        "max_abs_diff": 0.3759765625,
+        "relative": 0.9080188679245284
+      },
+      "tap": 8
+    }
+  ],
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "a high cosine is necessary for a correct intermediate and not sufficient",
+    "the earlier 'accumulation, nowhere in particular' reading is SUPERSEDED for layers 0-2, not contradicted for the layers after the step: once a sublayer has departed, everything downstream of it differs for that reason"
+  ],
+  "producer": {
+    "device_half": "tools/probe_deepseek_v41_device_layer_residual.py",
+    "git": {
+      "commit": "39fd1a95086054fc50c1b44b64810ff8455e3959"
+    },
+    "tool": "tools/compare_deepseek_v41_layer_residual.py"
+  },
+  "question": "results/abi3/deepseek_v41_device_oracle_engram_depth.json said the V4.1 device departs from the comparator 'nowhere in particular' -- one BF16 ulp at layer 1 and 3.75% at layer 14, a shape it read as accumulation -- and named what would settle it: a shape-aware per-operator comparison instead of best-cosine matching. What does that comparison say?",
+  "records": [
+    "results/abi3/deepseek_v41_layer_residual_agreement/position_0.json",
+    "results/abi3/deepseek_v41_layer_residual_agreement/position_3.json",
+    "results/abi3/deepseek_v41_layer_residual_agreement/position_5.json",
+    "results/abi3/deepseek_v41_layer_residual_agreement/position_7.json"
+  ],
+  "schema": "opentallas.result.v41_divergence_enters_layer2_attention.v1",
+  "tap_position_0_is_the_control": "the same device taps, the same oracle forward, read at position 0 instead: cosine 0.9999975 at the tap that collapses to 0.8949 at position 7, and no step anywhere through layer 4. So the difference is not in the weights, the lowering, the dtype or the tap machinery -- all of those are shared -- it is in what layer 2's attention does with a position that has predecessors.",
+  "what_it_does_not_settle": [
+    "WHICH operator inside layer 2's attention: the taps bracket the whole sublayer -- compressed-KV write and read, the sparse attention itself, the output projection and hc_post are all inside the bracket",
+    "whether the same site explains the 32-token pinned workload's disagreement, whose gold comes from a comparator that does not reproduce itself past position 7"
+  ],
+  "why_the_pairing_needs_no_matching": "the vendor's Block does ``x = self.hc_pre(x, pre_mix)`` and then ``x = self.attn_norm(x)``, and the device's IR names a kernel ``main.layerNN.attention.norm`` whose input is ``main.layerNN.hyper_connection.attention.collapsed``. Those are the same tensor, so tap 2k pairs with layers[k].attn_norm by construction. The pairing is CHECKED rather than assumed: tap 0 comes back max|diff| EXACTLY ZERO and cosine 1.0000000000, which no accidental pairing of 5120-element rows produces."
+}

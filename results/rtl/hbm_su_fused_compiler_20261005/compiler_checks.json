@@ -1,0 +1,65 @@
+{
+  "scope": "saved descriptor conversion/negative fallback only; no numerical oracle or hardware qualification",
+  "results": [
+    {
+      "input": "v2_ildr",
+      "saved_pickle_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108",
+      "summary": {
+        "cases": 38,
+        "selected_by_kind": {
+          "hc_norm": 5,
+          "q_norm": 2,
+          "kv_norm": 2,
+          "hc_post": 4,
+          "swiglu": 14
+        },
+        "retained_ops": 35
+      },
+      "original_ops_meta_checks_and_coverage": "PASS"
+    },
+    {
+      "input": "p6om_ildr",
+      "saved_pickle_sha256": "e3491e868f4cbaeda3de5b8ba20e9bfbbb6a0818442489d2d0a5b4a0a52530a3",
+      "summary": {
+        "cases": 38,
+        "selected_by_kind": {
+          "hc_norm": 30,
+          "q_norm": 12,
+          "kv_norm": 12,
+          "hc_post": 24,
+          "swiglu": 84
+        },
+        "retained_ops": 210
+      },
+      "original_ops_meta_checks_and_coverage": "PASS"
+    },
+    {
+      "input": "original_norm",
+      "saved_pickle_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+      "summary": {
+        "cases": 62,
+        "selected_by_kind": {
+          "hc_norm": 9
+        },
+        "retained_ops": 179
+      },
+      "original_ops_meta_checks_and_coverage": "PASS"
+    },
+    {
+      "negative": "unsupported_swiglu_m2",
+      "unchanged_fallback": "PASS"
+    },
+    {
+      "negative": "unsupported_swiglu_asi",
+      "unchanged_fallback": "PASS"
+    },
+    {
+      "negative": "missing_actual_operand_binding",
+      "unchanged_fallback": "PASS"
+    },
+    {
+      "retained_original_hcpost_redsq_cases": 8,
+      "whole_original_group_preserved": "PASS"
+    }
+  ]
+}

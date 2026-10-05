@@ -1,0 +1,16 @@
+read_verilog -sv -DSYNTHESIS /src/rtl/ot_reduction_tree.sv
+hierarchy -check -top ot_reduction_endpoint -chparam DATA_W 32 -chparam GROUPS 2 -chparam SOURCES 8 -chparam TAG_W 16
+proc
+memory
+flatten
+opt_clean
+write_json /work/equivalence_postroute_gold_transition_pre_state.json
+async2sync
+dffunmap
+splitnets -ports
+opt_clean
+select -assert-any t:$dff
+select -assert-none t:$adff t:$adffe t:$sdff t:$sdffe t:$sdffce t:$dffe t:$dffsr t:$dffsre t:$dlatch t:$adlatch t:$dlatchsr t:$_DFF_* t:$_DFFE_* t:$_DFFSR_* t:$_DFFSRE_* t:$_SDFF_* t:$_SDFFE_* t:$_SDFFCE_* t:$_DLATCH_* t:$_DLATCHSR_*
+check -assert -nolatches
+write_rtlil /work/equivalence_postroute_gold_transition_normalized.il
+write_json /work/equivalence_postroute_gold_transition_normalized.json

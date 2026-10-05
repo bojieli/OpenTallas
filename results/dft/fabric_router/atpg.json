@@ -1,0 +1,136 @@
+{
+ "aborted_by_pin": {
+  "A": 3,
+  "A1": 5,
+  "A2": 3,
+  "A3": 2,
+  "B": 9,
+  "B1": 4,
+  "B2": 5,
+  "B3": 2,
+  "C": 1,
+  "Y": 2
+ },
+ "block": "ot_rom_fabric_router",
+ "classes": {
+  "AU": 36,
+  "DS": 66418,
+  "DT": 439144,
+  "ND": 0,
+  "UT": 636
+ },
+ "engine": {
+  "binary_source_sha256": "3b639ac42a3eb520dab25b0f73eda39624d3d878399fe3eab4deba9461dd220d",
+  "capture": {
+   "abort_retry_backtrack_limit": 4096,
+   "aborted": 36,
+   "aborted_retried": 39,
+   "backtrack_limit": 256,
+   "detected": 439144,
+   "detected_after_random": 438028,
+   "faults_targeted": 479782,
+   "log": [
+    "otatpg: PODEM 40806 calls, 40602 untestable, 36 aborted, 126 deterministic patterns, 0 unconfirmed (7.45341 s)",
+    "otatpg: compaction 785 -> 508 patterns (8.38158 s)",
+    "otatpg: 439144 detected, 40602 untestable, 36 aborted, 0 other; 508 patterns (9.53054 s)"
+   ],
+   "max_level": 90,
+   "nodes": 508218,
+   "observed": 15852,
+   "patterns": 508,
+   "patterns_before_compaction": 785,
+   "podem_backtracks": 196874,
+   "podem_calls": 40806,
+   "podem_unconfirmed": 0,
+   "primary_inputs": 2605,
+   "random_blocks": 26,
+   "random_patterns_kept": 659,
+   "seconds": 9.5305,
+   "seed": 1,
+   "sources": 15831,
+   "threads": 8,
+   "undetected_other": 0,
+   "untestable": 40602,
+   "untestable_but_detected": 0,
+   "wall_seconds": 0.0
+  },
+  "shift": {
+   "cycles": 2038,
+   "detected": 66418,
+   "faults_simulated": 67090,
+   "first_divergence_faults": 67007,
+   "full_simulation_faults": 57,
+   "log": [
+    "otatpg: flush 2038 cycles, 66418/67090 faults detected (196.423 s)"
+   ],
+   "longest_chain": 1018,
+   "mode": "flush",
+   "scan_out_faults": 26,
+   "seconds": 196.423,
+   "wall_seconds": 0.0
+  }
+ },
+ "fault_coverage": 0.998673,
+ "fault_model": "single stuck-at, every pin of every cell (uncollapsed), clock pins included",
+ "faults_total": 506234,
+ "model": {
+  "clock_pin_faults": 26452,
+  "clock_ports": [
+   "clk"
+  ],
+  "instances": 61777,
+  "lockup_latches": 0,
+  "node_types": {
+   "AND": 104322,
+   "BUF": 253117,
+   "CONST1": 1,
+   "INPUT": 15831,
+   "NOT": 86584,
+   "OR": 48363
+  },
+  "nodes": 508218,
+  "pin_faults_modelled": 479782,
+  "primary_inputs": 2605,
+  "primary_outputs": 2626,
+  "scan_cells": 13226,
+  "top": "ot_rom_fabric_router",
+  "undriven_net_count": 0,
+  "undriven_nets": []
+ },
+ "netlist": {
+  "origin": "host Yosys 0.68 synthesis (run_abi3_physical --stages synth), scan inserted by tools/dft/scan_insert.py --max-length 1024",
+  "path": "scan.v",
+  "sha256": "0daa787542876e0048a6c5ce0331dcc4328292c0f5f0fdbc692e4f08e18092ad"
+ },
+ "patterns": {
+  "before_compaction": 785,
+  "capture": 508,
+  "chain_test": 1,
+  "note": "tester cycles = one load/unload of the longest chain per pattern, overlapped, plus the capture cycle",
+  "random_kept": 659,
+  "tester_cycles": 519689
+ },
+ "scan": {
+  "capture_constraints": {
+   "rst_n": 1,
+   "scan_en": 0
+  },
+  "chains": 13,
+  "max_chain_length": 1018,
+  "scan_cells": 13226
+ },
+ "schema": "opentallas.dft.atpg.v1",
+ "seconds": 26.2,
+ "test_coverage": 0.999929,
+ "top": "ot_rom_fabric_router",
+ "untestable_by_pin": {
+  "A": 4,
+  "A1": 5,
+  "A2": 21,
+  "B": 1,
+  "C": 1,
+  "RESETN": 301,
+  "SETN": 301,
+  "Y": 2
+ }
+}

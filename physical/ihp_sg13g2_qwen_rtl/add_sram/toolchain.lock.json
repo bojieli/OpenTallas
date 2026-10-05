@@ -1,0 +1,47 @@
+{
+  "container": {
+    "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "registry_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "repository": "openroad/orfs"
+  },
+  "platform_files": {
+    "cells_clkgate.v": "08a86b2b9762b6b3f471a665c19ae69da074a23d514373725c0935112f8b641a",
+    "cells_latch.v": "4f975ef4a05fa67ae023700644629002fe3d61001f548bc844676ad5183e836e",
+    "config.mk": "5705790357ccd37bd71f82397faf8ece7ecf8ce5c97d730915fb56ec8a138c8d",
+    "fastroute.tcl": "ee86bac7e56c51d2d82ce1864e17b7e23c167863bb9fea8cda0165b1a4e53c9b",
+    "fill.json": "caa72771f05022642b5c850ed128799df8f2f76741b248964453a1ad015467dd",
+    "gds/sg13g2_stdcell.gds": "6ee92931ad70eeb8f79ca89fe0d4f38892d9e7e14d1a1b21bfb7118e55bf232f",
+    "lef/sg13g2_stdcell.lef": "c7575039af0b124e1834c407bfb9ac7a2db576d1e3533d98474dad3fbc2af589",
+    "lef/sg13g2_tech.lef": "054f5b7b24d72365b4b1088be1331e04c1c2e3805de9f99c37e71938ed231efc",
+    "lib/sg13g2_stdcell_fast_1p32V_m40C.lib": "547c5fb3ef0eabe0362de7fb361ff736f6791987996b4b1af39b70deb569a72e",
+    "lib/sg13g2_stdcell_slow_1p08V_125C.lib": "ed1cff6e4d66d89d200e94c2213b8926a71c451218ca2df9b1157c98460e4b1d",
+    "lib/sg13g2_stdcell_typ_1p20V_25C.lib": "968b0cfdcefc49a88d9a5c48874769eaad9aba3509e1240b5e14a821bb07a3c4",
+    "make_tracks.tcl": "5fe971399d10921f2f1b06a3dbdcab0dd95446755e640f16de7bd153f5ceac6f",
+    "pdn.tcl": "b4a333acd7ad86b061ab03b61eeb7974dce2ca804a9eda33e74395c5b772212f",
+    "rcx_patterns.rules": "ffda02d57a6ecb39b02268be9511d89ef072911f17bd2dcd095f3f3cbeb5a905",
+    "setRC.tcl": "286edf3042ecbbd6c2741d931e7dac5983dbccdff0af9a7e7c2c6bc975fd061a",
+    "sg13g2.lyt": "bec60c325ab5f4b2c141f2c697b6c2b47d87c8404943ee38e375c4adbca27039",
+    "sg13g2.map": "7a359ddacd8f4517b5986e6cc46c436ba2232aaf6951f7d0f2849c920f338207",
+    "suppress_message.tcl": "0aa47a02fd5e427e36636f2841dd54c09a19b3c8f2ed9aaf6b045a03b9324e30",
+    "tapcell.tcl": "085437f583f75b709da9373668979917894f32586c913827c674084498c05331"
+  },
+  "platform_root": "/OpenROAD-flow-scripts/flow/platforms/ihp-sg13g2",
+  "schema": "opentallas.physical.ihp_sg13g2_toolchain_lock.v1",
+  "tools": {
+    "klayout": {
+      "executable": "/usr/bin/klayout",
+      "sha256": "c068a1d6f8f4626e7eda4d5c3bf08dc2a6edb1fe60d0621446a927db6b22d60b",
+      "version": "KLayout 0.30.7"
+    },
+    "openroad": {
+      "executable": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+      "sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+      "version": "26Q3-1510-g6cb3f2b704"
+    },
+    "yosys": {
+      "executable": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+      "sha256": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92",
+      "version": "Yosys 0.68+post"
+    }
+  }
+}

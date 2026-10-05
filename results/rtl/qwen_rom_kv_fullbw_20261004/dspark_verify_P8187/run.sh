@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /srv/opentallas-scratch/claude/fullbw-hbm/src_v
+/srv/opentallas-scratch/admit.sh 20 -- /usr/bin/time -f "%M %e" -o /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_L0/time.txt python3 tools/qwen_rom_rt_vprm_stream4_w12.py --workdir /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_L0/w --build-dir /srv/opentallas-scratch/claude/fullbw-hbm/build_v --hbm-layers 3 --code-banks 1 --pullin 16 --wbw 4 --plan /srv/opentallas-scratch/claude/qwen-dspark-system/ctx8k/plans/L0/plan --expect /srv/opentallas-scratch/claude/qwen-dspark-system/ctx8k/plans/L0/expect.json --kv-dir /srv/opentallas-scratch/claude/qwen-dspark-system/ctx8k/plans/kv --result /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_L0/result.json --threads 8 > /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_L0/driver.log 2>&1
+echo $? > /srv/opentallas-scratch/claude/fullbw-hbm/runs/vprm/k_L0/exit

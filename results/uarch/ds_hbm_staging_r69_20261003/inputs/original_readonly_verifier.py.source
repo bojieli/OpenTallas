@@ -1,0 +1,70 @@
+import datetime
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+
+ROOT = Path('/tmp/kepler-ds-pc01-r68-mainbase-20261003')
+DEST = Path('/tmp/claude-1000/queue/h4-c0-bridge-20261002')
+CAPACITY = Path('/tmp/claude-1000/queue/R68-fleet-capacity-20261003T0610Z/capacity.receipt.json')
+
+def stamp(s):
+    return [s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns]
+
+def digest(path):
+    with path.open('rb') as f:
+        fcntl.flock(f, fcntl.LOCK_SH | fcntl.LOCK_NB)
+        before = stamp(os.fstat(f.fileno()))
+        h = hashlib.sha256()
+        while block := f.read(1024 * 1024):
+            h.update(block)
+        assert before == stamp(os.fstat(f.fileno())) == stamp(path.stat()), str(path)
+        return {'path': str(path), 'bytes': before[2], 'sha256': h.hexdigest(), 'stable_stamp': before}
+
+def main():
+    capacity = json.loads(CAPACITY.read_text())
+    index = json.loads((ROOT/'results/uarch/ds_hbm_pc01_r68_20261003/immutable_input_index.json').read_text())
+    plan = json.loads((ROOT/'results/uarch/ds_hbm_pc01_r68_20261003/ot-pve1_plan.template.json').read_text())
+    pins = []
+    for rel, expected in plan['source_sha256'].items():
+        item = digest(ROOT/rel)
+        assert item['sha256'] == expected, rel
+        pins.append(item)
+    inputs = []
+    for name, expected in index['paths'].items():
+        item = digest(Path(name))
+        assert item['bytes'] == expected['bytes'] and item['sha256'] == expected['sha256'], name
+        inputs.append(item)
+    shards = []
+    for source in capacity['source_staging']['selected_shards']:
+        item = digest(Path(source['path']))
+        assert item['stable_stamp'] == source['stamp']
+        with Path(source['path']).open('rb') as f:
+            n = int.from_bytes(f.read(8), 'little')
+            assert 0 < n <= 67108864
+            raw = f.read(n)
+        header = json.loads(raw)
+        item['header_sha256'] = hashlib.sha256(raw).hexdigest()
+        item['selected_tensor_headers'] = {name: header[name] for name in source['selected_names']}
+        shards.append(item)
+        print(json.dumps({'completed': item['path'], 'sha256': item['sha256']}), flush=True)
+    checkpoint_index = digest(Path(index['checkpoint_path'])/'model.safetensors.index.json')
+    report = dict(schema='R68_READONLY_LOCAL_STAGING_INTEGRITY',
+        time_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        frozen_source='915558caaa3742e32ab46343fef9c437807a1f28',
+        model_sha256=plan['component_model_sha256'], source_pins=pins,
+        immutable_inputs=inputs, selected_shards=shards, checkpoint_index=checkpoint_index,
+        source_pin_count=len(pins), immutable_input_count=len(inputs),
+        remote_transfer_performed=False, physical_admission=False,
+        constructors_executed=False, numerical_execution=False,
+        note='Whole local shard integrity only; receiver verification, staging workspace, page union and peer leases remain required.')
+    out=DEST/'Kepler_R68_local_staging_integrity_20261003.json'
+    tmp=out.with_suffix('.json.partial')
+    with tmp.open('w') as f:
+        json.dump(report, f, indent=2); f.write('\n'); f.flush(); os.fsync(f.fileno())
+    os.replace(tmp,out)
+    print(json.dumps({'receipt':str(out),'sources':len(pins),'inputs':len(inputs)}),flush=True)
+
+if __name__ == '__main__':
+    main()

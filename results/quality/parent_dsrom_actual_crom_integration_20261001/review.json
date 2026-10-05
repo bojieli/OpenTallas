@@ -1,0 +1,41 @@
+{
+  "actual_image_words_per_rank": 508800,
+  "bounded_source_commits": [
+    "6c6c0ff89",
+    "676bdb433",
+    "70f73928f",
+    "075b72af60134ee1bfa283f6f06f0057712b60bf"
+  ],
+  "capacity_words_per_rank": 524288,
+  "focused_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q tests/test_w11_dsrom_full_tp_program_constants.py tests/test_w11_dsrom_full_tp_program.py tests/test_w11_dsrom_full_tp_program_binding.py",
+    "failed": 0,
+    "files": [
+      "tests/test_w11_dsrom_full_tp_program.py",
+      "tests/test_w11_dsrom_full_tp_program_binding.py",
+      "tests/test_w11_dsrom_full_tp_program_constants.py"
+    ],
+    "passed": 24,
+    "skipped": 0
+  },
+  "full_program_constant_operand_execution": false,
+  "full_token_RTL": false,
+  "hardware_admission": false,
+  "headnorm_base_word": 503680,
+  "historical_contract_scope": "constant_writer_contract remains the earlier fail-closed template audit. Its legacy 1024-bit WROM address calculation is distinct from the later 274-bit BF field candidate; neither is promoted to actual physical allocation by writer integration. Actual produced image and headnorm operand bindings are proved only by the new writer manifests and independent receipt.",
+  "independent_replay": {
+    "checked_slices": 1636,
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/verify_dsrom_crom_writer_evidence.py",
+    "existing_L0_positives": 10,
+    "receipt_sha256": "7ae36f1694ef2346d41a630031b39db3033c0c31652a9d3debd110eeb601f31d",
+    "regenerates_committed_receipt_byte_identically": true
+  },
+  "new_jobs_launched": 0,
+  "parent_base_before_intake": "97d64cfaf",
+  "physical_bank_and_port_qualification": false,
+  "pinned_original_RTL_modified": false,
+  "schema": "opentallas.parent.dsrom-actual-crom-integration.v1",
+  "status": "PASS_bounded_writer_integration_and_independent_replay",
+  "token_cycles": null,
+  "token_rate": null
+}

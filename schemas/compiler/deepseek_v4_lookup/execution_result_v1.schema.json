@@ -1,0 +1,270 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/execution_result_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "counter_reconciliation": {
+      "const": "exact"
+    },
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "bf16_codes_copied": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "completion_events": {
+          "const": 1
+        },
+        "logical_activation_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_activation_bytes_written": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_input_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_rom_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "micro_ops_executed": {
+          "const": 4
+        },
+        "rom_lookup_rows": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "semantic_operations_executed": {
+          "const": 3
+        }
+      },
+      "required": [
+        "bf16_codes_copied",
+        "completion_events",
+        "logical_activation_bytes_read",
+        "logical_activation_bytes_written",
+        "logical_input_bytes_read",
+        "logical_rom_bytes_read",
+        "micro_ops_executed",
+        "rom_lookup_rows",
+        "semantic_operations_executed"
+      ],
+      "type": "object"
+    },
+    "deployment_status": {
+      "enum": [
+        "development_fixture_lookup_slice_not_release_evidence",
+        "real_checkpoint_lookup_slice_not_full_model"
+      ]
+    },
+    "evidence_scope": {
+      "enum": [
+        "development_fixture",
+        "official_checkpoint"
+      ]
+    },
+    "execution_scope": {
+      "const": "three_operator_real_payload_slice_only"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "outputs": {
+      "items": false,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/embeddingOutput"
+        },
+        {
+          "$ref": "#/$defs/hcOutput"
+        },
+        {
+          "$ref": "#/$defs/i64Output"
+        }
+      ],
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "request_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_result.v1"
+    },
+    "source_application_status": {
+      "enum": [
+        "complete_official_transform_application",
+        "development_fixture_application_not_release_evidence",
+        "partial_official_transform_application_not_release_evidence"
+      ]
+    },
+    "status": {
+      "const": "pass"
+    }
+  },
+  "required": [
+    "build_id",
+    "counter_reconciliation",
+    "counters",
+    "deployment_status",
+    "evidence_scope",
+    "execution_scope",
+    "model_id",
+    "outputs",
+    "request_sha256",
+    "schema",
+    "source_application_status",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup execution result v1",
+  "type": "object",
+  "$defs": {
+    "bf16Code": {
+      "maximum": 65535,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "bf16Vector": {
+      "items": {
+        "$ref": "#/$defs/bf16Code"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "embeddingOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "BF16_BITS"
+        },
+        "id": {
+          "const": "embedding_bf16_codes"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape3"
+        },
+        "values": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/bf16Vector"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "dtype",
+        "id",
+        "shape",
+        "values"
+      ],
+      "type": "object"
+    },
+    "hcOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "BF16_BITS"
+        },
+        "id": {
+          "const": "hc_hidden_bf16_codes"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape4"
+        },
+        "values": {
+          "items": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/bf16Vector"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "dtype",
+        "id",
+        "shape",
+        "values"
+      ],
+      "type": "object"
+    },
+    "i64Output": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "I64"
+        },
+        "id": {
+          "const": "expert_ids"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape3"
+        },
+        "values": {
+          "items": {
+            "items": {
+              "items": {
+                "maximum": 255,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "dtype",
+        "id",
+        "shape",
+        "values"
+      ],
+      "type": "object"
+    },
+    "nonnegative": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "shape3": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "shape4": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    }
+  }
+}

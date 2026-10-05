@@ -1,0 +1,675 @@
+%Warning-WIDTH: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical Operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.g_lv[0].u_add.u.u_ca
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+                ... Use "/* verilator lint_off WIDTH */" and lint_on around source to disable this message.
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv:136:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[3].g_h[0].g_c[0].u_leaf.g_hardk.u_tc.u.g_lane[15].u_mul
+  136 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:478:29: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf
+  478 |             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
+      |                             ^~~~~~~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:373:27: Operator SUB expects 3 bits on the RHS, but RHS's VARREF 'fire' generates 1 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_dch
+  373 |         else cred <= cred - fire + ret;
+      |                           ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:373:34: Operator ADD expects 3 bits on the RHS, but RHS's VARREF 'ret' generates 1 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_dch
+  373 |         else cred <= cred - fire + ret;
+      |                                  ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:387:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 3 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_dch
+  387 |             if (f_v) wp <= (wp == DEPTH - 1) ? {AW{1'b0}} : wp + 1'b1;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:388:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 3 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_dch
+  388 |             if (pop) rp <= (rp == DEPTH - 1) ? {AW{1'b0}} : rp + 1'b1;
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:389:24: Operator ADD expects 3 bits on the RHS, but RHS's VARREF 'f_v' generates 1 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_dch
+  389 |             cnt <= cnt + f_v - pop;
+      |                        ^
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:389:30: Operator SUB expects 3 bits on the RHS, but RHS's VARREF 'pop' generates 1 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_dch
+  389 |             cnt <= cnt + f_v - pop;
+      |                              ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:90:29: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'q_cnt' generates 3 bits.
+                                                                      : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+   90 |     assign d_ready = (q_cnt < DQ);
+      |                             ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:129:26: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  129 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                          ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:129:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  129 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                                                           ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:129:85: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'used' generates 11 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  129 |     wire free_up = (used + 1'b1 < DEPTH), free_eq = (used < DEPTH), free_dn = (used - 1'b1 < DEPTH);
+      |                                                                                     ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:130:33: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  130 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                 ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:130:72: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  130 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                                                        ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:130:107: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'outstanding' generates 10 bits.
+                                                                        : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  130 |     wire cred_up = (outstanding + 1 < MAX_OUT), cred_eq = (outstanding < MAX_OUT), cred_dn = (outstanding - 1 < MAX_OUT);
+      |                                                                                                           ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:176:48: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  176 |                 if (take_c[1] && cslot[BB-1:0] == bk) bank_ptr[bk] <= bank_ptr[bk] + 1'b1;
+      |                                                ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:189:57: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  189 |                 set_hi[k] <= rsp_v && (rsp_tag[TW-1:LO] == k);
+      |                                                         ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:190:59: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  190 |                 clr_hi[k] <= take_c[0] && (cslot[TW-1:LO] == k);
+      |                                                           ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:193:47: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  193 |                 set_lo[k] <= (rsp_tag[LO-1:0] == k);
+      |                                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:194:45: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  194 |                 clr_lo[k] <= (cslot[LO-1:0] == k);
+      |                                             ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:299:51: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_wp' generates 2 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  299 |             if (d_valid && d_ready) q_wp <= (q_wp == DQ - 1) ? 0 : q_wp + 1'b1;
+      |                                                   ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv:302:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'q_rp' generates 2 bits.
+                                                                       : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_bc
+  302 |                 q_rp <= (q_rp == DQ - 1) ? 0 : q_rp + 1'b1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:104:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ph' generates 3 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  104 |     wire [SW-1:0] ph_nx = (ph == IL - 1) ? {SW{1'b0}} : ph + 1'b1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:105:31: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si' generates 3 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  105 |     wire [SW-1:0] si_nx = (si == IL - 1) ? {SW{1'b0}} : si + 1'b1;
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:107:34: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rows_q' generates 13 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  107 |     wire [SW:0] rs_sat = (rows_q >= IL) ? IL[SW:0] : rows_q[SW:0];
+      |                                  ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:108:31: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'g_q' generates 8 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  108 |     wire [SW:0] gq_sat = (g_q >= IL) ? IL[SW:0] : g_q[SW:0];
+      |                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:118:61: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 13 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  118 |     (* keep *) wire [RW:0] rb_n_inc; assign rb_n_inc = rb_n + IL;
+      |                                                             ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:118:54: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  118 |     (* keep *) wire [RW:0] rb_n_inc; assign rb_n_inc = rb_n + IL;
+      |                                                      ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:119:63: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb_n' generates 21 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  119 |     (* keep *) wire [RW+8:0] wb_n_inc; assign wb_n_inc = wb_n + IL;
+      |                                                               ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:119:56: Operator ASSIGNW expects 21 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  119 |     (* keep *) wire [RW+8:0] wb_n_inc; assign wb_n_inc = wb_n + IL;
+      |                                                        ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:122:20: Operator ADD expects 17 bits on the LHS, but LHS's VARREF 'pp0' generates 15 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  122 |         s01 <= pp0 + {pp1, 2'b0};
+      |                    ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:123:20: Operator ADD expects 17 bits on the LHS, but LHS's VARREF 'pp2' generates 15 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  123 |         s23 <= pp2 + {pp3, 2'b0};
+      |                    ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:124:24: Operator ADD expects 21 bits on the LHS, but LHS's VARREF 's01' generates 17 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  124 |         items_q <= s01 + {s23, 4'b0};
+      |                        ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:126:42: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb_n' generates 21 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  126 |             next_mask[f] <= gs_q ? (wb_n + f < items_q) : (rb_n + f < rows_q);
+      |                                          ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:126:65: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 13 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  126 |             next_mask[f] <= gs_q ? (wb_n + f < items_q) : (rb_n + f < rows_q);
+      |                                                                 ^
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:170:18: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  170 |             rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1; cxb_n <= 0;
+      |                  ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:170:63: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  170 |             rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1; cxb_n <= 0;
+      |                                                               ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:185:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si_nx' generates 3 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  185 |                 ls_q <= (si_nx == IL - 1);
+      |                                ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:197:22: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  197 |                 rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1;
+      |                      ^~
+%Warning-WIDTH: rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv:197:67: Operator ASSIGNDLY expects 21 bits on the Assign RHS, but Assign RHS's VARREF 'IL' generates 32 bits.
+                                                                   : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.u_issue
+  197 |                 rb_n <= IL; gi_n <= 1; ti_n <= 1; xa_n <= 1; wb_n <= IL; cr_n <= 1;
+      |                                                                   ^~
+%Warning-WIDTH: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:184:68: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'xw_grp' generates 7 bits.
+                                                            : ... In instance ot_hbrom_nc1_calibration.u_compute
+  184 |         for (gq = 0; gq < NBEAT; gq = gq + 1) w0_oh[gq] <= (xw_grp == gq);
+      |                                                                    ^~
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1095:1088 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1103:1096 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1111:1104 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1119:1112 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1127:1120 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1135:1128 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1143:1136 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1151:1144 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1159:1152 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1167:1160 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1175:1168 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1183:1176 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1191:1184 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1199:1192 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1207:1200 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1215:1208 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1223:1216 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1231:1224 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1239:1232 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1247:1240 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1255:1248 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1263:1256 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1271:1264 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1279:1272 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1287:1280 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1295:1288 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1303:1296 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1311:1304 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1319:1312 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1327:1320 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1335:1328 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1343:1336 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1351:1344 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1359:1352 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1367:1360 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1375:1368 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1383:1376 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1391:1384 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1399:1392 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1407:1400 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1415:1408 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1423:1416 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1431:1424 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1439:1432 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1447:1440 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1455:1448 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1463:1456 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1471:1464 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1479:1472 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1487:1480 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1495:1488 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1503:1496 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1511:1504 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1519:1512 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1527:1520 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1535:1528 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1543:1536 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1551:1544 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1559:1552 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1567:1560 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1575:1568 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1583:1576 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1591:1584 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1599:1592 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1607:1600 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1615:1608 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1623:1616 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1631:1624 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1639:1632 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1647:1640 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1655:1648 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1663:1656 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1671:1664 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1679:1672 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1687:1680 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1695:1688 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1703:1696 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1711:1704 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1719:1712 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1727:1720 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1735:1728 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1743:1736 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1751:1744 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1759:1752 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1767:1760 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1775:1768 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1783:1776 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1791:1784 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1799:1792 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1807:1800 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1815:1808 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1823:1816 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1831:1824 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1839:1832 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1847:1840 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1855:1848 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1863:1856 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1871:1864 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1879:1872 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1887:1880 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1895:1888 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1903:1896 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1911:1904 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1919:1912 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1927:1920 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1935:1928 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1943:1936 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1951:1944 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1959:1952 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1967:1960 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1975:1968 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1983:1976 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1991:1984 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 1999:1992 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 2007:2000 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 2015:2008 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 2023:2016 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 2031:2024 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 2039:2032 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-SELRANGE: rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv:204:61: Selection index out of range: 2047:2040 outside 1087:0
+                                                               : ... In instance ot_hbrom_nc1_calibration.u_compute
+  204 |                 assign fp8w[8*bb +: 8] = (J < LB / 2) ? s1_w[256*J + 8*bb +: 8] : 8'd0;
+      |                                                             ^
+%Warning-UNOPTFLAT: rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.g_lv[0].go'
+   75 |             wire          go   = v_in && !lone && (have || last_in);
+      |                           ^~
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.g_lv[0].go
+                    rtl/hdc/ot_hdc_sfu.sv:25:15:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:110:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.g_lv[0].gv
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:121:30:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:43:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.lv_v
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:74:32:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:74:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.g_lv[0].lone
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:32:      Example path: ASSIGNW
+                    rtl/hbm_accel/sm/ot_hbm_accel_stack.sv:75:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_col[0].g_stk.u_stack.g_lv[0].go
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add.u.u_cmp.p'
+                                                  : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add.u.u_cmp.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add.u.u_cmp.p
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add.u.u_dab.g'
+                                                  : ... In instance ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add.u.u_dab.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_hbrom_nc1_calibration.u_compute.g_new.g_l2s[0].g_h[0].g_c[0].u_leaf.g_hbd.u_bd.g_ring[0].u_add.u.u_dab.g

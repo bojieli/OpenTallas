@@ -1,0 +1,103 @@
+library(ot_pdie_tile_io) {
+    technology (cmos);
+    delay_model : table_lookup;
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    leakage_power_unit : "1uW";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1,pf);
+    nom_process : 1;
+    nom_temperature : 25.000;
+    nom_voltage : 0.7;
+    operating_conditions(tt_0p7_25) { process : 1; temperature : 25.000; voltage : 0.7; tree_type : balanced_tree; }
+    default_operating_conditions : tt_0p7_25;
+    default_max_transition : 0.320;
+    default_fanout_load : 1;
+    default_input_pin_cap : 0.0;
+    default_output_pin_cap : 0.0;
+    default_inout_pin_cap : 0.0;
+    default_cell_leakage_power : 0;
+    default_leakage_power_density : 0.0;
+    slew_lower_threshold_pct_rise : 20.000;
+    slew_upper_threshold_pct_rise : 80.000;
+    slew_lower_threshold_pct_fall : 20.000;
+    slew_upper_threshold_pct_fall : 80.000;
+    input_threshold_pct_rise : 50.000;
+    input_threshold_pct_fall : 50.000;
+    output_threshold_pct_rise : 50.000;
+    output_threshold_pct_fall : 50.000;
+    lu_table_template(ot_pdie_tile_io_delay) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_pdie_tile_io_slew) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_pdie_tile_io_check) { variable_1 : related_pin_transition; variable_2 : constrained_pin_transition; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    type (ot_pdie_tile_io_bus140) { base_type : array; data_type : bit; bit_width : 140; bit_from : 139; bit_to : 0; downto : true; }
+    type (ot_pdie_tile_io_bus380) { base_type : array; data_type : bit; bit_width : 380; bit_from : 379; bit_to : 0; downto : true; }
+    cell(ot_pdie_tile_io) {
+        area : 772462.370;
+        interface_timing : true;
+        dont_use : true;
+        dont_touch : true;
+        pin(clk) { direction : input; capacitance : 0.020; clock : true; }
+        bus(op_in) { bus_type : ot_pdie_tile_io_bus380;
+            direction : input;
+            capacitance : 0.0020;
+            timing() {
+                related_pin : "clk";
+                timing_type : setup_rising;
+            rise_constraint(ot_pdie_tile_io_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0800, 0.0800", "0.0800, 0.0800");
+            }
+            fall_constraint(ot_pdie_tile_io_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0800, 0.0800", "0.0800, 0.0800");
+            }
+            }
+            timing() {
+                related_pin : "clk";
+                timing_type : hold_rising;
+            rise_constraint(ot_pdie_tile_io_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            fall_constraint(ot_pdie_tile_io_check) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0500, 0.0500", "0.0500, 0.0500");
+            }
+            }
+        }
+        bus(res_out) { bus_type : ot_pdie_tile_io_bus140;
+            direction : output;
+            max_capacitance : 0.500;
+            timing() {
+                related_pin : "clk";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+            cell_rise(ot_pdie_tile_io_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1000, 0.1000", "0.1000, 0.1000");
+            }
+            cell_fall(ot_pdie_tile_io_delay) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.1000, 0.1000", "0.1000, 0.1000");
+            }
+            rise_transition(ot_pdie_tile_io_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            fall_transition(ot_pdie_tile_io_slew) {
+                index_1 ("0.005, 0.500");
+                index_2 ("0.001, 0.500");
+                values ("0.0200, 0.0200", "0.0200, 0.0200");
+            }
+            }
+        }
+    }
+}

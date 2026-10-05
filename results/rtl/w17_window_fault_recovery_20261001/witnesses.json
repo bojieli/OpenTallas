@@ -1,0 +1,147 @@
+[
+  {
+    "case": "reset_during_queued_held_return",
+    "before": {
+      "epoch": 0,
+      "lease": 0,
+      "fault": 16,
+      "frozen": true,
+      "outstanding": 1,
+      "reserved": 1,
+      "cancelled": 0,
+      "accepted": 1,
+      "retired": 0,
+      "acknowledgements": [],
+      "rtl_admission": false
+    },
+    "after": {
+      "epoch": 0,
+      "lease": 0,
+      "fault": 16,
+      "frozen": true,
+      "outstanding": 1,
+      "reserved": 1,
+      "cancelled": 0,
+      "accepted": 1,
+      "retired": 0,
+      "acknowledgements": [],
+      "rtl_admission": false
+    },
+    "rejection": "reset denied until complete fenced quiescence",
+    "retirement_required": true
+  },
+  {
+    "case": "delayed_stale_after_fault",
+    "old_identity": {
+      "lease": 0,
+      "serial": 0,
+      "epoch": 0,
+      "sector": 0,
+      "pc": 0,
+      "address": 262144,
+      "owner": "WINDOW",
+      "beat": 0
+    },
+    "new_identity": {
+      "lease": 1,
+      "serial": 1,
+      "epoch": 1,
+      "sector": 0,
+      "pc": 0,
+      "address": 262144,
+      "owner": "WINDOW",
+      "beat": 0
+    },
+    "before": {
+      "epoch": 1,
+      "lease": 1,
+      "fault": 0,
+      "frozen": false,
+      "outstanding": 1,
+      "reserved": 2,
+      "cancelled": 0,
+      "accepted": 2,
+      "retired": 1,
+      "acknowledgements": [],
+      "rtl_admission": false
+    },
+    "after": {
+      "epoch": 1,
+      "lease": 1,
+      "fault": 4,
+      "frozen": true,
+      "outstanding": 1,
+      "reserved": 2,
+      "cancelled": 0,
+      "accepted": 2,
+      "retired": 1,
+      "acknowledgements": [],
+      "rtl_admission": false
+    },
+    "rejection": "stale/duplicate return rejected; no retirement"
+  },
+  {
+    "case": "same_tag_512_epoch_wrap_ghost",
+    "old_identity": {
+      "lease": 0,
+      "serial": 0,
+      "epoch": 0,
+      "sector": 0,
+      "pc": 0,
+      "address": 262144,
+      "owner": "WINDOW",
+      "beat": 0
+    },
+    "new_identity": {
+      "lease": 512,
+      "serial": 1,
+      "epoch": 0,
+      "sector": 0,
+      "pc": 0,
+      "address": 262144,
+      "owner": "WINDOW",
+      "beat": 0
+    },
+    "wire_tag": 0,
+    "actual_FR_PIPE_wire_comparator_accepts_if_fault_cleared": true,
+    "full_lease_model_rejects": "stale/duplicate return rejected; no retirement",
+    "before": {
+      "epoch": 0,
+      "lease": 512,
+      "fault": 0,
+      "frozen": false,
+      "outstanding": 1,
+      "reserved": 2,
+      "cancelled": 0,
+      "accepted": 2,
+      "retired": 1,
+      "acknowledgements": [],
+      "rtl_admission": false
+    },
+    "after": {
+      "epoch": 0,
+      "lease": 512,
+      "fault": 4,
+      "frozen": true,
+      "outstanding": 1,
+      "reserved": 2,
+      "cancelled": 0,
+      "accepted": 2,
+      "retired": 1,
+      "acknowledgements": [],
+      "rtl_admission": false
+    },
+    "scope": "Conditional counterexample to future unfenced restart or unbounded duplicate delivery, not a claim current faulted RTL restarts. Existing fault admission remains closed."
+  },
+  {
+    "case": "source_pending_not_quiescence",
+    "fault": true,
+    "source_pending_before": 1,
+    "backend_return_count_before": 1,
+    "s_rdy": 15,
+    "pipe_reply_ok": false,
+    "source_pending_after": 1,
+    "backend_return_count_after": 0,
+    "justification": "FR_PIPE body guarded by !fault; s_rdy remains f. This is a source-derived transition transcription, not new RTL measurement."
+  }
+]

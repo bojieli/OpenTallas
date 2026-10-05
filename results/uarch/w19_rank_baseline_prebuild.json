@@ -1,0 +1,235 @@
+{
+  "schema": "opentallas.w19.rank_baseline_prebuild.v1",
+  "enabled_default": false,
+  "scope": "Accepted256B two-line fetch/SM baseline; optional host dispatch gate only, compact adapter excluded",
+  "prebuild_base": "1f74ac380",
+  "pins": {
+    "results/uarch/w19_payload_current_preflight_20261001.json": "d81119b4f182e6173311e7bf35d8273ab5eea09458e5277f6f290d38b3759d05",
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/w19_sm_real_ops.py": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7",
+    "tools/w19_payload_loader.py": "ea11be4101495c66a04cc7a4cbb1b88090c66f96eaba5ae9787c838e64ea26ca"
+  },
+  "ranks": 96,
+  "sm_per_rank": 32,
+  "stacks_per_rank": 4,
+  "stack_sm_quadrants": {
+    "0": [
+      0,
+      1,
+      2,
+      3,
+      8,
+      9,
+      10,
+      11
+    ],
+    "1": [
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      15
+    ],
+    "2": [
+      16,
+      17,
+      18,
+      19,
+      24,
+      25,
+      26,
+      27
+    ],
+    "3": [
+      20,
+      21,
+      22,
+      23,
+      28,
+      29,
+      30,
+      31
+    ]
+  },
+  "operations": {
+    "w1": {
+      "rows": 2304,
+      "K": 5120,
+      "format": "v41_fp4"
+    },
+    "w3": {
+      "rows": 2304,
+      "K": 5120,
+      "format": "v41_fp4"
+    },
+    "w2": {
+      "rows": 5120,
+      "K": 2304,
+      "format": "v41_fp4"
+    }
+  },
+  "row_layout": "ISA even(n) floor partition across96 ranks; extend busiest-SM ceil-width to clipped contiguous chunks across32SM; empty chunks have no descriptor",
+  "address_layout": "per-rank, per-stack expert stride; SM order in source-pinned floorplan quadrant, within SM w1/w3/w2; base + physical expertID*stride + operation offset",
+  "existing_transport": {
+    "schema": "opentallas.uarch.gpu_payload_transport.v1",
+    "enabled_default": false,
+    "scope": "V4.1 HBM candidate only; Qwen/ROM ports unchanged",
+    "payloads": 24,
+    "layout": "136-B records in golden SM issue order; final line padding only",
+    "compute": {
+      "macs_per_cycle": 0,
+      "intensity_macs_per_byte": 0,
+      "arithmetic": "none"
+    },
+    "ports_Bpc": {
+      "fetch_read": 128,
+      "reservoir_write": 128,
+      "reservoir_read": 136,
+      "sm_response_write": 136
+    },
+    "boundaries_bits_pc": {
+      "fetch": 1024,
+      "sm": 1088,
+      "request_tag": 42
+    },
+    "replicas_per_die": 32,
+    "tag_depth": 16,
+    "reservoir_bytes": 512,
+    "sector_window": 16,
+    "assembly": "five 32-B sectors per 136-B record; four 8-B phases; per-sector duplicate/epoch validation",
+    "mux_bit_equivalents": 37696,
+    "storage_bits": 4504,
+    "fanout": "SM-local ready/valid; no new die-wide broadcast",
+    "demux": "one local SM response",
+    "footprint_mm2_per_sm": 0.018729,
+    "footprint_mm2_die": 0.5993,
+    "area_basis": "ASSUMED 0.2 um2 bit mux + DFFHQNx1 0.2916 um2 + 512 um2 control, 50% utilisation",
+    "slot_fit": "reserve this footprint inside existing W13 SM slot; measured contextual fit pending",
+    "routing": {
+      "tracks": 2420,
+      "channel_capacity_tracks": 3200,
+      "fits": true,
+      "basis": "ASSUMED 64 um local channel, four existing signal layers, 80 nm pitch; no hub layer change"
+    },
+    "physical_lines": 26,
+    "transferred_bytes": 3328,
+    "padded_fixture_bytes": 6144,
+    "service_cycles_no_stalls": 27,
+    "ideal_128B_payload_cycles": 24,
+    "extra_service_cycles": 3,
+    "steady_payloads_pc": 0.9411764705882353,
+    "first_payload_after_two_line_landings_cycles": 1,
+    "composed_path": {
+      "layers": 40,
+      "expert_ops_per_layer": 18,
+      "added_supply_cycles_upper_bound": 2160,
+      "added_supply_us_upper_bound": 1.8,
+      "basis": "serial sum for all routed w1/w3/w2 busiest-SM slices; overlap may hide service; excludes HBM wait"
+    },
+    "adoption": "OFF: exact, in-context SS/FF and measured token gain gates required; no token-rate restatement",
+    "model_source_sha256": "de920936c66d58c7e37ef2748efe934584fc7a6f76f7a668efd0a1ee11d042ab",
+    "element": {
+      "subparts": 4,
+      "int8_lanes": 0,
+      "bf16_lanes": 64,
+      "blockdot_lanes": 8,
+      "cols": 8,
+      "il": 8,
+      "ingest_Bpc": 128,
+      "k_max": 5120,
+      "x_bytes": 2,
+      "simt_lanes": 128,
+      "scratch_kb": 64,
+      "stack_levels": 3,
+      "group_slot": true,
+      "gs_cols": 8
+    },
+    "sm_count": 32,
+    "bulk_copy": {
+      "in_flight_B_die": 1800000.0,
+      "in_flight_B_sm": 56250.0,
+      "outstanding_sectors_sm": 879,
+      "descriptor_bytes": 4096,
+      "outstanding_descriptors_sm": 14,
+      "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+      "measured": [
+        {
+          "outstanding_lines": 7,
+          "B_per_cycle": 1.6,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 16,
+          "B_per_cycle": 3.7,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 64,
+          "B_per_cycle": 14.9,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 256,
+          "B_per_cycle": 59.5,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 440,
+          "B_per_cycle": 101.0,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 512,
+          "B_per_cycle": 102.5,
+          "share_B_per_cycle": 102.4
+        }
+      ],
+      "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+      "outstanding_lines_sm": 512,
+      "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
+    }
+  },
+  "hardware_delta": {
+    "MACs_per_cycle": 0,
+    "ports_bytes_per_cycle_delta": 0,
+    "boundary_bits_per_cycle_delta": 0,
+    "replicas_delta": 0,
+    "mux_demux_fanout_delta": 0,
+    "storage_area_delta": 0,
+    "routing_tracks_delta": 0,
+    "slot_delta": 0
+  },
+  "runtime_launch_latency": "measure descriptor transitions diagnostically; no token-rate adoption/pricing from fixture cycles",
+  "resource_admission": {
+    "behavioral_HBM_sectors": 2097152,
+    "HBM_bytes": 67108864,
+    "simulation_SM_instances": 1
+  },
+  "dependency_control": "w1/w3 descriptors in ascending selected-ID order; w2 requires explicit producer-ready boundary. Inputs are retained per-op producer fixtures, not connected SwiGLU/collectives.",
+  "adoption": "OFF; prior slower adapter comparison remains rejected, no new rate or physical claim",
+  "layout_record_bytes": 256,
+  "baseline_source": "68e6edafc",
+  "baseline_tag_join": {
+    "scope": "existing bench-only512tag FIFO and2line join; unchanged allocation, not new engine RTL",
+    "entries": 512
+  },
+  "replica_target": {
+    "ranks": 96,
+    "SMs_per_rank": 32,
+    "stacks_per_rank": 4,
+    "tested_arithmetic_instances_initial": 1,
+    "others": "host layout only until full endpoint gate"
+  },
+  "ports": {
+    "HBM_line_bytes": 128,
+    "HBM_lines_per_SM_payload": 2,
+    "SM_payload_bytes": 136,
+    "physical_record_bytes": 256
+  },
+  "compact_status": "REJECTED measured240vs233; excluded from this path",
+  "baseline_join_sha256": "2ed46489225151dfac13124124c0a6c756403ec96f3827689080a952a3dea61e"
+}

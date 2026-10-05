@@ -1,0 +1,625 @@
+{
+  "PG_provider": "Retained raw M1 rails; common relocated sites need named same-net extensions and finite-current upfeed",
+  "added_cycles": null,
+  "additional_buffers": 0,
+  "annex_charge_mm2": 0,
+  "arch_rejection_origins": [
+    {
+      "commit": "bd87257f22e78dec2947a07b5ddc361031b310f2",
+      "copy": "arch_access.json",
+      "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/model.json",
+      "sha256": "b65134a6f5e1e1a4b12dc078336ebabef7866046eea762a28c03fc3f89da1d22"
+    }
+  ],
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "contextual_PR_admitted": false,
+  "equal_depth_or_optimistic_pin_C_is_not_skew_slew_or_SSFF": true,
+  "escape_provider": "db47c807 literal M1/VIA12/M2/VIA23/M3 constructions; relocated sites require regeneration and global collision checks",
+  "first_hop_geometry_pass": false,
+  "native_sink_refs_in_each_assigned_branch": true,
+  "new_jobs": [],
+  "old_bd872_rejection_preserved": true,
+  "physical_fit": false,
+  "remaining_gate": "Assign every downstream relay/pad on its fixed branch, construct native sink escapes/common PG and check loaded source clock/reset SS/FF; first-hop allocation alone does not admit P&R",
+  "schema": "DS_FIXED_GRAPH_CLOCK_FIRST_HOP_REALLOCATION_V1",
+  "selected_bank": {
+    "complete_selector_reserved_with_core_rectangle_headroom_mm2": 2.3226645088799995,
+    "core_clock70406": 70406,
+    "named_bank_bbox_DBU": [
+      3129786,
+      8953200,
+      3147930,
+      9745920
+    ],
+    "reserved_bank_mm2": 0.01438311168,
+    "source_cells_hash": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+    "source_commit": "d4a3deb550aa71afec39e0549adb0e0a7f4c2894",
+    "spare_sites": 58,
+    "transport_clock48007_not_readded": true
+  },
+  "shards": {
+    "0": {
+      "common_M1_rail_extensions_and_via_upfeeds_required": true,
+      "common_owner_must_reserve_relocated_sites": true,
+      "downstream_relay_and_pad_branch_assignment_complete": false,
+      "expected_outside_raw_minimum": 102,
+      "failures": [
+        {
+          "destination": "s0_r30_clock_bank1",
+          "home": "common",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r31_clock_bank0",
+          "home": "common",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r31_clock_bank1",
+          "home": "common",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_clock_upper_L3_7_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat1_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat1_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat1_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_b21_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_b22_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_b23_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_clock_leaf3",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_clock_leaf4",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat2_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b4_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b5_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b6_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b7_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b19_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b20_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b21_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b22_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_b23_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_clock_leaf1",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_clock_leaf3",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_clock_leaf4",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r63_seat3_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat2_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat3_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat3_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat4_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat4_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat4_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat4_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat4_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat4_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat5_b22_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat5_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat5_b23_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat5_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat5_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat5_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat5_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat5_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s0_r9_seat5_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s0_r9_seat5_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        }
+      ],
+      "first_relay_assigned": 19582,
+      "first_relay_failed": 40,
+      "outside_raw_body_um2": 10.10394,
+      "outside_raw_first_relays": 99,
+      "raw_buffers": 38284,
+      "raw_rows_available": 320,
+      "raw_rows_used": 320,
+      "raw_supply_literal_covered": true,
+      "site_file": "shard0_sites.json.gz",
+      "site_sha256": "3b44577562c109bbdb122b73d89c997e2f22189634e5091acea233f7ab177f1c",
+      "source_cells_untouched": true,
+      "total_fixed_buffers": 38383,
+      "unique_sites": 38383
+    },
+    "1": {
+      "common_M1_rail_extensions_and_via_upfeeds_required": true,
+      "common_owner_must_reserve_relocated_sites": true,
+      "downstream_relay_and_pad_branch_assignment_complete": false,
+      "expected_outside_raw_minimum": 66,
+      "failures": [
+        {
+          "destination": "s1_r63_seat1_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat1_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat1_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_b21_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_b22_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_b23_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_clock_leaf3",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_clock_leaf4",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat2_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b4_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b5_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b6_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b7_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b19_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b20_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b21_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b22_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_b23_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_clock_leaf1",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_clock_leaf3",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_clock_leaf4",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r63_seat3_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r63_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat0_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat0_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat1_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat1_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat1_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat2_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat2_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat2_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat2_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat3_b22_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat3_b23_dataFF",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat3_clock_leaf2_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat3_clock_leaf5",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat3_clock_leaf6",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        },
+        {
+          "destination": "s1_r9_seat3_clock_leaf7",
+          "home": "raw",
+          "metal_budget_fF": 0.32762649999999993,
+          "net": "s1_r9_seat3_clock_parent0_Y",
+          "reason": "No unoccupied literal-pin site in deterministic nearest512 search; not an impossibility proof"
+        }
+      ],
+      "first_relay_assigned": 15645,
+      "first_relay_failed": 37,
+      "outside_raw_body_um2": 6.7359599999999995,
+      "outside_raw_first_relays": 66,
+      "raw_buffers": 30165,
+      "raw_rows_available": 256,
+      "raw_rows_used": 256,
+      "raw_supply_literal_covered": true,
+      "site_file": "shard1_sites.json.gz",
+      "site_sha256": "0e40cea4bd777f91dde43af20060581698e7875eaae5333e31d21063aaaf95ef",
+      "source_cells_untouched": true,
+      "total_fixed_buffers": 30231,
+      "unique_sites": 30231
+    }
+  },
+  "single_user_latency_qualified": false,
+  "source_graph_changed": false
+}

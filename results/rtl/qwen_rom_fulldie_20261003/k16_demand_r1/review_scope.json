@@ -1,0 +1,23 @@
+{
+  "scope": "READ_ONLY_K16_MEASUREMENT_AND_PROSPECTIVE_MODEL",
+  "tests": {
+    "command": "python3 -m unittest discover -s tools -p test_qwen_rom_k16_hotspot_demand_r1.py -v",
+    "passed": 8
+  },
+  "original_source_commit": "c3a5675416cf435591a6213a88fe0c5f09956fed",
+  "original_tool_byte_identical": true,
+  "live_job_preserved": {
+    "host": "ot-epyc1tb",
+    "wrapper_pid": 1956887,
+    "docker_launcher_pid": 1956919,
+    "last_iteration": 13,
+    "terminal": false
+  },
+  "measured_changed_source_route": false,
+  "next_required_source": "Exact reset/FIFO/256-bit link/GALS caller source and source-matched cut count, then unified composed latency/area/ports admission before RTL/P&R",
+  "file_sha256": {
+    "tools/qwen_rom_k16_hotspot_demand_r1.py": "6101b14916fc65a3bb7e8ea4e63df653c45c1792f0d955791d4141747cc86d8d",
+    "tools/test_qwen_rom_k16_hotspot_demand_r1.py": "015b31f470b51158f80981ca2cc0b402931003c3bd17d002b31269ba77d36c4f",
+    "results/rtl/qwen_rom_fulldie_20261003/k16_demand_r1/banded_source_priced_r1.json": "27805067718a42b47b216934cb96ae5b1327585aeb5129e5c47a0d47c6d2a314"
+  }
+}

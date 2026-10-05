@@ -1,0 +1,616 @@
+{
+  "instructions": 27,
+  "opaque_address_instructions": 6,
+  "numeric_opcodes": 21,
+  "final_scalar_register": 0,
+  "final_scalar_value": "y@26",
+  "final_scalar_sha256": "8ca3d80f102617f5a13e3061290a29d813c20f204235245800307fdbf0b82675",
+  "reserved_controls": [
+    28,
+    29,
+    30,
+    31
+  ],
+  "one_partition_write_reservations": 27,
+  "receipts": [
+    {
+      "pc": 0,
+      "op": "IADDR",
+      "issue": 0,
+      "retire": 5,
+      "reads": [
+        {
+          "value": "@CHUNK",
+          "register": 28,
+          "scope": "reservedcontrol"
+        },
+        {
+          "value": "@SHARED_BASE",
+          "register": 30,
+          "scope": "reservedcontrol"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "ea@0",
+      "kind": "OPAQUE_IADDR",
+      "sha256": null
+    },
+    {
+      "pc": 1,
+      "op": "IADDR",
+      "issue": 5,
+      "retire": 10,
+      "reads": [
+        {
+          "value": "ea@0",
+          "register": 0,
+          "kind": "OPAQUE_IADDR",
+          "sha256": null
+        }
+      ],
+      "write_register": 0,
+      "write_value": "ea@1",
+      "kind": "OPAQUE_IADDR",
+      "sha256": null
+    },
+    {
+      "pc": 2,
+      "op": "IADDR",
+      "issue": 10,
+      "retire": 15,
+      "reads": [
+        {
+          "value": "ea@1",
+          "register": 0,
+          "kind": "OPAQUE_IADDR",
+          "sha256": null
+        }
+      ],
+      "write_register": 0,
+      "write_value": "ea@2",
+      "kind": "OPAQUE_IADDR",
+      "sha256": null
+    },
+    {
+      "pc": 3,
+      "op": "IADDR",
+      "issue": 15,
+      "retire": 20,
+      "reads": [
+        {
+          "value": "ea@2",
+          "register": 0,
+          "kind": "OPAQUE_IADDR",
+          "sha256": null
+        }
+      ],
+      "write_register": 0,
+      "write_value": "ea@3",
+      "kind": "OPAQUE_IADDR",
+      "sha256": null
+    },
+    {
+      "pc": 4,
+      "op": "IADDR",
+      "issue": 20,
+      "retire": 25,
+      "reads": [
+        {
+          "value": "ea@3",
+          "register": 0,
+          "kind": "OPAQUE_IADDR",
+          "sha256": null
+        }
+      ],
+      "write_register": 0,
+      "write_value": "ea@4",
+      "kind": "OPAQUE_IADDR",
+      "sha256": null
+    },
+    {
+      "pc": 5,
+      "op": "IADDR",
+      "issue": 25,
+      "retire": 30,
+      "reads": [
+        {
+          "value": "ea@4",
+          "register": 0,
+          "kind": "OPAQUE_IADDR",
+          "sha256": null
+        }
+      ],
+      "write_register": 0,
+      "write_value": "ea@5",
+      "kind": "OPAQUE_IADDR",
+      "sha256": null
+    },
+    {
+      "pc": 6,
+      "op": "LOAD",
+      "issue": 30,
+      "retire": 32,
+      "reads": [
+        {
+          "value": "ea@5",
+          "register": 0,
+          "kind": "OPAQUE_IADDR",
+          "sha256": null
+        }
+      ],
+      "write_register": 0,
+      "write_value": "sum@6",
+      "kind": "F32",
+      "sha256": "172e8b35d91c11fc67d14b5d006ba4d6c35304f4989c2944d6534bd17ab4fdb7"
+    },
+    {
+      "pc": 7,
+      "op": "DIV",
+      "issue": 32,
+      "retire": 53,
+      "reads": [
+        {
+          "value": "sum@6",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "172e8b35d91c11fc67d14b5d006ba4d6c35304f4989c2944d6534bd17ab4fdb7"
+        },
+        {
+          "value": "@F20480",
+          "register": "@F20480",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "mean@7",
+      "kind": "F32",
+      "sha256": "ee4a41ad564cc851c673151b4dc6005bb6db99b506415ab57e1b7f66474d5a4f"
+    },
+    {
+      "pc": 8,
+      "op": "FADD",
+      "issue": 53,
+      "retire": 62,
+      "reads": [
+        {
+          "value": "mean@7",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "ee4a41ad564cc851c673151b4dc6005bb6db99b506415ab57e1b7f66474d5a4f"
+        },
+        {
+          "value": "@EPS",
+          "register": "@EPS",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "v@8",
+      "kind": "F32",
+      "sha256": "ee4a41ad564cc851c673151b4dc6005bb6db99b506415ab57e1b7f66474d5a4f"
+    },
+    {
+      "pc": 9,
+      "op": "SHR",
+      "issue": 62,
+      "retire": 67,
+      "reads": [
+        {
+          "value": "v@8",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "ee4a41ad564cc851c673151b4dc6005bb6db99b506415ab57e1b7f66474d5a4f"
+        },
+        {
+          "value": "@U1",
+          "register": "@U1",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 1,
+      "write_value": "shift@9",
+      "kind": "U32",
+      "sha256": "becc561779244f5259ab63b3bf95bbe124142799cc4501237ccb80b37796f5c5"
+    },
+    {
+      "pc": 10,
+      "op": "ISUB",
+      "issue": 67,
+      "retire": 72,
+      "reads": [
+        {
+          "value": "@USEED",
+          "register": "@USEED",
+          "scope": "readonly immediate"
+        },
+        {
+          "value": "shift@9",
+          "register": 1,
+          "kind": "U32",
+          "sha256": "becc561779244f5259ab63b3bf95bbe124142799cc4501237ccb80b37796f5c5"
+        }
+      ],
+      "write_register": 1,
+      "write_value": "y@10",
+      "kind": "U32",
+      "sha256": "5ef049e8c7b20a0c7260ea221b738854dd059808709c8eff78151545be44c853"
+    },
+    {
+      "pc": 11,
+      "op": "FMUL",
+      "issue": 68,
+      "retire": 77,
+      "reads": [
+        {
+          "value": "v@8",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "ee4a41ad564cc851c673151b4dc6005bb6db99b506415ab57e1b7f66474d5a4f"
+        },
+        {
+          "value": "@FHALF",
+          "register": "@FHALF",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "half@11",
+      "kind": "F32",
+      "sha256": "98b7d84b200eca992e1206309f706ed85b263aa594c318bb28718819589178ab"
+    },
+    {
+      "pc": 12,
+      "op": "FMUL",
+      "issue": 72,
+      "retire": 81,
+      "reads": [
+        {
+          "value": "y@10",
+          "register": 1,
+          "kind": "U32",
+          "sha256": "5ef049e8c7b20a0c7260ea221b738854dd059808709c8eff78151545be44c853"
+        },
+        {
+          "value": "y@10",
+          "register": 1,
+          "kind": "U32",
+          "sha256": "5ef049e8c7b20a0c7260ea221b738854dd059808709c8eff78151545be44c853"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "yy@12",
+      "kind": "F32",
+      "sha256": "286df8936a8279bc86222d9081f4d5a4c65d086f762beb4d83e65b920212e7e8"
+    },
+    {
+      "pc": 13,
+      "op": "FMUL",
+      "issue": 81,
+      "retire": 90,
+      "reads": [
+        {
+          "value": "half@11",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "98b7d84b200eca992e1206309f706ed85b263aa594c318bb28718819589178ab"
+        },
+        {
+          "value": "yy@12",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "286df8936a8279bc86222d9081f4d5a4c65d086f762beb4d83e65b920212e7e8"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "hyy@13",
+      "kind": "F32",
+      "sha256": "a7186801686337b2f3bc91991fa90c7cb7586dd2099b7de72bb817ce92865f89"
+    },
+    {
+      "pc": 14,
+      "op": "XOR",
+      "issue": 90,
+      "retire": 95,
+      "reads": [
+        {
+          "value": "hyy@13",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "a7186801686337b2f3bc91991fa90c7cb7586dd2099b7de72bb817ce92865f89"
+        },
+        {
+          "value": "@SIGN",
+          "register": "@SIGN",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "neg@14",
+      "kind": "U32",
+      "sha256": "022bba4d2d08789e0fb95957999446edb63f48c507b22f2ac8adadcc4ff9cf0e"
+    },
+    {
+      "pc": 15,
+      "op": "FADD",
+      "issue": 95,
+      "retire": 104,
+      "reads": [
+        {
+          "value": "@FONEHALF",
+          "register": "@FONEHALF",
+          "scope": "readonly immediate"
+        },
+        {
+          "value": "neg@14",
+          "register": 2,
+          "kind": "U32",
+          "sha256": "022bba4d2d08789e0fb95957999446edb63f48c507b22f2ac8adadcc4ff9cf0e"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "corr@15",
+      "kind": "F32",
+      "sha256": "8a303aa832ca4244092625a842947307cb8c8166311d5bb30cbb9c848079ffc7"
+    },
+    {
+      "pc": 16,
+      "op": "FMUL",
+      "issue": 104,
+      "retire": 113,
+      "reads": [
+        {
+          "value": "y@10",
+          "register": 1,
+          "kind": "U32",
+          "sha256": "5ef049e8c7b20a0c7260ea221b738854dd059808709c8eff78151545be44c853"
+        },
+        {
+          "value": "corr@15",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "8a303aa832ca4244092625a842947307cb8c8166311d5bb30cbb9c848079ffc7"
+        }
+      ],
+      "write_register": 1,
+      "write_value": "y@16",
+      "kind": "F32",
+      "sha256": "24c7c79d25ee2b8d8d69ab2053043021547eeaece4972978fc44690606943645"
+    },
+    {
+      "pc": 17,
+      "op": "FMUL",
+      "issue": 113,
+      "retire": 122,
+      "reads": [
+        {
+          "value": "y@16",
+          "register": 1,
+          "kind": "F32",
+          "sha256": "24c7c79d25ee2b8d8d69ab2053043021547eeaece4972978fc44690606943645"
+        },
+        {
+          "value": "y@16",
+          "register": 1,
+          "kind": "F32",
+          "sha256": "24c7c79d25ee2b8d8d69ab2053043021547eeaece4972978fc44690606943645"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "yy@17",
+      "kind": "F32",
+      "sha256": "1e0eb2b570bf16695e6a667fbbd67b380b45facd3ef38056f42abc55db60d3d5"
+    },
+    {
+      "pc": 18,
+      "op": "FMUL",
+      "issue": 122,
+      "retire": 131,
+      "reads": [
+        {
+          "value": "half@11",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "98b7d84b200eca992e1206309f706ed85b263aa594c318bb28718819589178ab"
+        },
+        {
+          "value": "yy@17",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "1e0eb2b570bf16695e6a667fbbd67b380b45facd3ef38056f42abc55db60d3d5"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "hyy@18",
+      "kind": "F32",
+      "sha256": "0c4204ee7648bd890f243b2e3be7208a6dad34a0033482945b4b0310906c18cf"
+    },
+    {
+      "pc": 19,
+      "op": "XOR",
+      "issue": 131,
+      "retire": 136,
+      "reads": [
+        {
+          "value": "hyy@18",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "0c4204ee7648bd890f243b2e3be7208a6dad34a0033482945b4b0310906c18cf"
+        },
+        {
+          "value": "@SIGN",
+          "register": "@SIGN",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "neg@19",
+      "kind": "U32",
+      "sha256": "af13de04eb6f8fdc6dbb90e743892e7094af69793556dd759c7df4c04bf04796"
+    },
+    {
+      "pc": 20,
+      "op": "FADD",
+      "issue": 136,
+      "retire": 145,
+      "reads": [
+        {
+          "value": "@FONEHALF",
+          "register": "@FONEHALF",
+          "scope": "readonly immediate"
+        },
+        {
+          "value": "neg@19",
+          "register": 2,
+          "kind": "U32",
+          "sha256": "af13de04eb6f8fdc6dbb90e743892e7094af69793556dd759c7df4c04bf04796"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "corr@20",
+      "kind": "F32",
+      "sha256": "fdef0398a4524aee9dac4de3606b7ec70c509932ae9519d7ce09adbea225df38"
+    },
+    {
+      "pc": 21,
+      "op": "FMUL",
+      "issue": 145,
+      "retire": 154,
+      "reads": [
+        {
+          "value": "y@16",
+          "register": 1,
+          "kind": "F32",
+          "sha256": "24c7c79d25ee2b8d8d69ab2053043021547eeaece4972978fc44690606943645"
+        },
+        {
+          "value": "corr@20",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "fdef0398a4524aee9dac4de3606b7ec70c509932ae9519d7ce09adbea225df38"
+        }
+      ],
+      "write_register": 1,
+      "write_value": "y@21",
+      "kind": "F32",
+      "sha256": "1078e3bcb51bdd83d5b1b5baaee19a6f99f64b7bb9c9743d1a84d549aed57b6a"
+    },
+    {
+      "pc": 22,
+      "op": "FMUL",
+      "issue": 154,
+      "retire": 163,
+      "reads": [
+        {
+          "value": "y@21",
+          "register": 1,
+          "kind": "F32",
+          "sha256": "1078e3bcb51bdd83d5b1b5baaee19a6f99f64b7bb9c9743d1a84d549aed57b6a"
+        },
+        {
+          "value": "y@21",
+          "register": 1,
+          "kind": "F32",
+          "sha256": "1078e3bcb51bdd83d5b1b5baaee19a6f99f64b7bb9c9743d1a84d549aed57b6a"
+        }
+      ],
+      "write_register": 2,
+      "write_value": "yy@22",
+      "kind": "F32",
+      "sha256": "d670058db2fdb67fe53565db5f00730447246ceedc0517cd15de9b0955297bed"
+    },
+    {
+      "pc": 23,
+      "op": "FMUL",
+      "issue": 163,
+      "retire": 172,
+      "reads": [
+        {
+          "value": "half@11",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "98b7d84b200eca992e1206309f706ed85b263aa594c318bb28718819589178ab"
+        },
+        {
+          "value": "yy@22",
+          "register": 2,
+          "kind": "F32",
+          "sha256": "d670058db2fdb67fe53565db5f00730447246ceedc0517cd15de9b0955297bed"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "hyy@23",
+      "kind": "F32",
+      "sha256": "0e9c842ad287901dbfdbd62ba9b3ad0102d4436eb4047d5041c0defcc8aeb563"
+    },
+    {
+      "pc": 24,
+      "op": "XOR",
+      "issue": 172,
+      "retire": 177,
+      "reads": [
+        {
+          "value": "hyy@23",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "0e9c842ad287901dbfdbd62ba9b3ad0102d4436eb4047d5041c0defcc8aeb563"
+        },
+        {
+          "value": "@SIGN",
+          "register": "@SIGN",
+          "scope": "readonly immediate"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "neg@24",
+      "kind": "U32",
+      "sha256": "189fb66d62f020cfb6ee490ad4e8f4daa6977c9c8ad4df03c1ec0e4dd58b6a82"
+    },
+    {
+      "pc": 25,
+      "op": "FADD",
+      "issue": 177,
+      "retire": 186,
+      "reads": [
+        {
+          "value": "@FONEHALF",
+          "register": "@FONEHALF",
+          "scope": "readonly immediate"
+        },
+        {
+          "value": "neg@24",
+          "register": 0,
+          "kind": "U32",
+          "sha256": "189fb66d62f020cfb6ee490ad4e8f4daa6977c9c8ad4df03c1ec0e4dd58b6a82"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "corr@25",
+      "kind": "F32",
+      "sha256": "8f20e71d463b141e89495029889b139e3ddea60a90dbfaec9a6781c3820516ee"
+    },
+    {
+      "pc": 26,
+      "op": "FMUL",
+      "issue": 186,
+      "retire": 195,
+      "reads": [
+        {
+          "value": "y@21",
+          "register": 1,
+          "kind": "F32",
+          "sha256": "1078e3bcb51bdd83d5b1b5baaee19a6f99f64b7bb9c9743d1a84d549aed57b6a"
+        },
+        {
+          "value": "corr@25",
+          "register": 0,
+          "kind": "F32",
+          "sha256": "8f20e71d463b141e89495029889b139e3ddea60a90dbfaec9a6781c3820516ee"
+        }
+      ],
+      "write_register": 0,
+      "write_value": "y@26",
+      "kind": "F32",
+      "sha256": "8ca3d80f102617f5a13e3061290a29d813c20f204235245800307fdbf0b82675"
+    }
+  ]
+}

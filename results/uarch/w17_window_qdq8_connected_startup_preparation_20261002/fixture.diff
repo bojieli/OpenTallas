@@ -1,0 +1,11 @@
+--- rtl/test/w17_window_qdq8_connected/tb.sv
++++ rtl/test/w17_window_qdq8_connected_startup_guard/tb.sv
+@@ -129,7 +129,7 @@
+   producer_issue=mem.cyc==PRODUCER_ISSUE;
+   desc_v=0;
+   if(desc_count==0&&acks==32) begin pv_mode=0;desc_v=1;end
+-  else if(desc_count<NOPS&&life_done_count==desc_count&&source_done_count==desc_count) begin pv_mode=desc_count%2;desc_v=1;end
++  else if(desc_count>0&&desc_count<NOPS&&life_done_count==desc_count&&source_done_count==desc_count) begin pv_mode=desc_count%2;desc_v=1;end
+   for(integer p=0;p<32;p=p+1)begin
+    column_valid[p]=mem.h_sched[p]&&mem.q_n[p]>0&&mem.h_tcol[p]<=mem.cyc*1000;
+    column_ps[p]=mem.h_tcol[p];

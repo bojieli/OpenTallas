@@ -1,0 +1,49 @@
+=== q27_tp1_fp8_in128_out1
+Avg latency: 0.0522889710000527 seconds
+=== q27_tp1_fp8_in128_out257
+Avg latency: 3.2290190796663105 seconds
+=== q27_tp1_fp8_in8192_out1
+Avg latency: 0.4941785333333731 seconds
+=== q27_tp1_fp8_in8192_out257
+Avg latency: 3.706611776333375 seconds
+=== q27_tp8_fp8_in128_out1
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== q27_tp8_fp8_in128_out257
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== q27_tp8_fp8_in8192_out1
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== q27_tp8_fp8_in8192_out257
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== ds_tp8_in128_out1
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== ds_tp8_in128_out129
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== ds_tp8_in32768_out1
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== ds_tp8_in32768_out129
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1320, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+VB7DONE

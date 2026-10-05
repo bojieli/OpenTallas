@@ -1,0 +1,126 @@
+{
+  "RTL_PR_payload_and_remote_jobs": 0,
+  "address_compiler_or_allocator_rerun": false,
+  "build_admitted": false,
+  "census": {
+    "ME": 140,
+    "QE": 1010,
+    "actual_runtime_indexed_calls": 720,
+    "existing_words_validated_without_encoder": 1149,
+    "head_unbound": 1,
+    "layer_weights_bound": 1149,
+    "native_instructions": 4778,
+    "nonweight_and_runtime_nodes": 3737,
+    "phase_choice_matches": 276909,
+    "unique_physical_phase_ordinals": 46509,
+    "weight_descriptors": 1150
+  },
+  "containment_credit_mm2": 0,
+  "full_token_calendar_complete": false,
+  "missing_terms": [
+    "actual predicate/selected6EID trace and executable stage-packet/frontend mapping",
+    "positive finite native frontend RF/VM/SU/SFU/INT/attention/index costs and shared resources",
+    "cfg72 capture/ECC/generation/fault/delivery fence",
+    "HE8bank reads/ECC/capture/transpose deadline and transport plus CROM64 translation",
+    "field drain/return visibility, root/context/provider ownership and stage crossing",
+    "physical placement, decoded key table fanout/mux and SS/FF clock closure",
+    "Native entry refusal/kill and generation drain, with missing key and bad EID gating before S_GO",
+    "Dedicated head provider/shape/address and argmax/native rounding implementation"
+  ],
+  "native_calendar_profile_receipts_received": 0,
+  "native_entry_control_gate": {
+    "extra_control_area_and_latency_not_inferred_free": true,
+    "fault_does_not_suppress_S_LOOK_to_S_GO": true,
+    "must_reject_before_any_cfg_or_field_side_effect": [
+      "EID outside0..383",
+      "native predicate failure",
+      "missing or mismatched phase key",
+      "stale/reset generation",
+      "cfg poison/missing good word/act fence"
+    ],
+    "required_source_receipts": [
+      "entry_refusal_before_GO",
+      "generation_lease_and_fault_drain",
+      "actual_selected_EID_VM_read",
+      "provider_word_delivery_and_consumer_visibility"
+    ],
+    "software_API_checked_is_not_native_refusal_qualification": true,
+    "source_bad_EID_guard_present": false,
+    "source_inspection_only_no_measured_fault_execution": true
+  },
+  "native_failures": [
+    {
+      "failures": [
+        "round"
+      ],
+      "node": "L2.I24"
+    },
+    {
+      "failures": [
+        "round"
+      ],
+      "node": "L2.I25"
+    },
+    {
+      "failures": [
+        "round"
+      ],
+      "node": "L8.I24"
+    },
+    {
+      "failures": [
+        "round"
+      ],
+      "node": "L8.I25"
+    },
+    {
+      "failures": [
+        "round"
+      ],
+      "node": "L14.I34"
+    },
+    {
+      "failures": [
+        "round"
+      ],
+      "node": "L14.I35"
+    },
+    {
+      "failures": [
+        "round",
+        "!amax"
+      ],
+      "node": "Lhead.I5"
+    }
+  ],
+  "numerical_values_or_area_changed": false,
+  "old_records_failures_unchanged": true,
+  "partial_source_work": {
+    "HE_cold_block_prefetch_stream_cycles_if_every_projection_cold": 15360,
+    "HE_default_NL3_IL8_native_issue_serial_cycles_per_rank": 1638400,
+    "HE_default_source_tree_serial_cycles_per_rank": 1200,
+    "actual_selected6_expert_LAT8_source_issue_work_max_per_rank": 120960,
+    "actual_selected6_expert_LAT8_source_issue_work_min_per_rank": 120960,
+    "dense_LAT8_source_issue_cycles_per_rank": 79680,
+    "field_cfg_calls_per_rank": 1149,
+    "generic_cfg_cycles_per_call": 27,
+    "generic_cfg_work_cycles_per_rank": 31023,
+    "physical_cfg_27cycle_credit": false,
+    "scope": "All original call-site templates accepted; actual predicates/selected-EID trace must bind before runtime total. Rank sums are not summed as serial TP4 token latency.",
+    "stage_resident_phases_not_token_calls": true
+  },
+  "physical_or_rate_credit": false,
+  "record": "results/uarch/dsrom_full_product_binding_20261002/native_address_composed-r2.json.gz",
+  "record_sha256": "4f7c75dc5a223e3adb44da913658fd0eeaf1e6ac137e6efec9b3371551083291",
+  "replay_byteidentical": true,
+  "replay_command": "python3 tools/dsrom_native_address_calendar_join.py --out /tmp/UNIQUE-native-address-composed.json.gz",
+  "reticle_mm2": 858,
+  "schema": "opentallas.dsrom.authoritative-native-address-calendar-verdict.v1",
+  "service_doublecharge_mm2": 0,
+  "source_encoder_and_reemit_forbidden_by_test": true,
+  "source_native_commit": "d66047e514a280b53be6d8a181d9930d9bc6d052",
+  "test_command": "python3 -m pytest -q tests/test_dsrom_native_address_calendar_join.py tests/test_dsrom_finite_resources.py",
+  "tests_pass": 32,
+  "whole_area_mm2": 924.2886185238459,
+  "whole_area_verdict": "NO_FIT_DEMONSTRATED_CONSERVATIVE_RESERVATION_NOT_MINIMUM_OR_ARCHITECTURAL_IMPOSSIBILITY"
+}

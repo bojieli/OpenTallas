@@ -1,0 +1,57 @@
+{
+  "CXX_executed": false,
+  "GO_commit": "6d09d349ba69f0b06a6f0e2fa51592237fd6df4a",
+  "admitted_memory_bytes": 34359738368,
+  "classification": "FRONTEND_CGROUP_OOM_NOT_PHASE_TIMEOUT",
+  "counter_archive": {
+    "contemporaneous_read_observation": {
+      "memory_peak_bytes": 34359738368,
+      "oom": 1,
+      "oom_kill": 1,
+      "timestamp_UTC": "2026-10-02T08:27:03Z"
+    },
+    "observation_scope": "Transcribed from read-only tool output during monitoring; not a retained raw counter file",
+    "persisted_resource_observation_empty": true,
+    "reason": "cgroup drained before archival read"
+  },
+  "end_receipt_absent_reason": "SIGTERM raises during phase loop; inner finally records phase in verdict, exception skips separate end.json write",
+  "execution": false,
+  "frontend_wall_limit_s": 300,
+  "frontend_wall_s_observed_until_termination": 211.13652847288176,
+  "generated_frontend_complete": false,
+  "oom_evidence": "journal explicitly reports OOM-killed process; systemd terminal Result=oom-kill",
+  "output_bytes": 81908,
+  "physical_credit": false,
+  "proposal_sha256": "e29e6e2c847164686409185770c3fe3c593b95c26229c3b60eec79d1eb6759da",
+  "raw_archive_sha256": {
+    "owner_review.json": "2d8e6df3c7194b0a2adf96260c0d074c060b7441dd1f170d4dda3324bacea364",
+    "raw/GO.json": "188f1897d7a6ec92d66403e4d57f1cdb90eb8332d8834d82e045c0f1d4972561",
+    "raw/Qwen-frontend-start.json": "070966101c521cc1f9829306abd9388674b71f741ecd6f4039d7a7b999a05275",
+    "raw/Qwen/frontend.log": "d6761a52fa3118c654cfeccb20c2454dab5345ae517c1c91e214e4cdbf6dc6f0",
+    "raw/proposal.json": "e29e6e2c847164686409185770c3fe3c593b95c26229c3b60eec79d1eb6759da",
+    "raw/run_start.json": "1535641e70144a8f9dd07edcc122243ac728aefc2aa71b01ef3316ece577b68c",
+    "raw/verdict.json": "c71bb8bcb00cb5e51c3e044d28e25e72ffc8a875a410f33193dd59c9e910dcf3",
+    "resource_observation.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "service_journal.log": "94636f2973c64e4fd9b6acd93ab71e885f6e9bda560d6ec0ca2a562db88afda6",
+    "service_terminal.txt": "153d62333f2c1035f41dda51c045f2a6d81743c88f988e10cda8d2eac44fcb80"
+  },
+  "retry": false,
+  "runner_signal": "SIGTERM_15",
+  "runtime_executed": false,
+  "schema": "opentallas.H1.Qwen.frontend-resource-diagnosis.v1",
+  "service_wall_s": 212.3290029289201,
+  "source_commit": "10e6bcde11e2f0790f6c153d768a6fa0c1be2954",
+  "successor_requirements": {
+    "arithmetic_unchanged": true,
+    "complete_peak_memory_bound_known": false,
+    "fresh_model_caps_and_parent_GO_required": true,
+    "frontend_completion_time_known": false,
+    "fullgeometry_unchanged": true,
+    "larger_cap_sufficiency_not_demonstrated": true,
+    "measured_32GiB_cap_insufficient": true,
+    "no_partial_frontend_reuse": true,
+    "source_tool_argv_pins_required": true
+  },
+  "swap_bytes": 0,
+  "token_credit": false
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.architecture_span_service.v1",
+  "scope": "Current Qwen synthetic-input functional/cycle replays using ASAP7 v2 assumptions. Span 1 uses PHASE=1; spans 8 and 128 use PHASE=0. Not hardware performance, external oracle qualification, full long-context decode or additive critical-path attribution. Busy time includes the table service assumptions; apparent 1.28745 GHz does not prove integrated timing.",
+  "runs": [
+    {
+      "span_tokens": 1,
+      "source": "results/architecture/qwen_decode_full_symbols_cycle_baseline.json",
+      "source_sha256": "02b2a72da4e4212395c9120afab86cb3535971f02621796c7528f8b363f22427",
+      "total_cycles": 218830185,
+      "engine_busy_cycles": {
+        "attention": 4762548,
+        "dma": 39292516,
+        "selection": 57978,
+        "tensor": 176048322,
+        "vector": 5626024
+      }
+    },
+    {
+      "span_tokens": 8,
+      "source": "results/architecture/qwen_prefill8_cycle_baseline.json",
+      "source_sha256": "038c96b938e81a884fda97aff2148e264ddb9c88e2e465a18fafd8269e178cbe",
+      "total_cycles": 1308335818,
+      "engine_busy_cycles": {
+        "attention": 4786740,
+        "dma": 39308756,
+        "selection": 57978,
+        "tensor": 1275526587,
+        "vector": 36525992
+      }
+    },
+    {
+      "span_tokens": 128,
+      "source": "results/architecture/qwen_prefill128_cycle_baseline.json",
+      "source_sha256": "734137dce6a1f8c8b4c8a149f3aea55debfd25f963ed6b02144bc8433b1cc58d",
+      "total_cycles": 20344327372,
+      "engine_busy_cycles": {
+        "attention": 75516480,
+        "dma": 39588192,
+        "selection": 57978,
+        "tensor": 20123725497,
+        "vector": 574656056
+      }
+    }
+  ]
+}

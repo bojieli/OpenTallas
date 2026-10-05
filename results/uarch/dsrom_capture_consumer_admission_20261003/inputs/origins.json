@@ -1,0 +1,26 @@
+[
+  {
+    "copy": "program.json.gz",
+    "copy_sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "source": "results/uarch/dsrom_I66_stage_provider_20261002/inputs/demand-r5.json.gz",
+    "source_sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f"
+  },
+  {
+    "copy": "core.sv.gz",
+    "copy_sha256": "e118478fb65871a188858028c6d23e65590dc0c47287a97a9c3eca8a5d571bba",
+    "source": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/core.sv.txt",
+    "source_sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6"
+  },
+  {
+    "copy": "adapter.sv.gz",
+    "copy_sha256": "7925c5c5db3c1974450298949a9e845d12c76874563e004056a3f6dc8d3b080d",
+    "source": "rtl/v41die/ot_v41_rom_adapt.sv",
+    "source_sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+  },
+  {
+    "copy": "lane.sv.gz",
+    "copy_sha256": "b2d600b747126daf5459bb9a07ab140efe68c7402646d7aabeb87d67ab0e4e19",
+    "source": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+    "source_sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+  }
+]

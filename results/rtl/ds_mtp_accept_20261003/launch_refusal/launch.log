@@ -1,0 +1,2 @@
+RuntimeError: refuse compile from dirty source tree
+Git explicit add refused outside sparse-checkout definition; no commit was created. Corrected staging with --sparse, explicit paths only. No compilation/runtime started. Empty refused output directory preserved.

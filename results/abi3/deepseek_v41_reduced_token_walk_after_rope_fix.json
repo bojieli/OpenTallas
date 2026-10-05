@@ -1,0 +1,166 @@
+{
+  "agreement": {
+    "rom_wafer": false
+  },
+  "cases": {
+    "rom_wafer": {
+      "agrees_with_oracle": false,
+      "distribution": {
+        "oracle_token": {
+          "logit": 0.26919472217559814,
+          "of": 4040,
+          "rank": 597,
+          "token_id": 1638
+        },
+        "top": [
+          {
+            "logit": 1.1688607931137085,
+            "token_id": 1242
+          },
+          {
+            "logit": 0.964963972568512,
+            "token_id": 1259
+          },
+          {
+            "logit": 0.8894991874694824,
+            "token_id": 3567
+          },
+          {
+            "logit": 0.8427722454071045,
+            "token_id": 2164
+          },
+          {
+            "logit": 0.8416566848754883,
+            "token_id": 1061
+          },
+          {
+            "logit": 0.8252924680709839,
+            "token_id": 413
+          },
+          {
+            "logit": 0.8215593099594116,
+            "token_id": 2418
+          },
+          {
+            "logit": 0.769865870475769,
+            "token_id": 2357
+          }
+        ]
+      },
+      "emitted_token_ids": [
+        1242
+      ],
+      "failure": null,
+      "identity": {
+        "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "capability_sha256": "cfca88d4ce9f57135623d09cfd91aa15c39a55cb8d8a2090cf08ce884da9a861",
+        "deployment": "build/abi3/deepseek-v41-reduced-rom",
+        "deployment_sha256": "c31b71cb38f52df5d972d41e493821a831a8d9d2fb0e952436dc24172fbd91ab",
+        "descriptor_count": 9772,
+        "instruction_count": 4385
+      },
+      "retired_work": 13473,
+      "stop_reason": "max_new_tokens"
+    }
+  },
+  "evidence_class": "functional_device_execution",
+  "model_id": "deepseek-v4.1-flash-reduced-v1",
+  "not_a_claim": [
+    "rtl_execution",
+    "timing_or_performance",
+    "released_model_numerics",
+    "agreement_with_the_reference_oracle"
+  ],
+  "oracle": {
+    "artifact": "results/abi3/deepseek_v41_reduced_reference_oracle.json",
+    "checkpoint_lock_id": "c38e77599e941b07d5acc630e194fe879d3223e6151987b5e8309fbdee4474f1",
+    "generated_token_ids": [
+      1638,
+      930,
+      2587,
+      930,
+      1638,
+      1638,
+      1638,
+      1638,
+      0
+    ],
+    "sha256": "a3e139e6313ce84f24eddbdc607b6e24a7777257a655b70265173bba2943f695"
+  },
+  "producer": {
+    "git": {
+      "commit": "c0ee43d98a7c9557b58ce924777dc9fc42898b2f",
+      "worktree_dirty": true
+    },
+    "sha256": "f97180a589efa8914f6ffcc34e47611576c5420a54ae5531d0cd9199072ff777",
+    "tool": "tools/run_deepseek_v41_reduced_token_walk.py"
+  },
+  "prompt_dependence": {
+    "distinct_outputs": 3,
+    "output_depends_on_input": true,
+    "probed_store": "rom_wafer",
+    "probes": {
+      "constant": {
+        "emitted_token_ids": [
+          1436
+        ],
+        "failure": null,
+        "prompt_token_ids": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      },
+      "oracle_prompt": {
+        "emitted_token_ids": [
+          1242
+        ],
+        "failure": null,
+        "prompt_token_ids": [
+          0,
+          3563,
+          3745,
+          418,
+          170,
+          16,
+          3564,
+          3582
+        ]
+      },
+      "reversed": {
+        "emitted_token_ids": [
+          1809
+        ],
+        "failure": null,
+        "prompt_token_ids": [
+          3582,
+          3564,
+          16,
+          170,
+          418,
+          3745,
+          3563,
+          0
+        ]
+      }
+    }
+  },
+  "prompt_token_ids": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582
+  ],
+  "schema": "opentallas.abi3.reduced_token_walk.v1",
+  "stores_agree_with_each_other": true,
+  "workload_id": "TA-DS41-REDUCED-EOS-1"
+}

@@ -1,0 +1,47 @@
+{
+  "Qwen": {
+    "claim_boundary": "Owner analytical contract intake only. Raw accepted reads do not prove publication/writecommit/reader fences or numerical consumers. Trace adapter supplies no DUT publication state or data.",
+    "owner_Git_input_hashes_verified": {
+      "results/uarch/common_gpu_sector_crossbar_20261001/model_before_RTL_r4.json": "7e26cc254610bd400c4d083d67a1c6370aa61dba1884e69637350e3279a5d60c",
+      "results/uarch/common_gpu_sector_crossbar_20261001/verification_r4.json": "75427915266000dd95756a92fbd8a750e2eadd3cd250d89fc9ca20708a942db9",
+      "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979",
+      "tools/qwen_l2_publication_contract.py": "86a89b34f78e85aedd06f9bdc105e6e3809cfb46107c8aa90899999a19ea5084"
+    },
+    "owner_revision": "78b8f19ae050082097deb67019d0272d789610c9",
+    "parent_reran_90_case_model": false,
+    "preflight_sha256": "0cd0ea8d56fdf76503263f7c0731acc27f5e41ff4f1ea7983456b9423c9239eb",
+    "publication_reference_hash_verified": "86a89b34f78e85aedd06f9bdc105e6e3809cfb46107c8aa90899999a19ea5084",
+    "reviewed_commit": "1415a353baacb53ac18f896e123e5e8a83b1735b"
+  },
+  "W17": {
+    "claim_boundary": "Coarse integer storage assignment only. No executable ROM tensor/scale metadata addresses, stage program, selectedexpert lookup, finite hardware hop or persistent fullstage state qualified.41coarsegroups,42functionalops and45conditionalcandidate are distinct.",
+    "coarse_TP4_stage_groups": 41,
+    "coarse_layer_dies": 164,
+    "current_owner_exact_reproduction": true,
+    "functional_operations": 42,
+    "launch_allowed": false,
+    "physical_execution_mapping": "UNBOUND",
+    "preflight_sha256": "eb8963076b31c83e8ef306151bd6f3aa5de43d73e1eb49d9eb187fd311b08ad3",
+    "rejected_controls": [
+      "layercoverage",
+      "expertgap",
+      "expertowner",
+      "diecount",
+      "pairinventory",
+      "source_identity_rewrite"
+    ],
+    "reviewed_commit": "4d3ce7a9bd2a1a4741d2caa4f6608c93a2ecf31c",
+    "source_hashes_verified": {
+      "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+      "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
+      "results/floorplan/v41_die_macromap_expanded_woa.json": "01f10d3d3f03cfa93ca5212803883e54daa7d05a936938ac2f78dbbcf785c775",
+      "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "tools/v41_stage_owner_product.py": "bbd3f5f04771cca98ad30d564e63678d9f3ab5e456e051309e35d3a691b70e9c"
+    }
+  },
+  "full_token_qualified": false,
+  "hardware_adopted": false,
+  "headline_rate": null,
+  "physical_qualified": false,
+  "schema": "opentallas.w17-qwen-owner-parent-intake.v1"
+}

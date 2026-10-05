@@ -1,0 +1,9 @@
+%Warning-WIDTHCONCAT: /home/ubuntu/w17-dsrom-fixed4096-owner-compiler/rtl/test/dsrom_PAR2_runtime_consumer_observer/pinned/rtl/hdc/ot_hdc_delay.sv:32:47: Replication of more that --replication-limit 8192 is suspect: 27744
+                                                                                                                                                        : ... note: In instance 'dsrom_runtime_consumers.u_spine.g_bst.u_bst'
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                                               ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.527 MB sources in 35 modules, into 2.595 MB in 9 C++ files needing 0.033 MB
+- Verilator: Walltime 0.228 s (elab=0.014, cvt=0.152, bld=0.000); cpu 0.227 s on 1 threads; allocated 59.145 MB

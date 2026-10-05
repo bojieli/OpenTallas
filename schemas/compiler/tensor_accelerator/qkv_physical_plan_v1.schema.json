@@ -1,0 +1,498 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qkv_physical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "expected_counters": {
+      "$ref": "qkv_expectations_v1.schema.json#/$defs/counters"
+    },
+    "graph_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "projection_sources": {
+          "items": {
+            "$ref": "#/$defs/projection_source"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "projection_tiles": {
+          "items": {
+            "$ref": "#/$defs/projection_tile"
+          },
+          "maxItems": 16777216,
+          "minItems": 1,
+          "type": "array"
+        },
+        "regions": {
+          "items": {
+            "$ref": "#/$defs/hbm_region"
+          },
+          "maxItems": 5,
+          "minItems": 5,
+          "type": "array"
+        }
+      },
+      "required": [
+        "image",
+        "projection_sources",
+        "projection_tiles",
+        "regions"
+      ],
+      "type": "object"
+    },
+    "numeric_contracts": {
+      "const": [
+        "bf16_payload_lookup_v1",
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1"
+      ]
+    },
+    "physical_plan_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "coefficient_row_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "context_positions": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "head_dim": {
+          "minimum": 2,
+          "type": "integer"
+        },
+        "hidden_width": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "key_value_heads": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "projections": {
+          "items": {
+            "$ref": "#/$defs/projection_problem"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "query_heads": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "resident_embedding_base_token": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "resident_embedding_rows": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "coefficient_row_bytes",
+        "context_positions",
+        "head_dim",
+        "hidden_width",
+        "key_value_heads",
+        "projections",
+        "query_heads",
+        "resident_embedding_base_token",
+        "resident_embedding_rows"
+      ],
+      "type": "object"
+    },
+    "program": {
+      "$ref": "#/$defs/program"
+    },
+    "qualification_report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qkv_physical_plan.v1"
+    },
+    "source_operation_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "addressing": {
+          "const": "bank_base_plus_byte_offset"
+        },
+        "regions": {
+          "items": {
+            "$ref": "#/$defs/sram_region"
+          },
+          "maxItems": 16,
+          "minItems": 16,
+          "type": "array"
+        }
+      },
+      "required": [
+        "addressing",
+        "regions"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "capability_id",
+    "expected_counters",
+    "graph_id",
+    "hbm",
+    "numeric_contracts",
+    "physical_plan_id",
+    "problem",
+    "program",
+    "qualification_report_id",
+    "schema",
+    "source_operation_ids",
+    "sram"
+  ],
+  "title": "Q/K/V HBM/SRAM physical plan v1",
+  "type": "object",
+  "$defs": {
+    "hbm_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "id": {
+          "enum": [
+            "embedding_rows",
+            "input_norm_weight",
+            "q_norm_weight",
+            "k_norm_weight",
+            "rope_coefficient_table"
+          ]
+        },
+        "offset_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_role": {
+          "enum": [
+            "embedding",
+            "input_norm_weight",
+            "q_norm_weight",
+            "k_norm_weight",
+            "rope_coefficients"
+          ]
+        }
+      },
+      "required": [
+        "address",
+        "id",
+        "offset_bytes",
+        "payload_sha256",
+        "size_bytes",
+        "source_role"
+      ],
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "properties": {
+        "base_address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "path": {
+          "const": "memory/hbm_qkv.bin"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "base_address",
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "program": {
+      "additionalProperties": false,
+      "properties": {
+        "command_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path": {
+          "const": "program/commands.bin"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "command_count",
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "projection_problem": {
+      "additionalProperties": false,
+      "properties": {
+        "k": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "k_tile": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "k_tiles": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "n": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "n_tile": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "n_tiles": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "role": {
+          "enum": [
+            "q",
+            "k",
+            "v"
+          ]
+        },
+        "tile_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "k",
+        "k_tile",
+        "k_tiles",
+        "n",
+        "n_tile",
+        "n_tiles",
+        "role",
+        "tile_count"
+      ],
+      "type": "object"
+    },
+    "projection_source": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "projection_role": {
+          "enum": [
+            "q",
+            "k",
+            "v"
+          ]
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "tensor_name": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "projection_role",
+        "shape",
+        "tensor_name"
+      ],
+      "type": "object"
+    },
+    "projection_tile": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "k_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "k_start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "n_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "n_start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "offset_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "projection_role": {
+          "enum": [
+            "q",
+            "k",
+            "v"
+          ]
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tile_index": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "address",
+        "k_count",
+        "k_start",
+        "n_count",
+        "n_start",
+        "offset_bytes",
+        "payload_sha256",
+        "projection_role",
+        "size_bytes",
+        "tile_index"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sram_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "allocated_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "bank": {
+          "maximum": 15,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "dtype": {
+          "enum": [
+            "bf16",
+            "fp32",
+            "u32"
+          ]
+        },
+        "id": {
+          "enum": [
+            "runtime_ids",
+            "embedding",
+            "input_norm_weight",
+            "attention_norm",
+            "weight_tile",
+            "accumulator_tile",
+            "q_raw",
+            "k_raw",
+            "v",
+            "q_norm_weight",
+            "k_norm_weight",
+            "q_norm",
+            "k_norm",
+            "rope_coefficients",
+            "q_rotary",
+            "k_rotary"
+          ]
+        },
+        "logical_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "address",
+        "allocated_bytes",
+        "bank",
+        "dtype",
+        "id",
+        "logical_bytes",
+        "shape"
+      ],
+      "type": "object"
+    }
+  }
+}

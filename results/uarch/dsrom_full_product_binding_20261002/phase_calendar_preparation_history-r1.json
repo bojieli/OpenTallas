@@ -1,0 +1,25 @@
+{
+  "hardware_jobs": 0,
+  "historical_partial_record": "provider_first_composed-r2.json.gz",
+  "historical_record_not_current": true,
+  "historical_record_sha256": "0110e752d857f6d0ea06c1344b9c6240893a5d85d78c4233b66896fd379176e4",
+  "original_failures_unchanged": true,
+  "schema": "opentallas.dsrom.source-join-preparation-history.v1",
+  "terminal_preparation_failures": [
+    {
+      "attempt": "compose-r1",
+      "correction": "Scope head kept separate from numeric layer scope.",
+      "exception": "ValueError: invalid literal for int(): head"
+    },
+    {
+      "attempt": "compose-r3",
+      "correction": "Install dynamic phase selector tables before building encoded recipe audit.",
+      "exception": "KeyError: phase_selector_tables"
+    },
+    {
+      "attempt": "tests-r1",
+      "correction": "One slot has24 distinct addresses;8 slots have192; corrected test matches unchanged native packing formula.",
+      "exception": "Assertion expected24 packed words across all8 interleaved slots; actual192"
+    }
+  ]
+}

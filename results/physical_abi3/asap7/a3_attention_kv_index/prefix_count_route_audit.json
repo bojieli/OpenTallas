@@ -1,0 +1,59 @@
+{
+  "scope": "Current prefix-count KV index, corrected 22% utilization pin-capacity floorplan; final extracted block result at tested 1 ns ASAP7 TT, not integrated attention closure.",
+  "record": "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns.json",
+  "record_sha256": "70b2dd695d8107b622e86e69f09c45651d11b68248a59a0071235b1ba282dc62",
+  "source_bindings": [
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+      "size_bytes": 3047
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "sha256": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d",
+      "size_bytes": 6363
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/1_2_yosys.v": "722f50bd6938382c54799b43a7c931ecff95f97e1d007bff2336c1972ce403d0",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/6_final.v": "98edd4ced98ca680a0abbfc053e4a6222012e581b8d24e1c6d1fe4412396b045",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/6_finish.rpt": "a3e5d83ba27b0cdd6ff60876f4dadadef1b14f804d33590241707728fdd1bfb9",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/config.mk": "a56d8c082097443c6e9ceff6b7b44559a2ffa7ab611da71b0354a73379f03735",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_util22_cts12_1ns_artifacts/metadata.json": "e9be9e7e65ff5578473f1e1372a4042c5f86e1352e7abe2f92cf9b69b9d31b6a"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.056720799999999995,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.145303,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "routed_cell_area_um2": 911.483,
+  "critical_path": {
+    "startpoint": "cfg_kv_rows[29]",
+    "endpoint": "error_code[2]",
+    "setup_slack_ns": 0.145303
+  },
+  "baseline_status": "Matched old popcount route still active; no comparative routed improvement claim yet."
+}

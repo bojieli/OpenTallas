@@ -1,0 +1,6 @@
+[remote_gate] worker ot-pve3 (floor 32 GB), job 0a78a977fb: /tmp/claude-1000/w11s/jobs/st_sim.sh attn /tmp/claude-1000/w11st/attn_d8
+
+
+
+{"status": "HELD_USER_DRAIN", "host": "ot-pve3", "pending_variant": ["7", "6", "8", "/tmp/claude-1000/w11st/attn_d8/e76b8"], "time_utc": "2026-10-02T05:04:31.450906+00:00"}
+[remote_gate] worker ot-pve3 job 0a78a977fb finished rc=0; 3 worktree files returned

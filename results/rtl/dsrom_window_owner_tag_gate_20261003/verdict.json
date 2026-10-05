@@ -1,0 +1,90 @@
+{
+  "status": "ACTUAL_ORIGINAL_FAILURE_PRESERVED_AND_DEFAULT_OFF_REPAIR_PASS_BOUNDED_WINDOW_TAG_ONLY",
+  "audit_SHA": "b98b0522243835062c0700b60a462fe8c0acaf89",
+  "source_MAIN_SHA": "f06c71a87fc02ff3fb0a7ea9412eac3c0bdc85c0",
+  "baseline_gate_SHA": "a53ddc4e11e8013d8e325fb29900d83d4b9f3080",
+  "repair_gate_SHA": "9965ff51cc8d899fc1af3bfc99e15801f6681e9a",
+  "actual_failure": "refill512 tag4000 conflicts with owner01; mux refuses WINDOW request and faults; not observed data misdelivery",
+  "tag_fields": {
+    "wire_bits": 16,
+    "owner_bits": 2,
+    "sector_bits": 5,
+    "old_epoch_bits": 11,
+    "repaired_epoch_bits": 9,
+    "epoch_modulus": 512
+  },
+  "default_off": "REFILL_OWNER_SAFE=0; public source-chain WINDOW_REFILL_OWNER_SAFE=0; credits default1",
+  "scope": "actual full128 banked prefetch and both production muxes; immutable synthetic memory words; no state force/reset/cap to avoid boundary",
+  "records": {
+    "original_r1_evidence": {
+      "status": "CONFIRMED_ORIGINAL_DUT_OWNER_REJECTION",
+      "source_SHA": "a53ddc4e11e8013d8e325fb29900d83d4b9f3080",
+      "completion": "WINDOW_OWNER_NEGATIVE_CONFIRMED refill=512 rows=511 reads=8687 replies=8687 client_tag=4000 sector=0 owner=01 w_valid=1 w_ready=0 master_valid=0 mux_fault=1 pf_fault=0 peak=3",
+      "metrics": {
+        "compile.log": {
+          "wall": "0:00.95",
+          "peak_RSS_KiB": "11240",
+          "swaps": "0",
+          "exit_status": "0"
+        },
+        "simulate.log": {
+          "wall": "0:16.02",
+          "peak_RSS_KiB": "8192",
+          "swaps": "0",
+          "exit_status": "0"
+        }
+      }
+    },
+    "owner_safe_r1_evidence": {
+      "status": "PASS_BOUNDED_WINDOW_TAG_GATE_ONLY",
+      "source_SHA": "9965ff51cc8d899fc1af3bfc99e15801f6681e9a",
+      "completion": "WINDOW_OWNER_SAFE_PASS rows=1536 reads=26112 replies=26112 checks=1536 wraps=3 peak=8",
+      "metrics": {
+        "compile.log": {
+          "wall": "0:00.05",
+          "peak_RSS_KiB": "11516",
+          "swaps": "0",
+          "exit_status": "0"
+        },
+        "simulate.log": {
+          "wall": "0:34.14",
+          "peak_RSS_KiB": "8192",
+          "swaps": "0",
+          "exit_status": "0"
+        }
+      }
+    }
+  },
+  "model_price": {
+    "epoch_state_delta_per_instance": -2,
+    "extra_payload_bits": 0,
+    "ports_delta": 0,
+    "stages_delta": 0,
+    "additional_cycles": 0,
+    "clock_policy": "unchanged target SS .833ns/60ps and FF25ps; no measured timing credit",
+    "area": "-0.75816um2 conservative ASR FF-only screen, not mapped result"
+  },
+  "static_tests": {
+    "original_prepare": 7,
+    "repair_source_prepare": 5
+  },
+  "source_namespace_chain": [
+    "ot_chip_v41x_window_kv_prefetch_owner_safe",
+    "ot_chip_v41x_window_attn_source_owner_safe",
+    "ot_chip_v41x_die_owner_safe",
+    "ot_v41_rt_die_l20_owner_safe"
+  ],
+  "future_gates": [
+    "default-off/credits1 and malformed reply regressions in the actual caller chain",
+    "complete L20 source selection/build/observer integration and arithmetic gate under a reviewed source-sized measured resource plan",
+    "physical provider/CDC exactly-once and drain closure, SS/FF context before adoption"
+  ],
+  "selectedKV_scope": "CKV selection generation16 stays independent carried sideband/reverse ACK; do not squeeze it into the14bit client tag. Existing lease/publication successor remains separate and full512 gate unconnected.",
+  "no_retry": true,
+  "no_new_PVE2_PVE3": true,
+  "no_physical_job": true,
+  "installed_full_die": false,
+  "full_arithmetic_credit": false,
+  "physical_credit": false,
+  "fulltoken_credit": false
+}

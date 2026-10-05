@@ -1,0 +1,54 @@
+Epicurus owns independent exact GPU scalar DIV G0/source-contract preparation,
+explicitly assigned by parent. Peirce owns compiler/gather/INT/RF lease integration;
+Maxwell owns native NS8 service composition/slot and admission. Coordination bus
+167/168 requested current source hooks; no endpoint acknowledgement yet.
+
+Prepared model only; no engine RTL, compilation, simulation or physical job.
+Base400d3d and cd9a778 handoff refs are required and pinned by full SHA in model.
+D2 remains primary, clean at210d3bd1744436ff55ff5a882b53e39351efbe95;
+original production cadence overflow/failures are untouched. D2 actual L0/L20
+return occupancy still requires Maxwell actual emitter timestamps and compiled
+bank ownership. NP8192 reserve138469120bits stays; no NP4096 adoption or alias.
+
+Selected DS endpoint DIV(sum,45a00000), then rounded epsilon ADD, then exact
+source Newton rsqrt. Qwen norm mean is FMUL(sum,39800000). Reciprocal Newton
+(softmax/SILU) is separately modeled, never substituted for DS DIV or RMS rsqrt.
+RNE/gradual underflow/canonical+0 independently modeled via exact rational bits.
+Selected /5120 HDC31 functional recurrence transcription is checked against that
+oracle: 4112 sign/vector checks (2048 seeded samples plus8 boundary values,2signs).
+Additional2048 generic DIV golden comparisons,2048 roundtrip values,30 Newton
+functional endpoint witnesses including150 per-round trace comparisons, selected
+halfway/truncation controls and flags. This is static source-model coverage, not
+RTL qualification. Fail-closed error codes differ from golden IEEE Inf/NaN; no
+blind expected-zero-error flag. No tensor payload/checkpoint/ROM activation read.
+
+Existing-source state ledger: ABI3 bisection323bits, HDC31 2634bits,
+v41x19 1904bits. DFF0.2916um2 proxies price only registers, not total gates.
+Source-exact DIV body/reachable vline historical TT routed price1616.37um2 cell,
+4039.61um2 outline. Full SFU support file differs outside reachable vline; recorded
+old full source hashes verified at8e1441132c5b7ea4e8765fccfd4a03894afa26ac.
+This is TT pricing context, no inherited SS/FF frequency. Eight one-per-SM cores
+would reserve12930.96um2 cells/32316.88um2 historical outlines BEFORE capture/mux/
+tag/clock/corridor cost; actual collector replica choice remains admission-owned.
+
+Proposed no-stall GPU RF lease calendar: admit1+read2+execute31+writeACK2+
+retire1=37edges (D19 ->25). Source stage count includes output capture convention
+specified edge-by-edge in model; no actual native execution evidence. Conditional
+1.2GHz prices30.8333ns/20.8333ns require SS/FF60/25ps in-context closure. Host/RF/
+write/done stalls add edges; no finite worst upper bound without readiness bound.
+Two4096bit RF read paths/one4096bit mirrored write retained:1024B accepted read,
+512B write, no extra ports. Scalar64bit operands/32bit result and error/tag/control
+boundaries need current source binding. Peirce root41tracks and local RF12339
+tracks must fit Maxwell NS8 corridor; result publication follows mirrored ACK.
+Native ADD/MUL reuse proposed; no new approximate arithmetic or ROM-specific unit.
+
+G0 not admitted: total gate area, added mux/tag/capture, slot/corridor fit, native
+clock paths, selected source/replica count and whole-kernel root/delivery/fence
+costs remain explicit null/open. No defaultoff implementation until these model
+terms and the source join are reviewed. Preserve all failed records.
+
+Reproduce:
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python3 tests/test_h3_exact_scalar_contract.py -v
+python3 tools/h3_exact_scalar_contract.py --out /tmp/H3-scalar-model-review.json
+Compare byte-for-byte to model.json. Required pinned files must be present; sparse
+checkout needs results/physical_abi3/asap7/primitive_fmax_headroom/routes.

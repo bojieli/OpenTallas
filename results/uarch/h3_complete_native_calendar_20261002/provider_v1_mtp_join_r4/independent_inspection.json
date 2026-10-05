@@ -1,0 +1,87 @@
+{
+  "C0_shared_provider_charges_unchanged": true,
+  "DS_PCs": 2213,
+  "DS_families": 30,
+  "DS_rank_sets_and_dependencies_checked": true,
+  "Qwen_PCs": 1737,
+  "Qwen_families": 21,
+  "RF_debit_unknown": true,
+  "agentic_headline_numeric": null,
+  "artifact_inventory": {
+    "Kepler_state_home_join.json.gz": {
+      "bytes": 43278,
+      "sha256": "b1cc7ae1f052d7754b043de9ca2053a52e5f4e413bd612e737d402e8ae0ced23"
+    },
+    "MTP_source_contract_audit.json": {
+      "bytes": 4892,
+      "sha256": "1cc24d118fa487398552d7bcc2e8fe9df85837f13d8d06a3a3d84d212adf15ad"
+    },
+    "V1_native_component_successor.json.gz": {
+      "bytes": 289285,
+      "sha256": "c4407012d640966413431c48e9c8d6eac86a583ec32d157a6999ea562107f10c"
+    },
+    "V1_physical_capacity_join.json": {
+      "bytes": 10217,
+      "sha256": "ad355bc51b06694f399cc53b7a40adc2753a77e98288b13ef653c07487b0e5dd"
+    },
+    "manifest.json": {
+      "bytes": 4698,
+      "sha256": "b52b06fe95d21081384aa14facb4f18c2fcdee4076c35c726f3a0295dc3d5df8"
+    },
+    "parent_receipt_join.json": {
+      "bytes": 308,
+      "sha256": "037844313d84652eec91928f7e181effc7e7a21b5e56675663ddaf797d407014"
+    },
+    "summary.json": {
+      "bytes": 668,
+      "sha256": "ce06333dbba0b4a1b3daa9ae5ab6ec062dcd7d41fcb8ff8a9e2a016dcfe25259"
+    }
+  },
+  "authoritative_artifact_directory": "final_physical",
+  "index_fragments": [
+    {
+      "PC": 121,
+      "base": 34342912,
+      "bytes": 512,
+      "consumer_views": 288,
+      "maximum_requested_bytes": 2797568,
+      "rank": 63,
+      "version": "DeepSeek.121.index_keys.L2.226",
+      "visibility_receipt": null
+    },
+    {
+      "PC": 449,
+      "base": 36966912,
+      "bytes": 512,
+      "consumer_views": 288,
+      "maximum_requested_bytes": 2797568,
+      "rank": 63,
+      "version": "DeepSeek.449.index_keys.L8.690",
+      "visibility_receipt": null
+    },
+    {
+      "PC": 782,
+      "base": 39590912,
+      "bytes": 512,
+      "consumer_views": 288,
+      "maximum_requested_bytes": 2797568,
+      "rank": 63,
+      "version": "DeepSeek.782.index_keys.L14.1160",
+      "visibility_receipt": null
+    },
+    {
+      "PC": 1110,
+      "base": 42207232,
+      "bytes": 512,
+      "consumer_views": 1440,
+      "maximum_requested_bytes": 5595136,
+      "rank": 31,
+      "version": "DeepSeek.1110.index_keys.L20.1624",
+      "visibility_receipt": null
+    }
+  ],
+  "physical_slot_and_routing_failed_scope_preserved": true,
+  "physical_source_join_cost_unchanged": true,
+  "shared_unknown_calls": 189476,
+  "status": "PASS_INDEPENDENT_COMPONENT_ARITHMETIC_AND_SOURCE_HOME_INSPECTION"
+}

@@ -1,0 +1,38 @@
+{
+  "ROM_ECC_required": false,
+  "actual_no_ECC_RTL_implemented": false,
+  "date": "2026-10-02",
+  "next_gate": "Coordinated no-ECC model and source/macro/capture/calendar binding before RTL/P&R",
+  "owner_authorization": "yes, we can simply remove the ECC requirement for ROM",
+  "remove_only": [
+    "ROM SECDED check/correction",
+    "ECC-only check-bit storage and parity sidecars",
+    "ECC-only correction mirrors/exception queues",
+    "ECC-only held-check debt and latency"
+  ],
+  "required_fault_model": "fault-free ROM reads for numerical/physical research claims",
+  "retain": [
+    "exact checkpoint payload and golden arithmetic",
+    "actual macro read/capture timing",
+    "finite producer/consumer identity, credits and ownership",
+    "SRAM/HBM/link/control-state protection",
+    "immutable historical ECC pass/failure evidence",
+    "configuration/descriptor payload validity, address bounds and transaction identity checks"
+  ],
+  "reticle_or_SSFF_closed": false,
+  "schema": "opentallas.rom_reliability_policy.v1",
+  "scope": "All ROM storage, including weight and configuration ROM; no mandatory ROM ECC. Preserve semantic descriptor/identity/address checks and mutable control-state protection.",
+  "targets": [
+    "qwen3_8b_rom",
+    "deepseek_v4_1_rom"
+  ],
+  "theoretical_codeword_accounting": {
+    "legacy_ECC_payload_overhead_factor": 1.0390625,
+    "legacy_payload_bits": 256,
+    "legacy_protected_bits": 266,
+    "new_ECC_payload_overhead_factor": 1.0,
+    "physical_macro_area_saving": null,
+    "physical_macro_width_change": "requires source-matched macro inventory; unused bits do not automatically shrink an existing macro"
+  },
+  "token_rate_qualified": false
+}

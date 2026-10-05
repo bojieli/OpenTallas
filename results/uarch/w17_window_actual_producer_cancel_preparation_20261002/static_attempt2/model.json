@@ -1,0 +1,124 @@
+{
+  "status": "MODEL_PLUS_UNCOMPILED_ACTUAL_PRODUCER_COPY_ONLY_NO_CORE_OVERLAY",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7"
+  },
+  "Nash_contract_commit": "8a156f62548aa927414d1d2e4f1a00baa2898bbf",
+  "Nash_interfaces_sha256": "c98fa39529b2f86e3d0f2301681d9b50a44326f9d7457cdedda1ebe0fb93d5d5",
+  "selectedowner": "WIN_STACK2 / backend TAG100|epoch9|sector5",
+  "actual_shape": {
+    "AW": 30,
+    "NW": 21,
+    "BL": 16,
+    "IL": 8,
+    "NBMAX": 192,
+    "CHUNK8": 1,
+    "MP": 1,
+    "QE_mode": 1,
+    "nb": 16,
+    "xbase": 54720,
+    "obase": 55232
+  },
+  "core_hooks": [
+    {
+      "location": "S_ISSUE waited/unit_ready predicate + u_qe .go(qe_go)",
+      "change": "Gate both sequencer admission and actual QE go with sticky recovery freeze/current known fault. Gating go alone would let sequencer advance without actual acceptance. Gate selected mode1 on producer available and no old suffix; do not reset an active QE."
+    },
+    {
+      "location": "u_qe kvb_v / kvb_fault / ww_q_we / qe_idle",
+      "change": "Count each good OR poison terminal; verify exclusive good/poison and QDQ8 VM write correspondence. Continue raw QE reads/arithmetic/VM writes until source idle; never stall suffix on cap_ready or block client ready."
+    },
+    {
+      "location": "u_blocks .cap_v(win_capture_v)",
+      "change": "Suppress capture COMMIT after sticky freeze/current fault/poison; still observe and discard every fixed QE terminal event independently. Poison is a terminal, not a missing block."
+    },
+    {
+      "location": "win_issue + win_scalar_suppress",
+      "change": "Gate actual issue and associated SU admission consistently; preserve existing scalar suppression for an already accepted selected SU. No global SU-reset claim."
+    },
+    {
+      "location": "u_blocks blk_v/blk_ready -> guard -> WINDOW",
+      "change": "Stop new atomic block handshakes at fault; previously accepted33byte block remains WINDOW owned for BOTH WC and WS. Keep source fault-drain candidate continuation enabled."
+    },
+    {
+      "location": "core fault clear-on-start",
+      "change": "Hold recovery freeze/cause independently until full selected-owner retirement and certified delivery/causalvisibility fence. New start cannot implicitly clear cancellation state."
+    }
+  ],
+  "local_cancel_contract": {
+    "request": "held rec_cancel+rec_token after sticky freeze + all16 terminal outputs (or no QE accepted) + actual QE idle",
+    "ack": "metadata EMPTY/count0/rd_idx0 and held matching token; no payload zeroing, no source pending or provider credits cleared",
+    "producer_fault_rearm": "Prepared copy preserves fault exactly; sticky producer fault cannot be cleared by token start. Dedicated rearm after complete certified quiescence is NOT prepared yet; no restart/admission claim for that path.",
+    "adapter_late_identity": "One closed QE operation, no tag added to sideband. Future suffix count5 active1 frozen1 provenance_fault1=8bits; any unexpected/duplicate terminal blocks rearm. Wire-identical ghost cannot be detected; provider provenance required."
+  },
+  "unified_compatible_entry": {
+    "applicable_designs": [
+      "v41_rom",
+      "v41_hbm"
+    ],
+    "element": "actual_QDQ8_window_producer_cancel_adapter",
+    "replicas": 1,
+    "macs_per_cycle": 0,
+    "new_payload_bits": 0,
+    "prepared_local_ack_state_bits": 2,
+    "future_suffix_and_freeze_state_bits": 8,
+    "concrete_subtotal_bits": 10,
+    "prior_conservative_local_adapter_envelope_bits": 19,
+    "do_not_add_19_and10": true,
+    "DFF_proxy_um2_subtotal": 2.9160000000000004,
+    "conservative_19_DFF_proxy_um2": 5.540400000000001,
+    "control_ports_producer_added_bits": 7,
+    "existing_stream_per_terminal_bits": 296,
+    "terminal_event_rate_blocks_per_cycle": 1,
+    "ports_bytes_per_cycle": {
+      "QE_codes_scale": 33,
+      "QE_VM_write": 128,
+      "accepted_WINDOW_block_payload": 33
+    },
+    "boundary_bits_per_cycle": {
+      "QE_sideband": 296,
+      "QE_VM_payload": 1024,
+      "producer_recovery_control": 7
+    },
+    "control_boundary_track_proxy": 7,
+    "route_capacity": "UNBOUND; no physical channel/slot fit assertion",
+    "enable_mux_fanout_cost": "QEgo + capturecommit + producerissue + newblk gates; exact cell/SSFF cost unmeasured. No payload mux added.",
+    "area_slot_fit": "UNQUALIFIED; DFF-only proxy, needs enable gates plus actual layout slot pricing",
+    "healthy_added_stages_intended": 0,
+    "healthy_added_guard_cycles": 0,
+    "fault_latency": "remaining <=16 QE terminal outputs then actual sourceidle + registered localack; arbitrary stalls in provider drain have no finite bound absent bounded fairness/causal visibility/delivery contract",
+    "provider_composition": "259 prepared provider/source bits reused; 19 adapter envelope separate. Optional228read observer not mandatory hardware; actual PHY provider state unknown."
+  },
+  "unchanged_healthy_landmarks": {
+    "producer_EMPTY_cycle": 871,
+    "final_WR_ACK_cycle": 905,
+    "projected_visible_ps": 911274,
+    "projected_deadline_not_causal_completion": true
+  },
+  "next_review": {
+    "no_compile_GO": true,
+    "Nash_review_needed": [
+      "sameedge known versus delayed fault",
+      "goodORpoison + VM terminal conservation and actual sourceidle",
+      "S_ISSUE/go consistency and SU scalar suppression",
+      "sticky fault explicit rearm requirement before restart"
+    ],
+    "following_real_gate": "Reuse actual QE arithmetic/source and producer integration vectors after composition; do not replace QE with synthetic cap-v fixture. No bench added here."
+  },
+  "qualification": {
+    "local_source_hooks_prepared": true,
+    "actual_core_adapter_installed": false,
+    "causal_PHY_provider": false,
+    "producer_safe": false,
+    "restart_complete": false,
+    "fulltoken": false,
+    "adoption": false
+  },
+  "generator_sha256": "c70aff143bd42cf7879a3a2ae40fd45923e3b34bcafe78ed7ae320b62bac154d",
+  "candidate_sha256": "ec87eafaf38fcb3a69cddd93ceed166e130c629b4c8435d1367cfc4ce83dfe8b",
+  "default_inverse_byte_identical": true,
+  "prepared_declared_added_register_bits": 2
+}

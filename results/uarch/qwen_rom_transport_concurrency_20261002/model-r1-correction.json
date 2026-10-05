@@ -1,0 +1,5 @@
+{
+  "status": "REJECTED_LOCAL_PADDING_COUNT",
+  "failed_record_sha256": "340f0d8c335b588f4b405771e4e3a1c2b67eb0ce5d3b24f77095437182eb6277",
+  "reason": "First preparation used 8 local words instead of source 2*ceil(512/48)*2=44. Preserved r1; r2 corrects byte-capacity accounting. No admission from either record."
+}

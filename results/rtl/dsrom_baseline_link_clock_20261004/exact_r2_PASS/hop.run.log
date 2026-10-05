@@ -1,0 +1,3 @@
+ARGV ["vvp", "-n", "/srv/opentallas-scratch/codex/dsrom-baseline-link-clock/exact-r2/hop.vvp", "+bytes=40976", "+seed=81", "+case=baseline_clock1"]
+HOP_SUMMARY case=baseline_clock1 result=PASS bytes=40976 flits=641 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=641 rcvd=641 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=642 first_flit=181 last_flit=821 leg1_first_flit=163 leg1_last_flit=803 out_span=640 in_span=640 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=320 max_replay_occ2=30 seed=81
+/srv/opentallas-scratch/codex/dsrom-baseline-link-clock/exact-r2/hop.sv:176: $finish called at 4193000 (1ps)

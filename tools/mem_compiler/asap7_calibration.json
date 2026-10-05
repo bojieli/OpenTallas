@@ -1,0 +1,57 @@
+{
+  "corners": {
+    "ff": {
+      "dff_clk_to_q_ps": 46.12183394777777,
+      "dff_hold_ps": 12.2836,
+      "dff_setup_ps": 9.91753,
+      "fo4_ps": 14.777241075555557,
+      "inv1_cin_ff": 0.683716,
+      "inv1_r_kohm": 2.483265188838424,
+      "inv4_cin_ff": 2.5933,
+      "inv4_r_kohm": 0.6344971042276323,
+      "liberty": {
+        "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+        "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      "slew_ps_used": 20.0,
+      "temperature_c": 0.0,
+      "voltage_v": 0.77
+    },
+    "ss": {
+      "dff_clk_to_q_ps": 89.61592385499999,
+      "dff_hold_ps": 18.2774,
+      "dff_setup_ps": 16.2073,
+      "fo4_ps": 23.593241169166667,
+      "inv1_cin_ff": 0.578766,
+      "inv1_r_kohm": 5.614859963194681,
+      "inv4_cin_ff": 2.17094,
+      "inv4_r_kohm": 1.4166982813160556,
+      "liberty": {
+        "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "971247fdbb98c969300444c440ce5a5f3bc64a17c402e2025cf09c87908e97c0",
+        "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      },
+      "slew_ps_used": 20.0,
+      "temperature_c": 100.0,
+      "voltage_v": 0.63
+    },
+    "tt": {
+      "dff_clk_to_q_ps": 62.480234782222226,
+      "dff_hold_ps": 12.4678,
+      "dff_setup_ps": 9.99126,
+      "fo4_ps": 18.264918771111113,
+      "inv1_cin_ff": 0.619928,
+      "inv1_r_kohm": 3.5914310836037355,
+      "inv4_cin_ff": 2.33645,
+      "inv4_r_kohm": 0.9125151952912302,
+      "liberty": {
+        "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      "slew_ps_used": 20.0,
+      "temperature_c": 25.0,
+      "voltage_v": 0.7
+    }
+  },
+  "image": "openroad/orfs:latest",
+  "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+}

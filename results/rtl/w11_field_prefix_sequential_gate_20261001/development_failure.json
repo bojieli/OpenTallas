@@ -1,0 +1,11 @@
+{
+  "status": "RETAINED_DEVELOPMENT_TEST_FAILURE",
+  "test": "test_exact_pins_and_candidate_body_only",
+  "observed_pytest": "1 failed, 2 passed",
+  "observed_difference": "// (* keep *) net, field_ref_so synthesis must keep log2(W) levels.",
+  "cause": "Unanchored module regex matched the words module so in a source comment",
+  "fix": "Match module declarations at line start with re.MULTILINE; source preservation test passes",
+  "initial_run_record_path": "/tmp/field-leaf-seq/attempt-r1.json",
+  "initial_run_record_sha256": "39c0db32f8bebf8a76894e97b3ad43b9a2f5fa459782646b9e96b578cd4b92e7",
+  "initial_run": "Preliminary three-seed and carry/reset mutants completed; canonical final evidence is attempt-r2 with corrected parser and four mutants"
+}

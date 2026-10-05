@@ -1,0 +1,23 @@
+{
+  "actual_writers": 144,
+  "artifact_byte_equal_replay": true,
+  "artifact_sha256": "e480fd1cb12290ba99de3e39e2c50d3acd527023983c157d54b002e98dfae8f9",
+  "balanced_mean_not_service_floor": 132,
+  "finite64contexts_do_not_prove64way_service": true,
+  "focused_tests": {
+    "passed": 2,
+    "seconds": 0.27
+  },
+  "hardware_admission": false,
+  "hardware_provider_clock_events_bound": false,
+  "mixed_command_floor_per_writer": 144,
+  "owner_commit": "2185eadf516c177d58eceb1aa8826d3c80dfdc45",
+  "schema": "opentallas.parent.hbm-finite-service-join-review.v1",
+  "scope": "Immutable source joins independently replayed; actual packed writer skew charged. Serial lock model is an explicit sizing scenario only, excludes remaining V/fullprogram contention and does not qualify throughput. Source compiler dependencies/CPUwalltime are not hardware event clocks.",
+  "single_global_lock_scenario_is_partial_only": true,
+  "token_cycles": null,
+  "total_mixed_commands_two_tokens": 76032,
+  "total_port_payload_bytes_two_tokens": 2433024,
+  "verdict": "PASS_SOURCE_JOIN_INCOMPLETE_FULL_RESOURCE_CALENDAR",
+  "whole_program_service_calendar_closed": false
+}

@@ -1,0 +1,43 @@
+{
+  "binary_sha256": "f978bef241324e3ff25fae122a24470d07057418c804b7e2c84608f510e89cdb",
+  "claim_boundary": "Real checkpoint layer-0 Q/K norm weights from 640 32-byte HBM sectors per die, 2560 CROM words at [4096,6656), bit-exact one-cycle reads. Standalone source only; no complete layer, shared controller, KV, P&R or throughput claim.",
+  "image_sha256": {
+    "die0": {
+      "base": 4096,
+      "crom": "3721b9635f7928126620c2311fa317809c4276b5b4a46d166790eca40cca6ce1",
+      "extracted": "cb8d01e40a61866c70bf7fb57e1514389e6a56db24121a8a0f170a7ac5947ee9",
+      "manifest": "37cbea2a5ac39e85370f637f4f00d838e421ab86168d1d89348eb50929885f8a",
+      "words": 2560
+    },
+    "die1": {
+      "base": 4096,
+      "crom": "3721b9635f7928126620c2311fa317809c4276b5b4a46d166790eca40cca6ce1",
+      "extracted": "cb8d01e40a61866c70bf7fb57e1514389e6a56db24121a8a0f170a7ac5947ee9",
+      "manifest": "cfeed5851c63c84c8c20c0ea2dd3461f169f2c87257e954bf2acba1d324d0a58",
+      "words": 2560
+    }
+  },
+  "observed": {
+    "dies": 2,
+    "sectors_per_die": 640,
+    "words_per_die": 2560
+  },
+  "runs": {
+    "die0": {
+      "status": "pass",
+      "stdout": "PASS Qwen CROM HBM words=2560 sectors=640 exact prior to unowned-address fault\n- /tmp/opentallas-qwen-o4-hbm-scale-base/rtl/test/tb_hdc_qwen_post_tp_scale_hbm.sv:52: Verilog $finish\n"
+    },
+    "die1": {
+      "status": "pass",
+      "stdout": "PASS Qwen CROM HBM words=2560 sectors=640 exact prior to unowned-address fault\n- /tmp/opentallas-qwen-o4-hbm-scale-base/rtl/test/tb_hdc_qwen_post_tp_scale_hbm.sv:52: Verilog $finish\n"
+    }
+  },
+  "schema": "opentallas.qwen-qk-norm-hbm.v1",
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hdc_qwen_post_tp_scale_hbm.sv": "7996678416203fd71590997f135b8e220e8f849d59a8e9fb34b64a0c0c4d0a83",
+    "rtl/test/qwen_post_tp_scale_hbm_harness.cpp": "b3390b9ff487400ac9f06765663f9b429490cd4f124bb1524709d07ceb5f83cb",
+    "rtl/test/tb_hdc_qwen_post_tp_scale_hbm.sv": "4745e4763cfaa95e908cc5a89a162a8d886390d81712a35ac79feb3fd4ee21bd",
+    "tools/rtl_hdc_qwen_qk_norm_hbm.py": "9212688902d5c55398a204befeceb9dd5c563dae43639d1a0d8b0b24fdfdfa7a"
+  },
+  "status": "pass"
+}

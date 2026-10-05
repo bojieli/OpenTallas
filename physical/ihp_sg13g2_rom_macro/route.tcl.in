@@ -1,0 +1,60 @@
+# Full place-and-route of a via-programmed mask-ROM macro in IHP SG13G2.
+# The bit array is a hard macro drawn by spice/ihp_sg13g2/bitcell/rom_bitarray.tcl;
+# everything else is standard cells placed and routed here.
+
+read_lef @TECH_LEF@
+read_lef @STDCELL_LEF@
+read_lef @MACRO_LEF@
+read_liberty @STDCELL_LIB@
+read_liberty @MACRO_LIB@
+read_verilog @NETLIST@
+link_design ot_rom_macro
+read_sdc @SDC@
+
+initialize_floorplan -die_area {0 0 @DIE_W@ @DIE_H@} \
+                     -core_area {@CORE_X0@ @CORE_Y0@ @CORE_X1@ @CORE_Y1@} \
+                     -site CoreSite
+
+source @TRACKS_TCL@
+
+place_macro -macro_name u_array -location {@MACRO_X@ @MACRO_Y@} -orientation R0
+
+set_placement_padding -global -left 1 -right 1
+insert_tiecells sg13g2_tielo/L_LO
+insert_tiecells sg13g2_tiehi/L_HI
+
+place_pins -hor_layers Metal3 -ver_layers Metal2 -random_seed 42
+
+global_placement -density @PLACE_DENSITY@ -pad_left 1 -pad_right 1
+estimate_parasitics -placement
+repair_design
+detailed_placement
+
+clock_tree_synthesis -buf_list {sg13g2_buf_4 sg13g2_buf_8 sg13g2_buf_16} \
+                     -root_buf sg13g2_buf_8 -sink_clustering_enable
+set_propagated_clock [all_clocks]
+estimate_parasitics -placement
+repair_clock_nets
+detailed_placement
+
+set_placement_padding -global -left 0 -right 0
+check_placement -verbose
+
+set_thread_count 4
+set_routing_layers -signal Metal2-Metal5 -clock Metal2-Metal5
+global_route -congestion_iterations 50 -verbose
+detailed_route -output_drc @DRC_RPT@ -droute_end_iter 12 -verbose 1
+
+set die [ord::get_die_area]
+set core [ord::get_core_area]
+puts "OT_ROUTE_DONE=1"
+puts "OT_DIE_W=[expr {[lindex $die 2] - [lindex $die 0]}]"
+puts "OT_DIE_H=[expr {[lindex $die 3] - [lindex $die 1]}]"
+puts "OT_DIE_AREA_UM2=[expr {([lindex $die 2]-[lindex $die 0])*([lindex $die 3]-[lindex $die 1])}]"
+puts "OT_CORE_AREA_UM2=[expr {([lindex $core 2]-[lindex $core 0])*([lindex $core 3]-[lindex $core 1])}]"
+report_design_area
+puts "OT_WNS=[sta::worst_slack -max]"
+puts "OT_TNS=[sta::total_negative_slack -max]"
+report_check_types -max_slew -max_capacitance -max_fanout -violators
+write_def @DEF@
+exit

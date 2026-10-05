@@ -1,0 +1,65 @@
+{
+  "status": "READY_FOR_PARENT_SOURCE_AND_GO_REVIEW_NOT_RUNTIME_PASS",
+  "worktree": "/tmp/window-fault-recovery/worktree",
+  "branch": "codex/window-fault-recovery-model-20261001",
+  "entrypoint": "tools/w17_window_core_cancel_join_binding_run.py",
+  "plan": "results/uarch/w17_window_core_cancel_join_preparation_r6_20261002/plan_r8/plan.json",
+  "GO_template": "results/uarch/w17_window_core_cancel_join_preparation_r6_20261002/plan_r8/parent_GO_template.json",
+  "bench": "rtl/test/w17_window_core_cancel_join_r6/tb.sv",
+  "selected_cone": "rtl/test/w17_window_core_cancel_join_r6/actual_fastpp_core_selected_cone.sv",
+  "source_copies": "rtl/test/w17_window_core_cancel_prepared_r7",
+  "allocation": {
+    "provider": 259,
+    "concrete_adapter": 10,
+    "concrete_total": 269,
+    "reserved_total": 278,
+    "extra_uninstantiated_reserve": 9,
+    "old_280": "superseded unchanged record"
+  },
+  "ports": {
+    "rec_request": "sticky fault-admission stop, caller holds token",
+    "rec_local_ack": "producer metadata EMPTY after actual fixed QE suffix and idle; independent selected-owner drain",
+    "rec_provider_ready": "selected stack2 WINDOW/mux/KARB/idx joined logical owner drain and pinned projected deadline receipt, insufficient alone",
+    "rec_delivery_certified": "causal closed delivery certificate from actual external provider, absent",
+    "rec_visibility_certified": "causal write visible certificate, absent; never set from h_tcol/CWL/BURST timer",
+    "rec_provenance_valid": "closed provenance certificate, absent",
+    "rec_commit_qualified": "join of matching local receipt, actual QE/SU idle, provider-ready and all 3 certificates"
+  },
+  "runtime_scope": "Actual fastpp source-extracted sequencer+decode+DYN, full QE BL16 IL8 NBMAX192 CHUNK8 MP1, actual SUN256 SUM64 SU and producer. Accepted WC/WS reaches qualified selectedowner transport. All omitted ME/HE/XU/ROM admissions fatal, no whole core/die build. No actual arithmetic/provider/hardware rate admission.",
+  "ghost_limit": "1-bit control fence token cannot detect wire-identical old epoch/sector/beat ghosts after 512 reuse; absence of causal delivery certificate holds restart. Prior standalone ghost assumption control remains separate.",
+  "coordination": "Nash dd2090993b136d4efaf175a233972277eb6b1825 actual FSM/QE source slice remains separately committed and untouched; shared runner ownership remains Peirce. This gate adds actual SU/suppression and selected-owner transport.",
+  "resources": {
+    "MemoryMax": 4294967296,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 268435456,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 180,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 130,
+    "runtime_shared_seconds": 26,
+    "reserve_seconds": 24,
+    "whole_seconds": 180,
+    "aggregate_generated_output_bytes": 268435456,
+    "no_retry": true
+  },
+  "resource_risk": "Joined SU256/QE generated output peak unmeasured; failure at current cap stops and is preserved, no automatic increase or shrink. New agidock128 available but this runner currently binds reviewed local CPU30,31 cap contract; remote use needs separately reviewed exact CPU/cap receipt, not automatic fleet adoption.",
+  "immutable_prior_failures": true,
+  "earlier_local_preparations": "All uncompiled intermediate copies and failed static logs retained; latest selected pin only R7/cone R6/plan R8.",
+  "no_GO": "Prior user instruction requires fresh reviewed GO before compilation. No current GO issued for this new gate.",
+  "physical_causal_provider": false,
+  "actual_source_cancel_runtime_PASS": false,
+  "fulltoken": false,
+  "adoption": false,
+  "source_edge_proof": "results/uarch/w17_window_core_cancel_join_preparation_r6_20261002/source_edge_proof.json",
+  "repair_record": "results/uarch/w17_window_core_cancel_join_preparation_r6_20261002/repair_record.json",
+  "prepare_tool": "tools/w17_window_core_cancel_join_binding_repair.py",
+  "full_program_primary": "This finite source slice is prerequisite only; actual full program execution remains primary and unqualified."
+}

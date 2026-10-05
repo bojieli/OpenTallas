@@ -1,0 +1,42 @@
+{
+  "status": "REVIEWED_COMPONENTS_PENDING_CURRENT_EXECUTION_ADAPTER",
+  "owner_commits": [
+    "1907a4ede5738058981d9b762e77691c6d4111f0",
+    "f6758fcf573138cd0018d94a5a329edb771e8f63"
+  ],
+  "calendar_and_reference_parent_tests": 108,
+  "calendar_and_reference_test_exit": 0,
+  "calendar_replay_outputs_byte_exact": 12,
+  "calendar_artifact_hashes_verified": 47,
+  "reference_artifact_hashes_verified": 106,
+  "independent_reference_fragments_byte_checked": 384,
+  "complete_static_inventory_cold_replay": {
+    "PCs": 2213,
+    "families": 30,
+    "required_published_field_slots": 292912,
+    "bound_witness_slots": 2720,
+    "missing_homes": 0,
+    "unsupported_opcodes": []
+  },
+  "released_checkpoint_header_cold_replay": {
+    "bindings": 3435,
+    "unique_tensors": 46963,
+    "missing_tensors": 0,
+    "numerical_payload_reads": 0
+  },
+  "cold_replay_external_input_dependency": "exact retained R43 artifacts and PC11..19 references remain outside main; byte-identical tracked candidates relocated where present",
+  "compact_PC0_10_new_journal_reservation_bytes": 819950818992,
+  "complete_execution_storage_admitted": false,
+  "current_calendar_sha256": "d533797c7f4bfcc2af773d49a9d4f37f95adc9372455d516b921c41b5d48768a",
+  "R50_adapter_tests_exit": 1,
+  "R50_adapter_tests_failed": 5,
+  "failure_log_sha256": "0cd4143fa9309d3227be77bd973b7f0f994a7f60c407167e3ea997f8ba06348f",
+  "publication_held_for": "Additive successor modules and explicit R51 source selection; original calendar/checkpoint sources must stay byte-identical; R50 source checks remain qualified at original scope",
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "rate_credit": false,
+  "make_check_figures_exit": 0,
+  "shared_query_component_owner_commit": "458f6c2fb",
+  "combined_calendar_reference_checkpoint_tests": 151,
+  "combined_test_exit": 0
+}

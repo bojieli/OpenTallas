@@ -1,0 +1,56 @@
+{
+ "schema": "qwen-nearhbm-attn-vp-area-power.v1",
+ "vp": 2,
+ "row_engines_per_stack": 6,
+ "area_mm2": {
+  "frame_basis": {
+   "per_lane_set": 15.74,
+   "added_for_vp": 15.55,
+   "basis": "24 floorplan r1 row-engine frames x 655983 um2 per lane set (incl. exp, Z, P.V, score SRAM, q), minus the shared row FIFO, plus one synthesised hub"
+  },
+  "unit_basis": {
+   "per_lane_set_first": 11.75,
+   "added_for_vp": 11.42,
+   "components_um2_per_stack": {
+    "row_engines_wo_fifo": 2051740,
+    "exp_quads": 297932,
+    "pv_tree": 339760,
+    "z_tree": 50451,
+    "score_e_sram": 73885,
+    "q": 6927
+   },
+   "hub_um2": 135950.36436,
+   "basis": "pre-layout synthesised SS units (prod, add7, mul6, exp_p LA7/LM7), register bit 0.42282 um2, SRAM 12314.21 um2; no utilisation/CTS/PDN"
+  },
+  "model_priced_per_extra_lane_set": 14.7
+ },
+ "power": {
+  "limit_w_per_mm2": {
+   "nominal": 2.0,
+   "conservative": 1.0,
+   "aggressive": 4.0
+  },
+  "limit_source": "IEEE EPS Heterogeneous Integration Roadmap, Chapter 20 Thermal, draft v0.9 (2026)",
+  "limit_source_sha256": "ef2643c8cfebbc70b54ca45ae9e0ccec8f9a2e7d8f0c93fa64b73785693b31e6",
+  "scenario": "A (measured TT MAC 3.974 pJ)",
+  "in_phase_peak_w_per_mm2": 3.924,
+  "peak_note": "each lane set occupies its own frames at the parent lane density: the in-phase peak (a PDN/IR load, tau 1.22 ms >> phase) is unchanged by VP",
+  "ar_time_averaged_w_per_mm2": 0.921,
+  "vp_time_averaged_w_per_mm2": 0.921,
+  "active_fraction": {
+   "ar": 0.1931,
+   "vp": 0.1931,
+   "basis": "each lane set runs its K/V phases once per verify step of 202590 cycles vs once per AR token of 202590"
+  },
+  "duty_cap_sustained": 0.483,
+  "verdict": "PASS single-user time-averaged vs 2.0 nominal and 1.0 conservative",
+  "sustained_note": "a 100%-duty strip (aggregate saturation) still needs the r2 duty governor <= 0.483 or a measured MAC <= 1.92 pJ; VP does not change that bound (intensive)"
+ },
+ "sources_sha256": {
+  "ced04cd96:results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r1.json": "205279c5497bb71fbf5e4a30ccc45597530a4a8ded300dd8e43e1e54f2d22e38",
+  "ced04cd96:results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r2.json": "e1e8ac2ddab4711d1a6e476a31a7b9f01813a67aa6c27dfd473225d771e7b951",
+  "results/uarch/qwen_nearhbm_attn_rtl_20261003/ss_screens.json": "faee8a17d58d57ba9105c8fe32e72d5c7a33ca7bd35ec771916ef0196394ae92",
+  "results/uarch/qwen_nearhbm_attn_rtl_20261003/pnr/hub_r3.host_synth_stat.txt": "3b22aa340dfc84f40c299e77bce6da400887c719cb01ec05ff0fbf564dfb5ac3",
+  "tools/qwen_nearhbm_attn_vp_area.py": "fd71487ddb99ac55f866ca3ab17670e1d8c32ac91047cea4a63d7389257ff80c"
+ }
+}

@@ -1,0 +1,64 @@
+HB cyc=100000 node=1 st=0 pc=0 running=0 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=100000 node=0 st=6 pc=963 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HEARTBEAT cycle=100000 finished=0
+HB cyc=200000 node=1 st=0 pc=0 running=0 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=200000 node=0 st=6 pc=1884 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HEARTBEAT cycle=200000 finished=0
+HB cyc=300000 node=1 st=6 pc=844 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=300000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=300000 finished=0
+HB cyc=400000 node=1 st=6 pc=1810 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=400000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=400000 finished=0
+TOK user=0 pos=0 token=2815 cycle=429041
+CPL TOKEN tag=5a user=0 pos=0 token=2815 stamp=429035
+HB cyc=500000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=500000 node=0 st=6 pc=600 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=500000 finished=0
+HB cyc=600000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=600000 node=0 st=6 pc=1498 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=600000 finished=0
+HB cyc=700000 node=1 st=6 pc=459 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=700000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=700000 finished=0
+HB cyc=800000 node=1 st=6 pc=1445 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=800000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=800000 finished=0
+TOK user=0 pos=1 token=3537 cycle=865849
+CPL TOKEN tag=5a user=0 pos=1 token=3537 stamp=865843
+HB cyc=900000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=900000 node=0 st=6 pc=251 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=900000 finished=0
+HB cyc=1000000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1000000 node=0 st=6 pc=1246 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=1000000 finished=0
+HB cyc=1100000 node=1 st=6 pc=107 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1100000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=3
+HEARTBEAT cycle=1100000 finished=0
+HB cyc=1200000 node=1 st=6 pc=1081 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1200000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=3
+HEARTBEAT cycle=1200000 finished=0
+HB cyc=1300000 node=1 st=6 pc=1976 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1300000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=3
+HEARTBEAT cycle=1300000 finished=0
+TOK user=0 pos=2 token=2047 cycle=1304976
+CPL TOKEN tag=5a user=0 pos=2 token=2047 stamp=1304970
+CPL DONE tag=5a users=1 stamp=1304971
+NODE node=1 busy=647229 side_wait=0 tx_wait=0 starved=674129 jobs=3 state_mismatch=0
+HBM_NODE node=1 q_bad=0 q_words=51360 q_reads=665760 q_fault=0 idx_records=3 idx_writes=36 idx_read_stalls=0 idx_writer_stalls=0 idx_refresh=1316888
+STALLX node=1 stuck=0 idle_max=1145 trace=11695 drops=0 busy=647229 kv_low=39892 kvd_wait=0 q_low=352010 qd_wait=1 rx_hold=7 tx_credit=0 tx_gate=0 kvhbm_stall=0 ikw_stall=0 ikr_stall=0 u0=258155 u1=248974 u2=104431 u3=41751 u4=48240
+GUARD node=1 msgs=3 flits=126 fault=0 code=0 hdr=0000000000000000
+NODE node=0 busy=656231 side_wait=0 tx_wait=0 starved=665127 jobs=3 state_mismatch=0
+HBM_NODE node=0 q_bad=0 q_words=58848 q_reads=793056 q_fault=0 idx_records=3 idx_writes=36 idx_read_stalls=0 idx_writer_stalls=0 idx_refresh=1085794
+STALLX node=0 stuck=0 idle_max=3592 trace=11790 drops=0 busy=656231 kv_low=34816 kvd_wait=0 q_low=197115 qd_wait=1 rx_hold=0 tx_credit=391 tx_gate=35 kvhbm_stall=0 ikw_stall=0 ikr_stall=0 u0=212696 u1=251826 u2=112781 u3=41056 u4=48240
+GUARD node=0 msgs=3 flits=3 fault=0 code=0 hdr=0000000000000000
+LINK link=0 class=1 rt=0 fault=0 code=0 tx=0 rx_ok=0 crc_err=0 naks=0 replays=0 timeouts=0 retx=0 max_replay_occ=0 credit_stalls=356
+LINK link=1 class=1 rt=0 fault=0 code=0 tx=0 rx_ok=0 crc_err=0 naks=0 replays=0 timeouts=0 retx=0 max_replay_occ=0 credit_stalls=0
+HOSTCQ tokens_dev=3 tokens_cpl=3 done_cpl=1 err_cpl=0 cpl_mismatch=0 spec_reads=1 cpl_stall=2 cq_high=1 fault=0 code=0 wdog=0
+KVHBM ops=720 words=12786 writes=10128 holds=74708 state_bad=0 fault=00
+IDXHBM_USERS read=1 wrote=1
+HDC41_ARRAY nodes=2 users=1 generated=1 mismatches=0 logit_mismatch=0 lm_head_checks=3 state_mismatch=0 total_cycles=1304979
+USERS_DONE 1
+LINK_STALLS 356
+PASS
+- /srv/opentallas-scratch/claude/dsrom-system/src/rtl/test/dsrom_sys/tb_dsrom_system.sv:1231: Verilog $finish

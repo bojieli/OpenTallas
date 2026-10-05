@@ -1,0 +1,20 @@
+{
+  "artifact_pins": 30,
+  "binary_sha256": "9d024fc9ae60507bccc339be0dada6af01a0b92abdca12b2bee5c54eb7255ba3",
+  "failed_initial_parent_test_invocation": "wrong test filename; no tests collected; corrected 62-test run passes",
+  "fresh_compiler_before_after_verified": true,
+  "historical_compiler_digest_available": false,
+  "host_sha256": "d42a775f630831d3f7640e1b439902f1d3ee07d1b92629375f090a5e4b93b6ad",
+  "live_compiled_outputs_independently_verified": 5,
+  "live_input_pins_independently_verified": 47,
+  "pve1_measured_available_memory_kB": 156889580,
+  "pve1_measured_free_disk_B": 80858611712,
+  "reservations_not_caps": {
+    "journal_B": 536870912
+  },
+  "run_admission": "one L0 only on exclusive PVE1 lease after fresh exact payload/source/archive/compiler pins and resource recheck; no timeout CPU AS FSIZE cap; full36 held",
+  "scope": "host relink and historical L0 actual accepted/write/read/snapshot observation; no full36/provider/physical/rate qualification",
+  "status": "PASS_HOST_RELINK_AND_MINIMUM_L0_REVIEW",
+  "tests_passed": 62,
+  "verifier": "tools/qwen_rom_source_observer_verify.py --layers 1"
+}

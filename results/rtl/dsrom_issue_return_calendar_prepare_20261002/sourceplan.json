@@ -1,0 +1,134 @@
+{
+  "BF_site_binding": {
+    "active6899_matched": 243,
+    "hardware_BF_inactive": 128,
+    "hardware_only": 781,
+    "image_only": 781,
+    "record": "BF_site_binding_diagnosis.json",
+    "scope": "Uniformfullactive8192 modelcasesmatchhardware; historicalactive6899productionimagebinding unresolved. No silentremap orgeometrychange."
+  },
+  "DRAIN127": "Cases79/105postwalktail satisfy127 onlyundertheseallready/sourceconfigs. Universalbound remainsopen; returnlastleaf->root136 inqcase exceeds127 andisindependentfreeclockpath. No droppingpost127 events orcheckingonlypairbusy.",
+  "artifact_sha256": {
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/BF_site_binding_diagnosis.json": "5b7341403feaa8639606eb02f750e72783c7d3657d52ae240fd5a324c6e6adf1",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/FP4_XFIFO_first_fault_witness.json": "6768bc727729a1ddf80262ca871f595e8458bbc877f1bd5b98e72bd540828b63",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/bf16_2048x4096_mtp6_r1.json": "08f292c0440da6e1df942b6756728067745b5c06fe69897db8c943d4ff8573fa",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/bf16_2048x4096_mtp6_r1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/fp4_4608x2304_mtp6_r1.json": "6f9790f1fc9adb1d7712963b655b18c441411291fd723607db37c49b68e328db",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/fp4_4608x2304_mtp6_r1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/fp8_8192x5120_r1.json": "f5d4fb5696f0c7375dc1f8c9a31675ef15d0224c97822aea85c28d612eda69e9",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/fp8_8192x5120_r1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/fp8_8192x5120_r2.json": "856dbc8d80f43daca5a733c15067e7133b0881b34f0cb40e6f782a516de8dd89",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/fp8_8192x5120_r2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/dsrom_issue_return_calendar_prepare_20261002/static_tests_r1.log": "814a958ee597b246f30bc7e8be59c1b5c66ac8e92e4b708b1414980ce6c51219"
+  },
+  "baseline_commit": "f8f2bca3e3673715680a0e4f8e9575a80707e03e",
+  "cases": [
+    {
+      "record": "fp8_8192x5120_r1.json",
+      "scope": "Initialcontrolrecord beforeaddingindependentsymbolicassertion; preservedunchanged."
+    },
+    {
+      "XFIFO_peak": 3,
+      "lastleaf_to_lastroot_cycles": 136,
+      "leaf_after_lastwalk_modelcycles": 79,
+      "node_queue_peaks": [
+        1,
+        2,
+        3,
+        5,
+        10,
+        19,
+        24
+      ],
+      "positions": 1,
+      "record": "fp8_8192x5120_r2.json",
+      "root_Q_peak": 6,
+      "root_buffer_peak": 8,
+      "rows": 8192,
+      "status": "STATIC_CONTROL_AND_SYMBOLIC_TREE_PASS_ONLY",
+      "symbolic_checks": 8192
+    },
+    {
+      "leaf_after_lastwalk_modelcycles": 105,
+      "positions": 6,
+      "record": "bf16_2048x4096_mtp6_r1.json",
+      "rows": 2048,
+      "status": "STATIC_CONTROL_AND_SYMBOLIC_TREE_PASS_ONLY",
+      "symbolic_checks": 12288
+    },
+    {
+      "failure_record": "FP4_XFIFO_first_fault_witness.json",
+      "record": "fp4_4608x2304_mtp6_r1.json",
+      "status": "FAIL_UNQUALIFIED_STATIC_XFIFO_CALENDAR"
+    }
+  ],
+  "execution": {
+    "HDL_engine_compile": false,
+    "HDL_sim": false,
+    "PNR": false,
+    "Python_source_models": "Local, sourcecasecommandsGNUtimeout60s killafter1; no sourceupdate duringrunningcase. Originalr1/r2 distinctrecords preserved. No hardcgroup runtimequalification claimed.",
+    "STA": false,
+    "pve2_pve3_new_admissions": false,
+    "pve2_pve3_owned_jobs": []
+  },
+  "fault_source_copy_commit": "f8f2bca3e3673715680a0e4f8e9575a80707e03e",
+  "first_fault_witness": {
+    "BF16": 0,
+    "K": 512,
+    "MTP_positions": 2,
+    "XF": 4,
+    "confidence": "Independentclosedrecurrence agrees withsourcecontrolmodel onpre-faultstate; static only, notactualRTLmeasurement.",
+    "first_fault_model_t": 61,
+    "fmt": "fp4",
+    "full_pair_index": 1,
+    "independent_statement": "Push6+5k, pop7+8k for16slices. At61 occupancy4+push1-pop0=5. Timestampmodelrelativefirstexternalbeat4; initialVM/go/broadcastdelay shiftsabsolutetime, notcadencemismatch.",
+    "required_LAT": 8,
+    "rows": 257,
+    "source_round_spacing": 5,
+    "words_per_round": 1
+  },
+  "full_geometry": {
+    "NBF": 1024,
+    "NP": 8192,
+    "R": 128,
+    "logical_return_leaves": 16384,
+    "physical_ROM_4096_banks": 32768,
+    "return_nodes": 16256,
+    "roots": 128
+  },
+  "model_contract": {
+    "allready_scope": "Allspineactivationbeats available atscheduledbeat; beforeuniversalPASS mustcompose actualVM/quantizer13/BST/cfg/go calendarandalllegalphase/sourceinstancebindings.",
+    "assertions": "Independent symbolic golden balancedpaddedtree overorderedbaseidentities andsource rowregion; exactonceposition/rowtags andcompletebuffers checked. NoFP32bits/nonfinite/errorflags/goldenvalueorhardwaretiming proof.",
+    "clock_calendar": "Consumer seesproduceroutputs onfollowingedge. Source PP boundary3, q bterm11/chaininput1/LAT8/pairLAT8 =>31 tosegmentenqueue; BFboundary1/mul5/chaininput1/LAT8/tree4*LAT8 =>50. SegmentdecisionrecurrenceLAT+3=11. ReturnFIFOwrite+decision, node5addstage+RST1 or1bypass+RST1; rootregisteredlaunch+5addstages =>6 before rootconsidersresult.",
+    "first_failure_policy": "OnceXFIFOoverflow occurs modelunboundeddequeprojection isnotactualwrappedDUTstate. Subsequentqueueoccupancies/retirecounts infailedFP4record arediagnostic only, not reachable-validstoragebound. Originalrecord retained; firstoverflow is exactpre-fault recurrence witness.",
+    "node_storage": "All16256nodeobjects and128rootobjects allocated in everyfull_return call. No undersizedreturnproxy.",
+    "source_vs_generic_mapper": "Actual v41_die_field imports w17_runtime_v41_die_images; this model uses its per-region/active/NCH/NCHBconstraints. Prior genericmapperdescription doesnot qualify actualfieldimage.",
+    "sourcecase": "Immutable synthetic matrixmetadata only, no ROMwords or checkpointpayload read/generated. Source add_phase AST deletes exactly weightpayload mb-loop andretainsplacement/config/worddemand/fill/capacity/stream/phaseoperations."
+  },
+  "next_review": "Review independentXFIFOcadencewitness andBFsitebinding before anydefaultoffcalendar/bindingrepairsource. Universalfullfieldgate cannotclaimPASS undercurrentacceptedimagecalendar. Sourcefaulttieoffcopy isreadyforreview; no fullfieldenginelaunchuntilfreshsource-boundGO.",
+  "return_clock": "Keep original5stageclocksource inmodel/fieldcopy, SS/FFunqualified. AddingLAT8wouldchange7regionaladderpaths by21cycles plusrootre-addlatency per dependency; noactualstage/CDCchange.0.9GHzneedspriced3:4FIFO/tag/error/readyproof, notclocksubstitution.",
+  "source_sha256": {
+    "rtl/v41die/ot_v41_field_w17w10.sv": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+    "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "rtl/v41die/ot_v41_spine_w17w10.sv": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+    "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv": "f5d76c5ac689e4aac774a098e5f08f75ceac3552c456a48d5bc2af419dd1eabe",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79",
+    "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+    "tests/test_dsrom_issue_return_calendar.py": "5558ccbce9c5c1ed559079a0cba145128dda71c90283180df64495a62367c10c",
+    "tools/model_dsrom_issue_return_calendar.py": "2c2764dff035ce8231045456449256099a603ac8ee112a8a87f5d867eb214b21",
+    "tools/v41_die_field.py": "fdf62d1b9ecee3ccb3c8a67137bb75d3399a812f762df3651fffc37041a73d4a",
+    "tools/v41_die_images.py": "3efd61fdebcbaa393366a353eff65137ee0ad7f9603caba3118b963cb39ed2d0",
+    "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+    "tools/w17_runtime_v41_die_images.py": "e7c95148569f6743e81f1a4a059c10bdf2f8bdc5342d4de0da15beb059e1b643"
+  },
+  "static_tests": {
+    "controls": "Wrongrowtag preventsretirement (DIFF), three-basepaddingtree exacttiming, rootregisteredlaunch, fullforestphasecounts, independentXFfirstfault, BFbinding. NocompiledHDLmutants.",
+    "count": 8,
+    "log": "static_tests_r1.log",
+    "symbolic_checks_positive_full_cases": 20480
+  },
+  "status": "SOURCE_CALENDAR_COUNTEREXAMPLES_PRESERVED_UNIVERSAL_CLOSURE_REFUSED"
+}

@@ -1,0 +1,847 @@
+# OpenTallas analytical report: ROM versus HBM decode
+
+Date: 2026-09-23. This is the project's only analytical performance report. It
+replaces every earlier analytical comparison: the iso-area, wafer-versus-array,
+technical-direction, compute-in-ROM mechanism, per-region and first-principles
+memory documents; the DeepSeek-V4.1 feasibility screens; the Qwen and HC1
+screens; and the iso-node prose reports. All of those were deleted on this date.
+Every number below is produced by `python3 tools/run_roofline_studies.py --force`
+and bound to its artifact by a checked annotation. The results are analytical
+projections, not silicon or workload measurements.
+
+## 1. The two machines
+
+**ROM machine (model-specific).** Weights are masked into ROM on reticle-class
+dies at N5 or N6.
+
+- **Packaging:** two dies share an interposer package (the class of a shipping
+  B200-type package) over one advanced-package UCIe link; UCIe reaches ~2 mm, so
+  only edge-adjacent dies connect. Packages connect to neighbours over direct
+  SerDes links in a board mesh.
+- **Link latency:** priced from hardware primitives with no software stack.
+  About 10 ns per die-to-die hop (a UCIe PHY under 2 ns, on-die routing and
+  flit synchronisation) and 209 ns per package hop (a 200 ns channel of 112G
+  PAM4 SerDes, KP4 FEC and flight, 4 cycles of clock-domain crossing and a
+  5-cycle digital endpoint; band 129-409 ns). These are assumed and swept, not
+  measured.
+- **Expert storage:** each expert is striped across every read bank of a die,
+  so a token's selected experts are read at the die's full rate rather than
+  sweeping the whole array.
+- **Layout:** the layout search can put one layer's tensor group inside one
+  package and pipeline layers across packages. A ROM stage reads its own
+  weights locally, so pipelining costs it no bandwidth. This is the layout
+  most redesigned winners use.
+- **Arithmetic:** either ROM storage feeding MAC arrays, which amortises a
+  weight over a batch, or HC1-style compute-in-ROM (one select cell per ≤4-bit
+  weight, no batch amortisation), with per-expert-region ports as a middle
+  option.
+- **KV cache:** on-die SRAM or attached HBM stacks.
+
+**HBM machine (general-purpose, best shipping practice).** NVIDIA A100 (N7) or
+B200 (4NP) on their published NVLink fabrics:
+
+- the 8-GPU HGX baseboard, plus the 72-GPU NVL72 domain for Blackwell;
+- InfiniBand scale-out;
+- tensor, pipeline, hybrid and expert-parallel layouts, the last being
+  DeepSeek's own serving layout (attention replicated per NVLink domain,
+  experts sharded, dispatch and combine per layer);
+- native checkpoint formats: FP4 experts and FP8 dense.
+
+The GPU is not given specialised links. Those are a property of the
+model-specific machine.
+
+## 2. Method
+
+- **Resources first.** Each design fixes dies, area split, capacity, rates and
+  links; tokens/s follows. Both sides are swept over device count and layout at
+  every silicon area.
+- **One critical path per token, from the operator graph.** The service time a
+  token waits for on the slots it visits is spread over the token's operator
+  dependency graph by the bytes each operator reads; the step is that graph's
+  longest path plus every pipeline hop, and never less than the sweep. See
+  *Serial latency and collectives* below.
+- **Each metric compared best against best.** Per-user speed against the GPU's
+  fastest per-user layout; throughput and energy against its best throughput
+  and best-energy layouts at the same silicon.
+- **Energy per delivered token.** Static power over the step plus the dynamic
+  energy of the users actually served.
+- **Prefill.** Time to first token is priced for a prompt the length of the
+  context: 8,192-token chunks, collectives paid per chunk.
+- **Batch sweep.** 1 to 4,096 users. Designs hold KV for the largest batch
+  within their die-edge limits.
+
+**Validation gates:**
+
+- **Taalas HC1** (815 mm², N6, 16,960 tokens/s on Llama-3.1-8B, self-reported by
+  Taalas): modelled at **0.63×** <!-- figure: 0.63 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1.ratio" name="HC1 gate ratio" -->, inside the gate's 2× tolerance but now
+  **below** the shipping part: it binds on the dependent-operator chain of the
+  Llama decode graph priced with our own RTL depths, not on the array sweep.
+  Across the serial inputs' stated ranges it lands at
+  0.44× <!-- figure: 0.44 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1.detail.layer_fixed_latency_band.high.ratio_to_published" name="HC1 gate ratio, slow serial end" -->–0.76× <!-- figure: 0.76 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1.detail.layer_fixed_latency_band.low.ratio_to_published" name="HC1 gate ratio, fast serial end" -->, so the band no longer brackets the
+  published rate. It was 1.45× under the flat per-layer floor. Nothing was
+  tuned to move it back: HC1's hardwired datapath is serially faster than ours.
+  The gate uses one select cell per ≤4-bit weight, a figure taken from the
+  vendor's own description, so it is not independent on capacity.
+- **A100 weight-bound gate:** exact arithmetic, **1.000×** <!-- figure: 1.000 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.ratio" name="A100 gate ratio" -->.
+- **HC1 card-power gate:** still fails at **0.31×** <!-- figure: 0.31 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.ratio" name="HC1 power gate ratio" -->, lower than before because
+  the modelled part now makes fewer tokens per second. ROM energy may be
+  understated by up to ~2.3×.
+
+### Serial latency and collectives
+
+Until this revision the serial part of every step was a flat floor of about
+250 ns per layer (four array-pass boundaries, a barrier and a sequencer issue)
+plus two all-reduces per layer. The bottom-up critical path of the machine we
+actually build found both badly low, and the model now uses that machinery
+(`src/opentallas/critical_path.py`) for every point of every study, on both
+sides:
+
+- **The operator graph.** One DAG per token, built from the model profile and
+  the pinned `config.json` values in `configs/models/decode_graph_shapes.json`:
+  GQA (Qwen3, Llama, MiMo's sliding-window and global layers with sinks),
+  DeepSeek V4/V4.1 (4-copy hyper-connections with the 20-iteration Sinkhorn,
+  compressed and sparse attention, the indexer and top-k, reuse layers, Engram,
+  hash routing) and Kimi K3 (KDA recurrent layers, MLA, a latent MoE and block
+  attention-residuals, the last two read structurally and flagged as such). A
+  model whose structure is not stated is refused, not defaulted.
+- **ROM nodes** are priced with the measured depths of our hardwired decode
+  datapath (`rtl/hdc`, `technology.json` `serial_latency.rom_datapath`, graded
+  `executed`) at the slowest routed clock. The hyper-connection Sinkhorn
+  runs on the routed `ot_hdc_sinkhorn` unit (one normalisation per unit clock)
+  or on the stream unit's pipelined divider, whichever is faster for the users
+  in flight -- the same rule as `tools/decode_critical_path.py`. On V4.1 that
+  leaves about 3.7 µs of dependent chain per layer (144 µs of chain on the ×188 array's 40 layers at batch 1 <!-- figure: 144 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.by_batch.1.chain_s" scale="1e6" name="V4.1 x188 chain us b1" -->).
+- **GPU nodes** are priced as the best published decode execution, not the
+  shipping default: a persistent megakernel or a PDL-chained sequence of fused
+  kernels. Norms, RoPE, activations, residuals and routing scores are fused
+  into the neighbouring GEMV or attention kernel. Every remaining dependent
+  boundary pays a dependency cost measured on a Blackwell GPU
+  (`results/gpu/blackwell_gather_designs.json`,
+  `results/gpu/blackwell_dependency_latency.json`): 1.0 µs when it gathers the
+  activation vector from every SM (every GEMV input, every top-k and the
+  argmax) and 371 ns for a one-to-one handoff (the attention scan, the split-KV
+  combine). No launch cost
+  is charged. See *The GPU baseline: fused persistent-kernel decode* below.
+  In-kernel arithmetic chains pay published FP32 latencies.
+- **Every collective the weight split needs** is a graph node with its latency
+  and its real payload: FP32 partial sums, the 4-copy hyper-connection residual
+  at stage hops, gathered KV rows and top-k candidates. V4.1 under a tensor
+  group needs 5.25 per layer <!-- figure: 5.25 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.by_batch.1.collectives_per_layer" name="V4.1 collectives per layer" -->, not 2.
+- **Topology is searched per point.** A hybrid layout tries every power-of-two
+  tensor group and multiples of its domain, and on hardware links (UCIe, board
+  and wafer SerDes, the on-wafer mesh) each collective takes the cheapest of
+  two-step, one-shot, ring, recursive doubling, tree and centre-rooted mesh,
+  hierarchically across link classes, each with a fixed summation order. NVLink
+  and InfiniBand keep their measured small-message floor.
+
+Before and after, N5 against B200 (the "before" column is frozen in
+`results/roofline/critical_path/legacy_serial_model_targets.json` from commit
+ae4d7487):
+
+| Target | Fastest ROM, batch 1: before → after (tok/s/user) | Batch 64: before → after (tok/s/user) | Batch 64 aggregate: before → after | Fastest B200, batch 1: before → after | Chosen ROM topology at batch 1 (group, algorithm) |
+|---|---:|---:|---:|---:|---|
+| V4.1-Flash array ×188 (`array-hw-hybrid-x188`) | 15,556 → **4,959 <!-- figure: 4,959 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.per_user_b1" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b1 after" -->** | 12,208 → **4,419 <!-- figure: 4,419 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.per_user_b64" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b64 after" -->** | 781,337 → 282,816 <!-- figure: 282,816 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.aggregate_b64" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b64 aggregate after" --> | -- | group 4, 40 stages, recursive doubling and two-step |
+| V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) | 5,653 → **4,607 <!-- figure: 4,607 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.per_user_b1" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b1 after" -->** | 5,158 → **4,355 <!-- figure: 4,355 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.per_user_b64" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b64 after" -->** | 330,104 → 278,745 <!-- figure: 278,745 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.aggregate_b64" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b64 aggregate after" --> | -- | group 16 on the express network, 40 stages, one_shot |
+| Qwen3-8B 8K | 42,248 → **9,245 <!-- figure: 9,245 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_rom_b1.per_user" name="Qwen3-8B 8K fastest ROM b1 after" -->** | 9,373 → **6,086 <!-- figure: 6,086 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_rom_b64.per_user" name="Qwen3-8B 8K fastest ROM b64 after" -->** | 796,702 → 517,339 <!-- figure: 517,339 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_rom_b64.aggregate" name="Qwen3-8B 8K fastest ROM b64 aggregate after" --> | 4,444 → 2,536 <!-- figure: 2,536 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_gpu_b1.per_user" name="Qwen3-8B 8K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill`: group 57 on the express network, one_shot, rec_doubling |
+| V4-Flash 200K | 18,119 → **3,938 <!-- figure: 3,938 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_rom_b1.per_user" name="V4-Flash 200K fastest ROM b1 after" -->** | 13,829 → **3,449 <!-- figure: 3,449 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_rom_b64.per_user" name="V4-Flash 200K fastest ROM b64 after" -->** | 1,175,496 → 296,601 <!-- figure: 296,601 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_rom_b64.aggregate" name="V4-Flash 200K fastest ROM b64 aggregate after" --> | 3,972 → 862 <!-- figure: 862 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_gpu_b1.per_user" name="V4-Flash 200K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-hybrid-x2`: group 8 on the express network, one_shot |
+| V4-Pro 1M | 6,111 → **2,048 <!-- figure: 2,048 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_rom_b1.per_user" name="V4-Pro 1M fastest ROM b1 after" -->** | 4,226 → **1,681 <!-- figure: 1,681 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_rom_b64.per_user" name="V4-Pro 1M fastest ROM b64 after" -->** | 422,634 → 141,227 <!-- figure: 141,227 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_rom_b64.aggregate" name="V4-Pro 1M fastest ROM b64 aggregate after" --> | 2,456 → 514 <!-- figure: 514 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_gpu_b1.per_user" name="V4-Pro 1M fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-hybrid-x6`: group 16 on the express network, one_shot |
+| V4.1-Flash 200K | 15,556 → **5,326 <!-- figure: 5,326 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_flash.after.fastest_rom_b1.per_user" name="V4.1-Flash 200K fastest ROM b1 after" -->** | 13,436 → **5,184 <!-- figure: 5,184 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_flash.after.fastest_rom_b64.per_user" name="V4.1-Flash 200K fastest ROM b64 after" -->** | 859,906 → 445,793 <!-- figure: 445,793 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_flash.after.fastest_rom_b64.aggregate" name="V4.1-Flash 200K fastest ROM b64 aggregate after" --> | 4,257 → 1076 <!-- figure: 1076 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_flash.after.fastest_gpu_b1.per_user" name="V4.1-Flash 200K fastest GPU b1 after" --> | `ROM-N5-native-HBMKV-wafer-hybrid-x3`: group 8 on the express network, one_shot |
+| Kimi-K3 200K | 3,580 → **1,861 <!-- figure: 1,861 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.kimi_k3.after.fastest_rom_b1.per_user" name="Kimi-K3 200K fastest ROM b1 after" -->** | 1,237 → **1,277 <!-- figure: 1,277 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.kimi_k3.after.fastest_rom_b64.per_user" name="Kimi-K3 200K fastest ROM b64 after" -->** | 79,191 → 81,739 <!-- figure: 81,739 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.kimi_k3.after.fastest_rom_b64.aggregate" name="Kimi-K3 200K fastest ROM b64 aggregate after" --> | 1,275 → 495 <!-- figure: 495 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.kimi_k3.after.fastest_gpu_b1.per_user" name="Kimi-K3 200K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-hybrid-x3-perstream-romfill`: group 57 on the express network, one_shot, rec_doubling |
+| MiMo-V2.6-Pro 200K | 6,779 → **3,672 <!-- figure: 3,672 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_pro.after.fastest_rom_b1.per_user" name="MiMo-V2.6-Pro 200K fastest ROM b1 after" -->** | 1,480 → **1,563 <!-- figure: 1,563 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_pro.after.fastest_rom_b64.per_user" name="MiMo-V2.6-Pro 200K fastest ROM b64 after" -->** | 94,715 → 100,039 <!-- figure: 100,039 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_pro.after.fastest_rom_b64.aggregate" name="MiMo-V2.6-Pro 200K fastest ROM b64 aggregate after" --> | 2,120 → 916 <!-- figure: 916 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_pro.after.fastest_gpu_b1.per_user" name="MiMo-V2.6-Pro 200K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-tensor-x1-perstream-romfill`: group 57 on the express network, one_shot, rec_doubling |
+| MiMo-V2.6-Flash 200K | 13,762 → **5,575 <!-- figure: 5,575 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_flash.after.fastest_rom_b1.per_user" name="MiMo-V2.6-Flash 200K fastest ROM b1 after" -->** | 2,588 → **2,529 <!-- figure: 2,529 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_flash.after.fastest_rom_b64.per_user" name="MiMo-V2.6-Flash 200K fastest ROM b64 after" -->** | 219,956 → 161,848 <!-- figure: 161,848 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_flash.after.fastest_rom_b64.aggregate" name="MiMo-V2.6-Flash 200K fastest ROM b64 aggregate after" --> | 3,532 → 1400 <!-- figure: 1400 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.mimo_v26_flash.after.fastest_gpu_b1.per_user" name="MiMo-V2.6-Flash 200K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-tensor-x1-perstream-romfill`: group 57 on the express network, one_shot, rec_doubling |
+| Qwen3-8B on one HC1-class reticle | 24,222 → **9,195 <!-- figure: 9,195 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b_single_reticle.after.per_user_b1" name="Qwen3-8B single reticle after" -->** | -- | -- | -- | single die, no collective |
+| Taalas HC1 gate (Llama-3.1-8B) | 24,675 → **10,723 <!-- figure: 10,723 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.hc1_llama31_8b.after.per_user_b1" name="HC1 modelled after" -->** | -- | -- | -- | published 16,960 |
+
+Every target loses batch-1 per-user speed against the flat floor. The GPU columns
+were re-priced after this table's first publication with the measured
+dependency costs below, so they are the fused persistent-kernel GPU. The ×188 V4.1 array now
+prefers a 4-die tensor group (two two-die packages) at batch 1 and at batch 64,
+reducing by recursive doubling and two-step.
+
+**Wafer fabric.** A wafer's collectives can run on two networks, and every
+wafer point is priced on both. The Cerebras-style core mesh
+(`links.on_wafer_n5`, unchanged) costs 125 ns per reticle-field crossing
+because it has a router every 0.23 mm. That is a property of Cerebras' NoC, not
+of wafer-scale integration. The alternative, `links.rom_wafer_express`, is a
+dedicated network of pipelined, repeated wires with one forwarding stage per
+field boundary. Its values are the routed measurement
+(`results/architecture/wafer_express_link_measurement.json`, ASAP7): 605 ps/mm
+register to register, so 30 ns per 28.55 mm field crossing, and 12.5 TB/s per
+field edge from 100,364 wires on a quarter of two upper metal layers. The
+thick-metal N5 reading (150 ps/mm plus a 3 ns router, 7.3 ns and 1.78 TB/s) is
+kept as the optimistic end of the range. On the core mesh alone the ×12 V4.1
+wafer's best is 3,214 tokens/s per user at batch 1 (8-field groups, ~99 µs of
+collectives a token); on the express network it takes 16-field groups with
+~40 µs of collectives and reaches the rate in the table. That is still behind
+the ×188 array at batch 1 and 64, and ahead of it from about 1,000 users on
+aggregate. The express network is chosen at every batch for that wafer, and a
+wafer on it is the fastest ROM class at batch 1 for every target in the table
+above: Qwen3-8B, V4-Flash, V4-Pro, V4.1, Kimi-K3 and both MiMo models.
+
+The candidate models against B200 at the same silicon:
+
+| Model | Batch | ROM design | GPU design | ROM tok/s per user | GPU tok/s per user | Ratio |
+|---|---:|---|---|---:|---:|---:|
+| Kimi-K3 200K | 1 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x395` | `b200_sxm-x201-nvl72-hybrid` | 928 | 487 | **1.91×** | <!-- figure: 928 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#comparisons[rom_design=Kimi-K3/ROM-N5-native-SRAMKV-array-hw-hybrid-x395,batch_size=1].rom_per_user_tokens_s" name="Kimi-K3 200K b1 ROM rate" --> <!-- figure: 487 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#comparisons[rom_design=Kimi-K3/ROM-N5-native-SRAMKV-array-hw-hybrid-x395,batch_size=1].iso_area_gpu_per_user_tokens_s" name="Kimi-K3 200K b1 GPU rate" --> <!-- figure: 1.91 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#comparisons[rom_design=Kimi-K3/ROM-N5-native-SRAMKV-array-hw-hybrid-x395,batch_size=1].per_user_speed_ratio" name="Kimi-K3 200K b1 ratio" -->
+| Kimi-K3 200K | 64 | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | `b200_sxm-x202-nvl72-hybrid` | 531 | 274 | **1.94×** | <!-- figure: 531 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#comparisons[rom_design=Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x396,batch_size=64].rom_per_user_tokens_s" name="Kimi-K3 200K b64 ROM rate" --> <!-- figure: 274 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#comparisons[rom_design=Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x396,batch_size=64].iso_area_gpu_per_user_tokens_s" name="Kimi-K3 200K b64 GPU rate" --> <!-- figure: 1.94 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#comparisons[rom_design=Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x396,batch_size=64].per_user_speed_ratio" name="Kimi-K3 200K b64 ratio" -->
+| MiMo-V2.6-Pro 200K | 1 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x140` | `b200_sxm-x71-nvl72-tensor` | 2,097 | 916 | **2.29×** | <!-- figure: 2,097 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Pro/ROM-N5-native-SRAMKV-array-hw-hybrid-x140,batch_size=1].rom_per_user_tokens_s" name="MiMo-V2.6-Pro 200K b1 ROM rate" --> <!-- figure: 916 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Pro/ROM-N5-native-SRAMKV-array-hw-hybrid-x140,batch_size=1].iso_area_gpu_per_user_tokens_s" name="MiMo-V2.6-Pro 200K b1 GPU rate" --> <!-- figure: 2.29 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Pro/ROM-N5-native-SRAMKV-array-hw-hybrid-x140,batch_size=1].per_user_speed_ratio" name="MiMo-V2.6-Pro 200K b1 ratio" -->
+| MiMo-V2.6-Pro 200K | 64 | `ROM-N5-native-HBMKV-wafer-hybrid-x49` | `b200_sxm-x1416-nvl72-hybrid` | 1,563 | 790 | **1.98×** | <!-- figure: 1,563 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x49,batch_size=64].rom_per_user_tokens_s" name="MiMo-V2.6-Pro 200K b64 ROM rate" --> <!-- figure: 790 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x49,batch_size=64].iso_area_gpu_per_user_tokens_s" name="MiMo-V2.6-Pro 200K b64 GPU rate" --> <!-- figure: 1.98 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x49,batch_size=64].per_user_speed_ratio" name="MiMo-V2.6-Pro 200K b64 ratio" -->
+| MiMo-V2.6-Flash 200K | 1 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x45` | `b200_sxm-x23-nvl72-tensor` | 3,852 | 1267 | **3.04×** | <!-- figure: 3,852 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x45,batch_size=1].rom_per_user_tokens_s" name="MiMo-V2.6-Flash 200K b1 ROM rate" --> <!-- figure: 1267 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x45,batch_size=1].iso_area_gpu_per_user_tokens_s" name="MiMo-V2.6-Flash 200K b1 GPU rate" --> <!-- figure: 3.04 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x45,batch_size=1].per_user_speed_ratio" name="MiMo-V2.6-Flash 200K b1 ratio" -->
+| MiMo-V2.6-Flash 200K | 64 | `ROM-N5-native-HBMKV-array-hw-hybrid-x188-romfill` | `b200_sxm-x96-nvl72-hybrid` | 1,632 | 617 | **2.65×** | <!-- figure: 1,632 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188-romfill,batch_size=64].rom_per_user_tokens_s" name="MiMo-V2.6-Flash 200K b64 ROM rate" --> <!-- figure: 617 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188-romfill,batch_size=64].iso_area_gpu_per_user_tokens_s" name="MiMo-V2.6-Flash 200K b64 GPU rate" --> <!-- figure: 2.65 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#comparisons[rom_design=MiMo-V2.6-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188-romfill,batch_size=64].per_user_speed_ratio" name="MiMo-V2.6-Flash 200K b64 ratio" -->
+
+| Model | Silicon | ROM best throughput (design, batch) | GPU best throughput (design, batch) | Throughput ratio | Best tokens/J ratio |
+|---|---:|---|---|---:|---:|
+| Kimi-K3 200K | 739,600 mm² | 152,114 (`ROM-N5-native-HBMKV-wafer-pipeline-x16-perstream-romfill`, 4,096) | 158,454 (`b200_sxm-x462-nvl72-hybrid`, 4,096) | **0.96×** | **3.09×** | <!-- figure: 0.96 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#capacity_comparison[model=Kimi-K3,silicon_area_mm2=739600.0].aggregate_ratio" name="Kimi-K3 200K best-vs-best throughput" --> <!-- figure: 3.09 src="results/roofline/candidates/kimi-k3/n5_vs_b200/analytical.json#capacity_comparison[model=Kimi-K3,silicon_area_mm2=739600.0].tokens_per_joule_ratio" name="Kimi-K3 200K best tokens per joule" -->
+| MiMo-V2.6-Pro 200K | 2,265,000 mm² | 165,097 (`ROM-N5-native-HBMKV-wafer-pipeline-x49`, 4,096) | 445,057 (`b200_sxm-x1416-nvl72-hybrid`, 4,096) | **0.37×** | **4.46×** | <!-- figure: 0.37 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#capacity_comparison[model=MiMo-V2.6-Pro,silicon_area_mm2=2265000.0].aggregate_ratio" name="MiMo-V2.6-Pro 200K best-vs-best throughput" --> <!-- figure: 4.46 src="results/roofline/candidates/mimo-v26-pro/n5_vs_b200/analytical.json#capacity_comparison[model=MiMo-V2.6-Pro,silicon_area_mm2=44800.0].tokens_per_joule_ratio" name="MiMo-V2.6-Pro 200K best tokens per joule" -->
+| MiMo-V2.6-Flash 200K | 306,400 mm² | 244,568 (`ROM-N5-native-HBMKV-array-hw-hybrid-x376-romfill`, 4,096) | 217,383 (`b200_sxm-x192-nvl72-hybrid`, 4,096) | **1.13×** | **9.66×** | <!-- figure: 1.13 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#capacity_comparison[model=MiMo-V2.6-Flash,silicon_area_mm2=306400.0].aggregate_ratio" name="MiMo-V2.6-Flash 200K best-vs-best throughput" --> <!-- figure: 9.66 src="results/roofline/candidates/mimo-v26-flash/n5_vs_b200/analytical.json#capacity_comparison[model=MiMo-V2.6-Flash,silicon_area_mm2=46200.0].tokens_per_joule_ratio" name="MiMo-V2.6-Flash 200K best tokens per joule" -->
+
+### The GPU baseline: fused persistent-kernel decode
+
+The GPU side is priced as the best published decode execution rather than the
+shipping default. That means one persistent megakernel (Hazy Research's
+Llama-1B "No Bubbles" megakernel; CMU's Mirage Persistent Kernel), or fused
+kernels chained by Programmatic Dependent Launch (Hopper and later; TensorRT-LLM
+and FlashInfer ship it per kernel). Today's serving stacks stop short of this:
+
+- vLLM decodes under full CUDA graphs with torch.compile fusion passes.
+- SGLang runs CUDA graphs and torch.compile.
+- TensorRT-LLM's DeepSeek-R1 minimum-latency path on 8×B200 reached 368
+  tokens/s per user from a 67 tokens/s CUDA-graph baseline; enabling PDL there
+  was one +3% step.
+
+The published megakernels report 1.0–1.7× (Mirage: Qwen3-8B on A100 from 14.5
+to 12.5 ms per token) and up to 2.5× over vLLM on H100 (Hazy). The sources and
+quotes are in `technology.json` `serial_latency.gpu_datapath.execution_model`.
+
+**Fusion.** Norms, RoPE, activations, residual adds, routing scores,
+hyper-connection mixes and quantisers run in the prologue or epilogue of the
+neighbouring GEMV or attention kernel. That dependency stays inside one CTA and
+is not charged (`__syncthreads`, 7 ns measured). Two kinds of dependent boundary
+remain:
+
+- an **all-SM gather** before every GEMV, top-k and the argmax: charged 1.0 µs,
+  band 0.74–1.15 µs;
+- a **one-to-one handoff** at the attention scan and the split-KV combine:
+  charged 371 ns, band to 469 ns.
+
+Qwen3-8B then has 6 <!-- figure: 6 src="results/roofline/critical_path/serial_latency_report.json#gpu_boundaries.qwen3_8b.per_layer_total_mean" name="Qwen boundaries per layer" --> boundaries per layer: fused QKV, attention,
+attention combine, o-proj, gate|up and down, which is Hazy's instruction set.
+An unfused stack would have 12 per layer, and Mirage counts 293 kernels per
+Qwen3-8B token. V4.1 averages 13.62 <!-- figure: 13.62 src="results/roofline/critical_path/serial_latency_report.json#gpu_boundaries.deepseek_v41_flash.per_layer_total_mean" name="V4.1 boundaries per layer" --> per layer. That count is this rule's, since no
+fused DeepSeek layer count is published. On one GPU the boundaries alone cost a
+Qwen3-8B token 173 <!-- figure: 173 src="results/roofline/critical_path/serial_latency_report.json#gpu_boundaries.qwen3_8b.single_gpu_dependency_path_s" scale="1e6" name="Qwen single-GPU dependency path us" --> µs and a V4.1 token 363 <!-- figure: 363 src="results/roofline/critical_path/serial_latency_report.json#gpu_boundaries.deepseek_v41_flash.single_gpu_dependency_path_s" scale="1e6" name="V4.1 single-GPU dependency path us" --> µs.
+
+**Where the charges come from.** Both boundary costs were measured on an RTX PRO
+6000 Blackwell (GB202, 188 SMs) and are derived for B200:
+
+- `results/gpu/blackwell_gather_designs.json` gives the gather: the best all-SM
+  fan-in with the 4,096-wide bf16 vector actually delivered is 1,004 ns, and
+  1,151 ns for fp32. Under a DRAM-bound weight stream with dynamic row claiming,
+  the exposed cost is 0.74–1.06 µs per boundary.
+- `results/gpu/blackwell_dependency_latency.json` gives the handoff, 370.6 ns.
+  PDL measures the same, 365.6 ns.
+- `results/gpu/blackwell_sync_breakdown.json` shows the cost is L2 latency, not
+  arrival serialisation.
+
+A two-die B200 may be slower on an all-SM gather. No launch cost is charged
+anywhere. For scale only, the measured empty-kernel CUDA-graph gap on the same
+part is 428 ns.
+
+**ROM against the fused GPU.** Each band end re-evaluates every GPU design of
+the study and keeps the fastest (`tools/serial_latency_report.py`):
+
+| Target | Batch | ROM tok/s per user | Fused GPU tok/s per user | ROM:GPU | Boundary band (fast–slow GPU) |
+|---|---:|---:|---:|---:|---:|
+| Qwen3-8B 8K | 1 | 9,245 <!-- figure: 9,245 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.1.rom_per_user_tokens_s" name="Qwen3-8B 8K b1 ROM rate (GPU section)" --> | 2,536 <!-- figure: 2,536 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.1.gpu.headline.per_user_tokens_s" name="Qwen3-8B 8K b1 fused GPU rate" --> | **3.65 <!-- figure: 3.65 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.1.gpu.headline.rom_over_gpu" name="Qwen3-8B 8K b1 ROM:GPU" -->×** | 3.29 <!-- figure: 3.29 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.1.gpu.band_low.rom_over_gpu" name="Qwen3-8B 8K b1 ROM:GPU fast boundary" -->×–3.91 <!-- figure: 3.91 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.1.gpu.band_high.rom_over_gpu" name="Qwen3-8B 8K b1 ROM:GPU slow boundary" -->× |
+| Qwen3-8B 8K | 64 | 6,086 <!-- figure: 6,086 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.64.rom_per_user_tokens_s" name="Qwen3-8B 8K b64 ROM rate (GPU section)" --> | 2,137 <!-- figure: 2,137 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.64.gpu.headline.per_user_tokens_s" name="Qwen3-8B 8K b64 fused GPU rate" --> | **2.85 <!-- figure: 2.85 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.64.gpu.headline.rom_over_gpu" name="Qwen3-8B 8K b64 ROM:GPU" -->×** | 2.62 <!-- figure: 2.62 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.64.gpu.band_low.rom_over_gpu" name="Qwen3-8B 8K b64 ROM:GPU fast boundary" -->×–3.03 <!-- figure: 3.03 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.qwen3_8b.by_batch.64.gpu.band_high.rom_over_gpu" name="Qwen3-8B 8K b64 ROM:GPU slow boundary" -->× |
+| V4.1-Flash array ×188 | 1 | 4,959 <!-- figure: 4,959 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.1.rom_per_user_tokens_s" name="V4.1-Flash array ×188 b1 ROM rate (GPU section)" --> | 1,076 <!-- figure: 1,076 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.1.gpu.headline.per_user_tokens_s" name="V4.1-Flash array ×188 b1 fused GPU rate" --> | **4.61 <!-- figure: 4.61 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.1.gpu.headline.rom_over_gpu" name="V4.1-Flash array ×188 b1 ROM:GPU" -->×** | 4.18 <!-- figure: 4.18 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.1.gpu.band_low.rom_over_gpu" name="V4.1-Flash array ×188 b1 ROM:GPU fast boundary" -->×–4.90 <!-- figure: 4.90 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.1.gpu.band_high.rom_over_gpu" name="V4.1-Flash array ×188 b1 ROM:GPU slow boundary" -->× |
+| V4.1-Flash array ×188 | 64 | 4,419 <!-- figure: 4,419 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.64.rom_per_user_tokens_s" name="V4.1-Flash array ×188 b64 ROM rate (GPU section)" --> | 887 <!-- figure: 887 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.64.gpu.headline.per_user_tokens_s" name="V4.1-Flash array ×188 b64 fused GPU rate" --> | **4.98 <!-- figure: 4.98 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.64.gpu.headline.rom_over_gpu" name="V4.1-Flash array ×188 b64 ROM:GPU" -->×** | 4.60 <!-- figure: 4.60 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.64.gpu.band_low.rom_over_gpu" name="V4.1-Flash array ×188 b64 ROM:GPU fast boundary" -->×–5.25 <!-- figure: 5.25 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_array_x188.by_batch.64.gpu.band_high.rom_over_gpu" name="V4.1-Flash array ×188 b64 ROM:GPU slow boundary" -->× |
+| V4.1-Flash 200K (fastest ROM) | 1 | 5,326 <!-- figure: 5,326 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.1.rom_per_user_tokens_s" name="V4.1-Flash 200K (fastest ROM) b1 ROM rate (GPU section)" --> | 1,076 <!-- figure: 1,076 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.1.gpu.headline.per_user_tokens_s" name="V4.1-Flash 200K (fastest ROM) b1 fused GPU rate" --> | **4.95 <!-- figure: 4.95 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.1.gpu.headline.rom_over_gpu" name="V4.1-Flash 200K (fastest ROM) b1 ROM:GPU" -->×** | 4.49 <!-- figure: 4.49 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.1.gpu.band_low.rom_over_gpu" name="V4.1-Flash 200K (fastest ROM) b1 ROM:GPU fast boundary" -->×–5.27 <!-- figure: 5.27 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.1.gpu.band_high.rom_over_gpu" name="V4.1-Flash 200K (fastest ROM) b1 ROM:GPU slow boundary" -->× |
+| V4.1-Flash 200K (fastest ROM) | 64 | 5,184 <!-- figure: 5,184 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.64.rom_per_user_tokens_s" name="V4.1-Flash 200K (fastest ROM) b64 ROM rate (GPU section)" --> | 887 <!-- figure: 887 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.64.gpu.headline.per_user_tokens_s" name="V4.1-Flash 200K (fastest ROM) b64 fused GPU rate" --> | **5.85 <!-- figure: 5.85 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.64.gpu.headline.rom_over_gpu" name="V4.1-Flash 200K (fastest ROM) b64 ROM:GPU" -->×** | 5.39 <!-- figure: 5.39 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.64.gpu.band_low.rom_over_gpu" name="V4.1-Flash 200K (fastest ROM) b64 ROM:GPU fast boundary" -->×–6.15 <!-- figure: 6.15 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v41_flash.by_batch.64.gpu.band_high.rom_over_gpu" name="V4.1-Flash 200K (fastest ROM) b64 ROM:GPU slow boundary" -->× |
+| V4-Flash 200K | 1 | 3,938 <!-- figure: 3,938 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.1.rom_per_user_tokens_s" name="V4-Flash 200K b1 ROM rate (GPU section)" --> | 862 <!-- figure: 862 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.1.gpu.headline.per_user_tokens_s" name="V4-Flash 200K b1 fused GPU rate" --> | **4.57 <!-- figure: 4.57 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.1.gpu.headline.rom_over_gpu" name="V4-Flash 200K b1 ROM:GPU" -->×** | 4.20 <!-- figure: 4.20 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.1.gpu.band_low.rom_over_gpu" name="V4-Flash 200K b1 ROM:GPU fast boundary" -->×–4.82 <!-- figure: 4.82 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.1.gpu.band_high.rom_over_gpu" name="V4-Flash 200K b1 ROM:GPU slow boundary" -->× |
+| V4-Flash 200K | 64 | 3,449 <!-- figure: 3,449 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.64.rom_per_user_tokens_s" name="V4-Flash 200K b64 ROM rate (GPU section)" --> | 757 <!-- figure: 757 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.64.gpu.headline.per_user_tokens_s" name="V4-Flash 200K b64 fused GPU rate" --> | **4.56 <!-- figure: 4.56 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.64.gpu.headline.rom_over_gpu" name="V4-Flash 200K b64 ROM:GPU" -->×** | 4.23 <!-- figure: 4.23 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.64.gpu.band_low.rom_over_gpu" name="V4-Flash 200K b64 ROM:GPU fast boundary" -->×–4.78 <!-- figure: 4.78 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_flash.by_batch.64.gpu.band_high.rom_over_gpu" name="V4-Flash 200K b64 ROM:GPU slow boundary" -->× |
+| V4-Pro 1M | 1 | 2,048 <!-- figure: 2,048 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.1.rom_per_user_tokens_s" name="V4-Pro 1M b1 ROM rate (GPU section)" --> | 514 <!-- figure: 514 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.1.gpu.headline.per_user_tokens_s" name="V4-Pro 1M b1 fused GPU rate" --> | **3.99 <!-- figure: 3.99 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.1.gpu.headline.rom_over_gpu" name="V4-Pro 1M b1 ROM:GPU" -->×** | 3.71 <!-- figure: 3.71 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.1.gpu.band_low.rom_over_gpu" name="V4-Pro 1M b1 ROM:GPU fast boundary" -->×–4.17 <!-- figure: 4.17 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.1.gpu.band_high.rom_over_gpu" name="V4-Pro 1M b1 ROM:GPU slow boundary" -->× |
+| V4-Pro 1M | 64 | 1,681 <!-- figure: 1,681 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.64.rom_per_user_tokens_s" name="V4-Pro 1M b64 ROM rate (GPU section)" --> | 469 <!-- figure: 469 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.64.gpu.headline.per_user_tokens_s" name="V4-Pro 1M b64 fused GPU rate" --> | **3.59 <!-- figure: 3.59 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.64.gpu.headline.rom_over_gpu" name="V4-Pro 1M b64 ROM:GPU" -->×** | 3.36 <!-- figure: 3.36 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.64.gpu.band_low.rom_over_gpu" name="V4-Pro 1M b64 ROM:GPU fast boundary" -->×–3.74 <!-- figure: 3.74 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.deepseek_v4_pro.by_batch.64.gpu.band_high.rom_over_gpu" name="V4-Pro 1M b64 ROM:GPU slow boundary" -->× |
+| Kimi-K3 200K | 1 | 1,861 <!-- figure: 1,861 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.1.rom_per_user_tokens_s" name="Kimi-K3 200K b1 ROM rate (GPU section)" --> | 495 <!-- figure: 495 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.1.gpu.headline.per_user_tokens_s" name="Kimi-K3 200K b1 fused GPU rate" --> | **3.76 <!-- figure: 3.76 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.1.gpu.headline.rom_over_gpu" name="Kimi-K3 200K b1 ROM:GPU" -->×** | 3.41 <!-- figure: 3.41 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.1.gpu.band_low.rom_over_gpu" name="Kimi-K3 200K b1 ROM:GPU fast boundary" -->×–3.98 <!-- figure: 3.98 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.1.gpu.band_high.rom_over_gpu" name="Kimi-K3 200K b1 ROM:GPU slow boundary" -->× |
+| Kimi-K3 200K | 64 | 1,277 <!-- figure: 1,277 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.64.rom_per_user_tokens_s" name="Kimi-K3 200K b64 ROM rate (GPU section)" --> | 345 <!-- figure: 345 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.64.gpu.headline.per_user_tokens_s" name="Kimi-K3 200K b64 fused GPU rate" --> | **3.70 <!-- figure: 3.70 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.64.gpu.headline.rom_over_gpu" name="Kimi-K3 200K b64 ROM:GPU" -->×** | 3.46 <!-- figure: 3.46 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.64.gpu.band_low.rom_over_gpu" name="Kimi-K3 200K b64 ROM:GPU fast boundary" -->×–3.85 <!-- figure: 3.85 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.kimi_k3.by_batch.64.gpu.band_high.rom_over_gpu" name="Kimi-K3 200K b64 ROM:GPU slow boundary" -->× |
+| MiMo-V2.6-Pro 200K | 1 | 3,672 <!-- figure: 3,672 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.1.rom_per_user_tokens_s" name="MiMo-V2.6-Pro 200K b1 ROM rate (GPU section)" --> | 916 <!-- figure: 916 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.1.gpu.headline.per_user_tokens_s" name="MiMo-V2.6-Pro 200K b1 fused GPU rate" --> | **4.01 <!-- figure: 4.01 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.1.gpu.headline.rom_over_gpu" name="MiMo-V2.6-Pro 200K b1 ROM:GPU" -->×** | 3.61 <!-- figure: 3.61 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.1.gpu.band_low.rom_over_gpu" name="MiMo-V2.6-Pro 200K b1 ROM:GPU fast boundary" -->×–4.29 <!-- figure: 4.29 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.1.gpu.band_high.rom_over_gpu" name="MiMo-V2.6-Pro 200K b1 ROM:GPU slow boundary" -->× |
+| MiMo-V2.6-Pro 200K | 64 | 1,563 <!-- figure: 1,563 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.64.rom_per_user_tokens_s" name="MiMo-V2.6-Pro 200K b64 ROM rate (GPU section)" --> | 790 <!-- figure: 790 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.64.gpu.headline.per_user_tokens_s" name="MiMo-V2.6-Pro 200K b64 fused GPU rate" --> | **1.98 <!-- figure: 1.98 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.64.gpu.headline.rom_over_gpu" name="MiMo-V2.6-Pro 200K b64 ROM:GPU" -->×** | 1.81 <!-- figure: 1.81 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.64.gpu.band_low.rom_over_gpu" name="MiMo-V2.6-Pro 200K b64 ROM:GPU fast boundary" -->×–2.10 <!-- figure: 2.10 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_pro.by_batch.64.gpu.band_high.rom_over_gpu" name="MiMo-V2.6-Pro 200K b64 ROM:GPU slow boundary" -->× |
+| MiMo-V2.6-Flash 200K | 1 | 5,575 <!-- figure: 5,575 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.1.rom_per_user_tokens_s" name="MiMo-V2.6-Flash 200K b1 ROM rate (GPU section)" --> | 1,400 <!-- figure: 1,400 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.1.gpu.headline.per_user_tokens_s" name="MiMo-V2.6-Flash 200K b1 fused GPU rate" --> | **3.98 <!-- figure: 3.98 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.1.gpu.headline.rom_over_gpu" name="MiMo-V2.6-Flash 200K b1 ROM:GPU" -->×** | 3.57 <!-- figure: 3.57 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.1.gpu.band_low.rom_over_gpu" name="MiMo-V2.6-Flash 200K b1 ROM:GPU fast boundary" -->×–4.28 <!-- figure: 4.28 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.1.gpu.band_high.rom_over_gpu" name="MiMo-V2.6-Flash 200K b1 ROM:GPU slow boundary" -->× |
+| MiMo-V2.6-Flash 200K | 64 | 2,529 <!-- figure: 2,529 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.64.rom_per_user_tokens_s" name="MiMo-V2.6-Flash 200K b64 ROM rate (GPU section)" --> | 1,134 <!-- figure: 1,134 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.64.gpu.headline.per_user_tokens_s" name="MiMo-V2.6-Flash 200K b64 fused GPU rate" --> | **2.23 <!-- figure: 2.23 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.64.gpu.headline.rom_over_gpu" name="MiMo-V2.6-Flash 200K b64 ROM:GPU" -->×** | 2.04 <!-- figure: 2.04 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.64.gpu.band_low.rom_over_gpu" name="MiMo-V2.6-Flash 200K b64 ROM:GPU fast boundary" -->×–2.36 <!-- figure: 2.36 src="results/roofline/critical_path/serial_latency_report.json#gpu_execution.targets.mimo_v26_flash.by_batch.64.gpu.band_high.rom_over_gpu" name="MiMo-V2.6-Flash 200K b64 ROM:GPU slow boundary" -->× |
+
+Against the fused GPU, the batch-1 per-user advantage falls to roughly 3.6 to
+5 times on every model; it was larger when the GPU paid a launch per unfused
+kernel. Across the measured boundary band, each ratio moves by about a tenth.
+
+## 3. Per-user decode speed, N5 ROM against B200 at the same silicon
+
+Best ROM array against the GPU's fastest per-user design at the same area.
+
+| Model | Batch | ROM design | GPU design | ROM tok/s per user | GPU tok/s per user | Ratio |
+|---|---:|---|---|---:|---:|---:|
+| V4.1-Flash 200K | 1 | `ROM-N5-native-HBMKV-array-hw-hybrid-x183` | `b200_sxm-x93-nvl72-hybrid` | 4,107 | 1057 | **3.89×** | <!-- figure: 4,107 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x183,batch_size=1].rom_per_user_tokens_s" name="V4.1-Flash 200K b1 ROM rate" --> <!-- figure: 1057 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x183,batch_size=1].iso_area_gpu_per_user_tokens_s" name="V4.1-Flash 200K b1 GPU rate" --> <!-- figure: 3.89 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x183,batch_size=1].per_user_speed_ratio" name="V4.1-Flash 200K b1 ratio" -->
+| V4.1-Flash 200K | 64 | `ROM-N5-native-HBMKV-array-hw-hybrid-x185` | `b200_sxm-x94-nvl72-hybrid` | 4,036 | 709 | **5.69×** | <!-- figure: 4,036 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x185,batch_size=64].rom_per_user_tokens_s" name="V4.1-Flash 200K b64 ROM rate" --> <!-- figure: 709 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x185,batch_size=64].iso_area_gpu_per_user_tokens_s" name="V4.1-Flash 200K b64 GPU rate" --> <!-- figure: 5.69 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x185,batch_size=64].per_user_speed_ratio" name="V4.1-Flash 200K b64 ratio" -->
+| V4.1-Flash 200K | 1,024 | `ROM-N5-native-HBMKV-array-hw-pipeline-x264` | `b200_sxm-x134-nvl72-hybrid` | 1,305 | 233 | **5.59×** | <!-- figure: 1,305 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x264,batch_size=1024].rom_per_user_tokens_s" name="V4.1-Flash 200K b1024 ROM rate" --> <!-- figure: 233 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x264,batch_size=1024].iso_area_gpu_per_user_tokens_s" name="V4.1-Flash 200K b1024 GPU rate" --> <!-- figure: 5.59 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x264,batch_size=1024].per_user_speed_ratio" name="V4.1-Flash 200K b1024 ratio" -->
+| V4.1-Flash 200K | 4,096 | `ROM-N5-native-HBMKV-array-hw-pipeline-x352` | `b200_sxm-x179-nvl72-hybrid` | 551 | 142 | **3.87×** | <!-- figure: 551 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x352,batch_size=4096].rom_per_user_tokens_s" name="V4.1-Flash 200K b4096 ROM rate" --> <!-- figure: 142 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x352,batch_size=4096].iso_area_gpu_per_user_tokens_s" name="V4.1-Flash 200K b4096 GPU rate" --> <!-- figure: 3.87 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x352,batch_size=4096].per_user_speed_ratio" name="V4.1-Flash 200K b4096 ratio" -->
+| V4-Flash 200K | 1 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x56` | `b200_sxm-x29-nvl72-tensor` | 3,460 | 846 | **4.09×** | <!-- figure: 3,460 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x56,batch_size=1].rom_per_user_tokens_s" name="V4-Flash 200K b1 ROM rate" --> <!-- figure: 846 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x56,batch_size=1].iso_area_gpu_per_user_tokens_s" name="V4-Flash 200K b1 GPU rate" --> <!-- figure: 4.09 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x56,batch_size=1].per_user_speed_ratio" name="V4-Flash 200K b1 ratio" -->
+| V4-Flash 200K | 64 | `ROM-N5-native-HBMKV-array-hw-pipeline-x60` | `b200_sxm-x31-hybrid` | 2,615 | 389 | **6.72×** | <!-- figure: 2,615 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x60,batch_size=64].rom_per_user_tokens_s" name="V4-Flash 200K b64 ROM rate" --> <!-- figure: 389 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x60,batch_size=64].iso_area_gpu_per_user_tokens_s" name="V4-Flash 200K b64 GPU rate" --> <!-- figure: 6.72 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x60,batch_size=64].per_user_speed_ratio" name="V4-Flash 200K b64 ratio" -->
+| V4-Flash 200K | 1,024 | `ROM-N5-native-HBMKV-array-hw-pipeline-x113` | `b200_sxm-x58-hybrid` | 685 | 108 | **6.37×** | <!-- figure: 685 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x113,batch_size=1024].rom_per_user_tokens_s" name="V4-Flash 200K b1024 ROM rate" --> <!-- figure: 108 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x113,batch_size=1024].iso_area_gpu_per_user_tokens_s" name="V4-Flash 200K b1024 GPU rate" --> <!-- figure: 6.37 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x113,batch_size=1024].per_user_speed_ratio" name="V4-Flash 200K b1024 ratio" -->
+| V4-Flash 200K | 4,096 | `ROM-N5-native-HBMKV-array-hw-pipeline-x168` | `b200_sxm-x86-nvl72-hybrid` | 285 | 63 | **4.53×** | <!-- figure: 285 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x168,batch_size=4096].rom_per_user_tokens_s" name="V4-Flash 200K b4096 ROM rate" --> <!-- figure: 63 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x168,batch_size=4096].iso_area_gpu_per_user_tokens_s" name="V4-Flash 200K b4096 GPU rate" --> <!-- figure: 4.53 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x168,batch_size=4096].per_user_speed_ratio" name="V4-Flash 200K b4096 ratio" -->
+| V4-Pro 1M | 1 | `ROM-N5-native-SRAMKV-array-hw-hybrid-x340` | `b200_sxm-x173-nvl72-hybrid` | 1,165 | 509 | **2.29×** | <!-- figure: 1,165 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-SRAMKV-array-hw-hybrid-x340,batch_size=1].rom_per_user_tokens_s" name="V4-Pro 1M b1 ROM rate" --> <!-- figure: 509 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-SRAMKV-array-hw-hybrid-x340,batch_size=1].iso_area_gpu_per_user_tokens_s" name="V4-Pro 1M b1 GPU rate" --> <!-- figure: 2.29 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-SRAMKV-array-hw-hybrid-x340,batch_size=1].per_user_speed_ratio" name="V4-Pro 1M b1 ratio" -->
+| V4-Pro 1M | 64 | `ROM-N5-native-HBMKV-array-hw-hybrid-x399` | `b200_sxm-x203-nvl72-hybrid` | 1,163 | 313 | **3.72×** | <!-- figure: 1,163 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-HBMKV-array-hw-hybrid-x399,batch_size=64].rom_per_user_tokens_s" name="V4-Pro 1M b64 ROM rate" --> <!-- figure: 313 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-HBMKV-array-hw-hybrid-x399,batch_size=64].iso_area_gpu_per_user_tokens_s" name="V4-Pro 1M b64 GPU rate" --> <!-- figure: 3.72 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-HBMKV-array-hw-hybrid-x399,batch_size=64].per_user_speed_ratio" name="V4-Pro 1M b64 ratio" -->
+| V4-Pro 1M | 1,024 | `ROM-N5-native-HBMKV-array-hw-pipeline-x399` | `b200_sxm-x203-nvl72-hybrid` | 338 | 67 | **5.01×** | <!-- figure: 338 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-HBMKV-array-hw-pipeline-x399,batch_size=1024].rom_per_user_tokens_s" name="V4-Pro 1M b1024 ROM rate" --> <!-- figure: 67 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-HBMKV-array-hw-pipeline-x399,batch_size=1024].iso_area_gpu_per_user_tokens_s" name="V4-Pro 1M b1024 GPU rate" --> <!-- figure: 5.01 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N5-native-HBMKV-array-hw-pipeline-x399,batch_size=1024].per_user_speed_ratio" name="V4-Pro 1M b1024 ratio" -->
+| Qwen3-8B 8K | 1 | `ROM-N5-native-SRAMKV-array-hw-tensor-x16-romfill` | `b200_sxm-x8-tensor` | 6,902 | 1502 | **4.60×** | <!-- figure: 6,902 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x16-romfill,batch_size=1].rom_per_user_tokens_s" name="Qwen3-8B 8K b1 ROM rate" --> <!-- figure: 1502 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x16-romfill,batch_size=1].iso_area_gpu_per_user_tokens_s" name="Qwen3-8B 8K b1 GPU rate" --> <!-- figure: 4.60 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x16-romfill,batch_size=1].per_user_speed_ratio" name="Qwen3-8B 8K b1 ratio" -->
+| Qwen3-8B 8K | 64 | `ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill` | `b200_sxm-x25-nvl72-tensor` | 1,832 | 926 | **1.98×** | <!-- figure: 1,832 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill,batch_size=64].rom_per_user_tokens_s" name="Qwen3-8B 8K b64 ROM rate" --> <!-- figure: 926 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill,batch_size=64].iso_area_gpu_per_user_tokens_s" name="Qwen3-8B 8K b64 GPU rate" --> <!-- figure: 1.98 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill,batch_size=64].per_user_speed_ratio" name="Qwen3-8B 8K b64 ratio" -->
+| Qwen3-8B 8K | 1,024 | `ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill` | `b200_sxm-x25-hybrid` | 116 | 111 | **1.05×** | <!-- figure: 116 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill,batch_size=1024].rom_per_user_tokens_s" name="Qwen3-8B 8K b1024 ROM rate" --> <!-- figure: 111 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill,batch_size=1024].iso_area_gpu_per_user_tokens_s" name="Qwen3-8B 8K b1024 GPU rate" --> <!-- figure: 1.05 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x49-romfill,batch_size=1024].per_user_speed_ratio" name="Qwen3-8B 8K b1024 ratio" -->
+
+## 4. Each side at its best, N5 against B200
+
+Best throughput and best tokens per joule over every design and batch at the
+same silicon (maximum over areas).
+
+| Model | Silicon | ROM best throughput (design, batch) | GPU best throughput (design, batch) | Throughput ratio | Best tokens/J ratio |
+|---|---:|---|---|---:|---:|
+| V4.1-Flash 200K | 554,700 mm² | 2,808,107 (`ROM-N5-native-HBMKV-wafer-hybrid-x12`, 4,096) | 707,114 (`b200_sxm-x347-nvl72-hybrid`, 4,096) | **3.97×** | **11.84×** | <!-- figure: 3.97 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].aggregate_ratio" name="V4.1-Flash 200K best-vs-best throughput" --> <!-- figure: 11.84 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].tokens_per_joule_ratio" name="V4.1-Flash 200K best tokens per joule" -->
+| V4-Flash 200K | 277,100 mm² | 1,329,343 (`ROM-N5-native-HBMKV-array-hw-pipeline-x340-romfill`, 4,096) | 372,997 (`b200_sxm-x173-nvl72-hybrid`, 4,096) | **3.56×** | **7.85×** | <!-- figure: 3.56 src="results/roofline/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4-Flash-0731,silicon_area_mm2=277100.0].aggregate_ratio" name="V4-Flash 200K best-vs-best throughput" --> <!-- figure: 7.85 src="results/roofline/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4-Flash-0731,silicon_area_mm2=45600.0].tokens_per_joule_ratio" name="V4-Flash 200K best tokens per joule" -->
+| V4-Pro 1M | 2,172,600 mm² | 690,813 (`ROM-N5-native-HBMKV-wafer-pipeline-x47`, 4,096) | 399,070 (`b200_sxm-x1358-nvl72-hybrid`, 4,096) | **1.73×** | **8.76×** | <!-- figure: 1.73 src="results/roofline/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4-Pro-0813,silicon_area_mm2=2172600.0].aggregate_ratio" name="V4-Pro 1M best-vs-best throughput" --> <!-- figure: 8.76 src="results/roofline/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4-Pro-0813,silicon_area_mm2=325200.0].tokens_per_joule_ratio" name="V4-Pro 1M best tokens per joule" -->
+| Qwen3-8B 8K | 277,100 mm² | 823,812 (`ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill`, 4,096) | 730,305 (`b200_sxm-x173-nvl72-hybrid`, 4,096) | **1.13×** | **9.04×** | <!-- figure: 1.13 src="results/roofline/n5_vs_b200/analytical.json#capacity_comparison[model=Qwen3-8B,silicon_area_mm2=277100.0].aggregate_ratio" name="Qwen3-8B 8K best-vs-best throughput" --> <!-- figure: 9.04 src="results/roofline/n5_vs_b200/analytical.json#capacity_comparison[model=Qwen3-8B,silicon_area_mm2=1600.0].tokens_per_joule_ratio" name="Qwen3-8B 8K best tokens per joule" -->
+
+## 5. Against the A100 (N6 ROM)
+
+The same comparison one generation earlier is more favourable to ROM on every
+per-user and throughput ratio, and on tokens per joule for every model but V4-Pro:
+
+| Model | ROM per user, batch 1 | ROM per user, batch 64 | Best throughput | Best tokens/J |
+|---|---:|---:|---:|---:|
+| V4.1-Flash 200K | 8.81× | 9.27× | 10.23× | 23.21× | <!-- figure: 8.81 src="results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x261,batch_size=1].per_user_speed_ratio" name="V4.1-Flash 200K b1 ratio N6" --> <!-- figure: 9.27 src="results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x205-romfill,batch_size=64].per_user_speed_ratio" name="V4.1-Flash 200K b64 ratio N6" --> <!-- figure: 10.23 src="results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].aggregate_ratio" name="V4.1-Flash 200K best-vs-best throughput N6" --> <!-- figure: 23.21 src="results/roofline/candidates/deepseek-v41-flash/n6_vs_a100/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].tokens_per_joule_ratio" name="V4.1-Flash 200K best tokens per joule N6" -->
+| V4-Flash 200K | 7.82× | 10.78× | 7.71× | 9.78× | <!-- figure: 7.82 src="results/roofline/n6_vs_a100/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N6-native-SRAMKV-array-hw-hybrid-x80,batch_size=1].per_user_speed_ratio" name="V4-Flash 200K b1 ratio N6" --> <!-- figure: 10.78 src="results/roofline/n6_vs_a100/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x79,batch_size=64].per_user_speed_ratio" name="V4-Flash 200K b64 ratio N6" --> <!-- figure: 7.71 src="results/roofline/n6_vs_a100/analytical.json#capacity_comparison[model=DeepSeek-V4-Flash-0731,silicon_area_mm2=277100.0].aggregate_ratio" name="V4-Flash 200K best-vs-best throughput N6" --> <!-- figure: 9.78 src="results/roofline/n6_vs_a100/analytical.json#capacity_comparison[model=DeepSeek-V4-Flash-0731,silicon_area_mm2=277100.0].tokens_per_joule_ratio" name="V4-Flash 200K best tokens per joule N6" -->
+| V4-Pro 1M | 6.40× | 8.97× | 1.83× | 5.99× | <!-- figure: 6.40 src="results/roofline/n6_vs_a100/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x389,batch_size=1].per_user_speed_ratio" name="V4-Pro 1M b1 ratio N6" --> <!-- figure: 8.97 src="results/roofline/n6_vs_a100/analytical.json#comparisons[rom_design=DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x66,batch_size=64].per_user_speed_ratio" name="V4-Pro 1M b64 ratio N6" --> <!-- figure: 1.83 src="results/roofline/n6_vs_a100/analytical.json#capacity_comparison[model=DeepSeek-V4-Pro-0813,silicon_area_mm2=3050800.0].aggregate_ratio" name="V4-Pro 1M best-vs-best throughput N6" --> <!-- figure: 5.99 src="results/roofline/n6_vs_a100/analytical.json#capacity_comparison[model=DeepSeek-V4-Pro-0813,silicon_area_mm2=3050800.0].tokens_per_joule_ratio" name="V4-Pro 1M best tokens per joule N6" -->
+| Qwen3-8B 8K | 12.11× | 3.26× | 1.37× | 9.47× | <!-- figure: 12.11 src="results/roofline/n6_vs_a100/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N6-native-SRAMKV-array-hw-tensor-x16-romfill,batch_size=1].per_user_speed_ratio" name="Qwen3-8B 8K b1 ratio N6" --> <!-- figure: 3.26 src="results/roofline/n6_vs_a100/analytical.json#comparisons[rom_design=Qwen3-8B/ROM-N6-native-HBMKV-array-hw-hybrid-x69,batch_size=64].per_user_speed_ratio" name="Qwen3-8B 8K b64 ratio N6" --> <!-- figure: 1.37 src="results/roofline/n6_vs_a100/analytical.json#capacity_comparison[model=Qwen3-8B,silicon_area_mm2=277100.0].aggregate_ratio" name="Qwen3-8B 8K best-vs-best throughput N6" --> <!-- figure: 9.47 src="results/roofline/n6_vs_a100/analytical.json#capacity_comparison[model=Qwen3-8B,silicon_area_mm2=3300.0].tokens_per_joule_ratio" name="Qwen3-8B 8K best tokens per joule N6" -->
+
+## 6. Where the advantage comes from
+
+The ROM design has two separable advantages, and the serial-latency model
+changes their balance:
+
+- **Weights in ROM.** An HBM step must read the union of every user's experts;
+  a ROM weight never moves. This is what keeps ROM per-user speed nearly flat
+  from batch 1 to 64 on the MoE models (section 3), while the GPU's falls.
+- **Specialisation of the fabric and the datapath.** Hardware-limited links,
+  striped expert banks and a layer-per-package pipeline still matter, but once
+  the serial path is priced from the operator graph the dependent-operator
+  chain, not the link, dominates the batch-1 step on every ROM design: V4.1's
+  hyper-connection Sinkhorn, KDA's state update and the per-layer norms and
+  top-k selections. With the routed Sinkhorn unit the chain is ~150 µs a V4.1
+  token; the next gains are fused norms and faster stream-unit functions, and
+  on a wafer a designed collective network rather than the core mesh.
+
+Two things still limit the ratio:
+
+- **Throughput at each side's best** (section 4) is set by arithmetic at
+  thousands of users, where ROM dies spend area on storage that GPUs spend on
+  multipliers.
+- **KV-bound regimes narrow or reverse the advantage.** Dense-KV Qwen at 1,000+
+  users, Kimi-K3 and MiMo-Pro beyond ~1,000 users are examples: ROM does not
+  help KV reads.
+
+## 7. Sweet spots
+
+1. **Single-user latency on any model.** About 2–4× at N5 for DeepSeek-class MoE
+   and for Kimi-K3 and MiMo, and about 4.6× for an 8B dense model
+   (section 3 and the candidate table above).
+2. **Interactive multi-user MoE serving, tens to hundreds of users.** The ROM
+   keeps per-user speed while the GPU's expert reads grow with the batch.
+3. **Energy per token** (section 4): the GPU's static power is paid over its
+   measured dependency chain as well as its memory sweep.
+4. **Weak spots:**
+   - dense-KV and large-KV serving at high concurrency;
+   - maximum-throughput batch serving on the largest models;
+   - ROM wafers whose collectives run on a Cerebras-style core mesh; on the
+     measured express network they close most of the gap to the packaged array.
+
+## 8. Open limits
+
+- ROM read bandwidth rests on a simulated 28 nm CIM macro scaled to N5.
+- Striped expert banks need deep banks and muxing that no N5 macro qualifies.
+  Their address map and stream schedule are now simulated in RTL
+  (`rtl/rom/ot_rom_striped_expert_reader.sv`,
+  `python3 tools/rtl_rom_striped_bank_campaign.py`). Across 56 scoreboarded
+  runs, six selected experts take a constant 52 cycles striped, <!-- figure: 52 src="results/rtl/rom_striped_bank_campaign.json#striped_cycles_six_experts[0]" name="striped six-expert cycles" -->
+  and dedicated banks take up to 7.46× as long on a concentrated route. <!-- figure: 7.46 src="results/rtl/rom_striped_bank_campaign.json#worst_dedicated_over_striped" name="dedicated over striped worst" -->
+  That is functional evidence for the schedule, not for macro area, timing or
+  energy.
+- All ROM link latencies are hardware-floor estimates. The digital part of a
+  package hop is now simulated in RTL (`rtl/rom/ot_rom_pkg_link.sv`,
+  `python3 tools/rtl_rom_pkg_link_campaign.py`): cut-through forwarding with
+  credits costs 5 cycles of framing, <!-- figure: 5 src="results/rtl/rom_pkg_link_campaign.json#digital_endpoint_cycles" name="link digital endpoint cycles" -->
+  and one user's hidden state arrives 214 ns after it is sent through a 204-cycle <!-- figure: 214 src="results/rtl/rom_pkg_link_campaign.json#one_user_hidden_state_latency_ns" name="link one-user latency" -->
+  channel stand-in (200 ns of 112G PAM4 SerDes, KP4 FEC and flight plus 4 cycles
+  of clock-domain crossing), with no loss under random back-pressure. The package
+  hop is priced at that 209 ns (band 129-409 ns); the SerDes, FEC and flight part
+  remains unmeasured.
+- The ROM power model reads HC1 low.
+- Hot-expert skew is uniform-random plus a derate for ROM; the GPU is assumed to
+  replicate hot experts.
+- Speculative decoding is a separate study (`results/roofline/speculative/`); its
+  acceptance lengths are measured and cited in the subsection below.
+- Mask cost and model churn are outside the model.
+- Before any claim: test ROM bank striping, link latency and power in RTL and
+  physical design (the next phase).
+
+### Speculative acceptance per workload, measured and cited
+
+Unlike the rest of this report, these acceptance lengths are measured or cited,
+not projected. tau is the number of tokens one verification pass commits,
+including the target's bonus token. The producer is
+`tools/measure_speculative_acceptance.py` and the record is
+`results/speculative/acceptance_tau.json`. The measured and cited points are
+added to `configs/studies/speculative_profiles.json` beside the published ones,
+with grades.
+
+**Qwen3-8B with DFlash, measured.**
+
+- **Setup:** drafter `z-lab/Qwen3-8B-DFlash-b16` on BF16 `Qwen/Qwen3-8B`,
+  greedy decoding, batch 1, 24 samples per workload. It ran on one NVIDIA RTX
+  PRO 6000 Blackwell shared with other tenants.
+- **Two implementations:** vLLM 0.23.0 with 15 draft tokens per pass, and
+  DFlash's own Transformers reference (`dflash_generate`).
+- **Block length:** a block of 16 is the anchor token plus 15 drafted positions,
+  so tau runs from 1 to 16.
+
+The table columns are:
+
+- tau from vLLM, with a prompt-bootstrap 95% interval;
+- tau from the reference implementation;
+- survival of draft positions 1 and 4;
+- tau truncated to 5 drafts (derived: 1 plus the first five survival terms);
+- decode rate at concurrency 1, autoregressive (AR) → DFlash.
+
+| Class | Workload | n | Generated tokens | tau (vLLM, 95% CI) | tau (reference) | s1 / s4 | tau at 5 drafts | AR → DFlash tok/s |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Reasoning | MATH-500, thinking on | 24 | 48,176 | **3.87** (3.63–4.13) | 3.85 | 0.75 / 0.28 | 3.13 | 94 → 270 | <!-- figure: 3.87 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_math500.tau_mean" name="DFlash tau reasoning_math500" --> <!-- figure: 270 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.reasoning_math500.decode_tokens_per_s" name="DFlash tok/s reasoning_math500" -->
+| Reasoning | AIME 2025, thinking on | 24 | 49,152 | **3.77** (3.54–4.04) | 3.74 | 0.76 / 0.27 | 3.12 | 94 → 286 | <!-- figure: 3.77 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_aime25.tau_mean" name="DFlash tau reasoning_aime25" --> <!-- figure: 286 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.reasoning_aime25.decode_tokens_per_s" name="DFlash tok/s reasoning_aime25" -->
+| Reasoning | HumanEval, thinking on | 24 | 46,429 | **3.40** (3.21–3.59) | 3.33 | 0.74 / 0.22 | 2.92 | 94 → 253 | <!-- figure: 3.40 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_humaneval.tau_mean" name="DFlash tau reasoning_humaneval" --> <!-- figure: 253 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.reasoning_humaneval.decode_tokens_per_s" name="DFlash tok/s reasoning_humaneval" -->
+| Agentic | BFCL v3 function calls | 24 | 1,175 | **5.90** (5.40–6.36) | 5.92 | 0.83 / 0.53 | 4.05 | 90 → 514 | <!-- figure: 5.90 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_bfcl.tau_mean" name="DFlash tau agentic_bfcl" --> <!-- figure: 514 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_bfcl.decode_tokens_per_s" name="DFlash tok/s agentic_bfcl" -->
+| Agentic | tau-bench next agent turn | 24 | 1,672 | **4.27** (3.22–5.38) | 4.11 | 0.72 / 0.35 | 3.32 | 89 → 284 | <!-- figure: 4.27 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_tau_bench.tau_mean" name="DFlash tau agentic_tau_bench" --> <!-- figure: 284 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_tau_bench.decode_tokens_per_s" name="DFlash tok/s agentic_tau_bench" -->
+| Agentic | SWE-agent next action | 24 | 2,741 | **3.85** (3.32–4.41) | 3.80 | 0.76 / 0.27 | 3.20 | 91 → 249 | <!-- figure: 3.85 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_swe_agent.tau_mean" name="DFlash tau agentic_swe_agent" --> <!-- figure: 249 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_swe_agent.decode_tokens_per_s" name="DFlash tok/s agentic_swe_agent" -->
+| Agentic | Mind2Web next web action | 24 | 1,310 | **2.62** (2.49–2.75) | 2.65 | 0.67 / 0.13 | 2.54 | 92 → 176 | <!-- figure: 2.62 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_mind2web.tau_mean" name="DFlash tau agentic_mind2web" --> <!-- figure: 176 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_mind2web.decode_tokens_per_s" name="DFlash tok/s agentic_mind2web" -->
+| Agentic | JSON-schema output | 24 | 2,204 | **11.31** (10.31–12.16) | 11.12 | 0.98 / 0.85 | 5.48 | 94 → 878 | <!-- figure: 11.31 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_json_mode.tau_mean" name="DFlash tau agentic_json_mode" --> <!-- figure: 878 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_json_mode.decode_tokens_per_s" name="DFlash tok/s agentic_json_mode" -->
+| Chat | MT-Bench, two turns | 24 | 11,504 | **3.49** (2.97–4.31) | 3.44 | 0.73 / 0.22 | 2.91 | 94 → 240 | <!-- figure: 3.49 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.chat_mt_bench.tau_mean" name="DFlash tau chat_mt_bench" --> <!-- figure: 240 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.chat_mt_bench.decode_tokens_per_s" name="DFlash tok/s chat_mt_bench" -->
+| Paper setting | MATH-500, thinking off | 24 | 23,583 | **8.22** (7.52–8.91) | 8.36 | 0.92 / 0.64 | 4.65 | 94 → 576 | <!-- figure: 8.22 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.xcheck_math500_nothink.tau_mean" name="DFlash tau xcheck_math500_nothink" --> <!-- figure: 576 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.xcheck_math500_nothink.decode_tokens_per_s" name="DFlash tok/s xcheck_math500_nothink" -->
+| Paper setting | HumanEval, thinking off | 24 | 11,911 | **6.45** (6.06–6.87) | 6.34 | 0.87 / 0.50 | 4.14 | 94 → 508 | <!-- figure: 6.45 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.xcheck_humaneval_nothink.tau_mean" name="DFlash tau xcheck_humaneval_nothink" --> <!-- figure: 508 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.xcheck_humaneval_nothink.decode_tokens_per_s" name="DFlash tok/s xcheck_humaneval_nothink" -->
+
+The workloads:
+
+- **Reasoning:** thinking on, up to 2,048 tokens. Most samples reach the cap, so
+  this is mostly thinking text.
+- **Agentic:** thinking off, up to 1,024 tokens. The sources are:
+  - [BFCL v3](https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard):
+    the simple, multiple, parallel and live-multiple subsets, with Qwen3's own
+    tool template;
+  - [tau-bench](https://github.com/sierra-research/tau-bench): its published
+    gpt-4o trajectories, cut before an agent turn;
+  - [SWE-agent trajectories](https://huggingface.co/datasets/nebius/SWE-agent-trajectories):
+    cut before an agent action;
+  - [Mind2Web](https://huggingface.co/datasets/osunlp/Mind2Web): the next-action
+    prompt over cleaned HTML;
+  - [json-mode-eval](https://huggingface.co/datasets/NousResearch/json-mode-eval).
+- **Chat:** both turns of [MT-Bench](https://huggingface.co/datasets/HuggingFaceH4/mt_bench_prompts).
+
+Seeds, dataset revisions and prompt ids are in the record.
+
+1. **The paper's setting reproduces, and thinking mode explains the gap.**
+   - With thinking off, MATH-500 gives tau **8.22** <!-- figure: 8.22 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.xcheck_math500_nothink.tau_mean" name="tau MATH-500 thinking off" -->, against the paper's
+     7.87 (arXiv:2602.06036, Table 1). Per-prompt MT-Bench gives
+     **4.44** <!-- figure: 4.44 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.chat_mt_bench.tau_macro_mean_of_prompt_means" name="tau MT-Bench per-prompt mean" -->, against the paper's 4.24.
+   - With thinking on, the same MATH-500 prompts fall to **3.87** <!-- figure: 3.87 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_math500.tau_mean" name="tau MATH-500 thinking on" -->. Every
+     reasoning workload lands between 3.4 and 3.9.
+   - The released b16 drafter targets non-thinking Qwen3. The paper's
+     thinking-mode results (tau 5.82 on MATH-500) used drafters trained on
+     reasoning traces, which are not the released checkpoint.
+   - The two implementations agree to within a few hundredths of a token. So
+     the prompt template, bf16 precision and the verifier are not the cause.
+   - The design default of tau = 4.1 sits inside the measured reasoning and
+     agentic range.
+2. **Agentic acceptance depends on the output format.**
+   - Schema-bound output is the easiest: JSON reaches tau about 11, and BFCL
+     tool calls about 6.
+   - Free-form agent turns reach 3.8–4.3.
+   - Mind2Web's HTML-grounded action choice is the lowest at 2.6.
+   - Agent turns are short, 39–162 tokens. So prefill, not the per-token rate,
+     dominates the latency of an agent step.
+3. **Losslessness holds up to bf16 rounding.**
+   - Every emitted reference token was checked against the target in one
+     teacher-forced forward. 579 of 198,460 tokens are not the target's
+     full-sequence argmax, and all but 4 of those lie within
+     0.5 logits of it.
+   - Compared with plain greedy in the same engine, every first divergence falls
+     at a top-1/top-2 gap of at most 0.5 logits, except one. That one vLLM case
+     reproduces deterministically and disappears with batch-invariant kernels.
+   - With batch-invariant kernels (`VLLM_BATCH_INVARIANT=1`), speculative and
+     plain outputs are token-identical on all 36 control samples.
+4. **EAGLE-3, for comparison.** `RedHatAI/Qwen3-8B-speculator.eagle3` with
+   chain drafting at 7 tokens gets tau 2.2–3.5 on the same workloads, 5.1 on
+   JSON. That matches its model card: 2.81 on math at k = 7.
+5. **Absolute rate and energy on this GPU at concurrency 1 (vLLM).**
+   - Decode rates:
+     - AR: **94** <!-- figure: 94 src="results/speculative/acceptance_tau.json#throughput_c1.runs.ar_bf16.workloads.reasoning_math500.decode_tokens_per_s" name="AR BF16 tok/s" --> tok/s in BF16 and **151** <!-- figure: 151 src="results/speculative/acceptance_tau.json#throughput_c1.runs.ar_fp8.workloads.reasoning_math500.decode_tokens_per_s" name="AR FP8 tok/s" --> in FP8;
+     - DFlash: 250–580 tok/s in BF16 outside the JSON outlier.
+   - Board energy on MATH-500 with thinking on (100 ms power log, other
+     tenants' idle draw included):
+     - AR: **5.15** <!-- figure: 5.15 src="results/speculative/acceptance_tau.json#throughput_c1.runs.ar_bf16_energy.workloads.reasoning_math500.energy.j_per_token_gross" name="AR J/token" --> J/token;
+     - DFlash: **1.85** <!-- figure: 1.85 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16_energy.workloads.reasoning_math500.energy.j_per_token_gross" name="DFlash J/token" --> J/token.
+   - A concurrency sweep up to 16 is in the record.
+
+**DeepSeek-V4 family, cited.** No published source measures DeepSeek-V4.1-Flash,
+and none measures an agentic workload.
+
+- **DeepSeek-V3** accepts the second token 85–90% of the time
+  (arXiv:2412.19437, section 5.4.3). So tau = 1 + s1 = **1.85–1.90** at
+  gamma = 1.
+- **DeepSeek-V4-Pro-0813 with DSpark.**
+  - [vLLM](https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification)
+    reports that the first drafted position survives more than 70% of the time
+    and the seventh less than 10%, at temperature 1.0.
+  - Those two survivals alone bound tau at gamma = 7 to (1.70, 7.10).
+  - Assuming a constant conditional rate r = (0.10/0.70)^(1/6) = 0.723 between
+    them gives tau = 1 + 0.70·(1 − r^7)/(1 − r) = **3.27**. That is an
+    illustration, not a measurement.
+- **DeepSeek-V4-Pro-DSpark.**
+  [LMSYS](https://www.lmsys.org/blog/2026-07-06-dspark-sglang/) publishes
+  "accept length ~5" at batch 1, without stating the workload.
+
+**DeepSeek-V4.1-Flash, teacher-forced.**
+
+- **Method:** the checkpoint is streamed one layer at a time through a 12 GB GPU
+  slice (`tools/v41_dspark_teacher_forced/`). Its shipped DSpark drafter
+  (5 draft positions) then scores 16 public agent traces from tau-bench and
+  SWE-agent against V4.1's own greedy argmax, in about 14 minutes.
+- **Result:**
+  - tau at gamma = 5 is **3.48** <!-- figure: 3.48 src="results/speculative/v41_flash_dspark_feasibility.json#public_traces.overall.tau_proxy_assistant_spans" name="V4.1 tau all tokens" --> over all assistant tokens;
+  - it is **4.33** <!-- figure: 4.33 src="results/speculative/v41_flash_dspark_feasibility.json#public_traces.overall.tau_on_greedy_matching_rows" name="V4.1 tau matching tokens" --> on the tokens where the trace already equals V4.1's
+    greedy choice.
+- **Why this is a bracket, not a value:** the traces were written by other
+  models, so the first figure understates and the second overstates on-policy
+  acceptance.
+- **What a true on-policy measurement needs:** V4.1's own greedy continuations,
+  which need a KV-cached streamed decode that is not built yet (0.5–2.8 h per
+  run here). It would be routine on one 8×H200/B200 node.
+- **Record:** `results/speculative/v41_flash_dspark_feasibility.json`.
+
+### Speculative decoding on the Qwen3-8B ROM at 8K: why it does not pay
+
+**Finding.** On the Qwen3-8B ROM at its target context (TP-4, position 8,191,
+FP8 KV on four HBM3E stacks a die, the STREAM4 path) speculative decoding with
+DSpark is slower than plain autoregressive decoding. The Qwen ROM therefore
+runs in plain decoding (AR) mode at 8K. DSpark remains built and bit-exact in
+RTL, but it is switched off. Every figure below is a measured RTL stage, exact
+against the GPU golden, unless it is marked otherwise. Records:
+`results/rtl/qwen_rom_kv_fullbw_20261004/` (`compose_P8191_token.json`,
+`dspark_step_stream4.json`, `dspark_verdict.json`).
+
+#### The two rates
+
+**Plain decoding.** One token is 194,498 cycles <!-- figure: 194498 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.token_cycles" tol="exact" name="STREAM4 AR token cycles" -->
+at 1.2 GHz, which is **6,169.7** tok/s per user. <!-- figure: 6169.7 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.tok_per_s" name="STREAM4 AR tok/s" -->
+The token is composed from measured layers:
+
+    T_AR = 7 + E + (L0_iso - 1) + 35 x L_chained + (H1 - 1) + 37
+
+- `L0_iso` = 6,489 is layer 0 with the whole KV fill exposed.
+- `L_chained` = 5,282 is the steady layer. <!-- figure: 5282 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#stream4.per_layer_cycles.chained_steady_max" tol="exact" name="STREAM4 chained layer" -->
+  Its 8K window (4 MiB a die) is streamed during the previous layer's MLP, at
+  3.72 TB/s, which is 93% of the four-stack peak.
+- `E` = 98 and `H1` = 2,999 come from the P255 full-token record. They carry
+  no KV term.
+
+The chained layer (5,282) equals the compute-only bound measured with ideal KV, 5,283 cycles. <!-- figure: 5283 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#references.kv_ideal_isolated_L0.cycles" tol="exact" name="KV_IDEAL layer" -->
+**At 8K the ROM is compute-bound, and prefetch hides the KV fill completely.**
+With the die-floorplan wire-stage bound added, the rate is 5,974.3 tok/s. <!-- figure: 5974.3 src="results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json#wire_bound.bound_tok_s" name="STREAM4 AR wire-bound tok/s" -->
+That bound uses floorplan stage counts, with no routed-path STA.
+
+**DSpark.** A step drafts three tokens, verifies a block of p = 4 positions,
+and commits. The three phases are in series:
+
+    S = 36 x V + H_4 + D + C
+
+| Term | Cycles | Source |
+|---|---:|---|
+| Verify layer `V`, p = 4, P8187..8190 on STREAM4 (exact; commit 1, rollback 8188..8190) | 17,197 | `dspark_step_stream4.json` `verify_layer_stream4.step1_P8187_np4` |
+| Verify head `H_4`, p = 4 | 11,993 | ROM DSpark 8K record (`c_H1`) |
+| Draft `D`, S = 3: five drafter layers 153,055 (RTL, REAL_MEM path), draft heads 8,995, context ingest 70,032 and Markov epilogue 4,968 (RTL, `fac4b889e`; argmax and gather priced) | 237,050 | `dspark_verdict.json` `draft_terms_s3` |
+| Commit `C` | 65 | `dspark_step_stream4.json` |
+| **Step `S`** | **868,200** | `dspark_verdict.json` `variants.baseline_np4.step_upper` |
+
+The verify layer is 3.26× the AR layer (17,197 / 5,282). <!-- figure: 17197 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_layer_stream4.step1_P8187_np4" tol="exact" name="STREAM4 verify layer p4" -->
+The acceptance length is τ = 3.1445 accepted tokens a step. <!-- figure: 3.1445 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#tau" name="DSpark tau third-party" -->
+τ is the published DSpark Qwen3-8B figure, truncated to three drafts
+(`results/speculative/third_party_acceptance_20261004/acceptance.json`); it is
+not measured here. The per-user rate is τ · f / S = **4,346.2** tok/s, <!-- figure: 4346.2 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.tok_s_upper" name="DSpark STREAM4 tok/s" -->
+which is **0.704×** of AR. <!-- figure: 0.704 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.speedup_vs_ar_upper" name="DSpark STREAM4 vs AR" -->
+With the drafter ingest and Markov epilogue priced instead of measured (7,875
+cycles), the step was 801,075 cycles: 4,710.4 tok/s, 0.763× of AR. With a free
+draft (`D` = 0) the bound is still **0.969×** of AR. <!-- figure: 0.969 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#bound_if_draft_free.speedup_vs_ar_chained" name="DSpark free-draft bound" -->
+
+#### Where the verify excess goes
+
+An instruction-fetch trace of die 0 at P8187 compares the verify layer (p = 4,
+17,197 cycles) with an AR layer at the same position (p = 1, 6,479 cycles; both
+exact; `dspark_verify_P8187/optrace`). The excess is 10,718 cycles a layer.
+
+| Component | Excess (cycles a layer) | Why it scales with p |
+|---|---:|---|
+| Attention | +3,490 <!-- figure: 3490 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.attention_kv_passes.excess" tol="exact" name="verify attention excess" --> | The softmax stream op is issued once per position: 8 heads × 8,188 scores ÷ 64 stream-unit lanes = 1,023 cycles of work (measured about 1,161) |
+| All-reduces | +1,295 <!-- figure: 1295 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.all_reduces.excess" tol="exact" name="verify all-reduce excess" --> | Four times the payload on the same link |
+| Other per-position work | +5,933 <!-- figure: 5933 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.remaining_excess" tol="exact" name="verify other excess" --> | Stream-unit ops issued once per position, latency-bound; weight matvecs re-streamed once per position |
+
+The per-cycle sequencer trace gives the same picture from the weight engines'
+side. They are busy 1.47× (attention block) and 2.09× (MLP) of AR for four
+positions, so each weight word is not applied to all four positions in one
+pass. **Nothing in the verify layer is shared across positions except the
+weight read itself, and on this ROM the weight read was never the bottleneck.**
+
+#### The break-even algebra
+
+Let `f` be the clock, `n` = 36 the number of layers, `L` the AR layer and
+`T_AR` the AR token. DSpark pays when
+
+    tau x f / S > f / T_AR   <=>   S < tau x T_AR
+                             <=>   V < V* = (tau x T_AR - H_4 - D - C) / n
+
+Write the verify layer as `V = L (1 + (p - 1) rho)`. Here `rho` is the share
+of a layer's cost that is paid again for each extra position. Ignoring the
+head, draft and commit, the speed-up is
+
+    s ~ tau / (1 + (p - 1) rho)        and break-even needs  rho < (tau - 1) / (p - 1)
+
+At τ = 3.1445 and p = 4 the break-even share is `rho*` = 0.715, before any
+draft cost. The measured verify layers place the three machines on either side
+of it:
+
+| Machine and path | AR layer | Verify layer (positions) | `V / L` | `rho` | DSpark or MTP vs AR | Record |
+|---|---:|---:|---:|---:|---:|---|
+| Qwen ROM, STREAM4 (this) | 5,282 | 17,197 (4) | 3.26 | 0.75 | 0.70× | `qwen_rom_kv_fullbw_20261004` |
+| Qwen ROM, one-stack REAL_MEM | 14,574 | 24,320 (4) | 1.67 | 0.22 | 1.57× | `qwen_dspark_system_20261004/ctx8k` |
+| Qwen ROM, P255 | 4,338 | 12,520 (4) | 2.89 | 0.63 | 0.83× (τ 3.04) | `qwen_dspark_system_20261004/step_composed.json` |
+| Qwen HBM accelerator, TP4, 8K | 17,237 | 16,044 (4) | 0.93 | ~0 | 2.28× (τ 3.04) | `hbm_accel_qwen_chains_20261004` (main `2f4a6af49`) |
+| DS ROM array, 1M | 620.1 µs token | 748.9 µs (6) | 1.21 (token) | 0.04 | 2.77× (τ 3.89) | `dsrom_recovery_20261004/composition.json` |
+
+With the STREAM4 numbers:
+
+- `tau x T_AR` = 3.1445 × 194,498 = 611,599 cycles.
+- With the measured draft, `V*` = (611,599 − 11,993 − 237,050 − 65) / 36 = **10,069** cycles, 1.91× the AR layer. <!-- figure: 10069.1 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.baseline_np4.break_even_verify_layer_draft_upper" name="break-even verify layer" -->
+- With a free draft, `V*` = (611,599 − 11,993 − 65) / 36 = 16,654 cycles (3.15× the AR layer). The measured 17,197 is above even that.
+
+The verify layer would have to fall from 3.26× to about 1.91× the AR layer. That is a 41% cut of a layer whose
+excess is per-position by construction.
+
+#### The principle
+
+**Speculation trades an idle resource for fewer serial steps.** A verify pass
+computes p positions in one step. It pays only when the step's dominant cost is
+shared by the p positions, so that the extra positions ride on a resource that
+would otherwise sit idle.
+
+- **GPU and the HBM accelerator: weight bandwidth is shared.** A decode step
+  streams every weight once. Four positions use the same stream, and the MACs
+  that sit idle at batch 1 absorb the extra products. The verify layer costs
+  0.93× an AR layer, and DSpark gives 2.28×.
+- **DeepSeek ROM array: pipeline latency is shared.** The token is latency- and
+  fill-bound across a ring of stages, most of them idle at any moment. A
+  wavefront of six positions fills idle stages: verify = AR + 5 × the initiation
+  interval, 1.21× one token. MTP gives 2.77×.
+- **Qwen ROM at 8K: nothing is shared.** The ROM read rate equals the MAC rate,
+  so a weight word read once can feed only one position's MACs. The softmax,
+  the all-reduce payload and stream-unit work all scale with p, and with
+  STREAM4 hiding the KV fill there is no stall left for the extra positions to
+  fill. Verify costs 3.26× and DSpark loses.
+
+The history of this verdict follows the same rule. At P255 the layer was
+compute-bound and DSpark was rejected (0.83×). On the one-stack REAL_MEM path at
+8K, every layer stalled on a 9,893-cycle KV fill. A verify layer shares that fill
+across four positions, so DSpark appeared to pay 1.57×. STREAM4 removed the
+stall: the AR layer fell 2.76× (14,574 → 5,282) and the verify layer only 1.41×
+(24,320 → 17,197). Speculation had been paying for idle MACs during a memory
+stall that the full-bandwidth path no longer has.
+
+**Break-even is not a gain.** A lever that only brings the verify layer to
+`V*` gives the same rate as AR, while adding a drafter, a drafter ROM on
+every die and the commit/rollback machinery. Under the owner rule a lever must
+deliver at least 1% per user after composition.
+
+#### Levers evaluated
+
+Each lever was measured on the same STREAM4 verify vehicle at P8187, exact,
+or is an area estimate where it is marked as one (`dspark_verdict.json`).
+
+| Lever | Verify layer | Positions (τ) | Step | DSpark ÷ AR | Verdict |
+|---|---:|---:|---:|---:|---|
+| Baseline verify program | 17,197 | 4 (3.1445) | 868,200 | 0.704× | AR wins |
+| Per-position work reduction: stream-unit ops merged across positions (MERGE_SU) | 15,971 <!-- figure: 15971 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np4.verify_layer" tol="exact" name="MERGE_SU np4 verify" --> | 4 (3.1445) | 824,064 | 0.742× <!-- figure: 0.742 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np4.speedup_vs_ar_upper" name="MERGE_SU np4 vs AR" --> | AR wins |
+| Shorter draft, with MERGE_SU | 13,104 <!-- figure: 13104 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np3.verify_layer" tol="exact" name="MERGE_SU np3 verify" --> | 3 (2.5441) | 665,179–716,198 | 0.691–0.744× <!-- figure: 0.744 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np3.speedup_vs_ar_lower" name="MERGE_SU np3 vs AR lower draft" --> | AR wins |
+| Sharing K/V passes between positions (analysed, not built) | no change | 4 | — | — | no gain |
+| MAC area for single-pass weight reuse (estimate, not built) | removes at most 2,144 a layer | 4 | — | — | does not fit |
+
+- **Per-position work reduction.** The stream ops with no position-dependent
+  term (norms, rsqrt, reciprocal, residuals, SiLU scale) are issued once for
+  all four positions. That cuts the SU ops from 74 to 47 and removes 1,226
+  cycles a layer. That is 7% of the verify layer, and the layer needs a 41%
+  cut. The softmax and the all-reduce payload stay per-position.
+- **Sharing K/V passes.** This gives no gain. The KV-sourced matvec puts
+  context positions on the lanes and the query heads on the 8 interleave slots,
+  so its time is slots × K steps whatever the KV reads. One position's scores
+  already fill all 8 slots, and two positions in one op take the time of two
+  ops. The attention excess is the per-position softmax, and it scales with the
+  stream-unit width (`dspark_levers.json`).
+- **Shorter draft.** At p = 3 the verify layer is 13,104 cycles, but τ falls to
+  2.5441. The break-even layer falls with it, to 6,955–8,372 cycles (13,410
+  with a free draft). The drafter layers were measured only at S = 3, so the
+  range brackets the S = 2 draft, from the S = 3 value down to the S = 3 value
+  scaled by S / 3. Both ends lose.
+- **MAC area for single-pass reuse.** To apply one weight word to four
+  positions in the same cycle, every lane needs four products, four
+  accumulators and four result trees. That adds an estimated 103–165 mm² a die,
+  2.2–3.6× the 46 mm² reticle margin. A 2-position pass adds 34–55 mm², about
+  the whole margin. Widening the ROM read 4× instead adds about 1,350 mm². Even
+  if the area fitted, single-pass reuse removes only the weight re-stream share
+  of the excess, at most 2,144 cycles a layer (measured ME-busy bound). Without
+  the attention and all-reduce terms it cannot reach `V*`.
+
+No variant reaches break-even with the measured draft. The best exact p = 4
+verify layer (15,971) is below the free-draft break-even (16,654), so it would
+pay only if the 237,050-cycle draft cost nothing. Break-even would not be a
+gain in any case. The
+verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#verdict" name="Qwen ROM 8K mode verdict" -->
+
+#### Decision and scope
+
+- **The Qwen3-8B ROM operates in AR mode at 8K: 194,498 cycles = 6,169.7 tok/s
+  per user on STREAM4** (5,974.3 with the wire-stage bound).
+- DSpark is built and exact on this datapath: verify, commit and rollback, KV
+  multi-position commit, drafter layers, and ingest/Markov. It is switched off
+  by default. It is not a headline.
+- The verdict is scoped to the Qwen ROM at 8K. MTP/DSpark remains required, and
+  pays, where the step's dominant cost is shared: on the DeepSeek-V4.1 ROM array
+  (2.77× at 1M) and on the HBM accelerators (2.28× on the Qwen HBM accelerator
+  at 8K).
+
+## 9. Implementation status: the three mechanisms in RTL
+
+The report credits the ROM machine with three specialisations. Each now has a
+functional RTL model, a scoreboarded Icarus simulation, a Verilator lint and a
+campaign record under `results/rtl/`:
+
+1. **Striped expert banks** (`ot_rom_striped_expert_reader`,
+   `rom_striped_bank_campaign.json`). A token's selected experts are read at the
+   full bank rate, with no bank conflicts, in any selection.
+2. **Package links** (`ot_rom_pkg_link`, `rom_pkg_link_campaign.json`).
+   Cut-through with credits and 5 cycles of digital framing; the PHY is a
+   delay-line stand-in. On ASAP7 it routes at 1,339 MHz <!-- figure: 1339 src="results/physical_abi3/asap7/rom_pkg_link/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="link routed Fmax MHz" -->
+   (64-byte flits, 16 credits). Setup timing is met at 1 GHz. The one open item
+   is 58 max-slew violations from the flop-built receive buffer, which belongs
+   in an SRAM macro. Routing first found the buffer's read mux as the critical
+   path at 919 MHz; the registered output that fixed it costs one cycle.
+3. **Layer-per-package pipeline** (`ot_rom_layer_stage`,
+   `rom_layer_pipeline_campaign.json`). Four packages joined by links carry
+   eight users' tokens, and every final hidden state matches a reference model.
+   - The first token takes 550 cycles, <!-- figure: 550 src="results/rtl/rom_layer_pipeline_campaign.json#first_token_latency_cycles" name="pipeline first-token latency" -->
+     which is four stage services plus five hops, as the framework's latency
+     law says.
+   - Later tokens leave every 56 cycles, one stage's service. <!-- figure: 56 src="results/rtl/rom_layer_pipeline_campaign.json#stage_service_cycles" name="pipeline stage service" -->
+   - About ten users are in flight with no per-user slowdown.
+
+These are functional and cycle-structure models only. The router and the
+arithmetic in the pipeline are stated stand-ins. None of them establishes
+macro area, timing closure, PHY latency or energy, and they are not yet part of
+the ABI 3.0 token path.
+
+### A per-token decode core in RTL
+
+Section 6 attributes most of the ROM machine's gain to specialisation. The
+hardwired decode core (`rtl/hdc/`, plan and iteration log in
+[TOKEN_PIPELINE_OPTIMIZATION_PLAN.md](TOKEN_PIPELINE_OPTIMIZATION_PLAN.md))
+implements that specialisation on the reduced Qwen3 vehicle.
+
+- A static program drives a 64-lane matrix engine and a 16-element vector
+  stream unit with exp, reciprocal, rsqrt and sigmoid pipelines.
+- In the source-pinned joined Verilator gate, the core decodes positions 15
+  and 16 in 24,408 <!-- figure: 24408 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_autoboot_g4sw16.json#first_step.cycles" name="Qwen joined autonomous-boot first-step cycles" -->
+  and 24,685 <!-- figure: 24685 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_autoboot_g4sw16.json#cycles" name="Qwen joined autonomous-boot second-step cycles" -->
+  cycles. Both tokens, all logits, vector memory, and KV entries match the ISA
+  oracle. Its KV cache uses a serialized 32-byte HBM interface. Before the
+  first token, the hardware boot controller reads 128 <!-- figure: 128 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_autoboot_g4sw16.json#kv_system.boot_hbm_reads" name="Qwen autonomous K-tail boot HBM reads" -->
+  physical HBM sectors into the resident K tail. The second token reads V
+  sectors written by the first, while a closed K tile is flushed to HBM and
+  read back exactly. The behavioral HBM model has one-cycle reads and no
+  calibrated bandwidth or refresh timing; these cycles establish functional
+  scheduling only.
+- Starting from an empty KV cache, the same vector core processes a
+  16-token prompt <!-- figure: 16 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#configuration.prompt_tokens" name="Qwen physical-KV vector prompt tokens" -->
+  and produces 3 <!-- figure: 3 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.generated" name="Qwen physical-KV vector generated tokens" -->
+  oracle tokens (1073, 382, 93) in 18 <!-- figure: 18 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.steps" name="Qwen physical-KV vector decode steps" -->
+  decode steps and 439,897 <!-- figure: 439897 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.total_cycles" name="Qwen physical-KV vector multi-step cycles" -->
+  simulated cycles. Every step's token, logits, vector memory, and KV state
+  match the ISA model. Every physically written HBM sector has zero byte mismatches after
+  144 <!-- figure: 144 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.v_reads_after_write" name="Qwen vector V HBM reads after writes" -->
+  V reads from previously written sectors and 128 <!-- figure: 128 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.k_flush_writes" name="Qwen vector K-tail physical HBM flush writes" -->
+  K-tail flush writes. The one-cycle behavioral HBM model makes this a
+  functional sequence result, not a calibrated token-rate measurement.
+- Repeating those 18 steps with the existing four-pseudo-channel timing HBM
+  controller on the KV path also matches every token, logit, vector-memory
+  word, KV word, and physically written sector. Weights remain in synchronous
+  ROM. The sum of per-token core cycles is 492,687 <!-- figure: 492687 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#summary.total_cycles" name="Qwen vector timed-KV-HBM multi-step core cycles" -->
+  under this model, versus 439,897 <!-- figure: 439897 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.total_cycles" name="Qwen vector one-cycle-KV-HBM comparison core cycles" -->
+  with the one-cycle KV model above. Both sums exclude the autonomous
+  pre-token K-tail boot.
+  The HBM controller completes 1,200 <!-- figure: 1200 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#hbm_timing.completed_reads" name="Qwen timed-KV-HBM completed sector reads" -->
+  sector reads and 272 <!-- figure: 272 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#physical_hbm.committed_writes" name="Qwen timed-KV-HBM committed sector writes" -->
+  writes, with 496 <!-- figure: 496 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#hbm_timing.refreshes" name="Qwen timed-KV-HBM modeled refreshes" -->
+  modeled refreshes and a 57,073 ps <!-- figure: 57073 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#hbm_timing.read_latency_avg_ps" name="Qwen timed-KV-HBM modeled average read latency ps" -->
+  average read latency. The DRAM timings and controller latency are model
+  assumptions; this gate does not establish physical bandwidth, chip energy,
+  or a shipped-model token rate.
+- The scalar weight-HBM configuration also passes a complete split-aware
+  position-15 token with weights and KV in the behavioral HBM model at
+  30,539 cycles. <!-- figure: 30539 src="results/rtl/hdc_qwen_whbm_split_single.json#cycles" name="Qwen split-aware scalar weight-HBM single-token cycles" -->
+  From an empty KV cache, the same configuration consumes the prompt and
+  generates 3 <!-- figure: 3 src="results/rtl/hdc_qwen_whbm_split_e2e.json#generated" name="Qwen scalar weight-HBM generated tokens" -->
+  oracle tokens with 0 mismatches. <!-- figure: 0 src="results/rtl/hdc_qwen_whbm_split_e2e.json#mismatches" name="Qwen scalar weight-HBM generated-token mismatches" -->
+- A matched reduced-vehicle run changes only the scalar controller's weight
+  supply: synchronous ROM takes 30,127 <!-- figure: 30127 src="results/rtl/hdc_qwen_matched_weight_single.json#rom.cycles" name="Qwen matched scalar ROM-weight token cycles" -->
+  cycles and streamed HBM takes 30,539 <!-- figure: 30539 src="results/rtl/hdc_qwen_matched_weight_single.json#hbm.cycles" name="Qwen matched scalar HBM-weight token cycles" -->
+  cycles. Both keep KV in the same behavioral HBM system and produce the same
+  token and full state. This controlled RTL comparison supports a cycle count
+  for this vehicle, not a chip energy or full-model performance ratio.
+- On ASAP7 the stream unit routes at 1,111 MHz. <!-- figure: 1111 src="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC stream unit routed fmax MHz" -->
+
+The same vehicle takes 7.9 M cycles on the general ABI 3.0 token path, whose
+slowest blocks route at 58–75 MHz.
+
+### V4.1 reduced-core and package-array gates
+
+The combined reduced V4.1 core has now run ten dependent steps from empty
+state with QE weights streamed from HBM and pooled index keys written to and
+read from timed four-stack HBM. It generates 3 <!-- figure: 3 src="results/rtl/hdc_v41x_whbm_pooled_multi.json#configuration.generated_tokens" name="V4.1 combined HBM generated tokens" -->
+oracle tokens in 4,326,779 <!-- figure: 4326779 src="results/rtl/hdc_v41x_whbm_pooled_multi.json#summary.total_cycles" name="V4.1 combined HBM ten-step RTL cycles" -->
+RTL cycles, with 0 <!-- figure: 0 src="results/rtl/hdc_v41x_whbm_pooled_multi.json#summary.token_mismatches" name="V4.1 combined HBM generated-token mismatches" -->
+generated-token, final vector-memory and KV mismatches, faults, or queue errors.
+The result uses DPI arithmetic stand-ins and does not establish production
+throughput or energy.
+
+A separate two-package point-to-point array run completed its prompt and
+generated-token gate in 967,618 <!-- figure: 967618 src="results/rtl/hdc_v41x_array_b2_campaign.json#configurations[0].runs[0].total_cycles" name="V4.1 two-package array RTL cycles" -->
+RTL cycles with exact token, logit and package state checks. It is pinned to
+the tested source snapshot; the current-source rerun and switched five-package
+gate remain open. These gates exercise different configurations and do not yet
+prove a combined full-size system rate.
+
+## 10. Reproduce
+
+```
+python3 tools/run_roofline_studies.py --force   # several hours serially; --no-candidates and --candidates split it
+python3 tools/rtl_rom_striped_bank_campaign.py  # section 9, seconds each
+python3 tools/rtl_rom_pkg_link_campaign.py
+python3 tools/rtl_rom_layer_pipeline_campaign.py
+python3 tools/rtl_hdc_decode_campaign.py       # decode core, ~3 min
+python3 tools/check_prose_figures.py            # every annotated figure above
+```

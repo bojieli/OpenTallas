@@ -1,0 +1,11 @@
+{
+  "status": "PRESERVED_TRIAL_INTAKE_MISSING_HISTORY_DEPENDENCIES",
+  "worker_commit": "ca99e5d04fcf51130a1c0b616659b3c91728f4a9",
+  "observed": "4 source codec tests fail FileNotFoundError in fresh main trial; r32 original module is also not part of main",
+  "resolution": "Restore two exact committed r32 source bytes as historical test dependencies, not active provider adoption. r33 successor remains the operational provider.",
+  "restored": [
+    "tools/h3_ds_checkpoint_provider_r32.py",
+    "results/uarch/ds_hbm_wo_a_route_bindings_r32_20261002/inputs/hdc_golden_v41.py.source"
+  ],
+  "origin": "f63d1324a16097b445613bca7801010c235d0315"
+}

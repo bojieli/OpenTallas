@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/usr/bin/make",
+    "-C",
+    "/tmp/DS-recovery-negative-successor-execution-20261002-r1/baseline/obj",
+    "-f",
+    "Vtb.mk",
+    "-j",
+    "2",
+    "OPT_FAST=-O0",
+    "OPT_SLOW=-O0",
+    "OPT_GLOBAL=-O0"
+  ],
+  "returncode": 0,
+  "log_sha256": "fe63cc43fdcafcb72d5b490f81e3367760a58fbef0f70de402dbd2533b6748c4",
+  "memory_events_before": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "memory_events_after": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  }
+}

@@ -1,0 +1,98 @@
+OpenTallas
+Copyright (c) 2026 Bojie Li
+
+This product is licensed under the MIT License; see LICENSE.
+
+The MIT License covers OpenTallas' own source, documentation and derived
+evidence artifacts. It does NOT cover the third-party material listed below,
+some of which is redistributed inside this repository under its own terms.
+Each entry states what is redistributed and where, so that a downstream user
+can find it rather than discover it.
+
+
+THIRD-PARTY MATERIAL REDISTRIBUTED IN THIS REPOSITORY
+=====================================================
+
+ASAP7 Predictive PDK
+--------------------
+  Copyright Arizona State University and Arm Limited.
+  Licensed under BSD-3-Clause, as recorded by this repository at
+  configs/pdk/asap7_physical_lock.json and
+  configs/pdk/asap7_local_liberty_lock.json ("license": "BSD-3-Clause").
+
+  Redistributed content: merged standard-cell layout geometry is embedded in
+  three routed GDSII files committed under results/:
+
+      results/asap7_physical/numeric_e4_l16_tc/artifacts/6_final.gds    (26 MB)
+      results/asap7_physical/reduction_s8_g2_tc/artifacts/6_final.gds  (8.3 MB)
+      results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.gds   (5.8 MB)
+
+  These are outputs of a physical-design flow run against ASAP7 and therefore
+  contain ASAP7 cell geometry. BSD-3-Clause permits redistribution in binary
+  form provided the copyright notice, this list of conditions and the
+  disclaimer are reproduced; this NOTICE is where this repository reproduces
+  them. ASAP7 is a PREDICTIVE, non-manufacturable academic PDK: no result in
+  this repository is a silicon or foundry claim.
+
+
+Model weight tensors
+--------------------
+  One weight tensor derived from a third-party model checkpoint is committed
+  as test data:
+
+      testdata/rtl/a3_hc_pre_t1_checkpoint/projection.hex
+
+  It is 393,216 F32 values of tensor `layers.0.hc_attn_fn` from
+  deepseek-ai/DeepSeek-V4-Flash-0731 at revision
+  7872f01b1d1fe23eabc4c98b48bffcef5a386062, serialised as hex words. The
+  sibling index.json records the checkpoint repository, revision and per-shard
+  SHA-256 digests it was taken from.
+
+  That checkpoint is released under the MIT License. Verified by reading the
+  LICENSE file inside the pinned snapshot itself, not inferred:
+
+      MIT License
+      Copyright (c) 2023 DeepSeek
+
+  MIT permits redistribution provided the copyright notice and permission
+  notice are included, which is what this entry does. The same applies to
+  deepseek-ai/DeepSeek-V4-Pro-0813, whose pinned snapshot carries the identical
+  MIT License and copyright line.
+
+  Qwen/Qwen3-8B, referenced by configuration but NOT redistributed here, is
+  released under the Apache License 2.0 (verified the same way, in the pinned
+  snapshot at revision b968826d9c46dd6066d109eabc6255188de91218).
+
+  Model identities referenced by configuration without redistribution:
+  Qwen/Qwen3-8B (Apache-2.0), deepseek-ai/DeepSeek-V4-Flash-0731 (MIT),
+  deepseek-ai/DeepSeek-V4-Pro-0813 (MIT), moonshotai/Kimi-K3. Their weights are
+  not included; the tooling fetches them from their upstream sources.
+
+
+SKY130 and IHP SG13G2 PDK-derived artifacts
+-------------------------------------------
+  Small GDSII and SPICE artifacts under results/spice/ are outputs of flows run
+  against the SkyWater SKY130 PDK (Apache-2.0, release
+  f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7, fetched via ciel 2.6.1) and the
+  IHP SG13G2 open PDK (release v0.3.0). Those PDKs remain under their own
+  licences and are not vendored here beyond these flow outputs.
+
+
+THIRD-PARTY TOOLS USED BUT NOT REDISTRIBUTED
+============================================
+
+  No source or binary of the following is included. Versions are pinned
+  because results depend on them; see tools/bootstrap_*.sh and
+  docs/ABI3_PHYSICAL_VIEWS.md.
+
+      Verilator          5.050 (pinned to an upstream commit)
+      Icarus Verilog     >= 11.0
+      Yosys              0.68
+      OpenROAD / ORFS    pinned by container image digest
+      OpenSTA            3.1.0
+      ngspice, magic, netgen, klayout
+
+  Vendor performance figures for comparison baselines (NVIDIA, Cerebras,
+  Taalas and others) are quoted from published sources, each cited by URL in
+  configs/hardware/*.json. Those figures are the property of their publishers.
+  OpenTallas is not affiliated with, endorsed by, or a product of any of them.

@@ -1,0 +1,62 @@
+{
+  "utc": "2026-10-01T21:13:50.170149+00:00",
+  "source_git": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+  "verified_source_files": 15,
+  "engineering_verdict": "FAIL",
+  "flow_exit": 0,
+  "flow_exit_evidence": "original_wrapper.log: remote_gate job70bbc5e9a2 finished rc=0; 14 worktree files returned",
+  "corner_command_rc": {
+    "SS": 0,
+    "FF": 0
+  },
+  "ss_setup_wns_ps": -102.65510663742816,
+  "ff_hold_wns_ps": -0.9053036098549683,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "prior_archive_commit": "0be114653",
+  "old_worker_snapshot_proves_liveness": false,
+  "original_wrapper_pids_absent": [
+    2089594,
+    2089597
+  ],
+  "sole_supervisor": {
+    "pid": 615596,
+    "start_ticks": 305293450,
+    "state": "T"
+  },
+  "monitor": {
+    "pid": 626096,
+    "start_ticks": 305314538
+  },
+  "power_or_wholeSM_fit_credit": false,
+  "adopt": false,
+  "SM_admission": false,
+  "retry_or_tune": false,
+  "files": {
+    "remote_process_snapshot.json": "77f14827388015265776a461a8d91fb3c382fb14f04ba2d8696e149d1abdc974",
+    "original_wrapper.log": "d99d05e9c45122e7e9c2c2617d98b2d210318b31ca3fe996ee8d2118533380db",
+    "records/results/physical_abi3/asap7/chip/boundary/ot_gpu_tc_col.json": "ad620463191291e9a2c02b7844524e698ba6f60b1a9a61efa6550664a3967d0b",
+    "records/results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_ff.lib": "cb1a5137c891723efa7a8a3bbdadbe254c544687078e9361978d9252e16b5b3a",
+    "records/results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col.lef": "0598ece9e079b5a378b69ee37974d9e91a835d286e387e0dbd99f914098ecab4",
+    "records/results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_ss.lib": "bd2b76f8b999739e46cc21502060a6604049a879617b30511fd4ee48552dc47c",
+    "records/results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib": "4483bf9782344609b928694620eb4c520970c60c8c8a77476c78017b355595d5",
+    "records/results/physical_abi3/asap7/chip/corners/ot_gpu_tc_col.json": "dc0030fba3f3795667d074378f3361d375d42c375efbb584a7e36681d62d4fa7",
+    "records/results/physical_abi3/asap7/chip/blocks/ot_gpu_tc_col.json": "8cecf7dae5a9d2c76815d3d34e48bdf8b7ea74562bbd343e2167c540d7f54393",
+    "source/rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "source/rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "source/rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "source/rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "source/rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "source/rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "source/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "source/rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "source/rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+    "source/rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "source/rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+    "source/rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "source/rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+    "source/rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "local": {
+    "UTC": "2026-10-02T03:52:27.670890+00:00",
+    "available_RAM_KiB": 153756812,
+    "affinity_CPUs": 32,
+    "load": [
+      6.56982421875,
+      6.77880859375,
+      7.06494140625
+    ],
+    "tmp_disk_free_bytes": 2975363072,
+    "proposed_RAM4GiB_plus24GiB_reserve_fit": true,
+    "disk2GiB_plus16GiB_reserve_fit": false,
+    "admitted": false
+  },
+  "new_VM": {
+    "UTC": "2026-10-02T03:49:36Z",
+    "host": "ot-agidock128",
+    "available_RAM_MiB": 120568,
+    "load": [
+      0.15,
+      1.89,
+      3.69
+    ],
+    "root_available_MB": 997264,
+    "source_input_transport_bytes": 659625865,
+    "candidate": true
+  },
+  "preferred_host": "ot-agidock128 after reviewed input transport and fresh checks; local blocked on disk reserve",
+  "CPU": 2,
+  "aggregate_memory_GiB": 4,
+  "live_RAM_reserve_GiB": 24,
+  "aggregate_threads_limit": 48,
+  "remote_aggregate_job_budget_GiB": 96,
+  "no_PVE2_or_PVE3_launch": true,
+  "no_job_reserved_or_started": true
+}

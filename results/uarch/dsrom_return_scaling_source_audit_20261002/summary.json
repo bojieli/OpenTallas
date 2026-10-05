@@ -1,0 +1,67 @@
+{
+  "HBM_draft_preservation_commits": [
+    "290e0b7058cad4f837f6eddb1c1a4bc5b28e5dde",
+    "ea8fa03ab6730624cef190bfbf1e780999dc2609"
+  ],
+  "RTL_PNR_or_jobs": false,
+  "active_mask_only_cannot_reduce_storage": true,
+  "actual_current_fullfield_liveness_bytes": null,
+  "allocated_formula": "8386*(2*NP-128)+2146304",
+  "conditional_compiled_NP4096": {
+    "NBF": 1024,
+    "R": 128,
+    "aggregate_pair_capacity_reference": 917504,
+    "aggregate_return_declared_bits_reference": 15628705792,
+    "compiled_NP": 4096,
+    "conservative_FF_50pct_mm2": 52.897587425279994,
+    "declared_lower_bits": 69771008,
+    "distributed_node_read_bytes_per_cycle": 131040.0,
+    "distributed_node_write_bytes_per_cycle": 131040.0,
+    "fixed_root_bits": 2146304,
+    "logical_macro_leaves": 8192,
+    "node_RST_bits": 532224,
+    "node_queue_bits": 67092480,
+    "physical_PP4096_banks": 16384,
+    "physical_or_calendar_qualified": false,
+    "preexisting_capacity_reference_layer_dies": 224,
+    "region_tree_levels": 6,
+    "return_nodes": 8064,
+    "root_public_bits_per_cycle": 8832,
+    "root_public_port_count": 128,
+    "sibling_noqueue_source_cycles": 36,
+    "source_array_discount_admitted": false
+  },
+  "credits": {
+    "embedded_global_return": 0,
+    "ports": 0,
+    "scratch_alias": 0
+  },
+  "current_compiled_NP8192": {
+    "NBF": 1024,
+    "R": 128,
+    "compiled_NP": 8192,
+    "conservative_FF_50pct_mm2": 104.9817480192,
+    "declared_lower_bits": 138469120,
+    "distributed_node_read_bytes_per_cycle": 264160.0,
+    "distributed_node_write_bytes_per_cycle": 264160.0,
+    "fixed_root_bits": 2146304,
+    "logical_macro_leaves": 16384,
+    "node_RST_bits": 1072896,
+    "node_queue_bits": 135249920,
+    "physical_PP4096_banks": 32768,
+    "physical_or_calendar_qualified": false,
+    "region_tree_levels": 7,
+    "return_nodes": 16256,
+    "root_public_bits_per_cycle": 8832,
+    "root_public_port_count": 128,
+    "sibling_noqueue_source_cycles": 42,
+    "source_array_discount_admitted": false
+  },
+  "decision": "RETURN_PRIORITY_CURRENT_NP8192_FULL_RESERVATION_RETAINED",
+  "source_lifetime_evidence": "93efabc2d9fd6f3402a6f586798b45fd97adbabc",
+  "validation": {
+    "exact_regeneration": true,
+    "new_source_scaling_tests": 8,
+    "prior_return_template_tests": 10
+  }
+}

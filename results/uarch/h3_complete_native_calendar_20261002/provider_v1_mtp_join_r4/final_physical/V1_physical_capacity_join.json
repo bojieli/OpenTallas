@@ -1,0 +1,272 @@
+{
+  "RF_contract": {
+    "C0_order": [
+      "accepted",
+      "complete",
+      "mirrored_visible_ACK",
+      "consumer_accept",
+      "reverse_grant",
+      "retire"
+    ],
+    "RF_transaction_credit": 1,
+    "RF_vector_count": 512,
+    "bounded_latency": "3*read_pairs+2*write_vectors+native_ticks+C0_control+sum(response_stalls); each stall bound explicit, no timeout/drop",
+    "command_credit": 1,
+    "generation_bits": 64,
+    "missing_actual_gate": "H1 arbitrates each transaction only; C0 owner gateway must mask unrelated host/matrix/SIMD throughout command",
+    "owner_gate_state_area_recharged": false,
+    "owner_gate_state_basis": "V1 existing256tag+128control+64state reservation; carve203bits, no duplicate latch",
+    "owner_gate_state_bits": 203,
+    "owner_gate_state_layout": {
+      "mirror_mask": 2,
+      "phase": 4,
+      "read_index": 3,
+      "stall_counter": 64,
+      "ticket": 128,
+      "write_index": 2
+    },
+    "owner_gate_state_reserved_bits": 448,
+    "owner_held_until": "all serialized reads, exact primitive completion, all write ACKs, consumer acceptance, reverse retirement",
+    "physical_write_mirrors": 2,
+    "read_vectors_per_accept": 2,
+    "response_payload_B": 1024,
+    "source_adapter": "SerializedOwner below uses exact C0 ticket tuple; protocol-only model, no hardware binding",
+    "ticket_fields": [
+      "generation",
+      "PC",
+      "sequence",
+      "rank",
+      "SM"
+    ],
+    "write_mirror_payload_B": 1024,
+    "write_vectors_per_accept": 1
+  },
+  "additional_C0_or_RF_cost_applied": false,
+  "blockers": [
+    "reserve composed H1+C0+V1 slot with actual macro/FF/OBS exclusions",
+    "allocate distributed cuts including C0 routes without transferring candidate geometry contexts",
+    "implement actual atomic owner gateway only after own G0 admission",
+    "typed full-trace calendar join and source-exact connected V1 exception gates",
+    "context SS60ps/FF25ps closure"
+  ],
+  "clock_or_ns_conversion": null,
+  "dynamic_RF_ledger": null,
+  "hardware_admitted": false,
+  "models": {
+    "DeepSeek": {
+      "G0_verdict": "FAIL_EXISTING_COMPOSED_SLOT_AND_SHARED_CHANNEL",
+      "calendar": {
+        "RF_read_II": 3,
+        "RF_write_II": 2,
+        "dependency_path_ticks_upper": 108081200448,
+        "hardware_token_rate": null,
+        "native_replacement_owner": "Dewey native:OP; V1 native-only term replaces provisional entry, control remains C0",
+        "scope": "V1 isolated contribution only; absent M1/S1/R1/T1/provider/collective costs remain unknown, never zero full-token latency",
+        "serialized_single_worker_ticks_upper": 108081200448,
+        "typed_counts_owner": "Dewey actual ordered C0 trace; use existing RF/highword/RMW intervals once"
+      },
+      "opcode_hardware_coverage": [],
+      "rank_SM_mapping_sha256": "a15e5be74260afadd669dbc0b69158a9ab91b7e6f7f85262f694417175766ec6",
+      "replicas": 3072,
+      "routing": {
+        "C0_command512_already_in_V1": true,
+        "H1_existing_track_incidence_upper": 25718,
+        "V1_channels_required": 3,
+        "V1_incremental_track_incidence_upper": 6848,
+        "actual_distributed_cut_allocation": null,
+        "additional_C0_routes_unknown": true,
+        "basis": "H1 existing M7-M9 50% track budget; incidences are screening bounds, not unique global nets; no extra layers or PG credit",
+        "combined_channels_screen_lower_bound": 14,
+        "existing_outline_channel_tracks": 2430,
+        "shared_channel_fits": false
+      },
+      "slot": {
+        "C0_incremental_logic_um2": 54656.43720000001,
+        "H1_logic_um2": 164005.99040000004,
+        "V1_incremental_logic_um2_range": [
+          137377.2544,
+          362452.4544
+        ],
+        "composed_footprint_mm2_range": [
+          0.7121817640000001,
+          1.1625369639999998
+        ],
+        "composed_logic_um2_range": [
+          356090.88200000004,
+          581268.482
+        ],
+        "deficit_cell_um2_range": [
+          196996.25480000005,
+          422173.8548
+        ],
+        "existing_logic_cell_capacity_um2": 159094.6272,
+        "existing_slot_fits_any_bound": false,
+        "expanded_H1_rectangle_is_spare": false,
+        "geometry_context": "H1 service outline only; die-floorplan macro shape not interchangeable",
+        "occupancy_credit_um2": 0,
+        "owner_gate_incremental_logic_um2_range": [
+          51.2,
+          153.6
+        ],
+        "owner_gate_logic_basis": "512 gate-equivalent analytical bound:128bit ticket compare plus phase, mask, ready/valid exclusion; not mapped measurement",
+        "physical_slot_admitted": false,
+        "rectangle_conflict_checked": false,
+        "rectangle_inside_retained_outline_range": [
+          false,
+          false
+        ],
+        "required_rectangle_um_range": [
+          [
+            1572.8,
+            1208.71,
+            2395.76,
+            2074.87
+          ],
+          [
+            1572.8,
+            1208.71,
+            2395.76,
+            2621.3500000000004
+          ]
+        ],
+        "retained_service_outline_um": [
+          2397.6000000000004,
+          1641.6000000000001
+        ]
+      }
+    },
+    "Qwen": {
+      "G0_verdict": "FAIL_EXISTING_COMPOSED_SLOT_AND_SHARED_CHANNEL",
+      "calendar": {
+        "RF_read_II": 3,
+        "RF_write_II": 2,
+        "dependency_path_ticks_upper": 1612377425,
+        "hardware_token_rate": null,
+        "native_replacement_owner": "Dewey native:OP; V1 native-only term replaces provisional entry, control remains C0",
+        "scope": "V1 isolated contribution only; absent M1/S1/R1/T1/provider/collective costs remain unknown, never zero full-token latency",
+        "serialized_single_worker_ticks_upper": 1612377425,
+        "typed_counts_owner": "Dewey actual ordered C0 trace; use existing RF/highword/RMW intervals once"
+      },
+      "opcode_hardware_coverage": [],
+      "rank_SM_mapping_sha256": "eb816005d654a1d4eaf96991dda96541ebb07e0de8651dbabd3f61e8cb219f25",
+      "replicas": 64,
+      "routing": {
+        "C0_command512_already_in_V1": true,
+        "H1_existing_track_incidence_upper": 25718,
+        "V1_channels_required": 3,
+        "V1_incremental_track_incidence_upper": 6848,
+        "actual_distributed_cut_allocation": null,
+        "additional_C0_routes_unknown": true,
+        "basis": "H1 existing M7-M9 50% track budget; incidences are screening bounds, not unique global nets; no extra layers or PG credit",
+        "combined_channels_screen_lower_bound": 13,
+        "existing_outline_channel_tracks": 2702,
+        "shared_channel_fits": false
+      },
+      "slot": {
+        "C0_incremental_logic_um2": 54358.32520000001,
+        "H1_logic_um2": 164005.99040000004,
+        "V1_incremental_logic_um2_range": [
+          137377.2544,
+          362452.4544
+        ],
+        "composed_footprint_mm2_range": [
+          0.7115855400000002,
+          1.16194074
+        ],
+        "composed_logic_um2_range": [
+          355792.7700000001,
+          580970.37
+        ],
+        "deficit_cell_um2_range": [
+          196698.14280000012,
+          421875.7428
+        ],
+        "existing_logic_cell_capacity_um2": 159094.62719999996,
+        "existing_slot_fits_any_bound": false,
+        "expanded_H1_rectangle_is_spare": false,
+        "geometry_context": "H1 service outline only; die-floorplan macro shape not interchangeable",
+        "occupancy_credit_um2": 0,
+        "owner_gate_incremental_logic_um2_range": [
+          51.2,
+          153.6
+        ],
+        "owner_gate_logic_basis": "512 gate-equivalent analytical bound:128bit ticket compare plus phase, mask, ready/valid exclusion; not mapped measurement",
+        "physical_slot_admitted": false,
+        "rectangle_conflict_checked": false,
+        "rectangle_inside_retained_outline_range": [
+          true,
+          false
+        ],
+        "required_rectangle_um_range": [
+          [
+            2392.24,
+            1247.5900000000001,
+            3215.2,
+            2113.75
+          ],
+          [
+            2392.24,
+            1247.5900000000001,
+            3215.2,
+            2660.2300000000005
+          ]
+        ],
+        "retained_service_outline_um": [
+          3216.2400000000002,
+          2501.28
+        ]
+      }
+    }
+  },
+  "schema": "H4_CALENDAR_V1_PHYSICAL_CAPACITY_JOIN_V1",
+  "source_pins": [
+    {
+      "commit": "6ce60f8ea4a8eb7ce809d90840415bddc5cd0cd8",
+      "name": "H1",
+      "path": "results/uarch/full_sm_rf_service_20261002/model_final.json",
+      "sha256": "6707df368b3fde7bb8e481efd5a0d7f35051cc569562dd3af7e3e8534b4fc2c9"
+    },
+    {
+      "commit": "56506fb5bacb993107ff11f7df45f6f03363f667",
+      "name": "Qwen_geometry",
+      "path": "results/uarch/qwen_hbm_interface_geometry_20261002/qwen_floorplan_r11.json",
+      "sha256": "97a6d79ee1ba22fbc89f70f90745d3799a64b3e45ed651312da540e91539e3ab"
+    },
+    {
+      "commit": "56506fb5bacb993107ff11f7df45f6f03363f667",
+      "name": "DS_geometry",
+      "path": "results/uarch/qwen_hbm_interface_geometry_20261002/deepseek_floorplan_r11.json",
+      "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca"
+    },
+    {
+      "commit": "655f22b2b",
+      "name": "C0",
+      "path": "results/uarch/h4_c0_bridge_model_20261002/model.json",
+      "sha256": "96a64c5f7f17bac9498c7101a0004791820a84d681c1651d518177109de20a1e"
+    },
+    {
+      "commit": "655f22b2b",
+      "name": "unified",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "name": "RF",
+      "path": "rtl/gpu/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "commit": "655f22b2b",
+      "name": "C0_owner",
+      "path": "tools/h4_c0_bridge.py",
+      "sha256": "19904b9fa7481e5ba0e27e9d4f17b1308abf3ee2df20a553f5c5ae5b0add996c"
+    },
+    {
+      "commit": "f7fa8e290d419f6de3356385c0b55ded768c2090",
+      "name": "V1",
+      "path": "results/uarch/h4_v1_g0_model_20261002/intake/run/model.json",
+      "sha256": "9538e72448ad2ddd438faf483dfc6a8f5a76decb31a6057647f4daed033c27b0"
+    }
+  ]
+}

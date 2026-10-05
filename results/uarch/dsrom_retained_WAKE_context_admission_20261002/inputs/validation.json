@@ -1,0 +1,23 @@
+{
+  "tests_PASS": 30,
+  "byteidentical_model_replay": true,
+  "q_and_BF_real_WAKEDFF": 8,
+  "q_and_BF_distinct_FF_outputs": 8,
+  "q_and_BF_distinct_WAKE_outputs": 8,
+  "real_cell_keep_dont_touch": true,
+  "source_manifest_unchanged": true,
+  "hardware_ports_connectivity_unchanged_by_attribute_preparation": true,
+  "four4096x274macros_each_preserved": true,
+  "all_actual_ICG_and_capture_cells_bound": true,
+  "mapped_macro_to_translated_abstract_identity_bijection": true,
+  "physical_G0_admitted": false,
+  "physical_PnR_launched": false,
+  "SS_FF_closed": false,
+  "cold_mapping_runs_in_attribute_prepare": 0,
+  "all_own_jobs_terminal": true,
+  "pve2_pve3_jobs": 0,
+  "prior_a910_and_new_attr_serialization_failures_preserved": true,
+  "source_scope": "retained full21file q/BF, no arithmetic/pins/parameter/engine changes",
+  "parent_review_main": "433ccff91",
+  "generator_sha256": "a6c7dc9aa98f360fbb87a126c46fa56e100e1e168aabc729d2520ac4a4605058"
+}

@@ -1,0 +1,20 @@
+test_all_72_rows_reader_owner_and_real_drain (ha4_fixture.ControllerRTLTests) ... ok
+test_complete_with_physical_backpressure_and_separate_reverse (ha4_fixture.ControllerRTLTests) ... ok
+test_component_default_off (ha4_fixture.ControllerRTLTests) ... ok
+test_duplicate_consumer_callback_cannot_reuse_receipt (ha4_fixture.ControllerRTLTests) ... ok
+test_incomplete_staging_cannot_commit (ha4_fixture.ControllerRTLTests) ... ok
+test_metadata_record_before_bitmap_refused (ha4_fixture.ControllerRTLTests) ... ok
+test_old_sector_wrong_identity_is_not_completion (ha4_fixture.ControllerRTLTests) ... ok
+test_partial_allcopy_drain_refused (ha4_fixture.ControllerRTLTests) ... ok
+test_pause_retains_accepted_writer_and_staging_debt (ha4_fixture.ControllerRTLTests) ... ok
+test_physical_source_address_mismatch (ha4_fixture.ControllerRTLTests) ... ok
+test_quiesce_allows_actual_writer_continuation (ha4_fixture.ControllerRTLTests) ... ok
+test_quiesce_does_not_erase_entering_lease (ha4_fixture.ControllerRTLTests) ... ok
+test_real_sram_readback_corruption_refused (ha4_fixture.ControllerRTLTests) ... ok
+test_saved_command_ports_mutate_while_response_held (ha4_fixture.ControllerRTLTests) ... ok
+test_stale_reverse_drain_identity_retains_owner (ha4_fixture.ControllerRTLTests) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 5.256s
+
+OK

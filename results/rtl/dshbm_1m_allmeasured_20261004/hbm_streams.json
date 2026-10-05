@@ -1,0 +1,1880 @@
+{
+ "schema": "opentallas.dshbm_1m.hbm_streams.v1",
+ "position": 1048575,
+ "context": 1048576,
+ "design": "DS-V4.1 HBM accelerator, TP-96, 4 HBM3E stacks a die (4.0 TB/s peak)",
+ "minimum_component": "one HBM3E stack (32 PCs, REFpb on schedule, refresh live); die = 4 identical stacks",
+ "bench": "rtl/test/hbm_accel/tb_dshbm_1m_streams.sv on rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv (52ce3e9c1 r6 stream PC + notice) + ot_hbm_accel_cdc_fifo landing; ASSUMED path terms PHY_CMD 5 ns + RSP 10 ns + NoC 5 ns (R5a bench)",
+ "metrics": {
+  "first_access": "go (query / merge / token start) -> first sector at the consumer",
+  "complete": "go -> last sector at the consumer (the on-path time)",
+  "steady": "bytes / (first RD -> last RD burst end)",
+  "end_to_end": "bytes / complete"
+ },
+ "exactness": "every consumed sector compared with its stored pattern (distinct per sector), 0 DRAM timing violations at the corrected REFpb rules; negative controls must FAIL",
+ "negative_controls": [
+  {
+   "case": "neg_corrupt_sector_scan",
+   "verdict": "FAIL",
+   "bad": 1,
+   "viol": 0
+  },
+  {
+   "case": "neg_corrupt_sector_gather",
+   "verdict": "FAIL",
+   "bad": 1,
+   "viol": 0
+  },
+  {
+   "case": "neg_trcd_check_plus_1ns_gather",
+   "verdict": "FAIL",
+   "bad": 0,
+   "viol": 162
+  }
+ ],
+ "ckv_selection": {
+  "golden": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930",
+  "rule": "sel = global top-512 of the layer index scores (max first, lowest index on ties: w19_hbm_tp96_isa op_merge); owner die = (i // 8) % 96 (key_owner, KEY_BLOCK 8); stack within the die ASSUMED (i // 8 // 96) % 4 (the die interleaves its key blocks over its four stacks)",
+  "layers": {
+   "2": {
+    "n_scores": 524288,
+    "finite": 524288,
+    "max_rows_per_die": 13,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 96,
+    "max_rows_per_stack": 5,
+    "hist_rows_per_die": [
+     0,
+     4,
+     7,
+     11,
+     13,
+     18,
+     17,
+     8,
+     8,
+     7,
+     1,
+     1,
+     0,
+     1
+    ]
+   },
+   "8": {
+    "n_scores": 524288,
+    "finite": 524288,
+    "max_rows_per_die": 13,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 96,
+    "max_rows_per_stack": 6,
+    "hist_rows_per_die": [
+     0,
+     3,
+     8,
+     13,
+     12,
+     18,
+     10,
+     15,
+     9,
+     4,
+     3,
+     0,
+     0,
+     1
+    ]
+   },
+   "14": {
+    "n_scores": 524288,
+    "finite": 524288,
+    "max_rows_per_die": 9,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 96,
+    "max_rows_per_stack": 6,
+    "hist_rows_per_die": [
+     0,
+     2,
+     5,
+     15,
+     13,
+     17,
+     12,
+     15,
+     12,
+     5
+    ]
+   },
+   "20": {
+    "n_scores": 1048576,
+    "finite": 1048576,
+    "max_rows_per_die": 12,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 94,
+    "max_rows_per_stack": 6,
+    "hist_rows_per_die": [
+     2,
+     1,
+     5,
+     13,
+     9,
+     24,
+     16,
+     10,
+     9,
+     4,
+     2,
+     0,
+     1
+    ]
+   },
+   "24": {
+    "n_scores": 1048576,
+    "finite": 16384,
+    "max_rows_per_die": 12,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 94,
+    "max_rows_per_stack": 6,
+    "hist_rows_per_die": [
+     2,
+     2,
+     7,
+     11,
+     18,
+     15,
+     9,
+     15,
+     7,
+     4,
+     2,
+     3,
+     1
+    ]
+   },
+   "28": {
+    "n_scores": 1048576,
+    "finite": 16384,
+    "max_rows_per_die": 18,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 95,
+    "max_rows_per_stack": 7,
+    "hist_rows_per_die": [
+     1,
+     3,
+     9,
+     10,
+     22,
+     14,
+     10,
+     8,
+     7,
+     2,
+     6,
+     2,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1
+    ]
+   },
+   "32": {
+    "n_scores": 1048576,
+    "finite": 16384,
+    "max_rows_per_die": 12,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 94,
+    "max_rows_per_stack": 5,
+    "hist_rows_per_die": [
+     2,
+     1,
+     8,
+     15,
+     14,
+     15,
+     13,
+     7,
+     8,
+     4,
+     8,
+     0,
+     1
+    ]
+   },
+   "36": {
+    "n_scores": 1048576,
+    "finite": 16384,
+    "max_rows_per_die": 14,
+    "mean_rows_per_die": 5.333,
+    "dies_with_rows": 95,
+    "max_rows_per_stack": 6,
+    "hist_rows_per_die": [
+     1,
+     7,
+     4,
+     12,
+     17,
+     15,
+     11,
+     11,
+     5,
+     5,
+     3,
+     3,
+     0,
+     1,
+     1
+    ]
+   }
+  },
+  "ckv_rows": {
+   "max_rows_per_die": 18,
+   "max_rows_per_stack": 7,
+   "row_bytes": 288
+  },
+  "input_sha256": {
+   "ctx1048576_L02.npz": "c7a427509f8caf071a1e39aee3c176c93b04b8d0b44a49f07178bf5708823135",
+   "ctx1048576_L08.npz": "904c3d323b4c64179c93072c1995ff57d07f57627da18b636f162497130b8dc9",
+   "ctx1048576_L14.npz": "2f0d79a326a122c996aebf8b2adc5daceeed95e13df27ff35f16441e98c5a901",
+   "ctx1048576_L20.npz": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45",
+   "ctx1048576_L24.npz": "c7c2809d84a259425632856d9a942858c0da49a944788e69d49be098a88b9592",
+   "ctx1048576_L28.npz": "2bd9460587c78c912ceaee2c152f04f5ed8c3082a9b9185aff3f5cf66d7ceb09",
+   "ctx1048576_L32.npz": "758d4b9c10f539973dff7290e59c2e80f4eb1f9ee6fb3008263097aa16365faa",
+   "ctx1048576_L36.npz": "65260c9fc00a273cf44bcd5b84bdacea4e77ac157f801af7b5647858d076f292"
+  }
+ },
+ "streams": {
+  "scan_L20_as_built": {
+   "note": "L20-type index keys (10923 keys/die, 182 sectors a PC), R5a landing 32, descriptor posted 200 ns ahead, RDs at the query, no notice",
+   "law": 5,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 182,
+    "nk": 0
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": false,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 186368,
+   "bytes_per_die": 745472,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 265.045,
+    "median": 265.87,
+    "max": 340.199
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 320,
+    "max": 409
+   },
+   "steady_tbps_stack": {
+    "min": 0.6169,
+    "mean": 0.792
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.5478,
+    "mean": 0.6802
+   },
+   "achieved_TBps_die_steady_min": 2.4676,
+   "fraction_of_peak_steady_min": 0.6169,
+   "fraction_of_peak_steady_mean": 0.792,
+   "fraction_of_peak_end_to_end_min": 0.5478,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 170516
+   },
+   "activates_max": 257,
+   "refreshes_max": 3165
+  },
+  "scan_L20_notice": {
+   "note": "L20 keys, 64-deep landing + static-schedule notice, RDs at the query",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 182,
+    "nk": 0,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 186368,
+   "bytes_per_die": 745472,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 223.993,
+    "median": 224.7645,
+    "max": 225.615
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 270,
+    "max": 271
+   },
+   "steady_tbps_stack": {
+    "min": 1.0,
+    "mean": 1.0
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.826,
+    "mean": 0.8291
+   },
+   "achieved_TBps_die_steady_min": 4.0,
+   "fraction_of_peak_steady_min": 1.0,
+   "fraction_of_peak_steady_mean": 1.0,
+   "fraction_of_peak_end_to_end_min": 0.826,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 169640
+   },
+   "activates_max": 256,
+   "refreshes_max": 3155
+  },
+  "scan_L20_prefetch": {
+   "note": "L20 keys, notice + key RDs start 30 ns before the query (region known at token start)",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 182,
+    "nk": 0,
+    "notice_lead_ps": 300000,
+    "prefetch_ps": 30000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 186368,
+   "bytes_per_die": 745472,
+   "first_access_ns": {
+    "min": 8.643,
+    "median": 9.473500000000001,
+    "max": 10.203
+   },
+   "complete_ns": {
+    "min": 193.933,
+    "median": 194.805,
+    "max": 198.019
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 234,
+    "max": 238
+   },
+   "steady_tbps_stack": {
+    "min": 0.9838,
+    "mean": 0.9991
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.9412,
+    "mean": 0.9559
+   },
+   "achieved_TBps_die_steady_min": 3.9352,
+   "fraction_of_peak_steady_min": 0.9838,
+   "fraction_of_peak_steady_mean": 0.9991,
+   "fraction_of_peak_end_to_end_min": 0.9412,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 169146
+   },
+   "activates_max": 256,
+   "refreshes_max": 3147
+  },
+  "scan_L20_index_stack_nk16": {
+   "note": "L20 keys consumed at the ot_hbm_accel_index_stack rate (16 keys a 1.2 GHz cycle a stack), notice",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 182,
+    "nk": 16,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 186368,
+   "bytes_per_die": 745472,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 223.993,
+    "median": 224.7645,
+    "max": 225.615
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 270,
+    "max": 271
+   },
+   "steady_tbps_stack": {
+    "min": 1.0,
+    "mean": 1.0
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.826,
+    "mean": 0.8291
+   },
+   "achieved_TBps_die_steady_min": 4.0,
+   "fraction_of_peak_steady_min": 1.0,
+   "fraction_of_peak_steady_mean": 1.0,
+   "fraction_of_peak_end_to_end_min": 0.826,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 169640
+   },
+   "activates_max": 256,
+   "refreshes_max": 3155
+  },
+  "scan_L2_as_built": {
+   "note": "L2-type index keys (5462 keys/die, 91 sectors a PC), R5a landing 32, descriptor posted 200 ns ahead, RDs at the query, no notice",
+   "law": 5,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 91,
+    "nk": 0
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": false,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 93184,
+   "bytes_per_die": 372736,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 147.157,
+    "median": 148.0675,
+    "max": 222.746
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 178,
+    "max": 268
+   },
+   "steady_tbps_stack": {
+    "min": 0.5056,
+    "mean": 0.8027
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.4183,
+    "mean": 0.6006
+   },
+   "achieved_TBps_die_steady_min": 2.0224,
+   "fraction_of_peak_steady_min": 0.5056,
+   "fraction_of_peak_steady_mean": 0.8027,
+   "fraction_of_peak_end_to_end_min": 0.4183,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 168499
+   },
+   "activates_max": 129,
+   "refreshes_max": 3134
+  },
+  "scan_L2_notice": {
+   "note": "L2 keys, 64-deep landing + static-schedule notice, RDs at the query",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 91,
+    "nk": 0,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 93184,
+   "bytes_per_die": 372736,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 130.854,
+    "median": 131.625,
+    "max": 132.397
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 158,
+    "max": 159
+   },
+   "steady_tbps_stack": {
+    "min": 1.0,
+    "mean": 1.0
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.7038,
+    "mean": 0.708
+   },
+   "achieved_TBps_die_steady_min": 4.0,
+   "fraction_of_peak_steady_min": 1.0,
+   "fraction_of_peak_steady_mean": 1.0,
+   "fraction_of_peak_end_to_end_min": 0.7038,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 168064
+   },
+   "activates_max": 128,
+   "refreshes_max": 3130
+  },
+  "scan_L2_prefetch": {
+   "note": "L2 keys, notice + key RDs start 30 ns before the query (region known at token start)",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 91,
+    "nk": 0,
+    "notice_lead_ps": 300000,
+    "prefetch_ps": 30000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 93184,
+   "bytes_per_die": 372736,
+   "first_access_ns": {
+    "min": 8.643,
+    "median": 9.473500000000001,
+    "max": 10.203
+   },
+   "complete_ns": {
+    "min": 100.872,
+    "median": 101.6765,
+    "max": 104.723
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 123,
+    "max": 126
+   },
+   "steady_tbps_stack": {
+    "min": 0.9681,
+    "mean": 0.9982
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.8898,
+    "mean": 0.9154
+   },
+   "achieved_TBps_die_steady_min": 3.8724,
+   "fraction_of_peak_steady_min": 0.9681,
+   "fraction_of_peak_steady_mean": 0.9982,
+   "fraction_of_peak_end_to_end_min": 0.8898,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 167555
+   },
+   "activates_max": 128,
+   "refreshes_max": 3122
+  },
+  "scan_L2_index_stack_nk16": {
+   "note": "L2 keys consumed at the ot_hbm_accel_index_stack rate (16 keys a 1.2 GHz cycle a stack), notice",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 91,
+    "nk": 16,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "key region = the die's position shard of keys 0..P-1, fixed before the token; only the query is token-dependent, so RDs can start before the query (scan_*_prefetch), but the scorer consumes them only after index_q, so the scan COMPLETION is on the path: charge max(stream from prefetch/notice case, scorer compute) after index_q",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 93184,
+   "bytes_per_die": 372736,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 130.854,
+    "median": 131.625,
+    "max": 132.397
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 158,
+    "max": 159
+   },
+   "steady_tbps_stack": {
+    "min": 1.0,
+    "mean": 1.0
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.7038,
+    "mean": 0.708
+   },
+   "achieved_TBps_die_steady_min": 4.0,
+   "fraction_of_peak_steady_min": 1.0,
+   "fraction_of_peak_steady_mean": 1.0,
+   "fraction_of_peak_end_to_end_min": 0.7038,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 168064
+   },
+   "activates_max": 128,
+   "refreshes_max": 3130
+  },
+  "window_as_built": {
+   "note": "window 128 x 576 B a die (18 sectors a PC), as built, RDs at the query",
+   "law": 5,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 18,
+    "nk": 0
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "127 of the 128 window rows are positions < P, stored before the token; the newest row is produced in-layer (registers). The ROM charges its window load per layer in front of attention (worst of 64 refresh phases): the fair HBM term is window_prefetch/notice complete_ns max",
+   "ge90_steady": false,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 18432,
+   "bytes_per_die": 73728,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 56.04,
+    "median": 56.968999999999994,
+    "max": 131.116
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 69,
+    "max": 158
+   },
+   "steady_tbps_stack": {
+    "min": 0.1978,
+    "mean": 0.8837
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.1406,
+    "mean": 0.2983
+   },
+   "achieved_TBps_die_steady_min": 0.7912,
+   "fraction_of_peak_steady_min": 0.1978,
+   "fraction_of_peak_steady_mean": 0.8837,
+   "fraction_of_peak_end_to_end_min": 0.1406,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 166957
+   },
+   "activates_max": 129,
+   "refreshes_max": 3110
+  },
+  "window_notice": {
+   "note": "window, notice",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 18,
+    "nk": 0,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "127 of the 128 window rows are positions < P, stored before the token; the newest row is produced in-layer (registers). The ROM charges its window load per layer in front of attention (worst of 64 refresh phases): the fair HBM term is window_prefetch/notice complete_ns max",
+   "ge90_steady": true,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 18432,
+   "bytes_per_die": 73728,
+   "first_access_ns": {
+    "min": 38.625,
+    "median": 39.4645,
+    "max": 40.247
+   },
+   "complete_ns": {
+    "min": 56.04,
+    "median": 56.837,
+    "max": 57.74
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 69,
+    "max": 70
+   },
+   "steady_tbps_stack": {
+    "min": 1.0,
+    "mean": 1.0
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.3192,
+    "mean": 0.3242
+   },
+   "achieved_TBps_die_steady_min": 4.0,
+   "fraction_of_peak_steady_min": 1.0,
+   "fraction_of_peak_steady_mean": 1.0,
+   "fraction_of_peak_end_to_end_min": 0.3192,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 166784
+   },
+   "activates_max": 128,
+   "refreshes_max": 3110
+  },
+  "window_prefetch": {
+   "note": "window, notice + RDs 30 ns before the query (rows known at token start)",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 18,
+    "nk": 0,
+    "notice_lead_ps": 300000,
+    "prefetch_ps": 30000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "prefetchable at token start",
+   "evidence": "127 of the 128 window rows are positions < P, stored before the token; the newest row is produced in-layer (registers). The ROM charges its window load per layer in front of attention (worst of 64 refresh phases): the fair HBM term is window_prefetch/notice complete_ns max",
+   "ge90_steady": false,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 18432,
+   "bytes_per_die": 73728,
+   "first_access_ns": {
+    "min": 8.643,
+    "median": 9.473500000000001,
+    "max": 10.203
+   },
+   "complete_ns": {
+    "min": 26.058,
+    "median": 26.951999999999998,
+    "max": 30.586
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 33,
+    "max": 37
+   },
+   "steady_tbps_stack": {
+    "min": 0.8571,
+    "mean": 0.9917
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.6026,
+    "mean": 0.6819
+   },
+   "achieved_TBps_die_steady_min": 3.4284,
+   "fraction_of_peak_steady_min": 0.8571,
+   "fraction_of_peak_steady_mean": 0.9917,
+   "fraction_of_peak_end_to_end_min": 0.6026,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 166282
+   },
+   "activates_max": 128,
+   "refreshes_max": 3102
+  },
+  "gather_2rows_as_built": {
+   "note": "selected CKV rows, uniform expectation 512/96/4 = 1.33 rows a stack; posted at the merge (token-dependent), no notice",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 2
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path",
+   "evidence": "rows = the merged top-512 of THIS token's index scores (op_merge then op_kv_gather); address known only after the 96 x 512 merge; the source die's read precedes its kv_gather transmit",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 576,
+   "bytes_per_die": 2304,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.949,
+    "max": 235.169
+   },
+   "complete_ns": {
+    "min": 61.194,
+    "median": 75.825,
+    "max": 315.422
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 91,
+    "max": 379
+   },
+   "steady_tbps_stack": {
+    "min": 0.0023,
+    "mean": 0.1445
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0018,
+    "mean": 0.008
+   },
+   "achieved_TBps_die_steady_min": 0.0092,
+   "fraction_of_peak_steady_min": 0.0023,
+   "fraction_of_peak_steady_mean": 0.1445,
+   "fraction_of_peak_end_to_end_min": 0.0018,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 167231
+   },
+   "activates_max": 73,
+   "refreshes_max": 3112
+  },
+  "gather_2rows_notice": {
+   "note": "selected CKV rows, uniform expectation 512/96/4 = 1.33 rows a stack; static-schedule notice over the gather window",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 2,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path",
+   "evidence": "rows = the merged top-512 of THIS token's index scores (op_merge then op_kv_gather); address known only after the 96 x 512 merge; the source die's read precedes its kv_gather transmit",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 576,
+   "bytes_per_die": 2304,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.9235,
+    "max": 61.827
+   },
+   "complete_ns": {
+    "min": 61.194,
+    "median": 69.242,
+    "max": 77.185
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 84,
+    "max": 93
+   },
+   "steady_tbps_stack": {
+    "min": 0.0331,
+    "mean": 0.1582
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0075,
+    "mean": 0.0084
+   },
+   "achieved_TBps_die_steady_min": 0.1324,
+   "fraction_of_peak_steady_min": 0.0331,
+   "fraction_of_peak_steady_mean": 0.1582,
+   "fraction_of_peak_end_to_end_min": 0.0075,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 167018
+   },
+   "activates_max": 72,
+   "refreshes_max": 3112
+  },
+  "gather_7rows_as_built": {
+   "note": "selected CKV rows, golden worst stack (7 rows, stack = (row//8//96) % 4, ASSUMED map); posted at the merge (token-dependent), no notice",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 7
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path",
+   "evidence": "rows = the merged top-512 of THIS token's index scores (op_merge then op_kv_gather); address known only after the 96 x 512 merge; the source die's read precedes its kv_gather transmit",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 2016,
+   "bytes_per_die": 8064,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.949,
+    "max": 173.884
+   },
+   "complete_ns": {
+    "min": 125.699,
+    "median": 126.524,
+    "max": 364.569
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 152,
+    "max": 438
+   },
+   "steady_tbps_stack": {
+    "min": 0.0066,
+    "mean": 0.0286
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0055,
+    "mean": 0.0152
+   },
+   "achieved_TBps_die_steady_min": 0.0264,
+   "fraction_of_peak_steady_min": 0.0066,
+   "fraction_of_peak_steady_mean": 0.0286,
+   "fraction_of_peak_end_to_end_min": 0.0055,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 168227
+   },
+   "activates_max": 248,
+   "refreshes_max": 3129
+  },
+  "gather_7rows_notice": {
+   "note": "selected CKV rows, golden worst stack (7 rows, stack = (row//8//96) % 4, ASSUMED map); static-schedule notice over the gather window",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 7,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path",
+   "evidence": "rows = the merged top-512 of THIS token's index scores (op_merge then op_kv_gather); address known only after the 96 x 512 merge; the source die's read precedes its kv_gather transmit",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 2016,
+   "bytes_per_die": 8064,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.9235,
+    "max": 61.827
+   },
+   "complete_ns": {
+    "min": 125.699,
+    "median": 126.47049999999999,
+    "max": 127.321
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 152,
+    "max": 153
+   },
+   "steady_tbps_stack": {
+    "min": 0.0298,
+    "mean": 0.0303
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0158,
+    "mean": 0.0159
+   },
+   "achieved_TBps_die_steady_min": 0.1192,
+   "fraction_of_peak_steady_min": 0.0298,
+   "fraction_of_peak_steady_mean": 0.0303,
+   "fraction_of_peak_end_to_end_min": 0.0158,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 167975
+   },
+   "activates_max": 242,
+   "refreshes_max": 3129
+  },
+  "gather_18rows_as_built": {
+   "note": "selected CKV rows, golden worst source die (18 rows) all on one stack (bound); posted at the merge (token-dependent), no notice",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 18
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path",
+   "evidence": "rows = the merged top-512 of THIS token's index scores (op_merge then op_kv_gather); address known only after the 96 x 512 merge; the source die's read precedes its kv_gather transmit",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 5184,
+   "bytes_per_die": 20736,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.949,
+    "max": 173.884
+   },
+   "complete_ns": {
+    "min": 313.073,
+    "median": 321.5855,
+    "max": 546.996
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 386,
+    "max": 657
+   },
+   "steady_tbps_stack": {
+    "min": 0.0107,
+    "mean": 0.0197
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0095,
+    "mean": 0.0159
+   },
+   "achieved_TBps_die_steady_min": 0.0428,
+   "fraction_of_peak_steady_min": 0.0107,
+   "fraction_of_peak_steady_mean": 0.0197,
+   "fraction_of_peak_end_to_end_min": 0.0095,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 171411
+   },
+   "activates_max": 602,
+   "refreshes_max": 3180
+  },
+  "gather_18rows_notice": {
+   "note": "selected CKV rows, golden worst source die (18 rows) all on one stack (bound); static-schedule notice over the gather window",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 18,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path",
+   "evidence": "rows = the merged top-512 of THIS token's index scores (op_merge then op_kv_gather); address known only after the 96 x 512 merge; the source die's read precedes its kv_gather transmit",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 5184,
+   "bytes_per_die": 20736,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.9235,
+    "max": 61.827
+   },
+   "complete_ns": {
+    "min": 313.073,
+    "median": 321.3505,
+    "max": 518.724
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 386,
+    "max": 623
+   },
+   "steady_tbps_stack": {
+    "min": 0.0113,
+    "mean": 0.0198
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.01,
+    "mean": 0.0161
+   },
+   "achieved_TBps_die_steady_min": 0.0452,
+   "fraction_of_peak_steady_min": 0.0113,
+   "fraction_of_peak_steady_mean": 0.0198,
+   "fraction_of_peak_end_to_end_min": 0.01,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 171315
+   },
+   "activates_max": 602,
+   "refreshes_max": 3180
+  },
+  "engram_1row_notice": {
+   "note": "Engram table row by hash: one random 288-B row read on the same gather path (no Engram HBM RTL)",
+   "law": 5,
+   "plusargs": {
+    "mode": 1,
+    "nrows": 1,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "known at token start",
+   "evidence": "hash ids = f(token history incl. the current token, which the previous token's head produced): the W19 program already keeps engram.* collectives off-path (OFF_PATH_COLL); charge 0 on the path if issued at token start (the row read completes long before L1)",
+   "ge90_steady": null,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 288,
+   "bytes_per_die": 1152,
+   "first_access_ns": {
+    "min": 60.205,
+    "median": 60.9235,
+    "max": 61.827
+   },
+   "complete_ns": {
+    "min": 61.194,
+    "median": 67.6015,
+    "max": 74.009
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 82,
+    "max": 89
+   },
+   "steady_tbps_stack": {
+    "min": 0.0201,
+    "mean": 0.0811
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0039,
+    "mean": 0.0043
+   },
+   "achieved_TBps_die_steady_min": 0.0804,
+   "fraction_of_peak_steady_min": 0.0201,
+   "fraction_of_peak_steady_mean": 0.0811,
+   "fraction_of_peak_end_to_end_min": 0.0039,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 166985
+   },
+   "activates_max": 36,
+   "refreshes_max": 3112
+  },
+  "embedding_row_post_at_go": {
+   "note": "embedding row (5120 x BF16 = 10240 B a die, 3 sectors a PC), address known only at go",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 3,
+    "nk": 0,
+    "post_lead_ps": 0
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path at token start",
+   "evidence": "row = embedding[current token id]; address known at token start (the previous head's argmax); nothing to overlap it with before L0",
+   "ge90_steady": false,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 3072,
+   "bytes_per_die": 12288,
+   "first_access_ns": {
+    "min": 59.059,
+    "median": 59.962,
+    "max": 173.884
+   },
+   "complete_ns": {
+    "min": 83.842,
+    "median": 85.237,
+    "max": 316.803
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 103,
+    "max": 381
+   },
+   "steady_tbps_stack": {
+    "min": 0.012,
+    "mean": 0.1024
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0097,
+    "mean": 0.0325
+   },
+   "achieved_TBps_die_steady_min": 0.048,
+   "fraction_of_peak_steady_min": 0.012,
+   "fraction_of_peak_steady_mean": 0.1024,
+   "fraction_of_peak_end_to_end_min": 0.0097,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 167761
+   },
+   "activates_max": 129,
+   "refreshes_max": 3118
+  },
+  "embedding_row_notice": {
+   "note": "embedding row, posted at go, notice",
+   "law": 6,
+   "plusargs": {
+    "mode": 0,
+    "nsect": 3,
+    "nk": 0,
+    "post_lead_ps": 0,
+    "notice_lead_ps": 300000
+   },
+   "clock_hz": 1200000000.0,
+   "controller_clock_ps": 1024,
+   "refpb_rule": "corrected (main 54dcb2ab6 / c217afff7: tRFCpb same bank, tRREFD after ACT and after REFpb, each bank once a 32-REFpb round; checked on every command)",
+   "token_dependence": "token-dependent: ON the path at token start",
+   "evidence": "row = embedding[current token id]; address known at token start (the previous head's argmax); nothing to overlap it with before L0",
+   "ge90_steady": false,
+   "cases": 64,
+   "passed": 64,
+   "exact": true,
+   "bytes_per_stack": 3072,
+   "bytes_per_die": 12288,
+   "first_access_ns": {
+    "min": 59.059,
+    "median": 59.909000000000006,
+    "max": 60.759
+   },
+   "complete_ns": {
+    "min": 83.842,
+    "median": 85.02799999999999,
+    "max": 86.426
+   },
+   "complete_cycles_1p2GHz": {
+    "median": 103,
+    "max": 104
+   },
+   "steady_tbps_stack": {
+    "min": 0.1154,
+    "mean": 0.1176
+   },
+   "end_to_end_tbps_stack": {
+    "min": 0.0355,
+    "mean": 0.0361
+   },
+   "achieved_TBps_die_steady_min": 0.4616,
+   "fraction_of_peak_steady_min": 0.1154,
+   "fraction_of_peak_steady_mean": 0.1176,
+   "fraction_of_peak_end_to_end_min": 0.0355,
+   "dram_violations": 0,
+   "data_mismatches": 0,
+   "pc_checker": {
+    "runs": 64,
+    "pcs": 2048,
+    "violations": 0,
+    "refpb": 167275
+   },
+   "activates_max": 128,
+   "refreshes_max": 3118
+  }
+ },
+ "routed_expert_fetch": {
+  "record": "results/rtl/dshbm_expert_fetch90_20261004/summary.json (sel90)",
+  "post_refpb_record": "results/rtl/hbm_refpb_fix_20261004/family_b/expert_fetch_la_after.json.gz (sel90_notice, re-run after the REFpb fix, ot_hbm_pc_dram_check)",
+  "dram_check": {
+   "runs": 852,
+   "viol": 0
+  },
+  "identical_after_refpb": true,
+  "stream_tbs_stack": {
+   "min": 0.8077,
+   "mean": 0.9134,
+   "max": 0.9423
+  },
+  "first_access_ns": {
+   "min": 121.249,
+   "mean": 124.34,
+   "max": 130.311
+  },
+  "fraction_of_peak_mean": 0.9134,
+  "fraction_of_peak_min": 0.8077,
+  "per_token_fetch_us": {
+   "fetch_us_mean": 4.974,
+   "fetch_us_worst": 5.212
+  },
+  "ge90_mean": true,
+  "flag": "min 0.81 of peak (4 of 6 experts in one bank set): below 90% in the worst case",
+  "token_dependence": "token-dependent (router output): ON the path, priced per layer as the fetch term"
+ },
+ "sm_weight_stream": {
+  "sustained_static_TBps_die": 3.8496,
+  "sustained_routed_TBps_die_mean": 3.6536,
+  "window_bytes": 15728640,
+  "per_layer": [
+   {
+    "layer": 0,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.686
+   },
+   {
+    "layer": 1,
+    "static_bytes": 4273602,
+    "routed_bytes": 1172592,
+    "sm_us": 2.018,
+    "demand_TBps_during_sm": 2.699,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 2,
+    "static_bytes": 2795362,
+    "routed_bytes": 1172592,
+    "sm_us": 1.953,
+    "demand_TBps_during_sm": 2.032,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 3,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 4,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 5,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 6,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 7,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 8,
+    "static_bytes": 2795362,
+    "routed_bytes": 1172592,
+    "sm_us": 1.953,
+    "demand_TBps_during_sm": 2.032,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 9,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 10,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 11,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 12,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 13,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 14,
+    "static_bytes": 4429766,
+    "routed_bytes": 1172592,
+    "sm_us": 2.369,
+    "demand_TBps_during_sm": 2.365,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 15,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 16,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 17,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 18,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 19,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 20,
+    "static_bytes": 2744162,
+    "routed_bytes": 1172592,
+    "sm_us": 1.953,
+    "demand_TBps_during_sm": 2.006,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 21,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 22,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 23,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 24,
+    "static_bytes": 2692962,
+    "routed_bytes": 1172592,
+    "sm_us": 1.813,
+    "demand_TBps_during_sm": 2.132,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 25,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 26,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 27,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 28,
+    "static_bytes": 2692962,
+    "routed_bytes": 1172592,
+    "sm_us": 1.813,
+    "demand_TBps_during_sm": 2.132,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 29,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 30,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 31,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 32,
+    "static_bytes": 2692962,
+    "routed_bytes": 1172592,
+    "sm_us": 1.813,
+    "demand_TBps_during_sm": 2.132,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 33,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 34,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 35,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 36,
+    "static_bytes": 2692962,
+    "routed_bytes": 1172592,
+    "sm_us": 1.813,
+    "demand_TBps_during_sm": 2.132,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 37,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 38,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": 39,
+    "static_bytes": 2639199,
+    "routed_bytes": 1172592,
+    "sm_us": 1.602,
+    "demand_TBps_during_sm": 2.379,
+    "static_arrival_stall_us": 0.0
+   },
+   {
+    "layer": "head",
+    "static_bytes": 13783040,
+    "routed_bytes": 0,
+    "sm_us": 2.94,
+    "demand_TBps_during_sm": 4.688,
+    "static_arrival_stall_us": 0.0
+   }
+  ],
+  "by_type": {
+   "sliding": {
+    "layers": [
+     0
+    ],
+    "demand_TBps_max": 2.379
+   },
+   "engram+sliding": {
+    "layers": [
+     1
+    ],
+    "demand_TBps_max": 2.699
+   },
+   "ratio2+compressor+indexer": {
+    "layers": [
+     2,
+     8
+    ],
+    "demand_TBps_max": 2.032
+   },
+   "ratio2": {
+    "layers": [
+     3,
+     4,
+     5,
+     6,
+     7,
+     9,
+     10,
+     11,
+     12,
+     13,
+     15,
+     16,
+     17,
+     18,
+     19
+    ],
+    "demand_TBps_max": 2.379
+   },
+   "engram+ratio2+compressor+indexer": {
+    "layers": [
+     14
+    ],
+    "demand_TBps_max": 2.365
+   },
+   "ratio1+compressor+indexer+candidates": {
+    "layers": [
+     20
+    ],
+    "demand_TBps_max": 2.006
+   },
+   "ratio1": {
+    "layers": [
+     21,
+     22,
+     23,
+     25,
+     26,
+     27,
+     29,
+     30,
+     31,
+     33,
+     34,
+     35,
+     37,
+     38,
+     39
+    ],
+    "demand_TBps_max": 2.379
+   },
+   "ratio1+indexer": {
+    "layers": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "demand_TBps_max": 2.132
+   },
+   "head": {
+    "layers": [
+     "head"
+    ],
+    "demand_TBps_max": 4.688
+   }
+  },
+  "summary": {
+   "total_static_arrival_stall_us": 0.686,
+   "cold_first_token_stall_us": 0.686,
+   "steady_decode_stall_us": 0.0,
+   "steady_rule": "next token streams from this token's head start (window 15.7 MB)",
+   "head_total_us": 4.379,
+   "max_demand_TBps": 4.688,
+   "note": "demand during SM-busy exceeds the sustained stream only where the SMs run a layer's matvecs faster than the HBM can deliver them; the static stream runs ahead (prefetch window) so the composer charges only the steady_decode_stall_us (cold_first_token_stall_us for a first token); routed experts are the fetch term (sel90)"
+  }
+ },
+ "default_on_path": {
+  "notice": [
+   "scan_L20_notice",
+   "scan_L2_notice",
+   "window_notice"
+  ],
+  "as_built": [
+   "gather_*_as_built",
+   "embedding_row_post_at_go"
+  ],
+  "rule": "owner >= 90 % bandwidth rule (2026-10-04): the index-key scans and the window rows are posted with the static-schedule notice (the descriptors are known before the query); token-dependent loads stay as built.  Composer: tools/dshbm_1m_allmeasured.py Hbm.MODE = \"default\"",
+  "pc_checker": "rtl/test/ot_hbm_pc_dram_check.sv bound into every PC when the run used --chk"
+ },
+ "below_90pct": {
+  "streams": [
+   "scan_L20_as_built",
+   "scan_L2_as_built",
+   "window_as_built",
+   "window_prefetch",
+   "embedding_row_post_at_go",
+   "embedding_row_notice"
+  ],
+  "note": "random-row gathers and single-row reads are latency-bound by construction (a few sectors a PC): time, not bandwidth, is their measure"
+ },
+ "run": {
+  "host": "vm-xry57mhfyn",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "points": 64,
+  "source_commit": "0e38004465dced105c14d256a22a68b512fd37b9 (git archive on ot-agidock128)"
+ },
+ "input_sha256": {
+  "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+  "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc.sv": "0b40d0a56f986dcf73cfe6ca7672f88b3ca21c15dcfde6ef718abb1b39cbc592",
+  "rtl/test/hbm_accel/tb_dshbm_1m_streams.sv": "576d2bd1ab086eb372ed6decd744dbea85970487f005b02f112b81cf5597aad6",
+  "rtl/test/ot_hbm_pc_dram_check.sv": "dd9a6384b81c92067830173edae889bc92e9bf44716abe91225f04b9f4e09f8d",
+  "tools/dshbm_1m_hbm.py": "23bdbc09d902d642b5ea7f8467af8100f2496a029902609b3cbcc3fac7ee105e"
+ },
+ "record_tool_commit": "0e38004465dced105c14d256a22a68b512fd37b9",
+ "record_tool_sha256": "dfb301425d84cbf145b7e6b4f568b3018882f81f6d1ce419878dbb89e81ee961",
+ "note_tool": "the run step executed the same case/run code; later edits touched only record/weight_demand"
+}

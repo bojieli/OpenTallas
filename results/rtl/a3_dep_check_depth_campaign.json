@@ -1,0 +1,59 @@
+{
+ "depths": {
+  "1": {
+   "iverilog": {
+    "compile_returncode": 0,
+    "compile_tail": "",
+    "log_sha256": "b360dd5e2b4e51f84f9a07cb4f968c8428d8a0e13430e279e438ee5d6953a75d",
+    "marker_present": true,
+    "run_returncode": 0,
+    "run_tail": "HOST_LOAD program_rows=2048 descriptor_rows=4096 writes=212992 refused=0\nPASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11 checks=4555\n",
+    "status": "pass"
+   },
+   "verilator": {
+    "compile_returncode": 0,
+    "compile_tail": "llas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_microsequencer_top__pch.h.slow -c Vot_a3_microsequencer_top__Syms__Slow.cpp\ng++    a3_microsequencer_harness.o verilated.o verilated_threads.o Vot_a3_microsequencer_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_microsequencer_top\nrm Vot_a3_microsequencer_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_a3'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.851 MB sources in 16 modules, into 2.854 MB in 11 C++ files needing 0.008 MB\n- Verilator: Walltime 17.728 s (elab=0.076, cvt=0.598, bld=16.974); cpu 0.380 s on 1 threads; allocated 67.188 MB\n",
+    "log_sha256": "46c4df20f092e17a8f1cad96e5070be5b64be7d148e65810aa52f19509c2d89b",
+    "marker_present": true,
+    "run_returncode": 0,
+    "run_tail": "HOST_LOAD program_rows=2048 descriptor_rows=4096 writes=212992 refused=0\nPASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11 checks=4555\n",
+    "status": "pass"
+   }
+  },
+  "2": {
+   "iverilog": {
+    "compile_returncode": 0,
+    "compile_tail": "",
+    "log_sha256": "b360dd5e2b4e51f84f9a07cb4f968c8428d8a0e13430e279e438ee5d6953a75d",
+    "marker_present": true,
+    "run_returncode": 0,
+    "run_tail": "HOST_LOAD program_rows=2048 descriptor_rows=4096 writes=212992 refused=0\nPASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11 checks=4555\n",
+    "status": "pass"
+   },
+   "verilator": {
+    "compile_returncode": 0,
+    "compile_tail": "llas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_microsequencer_top__pch.h.slow -c Vot_a3_microsequencer_top__Syms__Slow.cpp\ng++    a3_microsequencer_harness.o verilated.o verilated_threads.o Vot_a3_microsequencer_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_microsequencer_top\nrm Vot_a3_microsequencer_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_a3'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 1.851 MB sources in 16 modules, into 2.794 MB in 11 C++ files needing 0.008 MB\n- Verilator: Walltime 15.503 s (elab=0.052, cvt=0.448, bld=14.912); cpu 0.512 s on 1 threads; allocated 68.188 MB\n",
+    "log_sha256": "d219b2b779add794e5c6d81a95554c61a5b609e18f81957c6cf61d711d3500ef",
+    "marker_present": true,
+    "run_returncode": 0,
+    "run_tail": "HOST_LOAD program_rows=2048 descriptor_rows=4096 writes=212992 refused=0\nPASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11 checks=4555\n",
+    "status": "pass"
+   }
+  }
+ },
+ "marker_is": "derived from the vector set's golden execution on runtime.sim.device.Device: the number of programs, program headers, engine-issue events and traps that had to be reproduced",
+ "not_a_claim": [
+  "no frequency is claimed here; the routed record is separate evidence",
+  "this is the vector set, not a shipped model's token"
+ ],
+ "question": "does the real control plane replay the whole ABI 3.0 vector set identically with the dependence table's conflict reduction split across two cycles?",
+ "required_marker": "PASS: ABI3 RTL microsequencer cases=65 headers=65 programs=53 issues=185 views=460 traps=11",
+ "schema": "opentallas.a3_dep_check_depth.v1",
+ "status": "pass",
+ "tools": {
+  "iverilog": "/usr/bin/iverilog",
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "vvp": "/usr/bin/vvp"
+ },
+ "what_a_pass_means": "both depths reproduce the same programs, the same engine-issue events and the same traps.  The deeper one takes more cycles to do it, which is the whole point: the cycle buys the clock."
+}

@@ -1,0 +1,2098 @@
+{
+  "CPU_native_workspace_upper_bytes": 21149856,
+  "PC10_RF_sector_address_derivation": {
+    "RF_readback_sectors": 98304,
+    "aligned_sectors_per_span": 16,
+    "mirrored_RF_write_sectors": 196608,
+    "physical_RF_second_return_payload_discounted": false,
+    "source_RF_homes_and_W19_chunks_validated": true,
+    "source_RF_read_sectors": 786432,
+    "source_words_per_span": 128,
+    "total": 1081344
+  },
+  "PC10_numerical_launch_performed": false,
+  "actual_numeric_or_provider_requests_executed": 0,
+  "complete_conservative_inherited_projection_bytes": 913249523376,
+  "components": {
+    "additional_PC10_49152_source_read_receipts": 290131968,
+    "additional_PC10_96_full_group_call_records": 850286160,
+    "additional_PC10_96_output_comparisons": 511728,
+    "additional_PC10_shared_sector_journals": 97114914816,
+    "explicit_PC0_9_numeric_call_records": 4879504,
+    "explicit_PC0_9_source_read_receipt_journals": 312799936,
+    "inherited_1568_output_comparisons": 23011184,
+    "inherited_RF_state_sector_bound": 814652981248,
+    "unconsumed_retirement_records": 6832
+  },
+  "expected_output_comparisons": 1664,
+  "finite_request_upper": 19848832,
+  "finite_sector_tick_upper": 2540650496,
+  "full_token_GO": false,
+  "group_call_records": [
+    {
+      "page_index_reservation_bytes": 8847360,
+      "rank": 0,
+      "serialized_upper_bytes": 1105856
+    },
+    {
+      "page_index_reservation_bytes": 8847936,
+      "rank": 1,
+      "serialized_upper_bytes": 1105928
+    },
+    {
+      "page_index_reservation_bytes": 8847936,
+      "rank": 2,
+      "serialized_upper_bytes": 1105928
+    },
+    {
+      "page_index_reservation_bytes": 8847360,
+      "rank": 3,
+      "serialized_upper_bytes": 1105856
+    },
+    {
+      "page_index_reservation_bytes": 8847936,
+      "rank": 4,
+      "serialized_upper_bytes": 1105928
+    },
+    {
+      "page_index_reservation_bytes": 8847936,
+      "rank": 5,
+      "serialized_upper_bytes": 1105928
+    },
+    {
+      "page_index_reservation_bytes": 8847360,
+      "rank": 6,
+      "serialized_upper_bytes": 1105856
+    },
+    {
+      "page_index_reservation_bytes": 8847936,
+      "rank": 7,
+      "serialized_upper_bytes": 1105928
+    },
+    {
+      "page_index_reservation_bytes": 8847936,
+      "rank": 8,
+      "serialized_upper_bytes": 1105928
+    },
+    {
+      "page_index_reservation_bytes": 8847360,
+      "rank": 9,
+      "serialized_upper_bytes": 1105856
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 10,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 11,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 12,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 13,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 14,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 15,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 16,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 17,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 18,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 19,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 20,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 21,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 22,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 23,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 24,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 25,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 26,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 27,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 28,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856760,
+      "rank": 29,
+      "serialized_upper_bytes": 1107031
+    },
+    {
+      "page_index_reservation_bytes": 8856184,
+      "rank": 30,
+      "serialized_upper_bytes": 1106959
+    },
+    {
+      "page_index_reservation_bytes": 8857464,
+      "rank": 31,
+      "serialized_upper_bytes": 1107119
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 32,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 33,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 34,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 35,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 36,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 37,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 38,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 39,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 40,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 41,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 42,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 43,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 44,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 45,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 46,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 47,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 48,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 49,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 50,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 51,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 52,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 53,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 54,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 55,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 56,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 57,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 58,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 59,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 60,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 61,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 62,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 63,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 64,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 65,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 66,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 67,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 68,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 69,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 70,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 71,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 72,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 73,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 74,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 75,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 76,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 77,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 78,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 79,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 80,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 81,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 82,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 83,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 84,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 85,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 86,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 87,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 88,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 89,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 90,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 91,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 92,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 93,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 94,
+      "serialized_upper_bytes": 1107287
+    },
+    {
+      "page_index_reservation_bytes": 8858808,
+      "rank": 95,
+      "serialized_upper_bytes": 1107287
+    }
+  ],
+  "hardware_admitted": false,
+  "inherited_RF_read_and_write_bounds_not_replaced": true,
+  "integer_schema_upper": 18446744073709551615,
+  "journal_capacity_bytes": 913249523376,
+  "legacy_generic_metadata_overhead_retained_without_credit": true,
+  "operand_and_unpublished_output_bound_bytes": 41472,
+  "output_root": "/tmp/kepler-ds-r46-PC0-10-execution-20261002",
+  "physical_RF_readpair_response_bytes": 50331648,
+  "physical_critical_path_edges": null,
+  "physical_service_or_macro_fit_admitted": false,
+  "prefix_metadata": {
+    "bridge_receipt_reservation_bytes": 312799936,
+    "numeric_call_records": 928,
+    "numeric_call_reservation_bytes": 4879504,
+    "source_profiles": [
+      {
+        "PC": 4,
+        "destination_rank": 0,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 0,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 1,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 1,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 2,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 2,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 3,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 3,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 4,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 4,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 5,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 5,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 6,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 6,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 7,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 7,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 8,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 8,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 9,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 9,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 10,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 10,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 11,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 11,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 12,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 12,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 13,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 13,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 14,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 14,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 15,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 15,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 16,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 16,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 17,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 17,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 18,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 18,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 19,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 19,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 20,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 20,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 21,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 21,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 22,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 22,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 23,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 23,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 24,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 24,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 25,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 25,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 26,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 26,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 27,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 27,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 28,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 28,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 29,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 29,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 30,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 30,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 31,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 31,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 32,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 32,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 33,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 33,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 34,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 34,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 35,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 35,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 36,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 36,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 37,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 37,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 38,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 38,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 39,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 39,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 40,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 40,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 41,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 41,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 42,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 42,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 43,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 43,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 44,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 44,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 45,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 45,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 46,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 46,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 47,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 47,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 48,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 48,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 49,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 49,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 50,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 50,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 51,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 51,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 52,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 52,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 53,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 53,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 54,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 54,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 55,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 55,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 56,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 56,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 57,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 57,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 58,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 58,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 59,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 59,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 60,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 60,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 61,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 61,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 62,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 62,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 63,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 63,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 64,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 64,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 65,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 65,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 66,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 66,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 67,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 67,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 68,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 68,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 69,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 69,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 70,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 70,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 71,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 71,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 72,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 72,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 73,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 73,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 74,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 74,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 75,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 75,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 76,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 76,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 77,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 77,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 78,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 78,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 79,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 79,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 80,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 80,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 81,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 81,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 82,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 82,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 83,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 83,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 84,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 84,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 85,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 85,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 86,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 86,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 87,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 87,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 88,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 88,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 89,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 89,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 90,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 90,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 91,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 91,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 92,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 92,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 93,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 93,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 94,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 94,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 95,
+        "source_read_receipt_records": 96,
+        "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+      },
+      {
+        "PC": 4,
+        "destination_rank": 95,
+        "source_read_receipt_records": 96,
+        "template": "d864ce1d4380be24473aafa8d883633b3a8df389632957f7f54a1e9f0327c232"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 0,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 1,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 2,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 3,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 4,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 5,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 6,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 7,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 8,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 9,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 10,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 11,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 12,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 13,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 14,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 15,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 16,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 17,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 18,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 19,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 20,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 21,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 22,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 23,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 24,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 25,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 26,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 27,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 28,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 29,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 30,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 31,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 32,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 33,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 34,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 35,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 36,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 37,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 38,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 39,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 40,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 41,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 42,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 43,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 44,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 45,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 46,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 47,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 48,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 49,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 50,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 51,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 52,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 53,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 54,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 55,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 56,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 57,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 58,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 59,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 60,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 61,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 62,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      },
+      {
+        "PC": 8,
+        "destination_rank": 63,
+        "source_read_receipt_records": 516,
+        "template": "3c6e305681aca1801187be48191c73781a81823dd28de32e429d021f17506228"
+      }
+    ],
+    "source_read_receipt_records": 51456
+  },
+  "prerequisites": [
+    "R45 stop9 numerical PASS",
+    "fresh complete provider/witness/composed-engine preflight",
+    "parent source review and numerical GO",
+    "fresh disk >= projected capacity; retained failures remain"
+  ],
+  "projection_complete_for_selected_runtime_journals": true,
+  "required_runtime_lineage": "same provider instance; actual PC0..9 retirement and all64 PC9 witnessed RF publications before PC10",
+  "retained_legacy_PC10_RF_sector_bound": 7667712,
+  "runtime_GO": false,
+  "schema": "DS_PC0_10_COMPLETE_SOFTWARE_JOURNAL_PROJECTION_R46",
+  "schema_hashes_are_size_placeholders_not_stimuli": true,
+  "selected_runtime_projection": "conservative inherited projection retained until parent reviews source-addressed refinement",
+  "shared_reserved_bytes": 201326592,
+  "software_shared_serial_ticks": 208797696,
+  "software_ticks_not_hardware_cycles": true,
+  "source_addressed_RF_event_reservation_bytes": 48721035264,
+  "source_addressed_candidate_projection_bytes": 616494126768,
+  "source_addressed_components": {
+    "additional_PC10_49152_source_read_receipts": 290131968,
+    "additional_PC10_96_full_group_call_records": 850286160,
+    "additional_PC10_96_output_comparisons": 511728,
+    "additional_PC10_shared_sector_journals": 97114914816,
+    "explicit_PC0_9_numeric_call_records": 4879504,
+    "explicit_PC0_9_source_read_receipt_journals": 312799936,
+    "inherited_1568_output_comparisons": 23011184,
+    "inherited_RF_state_sector_bound": 517897584640,
+    "unconsumed_retirement_records": 6832
+  },
+  "source_read_receipts": 49152,
+  "unused_second_RF_payload_charged": true
+}

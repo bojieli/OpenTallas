@@ -1,0 +1,161 @@
+{
+  "schema": "opentallas.ha5-native-compile.v1",
+  "source_moe_sha256": "49573d415180a9ef6befd8076dfe7a2f5eea1c26363aeaf4e8f4fea573f7ec47",
+  "scope": "native source compiler/allocator only; geometry fixtures, no checkpoint/model/RTL execution",
+  "cases": [
+    {
+      "ke": 3,
+      "die": 0,
+      "sm": 0,
+      "original": {
+        "words": 751,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "f28a0f7f1da8ac702f3128dafacef8b5eab4a55649aec66fc0ccc915ed5497f4",
+        "tensor_commands": 8
+      },
+      "shared_first": {
+        "words": 751,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "760fed2c4da7004a48ba7609e4e2217a1dc340767eea64971d91388e681114cb",
+        "tensor_commands": 8
+      }
+    },
+    {
+      "ke": 3,
+      "die": 0,
+      "sm": 1,
+      "original": {
+        "words": 730,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "db54c77078974b969a10c4cda12ca09dc516a11be9cad119b9ecb6f079f13ad8",
+        "tensor_commands": 8
+      },
+      "shared_first": {
+        "words": 730,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "cd446f16364bb5b424f4ee64592add99b7072e5da254a9995c8aa32b816e4fd7",
+        "tensor_commands": 8
+      }
+    },
+    {
+      "ke": 3,
+      "die": 1,
+      "sm": 0,
+      "original": {
+        "words": 751,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "247210e75ff6a858443a7e06f9fcae2d47374caeb543eda680c0d794c157b667",
+        "tensor_commands": 8
+      },
+      "shared_first": {
+        "words": 751,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "eb9afd58af1df3437731476d549c21fec3a69184aa802b642b3e4c612f4c6cb0",
+        "tensor_commands": 8
+      }
+    },
+    {
+      "ke": 3,
+      "die": 1,
+      "sm": 1,
+      "original": {
+        "words": 730,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "bd05e0986aafcde5c29c1a7fb2e145b801a75c09805e60c97446356731b81f2b",
+        "tensor_commands": 8
+      },
+      "shared_first": {
+        "words": 730,
+        "register_peak": 41,
+        "register_capacity": 256,
+        "sha256": "fca3ceaf36ad2372bb5b21c65e2e6bcfac94d68806bbbf220ea2e67949be1401",
+        "tensor_commands": 8
+      }
+    },
+    {
+      "ke": 6,
+      "die": 0,
+      "sm": 0,
+      "original": {
+        "words": 1015,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "334a6595ffc121e900c14f39fa01ec9216b5d23abcee945300057a0217f6ad62",
+        "tensor_commands": 14
+      },
+      "shared_first": {
+        "words": 1015,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "966ca2444f2b84e7bcdebb01344568c3852bda0e440cc55bf7d74c664ef6ac94",
+        "tensor_commands": 14
+      }
+    },
+    {
+      "ke": 6,
+      "die": 0,
+      "sm": 1,
+      "original": {
+        "words": 985,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "d638111a5018823f7d3d076e95bcc370464de6b00355808dc8f50cc7a6238d55",
+        "tensor_commands": 14
+      },
+      "shared_first": {
+        "words": 985,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "97b6b4c3715efc8048e4306abf7dc6aa0e971ef3cd1a4087ad3bca2659a54a3b",
+        "tensor_commands": 14
+      }
+    },
+    {
+      "ke": 6,
+      "die": 1,
+      "sm": 0,
+      "original": {
+        "words": 1015,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "c5a56fa27fe79ba98aff3e753874fee38d2513f7a4a54d4acb02aa46b5f60e7f",
+        "tensor_commands": 14
+      },
+      "shared_first": {
+        "words": 1015,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "e6dddff40b30dc2dca1fb2473220fee7b3e7389dc8866478a212494420636474",
+        "tensor_commands": 14
+      }
+    },
+    {
+      "ke": 6,
+      "die": 1,
+      "sm": 1,
+      "original": {
+        "words": 985,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "db4e578fe04a6be207e9a7837ffb59bc24e16eb8397383d8df4fd007aab5e323",
+        "tensor_commands": 14
+      },
+      "shared_first": {
+        "words": 985,
+        "register_peak": 44,
+        "register_capacity": 256,
+        "sha256": "d3dd224df59e9c8c49798186a75d13dbfc453944c6c4741a14a64ff692ebec0f",
+        "tensor_commands": 14
+      }
+    }
+  ],
+  "actual_layer_gate": "PENDING owner real callback/provider",
+  "adopt": false
+}

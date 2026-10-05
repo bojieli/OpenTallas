@@ -1,0 +1,1424 @@
+{
+  "aggregate_FF_bits": 2073625150,
+  "all192_ungated_clock_W": "41068.06461641767866480",
+  "all48_lookup_event_energy_allocation_J": "0.000004087720572643007808",
+  "all_macro_clock_internal_energy_retained": true,
+  "conditional_scope": "Warm initialized held-mask candidate only. Source c8 states no actual tree/provider. Node control data fullactivity1 charged separately, not zero. Unknown ACK time still incurs full clocks and control demand; no token-rate or averaging credit.",
+  "control_state_clock_counted_once": true,
+  "existing_route_gate": "FAIL_341_TRACKS_EXCEEDS_321; source is eight fullwidth responses, NOT sixteen serialized fragments.",
+  "per_home_control_state_full_activity_data_upper_W": "3.2001756764225592",
+  "per_lookup_data_energy_allocation_J": {
+    "all_output_load_ceiling": "6.9093783069696E-8",
+    "input_pin": "3.359920871995996E-9",
+    "internal": "1.2707141321704E-8",
+    "total_including_ceiling": "8.5160845263395996E-8"
+  },
+  "per_lookup_event_counts": {
+    "FF_D_raw_events_including_mux_hazards_upper": 735190,
+    "NAND_raw_input_events_upper": 2412608,
+    "both_child_demux_raw_input_events": 1924,
+    "demux_NAND_raw_input_events": 77376,
+    "disabled_feedback_MUX_D_raw_input_events": 962,
+    "disabled_sibling_demux_included": true,
+    "enable_bit_transitions_upper": 310506,
+    "feedback_NAND_raw_input_events": 2205570,
+    "registered_state_bit_transitions_upper": 114178,
+    "selected_response_MUX_NAND_raw_input_events": 128700
+  },
+  "physical_admission": false,
+  "physical_data_provider_proven": false,
+  "repacked_home_clock_inventory": [
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 0,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 1,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 2,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 3,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 4,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 5,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 6,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 7,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 8,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 9,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 10,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 11,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 12,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 13,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 14,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 15,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 16,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 17,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 18,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 19,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 20,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 21,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 22,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 23,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 24,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 25,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 26,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 27,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 28,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 29,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 30,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 31,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 32,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 33,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 34,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 35,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 36,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 37,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 38,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 39,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 40,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 41,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 42,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 43,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 44,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 45,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 46,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 47,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 48,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 49,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 50,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 51,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 52,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 53,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 54,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 55,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 56,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 57,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 58,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 59,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 60,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 61,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 62,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 63,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 64,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 65,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 66,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 67,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 68,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 69,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 70,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 71,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 72,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 73,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 74,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 75,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 76,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 77,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 78,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 79,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 80,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 81,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 82,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 83,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 84,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 85,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 86,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 87,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 88,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 89,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 90,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 91,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 92,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 93,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 94,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 95,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 96,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 97,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 98,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 99,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 100,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 101,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 102,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 103,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 104,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 105,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 106,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 107,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 108,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 109,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 110,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 111,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 112,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 113,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 114,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461052,
+      "actual_macros": 6675,
+      "home_id": 115,
+      "leakage_upper_W": "0.931938636622306",
+      "ungated_clock_W": "198.10340056570190640"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 116,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 117,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 118,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 119,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 120,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 121,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 122,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 123,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 124,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 125,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 126,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 127,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 128,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 129,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 130,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 131,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 132,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 133,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 134,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 135,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 136,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 137,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 138,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 139,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 140,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 141,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 142,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 143,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 144,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 145,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 146,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 147,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 148,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 149,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 150,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 151,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 152,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 153,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 154,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 155,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 156,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 157,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 158,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 159,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 160,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 161,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 162,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 163,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 164,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 165,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 166,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 167,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 168,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 169,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 170,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 171,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 172,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 173,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 174,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 175,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 176,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 177,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 178,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 179,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 180,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 181,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 182,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 183,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 184,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 185,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 186,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 187,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 188,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 189,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10913118,
+      "actual_macros": 8192,
+      "home_id": 190,
+      "leakage_upper_W": "1.034653644788292",
+      "ungated_clock_W": "219.15857739791392560"
+    },
+    {
+      "FF_bits": 10461350,
+      "actual_macros": 6676,
+      "home_id": 191,
+      "leakage_upper_W": "0.932006379776614",
+      "ungated_clock_W": "198.11741340593253120"
+    }
+  ],
+  "root_stop_credit": 0,
+  "schema": "w10_engram_conditional_selected_data_v1",
+  "serialized_256_model_data_qualified": false,
+  "source_pins": {
+    "area": {
+      "commit": "6da3c7a60",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
+      "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "clock": {
+      "commit": "fea811df4",
+      "path": "results/uarch/w10_q_existing_icg_r1/clock.json",
+      "sha256": "19291d798b14a4f920e6da2d8c310727b5afb6b19efc36df3f850b3a84728b1f"
+    },
+    "mask_contract": {
+      "commit": "c8ea5395d",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/repacked_192_enable_mask_contract.json",
+      "sha256": "9ddedc8aa5c90e3f0d8a292429d6da9540f6277a1f1e3301fe44350a8cab89f1"
+    },
+    "power": {
+      "commit": "e79394b1c",
+      "path": "results/uarch/w10_q_power_envelope_r1/power.json",
+      "sha256": "75d15a6c456b846a9a2e454383a46e91eeece71f8e537921b91e820d43a36105"
+    },
+    "typed96_source": {
+      "commit": "b2aa960a6",
+      "path": "results/uarch/w10_engram_home_power_r1/budget.json",
+      "sha256": "ad510845bdc00ce29a2cc7908ad840ab0ea5d190ee8855306b90168c827f2007"
+    },
+    "typed_leakage": {
+      "commit": "fea811df4",
+      "path": "results/uarch/w10_q_existing_icg_r1/leakage_palette.json",
+      "sha256": "77c69070a7b74c69b059f690c1eb5e8c36e6bb76d0cc8a4d739f09e505b7860e"
+    }
+  },
+  "typed_HQN_library_sha256": {
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/HQN_FF.cells.lib": "7279aad1cbbc376ea23bf9a0757afe8684131b6a4c5d4da94267374fb7a1ae4e",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/HQN_SS.cells.lib": "0768648315ab98eebfa0c554b82593f19570e2f8236dfd1b59747b61ea7ccf5e",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/HQN_TT.cells.lib": "d2db45e75d897594f8357d1ab27f1648d741d8f7ca168dbad4002d54a141d58a"
+  },
+  "unpriced": [
+    "enable-mask driver fanout/local buffers",
+    "descriptor/ready qualification and reset/epoch distribution",
+    "actual pin/wire/glitch/peakIR",
+    "PHY/CRC/reassembly and twofragment route repair"
+  ],
+  "verdict": "CONDITIONAL_MODEL_EVENT_ALLOCATION_WITH_OPEN_FANOUT_RESET_ROUTE_GATES",
+  "whole_token_average_power_W": null
+}

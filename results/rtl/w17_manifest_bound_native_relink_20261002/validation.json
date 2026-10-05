@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_w17_manifest_bound_relink.py",
+    "tests/test_w17_pinned_image_identity.py",
+    "tests/test_w17_existing_port_relink_plan.py"
+  ],
+  "negative_controls": [
+    "wrong local imageID",
+    "rawconfig byte mutation",
+    "reordered diffIDs",
+    "nondefault entrypoint",
+    "wrong image store",
+    "old GO",
+    "runtime-enabled or unbound GO",
+    "bool/duplicate/outside-affinity CPU IDs"
+  ],
+  "new_tests": 10,
+  "passed": 20,
+  "protected_git_blobs_verified": 5,
+  "scope": "Offline metadata, identity, GO and original input/cap equality gates; no compiler or runtime",
+  "seconds": 0.14
+}

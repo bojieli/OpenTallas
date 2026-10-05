@@ -1,0 +1,6 @@
+{
+  "status": "FAIL_PRESERVED",
+  "exception": "AttributeError: NoneType has no attribute group",
+  "reason": "Initial scalar SPACING parser did not support source V5/V6 LEF58 SPACINGTABLE DEFAULT; commented obsolete V3/V4 scalar spacings must not count.",
+  "correction": "Strip LEF comments and bind scalar SPACING or LEF58 SPACINGTABLE DEFAULT for each default cut class; no DRC qualification."
+}

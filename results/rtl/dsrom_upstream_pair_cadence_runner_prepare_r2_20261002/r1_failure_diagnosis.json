@@ -1,0 +1,18 @@
+{
+  "HDL_simulation_launched": false,
+  "assertion": "ValueError launcher receipt already exists",
+  "cause": "R1 main validates launcher receipt absence in child after parent created legitimate _host_admission.json and _launcher.log. Child exits before capped_run/cap_receipt/source preparation/compiler. Not an HDL/ROM/control fault.",
+  "classification": "RUNNER_CHILD_PATH_VALIDATION_FAILURE_BEFORE_COMPILE",
+  "compile_launched": false,
+  "exit_status": 1,
+  "first_failure_unchanged": true,
+  "preserved_inputs": {
+    "r1_failure_host_admission.json": "2172ce2b32d9040b3cd9ca6d9b2d5701588c6e31493463494353f24e01772e23",
+    "r1_failure_launcher.json": "1f80166294306e1a8f82c420539660aae33a80f76d2998c43f2cfee65a5e707a",
+    "r1_failure_launcher.log": "d8b1828a6997b395be909d28a959fff7e058860be35ba44bca46dd0bd9619c98"
+  },
+  "retry_authorized": false,
+  "runtime_ms": 47,
+  "same_GO_reuse": false,
+  "unit": "dsrom-upstream-pair-cadence-3653406.service"
+}

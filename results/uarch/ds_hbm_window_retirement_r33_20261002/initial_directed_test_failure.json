@@ -1,0 +1,10 @@
+{
+  "status": "FAIL_3_TEST_SETUP_CONTROLS_PRESERVED",
+  "projection_sha256": "35fced2e70c0ee59f54fe8585005fdf1a0d8af0da85b67d8bab5d693f31f652f",
+  "failures": [
+    "2 KeyError rank_bindings: projection omitted unrelated linear_q rank bindings scanned by exact source lookup",
+    "1 OwnershipFault consumer before held return: test attempted finish on queued sector"
+  ],
+  "source_retirement_fix_failed": false,
+  "correction": "retain exact rank bindings in projection; step accepted sector to held before consume/reverse"
+}

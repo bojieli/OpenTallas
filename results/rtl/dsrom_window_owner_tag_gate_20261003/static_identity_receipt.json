@@ -1,0 +1,10 @@
+{
+  "scope": "STATIC integer encoding enumeration only",
+  "original_valid_nonzero_epochs": 511,
+  "first_bad_epoch": 512,
+  "first_bad_tag": "4000",
+  "safe_modeled_refills_checked": 1048575,
+  "no_owner_collision": true,
+  "epoch_lifetime_cap": null,
+  "normal_wrap_requires_complete_provider_drain": true
+}

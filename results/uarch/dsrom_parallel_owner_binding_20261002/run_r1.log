@@ -1,0 +1,24 @@
+{"out": "results/uarch/dsrom_parallel_owner_binding_20261002/r1", "verdict": "PASS_SYMBOLIC_FULL_MODEL_PAR2_BINDING_TRANSPORT_AND_PROVIDER_TIMING_UNQUALIFIED", "totals": {"phases": 46509, "physical_weight_words": 2268504064, "output_rows": 38136192, "ECC_local_bits": 9437184000, "ECC_remote_bits": 8178892800, "both_shards_active": 46410}}
+	Command being timed: "python3 tools/dsrom_parallel_owner_binding.py --out results/uarch/dsrom_parallel_owner_binding_20261002/r1"
+	User time (seconds): 58.17
+	System time (seconds): 0.66
+	Percent of CPU this job got: 92%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:03.48
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 944660
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 236595
+	Voluntary context switches: 59
+	Involuntary context switches: 1674
+	Swaps: 0
+	File system inputs: 136
+	File system outputs: 22000
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,209 @@
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'wr_owner'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:11:20: ... Location of port declaration
+   11 |  input wire [45:0] wr_owner,output wire [45:0] ack_owner,
+      |                    ^~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_owner'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:11:48: ... Location of port declaration
+   11 |  input wire [45:0] wr_owner,output wire [45:0] ack_owner,
+      |                                                ^~~~~~~~~
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_slot'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:12:20: ... Location of port declaration
+   12 |  output wire [8:0] ack_slot,output wire ack_identity_fault
+      |                    ^~~~~~~~
+%Warning-PINMISSING: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:208:21: Instance has missing pin: 'ack_identity_fault'
+  208 |   ot_gpu_rf_service u_rf (
+      |                     ^~~~
+                     results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:12:41: ... Location of port declaration
+   12 |  output wire [8:0] ack_slot,output wire ack_identity_fault
+      |                                         ^~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:2:8: ... Location of module with timescale
+    2 | module ot_gpu_rf_service #(parameter integer ACK_ID=0) (
+      |        ^~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:2:51: Operator VAR 'ENABLE' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+    2 | module ot_gpu_full_sm_service #(parameter integer ENABLE=0,parameter integer ACK_ID=0) (
+      |                                                   ^~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:5:20: Operator VAR 'OPT_EXACT' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+    5 |  parameter integer OPT_EXACT=0, OPT_RESET_QUARANTINE=0, NC=6, MAX_OUT=16, AW=34,
+      |                    ^~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:5:33: Operator VAR 'OPT_RESET_QUARANTINE' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+    5 |  parameter integer OPT_EXACT=0, OPT_RESET_QUARANTINE=0, NC=6, MAX_OUT=16, AW=34,
+      |                                 ^~~~~~~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_full_sm_service.sv:81:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                          : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_sm[63].u_sm'
+   81 |  if(ENABLE) begin:g_enabled
+      |  ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                                                                         : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_sm[63].u_sm.g_identity.g_enabled.g_lane[127].u_add.u.u_ca'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:77:44: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                                                                                                       : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_sm[63].u_sm.g_identity.g_enabled.u_rf'
+   77 |     .w_mask_in({256{1'b1}}),.rr_en(2'b00),.rr_addr(12'd0),.cr_en(2'b00),.cr_sel(16'd0));
+      |                                            ^~~~~~~
+%Warning-WIDTHEXPAND: results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv:81:44: Input port connection 'rr_addr' expects 14 bits on the pin connection, but pin connection's CONST '12'h0' generates 12 bits.
+                                                                                                                                       : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_sm[63].u_sm.g_identity.g_enabled.u_rf'
+   81 |     .w_mask_in({256{1'b1}}),.rr_en(2'b00),.rr_addr(12'd0),.cr_en(2'b00),.cr_sel(16'd0));
+      |                                            ^~~~~~~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv:48:22: Operator ADD expects 35 bits on the RHS, but RHS's VARREF 'changed_bit' generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.state_observer'
+   48 |    position=(offset*8+changed_bit)&8191; layer=(offset*8+changed_bit)>>13;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv:48:12: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's AND generates 35 bits.
+                                                                                                  : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.state_observer'
+   48 |    position=(offset*8+changed_bit)&8191; layer=(offset*8+changed_bit)>>13;
+      |            ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv:48:57: Operator ADD expects 35 bits on the RHS, but RHS's VARREF 'changed_bit' generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.state_observer'
+   48 |    position=(offset*8+changed_bit)&8191; layer=(offset*8+changed_bit)>>13;
+      |                                                         ^
+%Warning-WIDTHTRUNC: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv:48:47: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SHIFTR generates 35 bits.
+                                                                                                  : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.state_observer'
+   48 |    position=(offset*8+changed_bit)&8191; layer=(offset*8+changed_bit)>>13;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv:57:29: Operator ADD expects 35 bits on the RHS, but RHS's VARREF 'half' generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.state_observer'
+   57 |      layer=(offset-36864)/16+half;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_observer.sv:57:11: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's ADD generates 35 bits.
+                                                                                                  : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.state_observer'
+   57 |      layer=(offset-36864)/16+half;
+      |           ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv:36:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'KV_destination' generates 6 bits.
+                                                                                                  : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.shared_router'
+   36 |      if(KV_live && KV_destination==i) begin
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv:45:48: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'requested' generates 6 bits.
+                                                                                                  : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.shared_router'
+   45 |     choose_KV=kv_valid && !KV_live && requested==i && (!native_valid[i] || prefer_KV[i]);
+      |                                                ^~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_shared_router.sv:63:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'requested' generates 6 bits.
+                                                                                                  : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.shared_router'
+   63 |     if(kv_valid && kv_ready && requested==j) begin
+      |                                         ^~
+%Warning-WIDTHTRUNC: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:75:24: Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's COND generates 32 or 9 bits.
+                                                                                                      : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+   75 |  wire [3:0] wanted_beat=sector_cursor<256 ? sector_cursor>>5 : 8+((sector_cursor-256)>>1);
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:103:57: Operator SHIFTR expects 34 bits on the LHS, but LHS's VARREF 'payload_sector' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  103 |  wire [33:0] expected_K_addr=K_base + (((payload_sector >> 6)*512 +
+      |                                                         ^~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:104:18: Operator SHIFTR expects 34 bits on the LHS, but LHS's SEL generates 13 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  104 |     (w_key[12:0] >> 4))*128 + ((payload_sector & 63)*2))*16;
+      |                  ^~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:104:48: Operator AND expects 34 bits on the LHS, but LHS's VARREF 'payload_sector' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  104 |     (w_key[12:0] >> 4))*128 + ((payload_sector & 63)*2))*16;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:105:57: Operator SUB expects 34 bits on the LHS, but LHS's VARREF 'payload_sector' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  105 |  wire [33:0] expected_V_addr=V_base + ((((payload_sector-256) >> 2)*8192 +
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:105:74: Operator ADD expects 34 bits on the RHS, but RHS's SEL generates 13 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  105 |  wire [33:0] expected_V_addr=V_base + ((((payload_sector-256) >> 2)*8192 +
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:106:41: Operator SUB expects 34 bits on the LHS, but LHS's VARREF 'payload_sector' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  106 |     w_key[12:0])*128) + ((payload_sector-256) & 3)*32;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:111:66: Operator COND expects 10 bits on the Conditional True, but Conditional True's VARREF 'wanted_beat' generates 4 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  111 |  assign shared_addr=stage_base + (state==LOAD || state==LOAD_ACK ? wanted_beat : beat); assign shared_wdata=stage_data;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:111:66: Operator COND expects 10 bits on the Conditional False, but Conditional False's VARREF 'beat' generates 4 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  111 |  assign shared_addr=stage_base + (state==LOAD || state==LOAD_ACK ? wanted_beat : beat); assign shared_wdata=stage_data;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:119:30: Operator SHIFTR expects 34 bits on the LHS, but LHS's VARREF 'sector_cursor' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  119 |     K_base + (((sector_cursor>>6)*512+(w_key[12:0]>>4))*128+((sector_cursor&63)*2))*16 :
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:119:51: Operator SHIFTR expects 34 bits on the LHS, but LHS's SEL generates 13 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  119 |     K_base + (((sector_cursor>>6)*512+(w_key[12:0]>>4))*128+((sector_cursor&63)*2))*16 :
+      |                                                   ^~
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:119:76: Operator AND expects 34 bits on the LHS, but LHS's VARREF 'sector_cursor' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  119 |     K_base + (((sector_cursor>>6)*512+(w_key[12:0]>>4))*128+((sector_cursor&63)*2))*16 :
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:120:30: Operator SUB expects 34 bits on the LHS, but LHS's VARREF 'sector_cursor' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  120 |     V_base + (((sector_cursor-256)>>2)*8192+w_key[12:0])*128+((sector_cursor-256)&3)*32;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:120:44: Operator ADD expects 34 bits on the RHS, but RHS's SEL generates 13 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  120 |     V_base + (((sector_cursor-256)>>2)*8192+w_key[12:0])*128+((sector_cursor-256)&3)*32;
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv:120:77: Operator SUB expects 34 bits on the LHS, but LHS's VARREF 'sector_cursor' generates 9 bits.
+                                                                                                        : ... note: In instance 'ot_gpu_qwen_hbm_integrated.u_kv.kv_controller'
+  120 |     V_base + (((sector_cursor-256)>>2)*8192+w_key[12:0])*128+((sector_cursor-256)&3)*32;
+      |                                                                             ^
+%Error-MODMISSING: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1019:2: Cannot find file containing module: 'ot_w2_nc6_correction_control'
+ 1019 |  ot_w2_nc6_correction_control correction(
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_w2_nc6_correction_control
+                        ot_w2_nc6_correction_control.v
+                        ot_w2_nc6_correction_control.sv
+                        obj_dir/ot_w2_nc6_correction_control
+                        obj_dir/ot_w2_nc6_correction_control.v
+                        obj_dir/ot_w2_nc6_correction_control.sv
+                   ... With current working directory '/srv/opentallas/repos/euclid-canonical-qwen-1c6d66481'
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1034:32: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OPT_RESET_QUARANTINE' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1034 |  .local_other_idle(core_idle&&(!OPT_RESET_QUARANTINE||(!(|c_req_v)&&!p_rsp_v&&!p_wr_done_v))),.rearm_ready(secondary_rearm),.local_idle(secondary_idle),
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1072:14: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1072 |  if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error&&!core_bad)begin
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1119:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1119 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1189:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1189 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1249:22: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1249 |  if(permit&&!core_bad&&OPT_EXACT&&rst_n)begin
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1257:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1257 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1379:24: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1379 |  if(!permit||core_bad||!OPT_EXACT||!rst_n)begin
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1383:14: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1383 |  if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error)begin
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv:1395:7: Logical operator IF expects 1 bit on the If, but If's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                : ... note: In instance 'ot_gpu_qwen_hbm_integrated.g_w2[127].u_w2'
+ 1395 |  else if(OPT_EXACT)begin for(integer x=0;x<NW;x=x+1)if(WE[x])cw[x]<=encoded[x];end
+      |       ^~
+%Error: Exiting due to 1 error(s)

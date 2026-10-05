@@ -1,0 +1,171 @@
+{
+  "binary_sha256": "ff950d744e8d0124524849810b9b4b057000920958a9e421b79de8c6a91b7923",
+  "compile_command": [
+    "taskset",
+    "-c",
+    "11,27",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--binary",
+    "--timing",
+    "--top-module",
+    "tb",
+    "-j",
+    "2",
+    "-Wno-fatal",
+    "--Mdir",
+    "/home/ubuntu/w2-nc6-526c76068-runtime-r1/obj",
+    "/home/ubuntu/w2-nc6-526c76068-source-r1/rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv",
+    "/home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv"
+  ],
+  "compile_launched": true,
+  "compile_returncode": 0,
+  "compile_seconds": 47.06158158404287,
+  "compiler": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "compiler_bin_sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+  "compiler_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "compiler_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "frozen_inputs_match": true,
+  "headroom": {
+    "admitted": true,
+    "allocated_cpus": [
+      11,
+      27
+    ],
+    "available_memory_KiB": 237064508,
+    "cpu_sample": [
+      {
+        "cpu": 0,
+        "idle_pct": 47.474747474747474
+      },
+      {
+        "cpu": 1,
+        "idle_pct": 43.75
+      },
+      {
+        "cpu": 2,
+        "idle_pct": 51.041666666666664
+      },
+      {
+        "cpu": 3,
+        "idle_pct": 35.05154639175258
+      },
+      {
+        "cpu": 4,
+        "idle_pct": 0.0
+      },
+      {
+        "cpu": 5,
+        "idle_pct": 0.0
+      },
+      {
+        "cpu": 6,
+        "idle_pct": 41.83673469387755
+      },
+      {
+        "cpu": 7,
+        "idle_pct": 44.89795918367347
+      },
+      {
+        "cpu": 8,
+        "idle_pct": 3.0
+      },
+      {
+        "cpu": 9,
+        "idle_pct": 39.0
+      },
+      {
+        "cpu": 10,
+        "idle_pct": 20.61855670103093
+      },
+      {
+        "cpu": 11,
+        "idle_pct": 56.52173913043478
+      },
+      {
+        "cpu": 12,
+        "idle_pct": 46.391752577319586
+      },
+      {
+        "cpu": 13,
+        "idle_pct": 31.31313131313131
+      },
+      {
+        "cpu": 14,
+        "idle_pct": 46.808510638297875
+      },
+      {
+        "cpu": 15,
+        "idle_pct": 40.86021505376344
+      },
+      {
+        "cpu": 16,
+        "idle_pct": 19.19191919191919
+      },
+      {
+        "cpu": 17,
+        "idle_pct": 22.22222222222222
+      },
+      {
+        "cpu": 18,
+        "idle_pct": 44.329896907216494
+      },
+      {
+        "cpu": 19,
+        "idle_pct": 35.416666666666664
+      },
+      {
+        "cpu": 20,
+        "idle_pct": 40.0
+      },
+      {
+        "cpu": 21,
+        "idle_pct": 8.823529411764707
+      },
+      {
+        "cpu": 22,
+        "idle_pct": 48.38709677419355
+      },
+      {
+        "cpu": 23,
+        "idle_pct": 0.9900990099009901
+      },
+      {
+        "cpu": 24,
+        "idle_pct": 46.808510638297875
+      },
+      {
+        "cpu": 25,
+        "idle_pct": 43.29896907216495
+      },
+      {
+        "cpu": 26,
+        "idle_pct": 36.26373626373626
+      },
+      {
+        "cpu": 27,
+        "idle_pct": 52.525252525252526
+      }
+    ],
+    "disk_free_bytes": 61256159232,
+    "eligible_cpu_count": 28,
+    "load": [
+      11.134765625,
+      13.05908203125,
+      14.9130859375
+    ],
+    "policy": "2 >=50% idle CPUs, load1 below eligible CPU count; measured admission, not process limits"
+  },
+  "preflight_only": false,
+  "process_caps": "NONE; affinity allocation only",
+  "resource_estimate": "Small NC6 component; no measured compile time/peak yet",
+  "runtime_launched": true,
+  "runtime_returncode": 0,
+  "source_commit": "526c760682f111e2f0261bdf811a7eab10e49d1b",
+  "source_pins": {
+    "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+    "rtl/test/w2_nc6_completion_20261003/tb.sv": "8427c1342f53311e8a2963773d12a302b06982b47e275623ef94efcfe0048c56"
+  },
+  "toolchain_matches_enrolled_hashes": true,
+  "verdict": "PASS_COMPONENT_FUNCTIONAL_ONLY",
+  "worktree_clean": true
+}

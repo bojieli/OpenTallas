@@ -1,0 +1,18 @@
+{
+  "L1_invalid_words_per_rank": 20480,
+  "all_four_rank_stage_ranges_match_independent_rank0_batched_address_sets": true,
+  "commands_per_rank": 491,
+  "distinct_global_words_per_rank": 549760,
+  "focused_tests_passed": 6,
+  "fresh_gzip_byte_equal": true,
+  "geometry_credit": false,
+  "independent_parent_decoded_footprint_commit": "7082475e0",
+  "max_stage_words": 33648,
+  "no_crossstage_address_duplication_in_current_demand": true,
+  "record_sha256": "d3aa9a22ef0439d3114be94bf9fa82e9c17b0986c926d9959dd61c026d2fa562",
+  "schema": "parent_stage_union_independent_review",
+  "service_timing_credit": false,
+  "source_commit": "8e28902ff",
+  "stages_per_rank": 41,
+  "whole_token_admission": false
+}

@@ -1,0 +1,68 @@
+{
+  "sender": "Kepler",
+  "to": [
+    "Peirce",
+    "Chandra",
+    "parent"
+  ],
+  "time_utc": "2026-10-03T06:20:53.574678+00:00",
+  "frozen_source": "915558caaa3742e32ab46343fef9c437807a1f28",
+  "integrity_receipt": "/tmp/claude-1000/queue/h4-c0-bridge-20261002/Kepler_R68_local_staging_integrity_20261003.json",
+  "required_constructor_metadata": [
+    {
+      "path": "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/actual_native_c65.json.gz",
+      "bytes": 14342060,
+      "sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    },
+    {
+      "path": "results/uarch/ds_hbm_bound_engine_r43_20261002/inputs/actual_dispatch_bcf.json.gz",
+      "bytes": 11566814,
+      "sha256": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    },
+    {
+      "path": "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/actual_DeepSeek_homes.json.gz",
+      "bytes": 4177637,
+      "sha256": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    },
+    {
+      "path": "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/prefix_input_manifest.json.gz",
+      "bytes": 99903,
+      "sha256": "2c7d0d38d9e5c1a2b049ba14eecfe8bae91eaaf2e96629f418b4ade9693c1c01",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    },
+    {
+      "path": "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/independent_prefix_expected_outputs.json",
+      "bytes": 684339,
+      "sha256": "91c803a93df18e011cd7ee6c5e0a84c8fc091136718ca329e5f2928349b3f342",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    },
+    {
+      "path": "results/uarch/ds_hbm_connected_source_r37_20261002/peer_source_pins.json",
+      "bytes": 8759,
+      "sha256": "ac08d45b958cbf0401c1abe706d19da8cca4c1ebf15243bc1a3b4181c4188641",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    },
+    {
+      "path": "results/uarch/ds_hbm_connected_source_r37_20261002/metadata_source_catalog.json",
+      "bytes": 627,
+      "sha256": "6620d8a6fc7a4b0797104fa319506381bcb4e83727b10bb35fc4fc4e7684663e",
+      "already_in_source_pins": false,
+      "already_in_array_input_index": false
+    }
+  ],
+  "metadata_subtotal_bytes": 30880139,
+  "complete_transfer_closure": false,
+  "request": "Include native/home/dispatch/manifest/reference and pinned peer metadata catalog dependencies in staging inventory, in addition to 2403 helpers and 111 array inputs. Supply fresh physical parent/peer-growth/page union proof; do not signal existing jobs or assume guest cache host reclaim. Neither phase is admitted.",
+  "constructor_launch": false,
+  "numerical_launch": false,
+  "transfer_performed": false
+}

@@ -1,0 +1,195 @@
+OpenSTA 2.6.0 aa598a2f14 Copyright (c) 2024, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13156, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13189, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13222, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13255, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13288, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13321, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 13354, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 14748, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 14781, timing group from output port.
+Warning: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/simple_ss.lib line 14814, timing group from output port.
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+Startpoint: cell_1140 (rising edge-triggered flip-flop clocked by core)
+Endpoint: cell_1227 (rising edge-triggered flip-flop clocked by core)
+Path Group: core
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+               0.000000    0.000000    0.000000 ^ cell_1140/CLK (DFFHQNx1_ASAP7_75t_R)
+   3.351444   59.334705   91.623528   91.623528 v cell_1140/QN (DFFHQNx1_ASAP7_75t_R)
+                                                  n236 (net)
+              59.334705    0.000000   91.623528 v cell_49/A (INVx1_ASAP7_75t_R)
+   3.697955   64.828369   48.734226  140.357758 ^ cell_49/Y (INVx1_ASAP7_75t_R)
+                                                  n237 (net)
+              64.828369    0.000000  140.357758 ^ cell_152/B (NAND2x1_ASAP7_75t_R)
+   0.892420   25.245649   22.170626  162.528381 v cell_152/Y (NAND2x1_ASAP7_75t_R)
+                                                  n355 (net)
+              25.245649    0.000000  162.528381 v cell_154/A (NAND2x1_ASAP7_75t_R)
+   2.427470   46.420689   33.550468  196.078842 ^ cell_154/Y (NAND2x1_ASAP7_75t_R)
+                                                  n357 (net)
+              46.420689    0.000000  196.078842 ^ cell_155/A (INVx1_ASAP7_75t_R)
+   1.848888   29.312639   27.470137  223.548981 v cell_155/Y (INVx1_ASAP7_75t_R)
+                                                  n358 (net)
+              29.312639    0.000000  223.548981 v cell_157/B (NAND2x1_ASAP7_75t_R)
+   0.924352   32.778522   21.689678  245.238663 ^ cell_157/Y (NAND2x1_ASAP7_75t_R)
+                                                  n360 (net)
+              32.778522    0.000000  245.238663 ^ cell_158/B (NAND2x1_ASAP7_75t_R)
+   4.211840   46.154118   34.029751  279.268402 v cell_158/Y (NAND2x1_ASAP7_75t_R)
+                                                  n361 (net)
+              46.154118    0.000000  279.268402 v cell_159/A (INVx1_ASAP7_75t_R)
+   3.698502   61.447979   44.244690  323.513092 ^ cell_159/Y (INVx1_ASAP7_75t_R)
+                                                  n362 (net)
+              61.447979    0.000000  323.513092 ^ cell_505/B (NAND2x1_ASAP7_75t_R)
+   0.924444   24.910095   21.984386  345.497498 v cell_505/Y (NAND2x1_ASAP7_75t_R)
+                                                  n708 (net)
+              24.910095    0.000000  345.497498 v cell_509/B (NAND2x1_ASAP7_75t_R)
+   2.773603   51.311790   32.962105  378.459595 ^ cell_509/Y (NAND2x1_ASAP7_75t_R)
+                                                  n712 (net)
+              51.311790    0.000000  378.459595 ^ cell_512/B (NAND2x1_ASAP7_75t_R)
+   0.892420   22.689312   20.351276  398.810883 v cell_512/Y (NAND2x1_ASAP7_75t_R)
+                                                  n715 (net)
+              22.689312    0.000000  398.810883 v cell_514/A (NAND2x1_ASAP7_75t_R)
+   1.848704   38.057358   28.796133  427.606995 ^ cell_514/Y (NAND2x1_ASAP7_75t_R)
+                                                  n717 (net)
+              38.057358    0.000000  427.606995 ^ cell_516/B (NAND2x1_ASAP7_75t_R)
+   0.892420   20.064655   18.411245  446.018250 v cell_516/Y (NAND2x1_ASAP7_75t_R)
+                                                  n719 (net)
+              20.064655    0.000000  446.018250 v cell_521/A (NAND2x1_ASAP7_75t_R)
+   0.924899   25.067232   21.710161  467.728424 ^ cell_521/Y (NAND2x1_ASAP7_75t_R)
+                                                  n724 (net)
+              25.067232    0.000000  467.728424 ^ cell_574/A (NAND2x1_ASAP7_75t_R)
+   0.892420   16.770660   16.466940  484.195343 v cell_574/Y (NAND2x1_ASAP7_75t_R)
+                                                  n777 (net)
+              16.770660    0.000000  484.195343 v cell_576/A (NAND2x1_ASAP7_75t_R)
+   2.428017   45.283627   30.435209  514.630554 ^ cell_576/Y (NAND2x1_ASAP7_75t_R)
+                                                  n779 (net)
+              45.283627    0.000000  514.630554 ^ cell_577/A (INVx1_ASAP7_75t_R)
+   2.709284   36.309753   32.475246  547.105835 v cell_577/Y (INVx1_ASAP7_75t_R)
+                                                  n780 (net)
+              36.309753    0.000000  547.105835 v cell_707/B (NAND2x1_ASAP7_75t_R)
+   0.924352   30.548401   23.783976  570.889771 ^ cell_707/Y (NAND2x1_ASAP7_75t_R)
+                                                  n910 (net)
+              30.548401    0.000000  570.889771 ^ cell_708/B (NAND2x1_ASAP7_75t_R)
+   1.502556   23.151056   20.449308  591.339111 v cell_708/Y (NAND2x1_ASAP7_75t_R)
+                                                  n911 (net)
+              23.151056    0.000000  591.339111 v cell_709/A (INVx1_ASAP7_75t_R)
+   0.924352   20.478485   17.441050  608.780151 ^ cell_709/Y (INVx1_ASAP7_75t_R)
+                                                  n912 (net)
+              20.478485    0.000000  608.780151 ^ cell_710/B (NAND2x1_ASAP7_75t_R)
+   0.892420   17.914625   14.633739  623.413879 v cell_710/Y (NAND2x1_ASAP7_75t_R)
+                                                  n913 (net)
+              17.914625    0.000000  623.413879 v cell_712/A (NAND2x1_ASAP7_75t_R)
+   1.503665   32.540440   24.798941  648.212830 ^ cell_712/Y (NAND2x1_ASAP7_75t_R)
+                                                  n915 (net)
+              32.540440    0.000000  648.212830 ^ cell_713/A (INVx1_ASAP7_75t_R)
+   0.892420   17.566439   17.420233  665.633057 v cell_713/Y (INVx1_ASAP7_75t_R)
+                                                  n916 (net)
+              17.566439    0.000000  665.633057 v cell_1053/A (NAND2x1_ASAP7_75t_R)
+   0.924352   24.686380   20.817904  686.450928 ^ cell_1053/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1256 (net)
+              24.686380    0.000000  686.450928 ^ cell_1071/B (NAND2x1_ASAP7_75t_R)
+   0.892420   16.724377   15.537960  701.988892 v cell_1071/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1274 (net)
+              16.724377    0.000000  701.988892 v cell_1089/A (NAND2x1_ASAP7_75t_R)
+   0.924352   24.562775   20.518198  722.507141 ^ cell_1089/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1292 (net)
+              24.562775    0.000000  722.507141 ^ cell_1090/B (NAND2x1_ASAP7_75t_R)
+   0.578112   14.168073   13.773427  736.280518 v cell_1090/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1293 (net)
+              14.168073    0.000000  736.280518 v cell_1091/A (INVx1_ASAP7_75t_R)
+   0.924899   18.204769   14.521107  750.801636 ^ cell_1091/Y (INVx1_ASAP7_75t_R)
+                                                  n1294 (net)
+              18.204769    0.000000  750.801636 ^ cell_1658/A (NAND2x1_ASAP7_75t_R)
+   0.892420   15.756722   15.018265  765.819885 v cell_1658/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1726 (net)
+              15.756722    0.000000  765.819885 v cell_1660/A (NAND2x1_ASAP7_75t_R)
+   0.511385   18.793936   17.414349  783.234253 ^ cell_1660/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1728 (net)
+              18.793936    0.000000  783.234253 ^ cell_1875/A (BUFx4_ASAP7_75t_R)
+   0.524726   13.172775   33.549217  816.783447 ^ cell_1875/Y (BUFx4_ASAP7_75t_R)
+                                                  n1943 (net)
+              13.172775    0.000000  816.783447 ^ cell_1227/D (DFFHQNx1_ASAP7_75t_R)
+                                     816.783447   data arrival time
+
+               0.000000 1111.111084 1111.111084   clock core (rise edge)
+                           0.000000 1111.111084   clock network delay (ideal)
+                         -60.000000 1051.111084   clock uncertainty
+                           0.000000 1051.111084   clock reconvergence pessimism
+                                    1051.111084 ^ cell_1227/CLK (DFFHQNx1_ASAP7_75t_R)
+                         -28.229504 1022.881592   library setup time
+                                    1022.881592   data required time
+---------------------------------------------------------------------------------------
+                                    1022.881592   data required time
+                                    -816.783447   data arrival time
+---------------------------------------------------------------------------------------
+                                     206.098083   slack (MET)
+
+
+Startpoint: cell_1138 (rising edge-triggered flip-flop clocked by core)
+Endpoint: cell_1208 (rising edge-triggered flip-flop clocked by core)
+Path Group: core
+Path Type: min
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+               0.000000    0.000000    0.000000 ^ cell_1138/CLK (DFFHQNx1_ASAP7_75t_R)
+   1.088827   33.694447   71.003441   71.003441 ^ cell_1138/QN (DFFHQNx1_ASAP7_75t_R)
+                                                  n232 (net)
+              33.694447    0.000000   71.003441 ^ cell_47/A (INVx1_ASAP7_75t_R)
+   1.276106   21.189507   20.405462   91.408905 v cell_47/Y (INVx1_ASAP7_75t_R)
+                                                  n233 (net)
+              21.189507    0.000000   91.408905 v cell_1544/A (NAND2x1_ASAP7_75t_R)
+   0.668858   17.136494   20.378387  111.787285 ^ cell_1544/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1612 (net)
+              17.136494    0.000000  111.787285 ^ cell_1546/A (NAND2x1_ASAP7_75t_R)
+   0.365101    9.137244   12.264009  124.051300 v cell_1546/Y (NAND2x1_ASAP7_75t_R)
+                                                  n1614 (net)
+               9.137244    0.000000  124.051300 v cell_1856/A (BUFx4_ASAP7_75t_R)
+   0.442001   14.675063   36.375694  160.426987 v cell_1856/Y (BUFx4_ASAP7_75t_R)
+                                                  n1924 (net)
+              14.675063    0.000000  160.426987 v cell_1208/D (DFFHQNx1_ASAP7_75t_R)
+                                     160.426987   data arrival time
+
+               0.000000    0.000000    0.000000   clock core (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                          25.000000   25.000000   clock uncertainty
+                           0.000000   25.000000   clock reconvergence pessimism
+                                      25.000000 ^ cell_1208/CLK (DFFHQNx1_ASAP7_75t_R)
+                          13.120938   38.120937   library hold time
+                                      38.120937   data required time
+---------------------------------------------------------------------------------------
+                                      38.120937   data required time
+                                    -160.426987   data arrival time
+---------------------------------------------------------------------------------------
+                                     122.306053   slack (MET)
+
+
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+cell_1652/A                           320.00  120.26  199.74 (MET)
+
+max capacitance
+
+Pin                                    Limit     Cap   Slack
+------------------------------------------------------------
+cell_18/Y                              46.08    7.40   38.68 (MET)
+

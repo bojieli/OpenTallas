@@ -1,0 +1,195 @@
+{
+  "schema": "opentallas.uarch.qwen_posted_kv.v1",
+  "rows": [
+    {
+      "position": 0,
+      "stage": "L0",
+      "baseline_cycles": 4960,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        278
+      ],
+      "counter_opportunity_cycles": [
+        4682,
+        4960
+      ],
+      "counter_opportunity_rate_pct": 5.937633489961555,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 0,
+      "stage": "L1",
+      "baseline_cycles": 5736,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        1130
+      ],
+      "counter_opportunity_cycles": [
+        4606,
+        5736
+      ],
+      "counter_opportunity_rate_pct": 24.533217542336082,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 0,
+      "stage": "L2",
+      "baseline_cycles": 5348,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        666
+      ],
+      "counter_opportunity_cycles": [
+        4682,
+        5348
+      ],
+      "counter_opportunity_rate_pct": 14.224690303289192,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 255,
+      "stage": "L0",
+      "baseline_cycles": 5075,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        369
+      ],
+      "counter_opportunity_cycles": [
+        4706,
+        5075
+      ],
+      "counter_opportunity_rate_pct": 7.841053973650658,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 255,
+      "stage": "L1",
+      "baseline_cycles": 5436,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        303
+      ],
+      "counter_opportunity_cycles": [
+        5133,
+        5436
+      ],
+      "counter_opportunity_rate_pct": 5.902980713033314,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 255,
+      "stage": "L2",
+      "baseline_cycles": 5587,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        821
+      ],
+      "counter_opportunity_cycles": [
+        4766,
+        5587
+      ],
+      "counter_opportunity_rate_pct": 17.22618548048678,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 1023,
+      "stage": "L0",
+      "baseline_cycles": 5789,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        471
+      ],
+      "counter_opportunity_cycles": [
+        5318,
+        5789
+      ],
+      "counter_opportunity_rate_pct": 8.856713050018804,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 1023,
+      "stage": "L1",
+      "baseline_cycles": 7171,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        699
+      ],
+      "counter_opportunity_cycles": [
+        6472,
+        7171
+      ],
+      "counter_opportunity_rate_pct": 10.800370828182942,
+      "measured_saved_cycles": null
+    },
+    {
+      "position": 1023,
+      "stage": "L2",
+      "baseline_cycles": 7027,
+      "baseline_qualified": true,
+      "possible_saved_cycles": [
+        0,
+        918
+      ],
+      "counter_opportunity_cycles": [
+        6109,
+        7027
+      ],
+      "counter_opportunity_rate_pct": 15.02700933049599,
+      "measured_saved_cycles": null
+    }
+  ],
+  "source_sha256": {
+    "/home/ubuntu/qwen-real-memory-20261003/results/rtl/qwen_rom_real_memory_20261003/frozen_v2/runs/real2_p0.json": "3cf3b23b7dd7e9e912a2b8de6ee0c3d1a8f40ac4674f4dbd3fd6630612312076",
+    "/home/ubuntu/qwen-real-memory-20261003/results/rtl/qwen_rom_real_memory_20261003/frozen_v2/runs/real2_p255.json": "42bd8be7dac7602933fcdc9449d1b51bd8c33a27fd9160b8dfd0bd61ffe0e226",
+    "/home/ubuntu/qwen-real-memory-20261003/results/rtl/qwen_rom_real_memory_20261003/frozen_v2/runs/real2_p1023.json": "3fa194ec5587d14d9991553b218cba150dfa5eb05ee625635d86b0c137b61ddb"
+  },
+  "candidate": "POSTED_KV=0 by default; release ordinary SU issue from write-done",
+  "fences": [
+    "SU idle before next ordinary SU operation",
+    "real tagged/generation-checked write-done before every barrier and END",
+    "retire all old read/write/assembly debt before layer-context reuse",
+    "next-token row reads and rollback cannot cross the retained END fence"
+  ],
+  "resources": {
+    "replicas": 4,
+    "new_macs_per_cycle": 0,
+    "new_memory_bytes_per_cycle": 0,
+    "new_boundary_bits_per_cycle": 0,
+    "new_routing_tracks": 0,
+    "new_muxes": 0,
+    "new_demuxes": 0,
+    "new_fanout_loads": 0,
+    "new_storage_bits": 0,
+    "incremental_area_mm2": 0,
+    "area_basis": "compile-time issue predicate specialization; existing buffers unchanged",
+    "slot_fit": "reuse current core and KV service slots",
+    "existing_write_entries_per_die": 64,
+    "existing_su_input_bytes_per_cycle": 256,
+    "existing_hbm_write_sector_bytes": 32,
+    "token_write_sectors_per_die": 136
+  },
+  "latency": {
+    "added_cycles": 0,
+    "saved_cycles": "bounded by measured stall_drain; fence residual unknown",
+    "stream_hz": 1200000000.0,
+    "serial_hz": 900000000.0,
+    "clock_policy": "SS setup 60ps / FF hold 25ps; unchanged, contextual closure pending"
+  },
+  "bridge_pipeline": "not included: ordinary issue still requires su_idle; needs separate credit sizing",
+  "adoption": false,
+  "measured_composed_gain_pct": null,
+  "qualification": [
+    "all pinned baseline runs terminal before successor launch",
+    "P0/P255/P1023 X and HBM writeback exact; no early visibility or rollback",
+    "measured gain >=1% after token composition",
+    "contextual SS/FF and hub routing"
+  ]
+}

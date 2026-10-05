@@ -1,0 +1,90 @@
+{
+  "CROM": {
+    "L1_invalid_hole": [
+      508800,
+      529280
+    ],
+    "complete_image": false,
+    "gamma414720_minimum_fast_cycles": 25920,
+    "gamma5120_minimum_fast_cycles": 320,
+    "legacy_faster_delivery_assumptions_usable": false,
+    "logical_words": 549760,
+    "selected_FP32_ports": 16
+  },
+  "admission_verdict": "FAIL_INCOMPLETE_WHOLE_POINT",
+  "candidate": {
+    "actual_complete_inventory": false,
+    "async_mailboxes_per_internal_hop": false,
+    "branch_NAND2_equivalent_reservation": 20444736,
+    "homes": 192,
+    "incremental_register_roles_per_home": {
+      "forward_REQ_and_reverse_ACK_level": 49856,
+      "locked_branch_selector": 8191,
+      "registered_branch_drain": 8191,
+      "registered_leaf_idle": 8192,
+      "root_quiesce_FSM": 3,
+      "wire_drain_pipeline": 16737
+    },
+    "register_reservation": 4378995838,
+    "reservation_not_minimum": true,
+    "synchronous_internal_hops": true,
+    "table_macros": 1500067
+  },
+  "checkpoint_reads": 0,
+  "full_token_cycles": null,
+  "hardware_admission": false,
+  "jobs_launched": 0,
+  "obligation_gates": {
+    "CROM_finite_selected_port_deadlines_and_whole_calendar": false,
+    "actual_branch_payload_fanout_buffers": false,
+    "actual_interdie_and_serial_CDC": false,
+    "all_control_register_gate_capture_and_macro_physical_slots": false,
+    "all_localidle_enables_reset_compare_serializer_gates": false,
+    "all_register_and_macro_clock_and_leak": false,
+    "complete_valid_frozen_image_and_encoded_bases": false,
+    "contextual_SS_setup_FF_hold": false,
+    "reset_retention_and_full_consumer_drain": false,
+    "selected_control_dynamic_activity_and_capacitance": false,
+    "selected_data_switching": false
+  },
+  "owner_actions": {
+    "Avicenna": "complete actual control/state/branch/reset/drain and boundary instance inventory",
+    "Confucius": "fresh typed clock/leak/control+data phase power with actual activity and load; no margin until complete",
+    "Fermat": "publish source-valid padded image and encoded bases; L1 absent remains hard gate",
+    "Godel": "bind actual consumer/credit/visibility and contextual implementation",
+    "Ramanujan": "compose placed CROM routes,16port deadlines and full graph after bounded providers"
+  },
+  "physical_slots": {
+    "actual_all_added_register_gate_buffer_placement": null,
+    "historical_macro_rectangle_screen_not_added_control_fit": true
+  },
+  "power": {
+    "clock_data_control_dynamic_all_required": true,
+    "complete_margin_W": null,
+    "complete_selected_phase_W": null,
+    "old_3e66_e851_power_currency": false,
+    "provisional_positive_margin_permitted": false,
+    "typed_branch_dynamic_is_all_activity_allocation_not_selected": true,
+    "typed_inventory_complete": false,
+    "typed_partial_ledger_bound": true,
+    "typed_partial_max_home_clock_and_all_leak_W": "370.25567246980593960"
+  },
+  "schema": "opentallas.DSROM-synchronous-whole-admission.v1",
+  "source_pins": {
+    "frozen_CROM": {
+      "commit": "2a49807654c259b9d3abefecead88c97871edfc6",
+      "path": "results/quality/w16_engram_initializer_20261001/frozen_closure.json",
+      "sha256": "22e676348224ee74bed4a84f9f096ae3d677e412abef53b47746da74e891cddc"
+    },
+    "sync_branch": {
+      "commit": "5b8c456a34965043ae9c6656725ca0565a5ce905",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/sync_branch_drain_inventory.json",
+      "sha256": "9d4765094ecfcad99658747082d48e2501094ac2578991ed557f489008565426"
+    },
+    "typed_partial_power": {
+      "commit": "2b14a8e567786674010bbd18c864d265e4742672",
+      "path": "results/uarch/w10_engram_sync_drain_power_r1/budget.json",
+      "sha256": "176bb782c5f94dd7a6c7582739c8376c57f4192025872d46e04757f6b908d6c7"
+    }
+  }
+}

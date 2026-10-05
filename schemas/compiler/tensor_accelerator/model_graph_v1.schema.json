@@ -1,0 +1,274 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/model_graph_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "numeric_profile": {
+      "enum": [
+        "int_exact_tensor_accelerator_v1",
+        "qwen3_bf16_gqa_v1",
+        "deepseek_v4_mixed_v1"
+      ]
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/operation"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "outputs": {
+      "items": {
+        "$ref": "#/$defs/identifier"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema": {
+      "const": "opentallas.model_graph.v1"
+    },
+    "symbols": {
+      "items": {
+        "$ref": "#/$defs/symbol"
+      },
+      "type": "array"
+    },
+    "tensors": {
+      "items": {
+        "$ref": "#/$defs/tensor"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "model_id",
+    "numeric_profile",
+    "operations",
+    "outputs",
+    "schema",
+    "symbols",
+    "tensors"
+  ],
+  "title": "OpenTallas backend-neutral Model Graph IR v1",
+  "type": "object",
+  "$defs": {
+    "dimension": {
+      "oneOf": [
+        {
+          "maximum": 1073741824,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "$ref": "#/$defs/identifier"
+        }
+      ]
+    },
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "operation": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": [
+              "boolean",
+              "integer",
+              "number",
+              "string"
+            ]
+          },
+          "type": "object"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "ADD",
+            "ATTENTION",
+            "COMPRESS",
+            "CONVERT",
+            "EMBEDDING_LOOKUP",
+            "EXPERT_DISPATCH",
+            "EXPERT_REDUCE",
+            "GATHER",
+            "KV_COMMIT",
+            "KV_READ",
+            "LAST_TOKEN_SELECT",
+            "MATMUL",
+            "RMS_NORM",
+            "ROPE",
+            "ROUTE",
+            "SILU_MUL",
+            "SINKHORN",
+            "SOFTMAX",
+            "TOPK"
+          ]
+        },
+        "numeric": {
+          "additionalProperties": {
+            "type": [
+              "boolean",
+              "integer",
+              "number",
+              "string"
+            ]
+          },
+          "type": "object"
+        },
+        "outputs": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "attributes",
+        "id",
+        "inputs",
+        "kind",
+        "numeric",
+        "outputs"
+      ],
+      "type": "object"
+    },
+    "symbol": {
+      "additionalProperties": false,
+      "properties": {
+        "default": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "maximum": {
+          "maximum": 1073741824,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "minimum": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "multiple_of": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "default",
+        "id",
+        "maximum",
+        "minimum",
+        "multiple_of"
+      ],
+      "type": "object"
+    },
+    "tensor": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "enum": [
+                  "activation",
+                  "input",
+                  "output",
+                  "state"
+                ]
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "values"
+              ]
+            }
+          }
+        }
+      ],
+      "properties": {
+        "dtype": {
+          "enum": [
+            "bf16",
+            "e8m0",
+            "fp32",
+            "fp4_e2m1",
+            "fp8_e4m3fn",
+            "i32",
+            "i8",
+            "mxfp4_e2m1"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "layout": {
+          "enum": [
+            "opaque",
+            "row_major",
+            "scalar"
+          ]
+        },
+        "role": {
+          "enum": [
+            "activation",
+            "constant",
+            "input",
+            "output",
+            "state",
+            "weight"
+          ]
+        },
+        "shape": {
+          "items": {
+            "$ref": "#/$defs/dimension"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array"
+        },
+        "values": {
+          "items": {
+            "maximum": 2147483647,
+            "minimum": -2147483648,
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "dtype",
+        "id",
+        "layout",
+        "role",
+        "shape"
+      ],
+      "type": "object"
+    }
+  }
+}

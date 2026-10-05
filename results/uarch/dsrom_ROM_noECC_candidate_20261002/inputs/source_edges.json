@@ -1,0 +1,156 @@
+{
+  "actual_absolute_source_event_calendar": false,
+  "callback_contract": {
+    "accepted_input": "Observed source_issue at posedge gclk with PP1 and actual source metadata lane-valid; parent-supplied source receipt and full owner identity.",
+    "accepted_relative_edge": 0,
+    "adapter_must_block_untested_lane_consume": true,
+    "current_no_added_cycle_gate": "Both matched K272 terminals and paired K256/gather authorization post-NBA visible no later than n+2 for sampling at n+3; otherwise hold/aligned-retime/reprice. A separately proved preedge combinational terminal may use its actual stable-before-edge receipt. No implicit replay.",
+    "first_irreversible_lane_sample_relative_edge": 3,
+    "parent_cfg_input_root_extractor_untouched": true,
+    "raw_capture_relative_edge": 2,
+    "registered_terminal_visibility_is_post_NBA": true,
+    "source_has_no_ECC_qualification_gate": true
+  },
+  "detector_area_ledger": {
+    "adapter5fc_and_Maxwell_state_overlays_require_disjoint_union_before_combining": true,
+    "additional_isolated_checkers_cell_mm2": 0.05513502816,
+    "isolated_capture_status_bits_extra": 11312,
+    "mapped_checkers_do_not_recharge_fullcorrector_or_replace_inherited_area_floor": true,
+    "prior_Maxwell_fullcorrector_copy_as_detector_proxy_is_superseded_not_additive": true,
+    "retained_fullcorrector_floor_mm2": 1.3275684864
+  },
+  "detector_operation_counts": [
+    {
+      "K": 256,
+      "XOR2_per_detector": 1305,
+      "balanced_XOR_depth_lower_bound": 9,
+      "clean_or_corrected_data_mux_bits": 105472,
+      "final_clean_INV_per_detector": 1,
+      "final_nonzero_OR2_per_detector": 9,
+      "mapped_detector_area_mm2": null,
+      "mapped_detector_delay_ps": null,
+      "replicas": 412,
+      "syndrome_can_be_shared_with_existing_corrector_ONLY_after_source_cut_proof": true,
+      "syndrome_data_terms_by_check": [
+        132,
+        131,
+        131,
+        129,
+        127,
+        127,
+        127,
+        127,
+        9
+      ],
+      "total_replicated_XOR2": 537660
+    },
+    {
+      "K": 272,
+      "XOR2_per_detector": 1379,
+      "balanced_XOR_depth_lower_bound": 9,
+      "clean_or_corrected_data_mux_bits": 69632,
+      "final_clean_INV_per_detector": 1,
+      "final_nonzero_OR2_per_detector": 9,
+      "mapped_detector_area_mm2": null,
+      "mapped_detector_delay_ps": null,
+      "replicas": 256,
+      "syndrome_can_be_shared_with_existing_corrector_ONLY_after_source_cut_proof": true,
+      "syndrome_data_terms_by_check": [
+        140,
+        139,
+        139,
+        137,
+        137,
+        127,
+        127,
+        127,
+        25
+      ],
+      "total_replicated_XOR2": 353024
+    }
+  ],
+  "detector_timing_window": {
+    "capture_fed_detector_budget_before_FF_CLKQ_wire_setup_skew_ps": 773.3333333333334,
+    "checker_measurement_source_commit": "68524a625ec0ea5963410637cdaafe58f9123d64",
+    "detector_mapped_delay_not_supplied": false,
+    "direct_macro_to_original_lane_detector_budget_before_wire_setup_skew_ps": 1696.0372998,
+    "formula": "Direct: Qmacro+Ddetect+wire+Tsetup+relative_skew+60 <=3T. Captured: Qcapture+Ddetect+wire+Tsetup+relative_skew+60 <=T.",
+    "hold_uncertainty_ps": 25,
+    "keep_provisional_held_II": 2,
+    "keep_provisional_service_cycles": 2,
+    "not_a_pipeline_or_registered_hold_proof": true,
+    "rawmacro_SS_CLKQ_ps": 743.9627002,
+    "registered_capture_and_hold_closed": false,
+    "setup_uncertainty_ps": 60,
+    "target_period_ps": 833.3333333333334
+  },
+  "exact_offered_prefix_cases": [
+    {
+      "alias": "exp0.w1",
+      "distinct_words_per_busy_leaf": 320,
+      "existing_global_main_paired_slots": 128,
+      "existing_global_raw_slots": 412,
+      "existing_leaf_capture_slots": 1,
+      "first_group": {
+        "ideal_II1_latency1_prefix_lead": 48,
+        "window": 16,
+        "words": 64
+      },
+      "full_phase_inequality": "P >= max(0,(320-1)*I_leaf + L_terminal - 192)",
+      "ideal_II1_latency1_prefix_lead": 128,
+      "lead_time_is_not_cache_word_capacity": true,
+      "no_absolute_accepted_edges_or_deadlines_inferred": true,
+      "offered_positions": 192,
+      "one_credit_held_service_inequality": "I_leaf >= max(port_II, accepted_to_safe_leaf_release); if output has no reserved capture, add its backpressure. No clean II1 inferred.",
+      "resident_cache_requires_perword_firstready_lastconsumer_intervals": true
+    }
+  ],
+  "exception_cost": "Hold original credit/codeword/identity through actual correction or fault; source4raw/3main optimistic held bounds remain rare only. No probability0 or II1 from ceil.",
+  "generator_sha256": "462f03556e0bf12b265ef0c7cb2d61cea8da234a560319273029cf19c098ab15",
+  "input_sha256": {
+    "results/uarch/dsrom_PAR2_source_deadline_join_20261002/inputs/checker_cone.sv": "b17ebbc04a7212f490fc79216c2c385fcab8e2e920ff674751632db8031aaa34",
+    "results/uarch/dsrom_PAR2_source_deadline_join_20261002/inputs/clean_checker_measurement.json": "044ac60cbea3b0ad55e57e7ccb1d8086053f6861fbe5e646877581b2bec17ec3",
+    "results/uarch/dsrom_PAR2_source_deadline_join_20261002/inputs/clean_terminal.json": "f2bf1d44217a6317b83bdffc05de42466aa8ed2a0036510190b7020c5e97f3d8",
+    "results/uarch/dsrom_PAR2_source_deadline_join_20261002/inputs/element.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+    "results/uarch/dsrom_PAR2_source_deadline_join_20261002/inputs/parity_profile.json": "a0452fe5f87ce5c475c11999d359ec731fdf88abe05189cab1abe21d0c85b475"
+  },
+  "measured_detector_costs": [
+    {
+      "FF_min_ps": 11.66715,
+      "K": 256,
+      "SS_clean_delay_ps": 525.730774,
+      "capture_fed_residual_for_FF_CLKQ_wire_setup_skew_ps": 247.60255933333337,
+      "mapped_area_per_cone_um2": 80.07336000000001,
+      "replicas": 412,
+      "replicated_cell_area_mm2": 0.032990224320000004,
+      "source_has_no_registers": true
+    },
+    {
+      "FF_min_ps": 29.469517,
+      "K": 272,
+      "SS_clean_delay_ps": 555.61792,
+      "capture_fed_residual_for_FF_CLKQ_wire_setup_skew_ps": 217.71541333333334,
+      "mapped_area_per_cone_um2": 86.50314,
+      "replicas": 256,
+      "replicated_cell_area_mm2": 0.02214480384,
+      "source_has_no_registers": true
+    }
+  ],
+  "new_RTL": false,
+  "new_jobs": 0,
+  "no_token_loss_proven": false,
+  "normal_cost": "Actual positive raw/main detection, capture, gather and owner fence; no fullcorrector on clean path.",
+  "physical_GO": false,
+  "schema": "opentallas.dsrom.PAR2.source-relative-deadline.v1",
+  "source_commits": {
+    "clean": "aefd04ba9e22992718d1e3612343c0dbe2a720cd",
+    "parity": "5fc7ff1a6361aa4ac99088aa36bfdf625879f6fc"
+  },
+  "source_seat_accounting": {
+    "adapter_10202_FF_and843776_comparebit_debit_retained": true,
+    "additional_inline512_already_in5fc": true,
+    "no_double_charge_body_or_inlinebits": true,
+    "paired_raw_bits": 548,
+    "standalone_nonce_exception_overlay_is_counterfactual_until_disjoint_instance_map": true
+  }
+}

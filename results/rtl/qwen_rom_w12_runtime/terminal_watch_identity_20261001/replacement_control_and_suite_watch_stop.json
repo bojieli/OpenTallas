@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-01T09:26:55.811184+00:00",
+  "stopped_control_processes": [
+    {
+      "pid": 544491,
+      "start_ticks": 305135789,
+      "argv": [
+        "python3",
+        "/tmp/claude-1000/w12b/collect_terminals_20261001.py"
+      ],
+      "state": "S",
+      "ppid": 1,
+      "cwd": "/home/ubuntu/OpenTallas"
+    },
+    {
+      "pid": 3062329,
+      "start_ticks": 304562597,
+      "argv": [
+        "python3",
+        "/tmp/claude-1000/w12b/watch_suite_20261001.py"
+      ],
+      "state": "S",
+      "ppid": 1,
+      "cwd": "/home/ubuntu/OpenTallas"
+    }
+  ],
+  "scientific_processes_signalled": []
+}

@@ -1,0 +1,207 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-27T14:55:41.249539+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hdc_matvec_memory_tile",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+        "size_bytes": 7528
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_matvec.sv",
+        "sha256": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
+        "size_bytes": 26224
+      },
+      {
+        "path": "rtl/dft/ot_rom_secded_dec.sv",
+        "sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+        "size_bytes": 3143
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_bb.v",
+        "sha256": "ef399648cd311941a2c09fbda401e95e62d8bef0f89bdc5101aa849fae7ad01d",
+        "size_bytes": 409
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+        "sha256": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+        "size_bytes": 664
+      },
+      {
+        "path": "rtl/hdc/physical/ot_hdc_matvec_memory_tile.sv",
+        "sha256": "82778a5b11a82919492356ba5c57405a8bcb213fb163ebc4d7f16072520d4796",
+        "size_bytes": 4285
+      }
+    ],
+    "top": "ot_hdc_matvec_memory_tile"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n 150 |        554 |       198 |       356\n      160 |        503 |       185 |       318\n      170 |        420 |       142 |       278\n      180 |        401 |       135 |       266\n      190 |        318 |       112 |       206\n      200 |        310 |       106 |       204\n      210 |        313 |       107 |       206\n      220 |        260 |        80 |       180\n      230 |        256 |        78 |       178\n      240 |        165 |        59 |       106\n      250 |        126 |        56 |        70\n      260 |        130 |        54 |        76\n      270 |        134 |        54 |        80\n      280 |        111 |        45 |        66\n      290 |         88 |        40 |        48\n      300 |        110 |        42 |        68\n      310 |         78 |        34 |        44\n      320 |         94 |        34 |        60\n      330 |         93 |        37 |        56\n      340 |         68 |        28 |        40\n      350 |         57 |        23 |        34\n[WARNING DPL-0700] Negotiation phase 1: violations stuck at 57 for 3 consecutive iterations.\nUsing old diamond search for 23 remaining illegal cells.\ndiamond recovery: recovered 4/23 stuck cells.\nNegotiation phase 2: isolation point active, 1000 iterations.\n      400 |         54 |        20 |        34\n      410 |         40 |        20 |        20\n      420 |         42 |        18 |        24\n      430 |         58 |        26 |        32\n      436 |         48 |        20 |        28\n[WARNING DPL-0702] Negotiation phase 2: violations stuck at 48 for 3 consecutive iterations. Using diamond search for 20 remaining illegal cells.\ndiamond recovery: recovered 3/20 stuck cells.\n[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 18\n[INFO DPL-0500] Runtime: 60.10s\nPlacement Analysis\n---------------------------------\ntotal displacement      96994.9 u\naverage displacement        0.9 u\nmax displacement           54.8 u\noriginal HPWL          790524.3 u\nlegalized HPWL         842793.4 u\ndelta HPWL                    7 %\n\nTook 60 seconds: detailed_placement\n[WARNING DPL-0005] Overlap check failed (9).\n hold26965 (BUFx2_ASAP7_75t_R) overlaps hold26878 (BUFx2_ASAP7_75t_R)\n hold27088 (BUFx2_ASAP7_75t_R) overlaps hold26900 (BUFx2_ASAP7_75t_R)\n hold27481 (BUFx2_ASAP7_75t_R) overlaps hold26851 (BUFx2_ASAP7_75t_R)\n hold29705 (BUFx2_ASAP7_75t_R) overlaps hold29685 (BUFx2_ASAP7_75t_R)\n hold29881 (BUFx2_ASAP7_75t_R) overlaps hold20221 (BUFx2_ASAP7_75t_R)\n hold29967 (BUFx2_ASAP7_75t_R) overlaps hold29450 (BUFx2_ASAP7_75t_R)\n hold30097 (BUFx2_ASAP7_75t_R) overlaps hold29712 (BUFx2_ASAP7_75t_R)\n input4983 (BUFx4_ASAP7_75t_R) overlaps hold27054 (BUFx2_ASAP7_75t_R)\n input5176 (BUFx4_ASAP7_75t_R) overlaps hold20261 (BUFx2_ASAP7_75t_R)\n[WARNING DPL-0011] Padding check failed (9).\n hold26965\n hold27088\n hold27481\n hold29705\n hold29881\n hold29967\n hold30097\n input4983\n input5176\n[ERROR DPL-0033] detailed placement checks failed during check placement.\nError: cts.tcl, 83 DPL-0033\n\nElapsed time: 0:02.17[h:]min:sec. CPU time: user 2.02 sys 0.14 (99%). Peak memory: 340464KB.\nElapsed time: 0:17.90[h:]min:sec. CPU time: user 20.26 sys 0.97 (118%). Peak memory: 454056KB.\nElapsed time: 1:05.01[h:]min:sec. CPU time: user 95.00 sys 33.19 (197%). Peak memory: 702964KB.\nElapsed time: 0:01.37[h:]min:sec. CPU time: user 1.26 sys 0.10 (99%). Peak memory: 274608KB.\nElapsed time: 0:07.88[h:]min:sec. CPU time: user 7.64 sys 0.21 (99%). Peak memory: 431436KB.\nElapsed time: 2:28.51[h:]min:sec. CPU time: user 1206.43 sys 1.35 (813%). Peak memory: 766912KB.\nElapsed time: 0:01.73[h:]min:sec. CPU time: user 1.53 sys 0.19 (99%). Peak memory: 365880KB.\nElapsed time: 6:12.87[h:]min:sec. CPU time: user 3066.39 sys 11.00 (825%). Peak memory: 2207404KB.\nElapsed time: 0:24.89[h:]min:sec. CPU time: user 33.09 sys 5.67 (155%). Peak memory: 552452KB.\nElapsed time: 0:44.06[h:]min:sec. CPU time: user 51.45 sys 5.63 (129%). Peak memory: 1615376KB.\nElapsed time: 1:53.73[h:]min:sec. CPU time: user 136.11 sys 12.03 (130%). Peak memory: 1767564KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_hdc_matvec_memory_tile_asap7_hdc_mem_tile/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-27T14:39:17.554731+00:00",
+  "git": {
+    "commit": "aa9eed5b7d311b118a5918dbbe94d03b91219cfe",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? rtl/hdc/physical/"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hdc_matvec_memory_tile",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_matvec.sv",
+      "--source",
+      "rtl/dft/ot_rom_secded_dec.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_bb.v",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+      "--source",
+      "rtl/hdc/physical/ot_hdc_matvec_memory_tile.sv",
+      "--clock-period-ns",
+      "1.5",
+      "--stages",
+      "pnr",
+      "--corner",
+      "TT",
+      "--core-utilization",
+      "25",
+      "--place-density",
+      "0.55",
+      "--macro-view",
+      "ot_rom_8192x266_m8=physical/asap7_memory_macros/ot_rom_8192x266_m8",
+      "--macro-view",
+      "ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--output",
+      "results/physical_hdc/asap7/matvec_memory_tile/physical.json",
+      "--nickname-tag",
+      "hdc_mem_tile"
+    ],
+    "driver": {
+      "commit": "aa9eed5b7d311b118a5918dbbe94d03b91219cfe",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-physical-tile-review/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "4d5ebb4d9e1cd3263e05a43398a96133d6575e23b6a79f351b95bcae4ad11c4b",
+      "tree": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-physical-tile-review"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-physical-tile-review"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.5,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

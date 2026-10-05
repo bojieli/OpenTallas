@@ -1,0 +1,46 @@
+{
+  "status": "READY_SOURCE_MODEL_ADAPTER_AND_STOP9_TERMINAL",
+  "model": "model.json",
+  "verification": "verification.json",
+  "source_pins": "source_pins.json",
+  "actual_R45_terminal": "actual_R45_stop9_terminal/summary.json",
+  "conservative_journal_bytes": 913249523376,
+  "source_addressed_candidate_journal_bytes": 616494126768,
+  "candidate_refinement_adopted": false,
+  "expected_PC0_10_comparisons": 1664,
+  "constructor_and_numerical_PC10_executed": false,
+  "numerical_GO": false,
+  "hardware_admitted": false,
+  "tests": 11,
+  "regeneration": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python3 tools/ds_hbm_pc10_projection_r46.py",
+  "test_command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python3 -m pytest -q tests/test_ds_hbm_pc10_projection_r46.py",
+  "dependencies": [
+    "main760a4b3d0 PC10 lineage",
+    "6575798758828a3ccd881814e54f34917443e31b R44 endpoint/model",
+    "9762474b590a55a9dc9d1dd354dab72142d5592e R45 retirement"
+  ],
+  "remaining": [
+    "source-reviewed complete PC0..10 launcher and actual composed provider/witness/engine constructor preflight",
+    "parent R45 raw journal/output audit and explicit next numerical GO",
+    "fresh projected journal/disk admission",
+    "PC11..2213 later-provider binding and witness admission"
+  ],
+  "Sagan_owner": "01a0fa84-2959-7963-b1d4-b377be694aee",
+  "coordination_message_sent": false,
+  "coordination_unavailable": "No inter-agent messaging tool exposed; parent relay required for later-provider scope",
+  "physical_unknowns_retained": [
+    "installed L2 reservation",
+    "selector and external reverse deadlines",
+    "clock/reset/via/shoreline context",
+    "SSFF closure and physical primitive endpoint calendar"
+  ],
+  "prepared_runner": "tools/ds_hbm_source_prefix_r46.py",
+  "prepared_preflight_command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python3 tools/ds_hbm_source_prefix_r46.py --stop 10 --finite-pc10 --retire-unconsumed --preflight-only --out /tmp/kepler-ds-r46-PC0-10-preflight-20261002",
+  "prepared_numerical_command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python3 tools/ds_hbm_source_prefix_r46.py --stop 10 --finite-pc10 --retire-unconsumed --out /tmp/kepler-ds-r46-PC0-10-execution-20261002",
+  "resume_from_R45_journal_supported": false,
+  "resume_reason": "Opaque provider sector backing and live lease/location directories were in process memory. Existing digest/identity journal cannot reconstruct payloads or admitted lease state. Fresh source execution required by this prepared runner.",
+  "R45_stop9_numerical_PASS": true,
+  "Sagan_relay_scope": "PC11..2213 canonical physical homes, actual checkpoint/provider acquisition, future-use lifetimes and complete witness expectation admission; software only, independent of PC10 numerical gate",
+  "fresh_disk_snapshot_bytes": 912203747328,
+  "fresh_disk_snapshot_admits_default": false
+}

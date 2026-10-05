@@ -1,0 +1,1078 @@
+{
+  "authority": "Conservative lexical inventory, not elaboration or conditional-reachability proof",
+  "owners": {
+    "ot_chip_v41x_attn_desc_lifecycle": [
+      "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv"
+    ],
+    "ot_chip_v41x_attn_row_merge": [
+      "rtl/chip/ot_chip_v41x_attn_row_merge.sv"
+    ],
+    "ot_chip_v41x_coll_transpose": [
+      "rtl/chip/ot_chip_v41x_coll_transpose.sv"
+    ],
+    "ot_chip_v41x_die": [
+      "rtl/w17_runtime/chip/ot_chip_v41x_die.sv"
+    ],
+    "ot_chip_v41x_hbm3e_phy": [
+      "rtl/chip/ot_chip_v41x_hbm3e_phy.sv"
+    ],
+    "ot_chip_v41x_hbm_karb": [
+      "rtl/chip/ot_chip_v41x_hbm_karb.sv"
+    ],
+    "ot_chip_v41x_hbm_karb_local": [
+      "rtl/chip/ot_chip_v41x_hbm_karb_local.sv"
+    ],
+    "ot_chip_v41x_hbm_rsp_pipe": [
+      "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv"
+    ],
+    "ot_chip_v41x_karb_q2": [
+      "rtl/chip/ot_chip_v41x_karb_q2.sv"
+    ],
+    "ot_chip_v41x_karb_qn": [
+      "rtl/chip/ot_chip_v41x_karb_qn.sv"
+    ],
+    "ot_chip_v41x_karb_region": [
+      "rtl/chip/ot_chip_v41x_karb_region.sv"
+    ],
+    "ot_chip_v41x_karb_region_kq": [
+      "rtl/chip/ot_chip_v41x_karb_region_kq.sv"
+    ],
+    "ot_chip_v41x_karb_slice": [
+      "rtl/chip/ot_chip_v41x_karb_slice.sv"
+    ],
+    "ot_chip_v41x_karb_stack_ep": [
+      "rtl/chip/ot_chip_v41x_karb_stack_ep.sv"
+    ],
+    "ot_chip_v41x_kv_prefetch": [
+      "rtl/chip/ot_chip_v41x_kv_prefetch.sv"
+    ],
+    "ot_chip_v41x_kv_reqmux": [
+      "rtl/chip/ot_chip_v41x_kv_reqmux.sv"
+    ],
+    "ot_chip_v41x_kv_rope_reqmux": [
+      "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv"
+    ],
+    "ot_chip_v41x_rope_hbm_cache": [
+      "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv"
+    ],
+    "ot_chip_v41x_rope_region_guard": [
+      "rtl/chip/ot_chip_v41x_rope_region_guard.sv"
+    ],
+    "ot_chip_v41x_rope_su_word": [
+      "rtl/chip/ot_chip_v41x_rope_su_word.sv"
+    ],
+    "ot_chip_v41x_tile": [
+      "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv"
+    ],
+    "ot_chip_v41x_window_attn_source": [
+      "rtl/chip/ot_chip_v41x_window_attn_source.sv"
+    ],
+    "ot_chip_v41x_window_block_guard": [
+      "rtl/chip/ot_chip_v41x_window_block_guard.sv"
+    ],
+    "ot_chip_v41x_window_kv_prefetch": [
+      "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv"
+    ],
+    "ot_chip_v41x_window_refill_schedule": [
+      "rtl/chip/ot_chip_v41x_window_refill_schedule.sv"
+    ],
+    "ot_chip_v41x_window_retention": [
+      "rtl/chip/ot_chip_v41x_window_retention.sv"
+    ],
+    "ot_chip_v41x_window_row_codec": [
+      "rtl/chip/ot_chip_v41x_window_row_codec.sv"
+    ],
+    "ot_chip_v41x_window_stage4": [
+      "rtl/chip/ot_chip_v41x_window_stage4.sv"
+    ],
+    "ot_chip_v41x_window_stream": [
+      "rtl/chip/ot_chip_v41x_window_stream.sv"
+    ],
+    "ot_coll_topk_merge": [
+      "rtl/chip/ot_coll_topk_merge.sv"
+    ],
+    "ot_fifo_sram_fwft": [
+      "rtl/link/ot_fifo_sram_fwft.sv"
+    ],
+    "ot_fp32_add_rne_pipe": [
+      "rtl/proto/ot_fp32_add_rne_pipe.sv"
+    ],
+    "ot_fp32_mul_rne_pipe": [
+      "rtl/proto/ot_fp32_mul_rne_pipe.sv"
+    ],
+    "ot_hdc_accept": [
+      "rtl/hdc/ot_hdc_accept.sv"
+    ],
+    "ot_hdc_actquant": [
+      "rtl/hdc/v41/ot_hdc_actquant.sv"
+    ],
+    "ot_hdc_blockdot": [
+      "rtl/hdc/v41/ot_hdc_blockdot.sv"
+    ],
+    "ot_hdc_bmul": [
+      "rtl/hdc/ot_hdc_fpu.sv"
+    ],
+    "ot_hdc_chunk8_stack": [
+      "rtl/hdc/v41/ot_hdc_chunk8_stack.sv"
+    ],
+    "ot_hdc_core_v41x": [
+      "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv"
+    ],
+    "ot_hdc_delay": [
+      "rtl/hdc/ot_hdc_delay.sv"
+    ],
+    "ot_hdc_engram_hash": [
+      "rtl/hdc/v41/ot_hdc_engram_hash.sv"
+    ],
+    "ot_hdc_exp": [
+      "rtl/hdc/ot_hdc_sfu.sv"
+    ],
+    "ot_hdc_fadd": [
+      "rtl/hdc/ot_hdc_fpu.sv"
+    ],
+    "ot_hdc_fdiv": [
+      "rtl/hdc/v41/ot_hdc_fdiv.sv"
+    ],
+    "ot_hdc_fmul": [
+      "rtl/hdc/ot_hdc_fpu.sv"
+    ],
+    "ot_hdc_fp32_add_fast": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_fp32_add_lat": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_add_lat3": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_add_lat4": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_add_lat4i": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_add_lat5": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_add_lat6": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_add_lat7": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_fast": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_fp32_mul_lat": [
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_lat4": [
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_lat5": [
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_lat5i": [
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_lat6": [
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_lat7": [
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+    ],
+    "ot_hdc_fp32_mul_pipe": [
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv"
+    ],
+    "ot_hdc_fp4qdq": [
+      "rtl/hdc/v41/ot_hdc_fp4qdq.sv"
+    ],
+    "ot_hdc_fsqrt": [
+      "rtl/hdc/v41/ot_hdc_fsqrt.sv"
+    ],
+    "ot_hdc_hbm_model": [
+      "rtl/hdc/kv/ot_hdc_hbm_model.sv"
+    ],
+    "ot_hdc_inc_k": [
+      "rtl/hdc/ot_hdc_prefix.sv"
+    ],
+    "ot_hdc_kadd": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv"
+    ],
+    "ot_hdc_kge": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv"
+    ],
+    "ot_hdc_kinc": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv"
+    ],
+    "ot_hdc_ksa": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_ksadd_k": [
+      "rtl/hdc/ot_hdc_prefix.sv"
+    ],
+    "ot_hdc_lzc32": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_mul24_rows": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_mul24_sum": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_qadd": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_qadd_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv"
+    ],
+    "ot_hdc_qmul": [
+      "rtl/hdc/ot_hdc_fastfp.sv"
+    ],
+    "ot_hdc_qmul_lat": [
+      "rtl/hdc/ot_hdc_fastfp_lat.sv"
+    ],
+    "ot_hdc_qstream": [
+      "rtl/hdc/hbm/ot_hdc_qstream.sv"
+    ],
+    "ot_hdc_recip": [
+      "rtl/hdc/ot_hdc_sfu.sv"
+    ],
+    "ot_hdc_reduce": [
+      "rtl/hdc/ot_hdc_reduce.sv"
+    ],
+    "ot_hdc_rsqrt": [
+      "rtl/hdc/ot_hdc_sfu.sv"
+    ],
+    "ot_hdc_select": [
+      "rtl/hdc/v41/ot_hdc_select.sv"
+    ],
+    "ot_hdc_sinkhorn": [
+      "rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+    ],
+    "ot_hdc_sinkhorn_mc": [
+      "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv"
+    ],
+    "ot_hdc_sinkhorn_seq": [
+      "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv"
+    ],
+    "ot_hdc_sk_add": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_cadd": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_csa": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_mul": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_norm": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_quot": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_recip_rom": [
+      "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv"
+    ],
+    "ot_hdc_sk_seed": [
+      "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+    ],
+    "ot_hdc_sk_sq_rom": [
+      "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv"
+    ],
+    "ot_hdc_softplus": [
+      "rtl/hdc/v41/ot_hdc_softplus.sv"
+    ],
+    "ot_hdc_v41_csa": [
+      "rtl/hdc/v41/ot_hdc_blockdot.sv"
+    ],
+    "ot_hdc_v41_hcproj": [
+      "rtl/hdc/v41/ot_hdc_v41_hcproj.sv"
+    ],
+    "ot_hdc_v41_matvec": [
+      "rtl/hdc/v41/ot_hdc_v41_matvec.sv"
+    ],
+    "ot_hdc_v41_qe": [
+      "rtl/hdc/v41/ot_hdc_v41_qe.sv"
+    ],
+    "ot_hdc_v41_stream": [
+      "rtl/hdc/v41/ot_hdc_v41_stream.sv"
+    ],
+    "ot_hdc_v41_su_lane": [
+      "rtl/hdc/v41/ot_hdc_v41_stream.sv"
+    ],
+    "ot_hdc_v41_tapline": [
+      "rtl/hdc/v41/ot_hdc_v41_stream.sv"
+    ],
+    "ot_hdc_v41_vtap": [
+      "rtl/hdc/v41/ot_hdc_v41_stream.sv"
+    ],
+    "ot_hdc_v41_xu": [
+      "rtl/hdc/v41/ot_hdc_v41_xu.sv"
+    ],
+    "ot_hdc_v41x_addtree": [
+      "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+    ],
+    "ot_hdc_v41x_att_adapt": [
+      "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv"
+    ],
+    "ot_hdc_v41x_attn": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+    ],
+    "ot_hdc_v41x_attn_bmul": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_attn_chunk": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_attn_deq": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_attn_hdp": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_attn_merge": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+    ],
+    "ot_hdc_v41x_attn_merge_phs": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+    ],
+    "ot_hdc_v41x_attn_staging": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv"
+    ],
+    "ot_hdc_v41x_attn_tile": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_attn_tr": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+    ],
+    "ot_hdc_v41x_attn_tr_phs": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+    ],
+    "ot_hdc_v41x_bf16": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv"
+    ],
+    "ot_hdc_v41x_bmul": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv"
+    ],
+    "ot_hdc_v41x_csa": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv"
+    ],
+    "ot_hdc_v41x_dly": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_e4m3_post": [
+      "rtl/hdc/v41x/ot_hdc_v41x_egather.sv"
+    ],
+    "ot_hdc_v41x_e4m3_pre": [
+      "rtl/hdc/v41x/ot_hdc_v41x_egather.sv"
+    ],
+    "ot_hdc_v41x_egather_asm": [
+      "rtl/hdc/v41x/ot_hdc_v41x_egather.sv"
+    ],
+    "ot_hdc_v41x_egather_slice": [
+      "rtl/hdc/v41x/ot_hdc_v41x_egather.sv"
+    ],
+    "ot_hdc_v41x_exp": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "ot_hdc_v41x_fdiv": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "ot_hdc_v41x_hcp": [
+      "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+    ],
+    "ot_hdc_v41x_he_adapt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv"
+    ],
+    "ot_hdc_v41x_idx_adapt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv"
+    ],
+    "ot_hdc_v41x_idx_chunk": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx.sv"
+    ],
+    "ot_hdc_v41x_idx_engine": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx.sv"
+    ],
+    "ot_hdc_v41x_idx_hbm": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv"
+    ],
+    "ot_hdc_v41x_idx_hsum": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv"
+    ],
+    "ot_hdc_v41x_idx_kctl": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv"
+    ],
+    "ot_hdc_v41x_idx_kctl_ring": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv"
+    ],
+    "ot_hdc_v41x_idx_kdata": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv"
+    ],
+    "ot_hdc_v41x_idx_kmerge": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv"
+    ],
+    "ot_hdc_v41x_idx_kstream": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv"
+    ],
+    "ot_hdc_v41x_idx_kstream_ring": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv"
+    ],
+    "ot_hdc_v41x_idx_kwr": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv"
+    ],
+    "ot_hdc_v41x_idx_pcol": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv"
+    ],
+    "ot_hdc_v41x_idx_pool_adapt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv"
+    ],
+    "ot_hdc_v41x_idx_pool_batch": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv"
+    ],
+    "ot_hdc_v41x_idx_pool_finish": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv"
+    ],
+    "ot_hdc_v41x_idx_pool_hbm_bridge": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv"
+    ],
+    "ot_hdc_v41x_idx_pool_kwr": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv"
+    ],
+    "ot_hdc_v41x_idx_pool_replica": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv"
+    ],
+    "ot_hdc_v41x_idx_quarter_join": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv"
+    ],
+    "ot_hdc_v41x_idx_ring_kwr": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv"
+    ],
+    "ot_hdc_v41x_idx_ring_port": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv"
+    ],
+    "ot_hdc_v41x_idx_ring_ranges": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv"
+    ],
+    "ot_hdc_v41x_idx_shard_addr": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv"
+    ],
+    "ot_hdc_v41x_idx_shard_reader": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv"
+    ],
+    "ot_hdc_v41x_idx_tail": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx.sv"
+    ],
+    "ot_hdc_v41x_ins": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "ot_hdc_v41x_me_adapt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv"
+    ],
+    "ot_hdc_v41x_me_xbank": [
+      "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv"
+    ],
+    "ot_hdc_v41x_me_xbank_macro": [
+      "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv"
+    ],
+    "ot_hdc_v41x_q4dot": [
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv"
+    ],
+    "ot_hdc_v41x_qrom_compact_word": [
+      "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv"
+    ],
+    "ot_hdc_v41x_rsqrt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "ot_hdc_v41x_sel": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel.sv"
+    ],
+    "ot_hdc_v41x_sel_cstage": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_sel_ctl": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel.sv"
+    ],
+    "ot_hdc_v41x_sel_hist": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_sel_pack": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_sel_popc": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_sel_prefix": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_sel_rstage": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_sel_slice": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv"
+    ],
+    "ot_hdc_v41x_sel_su": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv"
+    ],
+    "ot_hdc_v41x_softplus": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+    ],
+    "ot_hdc_v41x_su_adapt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv"
+    ],
+    "ot_hdc_v41x_vdly": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
+    ],
+    "ot_hdc_v41x_vec": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"
+    ],
+    "ot_hdc_v41x_vec_lane": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv"
+    ],
+    "ot_hdc_v41x_vec_red": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv"
+    ],
+    "ot_hdc_v41x_vec_side": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv"
+    ],
+    "ot_hdc_v41x_vline": [
+      "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+    ],
+    "ot_hdc_v41x_vred_op": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv"
+    ],
+    "ot_hdc_v41x_vsq": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv"
+    ],
+    "ot_hdc_v41x_wgt_add": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv"
+    ],
+    "ot_hdc_v41x_wgt_bdot": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv"
+    ],
+    "ot_hdc_v41x_wgt_chain": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv"
+    ],
+    "ot_hdc_v41x_wgt_comb": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv"
+    ],
+    "ot_hdc_v41x_wgt_csa": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv"
+    ],
+    "ot_hdc_v41x_wgt_mchunk": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv"
+    ],
+    "ot_hdc_v41x_wgt_mlane": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv"
+    ],
+    "ot_hdc_v41x_wgt_qchunk": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv"
+    ],
+    "ot_hdc_v41x_wgt_red": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv"
+    ],
+    "ot_hdc_v41x_wgt_tile": [
+      "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv"
+    ],
+    "ot_hdc_v41x_window_kv_blocks": [
+      "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv"
+    ],
+    "ot_hdc_v41x_xu_adapt": [
+      "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv"
+    ],
+    "ot_hdc_vline": [
+      "rtl/hdc/ot_hdc_sfu.sv"
+    ],
+    "ot_hdc_w11_cut": [
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "ot_rom_fabric_router": [
+      "rtl/rom/ot_rom_fabric_router.sv"
+    ],
+    "ot_rom_pkg_ctrl_x": [
+      "rtl/rom/ot_rom_pkg_ctrl_x.sv"
+    ],
+    "ot_sram_1r1w_128x256_m1_r2c2": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+    ],
+    "ot_sram_1r1w_256x256_m2_r2c2": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+    ],
+    "ot_sram_1r1w_64x512_m1_r2c2": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+    ],
+    "ot_v41_rom_adapt": [
+      "rtl/v41die/ot_v41_rom_adapt.sv"
+    ],
+    "ot_v41_rt_die": [
+      "rtl/test/v41_runtime/ot_v41_rt_die.sv"
+    ],
+    "ot_v41_spine_w17w10": [
+      "rtl/v41die/ot_v41_spine_w17w10.sv"
+    ],
+    "ot_w15_coll_dma": [
+      "rtl/chip/ot_w15_coll_dma.sv"
+    ],
+    "ot_w15_rom_oneshot_die_px": [
+      "rtl/rom/ot_w15_rom_oneshot_px.sv"
+    ]
+  },
+  "potential_references": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": [],
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": [],
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": [],
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": [],
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv": [],
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": [],
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": [
+      "ot_hdc_hbm_model",
+      "ot_hdc_v41x_idx_hbm"
+    ],
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": [
+      "ot_chip_v41x_hbm_rsp_pipe"
+    ],
+    "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": [
+      "ot_chip_v41x_karb_region",
+      "ot_chip_v41x_karb_stack_ep"
+    ],
+    "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv": [],
+    "rtl/chip/ot_chip_v41x_karb_q2.sv": [],
+    "rtl/chip/ot_chip_v41x_karb_qn.sv": [],
+    "rtl/chip/ot_chip_v41x_karb_region.sv": [
+      "ot_chip_v41x_karb_region_kq",
+      "ot_chip_v41x_karb_slice"
+    ],
+    "rtl/chip/ot_chip_v41x_karb_region_kq.sv": [
+      "ot_chip_v41x_karb_q2"
+    ],
+    "rtl/chip/ot_chip_v41x_karb_slice.sv": [],
+    "rtl/chip/ot_chip_v41x_karb_stack_ep.sv": [
+      "ot_chip_v41x_karb_q2",
+      "ot_chip_v41x_karb_qn"
+    ],
+    "rtl/chip/ot_chip_v41x_kv_prefetch.sv": [],
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv": [],
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": [
+      "ot_chip_v41x_kv_reqmux"
+    ],
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": [],
+    "rtl/chip/ot_chip_v41x_rope_region_guard.sv": [],
+    "rtl/chip/ot_chip_v41x_rope_su_word.sv": [],
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": [
+      "ot_chip_v41x_attn_row_merge",
+      "ot_chip_v41x_window_kv_prefetch",
+      "ot_chip_v41x_window_refill_schedule",
+      "ot_chip_v41x_window_retention",
+      "ot_chip_v41x_window_stream"
+    ],
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": [],
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": [
+      "ot_chip_v41x_window_row_codec",
+      "ot_chip_v41x_window_stage4"
+    ],
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": [],
+    "rtl/chip/ot_chip_v41x_window_retention.sv": [],
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": [],
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": [],
+    "rtl/chip/ot_chip_v41x_window_stream.sv": [],
+    "rtl/chip/ot_coll_topk_merge.sv": [],
+    "rtl/chip/ot_w15_coll_dma.sv": [
+      "ot_chip_v41x_coll_transpose",
+      "ot_coll_topk_merge"
+    ],
+    "rtl/hdc/hbm/ot_hdc_qstream.sv": [],
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": [],
+    "rtl/hdc/ot_hdc_accept.sv": [],
+    "rtl/hdc/ot_hdc_delay.sv": [],
+    "rtl/hdc/ot_hdc_fastfp.sv": [],
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": [
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_fp32_add_lat3",
+      "ot_hdc_fp32_add_lat4i",
+      "ot_hdc_fp32_mul_fast",
+      "ot_hdc_fp32_mul_lat",
+      "ot_hdc_fp32_mul_lat4",
+      "ot_hdc_fp32_mul_lat5i",
+      "ot_hdc_inc_k",
+      "ot_hdc_ksadd_k"
+    ],
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": [
+      "ot_hdc_fp32_add_lat_CUTS_must_match_LAT",
+      "ot_hdc_ksadd_k",
+      "ot_hdc_lzc32"
+    ],
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": [
+      "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT",
+      "ot_hdc_ksadd_k",
+      "ot_hdc_lzc32",
+      "ot_hdc_mul24_rows",
+      "ot_hdc_w11_cut"
+    ],
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": [],
+    "rtl/hdc/ot_hdc_fpu.sv": [
+      "ot_fp32_add_rne_pipe",
+      "ot_hdc_fp32_mul_pipe"
+    ],
+    "rtl/hdc/ot_hdc_prefix.sv": [],
+    "rtl/hdc/ot_hdc_reduce.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fadd",
+      "ot_hdc_fmul",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/ot_hdc_sfu.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fadd",
+      "ot_hdc_fmul"
+    ],
+    "rtl/hdc/v41/ot_hdc_actquant.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fmul"
+    ],
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": [
+      "ot_hdc_chunk8_stack",
+      "ot_hdc_delay",
+      "ot_hdc_fadd"
+    ],
+    "rtl/hdc/v41/ot_hdc_chunk8_stack.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fadd"
+    ],
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": [],
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": [],
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": [
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_fp4qdq.sv": [
+      "ot_hdc_delay"
+    ],
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": [
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_select.sv": [],
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": [
+      "ot_hdc_sk_add",
+      "ot_hdc_sk_norm",
+      "ot_hdc_sk_quot",
+      "ot_hdc_sk_seed"
+    ],
+    "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": [
+      "ot_hdc_sinkhorn"
+    ],
+    "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fadd",
+      "ot_hdc_fdiv",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": [
+      "ot_hdc_sk_recip_rom",
+      "ot_hdc_sk_sq_rom"
+    ],
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": [],
+    "rtl/hdc/v41/ot_hdc_softplus.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_exp",
+      "ot_hdc_fadd",
+      "ot_hdc_fdiv",
+      "ot_hdc_fmul",
+      "ot_hdc_fsqrt",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fadd",
+      "ot_hdc_fmul",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_v41_matvec.sv": [
+      "ot_hdc_bmul",
+      "ot_hdc_delay",
+      "ot_hdc_fadd",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": [
+      "ot_hdc_actquant",
+      "ot_hdc_blockdot",
+      "ot_hdc_fp4qdq"
+    ],
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_exp",
+      "ot_hdc_fadd",
+      "ot_hdc_fdiv",
+      "ot_hdc_fmul",
+      "ot_hdc_fsqrt",
+      "ot_hdc_reduce",
+      "ot_hdc_rsqrt",
+      "ot_hdc_softplus",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41/ot_hdc_v41_xu.sv": [
+      "ot_hdc_engram_hash",
+      "ot_hdc_select",
+      "ot_hdc_sinkhorn_mc",
+      "ot_hdc_sinkhorn_seq"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": [
+      "ot_hdc_qadd",
+      "ot_hdc_v41x_attn_staging",
+      "ot_hdc_v41x_attn_tile",
+      "ot_hdc_v41x_dly",
+      "ot_hdc_v41x_vdly"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": [
+      "ot_hdc_qadd"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fdiv",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_fp32_mul_fast"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": [
+      "ot_hdc_v41x_hcp"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_v41x_bf16",
+      "ot_hdc_v41x_bmul",
+      "ot_hdc_v41x_q4dot"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv": [
+      "ot_hdc_v41x_idx_engine",
+      "ot_hdc_v41x_idx_kstream"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_v41x_bf16",
+      "ot_hdc_v41x_bmul"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": [
+      "ot_hdc_v41x_idx_kdata"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": [
+      "ot_hdc_v41x_idx_kmerge",
+      "ot_hdc_v41x_idx_kstream_ring",
+      "ot_hdc_v41x_idx_pool_batch",
+      "ot_hdc_v41x_idx_pool_replica",
+      "ot_hdc_v41x_idx_quarter_join",
+      "ot_hdc_v41x_idx_ring_ranges",
+      "ot_hdc_v41x_idx_shard_reader"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": [
+      "ot_hdc_v41x_idx_pool_finish",
+      "ot_hdc_v41x_wgt_tile"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": [
+      "ot_hdc_v41x_idx_hsum",
+      "ot_hdc_v41x_idx_pcol"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv": [
+      "ot_hdc_v41x_idx_kstream"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": [
+      "ot_hdc_v41x_idx_ring_kwr"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": [
+      "ot_hdc_v41x_idx_shard_addr"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": [
+      "ot_hdc_v41x_me_xbank",
+      "ot_hdc_v41x_me_xbank_macro",
+      "ot_hdc_v41x_wgt_tile"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": [
+      "ot_hdc_v41x_sel_slice",
+      "ot_hdc_v41x_sel_su"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": [
+      "ot_hdc_v41x_sel_hist",
+      "ot_hdc_v41x_sel_pack",
+      "ot_hdc_v41x_sel_prefix"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_fsqrt",
+      "ot_hdc_kadd",
+      "ot_hdc_qadd_lat",
+      "ot_hdc_qmul_lat",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": [
+      "ot_hdc_v41x_vec"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_v41x_ins",
+      "ot_hdc_v41x_vec_LV_must_be_1_to_7",
+      "ot_hdc_v41x_vec_lane",
+      "ot_hdc_v41x_vec_red",
+      "ot_hdc_v41x_vec_side",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_kadd",
+      "ot_hdc_kge",
+      "ot_hdc_kinc",
+      "ot_hdc_qadd_lat",
+      "ot_hdc_qmul_lat",
+      "ot_hdc_v41x_exp",
+      "ot_hdc_v41x_fdiv",
+      "ot_hdc_v41x_ins",
+      "ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_kadd",
+      "ot_hdc_kge",
+      "ot_hdc_kinc",
+      "ot_hdc_qadd_lat",
+      "ot_hdc_qmul_lat",
+      "ot_hdc_v41x_vec_LV_must_be_1_to_7",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": [
+      "ot_hdc_fsqrt",
+      "ot_hdc_kge",
+      "ot_hdc_qadd_lat",
+      "ot_hdc_v41x_exp",
+      "ot_hdc_v41x_fdiv",
+      "ot_hdc_v41x_rsqrt",
+      "ot_hdc_v41x_softplus",
+      "ot_hdc_vline"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_qmul",
+      "ot_hdc_v41x_wgt_bdot",
+      "ot_hdc_v41x_wgt_chain"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_qadd"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": [
+      "ot_hdc_delay",
+      "ot_hdc_v41x_wgt_mchunk",
+      "ot_hdc_v41x_wgt_qchunk",
+      "ot_hdc_v41x_wgt_red"
+    ],
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": [],
+    "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": [
+      "ot_hdc_engram_hash",
+      "ot_hdc_select",
+      "ot_hdc_sinkhorn_mc",
+      "ot_hdc_sinkhorn_seq",
+      "ot_hdc_v41x_egather_asm",
+      "ot_hdc_v41x_egather_slice",
+      "ot_hdc_v41x_sel"
+    ],
+    "rtl/link/ot_fifo_sram_fwft.sv": [
+      "ot_sram_1r1w_128x256_m1_r2c2",
+      "ot_sram_1r1w_256x256_m2_r2c2",
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": [],
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": [],
+    "rtl/rom/ot_rom_fabric_router.sv": [],
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": [],
+    "rtl/rom/ot_w15_rom_oneshot_px.sv": [
+      "ot_fifo_sram_fwft",
+      "ot_fp32_add_rne_pipe",
+      "ot_hdc_fp32_add_fast",
+      "ot_hdc_fp32_add_lat"
+    ],
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": [
+      "ot_chip_v41x_die"
+    ],
+    "rtl/v41die/ot_v41_rom_adapt.sv": [],
+    "rtl/v41die/ot_v41_spine_w17w10.sv": [
+      "ot_hdc_actquant",
+      "ot_hdc_delay"
+    ],
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": [
+      "ot_chip_v41x_attn_desc_lifecycle",
+      "ot_chip_v41x_hbm3e_phy",
+      "ot_chip_v41x_hbm_karb",
+      "ot_chip_v41x_hbm_karb_local",
+      "ot_chip_v41x_kv_prefetch",
+      "ot_chip_v41x_kv_rope_reqmux",
+      "ot_chip_v41x_rope_hbm_cache",
+      "ot_chip_v41x_rope_region_guard",
+      "ot_chip_v41x_tile",
+      "ot_chip_v41x_window_attn_source",
+      "ot_chip_v41x_window_block_guard",
+      "ot_chip_v41x_window_kv_prefetch",
+      "ot_rom_fabric_router",
+      "ot_rom_pkg_ctrl_x",
+      "ot_w15_coll_dma",
+      "ot_w15_rom_oneshot_die_px"
+    ],
+    "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv": [
+      "ot_chip_v41x_rope_su_word",
+      "ot_hdc_core_v41x",
+      "ot_hdc_qstream",
+      "ot_hdc_v41x_idx_pool_hbm_bridge",
+      "ot_hdc_v41x_idx_ring_port",
+      "ot_hdc_v41x_qrom_compact_word"
+    ],
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": [
+      "ot_hdc_accept",
+      "ot_hdc_v41_hcproj",
+      "ot_hdc_v41_matvec",
+      "ot_hdc_v41_qe",
+      "ot_hdc_v41_stream",
+      "ot_hdc_v41_xu",
+      "ot_hdc_v41x_att_adapt",
+      "ot_hdc_v41x_he_adapt",
+      "ot_hdc_v41x_idx_adapt",
+      "ot_hdc_v41x_idx_kwr",
+      "ot_hdc_v41x_idx_pool_adapt",
+      "ot_hdc_v41x_idx_pool_kwr",
+      "ot_hdc_v41x_me_adapt",
+      "ot_hdc_v41x_su_adapt",
+      "ot_hdc_v41x_window_kv_blocks",
+      "ot_hdc_v41x_xu_adapt",
+      "ot_v41_rom_adapt",
+      "ot_v41_spine_w17w10"
+    ],
+    "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv": [
+      "ot_hdc_v41x_attn"
+    ]
+  },
+  "unresolved_potential_references": [
+    "ot_hdc_fp32_add_lat_CUTS_must_match_LAT",
+    "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT",
+    "ot_hdc_v41x_vec_LV_must_be_1_to_7",
+    "ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT"
+  ]
+}

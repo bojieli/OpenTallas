@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/terminalbench_agent_campaign_v1.schema.json",
+  "title": "OpenTallas Qwen3 bash-only TerminalBench campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "all_tasks_passed",
+    "attention_backend",
+    "bash_tool_schema_sha256",
+    "build_id",
+    "campaign_id",
+    "context_limit_tokens",
+    "device",
+    "docker_version",
+    "enable_thinking",
+    "generation_mode",
+    "maximum_agent_turns",
+    "maximum_new_tokens_per_turn",
+    "official_chat_template_sha256",
+    "runner_sha256",
+    "schema",
+    "status",
+    "suite_id",
+    "tasks",
+    "terminalbench_commit",
+    "tool_names",
+    "total_wall_time_seconds"
+  ],
+  "properties": {
+    "all_tasks_passed": {"type": "boolean"},
+    "attention_backend": {"enum": ["eager", "sdpa"]},
+    "bash_tool_schema_sha256": {"$ref": "#/$defs/sha256"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "context_limit_tokens": {"const": 8000},
+    "device": {"minLength": 1, "type": "string"},
+    "docker_version": {"minLength": 1, "type": "string"},
+    "enable_thinking": {"const": false},
+    "generation_mode": {"const": "greedy"},
+    "maximum_agent_turns": {"maximum": 8, "minimum": 1, "type": "integer"},
+    "maximum_new_tokens_per_turn": {"const": 800},
+    "official_chat_template_sha256": {"$ref": "#/$defs/sha256"},
+    "runner_sha256": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.terminalbench_agent_campaign.v1"},
+    "status": {"enum": ["fail", "pass"]},
+    "suite_id": {"$ref": "#/$defs/sha256"},
+    "tasks": {
+      "items": {"$ref": "#/$defs/task"},
+      "minItems": 1,
+      "maxItems": 8,
+      "type": "array"
+    },
+    "terminalbench_commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+    "tool_names": {"const": ["bash"]},
+    "total_wall_time_seconds": {"minimum": 0, "type": "number"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_termination",
+        "command_count",
+        "container_isolation",
+        "final_answer",
+        "id",
+        "image_id",
+        "model_generated_tokens",
+        "passed",
+        "task_wall_time_seconds",
+        "test_exit_code",
+        "test_stderr",
+        "test_stdout",
+        "transcript",
+        "turn_count"
+      ],
+      "properties": {
+        "agent_termination": {
+          "enum": [
+            "eos",
+            "context_limit",
+            "length",
+            "malformed_tool_call",
+            "maximum_turns",
+            "tool_error"
+          ]
+        },
+        "command_count": {"minimum": 0, "type": "integer"},
+        "container_isolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cap_drop_all",
+            "host_mounts",
+            "network",
+            "no_new_privileges",
+            "pids_limit",
+            "privileged",
+            "read_only_rootfs"
+          ],
+          "properties": {
+            "cap_drop_all": {"const": true},
+            "host_mounts": {"const": false},
+            "network": {"const": "none"},
+            "no_new_privileges": {"const": true},
+            "pids_limit": {"const": 128},
+            "privileged": {"const": false},
+            "read_only_rootfs": {"const": false}
+          }
+        },
+        "final_answer": {"type": ["string", "null"]},
+        "id": {"pattern": "^[a-z][a-z0-9-]{0,63}$", "type": "string"},
+        "image_id": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "model_generated_tokens": {"minimum": 1, "type": "integer"},
+        "passed": {"type": "boolean"},
+        "task_wall_time_seconds": {"minimum": 0, "type": "number"},
+        "test_exit_code": {"type": "integer"},
+        "test_stderr": {"type": "string"},
+        "test_stdout": {"type": "string"},
+        "transcript": {
+          "items": {"type": "object"},
+          "minItems": 2,
+          "type": "array"
+        },
+        "turn_count": {"minimum": 1, "type": "integer"}
+      }
+    }
+  }
+}

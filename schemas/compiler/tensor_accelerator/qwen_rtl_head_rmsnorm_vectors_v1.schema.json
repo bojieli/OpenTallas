@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_head_rmsnorm_vectors_v1.schema.json",
+  "title": "Qwen Q/K per-head RMSNorm RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_boundary",
+    "command_program_sha256",
+    "command_vector_set_id",
+    "commands",
+    "composition",
+    "graph_id",
+    "hbm_shard",
+    "k_input_codes",
+    "k_inverse_rms_codes",
+    "k_mean_square_codes",
+    "k_normalized_codes",
+    "k_output_codes",
+    "k_weight_codes",
+    "kernel_ir_id",
+    "kv_projection_vector_set_id",
+    "numeric_contract",
+    "physical_plan_id",
+    "q_input_codes",
+    "q_inverse_rms_codes",
+    "q_mean_square_codes",
+    "q_normalized_codes",
+    "q_output_codes",
+    "q_projection_vector_set_id",
+    "q_weight_codes",
+    "qkv_qualification_report_id",
+    "schema",
+    "source_execution_report_id",
+    "vector_set_id",
+    "weight_payload_hex",
+    "weight_payload_sha256"
+  ],
+  "properties": {
+    "claim_boundary": {
+      "const": {
+        "architectural_simulator_output_correlated": true,
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "complete_k_head_rmsnorm_graph_operation": true,
+        "complete_layer_execution": false,
+        "complete_q_head_rmsnorm_graph_operation": true,
+        "complete_qkv_preparation": false,
+        "exact_scalar_all_rows": true,
+        "preloaded_q_and_k_projection_outputs": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command_program_sha256": {
+      "const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"
+    },
+    "command_vector_set_id": {
+      "const": "420ada71f902c8e43b9e5866d9c57ab8e3a1ced59e25c01b20793c94cf45b1a2"
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/command"}
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_count",
+        "command_end",
+        "command_start",
+        "dma_hbm_bytes",
+        "dma_hbm_request_count",
+        "dma_sram_write_count",
+        "epsilon_addition_count",
+        "final_weight_multiply_count",
+        "graph_operation_ids",
+        "input_read_count",
+        "input_square_multiply_count",
+        "normalization_multiply_count",
+        "operations",
+        "reciprocal_square_root_count",
+        "reduction_add_count",
+        "row_count",
+        "sram_output_write_count",
+        "weight_read_count",
+        "width"
+      ],
+      "properties": {
+        "command_count": {"const": 4},
+        "command_end": {"const": 3078},
+        "command_start": {"const": 3075},
+        "dma_hbm_bytes": {"const": 512},
+        "dma_hbm_request_count": {"const": 8},
+        "dma_sram_write_count": {"const": 32},
+        "epsilon_addition_count": {"const": 40},
+        "final_weight_multiply_count": {"const": 5120},
+        "graph_operation_ids": {"const": ["node.0005", "node.0006"]},
+        "input_read_count": {"const": 5120},
+        "input_square_multiply_count": {"const": 5120},
+        "normalization_multiply_count": {"const": 5120},
+        "operations": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {"$ref": "#/$defs/q_operation"},
+            {"$ref": "#/$defs/k_operation"}
+          ],
+          "items": false
+        },
+        "reciprocal_square_root_count": {"const": 40},
+        "reduction_add_count": {"const": 5080},
+        "row_count": {"const": 40},
+        "sram_output_write_count": {"const": 5120},
+        "weight_read_count": {"const": 5120},
+        "width": {"const": 128}
+      }
+    },
+    "graph_id": {
+      "const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"
+    },
+    "hbm_shard": {
+      "const": {
+        "logical_base_address": 1073741824,
+        "path": "memory/hbm/hbm.00001.656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37.bin",
+        "sha256": "656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37",
+        "size_bytes": 1073741824,
+        "slice_offset_bytes": 221282304,
+        "slice_size_bytes": 512
+      }
+    },
+    "k_input_codes": {"$ref": "#/$defs/vector1024"},
+    "k_inverse_rms_codes": {"$ref": "#/$defs/u32vector8"},
+    "k_mean_square_codes": {"$ref": "#/$defs/u32vector8"},
+    "k_normalized_codes": {"$ref": "#/$defs/vector1024"},
+    "k_output_codes": {"$ref": "#/$defs/vector1024"},
+    "k_weight_codes": {"$ref": "#/$defs/vector128"},
+    "kernel_ir_id": {
+      "const": "270b7609f2ea101593b3870a498bda3320336c94b27862dca7f991352727e050"
+    },
+    "kv_projection_vector_set_id": {
+      "const": "ee711ae0b31985d0215b9f0c14233c3a2cb0cade3f79809bfc00493d369d5873"
+    },
+    "numeric_contract": {"const": "qwen3_rmsnorm_fp32_bf16_v1"},
+    "physical_plan_id": {
+      "const": "ba1d95462450d2cd059e6b55271c73ea90895515c9a4129bba1b51df265109c3"
+    },
+    "q_input_codes": {"$ref": "#/$defs/vector4096"},
+    "q_inverse_rms_codes": {"$ref": "#/$defs/u32vector32"},
+    "q_mean_square_codes": {"$ref": "#/$defs/u32vector32"},
+    "q_normalized_codes": {"$ref": "#/$defs/vector4096"},
+    "q_output_codes": {"$ref": "#/$defs/vector4096"},
+    "q_projection_vector_set_id": {
+      "const": "32dbdaa446fc4192f31a0a26394e04094e74c6459858d8a6b0135c11fc9e324b"
+    },
+    "q_weight_codes": {"$ref": "#/$defs/vector128"},
+    "qkv_qualification_report_id": {
+      "const": "42be4b6e14ca271c583e0b8f4bb0bc9a5e854e4e5aa918b0e90acc6217d763ae"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_head_rmsnorm_vectors.v1"
+    },
+    "source_execution_report_id": {
+      "const": "77b849e49608cacf9522eb16fad289385523c39618425e1e1c5f30126e504746"
+    },
+    "vector_set_id": {
+      "const": "9d6ff4c9ad10e03592d02ec3edebaf6bc341285fac8c69bc09b7daa7891ee791"
+    },
+    "weight_payload_hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{1024}$"
+    },
+    "weight_payload_sha256": {
+      "const": "8de1e5fb0a491567ccbb301547a3ef8d4c826f702cab737dd6eeb3a216017dd1"
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "u16": {"type": "integer", "minimum": 0, "maximum": 65535},
+    "u32": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "vector128": {
+      "type": "array", "minItems": 128, "maxItems": 128,
+      "items": {"$ref": "#/$defs/u16"}
+    },
+    "vector1024": {
+      "type": "array", "minItems": 1024, "maxItems": 1024,
+      "items": {"$ref": "#/$defs/u16"}
+    },
+    "vector4096": {
+      "type": "array", "minItems": 4096, "maxItems": 4096,
+      "items": {"$ref": "#/$defs/u16"}
+    },
+    "u32vector8": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": {"$ref": "#/$defs/u32"}
+    },
+    "u32vector32": {
+      "type": "array", "minItems": 32, "maxItems": 32,
+      "items": {"$ref": "#/$defs/u32"}
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "auxiliary", "destination", "engine", "flags", "index",
+        "kernel_index", "opcode", "size0", "size1", "size2", "size3",
+        "source0", "source1"
+      ],
+      "properties": {
+        "auxiliary": {"const": 0},
+        "destination": {"type": "integer", "minimum": 0},
+        "engine": {"enum": [1, 3]},
+        "flags": {"const": 0},
+        "index": {"type": "integer", "minimum": 3075, "maximum": 3078},
+        "kernel_index": {"enum": [5, 6]},
+        "opcode": {"enum": [1, 32]},
+        "size0": {"type": "integer", "minimum": 1},
+        "size1": {"type": "integer", "minimum": 0},
+        "size2": {"type": "integer", "minimum": 0},
+        "size3": {"const": 0},
+        "source0": {"type": "integer", "minimum": 0},
+        "source1": {"type": "integer", "minimum": 0}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_major", "abi_minor", "expected_error", "expected_fields",
+        "expected_index", "last", "name", "record_hex"
+      ],
+      "properties": {
+        "abi_major": {"const": 2},
+        "abi_minor": {"const": 5},
+        "expected_error": {"const": 0},
+        "expected_fields": {"$ref": "#/$defs/fields"},
+        "expected_index": {
+          "type": "integer", "minimum": 3075, "maximum": 3078
+        },
+        "last": {"type": "boolean"},
+        "name": {"type": "string", "minLength": 1},
+        "record_hex": {"type": "string", "pattern": "^[0-9a-f]{128}$"}
+      }
+    },
+    "operation_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_end", "command_start", "element_count", "input_address",
+        "input_payload_sha256", "inverse_rms_payload_sha256", "kernel_index",
+        "mean_square_payload_sha256", "normalized_payload_sha256",
+        "normalized_saturation_count", "operation_id", "output_address",
+        "output_payload_sha256", "output_saturation_count", "projection",
+        "row_count", "weight_hbm_address", "weight_payload_sha256",
+        "weight_sram_address", "width"
+      ],
+      "properties": {
+        "command_end": {"type": "integer"},
+        "command_start": {"type": "integer"},
+        "element_count": {"type": "integer"},
+        "input_address": {"type": "integer"},
+        "input_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "inverse_rms_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "kernel_index": {"type": "integer"},
+        "mean_square_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_saturation_count": {"const": 0},
+        "operation_id": {"type": "string"},
+        "output_address": {"type": "integer"},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "output_saturation_count": {"const": 0},
+        "projection": {"enum": ["q", "k"]},
+        "row_count": {"type": "integer"},
+        "weight_hbm_address": {"type": "integer"},
+        "weight_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "weight_sram_address": {"type": "integer"},
+        "width": {"const": 128}
+      }
+    },
+    "q_operation": {
+      "allOf": [
+        {"$ref": "#/$defs/operation_base"},
+        {
+          "properties": {
+            "command_end": {"const": 3076},
+            "command_start": {"const": 3075},
+            "element_count": {"const": 4096},
+            "kernel_index": {"const": 5},
+            "operation_id": {"const": "node.0005"},
+            "projection": {"const": "q"},
+            "row_count": {"const": 32}
+          }
+        }
+      ]
+    },
+    "k_operation": {
+      "allOf": [
+        {"$ref": "#/$defs/operation_base"},
+        {
+          "properties": {
+            "command_end": {"const": 3078},
+            "command_start": {"const": 3077},
+            "element_count": {"const": 1024},
+            "kernel_index": {"const": 6},
+            "operation_id": {"const": "node.0006"},
+            "projection": {"const": "k"},
+            "row_count": {"const": 8}
+          }
+        }
+      ]
+    }
+  }
+}

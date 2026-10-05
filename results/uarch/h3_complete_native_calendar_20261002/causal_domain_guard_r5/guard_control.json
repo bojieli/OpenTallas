@@ -1,0 +1,65 @@
+{
+  "RF_sole_outstanding_plus_all_stale_copy_drain_proved": false,
+  "W1_owner": "Euclid",
+  "actual_Qwen_publication_order": "bitmap before metadata under writer lock;87ca requirement stale, no source reorder",
+  "actual_RF_ACK_fields": [
+    "valid",
+    "ready"
+  ],
+  "endpoint_trace_can_use_control_channel": false,
+  "immutable_R3_fixture_pin": "9a88b76eec960e632c43ef080dc9af5a8b44d174d3f0c46cf944a25c3f41943b",
+  "immutable_R3_pin": "c3c0e800dbd6ea09a7fc35d1a2643244c19016de54bc6d4067e598d7a3731844",
+  "mutant_rejection_left_owner_live": true,
+  "mutant_successor_rejection": "exact source-bound domains/epochs/causal receipt required; owner retained",
+  "physical_clock_or_SS_FF_credit": false,
+  "positive_directed_receipt": {
+    "causal_events_sha256": "7ff909ee19b7147aea836825f229d34c598beeed670260b9928413def38065c2",
+    "channel_binding_sha256": "b7d77fad4ee49764c6075ab3fa8dc46cd2804aa00e03483e110cb21e43e3fdb4",
+    "channel_id": "source_control_reverse:cd9eb7d25ec65ed45a531b0656f018608f90039a6dc61cc3f3a1d1dd0645cb0b",
+    "receive_event": "reverse_receive:cd9eb7d25ec65ed45a531b0656f018608f90039a6dc61cc3f3a1d1dd0645cb0b",
+    "receiver_domain": "H1_streaming",
+    "receiver_edge": 14,
+    "receiver_epoch": 0,
+    "send_event": "reverse_send:cd9eb7d25ec65ed45a531b0656f018608f90039a6dc61cc3f3a1d1dd0645cb0b",
+    "sender_domain": "CORE",
+    "sender_edge": 100,
+    "sender_epoch": 0,
+    "source_sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "token": "cd9eb7d25ec65ed45a531b0656f018608f90039a6dc61cc3f3a1d1dd0645cb0b"
+  },
+  "positive_directed_retired": true,
+  "preserved_historical_failure": {
+    "live_owners": 0,
+    "receipt": {
+      "receiver_domain": "H1_streaming",
+      "receiver_edge": 14,
+      "sender_domain": "NOT_A_BOUND_CLOCK_DOMAIN",
+      "sender_edge": 17,
+      "token": "cd9eb7d25ec65ed45a531b0656f018608f90039a6dc61cc3f3a1d1dd0645cb0b"
+    },
+    "retired": true,
+    "verdict": "FAIL_UNBOUND_DOMAIN_ACCEPTED"
+  },
+  "production_calls_closed": 0,
+  "production_clock_reset_cohort_drain_bound": false,
+  "schema": "DOMAIN_EPOCH_CAUSAL_FAIL_CLOSED_SUCCESSOR_R5",
+  "software_token_is_not_physical_ACK_identity": true,
+  "source_FIFO_ports_are_not_installed_clock_net_proof": true,
+  "source_channel": {
+    "actual_reset_cohort_drain_receipt": null,
+    "common_reset_expression": "wrn&&rrn",
+    "module": "ot_hbm_r14_fifo2",
+    "production_installed": false,
+    "receiver_clock_port": "rc",
+    "receiver_domain": "H1_streaming",
+    "receiver_reset_port": "rrn",
+    "schema": "DIRECTED_CONTROL_SOURCE_PORT_BINDING_ONLY",
+    "sender_clock_port": "wc",
+    "sender_domain": "CORE",
+    "sender_reset_port": "wrn",
+    "source_path": "inputs/fifo2.sv",
+    "source_sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903"
+  },
+  "source_channel_sha256": "b7d77fad4ee49764c6075ab3fa8dc46cd2804aa00e03483e110cb21e43e3fdb4",
+  "whole_token_ns": null
+}

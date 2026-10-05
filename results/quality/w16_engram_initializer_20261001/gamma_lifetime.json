@@ -1,0 +1,1486 @@
+{
+  "actual_consumer_lifetime_provider_bound": false,
+  "actual_replacement_control_register_gate_inventory_complete": false,
+  "cache_bits_per_home": 163840,
+  "cache_select_MUX2_bits_per_home": 131072,
+  "candidate": "one resident gamma family perhome under explicitly serial no-overlap command schedule",
+  "checkpoint_reads": 0,
+  "commands": [
+    {
+      "PC": 6,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.0.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 0,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 52,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.0.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 0,
+      "previous_gamma_PC": 6
+    },
+    {
+      "PC": 129,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.1.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 1,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 175,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.1.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 1,
+      "previous_gamma_PC": 129
+    },
+    {
+      "PC": 242,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.2.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 2,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 320,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.2.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 2,
+      "previous_gamma_PC": 242
+    },
+    {
+      "PC": 387,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.3.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 3,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 435,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.3.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 3,
+      "previous_gamma_PC": 387
+    },
+    {
+      "PC": 502,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.4.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 4,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 550,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.4.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 4,
+      "previous_gamma_PC": 502
+    },
+    {
+      "PC": 617,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.5.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 5,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 665,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.5.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 5,
+      "previous_gamma_PC": 617
+    },
+    {
+      "PC": 732,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.6.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 6,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 780,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.6.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 6,
+      "previous_gamma_PC": 732
+    },
+    {
+      "PC": 847,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.7.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 7,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 895,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.7.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 7,
+      "previous_gamma_PC": 847
+    },
+    {
+      "PC": 962,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.8.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 8,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1040,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.8.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 8,
+      "previous_gamma_PC": 962
+    },
+    {
+      "PC": 1107,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.9.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 9,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1155,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.9.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 9,
+      "previous_gamma_PC": 1107
+    },
+    {
+      "PC": 1222,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.10.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 10,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1270,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.10.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 10,
+      "previous_gamma_PC": 1222
+    },
+    {
+      "PC": 1337,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.11.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 11,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1385,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.11.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 11,
+      "previous_gamma_PC": 1337
+    },
+    {
+      "PC": 1452,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.12.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 12,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1500,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.12.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 12,
+      "previous_gamma_PC": 1452
+    },
+    {
+      "PC": 1567,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.13.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 13,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1615,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.13.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 13,
+      "previous_gamma_PC": 1567
+    },
+    {
+      "PC": 1692,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.14.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 14,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1770,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.14.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 14,
+      "previous_gamma_PC": 1692
+    },
+    {
+      "PC": 1837,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.15.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 15,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 1885,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.15.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 15,
+      "previous_gamma_PC": 1837
+    },
+    {
+      "PC": 1952,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.16.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 16,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2000,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.16.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 16,
+      "previous_gamma_PC": 1952
+    },
+    {
+      "PC": 2067,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.17.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 17,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2115,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.17.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 17,
+      "previous_gamma_PC": 2067
+    },
+    {
+      "PC": 2182,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.18.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 18,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2230,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.18.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 18,
+      "previous_gamma_PC": 2182
+    },
+    {
+      "PC": 2297,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.19.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 19,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2345,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.19.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 19,
+      "previous_gamma_PC": 2297
+    },
+    {
+      "PC": 2412,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.20.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 20,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2489,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.20.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 20,
+      "previous_gamma_PC": 2412
+    },
+    {
+      "PC": 2556,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.21.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 21,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2604,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.21.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 21,
+      "previous_gamma_PC": 2556
+    },
+    {
+      "PC": 2671,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.22.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 22,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2719,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.22.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 22,
+      "previous_gamma_PC": 2671
+    },
+    {
+      "PC": 2786,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.23.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 23,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2834,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.23.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 23,
+      "previous_gamma_PC": 2786
+    },
+    {
+      "PC": 2901,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.24.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 24,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 2958,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.24.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 24,
+      "previous_gamma_PC": 2901
+    },
+    {
+      "PC": 3025,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.25.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 25,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3073,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.25.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 25,
+      "previous_gamma_PC": 3025
+    },
+    {
+      "PC": 3140,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.26.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 26,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3188,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.26.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 26,
+      "previous_gamma_PC": 3140
+    },
+    {
+      "PC": 3255,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.27.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 27,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3303,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.27.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 27,
+      "previous_gamma_PC": 3255
+    },
+    {
+      "PC": 3370,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.28.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 28,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3427,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.28.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 28,
+      "previous_gamma_PC": 3370
+    },
+    {
+      "PC": 3494,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.29.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 29,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3542,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.29.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 29,
+      "previous_gamma_PC": 3494
+    },
+    {
+      "PC": 3609,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.30.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 30,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3657,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.30.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 30,
+      "previous_gamma_PC": 3609
+    },
+    {
+      "PC": 3724,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.31.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 31,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3772,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.31.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 31,
+      "previous_gamma_PC": 3724
+    },
+    {
+      "PC": 3839,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.32.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 32,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 3896,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.32.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 32,
+      "previous_gamma_PC": 3839
+    },
+    {
+      "PC": 3963,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.33.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 33,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4011,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.33.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 33,
+      "previous_gamma_PC": 3963
+    },
+    {
+      "PC": 4078,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.34.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 34,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4126,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.34.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 34,
+      "previous_gamma_PC": 4078
+    },
+    {
+      "PC": 4193,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.35.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 35,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4241,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.35.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 35,
+      "previous_gamma_PC": 4193
+    },
+    {
+      "PC": 4308,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.36.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 36,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4365,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.36.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 36,
+      "previous_gamma_PC": 4308
+    },
+    {
+      "PC": 4432,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.37.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 37,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4480,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.37.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 37,
+      "previous_gamma_PC": 4432
+    },
+    {
+      "PC": 4547,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.38.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 38,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4595,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.38.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 38,
+      "previous_gamma_PC": 4547
+    },
+    {
+      "PC": 4662,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.39.attn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 39,
+      "previous_gamma_PC": null
+    },
+    {
+      "PC": 4710,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "layers.39.ffn_norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": 39,
+      "previous_gamma_PC": 4662
+    },
+    {
+      "PC": 4775,
+      "actual_previous_consumer_done_cycle": null,
+      "actual_replacement_provider": false,
+      "cache_words": 5120,
+      "cold_words": 5120,
+      "family": "norm.weight",
+      "intervals": [
+        "wait prior consumers/output/reversecredit drained",
+        "invalidate old cache tag; no early ready",
+        "fill all5120 newsourcecoefficients",
+        "publish image/rank/layer/family/PC/epoch tag only after lastaccepted fill",
+        "consume5x1024 vectors from5entries/lane",
+        "wait all reads and owning credits drained before replacement"
+      ],
+      "layer": "head",
+      "previous_gamma_PC": null
+    }
+  ],
+  "complete_area_power_or_slot_fit": null,
+  "gamma_words_refilled_per_rank": 414720,
+  "hardware_admission": false,
+  "jobs_launched": 0,
+  "no_alllayer_or_alltoken_reuse": true,
+  "no_refill_or_drain_timing_subtraction": true,
+  "preserved_twooperand_emit_buffers_bits": 131072,
+  "previous_twofamily_screens_preserved": true,
+  "proposed_base_staging_bits": 311562,
+  "reference_rank_views": 4,
+  "replacement_predicate": "oldactualconsumersdrained AND outputquiet AND returned owningreversecredit; booleanTrue only",
+  "retained_non_gamma_base_bits": 147722,
+  "schema": "opentallas.CROM-single-gamma-family-lifetime.v1",
+  "source": {
+    "commit": "f4bce8fa0",
+    "path": "results/uarch/w11_crom_demand_20261001/demand_v2.json.gz",
+    "sha256": "bb597c07e000b2e58f16b949f2c4515ec49cfaa943c70c20133e0361366ec62d"
+  }
+}

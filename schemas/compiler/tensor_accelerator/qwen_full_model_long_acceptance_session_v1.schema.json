@@ -1,0 +1,168 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_long_acceptance_session_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"const": "6445ef52a940af167f3bde52e0a326258bb8c8da013d4bb25a3b16e18f171bad"},
+    "capability_id": {"const": "a9b231b5f146f845257325e68031f02440f0a3712db42d4e4e2b54c69031f6cd"},
+    "checkpoint_lock_id": {"const": "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_8000_token_acceptance": {"const": true},
+        "separate_8192_resident_boundary": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "exact_8000_token_acceptance",
+        "separate_8192_resident_boundary",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "command_program_sha256": {"const": "dfc7ee4d89a091aea616f602174f8bd41cae319ceec92d31fda4cb43636dce6d"},
+    "context_capacity": {"const": 8192},
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {
+          "prefixItems": [{"const": 151645}, {"const": 151643}],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "generated_token_limit": {"const": 32},
+        "selection": {"const": "greedy_lowest_token_id_argmax"},
+        "unexpected_early_eos": {"const": "fail"}
+      },
+      "required": [
+        "eos_token_ids",
+        "generated_token_limit",
+        "selection",
+        "unexpected_early_eos"
+      ],
+      "type": "object"
+    },
+    "graph_id": {"const": "738f3cd8cb5db1ce400c0a44c12385cef6c42ddb2854e22d473251e97a1a51e3"},
+    "hbm_logical_sha256": {"const": "55fbb4f91ff9a081dede418edec25d7373553a591ce3c031a27d219048b90b97"},
+    "kernel_ir_id": {"const": "35bae3f71666c72ec886875abf336fefc68dd1635288d3b49720c4297d4cc1e1"},
+    "model_id": {"const": "qwen3-8b"},
+    "official_prefill_golden": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison_status": {"const": "pending_common_simulator_execution"},
+        "greedy_token_id": {"const": 33975},
+        "logits_sha256": {"const": "d7a3fd7b6e94a82ed503c489998173c88f05d368cb259a46461169ea4d69d1e8"},
+        "release_report_id": {"const": "a79d454e73d3566c9d6f9a44d87eb5c1d14470bc3cadbdf79beb8c2529738267"}
+      },
+      "required": [
+        "comparison_status",
+        "greedy_token_id",
+        "logits_sha256",
+        "release_report_id"
+      ],
+      "type": "object"
+    },
+    "physical_plan_id": {"const": "2bb30b4bc970b3c0af716eb78b86d3158ed06108218735b515d8e2133dc407a2"},
+    "prompt": {"$ref": "#/$defs/prompt"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_long_acceptance_session.v1"},
+    "session_id": {"$ref": "#/$defs/sha256"},
+    "session_version": {"const": "tensor-accelerator-qwen-long-acceptance-session-0.1.0"},
+    "tokenizer": {"$ref": "#/$defs/tokenizer"},
+    "workload_fixture": {"$ref": "#/$defs/workload_fixture"}
+  },
+  "required": [
+    "build_id",
+    "capability_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "context_capacity",
+    "generation",
+    "graph_id",
+    "hbm_logical_sha256",
+    "kernel_ir_id",
+    "model_id",
+    "official_prefill_golden",
+    "physical_plan_id",
+    "prompt",
+    "schema",
+    "session_id",
+    "session_version",
+    "tokenizer",
+    "workload_fixture"
+  ],
+  "title": "Qwen exact 8,000+32 long-acceptance session v1",
+  "type": "object",
+  "$defs": {
+    "git_object": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+    "prompt": {
+      "additionalProperties": false,
+      "properties": {
+        "encoding": {"const": "repeated_token_id_v1"},
+        "token_count": {"const": 8000},
+        "token_id": {"const": 151643},
+        "token_ids_sha256": {"const": "8dcbc057d9f4bb2657755ffc4419dae1189837343c093964ed329ad95e43d461"}
+      },
+      "required": ["encoding", "token_count", "token_id", "token_ids_sha256"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "tokenizer": {
+      "additionalProperties": false,
+      "properties": {
+        "explicit_vocabulary_size": {"const": 151669},
+        "library": {"const": "tokenizers"},
+        "library_version": {"const": "0.22.2"},
+        "model_vocabulary_size": {"const": 151936},
+        "path": {"const": "tokenizer.json"},
+        "prompt_source": {"const": "authenticated_token_id_fixture_no_retokenization"},
+        "sha256": {"const": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"}
+      },
+      "required": [
+        "explicit_vocabulary_size",
+        "library",
+        "library_version",
+        "model_vocabulary_size",
+        "path",
+        "prompt_source",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "workload_fixture": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"const": "3a985ffcecfd17fb8642cdef819c22e16d8e9f4c"},
+        "file_sha256": {"const": "124fad68b395250caf87e1ee37e7914d87ba9b23fc85fc23ef1cce92a9e11f84"},
+        "file_size_bytes": {"const": 4768},
+        "git_blob": {"const": "ddb325754b103ce04aa9e09a0aa5f529c9d43878"},
+        "git_tree": {"const": "71613b6eb97390884b8c409d11b05d85b6f19a79"},
+        "long_context_release_report_id": {"const": "a79d454e73d3566c9d6f9a44d87eb5c1d14470bc3cadbdf79beb8c2529738267"},
+        "path": {"const": "testdata/compiler/qwen3_8b/workload_manifest.json"},
+        "release_file_sha256": {"const": "257263925d380047546b51c3211404d00882e5873a269e7b8356ea1c907c6b59"},
+        "release_file_size_bytes": {"const": 185656},
+        "release_git_blob": {"const": "f3464f2f77abab75cfae074ff647e3c44ab8f72e"},
+        "release_path": {"const": "results/compiler/qwen3-8b/release_gate.json"},
+        "schema": {"const": "opentallas.qwen3.workload_manifest.v1"},
+        "workload_id": {"const": "340ec91558350b2e52259bcf9dedd919bd6022473a7ad24318afd99f1e55183e"}
+      },
+      "required": [
+        "commit",
+        "file_sha256",
+        "file_size_bytes",
+        "git_blob",
+        "git_tree",
+        "long_context_release_report_id",
+        "path",
+        "release_file_sha256",
+        "release_file_size_bytes",
+        "release_git_blob",
+        "release_path",
+        "schema",
+        "workload_id"
+      ],
+      "type": "object"
+    }
+  }
+}

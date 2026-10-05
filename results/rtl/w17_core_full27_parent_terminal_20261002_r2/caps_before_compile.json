@@ -1,0 +1,19 @@
+{
+  "systemd": {
+    "RuntimeMaxUSec": "1h",
+    "OOMPolicy": "stop",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/w17-recovery-resource-retained-full27-parent-20261002-r2.service",
+    "MemoryMax": "34359738368",
+    "MemorySwapMax": "0",
+    "LimitFSIZE": "1073741824",
+    "LimitCORE": "0",
+    "CPUAffinity": "30-31",
+    "KillMode": "control-group",
+    "KillSignal": "9"
+  },
+  "kernel_cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/w17-recovery-resource-retained-full27-parent-20261002-r2.service",
+  "affinity": [
+    30,
+    31
+  ]
+}

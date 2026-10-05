@@ -1,0 +1,1201 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/work/equivalence_mapped_gate.ys' --
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+Imported 42 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+Imported 37 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Ignoring cell ICGx1_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx3_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5p33DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx6p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx8DC_ASAP7_75t_R with missing function on output IQ.
+Imported 23 cell types from liberty file.
+<suppressed ~2 debug messages>
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: /work/results/asap7/opentallas_numeric_e1_l16_tc/base/1_2_yosys.v
+Parsing Verilog input from `/work/results/asap7/opentallas_numeric_e1_l16_tc/base/1_2_yosys.v' to AST representation.
+Generating RTLIL representation for module `\ot_numeric_dot'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+Used module:     \DFFASRHQNx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \TIELOx1_ASAP7_75t_R
+Used module:     \TIEHIx1_ASAP7_75t_R
+Used module:     \HAxp5_ASAP7_75t_R
+Used module:     \FAx1_ASAP7_75t_R
+Used module:     \AND2x4_ASAP7_75t_R
+Used module:     \XNOR2x1_ASAP7_75t_R
+Used module:     \OA211x2_ASAP7_75t_R
+Used module:     \NAND2x1_ASAP7_75t_R
+Used module:     \NOR2x1_ASAP7_75t_R
+Used module:     \XNOR2x2_ASAP7_75t_R
+Used module:     \AO21x1_ASAP7_75t_R
+Used module:     \OR2x2_ASAP7_75t_R
+Used module:     \OR5x1_ASAP7_75t_R
+Used module:     \OR4x1_ASAP7_75t_R
+Used module:     \AOI22x1_ASAP7_75t_R
+Used module:     \AND4x1_ASAP7_75t_R
+Used module:     \OR3x1_ASAP7_75t_R
+Used module:     \OA21x2_ASAP7_75t_R
+Used module:     \XOR2x2_ASAP7_75t_R
+Used module:     \OAI21x1_ASAP7_75t_R
+Used module:     \AO22x1_ASAP7_75t_R
+Used module:     \OA221x2_ASAP7_75t_R
+Used module:     \INVx1_ASAP7_75t_R
+Used module:     \AND2x2_ASAP7_75t_R
+Used module:     \AND3x1_ASAP7_75t_R
+Used module:     \OA22x2_ASAP7_75t_R
+Used module:     \AO221x1_ASAP7_75t_R
+Used module:     \AO32x1_ASAP7_75t_R
+Used module:     \OA31x2_ASAP7_75t_R
+Used module:     \AOI21x1_ASAP7_75t_R
+Used module:     \AO31x2_ASAP7_75t_R
+Used module:     \AND5x1_ASAP7_75t_R
+Used module:     \AO211x2_ASAP7_75t_R
+Used module:     \OR2x4_ASAP7_75t_R
+Used module:     \AND4x2_ASAP7_75t_R
+Used module:     \NOR3x1_ASAP7_75t_R
+Used module:     \OA222x2_ASAP7_75t_R
+
+7.2. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+Used module:     \DFFASRHQNx1_ASAP7_75t_R
+Used module:     \BUFx2_ASAP7_75t_R
+Used module:     \TIELOx1_ASAP7_75t_R
+Used module:     \TIEHIx1_ASAP7_75t_R
+Used module:     \HAxp5_ASAP7_75t_R
+Used module:     \FAx1_ASAP7_75t_R
+Used module:     \AND2x4_ASAP7_75t_R
+Used module:     \XNOR2x1_ASAP7_75t_R
+Used module:     \OA211x2_ASAP7_75t_R
+Used module:     \NAND2x1_ASAP7_75t_R
+Used module:     \NOR2x1_ASAP7_75t_R
+Used module:     \XNOR2x2_ASAP7_75t_R
+Used module:     \AO21x1_ASAP7_75t_R
+Used module:     \OR2x2_ASAP7_75t_R
+Used module:     \OR5x1_ASAP7_75t_R
+Used module:     \OR4x1_ASAP7_75t_R
+Used module:     \AOI22x1_ASAP7_75t_R
+Used module:     \AND4x1_ASAP7_75t_R
+Used module:     \OR3x1_ASAP7_75t_R
+Used module:     \OA21x2_ASAP7_75t_R
+Used module:     \XOR2x2_ASAP7_75t_R
+Used module:     \OAI21x1_ASAP7_75t_R
+Used module:     \AO22x1_ASAP7_75t_R
+Used module:     \OA221x2_ASAP7_75t_R
+Used module:     \INVx1_ASAP7_75t_R
+Used module:     \AND2x2_ASAP7_75t_R
+Used module:     \AND3x1_ASAP7_75t_R
+Used module:     \OA22x2_ASAP7_75t_R
+Used module:     \AO221x1_ASAP7_75t_R
+Used module:     \AO32x1_ASAP7_75t_R
+Used module:     \OA31x2_ASAP7_75t_R
+Used module:     \AOI21x1_ASAP7_75t_R
+Used module:     \AO31x2_ASAP7_75t_R
+Used module:     \AND5x1_ASAP7_75t_R
+Used module:     \AO211x2_ASAP7_75t_R
+Used module:     \OR2x4_ASAP7_75t_R
+Used module:     \AND4x2_ASAP7_75t_R
+Used module:     \NOR3x1_ASAP7_75t_R
+Used module:     \OA222x2_ASAP7_75t_R
+Removing unused module `\XOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XOR2x1_ASAP7_75t_R'.
+Removing unused module `\XNOR2xp5_ASAP7_75t_R'.
+Removing unused module `\OR5x2_ASAP7_75t_R'.
+Removing unused module `\OR4x2_ASAP7_75t_R'.
+Removing unused module `\OR3x4_ASAP7_75t_R'.
+Removing unused module `\OR3x2_ASAP7_75t_R'.
+Removing unused module `\OR2x6_ASAP7_75t_R'.
+Removing unused module `\NOR5xp2_ASAP7_75t_R'.
+Removing unused module `\NOR4xp75_ASAP7_75t_R'.
+Removing unused module `\NOR4xp25_ASAP7_75t_R'.
+Removing unused module `\NOR3xp33_ASAP7_75t_R'.
+Removing unused module `\NOR3x2_ASAP7_75t_R'.
+Removing unused module `\NOR2xp67_ASAP7_75t_R'.
+Removing unused module `\NOR2xp33_ASAP7_75t_R'.
+Removing unused module `\NOR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR2x1p5_ASAP7_75t_R'.
+Removing unused module `\NAND5xp2_ASAP7_75t_R'.
+Removing unused module `\NAND4xp75_ASAP7_75t_R'.
+Removing unused module `\NAND4xp25_ASAP7_75t_R'.
+Removing unused module `\NAND3xp33_ASAP7_75t_R'.
+Removing unused module `\NAND3x2_ASAP7_75t_R'.
+Removing unused module `\NAND3x1_ASAP7_75t_R'.
+Removing unused module `\NAND2xp67_ASAP7_75t_R'.
+Removing unused module `\NAND2xp5_ASAP7_75t_R'.
+Removing unused module `\NAND2xp33_ASAP7_75t_R'.
+Removing unused module `\NAND2x2_ASAP7_75t_R'.
+Removing unused module `\NAND2x1p5_ASAP7_75t_R'.
+Removing unused module `\MAJx3_ASAP7_75t_R'.
+Removing unused module `\MAJx2_ASAP7_75t_R'.
+Removing unused module `\MAJIxp5_ASAP7_75t_R'.
+Removing unused module `\AND5x2_ASAP7_75t_R'.
+Removing unused module `\AND3x4_ASAP7_75t_R'.
+Removing unused module `\AND3x2_ASAP7_75t_R'.
+Removing unused module `\AND2x6_ASAP7_75t_R'.
+Removing unused module `\SDFLx4_ASAP7_75t_R'.
+Removing unused module `\SDFLx3_ASAP7_75t_R'.
+Removing unused module `\SDFLx2_ASAP7_75t_R'.
+Removing unused module `\SDFLx1_ASAP7_75t_R'.
+Removing unused module `\SDFHx4_ASAP7_75t_R'.
+Removing unused module `\SDFHx3_ASAP7_75t_R'.
+Removing unused module `\SDFHx2_ASAP7_75t_R'.
+Removing unused module `\SDFHx1_ASAP7_75t_R'.
+Removing unused module `\DLLx3_ASAP7_75t_R'.
+Removing unused module `\DLLx2_ASAP7_75t_R'.
+Removing unused module `\DLLx1_ASAP7_75t_R'.
+Removing unused module `\DHLx3_ASAP7_75t_R'.
+Removing unused module `\DHLx2_ASAP7_75t_R'.
+Removing unused module `\DHLx1_ASAP7_75t_R'.
+Removing unused module `\DFFLQx4_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx2_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx1_ASAP7_75t_R'.
+Removing unused module `\DFFHQx4_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx2_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx1_ASAP7_75t_R'.
+Removing unused module `\OAI33xp33_ASAP7_75t_R'.
+Removing unused module `\OAI333xp33_ASAP7_75t_R'.
+Removing unused module `\OAI332xp33_ASAP7_75t_R'.
+Removing unused module `\OAI331xp33_ASAP7_75t_R'.
+Removing unused module `\OAI32xp33_ASAP7_75t_R'.
+Removing unused module `\OAI322xp33_ASAP7_75t_R'.
+Removing unused module `\OAI321xp33_ASAP7_75t_R'.
+Removing unused module `\OAI31xp67_ASAP7_75t_R'.
+Removing unused module `\OAI31xp33_ASAP7_75t_R'.
+Removing unused module `\OAI311xp33_ASAP7_75t_R'.
+Removing unused module `\OAI22xp5_ASAP7_75t_R'.
+Removing unused module `\OAI22xp33_ASAP7_75t_R'.
+Removing unused module `\OAI22x1_ASAP7_75t_R'.
+Removing unused module `\OAI222xp33_ASAP7_75t_R'.
+Removing unused module `\OAI221xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21xp33_ASAP7_75t_R'.
+Removing unused module `\OAI211xp5_ASAP7_75t_R'.
+Removing unused module `\OA33x2_ASAP7_75t_R'.
+Removing unused module `\OA333x2_ASAP7_75t_R'.
+Removing unused module `\OA333x1_ASAP7_75t_R'.
+Removing unused module `\OA332x2_ASAP7_75t_R'.
+Removing unused module `\OA332x1_ASAP7_75t_R'.
+Removing unused module `\OA331x2_ASAP7_75t_R'.
+Removing unused module `\OA331x1_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Removing unused module `\INVxp67_ASAP7_75t_R'.
+Removing unused module `\INVxp33_ASAP7_75t_R'.
+Removing unused module `\INVx8_ASAP7_75t_R'.
+Removing unused module `\INVx6_ASAP7_75t_R'.
+Removing unused module `\INVx5_ASAP7_75t_R'.
+Removing unused module `\INVx4_ASAP7_75t_R'.
+Removing unused module `\INVx3_ASAP7_75t_R'.
+Removing unused module `\INVx2_ASAP7_75t_R'.
+Removing unused module `\INVx13_ASAP7_75t_R'.
+Removing unused module `\INVx11_ASAP7_75t_R'.
+Removing unused module `\HB4xp67_ASAP7_75t_R'.
+Removing unused module `\HB3xp67_ASAP7_75t_R'.
+Removing unused module `\HB2xp67_ASAP7_75t_R'.
+Removing unused module `\HB1xp67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx9p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx8_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx6p67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx5p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx20_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx16_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx14_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx12_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx11_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx10_ASAP7_75t_R'.
+Removing unused module `\BUFx8_ASAP7_75t_R'.
+Removing unused module `\BUFx6f_ASAP7_75t_R'.
+Removing unused module `\BUFx5_ASAP7_75t_R'.
+Removing unused module `\BUFx4f_ASAP7_75t_R'.
+Removing unused module `\BUFx4_ASAP7_75t_R'.
+Removing unused module `\BUFx3_ASAP7_75t_R'.
+Removing unused module `\BUFx24_ASAP7_75t_R'.
+Removing unused module `\BUFx16f_ASAP7_75t_R'.
+Removing unused module `\BUFx12f_ASAP7_75t_R'.
+Removing unused module `\BUFx12_ASAP7_75t_R'.
+Removing unused module `\BUFx10_ASAP7_75t_R'.
+Removing unused module `\AOI33xp33_ASAP7_75t_R'.
+Removing unused module `\AOI333xp33_ASAP7_75t_R'.
+Removing unused module `\AOI332xp33_ASAP7_75t_R'.
+Removing unused module `\AOI331xp33_ASAP7_75t_R'.
+Removing unused module `\AOI32xp33_ASAP7_75t_R'.
+Removing unused module `\AOI322xp5_ASAP7_75t_R'.
+Removing unused module `\AOI321xp33_ASAP7_75t_R'.
+Removing unused module `\AOI31xp67_ASAP7_75t_R'.
+Removing unused module `\AOI31xp33_ASAP7_75t_R'.
+Removing unused module `\AOI311xp33_ASAP7_75t_R'.
+Removing unused module `\AOI22xp5_ASAP7_75t_R'.
+Removing unused module `\AOI22xp33_ASAP7_75t_R'.
+Removing unused module `\AOI222xp33_ASAP7_75t_R'.
+Removing unused module `\AOI221xp5_ASAP7_75t_R'.
+Removing unused module `\AOI221x1_ASAP7_75t_R'.
+Removing unused module `\AOI21xp5_ASAP7_75t_R'.
+Removing unused module `\AOI21xp33_ASAP7_75t_R'.
+Removing unused module `\AOI211xp5_ASAP7_75t_R'.
+Removing unused module `\AOI211x1_ASAP7_75t_R'.
+Removing unused module `\AO33x2_ASAP7_75t_R'.
+Removing unused module `\AO333x2_ASAP7_75t_R'.
+Removing unused module `\AO333x1_ASAP7_75t_R'.
+Removing unused module `\AO332x2_ASAP7_75t_R'.
+Removing unused module `\AO332x1_ASAP7_75t_R'.
+Removing unused module `\AO331x2_ASAP7_75t_R'.
+Removing unused module `\AO331x1_ASAP7_75t_R'.
+Removing unused module `\AO32x2_ASAP7_75t_R'.
+Removing unused module `\AO322x2_ASAP7_75t_R'.
+Removing unused module `\AO22x2_ASAP7_75t_R'.
+Removing unused module `\AO222x2_ASAP7_75t_R'.
+Removing unused module `\AO221x2_ASAP7_75t_R'.
+Removing unused module `\AO21x2_ASAP7_75t_R'.
+Removing unused module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Removing unused module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Removed 153 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module FAx1_ASAP7_75t_R.
+Optimizing module INVx1_ASAP7_75t_R.
+Optimizing module OR2x2_ASAP7_75t_R.
+Optimizing module AND5x1_ASAP7_75t_R.
+Optimizing module AND4x2_ASAP7_75t_R.
+Optimizing module AND4x1_ASAP7_75t_R.
+Optimizing module TIEHIx1_ASAP7_75t_R.
+Optimizing module OAI21x1_ASAP7_75t_R.
+Optimizing module ot_numeric_dot.
+Optimizing module AND3x1_ASAP7_75t_R.
+Optimizing module AOI22x1_ASAP7_75t_R.
+Optimizing module OR5x1_ASAP7_75t_R.
+Optimizing module AND2x4_ASAP7_75t_R.
+Optimizing module AND2x2_ASAP7_75t_R.
+Optimizing module DFFASRHQNx1_ASAP7_75t_R.
+Optimizing module XOR2x2_ASAP7_75t_R.
+Optimizing module AOI21x1_ASAP7_75t_R.
+Optimizing module OR4x1_ASAP7_75t_R.
+Optimizing module OA31x2_ASAP7_75t_R.
+Optimizing module OA22x2_ASAP7_75t_R.
+Optimizing module OA222x2_ASAP7_75t_R.
+Optimizing module OA221x2_ASAP7_75t_R.
+Optimizing module OA21x2_ASAP7_75t_R.
+Optimizing module OA211x2_ASAP7_75t_R.
+Optimizing module NOR3x1_ASAP7_75t_R.
+Optimizing module XNOR2x2_ASAP7_75t_R.
+Optimizing module BUFx2_ASAP7_75t_R.
+Optimizing module AO32x1_ASAP7_75t_R.
+Optimizing module XNOR2x1_ASAP7_75t_R.
+Optimizing module AO31x2_ASAP7_75t_R.
+Optimizing module OR3x1_ASAP7_75t_R.
+Optimizing module AO22x1_ASAP7_75t_R.
+Optimizing module NAND2x1_ASAP7_75t_R.
+Optimizing module TIELOx1_ASAP7_75t_R.
+Optimizing module AO221x1_ASAP7_75t_R.
+Optimizing module NOR2x1_ASAP7_75t_R.
+Optimizing module AO21x1_ASAP7_75t_R.
+Optimizing module AO211x2_ASAP7_75t_R.
+Optimizing module OR2x4_ASAP7_75t_R.
+Optimizing module HAxp5_ASAP7_75t_R.
+
+9. Executing MEMORY pass.
+
+9.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+9.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+9.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+9.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+9.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+9.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \FAx1_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIEHIx1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \ot_numeric_dot..
+Finding unused cells or wires in module \AND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFASRHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA22x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA222x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA221x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO32x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIELOx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \HAxp5_ASAP7_75t_R..
+Removed 3 unused cells and 40 unused wires.
+<suppressed ~40 debug messages>
+
+9.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+9.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+9.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \FAx1_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIEHIx1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \ot_numeric_dot..
+Finding unused cells or wires in module \AND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFASRHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA22x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA222x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA221x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO32x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIELOx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \HAxp5_ASAP7_75t_R..
+
+9.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+9.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing FLATTEN pass (flatten design).
+Deleting now unused module FAx1_ASAP7_75t_R.
+Deleting now unused module INVx1_ASAP7_75t_R.
+Deleting now unused module OR2x2_ASAP7_75t_R.
+Deleting now unused module AND5x1_ASAP7_75t_R.
+Deleting now unused module AND4x2_ASAP7_75t_R.
+Deleting now unused module AND4x1_ASAP7_75t_R.
+Deleting now unused module TIEHIx1_ASAP7_75t_R.
+Deleting now unused module OAI21x1_ASAP7_75t_R.
+Deleting now unused module AND3x1_ASAP7_75t_R.
+Deleting now unused module AOI22x1_ASAP7_75t_R.
+Deleting now unused module OR5x1_ASAP7_75t_R.
+Deleting now unused module AND2x4_ASAP7_75t_R.
+Deleting now unused module AND2x2_ASAP7_75t_R.
+Deleting now unused module DFFASRHQNx1_ASAP7_75t_R.
+Deleting now unused module XOR2x2_ASAP7_75t_R.
+Deleting now unused module AOI21x1_ASAP7_75t_R.
+Deleting now unused module OR4x1_ASAP7_75t_R.
+Deleting now unused module OA31x2_ASAP7_75t_R.
+Deleting now unused module OA22x2_ASAP7_75t_R.
+Deleting now unused module OA222x2_ASAP7_75t_R.
+Deleting now unused module OA221x2_ASAP7_75t_R.
+Deleting now unused module OA21x2_ASAP7_75t_R.
+Deleting now unused module OA211x2_ASAP7_75t_R.
+Deleting now unused module NOR3x1_ASAP7_75t_R.
+Deleting now unused module XNOR2x2_ASAP7_75t_R.
+Deleting now unused module BUFx2_ASAP7_75t_R.
+Deleting now unused module AO32x1_ASAP7_75t_R.
+Deleting now unused module XNOR2x1_ASAP7_75t_R.
+Deleting now unused module AO31x2_ASAP7_75t_R.
+Deleting now unused module OR3x1_ASAP7_75t_R.
+Deleting now unused module AO22x1_ASAP7_75t_R.
+Deleting now unused module NAND2x1_ASAP7_75t_R.
+Deleting now unused module TIELOx1_ASAP7_75t_R.
+Deleting now unused module AO221x1_ASAP7_75t_R.
+Deleting now unused module NOR2x1_ASAP7_75t_R.
+Deleting now unused module AO21x1_ASAP7_75t_R.
+Deleting now unused module AO211x2_ASAP7_75t_R.
+Deleting now unused module OR2x4_ASAP7_75t_R.
+Deleting now unused module HAxp5_ASAP7_75t_R.
+<suppressed ~5520 debug messages>
+
+11. Executing ASYNC2SYNC pass.
+Replacing ot_numeric_dot.$flatten\status[3]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\status[3]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\status[3]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\status[3]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\status[3]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\status[2]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\status[2]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\status[2]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\status[2]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\status[2]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[9]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[9]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[9]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[9]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[9]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[8]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[8]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[8]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[8]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[8]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[7]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[7]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[7]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[7]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[7]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[6]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[6]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[6]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[6]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[6]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[5]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[5]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[5]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[5]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[5]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[4]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[4]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[4]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[4]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[4]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[3]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[3]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[3]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[3]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[3]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[31]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[31]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[31]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[31]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[31]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[30]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[30]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[30]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[30]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[30]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[2]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[2]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[2]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[2]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[2]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[29]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[29]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[29]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[29]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[29]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[28]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[28]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[28]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[28]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[28]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[27]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[27]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[27]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[27]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[27]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[26]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[26]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[26]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[26]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[26]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[25]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[25]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[25]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[25]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[25]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[24]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[24]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[24]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[24]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[24]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[23]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[23]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[23]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[23]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[23]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[22]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[22]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[22]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[22]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[22]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[21]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[21]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[21]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[21]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[21]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[20]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[20]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[20]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[20]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[20]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[1]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[1]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[1]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[1]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[1]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[19]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[19]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[19]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[19]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[19]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[18]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[18]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[18]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[18]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[18]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[17]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[17]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[17]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[17]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[17]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[16]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[16]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[16]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[16]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[16]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[15]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[15]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[15]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[15]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[15]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[14]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[14]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[14]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[14]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[14]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[13]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[13]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[13]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[13]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[13]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[12]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[12]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[12]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[12]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[12]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[11]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[11]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[11]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[11]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[11]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[10]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[10]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[10]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[10]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[10]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\result[0]$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\result[0]$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\result[0]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\result[0]$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\result[0]$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\out_valid$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_valid$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_valid$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_valid$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_valid$_DFF_PN0_.IQN
+Replacing ot_numeric_dot.$flatten\out_poison$_DFF_PN0_.$auto$liberty.cc:242:create_ff$2851 ($_DFFSR_PPP_): SET=$flatten\out_poison$_DFF_PN0_.$auto$rtlil.cc:3511:AndnotGate$2853, CLR=$flatten\out_poison$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2846, D=$flatten\out_poison$_DFF_PN0_.$auto$rtlil.cc:3504:NotGate$2848, Q=\out_poison$_DFF_PN0_.IQN
+
+12. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+13. Executing CHECK pass (checking for obvious problems).
+Checking module ot_numeric_dot...
+Found and reported 0 problems.
+14. Executing TECHMAP pass (map to technology primitives).
+
+14.1. Executing Verilog-2005 frontend: /work/ff_to_nextstate.v
+Parsing Verilog input from `/work/ff_to_nextstate.v' to AST representation.
+Generating RTLIL representation for module `$dff'.
+Generating RTLIL representation for module `$_DFF_P_'.
+Generating RTLIL representation for module `$_DFF_N_'.
+Successfully finished Verilog frontend.
+
+14.2. Continuing TECHMAP pass.
+Using template $_DFF_P_ for cells of type $_DFF_P_.
+No more expansions possible.
+<suppressed ~41 debug messages>
+
+15. Executing OPT pass (performing simple optimizations).
+
+15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+<suppressed ~2949 debug messages>
+
+15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 27546 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23816 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23548 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23523 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23495 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23475 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23450 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23445 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23442 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23436 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23430 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23427 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 23424 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+<suppressed ~12366 debug messages>
+Removed a total of 4122 cells.
+
+15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 23424 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+Removed 2 unused cells and 13753 unused wires.
+<suppressed ~57 debug messages>
+
+15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 23422 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+
+15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+15.16. Finished fast OPT passes. (There is nothing left to do.)
+
+16. Executing CHECK pass (checking for obvious problems).
+Checking module ot_numeric_dot...
+Found and reported 0 problems.
+
+17. Executing SCC pass (detecting logic loops).
+Found 0 SCCs in module ot_numeric_dot.
+Found and expected 0 SCCs.
+
+18. Executing TECHMAP pass (map to technology primitives).
+
+18.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+18.2. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~77 debug messages>
+
+19. Executing OPT pass (performing simple optimizations).
+
+19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 23422 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 23422 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+19.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+19.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+
+19.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+19.9. Finished fast OPT passes. (There is nothing left to do.)
+
+20. Executing ABC pass (technology mapping using ABC).
+
+20.1. Extracting gate netlist of module `\ot_numeric_dot' to `<abc-temp-dir>/input.blif'..
+
+20.1.1. Executed ABC.
+Extracted 17902 gates and 18099 wires to a netlist network with 196 inputs and 35 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+20.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:     6580
+ABC RESULTS:               NOT cells:     5678
+ABC RESULTS:        internal signals:    17868
+ABC RESULTS:           input signals:      196
+ABC RESULTS:          output signals:       35
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 28573 unused wires.
+
+21. Executing AIGMAP pass (map logic to AIG).
+Module ot_numeric_dot: replaced 0 cells with 0 new cells, skipped 17778 cells.
+  not replaced 3 cell types:
+    6580 $_AND_
+    5678 $_NOT_
+    5520 $scopeinfo
+
+22. Executing CHECK pass (checking for obvious problems).
+Checking module ot_numeric_dot...
+Found and reported 0 problems.
+
+23. Executing SCC pass (detecting logic loops).
+Found 0 SCCs in module ot_numeric_dot.
+Found and expected 0 SCCs.
+
+24. Executing HIERARCHY pass (managing design hierarchy).
+
+24.1. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+
+24.2. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+Removed 0 unused modules.
+
+25. Executing AIGER backend.
+Warning: Treating undriven bit ot_numeric_dot.\rst_n like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\in_valid like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\in_poison like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\expert_enable like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [0] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [1] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [2] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [3] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [4] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [5] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [6] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [7] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [8] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [9] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [10] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [11] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [12] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [13] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [14] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [15] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [16] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [17] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [18] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [19] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [20] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [21] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [22] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [23] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [24] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [25] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [26] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [27] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [28] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [29] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [30] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [31] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [32] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [33] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [34] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [35] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [36] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [37] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [38] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [39] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [40] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [41] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [42] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [43] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [44] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [45] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [46] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [47] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [48] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [49] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [50] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [51] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [52] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [53] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [54] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [55] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [56] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [57] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [58] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [59] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [60] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [61] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [62] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [63] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [64] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [65] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [66] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [67] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [68] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [69] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [70] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [71] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [72] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [73] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [74] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [75] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [76] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [77] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [78] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [79] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [80] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [81] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [82] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [83] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [84] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [85] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [86] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [87] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [88] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [89] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [90] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [91] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [92] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [93] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [94] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [95] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [96] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [97] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [98] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [99] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [100] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [101] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [102] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [103] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [104] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [105] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [106] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [107] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [108] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [109] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [110] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [111] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [112] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [113] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [114] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [115] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [116] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [117] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [118] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [119] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [120] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [121] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [122] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [123] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [124] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [125] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [126] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [127] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [0] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [1] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [2] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [3] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [4] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [5] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [6] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [7] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [8] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [9] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [10] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [11] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [12] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [13] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [14] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [15] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [16] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [17] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [18] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [19] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [20] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [21] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [22] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [23] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [24] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [25] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [26] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [27] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [28] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [29] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [30] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [31] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [32] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [33] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [34] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [35] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [36] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [37] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [38] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [39] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [40] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [41] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [42] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [43] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [44] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [45] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [46] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [47] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [48] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [49] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [50] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [51] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [52] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [53] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [54] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [55] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [56] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [57] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [58] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [59] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [60] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [61] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [62] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [63] like $anyseq.
+Warning: Treating a total of 196 undriven bits in ot_numeric_dot like $anyseq.
+
+26. Executing AIGER backend.
+Warning: Treating undriven bit ot_numeric_dot.\rst_n like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\in_valid like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\in_poison like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\expert_enable like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [0] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [1] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [2] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [3] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [4] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [5] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [6] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [7] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [8] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [9] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [10] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [11] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [12] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [13] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [14] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [15] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [16] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [17] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [18] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [19] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [20] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [21] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [22] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [23] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [24] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [25] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [26] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [27] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [28] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [29] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [30] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [31] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [32] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [33] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [34] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [35] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [36] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [37] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [38] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [39] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [40] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [41] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [42] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [43] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [44] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [45] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [46] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [47] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [48] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [49] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [50] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [51] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [52] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [53] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [54] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [55] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [56] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [57] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [58] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [59] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [60] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [61] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [62] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [63] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [64] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [65] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [66] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [67] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [68] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [69] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [70] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [71] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [72] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [73] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [74] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [75] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [76] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [77] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [78] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [79] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [80] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [81] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [82] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [83] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [84] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [85] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [86] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [87] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [88] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [89] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [90] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [91] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [92] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [93] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [94] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [95] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [96] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [97] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [98] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [99] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [100] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [101] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [102] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [103] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [104] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [105] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [106] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [107] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [108] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [109] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [110] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [111] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [112] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [113] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [114] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [115] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [116] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [117] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [118] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [119] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [120] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [121] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [122] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [123] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [124] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [125] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [126] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [127] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [0] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [1] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [2] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [3] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [4] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [5] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [6] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [7] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [8] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [9] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [10] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [11] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [12] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [13] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [14] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [15] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [16] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [17] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [18] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [19] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [20] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [21] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [22] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [23] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [24] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [25] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [26] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [27] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [28] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [29] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [30] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [31] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [32] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [33] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [34] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [35] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [36] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [37] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [38] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [39] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [40] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [41] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [42] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [43] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [44] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [45] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [46] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [47] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [48] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [49] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [50] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [51] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [52] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [53] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [54] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [55] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [56] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [57] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [58] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [59] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [60] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [61] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [62] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [63] like $anyseq.
+Warning: Treating a total of 196 undriven bits in ot_numeric_dot like $anyseq.
+
+Warnings: 197 unique messages, 394 total
+End of script. Logfile hash: 6127991113, time: 32.02s, user: 2.73s, system: 0.11s, MEM: 121.01 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 92% 1x abc (29 sec), 1% 6x opt_expr (0 sec), ...

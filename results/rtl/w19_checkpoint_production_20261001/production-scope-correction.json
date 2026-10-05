@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.w19.production_scope_correction.v1",
+  "status": "accepted_scope_correction",
+  "source_commit": "c36784b412e6eef9ca2f9ae41d140408a25855b8",
+  "production_layout": "Accepted256:128weights+8exponents+120zero padding",
+  "rejected_compact_experiment": {
+    "commits": [
+      "b22e48b29",
+      "a9b898250",
+      "910fb60fc",
+      "eed9260eb",
+      "d6d9d68a1",
+      "c98db4d2b",
+      "c36784b41"
+    ],
+    "adoption": "REJECTED; do not merge910 as production",
+    "gate_qualification": "Exact experimental source-bound fixture operations only; supplied router scores and retained SM activations. AW27 compact address diagnostics are NOT accepted256 production qualification. Historical verdicts/pins unchanged."
+  },
+  "accepted256_weight_authority": {
+    "main_commit": "c0661c1e0",
+    "record": "results/uarch/w16_w19_address_prerequisite_20261001/prerequisite_r2.json",
+    "endpoint_checks": 1247872,
+    "AW27_weight_failures": 0,
+    "full_stack_address_width": null,
+    "non_SM_actual_reservations": null
+  },
+  "next_output": "Owner-frozen constants/embedding/Engram/window/CKV/index/open-group rank-to-stack bases/alignments/replicas/consumer formats/usercount, using actual checkpoint metadata and1M logicalstate extents. Derive complete resident address width before accepted256 endpoint companion.",
+  "ownership": {
+    "Engram_rank": "id%96 per parent; physical stack unresolved",
+    "CKV_index_rank": "(i//8)%96 per ISA; stack unresolved",
+    "window": "replicated96 ranks per ISA; stack unresolved",
+    "constants": "542 inventory includesembedding/Engram; residual159094208B contains realF32 HCmatrices, NOT all generic scalar constants; actual replication unresolved",
+    "usercount": "Logicalstate extents target one1M user, full capacity-user admission unresolved"
+  },
+  "full_token": false,
+  "token_contract": "ActualRTL propagated activation40layers+head. Initialcheckpoint/KV fixture only; no layerreference injection, router score fixture masqueradingrouter math or host vector arithmetic.",
+  "physical": "ActualSM LEF andSS/FF/routing qualification W13 sole chain17 owner; no separate launch.",
+  "old_compact_jobs_remaining": false
+}

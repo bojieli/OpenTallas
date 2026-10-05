@@ -1,0 +1,20 @@
+{
+  "verdict": "STATIC_REPAIR_READY_FOR_PARENT_REVIEW_NO_BUILD",
+  "preserved_failure_commit": "92a3f267fc1af9d067104c953597727154350b76",
+  "old_fixture_sha256": "4ed65a029a19555080d62c3ec0f02f1a622b1986875e3c04be06202265a19edb",
+  "new_fixture_sha256": "21a1233699ca806dad2e73a0a4c03669ae116097fa238fc3e79a47f4500a512d",
+  "snapshot": "/tmp/window-qdq8-connected-startup-prepared-20261002-r2",
+  "schema": "opentallas.connected_qdq8.startup_repair_handoff.v1",
+  "change": "Only continuation predicate adds desc_count>0; original firstacks32 gate and full strict admission assertion unchanged.",
+  "tests": "4 PASS: ack0..31 startup negative, preserved original mutant, both NOPS6/10 prior-descriptor drain truth tables, exact source diff/assertion preservation, complete fresh snapshot verification.",
+  "unchanged": "All engine RTL and candidate epoch9 source, numerical predictions, event journals, input/oracle/calendar files; failing bench and run preserved.",
+  "caps": "Future execution requires same twoCPU/4GiBaggregate/swap0/150compile+2*5runtime/180whole/256MiBfilecap; no compile or runtime performed for repair.",
+  "next_gate": "Parent independent fixture/snapshot review, then NEW additive runner binding to this model+manifest and fresh GO. Original committed runner pins original failed preparation and must not be reused for this repaired snapshot.",
+  "not_admitted": [
+    "physical WR provider",
+    "producer freeze/cancel",
+    "recovery",
+    "full token",
+    "hardware adoption"
+  ]
+}

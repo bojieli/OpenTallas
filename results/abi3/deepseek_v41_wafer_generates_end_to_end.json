@@ -1,0 +1,57 @@
+{
+ "answer": "yes.  Prefill and THREE decode steps, four tokens, no failure -- [305, 270, 915, 22105] -- through the governed harness with mandatory admission.  The tokens disagree with the oracle at index 0.",
+ "not_a_claim": [
+  "8,192 is a declared maximum context, not a shortened model: same weights, same graph structure, and the pinned workload is 32 prompt tokens plus four new",
+  "the cell is not closed; a cell closes when its tokens match the oracle"
+ ],
+ "question": "the shipped DeepSeek-V4.1-Flash ROM wafer cell refused in PREFILL -- first on 'view 1097: loop 1076 is not active', then on an engram row-scale gather declaring one scale where the table has eight, then on 'ROUTE.CANDIDATE_MASK output view covers 262144 query rows, expected 32'.  Does it generate tokens?",
+ "schema": "opentallas.result.v41_wafer_generates_end_to_end.v1",
+ "the_run": {
+  "admission": "admitted=True instructions=4385 work=2197217/2197217",
+  "backend": "rom_deepseek_v41",
+  "context_tokens": 8192,
+  "failure": null,
+  "generated_token_ids": [
+   305,
+   270,
+   915,
+   22105
+  ],
+  "oracle": {
+   "agreement": false,
+   "first_divergence_index": 0,
+   "generated_token_ids": [
+    13806,
+    345,
+    7472,
+    49665
+   ]
+  },
+  "per_step_final_tokens": [
+   305,
+   270,
+   915,
+   22105
+  ],
+  "stop_reason": "max_new_tokens",
+  "terminal_acceptance": {
+   "accepted": false,
+   "failed_checks": [
+    "oracle_token_identity"
+   ],
+   "reading": "the contract failed on token identity ALONE.  nonempty_sequences and prefix_contract_selected both hold, and the legitimacy checks are empty -- so nothing about how the tokens were produced is in question, only what they are."
+  },
+  "token_legitimacy_problems": [],
+  "wall_seconds": 15324.3,
+  "workload": "TA-DS41-CHAT-1-P32"
+ },
+ "the_three_fixes_that_got_it_here": [
+  "a per-query state plane resolves its leading extent, so the candidate-admission plane presents the request's queries instead of its 262,144-row capacity",
+  "a phase-split join's derived extent is stated back on CONTEXT_LENGTH where section 12.2 makes it exact, and its context-derived operand gets a per-phase view resolved by the loop that counts the context",
+  "the shipped IR was regenerated: the exporter's engram row-scale fix had been committed nine hours before the IR on disk was written"
+ ],
+ "what_this_closes_and_what_it_does_not": {
+  "closes": "END-TO-END TOKEN GENERATION for this cell.  Prefill over 32 positions and three decode steps execute through the real control plane with every admission check passing; each decode step consumes the token the previous one appended.  That had never happened for any V4.1 cell before tonight, on any store.",
+  "does_not_close": "numeric agreement.  305 against 13806, and the oracle's margin of 2.4947 is far too wide for a sub-ulp explanation, so a defect remains to be found."
+ }
+}

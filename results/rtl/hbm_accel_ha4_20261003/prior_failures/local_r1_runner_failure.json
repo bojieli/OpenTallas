@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.hbm_accel.ha4.runner_failure.v1",
+ "source_commit": "8b162534e",
+ "verdict": "FAIL_RUNNER_IMPORT",
+ "error": "ModuleNotFoundError: No module named 'tools.gpu_sys'",
+ "fixture_sha256": "950002206b71d46e67ecd22f43d12a93bb8bcfb7d8e12b828aca3a224c209365",
+ "RTL_ran": false,
+ "raw_fixture_path": "/tmp/ha4-local-directed-r1/pinned_fixture.py",
+ "note": "Recorded from terminal exception; not an RTL verdict"
+}

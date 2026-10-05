@@ -1,0 +1,20 @@
+images loaded in 3.0 s
+models constructed and preloaded in 6.7 s (tiles/die=1536, stages=1, pos0=8188 np0=3)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=1s passes=3
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=847/847 kv_ok=0 drained=0 wall=577s passes=11820
+progress tick=8192 cyc=8193 pc_base=0/0 me_busy=2991/2991 kv_ok=0 drained=1 wall=1703s passes=23729
+progress tick=12288 cyc=12289 pc_base=0/0 me_busy=6052/6052 kv_ok=1 drained=1 wall=3291s passes=34982
+progress tick=16384 cyc=16385 pc_base=0/0 me_busy=8630/8630 kv_ok=1 drained=1 wall=4621s passes=45752
+progress tick=20480 cyc=20481 pc_base=55/55 me_busy=10322/10322 kv_ok=1 drained=1 wall=5500s passes=56761
+progress tick=24576 cyc=24577 pc_base=55/55 me_busy=10322/10322 kv_ok=1 drained=1 wall=5576s passes=64953
+progress tick=28672 cyc=28673 pc_base=55/55 me_busy=11329/11329 kv_ok=1 drained=1 wall=6114s passes=74152
+STAGE D0 done cycles=30611 start_cyc=7 end_cyc=30618 me_busy=11421/11421 pos=8188 np=3 layer=0 seq_fault=0 core_fault=0 coll_fault=0 wall=6186s
+MEMSTAT D0 die0 fill_cycles=10395 fill_sectors=131040 wr_sectors=408 rsp_tile_stall=11 kvok_low_with_desc=4367 drain_low=3821 wr_lat_max=532 stall_kv=4373 stall_drain=3373 stall_bridge=9406 stall_retire=3788 stall_mem=0 tile_edges=15771
+VERIFY_TOKENS die=0 n=0
+MEMSTAT D0 die1 fill_cycles=10395 fill_sectors=131040 wr_sectors=408 rsp_tile_stall=11 kvok_low_with_desc=4367 drain_low=3821 wr_lat_max=532 stall_kv=4373 stall_drain=3373 stall_bridge=9406 stall_retire=3788 stall_mem=0 tile_edges=15771
+VERIFY_TOKENS die=1 n=0
+MEMSTAT D0 die2 fill_cycles=10395 fill_sectors=131040 wr_sectors=408 rsp_tile_stall=11 kvok_low_with_desc=4367 drain_low=3821 wr_lat_max=532 stall_kv=4373 stall_drain=3373 stall_bridge=9406 stall_retire=3788 stall_mem=0 tile_edges=15771
+VERIFY_TOKENS die=2 n=0
+MEMSTAT D0 die3 fill_cycles=10395 fill_sectors=131040 wr_sectors=408 rsp_tile_stall=11 kvok_low_with_desc=4367 drain_low=3821 wr_lat_max=532 stall_kv=4373 stall_drain=3373 stall_bridge=9406 stall_retire=3788 stall_mem=0 tile_edges=15771
+VERIFY_TOKENS die=3 n=0
+QWEN_ROM_VPRM PASS stages=1 cycles=30618 edges=30618 settle_max=2 wall_s=6186.0 RSS_KiB=3264708 threads=12

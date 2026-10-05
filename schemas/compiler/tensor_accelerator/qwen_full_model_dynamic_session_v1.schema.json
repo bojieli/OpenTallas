@@ -1,0 +1,115 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_dynamic_session_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_8000_token_acceptance": {"const": false},
+        "short_generation": {"const": true},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "exact_8000_token_acceptance",
+        "short_generation",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "context_capacity": {"const": 8000},
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {
+          "items": {"maximum": 151935, "minimum": 0, "type": "integer"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "generated_token_limit": {
+          "maximum": 8000,
+          "minimum": 32,
+          "type": "integer"
+        },
+        "selection": {"const": "greedy_lowest_token_id_argmax"},
+        "unexpected_early_eos": {"const": "fail"}
+      },
+      "required": [
+        "eos_token_ids",
+        "generated_token_limit",
+        "selection",
+        "unexpected_early_eos"
+      ],
+      "type": "object"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "model_id": {"const": "qwen3-8b"},
+    "prompt": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {"minLength": 1, "type": "string"},
+        "token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "token_ids": {
+          "items": {"maximum": 151935, "minimum": 0, "type": "integer"},
+          "maxItems": 8000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "utf8_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["text", "token_count", "token_ids", "utf8_sha256"],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_full_model_dynamic_session.v1"
+    },
+    "session_id": {"$ref": "#/$defs/sha256"},
+    "session_version": {
+      "const": "tensor-accelerator-qwen-dynamic-session-0.2.0"
+    },
+    "tokenizer": {
+      "additionalProperties": false,
+      "properties": {
+        "decoded_prompt_exact": {"const": true},
+        "library": {"const": "tokenizers"},
+        "library_version": {"const": "0.22.2"},
+        "path": {"const": "tokenizer.json"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "vocabulary_size": {"const": 151936}
+      },
+      "required": [
+        "decoded_prompt_exact",
+        "library",
+        "library_version",
+        "path",
+        "sha256",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "context_capacity",
+    "generation",
+    "graph_id",
+    "model_id",
+    "prompt",
+    "schema",
+    "session_id",
+    "session_version",
+    "tokenizer"
+  ],
+  "title": "Qwen dynamic short-generation session v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

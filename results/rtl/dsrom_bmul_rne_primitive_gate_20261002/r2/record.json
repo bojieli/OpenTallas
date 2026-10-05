@@ -1,0 +1,801 @@
+{
+  "GO": {
+    "GO": "BOUNDED_BF_RNE_PRIMITIVE_VERIFICATION_ONLY",
+    "bench_sha256": "32da5e53c1eb274e1460774672b9ec818994e3c2348b707b6cc7c62a691b12f8",
+    "caps": {
+      "aggregate_disk_bound_poll_seconds": 0.1,
+      "automatic_retries": 0,
+      "build_log_bytes": 8388608,
+      "build_summed_seconds": 60,
+      "core_bytes": 0,
+      "cpu_affinity": [
+        0
+      ],
+      "cpu_quota_percent": 100,
+      "each_sim_log_bytes": 262144,
+      "fallback": false,
+      "kill": "Alllimitviolations usecgroup.kill=1; timeoutreceipt failure cannotpreventkill. RuntimeMax70+independentwholewatchdog+SIGTERMwholekill. Logstoredbyteshardbounded; inheritedRLIMIT_FSIZE hardboundsregularfiles; aggregategenerated/outputbytes sampled0.1s, overshootpossibleuntilwholekill, explicitlynot a filesystemquota.",
+      "launcher_log_hard_bytes": 8388608,
+      "memory_max_bytes": 536870912,
+      "memory_swap_max_bytes": 0,
+      "output_aggregate_bytes": 33554432,
+      "output_files": 64,
+      "per_file_hard_bytes": 8388608,
+      "receipt_max_bytes": 4194304,
+      "simulate_summed_seconds": 10,
+      "whole_cgroup_seconds": 70,
+      "work_aggregate_bytes": 536870912,
+      "work_files": 4096
+    },
+    "expected_completion": {
+      "baseline_defaultoff_original_comparisons": 708,
+      "baseline_negative_witnesses": 2,
+      "encoder_assertions": 840,
+      "encoder_vectors": 420,
+      "execution_plan": "One shared binary withmode0positive thenmode1..8 selectedby+MUTANT; modeonlyselects assertioncontrol, immutable operandsunchanged; no separate HDL compilation per mutant.",
+      "mutant_PASS_condition": "Positive ref/candidate independent oracle checks pass, selected mutant emits explicit DIFF and exact coverage completes. Compile/crash/missing DIFF never qualifies control.",
+      "mutant_modes": [
+        "truncation",
+        "tie_away",
+        "shift_offbyone",
+        "negative_zero",
+        "old_range",
+        "underflow_fault",
+        "zero_nonfinite_bypass",
+        "refusal_no_fault"
+      ],
+      "product_assertions": 1416,
+      "product_vectors": 708
+    },
+    "generated_package_sha256": "5a31e5c4046b465686ed72f80246370e0e2e3450ab3257104cce48b5b08732f3",
+    "parent_instruction": "Fresh independent review only: set GO to BOUNDED_BF_RNE_PRIMITIVE_VERIFICATION_ONLY and prepared_commit to full40hex reviewed r2 commit; commit at results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/parent_GO.json. Prior consumed GO is not valid for new r2 path/pins. No automatic retry.",
+    "parent_review": {
+      "compile_only_change": "-MAKEFLAGS VM_PARALLEL_BUILDS=0",
+      "independent_tests": "19 passed, 22 subtests passed",
+      "preflight": "PASS_NO_HDL_EXECUTION",
+      "same_source_package_oracle_caps": true,
+      "scope": "One fresh primitive attempt only, no automatic retry."
+    },
+    "prepared_commit": "d8c2d19c2f9d732e8bf4985277abc4cdf13d7af0",
+    "prepared_model_sha256": "fa2a50136448c51cd82b07ac1ce8dfd9bcbb13a626b195ddfcc5e3e1f1d7a0e8",
+    "runner_plan_sha256": "5ed16adada8c8a96be7c83b64004ff6b3da0be71fd681642d8147e0e73bd4168",
+    "runner_sha256": "76112674c63527e167132b96e8fbe23ceea725e20b8ab2d58769c4aa6f941506",
+    "semantic_contract_sha256": "27c0488d7f00102137eb2b32f9c74c035fdbea385e04a72c55443d931312b966",
+    "sourceplan_sha256": "c846abfae781242bb89b5f25335f83174275518ce4dc1c5679ce0cfaec2da6ae"
+  },
+  "GO_commit": "HEAD",
+  "GO_sha256": "5496a8884ca1572efbf654eca7582928d7d7b4d691ae6d642c844c64379c5f18",
+  "artifacts": {
+    "bytes": 2994878,
+    "files": 54,
+    "sha256": {
+      "cand_ot_prefix.sv": "7cbc3fb75b85c059f6611063cecb2474fb658da49335a232a5062da9cdfa1358",
+      "cand_ot_v41_bmul2_rne_prepare.sv": "948b6533c6912d3c6fa47577e3c7490bd4a37063dda5eae205ee59f49f3949bd",
+      "cand_ot_v41_bmul_subnormal_rne_prepare.sv": "7700f956125c433ef18ce367d37e2c3314bcee15f75f0b5166074ca2989ffac1",
+      "dsrom_bmul_rne_primitive_expected.svh": "5baf56aa0ea6b5a017cc3beef18467c4a83396a41b2a059458ce44b05c7284ec",
+      "dsrom_bmul_rne_primitive_inputs.svh": "fad464d0f54edb1a9e854ccaeca31ac9de9af0c50c3814a70d189fd0345ff208",
+      "mut_negative_zero_ot_v41_bmul2_rne_prepare.sv": "694a5b2d182703cee6d6ef71617f1df80e42e57032778516254be6906962edb7",
+      "mut_negative_zero_ot_v41_bmul_subnormal_rne_prepare.sv": "0b56e306c1822131712f7bc9db4fa521107748fa19ae95215d83c7d0e608599c",
+      "mut_old_range_ot_v41_bmul2_rne_prepare.sv": "9afd71c27a39478985d99213033106777ba0ca7dcf5c457b9c24b277eea3b10c",
+      "mut_old_range_ot_v41_bmul_subnormal_rne_prepare.sv": "7ef18d7d79bb7057cb4510879f5174989fbdd01203cb57caf5c9d7909cdffa5d",
+      "mut_refusal_no_fault_ot_v41_bmul2_rne_prepare.sv": "2785d98e9b15c104682e50bef410f0557efb5f3c7f139a16a1739fddc8a42c07",
+      "mut_refusal_no_fault_ot_v41_bmul_subnormal_rne_prepare.sv": "2d7d405c4862ff43abe9c386de6265390b05206b10eb32a37bdaac8ae5b16bdb",
+      "mut_shift_offbyone_ot_v41_bmul2_rne_prepare.sv": "72b5024133a06e67c14782f4fcc28d6179fd435d06b2de1870d88dd3b2d179db",
+      "mut_shift_offbyone_ot_v41_bmul_subnormal_rne_prepare.sv": "098737fe94e39dc7897b8fa37f4548af5cc1a45836ea42f87a1ba7fd1c214029",
+      "mut_tie_away_ot_v41_bmul2_rne_prepare.sv": "c0d63c5f08b789ba89bc4fbef727406354132926cfdae7490756db3e982ec514",
+      "mut_tie_away_ot_v41_bmul_subnormal_rne_prepare.sv": "e9f81e08f615e058accb1d2f8b3968bd08ea4ca729bdf47d8b1d4219ae7d268f",
+      "mut_truncation_ot_v41_bmul2_rne_prepare.sv": "3510e5813306ae30b371850548f12030a0ccba85946a5e28292aa02b21daf2bc",
+      "mut_truncation_ot_v41_bmul_subnormal_rne_prepare.sv": "d5ff9fff121e1d8f7cb61d9c3179e493b7a39ceed38f7d56111200cce82be8cf",
+      "mut_underflow_fault_ot_v41_bmul2_rne_prepare.sv": "dd97b3ac2e41c70c87a5d4076cf71f52cf02483eb31c1e3f94e813d2be870113",
+      "mut_underflow_fault_ot_v41_bmul_subnormal_rne_prepare.sv": "f3c7ed10b33f1b0a548e3a38c96cadfeb712b87992fc35e53c32d14174c6310b",
+      "mut_zero_nonfinite_bypass_ot_v41_bmul2_rne_prepare.sv": "e75ca0b14c9b5a471d45bcffee8213e2ce1ddc159d0d270216e8726b9e837795",
+      "mut_zero_nonfinite_bypass_ot_v41_bmul_subnormal_rne_prepare.sv": "d9e0dc45b8a54dff50c20673a5f3f7b656acf20400b09f3d1deb84ee772345b9",
+      "obj_positive/Vtb_bmul_rne_primitive": "40c564e1024f320a5367f3f599597bfeaacb1bc71d5f792037e62a3b422b9753",
+      "obj_positive/Vtb_bmul_rne_primitive.cpp": "f259cc3b4e3dfd5968fab9a001907e27f165df07b0dc8d1dd4be76bb35184633",
+      "obj_positive/Vtb_bmul_rne_primitive.h": "b54e9dfcf98ca018fc575bb9909c6d48a61c12657074d7d80b1f819d664414ad",
+      "obj_positive/Vtb_bmul_rne_primitive.mk": "30cb662e39fe50a6a5fd4d4371286fb45b73508c992705620feae6c8d9dda055",
+      "obj_positive/Vtb_bmul_rne_primitive__ALL.a": "e653228fc0dba648497574886ab61cc36520c5459f28497ad42cedd3f414414b",
+      "obj_positive/Vtb_bmul_rne_primitive__ALL.cpp": "e0c14f9945bd920b72583a83a911f9f06c7c7bf1368961e84a1e18b1620bcc42",
+      "obj_positive/Vtb_bmul_rne_primitive__ALL.d": "fb5a0bfbfb4b7b5ada0a4c12554e32444db07a815bbf9e9c919b321e7d132055",
+      "obj_positive/Vtb_bmul_rne_primitive__ALL.o": "bbdab581907d53ce5e5eac47b9f3e758e20a76154a5d954bfa6a31a6fe4886ba",
+      "obj_positive/Vtb_bmul_rne_primitive__ConstPool__0__Slow.cpp": "6e64d4208d5f341fc248a9b178adf2b6edac150e67372b211a35a9dc43ef8c33",
+      "obj_positive/Vtb_bmul_rne_primitive__Syms.h": "52559cd1b44f7f7a3d9f0b7b4727e84e0e8ef63785e1bdf5747cee9a6848ddb3",
+      "obj_positive/Vtb_bmul_rne_primitive__Syms__Slow.cpp": "a6436a91f47d10c6976355af165a21a4aa5412cf7e9f27484332c1efbbcd8c07",
+      "obj_positive/Vtb_bmul_rne_primitive___024root.h": "e4eb95b4d84d1c04f693c2d79b485787b31e3a961435e2c4222bd0a16926df1f",
+      "obj_positive/Vtb_bmul_rne_primitive___024root__0.cpp": "e907f1910a175cdd5b6276a53ee49b081dd9b7cc0e0a2c7af2e29b6caf2dcaef",
+      "obj_positive/Vtb_bmul_rne_primitive___024root__0__Slow.cpp": "4a866ed821548ca5f14405e8459f313739fde924bd4163e61b84db05ed3de52d",
+      "obj_positive/Vtb_bmul_rne_primitive___024root__1.cpp": "401cd552f9a60847ecf81f7120a5027fca517de8e2e8b0482b2fbb0eafce04df",
+      "obj_positive/Vtb_bmul_rne_primitive___024root__Slow.cpp": "bb6276da7f047ac1c9614215b0eb92e790a61bd400bfb3e66d44af1ffdeb7179",
+      "obj_positive/Vtb_bmul_rne_primitive__main.cpp": "05a93d9c5a553cf1ad3767b605f8d42e23aeac748d169cf873cca6ebfb414e98",
+      "obj_positive/Vtb_bmul_rne_primitive__pch.h": "4fcfb2ccc9eff587fd0512281c6987c58086f3b8e3ae3eec84af6a78dcb7cede",
+      "obj_positive/Vtb_bmul_rne_primitive__ver.d": "d5121e2c935392fca9a2160f07beaa025daf72565e02864f18c8aa9b035daa05",
+      "obj_positive/Vtb_bmul_rne_primitive__verFiles.dat": "ccab9fb675d1e5defacc608d53552f1200a785f98d944e17310e8beaf4355d2d",
+      "obj_positive/Vtb_bmul_rne_primitive_classes.mk": "b49ffc973dc29531fbb9b0e0a2045840ce06e9c5decbdbc8b219fcb0aacb7565",
+      "obj_positive/verilated.d": "22847bd077c0eb293aa1e871ceafe053037479645bfc18ec6354afc638b67e5a",
+      "obj_positive/verilated.o": "e1bfbea77f32f1488af066a40da7d11f452ef4522c55a7c7246eec1a71a5d254",
+      "obj_positive/verilated_threads.d": "59d0aa0b830bfad4bd336191fb195e99c04e6399033e36c143e2aabaa57cea84",
+      "obj_positive/verilated_threads.o": "20e39a91341e70ea7416b7b001c43c5e96c868db98048de8be855b03bd1282c4",
+      "obj_positive/verilated_timing.d": "748002c51e1364120e32107d264c8cfe01c57db3f0e1bb1c224d7918ef773d24",
+      "obj_positive/verilated_timing.o": "24cdf5d8a25bca5f58a3e40ea57db0c1eda8d058e62c6c096fd47e797a7efd74",
+      "preparation.json": "cdcf1bf6ff12bff22a78f8380840e609d2bf02ea46770a098d8d265ad0dc39ef",
+      "ref_ot_prefix.sv": "d3df0d2991f705e3290da076dc9793598bdaeaeacf6b91e59660b0e2f80543c9",
+      "ref_ot_v41_bmul2.sv": "d62c5df5c217a874ad97fdaef82d4ec0e8dbc60e92f5e8cb4ccb1a87ae0589ef",
+      "ref_ot_v41_bmul2_rne_prepare.sv": "609c5149c6aea9f7d6528e83bee3ca0650270c29d2b9962e3a18d156c50fdf72",
+      "ref_ot_v41_bmul_subnormal_rne_prepare.sv": "8ee07dc643d00510ea5eda989e9dc9b72f4c4fa09c3f164ea26447c9631019a9",
+      "tb_dsrom_bmul_rne_primitive.sv": "32da5e53c1eb274e1460774672b9ec818994e3c2348b707b6cc7c62a691b12f8"
+    }
+  },
+  "caps": {
+    "aggregate_disk_bound_poll_seconds": 0.1,
+    "automatic_retries": 0,
+    "build_log_bytes": 8388608,
+    "build_summed_seconds": 60,
+    "core_bytes": 0,
+    "cpu_affinity": [
+      0
+    ],
+    "cpu_quota_percent": 100,
+    "each_sim_log_bytes": 262144,
+    "fallback": false,
+    "kill": "Alllimitviolations usecgroup.kill=1; timeoutreceipt failure cannotpreventkill. RuntimeMax70+independentwholewatchdog+SIGTERMwholekill. Logstoredbyteshardbounded; inheritedRLIMIT_FSIZE hardboundsregularfiles; aggregategenerated/outputbytes sampled0.1s, overshootpossibleuntilwholekill, explicitlynot a filesystemquota.",
+    "launcher_log_hard_bytes": 8388608,
+    "memory_max_bytes": 536870912,
+    "memory_swap_max_bytes": 0,
+    "output_aggregate_bytes": 33554432,
+    "output_files": 64,
+    "per_file_hard_bytes": 8388608,
+    "receipt_max_bytes": 4194304,
+    "simulate_summed_seconds": 10,
+    "whole_cgroup_seconds": 70,
+    "work_aggregate_bytes": 536870912,
+    "work_files": 4096
+  },
+  "claims": {
+    "adoption": false,
+    "full_element": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "final_caps": {
+    "cgroup.procs": "3067280",
+    "cpu.max": null,
+    "cpu_affinity": [
+      0
+    ],
+    "memory.current": "15982592",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "536870912",
+    "memory.peak": "391897088",
+    "memory.swap.current": "0",
+    "memory.swap.max": "0"
+  },
+  "generated": {
+    "compile_authorized": false,
+    "files_sha256": {
+      "cand_ot_prefix.sv": "7cbc3fb75b85c059f6611063cecb2474fb658da49335a232a5062da9cdfa1358",
+      "cand_ot_v41_bmul2_rne_prepare.sv": "948b6533c6912d3c6fa47577e3c7490bd4a37063dda5eae205ee59f49f3949bd",
+      "cand_ot_v41_bmul_subnormal_rne_prepare.sv": "7700f956125c433ef18ce367d37e2c3314bcee15f75f0b5166074ca2989ffac1",
+      "dsrom_bmul_rne_primitive_expected.svh": "5baf56aa0ea6b5a017cc3beef18467c4a83396a41b2a059458ce44b05c7284ec",
+      "dsrom_bmul_rne_primitive_inputs.svh": "fad464d0f54edb1a9e854ccaeca31ac9de9af0c50c3814a70d189fd0345ff208",
+      "mut_negative_zero_ot_v41_bmul2_rne_prepare.sv": "694a5b2d182703cee6d6ef71617f1df80e42e57032778516254be6906962edb7",
+      "mut_negative_zero_ot_v41_bmul_subnormal_rne_prepare.sv": "0b56e306c1822131712f7bc9db4fa521107748fa19ae95215d83c7d0e608599c",
+      "mut_old_range_ot_v41_bmul2_rne_prepare.sv": "9afd71c27a39478985d99213033106777ba0ca7dcf5c457b9c24b277eea3b10c",
+      "mut_old_range_ot_v41_bmul_subnormal_rne_prepare.sv": "7ef18d7d79bb7057cb4510879f5174989fbdd01203cb57caf5c9d7909cdffa5d",
+      "mut_refusal_no_fault_ot_v41_bmul2_rne_prepare.sv": "2785d98e9b15c104682e50bef410f0557efb5f3c7f139a16a1739fddc8a42c07",
+      "mut_refusal_no_fault_ot_v41_bmul_subnormal_rne_prepare.sv": "2d7d405c4862ff43abe9c386de6265390b05206b10eb32a37bdaac8ae5b16bdb",
+      "mut_shift_offbyone_ot_v41_bmul2_rne_prepare.sv": "72b5024133a06e67c14782f4fcc28d6179fd435d06b2de1870d88dd3b2d179db",
+      "mut_shift_offbyone_ot_v41_bmul_subnormal_rne_prepare.sv": "098737fe94e39dc7897b8fa37f4548af5cc1a45836ea42f87a1ba7fd1c214029",
+      "mut_tie_away_ot_v41_bmul2_rne_prepare.sv": "c0d63c5f08b789ba89bc4fbef727406354132926cfdae7490756db3e982ec514",
+      "mut_tie_away_ot_v41_bmul_subnormal_rne_prepare.sv": "e9f81e08f615e058accb1d2f8b3968bd08ea4ca729bdf47d8b1d4219ae7d268f",
+      "mut_truncation_ot_v41_bmul2_rne_prepare.sv": "3510e5813306ae30b371850548f12030a0ccba85946a5e28292aa02b21daf2bc",
+      "mut_truncation_ot_v41_bmul_subnormal_rne_prepare.sv": "d5ff9fff121e1d8f7cb61d9c3179e493b7a39ceed38f7d56111200cce82be8cf",
+      "mut_underflow_fault_ot_v41_bmul2_rne_prepare.sv": "dd97b3ac2e41c70c87a5d4076cf71f52cf02483eb31c1e3f94e813d2be870113",
+      "mut_underflow_fault_ot_v41_bmul_subnormal_rne_prepare.sv": "f3c7ed10b33f1b0a548e3a38c96cadfeb712b87992fc35e53c32d14174c6310b",
+      "mut_zero_nonfinite_bypass_ot_v41_bmul2_rne_prepare.sv": "e75ca0b14c9b5a471d45bcffee8213e2ce1ddc159d0d270216e8726b9e837795",
+      "mut_zero_nonfinite_bypass_ot_v41_bmul_subnormal_rne_prepare.sv": "d9e0dc45b8a54dff50c20673a5f3f7b656acf20400b09f3d1deb84ee772345b9",
+      "ref_ot_prefix.sv": "d3df0d2991f705e3290da076dc9793598bdaeaeacf6b91e59660b0e2f80543c9",
+      "ref_ot_v41_bmul2.sv": "d62c5df5c217a874ad97fdaef82d4ec0e8dbc60e92f5e8cb4ccb1a87ae0589ef",
+      "ref_ot_v41_bmul2_rne_prepare.sv": "609c5149c6aea9f7d6528e83bee3ca0650270c29d2b9962e3a18d156c50fdf72",
+      "ref_ot_v41_bmul_subnormal_rne_prepare.sv": "8ee07dc643d00510ea5eda989e9dc9b72f4c4fa09c3f164ea26447c9631019a9",
+      "tb_dsrom_bmul_rne_primitive.sv": "32da5e53c1eb274e1460774672b9ec818994e3c2348b707b6cc7c62a691b12f8"
+    },
+    "model_sha256": "fa2a50136448c51cd82b07ac1ce8dfd9bcbb13a626b195ddfcc5e3e1f1d7a0e8",
+    "simulate_authorized": false,
+    "status": "PRIMITIVE_PREPARED_NOT_COMPILED"
+  },
+  "initial_caps": {
+    "cgroup.procs": "3067280",
+    "cpu.max": null,
+    "cpu_affinity": [
+      0
+    ],
+    "memory.current": "10899456",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "536870912",
+    "memory.peak": "12038144",
+    "memory.swap.current": "0",
+    "memory.swap.max": "0"
+  },
+  "prepared_commit": "d8c2d19c2f9d732e8bf4985277abc4cdf13d7af0",
+  "runner_commit": "95d2a2e2a00b2216e445bc6cf32cc920fd41abd6",
+  "runs": [
+    {
+      "argv": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--build",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "-MAKEFLAGS",
+        "VM_PARALLEL_BUILDS=0",
+        "--top-module",
+        "tb_bmul_rne_primitive",
+        "--Mdir",
+        "obj_positive",
+        "ref_ot_prefix.sv",
+        "cand_ot_prefix.sv",
+        "ref_ot_v41_bmul2.sv",
+        "ref_ot_v41_bmul2_rne_prepare.sv",
+        "ref_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "cand_ot_v41_bmul2_rne_prepare.sv",
+        "cand_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_truncation_ot_v41_bmul2_rne_prepare.sv",
+        "mut_truncation_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_tie_away_ot_v41_bmul2_rne_prepare.sv",
+        "mut_tie_away_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_shift_offbyone_ot_v41_bmul2_rne_prepare.sv",
+        "mut_shift_offbyone_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_negative_zero_ot_v41_bmul2_rne_prepare.sv",
+        "mut_negative_zero_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_old_range_ot_v41_bmul2_rne_prepare.sv",
+        "mut_old_range_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_underflow_fault_ot_v41_bmul2_rne_prepare.sv",
+        "mut_underflow_fault_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_zero_nonfinite_bypass_ot_v41_bmul2_rne_prepare.sv",
+        "mut_zero_nonfinite_bypass_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "mut_refusal_no_fault_ot_v41_bmul2_rne_prepare.sv",
+        "mut_refusal_no_fault_ot_v41_bmul_subnormal_rne_prepare.sv",
+        "tb_dsrom_bmul_rne_primitive.sv"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15527936",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "shared",
+      "elapsed_seconds": 6.861512722913176,
+      "log_sha256": "1a56c10bdde4ca604d71fdd67e2bf6f7b316b4c993981bfc9860e275671f65bc",
+      "mode": null,
+      "phase": "build",
+      "remaining_seconds_at_start": 60.0,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15527936",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "positive",
+      "completion": {
+        "DIFF_lines": [],
+        "expected_counts": [
+          [
+            0,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": false,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            0,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.0027742311358451843,
+      "log_sha256": "13e6f1c0e28301e62bbab691a657756ad67cf246da032e41a25f92b236e1c7d3",
+      "mode": 0,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 10.0,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=1"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15622144",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "truncation",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "1",
+            "product",
+            "5",
+            "000000001",
+            "00000000/0"
+          ]
+        ],
+        "expected_counts": [
+          [
+            1,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            1,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.002167444210499525,
+      "log_sha256": "b6b06f78dd6c1d9fc1f615eb2387a56416a5eb77a624923a823ef29fd75d780a",
+      "mode": 1,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.997225768864155,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=2"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15695872",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "tie_away",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "2",
+            "product",
+            "1",
+            "000000000",
+            "00000001/0"
+          ]
+        ],
+        "expected_counts": [
+          [
+            2,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            2,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.001994452904909849,
+      "log_sha256": "a75274d681451ba52e7bb49ce5137cb50d3a98d492baa1f56d5797c936152830",
+      "mode": 2,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.995058324653655,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=3"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15691776",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "shift_offbyone",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "3",
+            "product",
+            "0",
+            "000008000",
+            "00004000/0"
+          ]
+        ],
+        "expected_counts": [
+          [
+            3,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            3,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.0019881417974829674,
+      "log_sha256": "8069eadc30c1a7027e9f0c79364dd1d0caba830c8408d94e9b2ea4f5815a41a6",
+      "mode": 3,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.993063871748745,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=4"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15753216",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "negative_zero",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "4",
+            "product",
+            "4",
+            "000000000",
+            "80000000/0"
+          ]
+        ],
+        "expected_counts": [
+          [
+            4,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            4,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.0019317041151225567,
+      "log_sha256": "3bc1692188d8f1fa50f4b62227266f5273a9caf43dddb19e9182a51242ea914f",
+      "mode": 4,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.991075729951262,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=5"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15798272",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "old_range",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "5",
+            "product",
+            "0",
+            "000008000",
+            "00000000/1"
+          ]
+        ],
+        "expected_counts": [
+          [
+            5,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            5,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.001975475810468197,
+      "log_sha256": "2b6fcbf402826cdba9870a9f5302e7f4ce56aae67021c2508417f1760edd695c",
+      "mode": 5,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.98914402583614,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=6"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "16068608",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "underflow_fault",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "6",
+            "product",
+            "0",
+            "000008000",
+            "00008000/1"
+          ]
+        ],
+        "expected_counts": [
+          [
+            6,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            6,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.0020844549871981144,
+      "log_sha256": "7836399931599507498c4221ebe558836d691191e22e1889928ab770156a6682",
+      "mode": 6,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.987168550025672,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=7"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "16003072",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "zero_nonfinite_bypass",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "7",
+            "product",
+            "8",
+            "100000000",
+            "00000000/0"
+          ]
+        ],
+        "expected_counts": [
+          [
+            7,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            7,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.0019311392679810524,
+      "log_sha256": "63708fa8f965dbd112084036da4d82f156b179a627fddbf4d8502d5af7d34892",
+      "mode": 7,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.985084095038474,
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "./obj_positive/Vtb_bmul_rne_primitive",
+        "+MUTANT=8"
+      ],
+      "caps": {
+        "cgroup.procs": "3067280",
+        "cpu.max": null,
+        "cpu_affinity": [
+          0
+        ],
+        "memory.current": "15982592",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "536870912",
+        "memory.peak": "391897088",
+        "memory.swap.current": "0",
+        "memory.swap.max": "0"
+      },
+      "case": "refusal_no_fault",
+      "completion": {
+        "DIFF_lines": [
+          [
+            "8",
+            "product",
+            "8",
+            "100000000",
+            "00000000/0"
+          ]
+        ],
+        "expected_counts": [
+          [
+            8,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "explicit_mutant_DIFF": true,
+        "fatal_or_crash": false,
+        "pass_counts": [
+          [
+            8,
+            1416,
+            840,
+            2
+          ]
+        ],
+        "valid": true
+      },
+      "elapsed_seconds": 0.0019417470321059227,
+      "log_sha256": "e3976ada4edc350c6b15f551817bb636db91a0c044724f818408bf3c327278ff",
+      "mode": 8,
+      "phase": "simulate",
+      "remaining_seconds_at_start": 9.983152955770493,
+      "returncode": 0
+    }
+  ],
+  "status": "PASS_BOUNDED_PRIMITIVE_ONLY",
+  "tool_preflight": {
+    "compiled": false,
+    "help_sha256": "163792edc666155765bbb78b29afb77bc1d5191a6093dff1d3827c184929a0be",
+    "installation_files_sha256": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0"
+    },
+    "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "version": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "used_seconds": {
+    "build": 6.861512722913176,
+    "simulate": 0.01878879126161337
+  },
+  "versions": {
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "g++": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "make": "GNU Make 4.3",
+    "systemd-run": "systemd 249 (249.11-0ubuntu3.22)"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "bfcolumn": {
+    "completed_phases": [
+      1,
+      2
+    ],
+    "completed_public_rows": 32,
+    "completed_value_assertions": 64,
+    "scope": "FP8 and FP4 complete; BF16 phase3 fails first observed numerical checker event. Later MTP/BF16, reset/restart and final completion unqualified."
+  },
+  "calibration": {
+    "OOM": false,
+    "caps": {
+      "cgroup.procs": "2841463",
+      "cpu.max": null,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "memory.max": "4294967296",
+      "memory.peak": "14430208",
+      "memory.swap.max": "0"
+    },
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_max": "Kernel cpu.max unavailable in this user cgroup; two-CPU capacity enforced by verified affinity [0,1], service quota200% recorded.",
+    "deadline_kill": false,
+    "final_caps": {
+      "cgroup.procs": "2841463",
+      "cpu.max": null,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "memory.max": "4294967296",
+      "memory.peak": "2491949056",
+      "memory.swap.max": "0"
+    },
+    "limits": {
+      "build": 600,
+      "simulate": 60
+    },
+    "peak_memory_bytes": 2491949056,
+    "prior_rowfix_measurement_not_a_rate_prediction": true,
+    "retries": 0,
+    "used_seconds": {
+      "build": 271.1858397186734,
+      "simulate": 1.28024248406291
+    },
+    "whole_limit_seconds": 660
+  },
+  "claims": {
+    "WAKE1": false,
+    "adoption": false,
+    "field_return": false,
+    "frequency": false,
+    "full_arithmetic_domain": false,
+    "fulltoken": false,
+    "physical_ICG": false
+  },
+  "q": {
+    "comparison_samples_lower_bound": 270780,
+    "completed_phases": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      7,
+      9,
+      10,
+      1
+    ],
+    "config_assertions": 352,
+    "public_rows": 344,
+    "runtime": {
+      "BF": 0,
+      "cycles": 90260,
+      "gated": 2308,
+      "issues": 3520,
+      "loads": 275,
+      "opened": 87948,
+      "partials": 176
+    },
+    "scope": "FP8/FP4; MTP six positions; two-unit and nseg2 tags. Reset cancellation/restart, empty go, idle macro, drain/gating checks reached and passed.",
+    "value_assertions": 688
+  },
+  "status": "Q_PASS_BF_FAIL_OVERALL_UNQUALIFIED",
+  "versions": {
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "g++": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "make": "GNU Make 4.3",
+    "systemd-run": "systemd 249 (249.11-0ubuntu3.22)"
+  }
+}

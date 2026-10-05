@@ -1,0 +1,215 @@
+{
+  "HC22": {
+    "HC_cost_nodes": 1760,
+    "artifacts": {
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/HC22_schedule_r1.json": "32c14d5933aeb930852b217a7f3984d73670792b17c856f61774b610b85f3f42",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/build_r1.log": "4641c1d2e82b3c77d7a0d81845da0fc0f7fffdb3336000766171fb9b2edad112",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/check_r1.log": "4641c1d2e82b3c77d7a0d81845da0fc0f7fffdb3336000766171fb9b2edad112",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/cost_r1.json": "f8d5a9ab72bbbe57806f341defaff4210b3e1aaaf353033f31d422b649e29414",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/cost_r1.trace.json": "8a6720019580f8206d2e9ebd8a380272dd0ca568fb55aaf7b39159f562470c80",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/inputs_r1.json": "7c130e8c16eba97918129c95e7f0b3ce446add7f904882a6eb2e1e80d8aa172e",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/remaining_nonHC_costs_r1.json": "5dbb36fe3998210130d8a643bb50b429bcb0256574a982975d93269bb63e65f4",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/resource_build_r2.log": "e440ef5dc0fa326df208ec8950f2a70e6343610d7e4f53737cc2b7be259962c3",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/resource_check_r2.log": "e440ef5dc0fa326df208ec8950f2a70e6343610d7e4f53737cc2b7be259962c3",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/tests_r1.log": "6dd786dc72d45e02d32f9a2c96fbee7f0ea69261b610e86a41d1a671dd0186ef",
+      "results/uarch/w16_gpu_hc_dot_schedule_20261001/tests_r1.xml": "ad2829660651d2681391719760b182978c2df6b5938ff74bc00841ddc4a659a0"
+    },
+    "claim_boundary": "Conditional isolated analytical HC only. The450cycle credit wait and500ns loaded HBM are assumptions awaiting service owner confirmation, not guaranteed measured bounds. Serialized HC subgraph removes non-HC dependencies solely for the scoped calendar. Full graph correctly refuses complete timing; historical five-phase graph, resource r1 and landing source remain unchanged.",
+    "committed_evidence_HC_calendar_exact": true,
+    "committed_evidence_full_graph_refusal_exact": true,
+    "cost_current_source_check": "PASS",
+    "cycles_operator": 132635,
+    "preserved_transpose_cycles": 35248,
+    "resource_r2_current_source_check": "PASS",
+    "source_inputs": {
+      "Euler_input": {
+        "actual_current_line_request_bytes_second_controller": 153600000000,
+        "bank_after_final_sector_assumption_cycles": 3,
+        "bank_layout": {
+          "PC_count": 32,
+          "PC_ingress_FIFO_depth": 8,
+          "SRAM": {
+            "context_macros": 8,
+            "context_physical_bits": 2097152,
+            "context_used_bits_per_row": 164,
+            "landing_macros": 32,
+            "landing_physical_bits": 8388608,
+            "macro_depth": 1024,
+            "macro_width": 256,
+            "used_rows_per_macro": 512
+          },
+          "SRAM_ports": {
+            "context": "8 separate 1R1W arrays; <=1 allocation write and <=1 delivery read per bank/cycle; allocation supplies generation/live to register scoreboard on the same edge",
+            "landing": "32 separate 1R1W arrays; each writes <=1 sector and reads <=1 completed line sector/cycle",
+            "scoreboard": "8 register banks, each 512x9; up to4 response validations/merged updates plus1 allocation and1 retirement; these are explicit multiport register costs, not SRAM ports"
+          },
+          "bank": "slot & 7",
+          "bank_count": 8,
+          "bytes_all96": 513292800,
+          "bytes_per_controller": 1336700,
+          "bytes_per_rank": 5346800,
+          "control_storage_bits": {
+            "PC_FIFO_payload_bits": 70656,
+            "PC_FIFO_pointer_bits": 320,
+            "SRAM_read_pipeline_bits": 9608,
+            "completion_FIFO_bits": 49152,
+            "completion_FIFO_pointer_bits": 224,
+            "output_skid_bits": 19200,
+            "output_skid_pointer_bits": 32,
+            "scoreboard_bits": 36864,
+            "sector_arbiter_RR_bits": 160
+          },
+          "incremental_bytes_per_rank_vs_logical_contract": 2894772,
+          "mux_and_merge": {
+            "SM_destinations": 32,
+            "inputs_per_sector_arbiter": 32,
+            "rank_age_counter_width": null,
+            "rank_age_storage_bits": null,
+            "rank_candidate_SM_equal_compare_bit_equivalents": 2480,
+            "rank_candidate_priority_pairwise_comparisons": 496,
+            "rank_delivery_32_to_32_mux_bit_equivalents": 1190400,
+            "rank_delivery_candidates": 32,
+            "rank_delivery_policy": "Oldest eligible candidate; at most one grant per source bank and SM per cycle. Physical age implementation/width pending; oracle uses first-completion cycle.",
+            "same_line_compare_bits": 12,
+            "same_line_pairwise_compare_bit_equivalents_per_controller": 576,
+            "same_line_pairwise_compares_per_bank": 6,
+            "scoreboard_4read_mux_bit_equivalents_per_controller": 147168,
+            "sector_RR_arbiters_per_controller": 32,
+            "sector_crossbar_32_to_32_mux_bit_equivalents": 273792
+          },
+          "note": "Storage excludes unbound physical rank-arbiter age logic and wires. No L2/RF/shared credit; SRAM read latency1 and update register logic at1.2GHz remain physical assumptions.",
+          "replicas": {
+            "controllers_per_rank": 4,
+            "ranks": 96,
+            "whole_SRAM_macros_all96": 15360,
+            "whole_SRAM_macros_per_rank": 160
+          },
+          "retained_transport_storage_bits": 21623,
+          "row": "slot >> 3",
+          "scoreboard_bits": {
+            "completion_enqueued": 1,
+            "generation": 3,
+            "live": 1,
+            "received_sector_mask": 4
+          },
+          "sector_bank": "beat & 3",
+          "sector_banks_per_line_bank": 4,
+          "slots_per_bank": 512,
+          "total_storage_bits_per_controller": 10693599
+        },
+        "commit": "0833a6613d0f0568dd28cb68fb1550b0d1b7c137",
+        "context_allocation_lines_cycle_controller": 1,
+        "path": "tools/w19_landing_banks.py",
+        "proposed_fullstack_TBps_credit": false,
+        "request": "Confirm proposed banked delivery3cycles after last sector and fourcontroller one128Bline/clock isolated HC service; bind reservation bounds. No full-stack1TB/s credit; shared transpose explicit8/4-way.",
+        "sha256": "227de15a43b36c6be3fc58bbd696d3e0b570060b9038b70d183b909517059f71",
+        "storage_bytes_rank": 5346800,
+        "transport": "results/uarch/w19_transport_contract_20261001/contract_r1.json"
+      },
+      "TC16_consequence": {
+        "action": "Preserve failed vehicle, no clock relaxation/tuning/restart; HC analytical calendar cannot confer comparator physical eligibility.",
+        "commit": "4f19cb6952e6a1f27c3a0d007b3aa7dd7a4ef94f",
+        "connected_matrix_clock_qualified": false,
+        "connected_token_price": null,
+        "hold_slack_ps": 5.22,
+        "path": "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/receipt.json",
+        "period_ps": 833,
+        "setup_slack_ps": -31.06,
+        "sha256": "246a444047d1cdc624e7b43ad73d6e6ee24c444efe446007c644f85d4c63df0b",
+        "status": "REJECT_SS_FAIL; downstream SM refused"
+      },
+      "expanded_graph_input": {
+        "commit": "0095fc4bc016ff1571e8316e836d5e522fc029e8",
+        "path": "tools/w19_composed_schedule.py",
+        "sha256": "dd85580b8bc9660fddfe39644d82eea3fe7d916c40744774931ed88a59da9598"
+      },
+      "nonlinear_input": {
+        "commit": "c4613d8fed7e74417d059107a323e19406dfb91c",
+        "path": "tools/w19_hc_nonlinear_proof.py",
+        "precision": "F32 IEEE division; no reciprocalmultiply, FMA or nativeapproximateSFU. GOLDEN canonical+0 onlyafter roundedADD/MUL/DIV; XORneg preservesnegativezero.",
+        "primitive_F32_element_counts": {
+          "add": 25523,
+          "div": 649,
+          "dot": 24,
+          "exp.clamped": 24,
+          "exp.input": 24,
+          "exp.output": 24,
+          "mul": 20758,
+          "neg": 66,
+          "rsqrt.input": 1,
+          "rsqrt.output": 1,
+          "rsqrt.seed": 1,
+          "sinkhorn.cols": 320,
+          "sinkhorn.rows": 304,
+          "sinkhorn.softmax_eps": 16
+        },
+        "proof_boundaries": 1500,
+        "proof_commit": "c4613d8fed7e74417d059107a323e19406dfb91c",
+        "proof_fixtures": 4,
+        "proof_role": "Leibniz CPU recipe source bound; no new campaign or target latency proof. Existing candidate exact scalar recipes and649 divisions charged, wrappers pending.",
+        "proof_sha256": "15b40bd6cbf5856e7c4c5ba75391d3ba377ac7957d31aac02f2bd6019e2c58cf",
+        "scalar_dependency_cycles": {
+          "comb_softmax": 324,
+          "mix_scale": 9,
+          "norm": 153,
+          "pre_post": 262,
+          "sinkhorn": 3393
+        },
+        "sha256": "461908f934a74a3b332b84b8dd5a01410a8daac7155229e320791d30cbc777d9"
+      }
+    },
+    "unbound_non_HC_cost_nodes": 11302
+  },
+  "TP96": {
+    "actual_RTL_negative_gate": "pending_not_run",
+    "archived_lint_sha256": "6cef0b4b2f5c5487c800b9d1125fcd016fd298bdb3a9926b37f9d639a9c8f3f8",
+    "claim_boundary": "Model-prepared admission and64bit measurement/checker contract only; original clean250 campaign remains functional pending and latency unqualified.",
+    "current_model_preflight_exact_reproduction": true,
+    "legacy_job_observed_live": [
+      595164,
+      791936
+    ],
+    "parent_reran_full_lint": false,
+    "preflight_sha256": "0d305f0ee44c5465f5de686832a29ee206f531912690495aa4fdb045751a6585",
+    "preparation_sha256": "d9d2041129053b4257bd25bc12b5838025220fd374d5d48f511bba1ed28d34c6",
+    "source_model_hashes_verified": 22,
+    "successor_launched": false
+  },
+  "full_token_qualified": false,
+  "hardware_adopted": false,
+  "headline_rate": null,
+  "live_jobs_observed": {
+    "controller_placement": 656848,
+    "field_gate": 532447,
+    "queued_L0_supervisor": 848893
+  },
+  "model_generator_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "physical_qualified": false,
+  "ready_to_build": false,
+  "reviewed_commits": [
+    "ec351a66d88a92b12f114ec21add4b0f89bed2ea",
+    "f5d180edf1314df9d84d1503509abdf8ebf5f918",
+    "4b766bfd1ce468a0724cf34db83e1dfd769a404c"
+  ],
+  "schema": "opentallas.hc22_tp96_parent_intake.v1",
+  "tests": {
+    "hc": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 66
+    },
+    "tp96_admission": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 27
+    },
+    "tp96_counters": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 11
+    }
+  }
+}

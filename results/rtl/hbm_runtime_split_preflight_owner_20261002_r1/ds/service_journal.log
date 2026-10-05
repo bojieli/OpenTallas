@@ -1,0 +1,4 @@
+Oct 02 08:03:31 ubuntu systemd[1537]: Started /usr/bin/taskset --cpu-list 0 /usr/bin/python3 -B /home/ubuntu/OpenTallas-hbm-rf-service/tools/run_hbm_runtime_calibration_r8.py --proposal /home/ubuntu/OpenTallas-hbm-rf-service/results/uarch/hbm_runtime_calibration_r8_20261002/DS_prepared_gate.json --go /home/ubuntu/OpenTallas/results/rtl/hbm_ds_runtime_calibration_parent_20261002_r1/GO.json --go-commit 6abacfbb0 --out /tmp/hbm-ds-runtime-calibration-parent-20261002-r1.
+Oct 02 08:03:31 ubuntu taskset[9888]: GO source/proposal mismatch
+Oct 02 08:03:31 ubuntu systemd[1537]: hbm-ds-runtime-calibration-parent-20261002-r1.service: Main process exited, code=exited, status=1/FAILURE
+Oct 02 08:03:31 ubuntu systemd[1537]: hbm-ds-runtime-calibration-parent-20261002-r1.service: Failed with result 'exit-code'.

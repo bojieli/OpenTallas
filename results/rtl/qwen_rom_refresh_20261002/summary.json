@@ -1,0 +1,79 @@
+{
+  "adoption": false,
+  "at": "2026-10-02T04:28:00.006498+00:00",
+  "candidate_inputs_current": true,
+  "checkpoint_mismatches": 0,
+  "completed_layers": 29,
+  "docs_edited": false,
+  "exact_rank_checkpoints": 116,
+  "fresh_gate_commands": [
+    "python3 tools/qwen_rom_source_gate.py --capture-binding /tmp/claude-1000/w12b/terminal_control_identity_20261001/observed.json --package /tmp/qwen-rom-next-capture.json --result /tmp/qwen-rom-next-verification.json",
+    "python3 tools/qwen_rom_integration_preflight.py --package /tmp/qwen-rom-next-capture.json --result /tmp/qwen-rom-next-join-preflight.json"
+  ],
+  "full_token_exact": false,
+  "job_configuration_changed": false,
+  "latest_completed": "L28",
+  "main_edited": false,
+  "model_pricing_ast_current": true,
+  "new_scientific_jobs": 0,
+  "next_active": "L29",
+  "original_identity": {
+    "live_pids": [
+      1217332,
+      1220907
+    ],
+    "state": "live"
+  },
+  "parent_intake_commit": "d29e2651be9f3714aff8035f3d8f6d359fa88e47",
+  "processes_signalled": [],
+  "remaining_physical": "All five physical records remain unclosed; driver/die/generated-core arithmetic propagation, +55 versus +54 model delta and local KV fill/read/collision plus routing/fit/SSFF remain unresolved.",
+  "runtime_sources_unchanged": true,
+  "scheduling": {
+    "actions_taken": [],
+    "affinity": "0-27",
+    "cgroup_limits": {
+      "/sys/fs/cgroup": {
+        "cpuset.cpus.effective": "0-27"
+      },
+      "/sys/fs/cgroup/user.slice": {
+        "cpu.max": "max 100000",
+        "cpuset.cpus.effective": "0-27"
+      },
+      "/sys/fs/cgroup/user.slice/user-1000.slice": {},
+      "/sys/fs/cgroup/user.slice/user-1000.slice/session-62078.scope": {}
+    },
+    "conclusion": "No material CPU affinity/nice contention apparent in the bounded observation: full affinity, nice0, no observed quota, substantial idle capacity and low pressure. Cache/memory interference and host-hypervisor scheduling causality are not established.",
+    "cpu_pressure": "some avg10=0.19 avg60=0.07 avg300=0.02 total=142272208378\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0",
+    "dominant_thread_cpu_percent": 95.06,
+    "host_idle_fraction": 0.4912,
+    "host_iowait_fraction": 0.0,
+    "host_steal_fraction": 0.0009,
+    "nice": 0,
+    "process_cpu_percent": 137.74,
+    "recent_layer_wall_seconds": {
+      "L26": 2199,
+      "L27": 2132,
+      "L28": 2135
+    },
+    "runqueue_wait_quantification": "Unavailable: kernel sched_schedstats=0; initial scheduler_sample.json near-zero wait inference is unqualified and superseded by scheduler_qualified_sample.json.",
+    "sample_seconds": 15.193,
+    "schedstats_enabled": false
+  },
+  "schema": "opentallas.qwen-rom-fresh-verification.v1",
+  "terminal_record_present": false,
+  "tests": {
+    "command": "python3 -m pytest -q tests/test_qwen_rom_scheduler_probe.py tests/test_qwen_rom_integration_preflight.py tests/test_qwen_rom_source_gate.py tests/test_qwen_rom_physical_join.py tests/test_w12_terminal_collect.py tests/test_qwen_tile_kv_region.py",
+    "count": 60,
+    "status": "pass"
+  },
+  "unjoined_runtime_paths": [
+    "rtl/hdc/ot_hdc_matvec.sv",
+    "rtl/hdc/ot_qwen_me_array.sv",
+    "rtl/hdc/ot_qwen_rom_tile.sv",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp",
+    "tools/qwen_rom_rt_core_emit.py",
+    "tools/qwen_rom_rt_token.py"
+  ],
+  "words_per_checkpoint": 4096
+}

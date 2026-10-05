@@ -1,0 +1,18 @@
+{
+ "tool": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+ "proven": true,
+ "equiv_cells": 5342,
+ "proven_cells": 5342,
+ "unproven_cells": 0,
+ "method": "equiv_make (state matched by instance name), equiv_simple -seq 1, equiv_induct",
+ "scan_off": "scan_en=0, test_mode=0, scan_in=0; scan_out unobserved",
+ "seconds": 82.5,
+ "log_tail": [
+  "  Equivalence successfully proven!",
+  "",
+  "Warnings: 1 unique messages, 1 total",
+  "End of script. Logfile hash: 3f67547fba, time: 81.19s, user: 74.08s, system: 0.51s, MEM: 1262.92 MB peak",
+  "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "Time spent: 83% 1x equiv_simple (60 sec), 4% 1x opt_clean (3 sec), ..."
+ ]
+}

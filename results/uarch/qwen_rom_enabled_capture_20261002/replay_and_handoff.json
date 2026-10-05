@@ -1,0 +1,38 @@
+{
+  "archimedes_context_snapshot_commit": "f9344909c89749fbd8d9d90fc9a3505ab9c81474",
+  "commands": [
+    "taskset -c 0 python3 -m pytest -q tests/test_qwen_rom_enabled_capture_cone.py tests/test_qwen_rom_enabled_capture_map.py",
+    "taskset -c 0 python3 tools/qwen_rom_enabled_capture_review.py --mapped results/uarch/qwen_rom_enabled_capture_20261002/mapped_r3.json --context results/uarch/qwen_rom_enabled_capture_20261002/archimedes_context --output /tmp/qwen-enabled-capture-review-fresh.json"
+  ],
+  "component_STA_dependencies_already_in_main": [
+    "fa3a90202",
+    "a29a8a8c4"
+  ],
+  "expected_mapping_exitcode": 1,
+  "expected_mapping_status": "BLOCKED_PRE_ROUTE_TIMING",
+  "expected_review_exitcode": 0,
+  "fresh_mapping": "First decompress input_libraries/*.lib.gz into an empty /tmp directory. Generate tools/qwen_rom_enabled_capture_cone.py --output NEW_PREPARATION. Run tools/qwen_rom_enabled_capture_map.py --preparation NEW_PREPARATION --workdir NEW_WORKDIR --result NEW_RESULT --library seq_ss.lib --library simple_ss.lib --library invbuf_ss.lib --library ao_ss.lib --yosys /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys --sta /usr/bin/sta under taskset CPU0.",
+  "minimal_model_dependency_commit": "7294d21bad62ecbcf6bc729215d277db32062bad",
+  "numerical_scope": "Original captured TP4 token remains144exact. No current-target token, secondposition or standalone macro credit transfer.",
+  "physical_handoff": {
+    "Archimedes": "Use actual 10ROM placement/pins/OBS/PG artifact. Add mapped 2560 capture FFs+11 selector/strobe FFs and 1328.7483um2 logic; the proposed 263.520x416.880um macro collar includes2KV macros but contains no complete tile/CTS/PG. Do not call it tile fit.",
+    "Maxwell": "Review 1025 control pin loads,345.767853fF before wire, required buffer/replica tree and physical clocks. Macro-data feedback path fails separately. No added stages/cycles or clock change implemented; any repair changing latency must compose through same-program +55, MLAT/tree/MUL and service calendar."
+  },
+  "requires": "Pinned clean checkout of this packet; current unified-model bytes are a join requirement. After parent model integration, generate a NEW preparation and mapping rather than silently re-pin archived records.",
+  "resource": {
+    "CPU_limit": null,
+    "FSIZE": "unlimited",
+    "actual_mapping_wall_s": 1.66,
+    "actual_yosys_peak_RSS_MiB": 114.18,
+    "admission_kind": "Bounded existing-source component mapping only; not engine/P&R.",
+    "aggregate_workdir_disk_guard_MiB": 256,
+    "heavy_fleet_jobs": 0,
+    "live_Qwen_handle": null,
+    "local_affinity": "CPU0",
+    "memory_guard_MiB": 2048,
+    "minimum_free_disk_MiB": 2048,
+    "wall_limit": null
+  },
+  "review_exitcode_scope": "Successful source/model/context review, not a physical PASS.",
+  "schema": "opentallas.qwen-rom-enabled-capture-replay.v1"
+}

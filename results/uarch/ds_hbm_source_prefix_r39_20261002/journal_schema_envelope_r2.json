@@ -1,0 +1,241 @@
+{
+  "max_events_per_transaction": 8,
+  "maximum_serialized_bytes": 564,
+  "schemas": {
+    "consumer_accept": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "consumer_accept",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 352
+    },
+    "request_accept": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "request_accept",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 351
+    },
+    "reverse_credit_accept": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "reverse_credit_accept",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 358
+    },
+    "software_backing_visible": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "software_backing_visible",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 361
+    },
+    "software_owned_issue": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "software_owned_issue",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 357
+    },
+    "software_read_capture": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "software_read_capture",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 358
+    },
+    "software_service_phases_reserved": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "software_service_phases_reserved",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "phase_costs": {
+          "admission": 2,
+          "consume": 2,
+          "forward_CDC": 4,
+          "held_accept": 1,
+          "owner_lookup": 12,
+          "read_service": 64,
+          "retire": 2,
+          "reverse_CDC": 4,
+          "reverse_grant": 4,
+          "write_service": 80,
+          "write_visibility": 4
+        },
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 564
+    },
+    "validated_reverse_grant": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "validated_reverse_grant",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 360
+    },
+    "write_residence_reserved": {
+      "schema_template": {
+        "allocation_identity": {
+          "address_class": "HBM_NATIVE_STATE",
+          "rank": 95
+        },
+        "event": "write_residence_reserved",
+        "generation": 18446744073709551615,
+        "hardware": false,
+        "identity": {
+          "epoch": 18446744073709551615,
+          "pc": 10,
+          "rank": 95,
+          "sector": 4194303,
+          "serial": 18446744073709551615,
+          "target": "DeepSeek"
+        },
+        "local_sector31": 2147483647,
+        "resident": 64,
+        "stack": 7,
+        "tag": 65535,
+        "tick": 18446744073709551615
+      },
+      "serialized_bytes": 375
+    }
+  },
+  "scope": "Source defaults unchanged; integer bounds uint64 tick/epoch/generation/serial, uint16 tag, AW27 sector, target DeepSeek, <=PC10, <=rank95. No primitive-private transport or clock credit.",
+  "selected_envelope_bytes": 640,
+  "source_successful_journal": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+  "status": "PASS_SOURCE_TYPED_SCHEMA_ENVELOPE",
+  "successful_event_schema_count": 9
+}

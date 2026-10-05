@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.parent_common_prefix_sat_review.v1",
+  "owner_commit": "388e80dc6379c74e38e160cc70eb9a00ff662736",
+  "proof_sha256": "1b6d77ee39af4c4026182ec3dadb85ebbd200e13dee19ad4d98cbbdc2457fe06",
+  "artifact_hashes_verified": 15,
+  "positive_all_binary_input_proofs": 7,
+  "real_mutant_counterexamples": 4,
+  "independent_yosys": "Yosys 0.9 (git sha1 1979e0b)",
+  "independent_pytest": {
+    "passed": 20,
+    "elapsed_seconds": 2.65,
+    "command": "PYTHONPATH=tools:. python3 -m pytest -o addopts= -q tests/test_dsrom_common_prefix_sat.py"
+  },
+  "initial_review_fixture_failure": {
+    "passed": 19,
+    "failed": 1,
+    "cause": "Sparse checkout omitted rtl/v41rom/ot_v41_bmul2.sv; authority read failed before completing pin check. Materialized all three exact committed consumers; fresh full run passes. No source edits."
+  },
+  "assumptions": [],
+  "scope": "Seven common-prefix unrestricted two-state combinational equivalences at pinned used widths, including carry. Consumer pipeline reset/valid/error/tag equivalence and connected wrapper qualification separate.",
+  "standins_installed": false,
+  "live_sources_modified": false,
+  "hardware_admission": false,
+  "rate_claim": false
+}

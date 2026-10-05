@@ -1,0 +1,23 @@
+{
+  "observed_utc": "2026-10-01T15:25:55.227201+00:00",
+  "prefix_receipt": "d1d3097dcbbe8aef024fa35a722b3fd0e5f92562",
+  "prefix17source_blobs_verified": true,
+  "prefix9operators_complete": true,
+  "prefix28544typed_boundaries": true,
+  "full_L0_software": {
+    "verdict": "PASS",
+    "operators": 53,
+    "queue_exit_code": 0,
+    "execution_sha256": "7c9003b4d0ef4a526d577f2a8f11b187a985de5cfbfba8bf18af67b25f8508aa",
+    "source": "066dad0094fbba015d447eeea9593ce1cf57bd0a",
+    "scientific_parent_rerun": false
+  },
+  "full40_head": {
+    "pid": 1394324,
+    "live": true,
+    "terminal": false,
+    "source_clean": true
+  },
+  "scope": "Retained CPU prefix receipt and queue observation; no independent rerun or full-token/hardware verdict",
+  "physical_admission": false
+}

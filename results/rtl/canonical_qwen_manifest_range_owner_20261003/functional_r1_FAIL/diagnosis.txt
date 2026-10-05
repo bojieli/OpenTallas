@@ -1,0 +1,9 @@
+Source snapshot 50a1cbbf502eea9536a020889af7e9b35b0e0ed0.
+Compile PASS, runtime FAIL cycle169; unchanged original terminal/logs preserved.
+Independent immutable SourcePlacement declarations show PC5 survivors
+0,2,3,1378,1379,1380; PC11 survivors0,2,3,1773.
+The original bench literal4 atPC5 and literal2 atPC11 omitted future
+consumers of version2 (lastPC35) and version3 (lastPC20).
+Successor bench derives exact physical live-row masks after every PC from
+canonical allocation and declared last consumers. Controller bytes unchanged.
+No new runtime yet. Full factory/whole-token qualification false.

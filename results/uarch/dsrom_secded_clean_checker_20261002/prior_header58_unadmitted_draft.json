@@ -1,0 +1,72 @@
+{
+  "FF_hold_uncertainty_ps": 25,
+  "MACs_per_cycle": 0,
+  "PR_admitted": false,
+  "SS_period_ps": 833.333333,
+  "SS_setup_uncertainty_ps": 60,
+  "area_slot": "Keep existing733.7227518355257 conservative service screen and fullcorrector floors; add held state and mapped checkers without reuse credit. Actual slots/translated PG/OBS/via/clock/wire still required.",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "checker_latency_is_after_accepted_fullword_capture": true,
+  "clean_contract": "syn==0 && overall==0 AND valid accepted word/identity; payload direct release only after checker decision; source full decoder returns same data and no flags in this condition. No error-frequency or data-change assumption.",
+  "composed_model": "Maxwell29cycle provisional dependency chain: rawcapture2 +rawdecode2 +gather22 +mainassembly1 +maindecode2. Replacing only2+2 by prospective1+1 gives27cycles, conditional on actual checker/capture closure; no token gain or service guarantee claimed.",
+  "cone_sha256": "b17ebbc04a7212f490fc79216c2c385fcab8e2e920ff674751632db8031aaa34",
+  "engine_RTL_admitted": false,
+  "engine_opt_in_default": false,
+  "finite_contract": "one accepted word/debt seat per replica; forbid overwrite/epoch/bank reuse until matched consumerACK or corrected-good ACK or fault/cancel physical drain. Full word and address/transaction remain held on error. No unchecked or early retirement. New reads refused while busy.",
+  "four_target_applicability": {
+    "DS_HBM": "no ROM parity provider transfer",
+    "DS_ROM": "current PAR2 ECC word validation",
+    "Qwen_HBM": "not applicable to GPU comparator",
+    "Qwen_ROM": "separate source/interface model required"
+  },
+  "fullcorrector_failure_commit": "9c3aeed6c292151bf32d54de342b44e1e348be24",
+  "guaranteed_II_cycles": null,
+  "input_ports": [
+    {
+      "K": 256,
+      "bits": 266,
+      "bytes": 33.25,
+      "direct_payload_bits": 256,
+      "logical_boundary_tracks": 533,
+      "outputs_bits": 11,
+      "outputs_bytes": 1.375
+    },
+    {
+      "K": 272,
+      "bits": 282,
+      "bytes": 35.25,
+      "direct_payload_bits": 272,
+      "logical_boundary_tracks": 565,
+      "outputs_bits": 11,
+      "outputs_bytes": 1.375
+    }
+  ],
+  "isolation_contract": "fast syndrome/overall outputs drive declared capture pins only. Slow correction is fed from held word or registered check state; unisolated sharing/dedup can recreate full-corrector fanout221/176 and is rejected.",
+  "new_checker_logic_charged_additionally": true,
+  "original_fullcorrector_area_allowance_mm2": 1.3275684864,
+  "pin_load": "one actual corner-specific DFFHQNx1 D pin on each syndrome9, overall and clean output;20ps input transition, actual input pin loads extracted",
+  "provisional_checker_latency_cycles": 1,
+  "replicas": [
+    {
+      "K": 256,
+      "N": 266,
+      "count": 412,
+      "held_word_bits": 274
+    },
+    {
+      "K": 272,
+      "N": 282,
+      "count": 256,
+      "held_word_bits": 282
+    }
+  ],
+  "retained_word_DFF_cell_area_only_mm2": 0.067604544,
+  "retained_word_FF50_proxy_mm2": 0.17577181439999998,
+  "retained_word_state_bits": 231840,
+  "routing_capacity_after_exclusions": null,
+  "schema": "opentallas.dsrom.clean-checker-model.v1",
+  "source_pipeline_cycles": 0,
+  "source_sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+  "source_state_bits": 0,
+  "state_contract": "per instance: complete held raw physical274 or main assembled282 + source identity58; checker syndrome9/overall/clean +valid1. Raw reserved8 retained but not ECC data. No embedding credit."
+}

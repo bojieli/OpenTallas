@@ -1,0 +1,105 @@
+{
+  "status": "PARENT_REVIEWED_ACCEPTANCE_EDGE_FIRST_CONTROL_PASS",
+  "verdict": "PASS_FIRST_MUTANT_ONLY",
+  "output": "/tmp/opentallas-core-first-acceptance-edge-parent-20261002-r1",
+  "record_sha256": "8df443062dda50247741378c3b4ddf112895f0a0f64d520d2c3ec3d92ca061f3",
+  "phase_closed_sha256": "e6ed3e8b7a76f7a3932226226e29c920ae4c6292859ab1e2139b20980a689885",
+  "runtime_log_sha256": "bacec5b965445f2f6eabfd0bfbd9a0e9aca754041f94a03a1147e8e99cdd4d66",
+  "independent_verify_runtime": "PASS strictcause registered go cut accepted QE, source tb.sv1261, return1, noOOM/capexit",
+  "source_plan_commit": "d9329a9fff3240df6fef37fd5e3f548f08bcc9d1",
+  "frontend_seconds": 99.87487309565768,
+  "CXX_seconds": 353.9285169518553,
+  "runtime_seconds": 0.8102891421876848,
+  "pins": {
+    "active_stage.json": {
+      "bytes": 284,
+      "sha256": "8d4b4958b7aa4e496c67ebab3af5a47fd1b73ebfe62f2aa0efb16f55bc58a30f"
+    },
+    "caps_before_compile.json": {
+      "bytes": 599,
+      "sha256": "21f0977ceb495ed3100a5f5ea9926aad84a3714df64e8a50fec352929e02fee0"
+    },
+    "host_admission.json": {
+      "bytes": 496,
+      "sha256": "bdf0a69eca366d19df125c714d85b4a89f3b392301d5c61b36e9d008caad66f2"
+    },
+    "launch.json": {
+      "bytes": 1485,
+      "sha256": "39471c1513e2b3d155d667c80f1137084948ccfc9e8852be5ea046412194cf0c"
+    },
+    "output_owner.json": {
+      "bytes": 380,
+      "sha256": "3f017663cc5ff3fc58ed78210c51364f8e94253a3abf76f7b69af3fabd316d16"
+    },
+    "physical_QE_gate/CXX.log": {
+      "bytes": 15761,
+      "sha256": "9c038ba415c47c0e40c1a2beffa4f064cc7f515e77078c55631c4459d8abadcb"
+    },
+    "physical_QE_gate/CXX_started.json": {
+      "bytes": 152,
+      "sha256": "1de3e35b1ec85826920fbd4ad403eae8f2b8e01e0c1b81767ff426a115d8b78c"
+    },
+    "physical_QE_gate/binary_receipt.json": {
+      "bytes": 105,
+      "sha256": "54603dd6e6744dd83fd5f4c889565e8a338907ac1715ab3fdcfffd8e0d08ec79"
+    },
+    "physical_QE_gate/compile.log": {
+      "bytes": 507855,
+      "sha256": "e6953bc3790d240d0fcb7ec8366e11ec3fccece2748f30b9d68f054bf4b0f8e7"
+    },
+    "physical_QE_gate/frontend.log": {
+      "bytes": 492094,
+      "sha256": "91a323179abd8576cdaa9a81015d6c7c8ac5d3e4b3b92f7d758b50fa87f74f01"
+    },
+    "physical_QE_gate/frontend_profile.json": {
+      "bytes": 181359,
+      "sha256": "59524a2ecf6af4edcddac23ecb24c9b2d52eeb46ebc3c28a5139c0abdb7e796c"
+    },
+    "physical_QE_gate/frontend_started.json": {
+      "bytes": 125,
+      "sha256": "6446e053b50be961e40792054b3abec18eeb4f7c8c5fa5d9df2ee9021d6ed0b5"
+    },
+    "physical_QE_gate/phase_closed.json": {
+      "bytes": 231189,
+      "sha256": "e6ed3e8b7a76f7a3932226226e29c920ae4c6292859ab1e2139b20980a689885"
+    },
+    "physical_QE_gate/reclamation_receipt.json": {
+      "bytes": 379,
+      "sha256": "db33b29df6430ed95771f640e9d7f080485cf295bb355bc11644b0d98db032d8"
+    },
+    "physical_QE_gate/runtime_0.log": {
+      "bytes": 215,
+      "sha256": "bacec5b965445f2f6eabfd0bfbd9a0e9aca754041f94a03a1147e8e99cdd4d66"
+    },
+    "physical_QE_gate/snapshot_sha256.json": {
+      "bytes": 19343,
+      "sha256": "3598c6e27d2f663805cf1a71fb4b4e9a7e77b2fc3dae43645eb2cb175b112dcf"
+    },
+    "record.json": {
+      "bytes": 42982,
+      "sha256": "8df443062dda50247741378c3b4ddf112895f0a0f64d520d2c3ec3d92ca061f3"
+    },
+    "service.log": {
+      "bytes": 222,
+      "sha256": "bfff272b975ec4eb637e20d059ab5b746dba81315e8bd7fa7d3b4f47f31009a5"
+    },
+    "service_journal.txt": {
+      "bytes": 778,
+      "sha256": "99bfe2fa98fc3b74eb2abffed45889d1c4bc058cea8f7596506e4cebebf0bddd"
+    },
+    "service_receipt.json": {
+      "bytes": 196,
+      "sha256": "cb932c9052f2e6c6cec726e417e968da6bab909133b9bea56ac5f496422b17b2"
+    },
+    "worker_entered.json": {
+      "bytes": 87,
+      "sha256": "f8bf79dd9558c1a884031c54a3dbeddf82fc8d5bdd8b0582c48ea85286fe0101"
+    }
+  },
+  "historical_baseline_positive23_scope_unchanged": true,
+  "changed_bench_healthy23_qualification": false,
+  "full27_qualification": false,
+  "fulltoken": false,
+  "physical": false,
+  "adoption": false
+}

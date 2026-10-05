@@ -1,0 +1,16 @@
+V41XJOB job=0 T=640 qk_first=23 qk_last=182 qk_beats=160 pv_first=430 pv_last=589 pv_beats=160 last_score=232 last_p=581 last_pv=641
+V41XJOB job=1 T=640 qk_first=203 qk_last=362 qk_beats=160 pv_first=779 pv_last=938 pv_beats=160 last_score=412 last_p=930 last_pv=990
+V41XJOB job=2 T=640 qk_first=610 qk_last=769 qk_beats=160 pv_first=1128 pv_last=1287 pv_beats=160 last_score=819 last_p=1279 last_pv=1339
+V41XJOB job=3 T=640 qk_first=959 qk_last=1118 qk_beats=160 pv_first=1477 pv_last=1636 pv_beats=160 last_score=1168 last_p=1628 last_pv=1688
+V41XJOB job=4 T=640 qk_first=1308 qk_last=1467 qk_beats=160 pv_first=1826 pv_last=1985 pv_beats=160 last_score=1517 last_p=1977 last_pv=2037
+V41XJOB job=5 T=640 qk_first=1657 qk_last=1816 qk_beats=160 pv_first=2175 pv_last=2334 pv_beats=160 last_score=1866 last_p=2326 last_pv=2386
+V41XATTN jobs=6 sc_checked=61440 sc_errors=0 pv_checked=49152 pv_errors=0 faults=0 lat_score_max=51 lat_score_min=51 lat_pv_max=60 cycles=2386 timeout=0
+V41XPOS job=0 accept=4 su_start=232 p_first=422 p_last=581
+V41XPOS job=1 accept=184 su_start=581 p_first=771 p_last=930
+V41XPOS job=2 accept=591 su_start=930 p_first=1120 p_last=1279
+V41XPOS job=3 accept=940 su_start=1279 p_first=1469 p_last=1628
+V41XPOS job=4 accept=1289 su_start=1628 p_first=1818 p_last=1977
+V41XPOS job=5 accept=1638 su_start=1977 p_first=2167 p_last=2326
+V41XILV su_l0=189 qk_beats=960 pv_beats=960 busy=1920 cycles=2386
+V41XSETCHK loads=1056 reads=983040 errors=0
+- /tmp/claude-1000/w11s/ns3/full_a/rtl/test/tb_hdc_v41x_attn.sv:323: Verilog $finish

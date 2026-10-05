@@ -1,0 +1,109 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/attention_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "counter_reconciliation": {"const": "exact"},
+    "counters": {"$ref": "attention_expectations_v1.schema.json#/$defs/counters"},
+    "mode": {"const": "artifact_only_data_bearing_functional"},
+    "outputs": {
+      "additionalProperties": false,
+      "properties": {
+        "attention": {"$ref": "#/$defs/tensor"},
+        "probabilities": {"$ref": "#/$defs/tensor"},
+        "scaled_scores": {"$ref": "#/$defs/tensor"}
+      },
+      "required": ["attention", "probabilities", "scaled_scores"],
+      "type": "object"
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "saturation": {
+      "additionalProperties": false,
+      "properties": {
+        "mask": {"minimum": 0, "type": "integer"},
+        "output": {"minimum": 0, "type": "integer"},
+        "probability": {"minimum": 0, "type": "integer"},
+        "scaling": {"minimum": 0, "type": "integer"},
+        "score": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["mask", "output", "probability", "scaling", "score"],
+      "type": "object"
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.attention_execution.v1"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "capacity": {"const": 8000},
+        "generation": {"const": 5},
+        "key_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "length": {"const": 4},
+        "resource_id": {"const": "kv.layer.0"},
+        "state_sha256": {"$ref": "#/$defs/sha256"},
+        "value_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["capacity", "generation", "key_payload_sha256", "length", "resource_id", "state_sha256", "value_payload_sha256"],
+      "type": "object"
+    },
+    "status": {"const": "pass"},
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "trace": {
+      "items": {"$ref": "#/$defs/trace_record"},
+      "maxItems": 7,
+      "minItems": 7,
+      "type": "array"
+    },
+    "trace_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "required": ["build_id", "capability_id", "counter_reconciliation", "counters", "mode", "outputs", "physical_plan_id", "qualification_report_id", "report_id", "request_id", "saturation", "schema", "state", "status", "timing", "trace", "trace_sha256"],
+  "title": "Artifact-only attention/KV execution report v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "tensor": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {"maximum": 65535, "minimum": 0, "type": "integer"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "dtype": {"const": "bf16"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "size_bytes": {"minimum": 2, "type": "integer"}
+      },
+      "required": ["codes", "dtype", "payload_sha256", "shape", "size_bytes"],
+      "type": "object"
+    },
+    "trace_record": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {"minimum": 0, "type": "integer"},
+        "opcode": {"enum": ["DMA_HBM_TO_SRAM", "KV_PREPARE_BF16", "GQA_ATTENTION_BF16", "STATE_COMMIT", "COMPLETE"]},
+        "state_generation": {"minimum": 0, "type": "integer"},
+        "state_length": {"minimum": 0, "type": "integer"},
+        "transaction_private": {"type": "boolean"}
+      },
+      "required": ["command_index", "opcode", "state_generation", "state_length", "transaction_private"],
+      "type": "object"
+    }
+  }
+}

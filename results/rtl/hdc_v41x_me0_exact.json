@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.rtl.hdc_v41x_me0_exact.v1",
+  "status": "pass",
+  "claim_boundary": "One real reduced L0.router operation: ME bank 0 in timed HBM, remaining seven ME banks in ROM. No complete token, contention with QE/KV/index, or chip throughput claim.",
+  "source_commit": "716a6c4556a39908eac3909f3bf6e7a56723e159",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv": "ba6465b3f77c13ceb1588412be7552fef2165626fbf6cd6c6c55eb78df04a1af",
+    "rtl/test/tb_hdc_v41x_me0_exact.sv": "fe0c5806c3ad10c9e7eaf3526791a6ce4054562295b1dc6d435fd7be81917037",
+    "tools/v41x_me0_exact_fixture.py": "2d7e7caa603dba56d369e9ee539b520f392090e130294a8af042d8da6838cfbf",
+    "tools/hdc_program_v41.py": "7031fa78094e67cec1329e27640c216f53c06d0f7d50db7844095982dfd06542",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_images_v41x.py": "42989b07a65e85bf4406774d8b049f9e4d38ef0b259187f7a744fc97024ffcc3",
+    "tools/rtl_hdc_v41x_me0_exact_campaign.py": "e7a10d82b20b5c24aa538af12705b09f8b2ec70ae2c9c67c3be09612e49f2771"
+  },
+  "image_sha256": {
+    "mbank.hex": "a0a62f4f12165a162f9858c26d8a3132c99eadc8a5d53d31218fe65fb7a19bc6",
+    "x.hex": "5f69ddd9e0e9a2492120bca6bf9ab1d34a77b6844d7df699f5fe9da06a457689",
+    "y.hex": "5cc77f9d21f35a5167a2708999c0bf9974df4f6c4cd0c796abcc6750f63dbed7",
+    "mbank_slice.hex": "6d2f93da0fa584ad09aabc2fcac6c95e7db52e038e8203dd854f97e4c7ccbbbd",
+    "fixture.json": "be183a0f38234e237f4995b09ec63e0687d13a495300fe70f2e28c3c70c6a0f1"
+  },
+  "arms": {
+    "rom": {
+      "exact_rows": 12,
+      "weight_reads": 36,
+      "hbm_sectors": 36,
+      "cycles": 211,
+      "log_sha256": "211105cb6bf097b07b843b4d094c6fb23e9ef2623a67a097972d83d2737fceb7"
+    },
+    "hbm": {
+      "exact_rows": 12,
+      "weight_reads": 36,
+      "hbm_sectors": 36,
+      "cycles": 211,
+      "log_sha256": "211105cb6bf097b07b843b4d094c6fb23e9ef2623a67a097972d83d2737fceb7"
+    }
+  }
+}

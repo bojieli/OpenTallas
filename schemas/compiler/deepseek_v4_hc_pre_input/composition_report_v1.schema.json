@@ -1,0 +1,507 @@
+{
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "nullableSha256": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableSize": {
+      "oneOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "officialSourceTextRow": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sourceTextRow"
+        },
+        {
+          "properties": {
+            "encode_status": {
+              "const": "exact_official_tokenizer_encode_equivalence"
+            }
+          }
+        }
+      ]
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sourceTextRow": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_index": {
+          "maximum": 3,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "encode_status": {
+          "enum": [
+            "exact_official_tokenizer_encode_equivalence",
+            "not_available_development_fixture"
+          ]
+        },
+        "encoded_token_ids_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "utf8_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "utf8_size_bytes": {
+          "maximum": 1048576,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "batch_index",
+        "encode_status",
+        "encoded_token_ids_sha256",
+        "utf8_sha256",
+        "utf8_size_bytes"
+      ],
+      "type": "object"
+    },
+    "tokenRow": {
+      "items": {
+        "maximum": 129279,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "maxItems": 4,
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_input/composition_report_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "official_tokenizer_lookup_differential_composition_verified"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "checkpoint": {
+            "properties": {
+              "evidence_scope": {
+                "const": "official_checkpoint"
+              }
+            }
+          },
+          "tokenizer": {
+            "properties": {
+              "encode_equivalence": {
+                "const": "exact_official_tokenizer_encode_equivalence"
+              },
+              "source_text_rows": {
+                "items": {
+                  "$ref": "#/$defs/officialSourceTextRow"
+                }
+              },
+              "tokenizer_config_sha256": {
+                "const": "6ac8c8dc065ed118161d02dd532749ae3f52c243deac27872134fae2f50d8547"
+              },
+              "tokenizer_config_size_bytes": {
+                "const": 801
+              },
+              "tokenizer_sha256": {
+                "const": "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf"
+              },
+              "tokenizer_size_bytes": {
+                "const": 6367146
+              },
+              "tokenizer_validation_id": {
+                "const": "176e504a2a500bfccd88d6ef10b72c1d08853a90ff62d97d173faaa808dd5c23"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "checkpoint": {
+            "properties": {
+              "evidence_scope": {
+                "const": "development_fixture"
+              }
+            }
+          },
+          "tokenizer": {
+            "properties": {
+              "encode_equivalence": {
+                "const": "not_available_development_fixture"
+              },
+              "tokenizer_config_sha256": {
+                "type": "null"
+              },
+              "tokenizer_config_size_bytes": {
+                "type": "null"
+              },
+              "tokenizer_sha256": {
+                "type": "null"
+              },
+              "tokenizer_size_bytes": {
+                "type": "null"
+              },
+              "tokenizer_validation_id": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "checkpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_scope": {
+          "enum": [
+            "development_fixture",
+            "official_checkpoint"
+          ]
+        },
+        "lock_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "revision": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_scope",
+        "lock_id",
+        "repository",
+        "revision"
+      ],
+      "type": "object"
+    },
+    "claim_boundary": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "const": "Composes one HC_PRE request only from a lookup result reproduced against the same locked checkpoint."
+        },
+        {
+          "const": "Official evidence requires exact tokenization of caller-supplied source text by the pinned, locally verified DeepSeek V4 tokenizer."
+        },
+        {
+          "const": "The report stores the source-text UTF-8 hash and length, never the source text itself."
+        },
+        {
+          "const": "The request contains no expected HC_PRE output and establishes no HC_PRE execution, transformer-block, full-model, timing, PPA, manufacturability, or NVIDIA comparison claim."
+        }
+      ],
+      "type": "array"
+    },
+    "composition_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "executable": {
+      "additionalProperties": false,
+      "properties": {
+        "application_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "build_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "deployment_manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "parameter_build_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "program_sha256": {
+          "const": "7811e26fae1162677a425795294e776caded0e6cd44383986bb34b9bf9c15739"
+        },
+        "schedule_certificate_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schedule_id": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "application_id",
+        "build_id",
+        "deployment_manifest_sha256",
+        "parameter_build_id",
+        "program_sha256",
+        "schedule_certificate_id",
+        "schedule_id"
+      ],
+      "type": "object"
+    },
+    "lookup": {
+      "additionalProperties": false,
+      "properties": {
+        "build_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "deployment_manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "differential_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "differential_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "differential_status": {
+          "const": "exact_locked_checkpoint_differential"
+        },
+        "hc_hidden_values_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "result_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "result_status": {
+          "const": "pass"
+        },
+        "source_application_id": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "build_id",
+        "deployment_manifest_sha256",
+        "differential_id",
+        "differential_sha256",
+        "differential_status",
+        "hc_hidden_values_sha256",
+        "request_sha256",
+        "result_sha256",
+        "result_status",
+        "source_application_id"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "request": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "items": false,
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/artifact"
+                },
+                {
+                  "properties": {
+                    "path": {
+                      "const": "input/hc_hidden.bf16le"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/artifact"
+                },
+                {
+                  "properties": {
+                    "path": {
+                      "const": "request_manifest.json"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "type": "array"
+        },
+        "input_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            },
+            {
+              "const": 4096
+            }
+          ],
+          "type": "array"
+        },
+        "tree_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "files",
+        "input_sha256",
+        "request_sha256",
+        "shape",
+        "tree_sha256"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_hc_pre_input_composition.v1"
+    },
+    "status": {
+      "enum": [
+        "development_fixture_lookup_differential_composition_not_release_evidence",
+        "official_tokenizer_lookup_differential_composition_verified"
+      ]
+    },
+    "tokenizer": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {
+          "maximum": 4,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "encode_equivalence": {
+          "enum": [
+            "exact_official_tokenizer_encode_equivalence",
+            "not_available_development_fixture"
+          ]
+        },
+        "source_text_rows": {
+          "items": {
+            "$ref": "#/$defs/sourceTextRow"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "type": "array"
+        },
+        "token_ids": {
+          "items": {
+            "$ref": "#/$defs/tokenRow"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "type": "array"
+        },
+        "token_ids_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "tokenizer_config_sha256": {
+          "$ref": "#/$defs/nullableSha256"
+        },
+        "tokenizer_config_size_bytes": {
+          "$ref": "#/$defs/nullableSize"
+        },
+        "tokenizer_sha256": {
+          "$ref": "#/$defs/nullableSha256"
+        },
+        "tokenizer_size_bytes": {
+          "$ref": "#/$defs/nullableSize"
+        },
+        "tokenizer_validation_id": {
+          "$ref": "#/$defs/nullableSha256"
+        }
+      },
+      "required": [
+        "batch_size",
+        "encode_equivalence",
+        "source_text_rows",
+        "token_ids",
+        "token_ids_sha256",
+        "tokenizer_config_sha256",
+        "tokenizer_config_size_bytes",
+        "tokenizer_sha256",
+        "tokenizer_size_bytes",
+        "tokenizer_validation_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "checkpoint",
+    "claim_boundary",
+    "composition_id",
+    "executable",
+    "lookup",
+    "model_id",
+    "request",
+    "schema",
+    "status",
+    "tokenizer"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE causal input composition report v1",
+  "type": "object"
+}

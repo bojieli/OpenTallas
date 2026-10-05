@@ -1,0 +1,20 @@
+--- rtl/v41die/ot_v41_pair_w17w10_rowfix_prepare.sv
++++ rtl/v41die/ot_v41_pair_w17w10_rne_wake_prepare.sv
+@@ -34,6 +34,8 @@
+     parameter integer BP = 0,
+     parameter integer PHW = 6,          // phase id bits: 2^PHW phases per die
+     parameter integer FIX_SECOND_ROW_INDEX = 0, // mandatory row decoder repair, opt-in preparation
++    parameter integer WAKE_REG = 0, // retained true WAKE1 leaf join, off by default
++    parameter integer GRADUAL_RNE = 0, // shared reviewed multiplier repair
+     parameter INSTANCE = ""
+ ) (
+     input  wire         clk,
+@@ -140,7 +142,7 @@
+     assign busy = e_busy;
+     assign quiet = !e_busy && !ld_run && !c_v && !cfg_go && !(go && act);
+     ot_v41_rom_elem_w10 #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NB(2), .MTP(MTP), .EARLY(EARLY),
+-                      .FAST(FAST), .PP(PP), .BP(BP), .FRONT_PAR(0), .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX), .INSTANCE(INSTANCE)) u_e (
++                      .FAST(FAST), .PP(PP), .BP(BP), .FRONT_PAR(0), .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX), .WAKE_REG(WAKE_REG), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_e (
+         .clk(clk), .rst_n(rst_n), .cfg_v(c_v), .cfg_a(c_a), .cfg_d(c_d),
+         .go(go_e), .go_bf(go_bf), .xb_v(xb_v), .xb_b(xb_b), .xb_sv(xb_sv), .xb_u(xb_u), .xb_d(xb_d),
+         .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0),

@@ -1,0 +1,100 @@
+{
+  "KV_leases_retired": true,
+  "Peirce_current_primitive_opcodes_supported": 35,
+  "artifact_sha256": {
+    "Peirce_native_76d564c9a.py.source": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf",
+    "Qwen_serial_calendar.json.gz": "0f9e7d6989680a0f31adccb4ff389d872eb1bec574c3585776d7c854b28b987b",
+    "Qwen_tiled.json.gz": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "common_native_ABI.json": "c8a6dc71de3943ad8576d63a81ff355ada05ae70a348e7d42a054aacb0fc3ac1",
+    "manifest.json": "146b938fb8950a0ce3aff45a493136f467691a1bed7f17e44a63c3364154ed10"
+  },
+  "baseline_artifacts_changed": false,
+  "compiler_replay": {
+    "PCs": 1737,
+    "all_PC_executable": true,
+    "families": {
+      "ALL_REDUCE": 72,
+      "ARGMAX": 2,
+      "ARGMAX_REDUCE": 1,
+      "EMBED": 1,
+      "EXP_SUM": 72,
+      "FINAL_NORM": 1,
+      "HEAD_NORM": 144,
+      "KV_FENCE": 72,
+      "KV_READ": 72,
+      "KV_WRITE": 72,
+      "MATRIX": 290,
+      "NORMALIZE": 72,
+      "PV": 72,
+      "QKV_SPLIT": 72,
+      "RESIDUAL": 72,
+      "ROPE": 144,
+      "ROW_SCALE": 146,
+      "RSTD": 72,
+      "SCALAR_MUL": 144,
+      "SCORES": 72,
+      "SILU_GATE": 72
+    },
+    "status": "PASS_EXACT_BOUNDED_COMPILER_REPLAY",
+    "unsupported": []
+  },
+  "execution_summary": [
+    {
+      "PCs": 1737,
+      "RF_workspace_peak_vectors": 16,
+      "next_token": 7,
+      "packed_KV_state_transfers": {
+        "state_read_sectors32": 1152,
+        "state_write_sectors32": 432
+      },
+      "physical_RF_HBM_transfers": {
+        "NoC_source_read_bits": 4730880,
+        "NoC_source_write_bits": 4751360,
+        "RF_mirror_write_bits": 19005440,
+        "RF_read": 3107,
+        "RF_write_ACK": 2320,
+        "source_read_payload_bits": 12726272,
+        "source_word_reads": 15550,
+        "source_write_payload_bits": 9502720
+      },
+      "shared_tile_peak_bytes": 256,
+      "temporary_HBM_bytes": 0
+    },
+    {
+      "PCs": 1737,
+      "RF_workspace_peak_vectors": 16,
+      "next_token": 15,
+      "packed_KV_state_transfers": {
+        "state_read_sectors32": 2952,
+        "state_write_sectors32": 864
+      },
+      "physical_RF_HBM_transfers": {
+        "NoC_source_read_bits": 9756672,
+        "NoC_source_write_bits": 9502720,
+        "RF_mirror_write_bits": 38010880,
+        "RF_read": 6358,
+        "RF_write_ACK": 4640,
+        "source_read_payload_bits": 26042368,
+        "source_word_reads": 31964,
+        "source_write_payload_bits": 19005440
+      },
+      "shared_tile_peak_bytes": 256,
+      "temporary_HBM_bytes": 0
+    }
+  ],
+  "failures_retained": [
+    "failure_external_fixture_rank.json",
+    "failure_direct_RSTD_test_harness.json",
+    "failure_actual_spill_retirement.json"
+  ],
+  "full_trained_checkpoint_numerical_execution": false,
+  "hardware_or_timing_credit": false,
+  "oracle_callbacks": 0,
+  "primitive_ABI_supported": 40,
+  "remaining_integration": "Dewey bounded schema intake and DS outer tiling/calendar composition; exact primitive adapter ready, detailed interface_handoff.json",
+  "source_homes_retired": true,
+  "status": "PASS_QWEN_BOUNDED_NATIVE_SOFTWARE_MILESTONE",
+  "tests_command": "python -m pytest -q tests/test_h3_qwen_complete_native.py",
+  "tests_passed": 50,
+  "tests_stdout_sha256": "5952b218382e51f578768c0a348723d5418c12143cc6d5f49d527f1d1b978a79"
+}

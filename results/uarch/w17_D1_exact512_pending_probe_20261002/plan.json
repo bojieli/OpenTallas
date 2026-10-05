@@ -1,0 +1,676 @@
+{
+  "status": "SOURCE_BOUND_EXACT_PARENT512_FINAL_SNAPSHOT",
+  "parent_terminal_commit": "d5b190eefb1c0a66228dc7c229683f776cd00781",
+  "fixture_commit": "bcbd8675a647962ecce4e52592c74ed0a30eaa1e",
+  "engine_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "binary": {
+    "path": "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix",
+    "SHA256": "dcbb334df6bd62990f7731c2254cd59aa33aeff0c20b61641edf8345d81e2482",
+    "bytes": 417466520
+  },
+  "header": {
+    "path": "/tmp/w17-D1-native-joined-20261002-r1/obj/Vtb_D1_scope_core___024root.h",
+    "SHA256": "c66d1ceb7ab3cbf289d9a88822ad6a1cf114cbb29fa37469752d89aa57f70042",
+    "bytes": 110103200
+  },
+  "program": null,
+  "GDB": {
+    "path": "/usr/bin/gdb",
+    "SHA256": "a6222ff0f450ca040e3479c04fdb7d0f1e0cabb099688270e720b7115d933c3d",
+    "bytes": 10280680
+  },
+  "actual_run_argv_gap": {
+    "actual_argv": [
+      "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix"
+    ],
+    "required_argv": [
+      "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix",
+      "+DIR=/tmp/w17-D1-native-diagnostic-result-20261002-r1/input"
+    ],
+    "default_program_file_exists": false,
+    "loaded_contents_not_read": true
+  },
+  "capture_hook": {
+    "symbol": "_Z40Vtb_D1_scope_core___024root___eval_finalP27Vtb_D1_scope_core___024root",
+    "phase": "Entry after last normal eval and before original top.final; source driver unchanged",
+    "root": "rdi direct LP64 argument; final call machine-code owner path Syms+0xc0 verified",
+    "breakpoint_does_not_call_inferior": true,
+    "if_fatal_before_final": "No capture; preserve actual failure, no fallback"
+  },
+  "fields": {
+    "tb_D1_scope_core__DOT__diag_cycle": {
+      "offset": 389376,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 307216
+    },
+    "tb_D1_scope_core__DOT__clk": {
+      "offset": 6704,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 867
+    },
+    "tb_D1_scope_core__DOT__rst_n": {
+      "offset": 6705,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 868
+    },
+    "tb_D1_scope_core__DOT__start": {
+      "offset": 6706,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 869
+    },
+    "tb_D1_scope_core__DOT__sc_v": {
+      "offset": 6708,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 871
+    },
+    "tb_D1_scope_core__DOT__sc_row": {
+      "offset": 217888,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 218751
+    },
+    "tb_D1_scope_core__DOT__sc_m": {
+      "offset": 6710,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 873
+    },
+    "tb_D1_scope_core__DOT__pv_v": {
+      "offset": 6709,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 872
+    },
+    "tb_D1_scope_core__DOT__pv_c": {
+      "offset": 6711,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 874
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__rst_s": {
+      "offset": 163821,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162968
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__fault_r": {
+      "offset": 163873,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 163022
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__coll_busy": {
+      "offset": 163819,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162966
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__kv_ok": {
+      "offset": 163831,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162980
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__kvd_v": {
+      "offset": 163830,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162979
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__att_packed_desc_fault": {
+      "offset": 163818,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162965
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__att_packed_desc_rows": {
+      "offset": 376006,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 300322
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__att_packed_desc_gen": {
+      "offset": 376004,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 300321
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__win_service_staged": {
+      "offset": 163833,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162982
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__win_service_v": {
+      "offset": 163832,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162981
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__win_service_fault": {
+      "offset": 163834,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162983
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__win_service_m": {
+      "offset": 163836,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162985
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__tile_packed_ready": {
+      "offset": 163835,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162984
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__att_packed_issue": {
+      "offset": 163837,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162986
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__pc": {
+      "offset": 376030,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 300334
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__st": {
+      "offset": 165995,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165210
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__idles": {
+      "offset": 166069,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165288
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__waited": {
+      "offset": 166070,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165289
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__q_gate": {
+      "offset": 166075,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165294
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__me_ready": {
+      "offset": 166002,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165219
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__me_go": {
+      "offset": 165997,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165212
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__d_unit": {
+      "offset": 166019,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165236
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__d_skip": {
+      "offset": 166024,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165241
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__me_cls": {
+      "offset": 166076,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165295
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__pred_ok": {
+      "offset": 166073,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165292
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__zero": {
+      "offset": 166074,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165293
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__win_admit": {
+      "offset": 166017,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165234
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__e_fault": {
+      "offset": 166079,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 165298
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__state": {
+      "offset": 189240,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 189195
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row": {
+      "offset": 1728872,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575506
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__sec": {
+      "offset": 189247,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 189202
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__active_row": {
+      "offset": 1728908,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575508
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__active_user": {
+      "offset": 385180,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 305053
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__refill_pending": {
+      "offset": 189242,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 189197
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__refill_issued": {
+      "offset": 1728864,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575504
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__refill_received": {
+      "offset": 1728868,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575505
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_schedule__DOT__state": {
+      "offset": 189271,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 189226
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__g_compat__DOT__u_merge__DOT__state": {
+      "offset": 189267,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 189222
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__state": {
+      "offset": 191384,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 191407
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__active_gen": {
+      "offset": 385508,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 305225
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__active_rows": {
+      "offset": 385512,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 305227
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__active_user": {
+      "offset": 385510,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 305226
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__beat_count": {
+      "offset": 385514,
+      "bytes": 2,
+      "alignment": 2,
+      "type": "SData",
+      "line": 305228
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__expected_mask": {
+      "offset": 191388,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 191411
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__u_desc_life__DOT__desc_same": {
+      "offset": 191387,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 191410
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__g_att_x__DOT__u_att__DOT__job_v": {
+      "offset": 187943,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 187856
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__g_att_x__DOT__u_att__DOT__job_ready": {
+      "offset": 187947,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 187860
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__g_att_x__DOT__u_att__DOT__kv_ready": {
+      "offset": 187948,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 187861
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__g_att_x__DOT__u_att__DOT__sc_cr": {
+      "offset": 187950,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 187863
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__reads": {
+      "offset": 1824656,
+      "bytes": 8,
+      "alignment": 8,
+      "type": "QData",
+      "line": 589722
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__returns": {
+      "offset": 1824664,
+      "bytes": 8,
+      "alignment": 8,
+      "type": "QData",
+      "line": 589723
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__writes": {
+      "offset": 1824672,
+      "bytes": 8,
+      "alignment": 8,
+      "type": "QData",
+      "line": 589724
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__acks": {
+      "offset": 1824680,
+      "bytes": 8,
+      "alignment": 8,
+      "type": "QData",
+      "line": 589725
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__pending": {
+      "offset": 163811,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162958
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__violations": {
+      "offset": 163810,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162957
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__target_seen": {
+      "offset": 163814,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 162961
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_valid[0]": {
+      "offset": 1728928,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575510,
+      "control_mask_word": 0
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_valid[1]": {
+      "offset": 1728932,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575510,
+      "control_mask_word": 1
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_valid[2]": {
+      "offset": 1728936,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575510,
+      "control_mask_word": 2
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_valid[3]": {
+      "offset": 1728940,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575510,
+      "control_mask_word": 3
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_active[0]": {
+      "offset": 1728912,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575509,
+      "control_mask_word": 0
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_active[1]": {
+      "offset": 1728916,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575509,
+      "control_mask_word": 1
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_active[2]": {
+      "offset": 1728920,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575509,
+      "control_mask_word": 2
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__row_active[3]": {
+      "offset": 1728924,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575509,
+      "control_mask_word": 3
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__stage_valid[0]": {
+      "offset": 1728944,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575511,
+      "control_mask_word": 0
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__stage_valid[1]": {
+      "offset": 1728948,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575511,
+      "control_mask_word": 1
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__stage_valid[2]": {
+      "offset": 1728952,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575511,
+      "control_mask_word": 2
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_packed_kv__DOT__g_window_hbm_attention__DOT__u_source__DOT__u_window__DOT__stage_valid[3]": {
+      "offset": 1728956,
+      "bytes": 4,
+      "alignment": 4,
+      "type": "IData",
+      "line": 575511,
+      "control_mask_word": 3
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__g_att_x__DOT__u_att__DOT__q_v": {
+      "offset": 187944,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 187857
+    },
+    "tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__g_att_x__DOT__u_att__DOT__kv_v": {
+      "offset": 187945,
+      "bytes": 1,
+      "alignment": 1,
+      "type": "CData",
+      "line": 187858
+    }
+  },
+  "pruned_unavailable": [
+    "win_idle standalone root member",
+    "m0_gate standalone root member",
+    "unit_busy standalone root member",
+    "q_ready standalone root member",
+    "prefetch fault_code storage"
+  ],
+  "absent_is_not_zero_qualified": true,
+  "capacity": {
+    "CPU": [
+      8
+    ],
+    "runtime_reservation_bytes": 103079215104,
+    "host_reserve_bytes": 34359738368,
+    "peer_reserve_bytes": 17179869184,
+    "wall_limit": null,
+    "AS_limit": null,
+    "CPU_time_limit": null,
+    "FS_limit": null,
+    "MemoryMax": null,
+    "fresh_admission_and_coordination_required": true
+  },
+  "new_frontend_or_build": false,
+  "replay_executed": false,
+  "scope": "TERMINAL_OWNER_SNAPSHOT_EXPERIMENTAL_NATIVE_PREFIX_ONLY",
+  "fulltoken": false,
+  "original_PC24_cause": "UNOBSERVED",
+  "RTL_fidelity": "UNPROVEN",
+  "first_return_deadline": null,
+  "no_cap_extension": true,
+  "script_contains_no_run": true,
+  "run_argv": [
+    "/usr/bin/gdb",
+    "-batch",
+    "-nx",
+    "-x",
+    "SOURCE_ROOT/results/uarch/w17_D1_terminal_program_binding_model_20261002/capture_terminal.gdb",
+    "-ex",
+    "run",
+    "-ex",
+    "printf \"D1_INFERIOR_EXIT code=%d\\n\", $_exitcode"
+  ],
+  "source_authority_SHA256": {
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/test/w17_D1_reset_qualified_fixture/tb_D1_scope_core.sv": "600c302d0af849a4847de68a5c0fd30a7c8733af9713d727bbc4de96449284ef"
+  },
+  "actual_argv": [
+    "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix"
+  ],
+  "cwd": "/tmp/w17-D1-native-joined-20261002-r1",
+  "expected_stop": {
+    "cycles": 512,
+    "time_ps": 516000,
+    "evals": 1545
+  },
+  "program_selection": "No DIR argument; original parent cwd has no prog.hex. Preserve this selection; no enrollment of separate two-instruction program.",
+  "source_first_return_model": {
+    "condition": "No actual descriptor accepted in retained parent log; first return cannot be bounded until source-owned descriptor and accepted request exist. Separately captured +DIR read/reply53cycles is a distinct execution, not transferable.",
+    "finite_upper_bound": "BOUND_MISSING",
+    "cap_expansion": false
+  },
+  "no_relink_needed": true,
+  "script_SHA256": "b56ce5a9abf2fe0650b9dca0bf44b61a7b9243584cae3f988b1bd3e97fdd0f1c"
+}

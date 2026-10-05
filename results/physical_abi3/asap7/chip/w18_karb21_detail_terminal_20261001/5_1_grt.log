@@ -1,0 +1,1068 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/4_cts.odb
+read_sdc /work/results/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       14
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_chip_v41x_karb_proot
+Die area:                 ( 0 0 ) ( 750000 128000 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     214018
+Number of terminals:      3381
+Number of snets:          2
+Number of nets:           207679
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+[INFO DRT-0164] Number of unique instances = 235.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 3777774.
+[INFO DRT-0033] V1 shape region query size = 10006791.
+[INFO DRT-0033] M2 shape region query size = 168378.
+[INFO DRT-0033] V2 shape region query size = 194739.
+[INFO DRT-0033] M3 shape region query size = 194739.
+[INFO DRT-0033] V3 shape region query size = 129826.
+[INFO DRT-0033] M4 shape region query size = 129826.
+[INFO DRT-0033] V4 shape region query size = 129826.
+[INFO DRT-0033] M5 shape region query size = 75242.
+[INFO DRT-0033] V5 shape region query size = 13344.
+[INFO DRT-0033] M6 shape region query size = 6768.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1262 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0081]   Complete 235 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0084]   Complete 153684 groups.
+#scanned instances     = 214018
+#unique  instances     = 235
+#stdCellGenAp          = 6611
+#stdCellValidPlanarAp  = 54
+#stdCellValidViaAp     = 5500
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 635486
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:26:52, elapsed time = 00:03:31, memory = 1393.36 (MB), peak = 1718.28 (MB)
+Took 217 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 101619
+[INFO GRT-0019] Found 1594 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 33
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3886475       2759614          28.99%
+M3         Vertical      4477140       3327381          25.68%
+M4         Horizontal    3459123       2573487          25.60%
+M5         Vertical      3314223       2459470          25.79%
+M6         Horizontal    2309184       1566600          32.16%
+M7         Vertical      2613337       1760808          32.62%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0197] Via related to pin nodes: 1317566
+[INFO GRT-0198] Via related Steiner nodes: 40560
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1768570
+[INFO GRT-0112] Final usage 3D: 7389229
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2759614        825417           29.91%             0 /  0 /  0
+M3             3327381        671389           20.18%             0 /  0 /  0
+M4             2573487        107851            4.19%             0 /  0 /  0
+M5             2459470         40628            1.65%             0 /  0 /  0
+M6             1566600        330394           21.09%             0 /  0 /  0
+M7             1760808        107840            6.12%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         14447360       2083519           14.42%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 1496219 um
+[INFO GRT-0014] Routed nets: 207679
+[INFO GRT-0303] Global routing runtime = 00:04:21
+Took 262 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+estimate_parasitics -global_routing
+Took 19 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    208947
+     1000 |     +0.0% |       0 |       0 |             0 |    207947
+     2000 |     +0.0% |       0 |       0 |             0 |    206947
+     3000 |     +0.0% |       0 |       0 |             0 |    205947
+     4000 |     +0.0% |       0 |       0 |             0 |    204947
+     5000 |     +0.0% |       0 |       0 |             0 |    203947
+     6000 |     +0.0% |       0 |       0 |             0 |    202947
+     7000 |     +0.0% |       0 |       0 |             0 |    201947
+     8000 |     +0.0% |       0 |       0 |             0 |    200947
+     9000 |     +0.0% |       0 |       0 |             0 |    199947
+    10000 |     +0.0% |       0 |       0 |             0 |    198947
+    11000 |     +0.0% |       0 |       0 |             0 |    197947
+    12000 |     +0.0% |       0 |       0 |             0 |    196947
+    13000 |     +0.0% |       0 |       0 |             0 |    195947
+    14000 |     +0.0% |       0 |       0 |             0 |    194947
+    15000 |     +0.0% |       0 |       0 |             0 |    193947
+    16000 |     +0.0% |       0 |       0 |             0 |    192947
+    17000 |     +0.0% |       0 |       0 |             0 |    191947
+    18000 |     +0.0% |       0 |       0 |             0 |    190947
+    19000 |     +0.0% |       0 |       0 |             0 |    189947
+    20000 |     +0.0% |       0 |       0 |             0 |    188947
+    21000 |     +0.0% |       0 |       0 |             0 |    187947
+    22000 |     +0.0% |       0 |       0 |             0 |    186947
+    23000 |     +0.0% |       0 |       0 |             0 |    185947
+    24000 |     +0.0% |       0 |       0 |             0 |    184947
+    25000 |     +0.0% |       0 |       0 |             0 |    183947
+    26000 |     +0.0% |       0 |       0 |             0 |    182947
+    27000 |     +0.0% |       0 |       0 |             0 |    181947
+    28000 |     +0.0% |       0 |       0 |             0 |    180947
+    29000 |     +0.0% |       0 |       0 |             0 |    179947
+    30000 |     +0.0% |       0 |       0 |             0 |    178947
+    31000 |     +0.0% |       0 |       0 |             0 |    177947
+    32000 |     +0.0% |       0 |       0 |             0 |    176947
+    33000 |     +0.0% |       0 |       0 |             0 |    175947
+    34000 |     +0.0% |       0 |       0 |             0 |    174947
+    35000 |     +0.0% |       0 |       0 |             0 |    173947
+    36000 |     +0.0% |       0 |       0 |             0 |    172947
+    37000 |     +0.0% |       0 |       0 |             0 |    171947
+    38000 |     +0.0% |       0 |       0 |             0 |    170947
+    39000 |     +0.0% |       0 |       0 |             0 |    169947
+    40000 |     +0.0% |       0 |       0 |             0 |    168947
+    41000 |     +0.0% |       0 |       0 |             0 |    167947
+    42000 |     +0.0% |       0 |       0 |             0 |    166947
+    43000 |     +0.0% |       0 |       0 |             0 |    165947
+    44000 |     +0.0% |       0 |       0 |             0 |    164947
+    45000 |     +0.0% |       0 |       0 |             0 |    163947
+    46000 |     +0.0% |       0 |       0 |             0 |    162947
+    47000 |     +0.0% |       0 |       0 |             0 |    161947
+    48000 |     +0.0% |       0 |       0 |             0 |    160947
+    49000 |     +0.0% |       0 |       0 |             0 |    159947
+    50000 |     +0.0% |       0 |       0 |             0 |    158947
+    51000 |     +0.0% |       0 |       0 |             0 |    157947
+    52000 |     +0.0% |       0 |       0 |             0 |    156947
+    53000 |     +0.0% |       0 |       0 |             0 |    155947
+    54000 |     +0.0% |       0 |       0 |             0 |    154947
+    55000 |     +0.0% |       0 |       0 |             0 |    153947
+    56000 |     +0.0% |       0 |       0 |             0 |    152947
+    57000 |     +0.0% |       0 |       0 |             0 |    151947
+    58000 |     +0.0% |       0 |       0 |             0 |    150947
+    59000 |     +0.0% |       0 |       0 |             0 |    149947
+    60000 |     +0.0% |       0 |       0 |             0 |    148947
+    61000 |     +0.0% |       0 |       0 |             0 |    147947
+    62000 |     +0.0% |       0 |       0 |             0 |    146947
+    63000 |     +0.0% |       0 |       0 |             0 |    145947
+    64000 |     +0.0% |       0 |       0 |             0 |    144947
+    65000 |     +0.0% |       0 |       0 |             0 |    143947
+    66000 |     +0.0% |       0 |       0 |             0 |    142947
+    67000 |     +0.0% |       0 |       0 |             0 |    141947
+    68000 |     +0.0% |       0 |       0 |             0 |    140947
+    69000 |     +0.0% |       0 |       0 |             0 |    139947
+    70000 |     +0.0% |       0 |       0 |             0 |    138947
+    71000 |     +0.0% |       0 |       0 |             0 |    137947
+    72000 |     +0.0% |       0 |       0 |             0 |    136947
+    73000 |     +0.0% |       0 |       0 |             0 |    135947
+    74000 |     +0.0% |       0 |       0 |             0 |    134947
+    75000 |     +0.0% |       0 |       0 |             0 |    133947
+    76000 |     +0.0% |       0 |       0 |             0 |    132947
+    77000 |     +0.0% |       0 |       0 |             0 |    131947
+    78000 |     +0.0% |       0 |       0 |             0 |    130947
+    79000 |     +0.0% |       0 |       0 |             0 |    129947
+    80000 |     +0.0% |       0 |       0 |             0 |    128947
+    81000 |     +0.0% |       0 |       0 |             0 |    127947
+    82000 |     +0.0% |       0 |       0 |             0 |    126947
+    83000 |     +0.0% |       0 |       0 |             0 |    125947
+    84000 |     +0.0% |       0 |       0 |             0 |    124947
+    85000 |     +0.0% |       0 |       0 |             0 |    123947
+    86000 |     +0.0% |       0 |       0 |             0 |    122947
+    87000 |     +0.0% |       0 |       0 |             0 |    121947
+    88000 |     +0.0% |       0 |       0 |             0 |    120947
+    89000 |     +0.0% |       0 |       0 |             0 |    119947
+    90000 |     +0.0% |       0 |       0 |             0 |    118947
+    91000 |     +0.0% |       0 |       0 |             0 |    117947
+    92000 |     +0.0% |       0 |       0 |             0 |    116947
+    93000 |     +0.0% |       0 |       0 |             0 |    115947
+    94000 |     +0.0% |       0 |       0 |             0 |    114947
+    95000 |     +0.0% |       0 |       0 |             0 |    113947
+    96000 |     +0.0% |       0 |       0 |             0 |    112947
+    97000 |     +0.0% |       0 |       0 |             0 |    111947
+    98000 |     +0.0% |       0 |       0 |             0 |    110947
+    99000 |     +0.0% |       0 |       0 |             0 |    109947
+   100000 |     +0.0% |       0 |       0 |             0 |    108947
+   101000 |     +0.0% |       0 |       0 |             0 |    107947
+   102000 |     +0.0% |       0 |       0 |             0 |    106947
+   103000 |     +0.0% |       0 |       0 |             0 |    105947
+   104000 |     +0.0% |       0 |       0 |             0 |    104947
+   105000 |     +0.0% |       0 |       0 |             0 |    103947
+   106000 |     +0.0% |       0 |       0 |             0 |    102947
+   107000 |     +0.0% |       0 |       0 |             0 |    101947
+   108000 |     +0.0% |       0 |       0 |             0 |    100947
+   109000 |     +0.0% |       0 |       0 |             0 |     99947
+   110000 |     +0.0% |       0 |       0 |             0 |     98947
+   111000 |     +0.0% |       0 |       0 |             0 |     97947
+   112000 |     +0.0% |       0 |       0 |             0 |     96947
+   113000 |     +0.0% |       0 |       0 |             0 |     95947
+   114000 |     +0.0% |       0 |       0 |             0 |     94947
+   115000 |     +0.0% |       0 |       0 |             0 |     93947
+   116000 |     +0.0% |       0 |       0 |             0 |     92947
+   117000 |     +0.0% |       0 |       0 |             0 |     91947
+   118000 |     +0.0% |       0 |       0 |             0 |     90947
+   119000 |     +0.0% |       0 |       0 |             0 |     89947
+   120000 |     +0.0% |       0 |       0 |             0 |     88947
+   121000 |     +0.0% |       0 |       0 |             0 |     87947
+   122000 |     +0.0% |       0 |       0 |             0 |     86947
+   123000 |     +0.0% |       0 |       0 |             0 |     85947
+   124000 |     +0.0% |       0 |       0 |             0 |     84947
+   125000 |     +0.0% |       0 |       0 |             0 |     83947
+   126000 |     +0.0% |       0 |       0 |             0 |     82947
+   127000 |     +0.0% |       0 |       0 |             0 |     81947
+   128000 |     +0.0% |       0 |       0 |             0 |     80947
+   129000 |     +0.0% |       0 |       0 |             0 |     79947
+   130000 |     +0.0% |       0 |       0 |             0 |     78947
+   131000 |     +0.0% |       0 |       0 |             0 |     77947
+   132000 |     +0.0% |       0 |       0 |             0 |     76947
+   133000 |     +0.0% |       0 |       0 |             0 |     75947
+   134000 |     +0.0% |       0 |       0 |             0 |     74947
+   135000 |     +0.0% |       0 |       0 |             0 |     73947
+   136000 |     +0.0% |       0 |       0 |             0 |     72947
+   137000 |     +0.0% |       0 |       0 |             0 |     71947
+   138000 |     +0.0% |       0 |       0 |             0 |     70947
+   139000 |     +0.0% |       0 |       0 |             0 |     69947
+   140000 |     +0.0% |       0 |       0 |             0 |     68947
+   141000 |     +0.0% |       0 |       0 |             0 |     67947
+   142000 |     +0.0% |       0 |       0 |             0 |     66947
+   143000 |     +0.0% |       0 |       0 |             0 |     65947
+   144000 |     +0.0% |       0 |       0 |             0 |     64947
+   145000 |     +0.0% |       0 |       0 |             0 |     63947
+   146000 |     +0.0% |       0 |       0 |             0 |     62947
+   147000 |     +0.0% |       0 |       0 |             0 |     61947
+   148000 |     +0.0% |       0 |       0 |             0 |     60947
+   149000 |     +0.0% |       0 |       0 |             0 |     59947
+   150000 |     +0.0% |       0 |       0 |             0 |     58947
+   151000 |     +0.0% |       0 |       0 |             0 |     57947
+   152000 |     +0.0% |       0 |       0 |             0 |     56947
+   153000 |     +0.0% |       0 |       0 |             0 |     55947
+   154000 |     +0.0% |       0 |       0 |             0 |     54947
+   155000 |     +0.0% |       0 |       0 |             0 |     53947
+   156000 |     +0.0% |       0 |       0 |             0 |     52947
+   157000 |     +0.0% |       0 |       0 |             0 |     51947
+   158000 |     +0.0% |       0 |       0 |             0 |     50947
+   159000 |     +0.0% |       0 |       0 |             0 |     49947
+   160000 |     +0.0% |       0 |       0 |             0 |     48947
+   161000 |     +0.0% |       0 |       0 |             0 |     47947
+   162000 |     +0.0% |       0 |       0 |             0 |     46947
+   163000 |     +0.0% |       0 |       0 |             0 |     45947
+   164000 |     +0.0% |       0 |       0 |             0 |     44947
+   165000 |     +0.0% |       0 |       0 |             0 |     43947
+   166000 |     +0.0% |       0 |       0 |             0 |     42947
+   167000 |     +0.0% |       0 |       0 |             0 |     41947
+   168000 |     +0.0% |       0 |       0 |             0 |     40947
+   169000 |     +0.0% |       0 |       0 |             0 |     39947
+   170000 |     +0.0% |       0 |       0 |             0 |     38947
+   171000 |     +0.0% |       0 |       0 |             0 |     37947
+   172000 |     +0.0% |       0 |       0 |             0 |     36947
+   173000 |     +0.0% |       0 |       0 |             0 |     35947
+   174000 |     +0.0% |       0 |       0 |             0 |     34947
+   175000 |     +0.0% |       0 |       0 |             0 |     33947
+   176000 |     +0.0% |       0 |       0 |             0 |     32947
+   177000 |     +0.0% |       0 |       0 |             0 |     31947
+   178000 |     +0.0% |       0 |       0 |             0 |     30947
+   179000 |     +0.0% |       0 |       0 |             0 |     29947
+   180000 |     +0.0% |       0 |       0 |             0 |     28947
+   181000 |     +0.0% |       0 |       0 |             0 |     27947
+   182000 |     +0.0% |       0 |       0 |             0 |     26947
+   183000 |     +0.0% |       0 |       0 |             0 |     25947
+   184000 |     +0.0% |       0 |       0 |             0 |     24947
+   185000 |     +0.0% |       0 |       0 |             0 |     23947
+   186000 |     +0.0% |       0 |       0 |             0 |     22947
+   187000 |     +0.0% |       0 |       0 |             0 |     21947
+   188000 |     +0.0% |       0 |       0 |             0 |     20947
+   189000 |     +0.0% |       0 |       0 |             0 |     19947
+   190000 |     +0.0% |       0 |       0 |             0 |     18947
+   191000 |     +0.0% |       0 |       0 |             0 |     17947
+   192000 |     +0.0% |       0 |       0 |             0 |     16947
+   193000 |     +0.0% |       0 |       0 |             0 |     15947
+   194000 |     +0.0% |       0 |       0 |             0 |     14947
+   195000 |     +0.0% |       0 |       0 |             0 |     13947
+   196000 |     +0.0% |       0 |       0 |             0 |     12947
+   197000 |     +0.0% |       0 |       0 |             0 |     11947
+   198000 |     +0.0% |       0 |       0 |             0 |     10947
+   199000 |     +0.0% |       0 |       0 |             0 |      9947
+   200000 |     +0.0% |       0 |       0 |             0 |      8947
+   201000 |     +0.0% |       0 |       1 |             1 |      7947
+   202000 |     +0.0% |       0 |       1 |             1 |      6947
+   203000 |     +0.0% |       0 |       1 |             1 |      5947
+   204000 |     +0.0% |       0 |       1 |             1 |      4947
+   205000 |     +0.0% |       0 |       1 |             1 |      3947
+   206000 |     +0.0% |       0 |       1 |             1 |      2947
+   207000 |     +0.0% |       0 |       1 |             1 |      1947
+   208000 |     +0.0% |       0 |       1 |             1 |       947
+    final |     +0.0% |       0 |       1 |             1 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0038] Inserted 1 buffers in 1 nets.
+[INFO RSZ-0504] Runtime: 49.09s
+Took 50 seconds: repair_design -verbose
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 94087.19 um^2
+[INFO DPL-0007] Movable instances area: 25235.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 225.06 um^2
+[INFO DPL-0009] Utilization: 27.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 214019 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 2.91s
+Placement Analysis
+---------------------------------
+total displacement          1.7 u
+average displacement        0.0 u
+max displacement            1.7 u
+original HPWL         1045214.7 u
+legalized HPWL        1045215.2 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+Took 20 seconds: estimate_parasitics -global_routing
+repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -max_buffer_percent 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 3963 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 3963 out of 3963 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -586.351 |  -372595.4 |  -341131.4 |   3963 | k_rsp_data[67]
+      10* |       0 |       9 |        0 |      0 |     0 |    +0.0% | -577.078 |  -372150.7 |  -340867.0 |   3963 | k_rsp_data[25]
+      20* |       0 |      19 |        0 |      0 |     0 |    +0.0% | -579.196 |  -371769.2 |  -340576.6 |   3963 | k_rsp_data[167]
+      30* |       0 |      29 |        0 |      0 |     0 |    +0.0% | -570.470 |  -371373.8 |  -340251.2 |   3963 | k_rsp_data[128]
+      40* |       2 |      36 |        4 |      0 |     0 |    +0.0% | -569.090 |  -371034.8 |  -339003.2 |   3963 | k_rsp_data[175]
+      50* |       2 |      45 |        5 |      0 |     0 |    +0.0% | -565.563 |  -370851.6 |  -339248.2 |   3963 | k_rsp_data[183]
+      60* |       2 |      55 |        5 |      0 |     0 |    +0.0% | -563.361 |  -370495.8 |  -339104.5 |   3963 | k_rsp_data[125]
+      70* |       3 |      64 |        5 |      0 |     0 |    +0.0% | -561.018 |  -370107.8 |  -338809.0 |   3963 | k_rsp_data[175]
+      80* |       4 |      71 |        5 |      0 |     2 |    +0.0% | -558.820 |  -369795.0 |  -338601.3 |   3963 | k_rsp_data[52]
+      90* |       7 |      75 |        8 |      0 |     4 |    +0.0% | -557.730 |  -369661.6 |  -338632.6 |   3963 | k_rsp_data[65]
+     100* |       8 |      83 |        8 |      0 |     5 |    +0.0% | -555.335 |  -369281.0 |  -338272.7 |   3963 | k_rsp_data[182]
+     109* |       9 |      86 |        9 |      1 |     6 |    +0.0% | -555.177 |  -369235.5 |  -338300.2 |   3963 | k_rsp_data[209]
+     110* |       9 |      86 |        9 |      1 |     6 |    +0.0% | -555.177 |  -369235.5 |  -338300.2 |   3963 | k_rsp_data[209]
+     120* |       9 |      92 |        9 |      2 |     9 |    +0.0% | -555.296 |  -369168.9 |  -337437.0 |   3963 | k_rsp_data[209]
+     130* |       9 |     100 |       10 |      3 |     9 |    +0.0% | -555.828 |  -369148.3 |  -336973.8 |   3963 | k_rsp_data[209]
+     140* |      11 |     106 |       15 |      3 |     9 |    +0.0% | -557.876 |  -369074.4 |  -334048.4 |   3963 | k_rsp_data[191]
+     143* |       9 |      88 |        9 |      1 |     6 |    +0.0% | -555.177 |  -369180.1 |  -338134.5 |   3963 | k_rsp_data[209]
+     150* |       9 |      91 |        9 |      2 |     8 |    +0.0% | -556.593 |  -369128.3 |  -338277.9 |   3963 | k_rsp_data[71]
+     160* |       9 |      99 |       12 |      2 |     8 |    +0.0% | -567.732 |  -369117.7 |  -337534.7 |   3963 | k_rsp_data[132]
+     170* |      11 |     107 |       12 |      2 |     8 |    +0.0% | -557.876 |  -369035.9 |  -332571.8 |   3963 | k_rsp_data[191]
+     179* |       9 |      89 |        9 |      1 |     7 |    +0.0% | -554.930 |  -369136.5 |  -338083.3 |   3963 | k_rsp_data[209]
+     180* |       9 |      89 |        9 |      1 |     7 |    +0.0% | -554.930 |  -369136.5 |  -338083.3 |   3963 | k_rsp_data[209]
+     190* |       9 |      96 |        9 |      3 |     8 |    +0.0% | -554.927 |  -369126.1 |  -338039.9 |   3963 | k_rsp_data[209]
+     198* |       9 |      97 |        9 |      3 |     8 |    +0.0% | -554.927 |  -369105.8 |  -338034.0 |   3963 | k_rsp_data[209]
+     200* |       9 |      98 |        9 |      3 |     8 |    +0.0% | -554.994 |  -369100.4 |  -337896.0 |   3963 | k_rsp_data[207]
+     210* |       9 |     104 |       10 |      5 |     9 |    +0.0% | -568.984 |  -369070.7 |  -340766.7 |   3963 | k_rsp_data[191]
+     220* |      10 |     111 |       11 |      6 |     9 |    +0.0% | -561.604 |  -369037.1 |  -339018.9 |   3963 | k_rsp_data[209]
+     222* |       9 |     102 |       10 |      4 |     9 |    +0.0% | -554.927 |  -369056.3 |  -338034.3 |   3963 | k_rsp_data[209]
+     230* |       9 |     107 |       11 |      5 |     9 |    +0.0% | -559.618 |  -369040.2 |  -338851.4 |   3963 | k_rsp_data[209]
+     239* |       9 |     103 |       10 |      4 |     9 |    +0.0% | -554.927 |  -369035.2 |  -338028.6 |   3963 | k_rsp_data[209]
+     240* |       9 |     103 |       10 |      4 |     9 |    +0.0% | -554.927 |  -369035.2 |  -338028.6 |   3963 | k_rsp_data[209]
+     250* |       9 |     109 |       11 |      5 |    11 |    +0.0% | -559.618 |  -369019.8 |  -338879.6 |   3963 | k_rsp_data[209]
+     260* |      10 |     117 |       11 |      6 |    11 |    +0.0% | -561.604 |  -368963.5 |  -338985.6 |   3963 | k_rsp_data[209]
+     262* |       9 |     104 |       10 |      4 |    10 |    +0.0% | -554.927 |  -369015.8 |  -338020.3 |   3963 | k_rsp_data[209]
+     270* |       9 |     110 |       12 |      4 |    10 |    +0.0% | -555.048 |  -368893.7 |  -336890.3 |   3963 | k_rsp_data[209]
+     280* |       9 |     116 |       15 |      5 |    10 |    +0.0% | -577.853 |  -368897.7 |  -337103.4 |   3963 | k_rsp_data[134]
+     290* |      10 |     123 |       17 |      5 |    10 |    +0.0% | -557.721 |  -368852.5 |  -333867.3 |   3963 | k_rsp_data[191]
+     300* |      10 |     130 |       20 |      6 |    11 |    +0.0% | -557.721 |  -368839.3 |  -334208.8 |   3963 | k_rsp_data[191]
+     303* |       9 |     106 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368957.4 |  -337998.0 |   3963 | k_rsp_data[209]
+     310* |       9 |     111 |       13 |      4 |    10 |    +0.0% | -554.927 |  -368898.8 |  -338385.3 |   3963 | k_rsp_data[209]
+     320* |      10 |     117 |       14 |      5 |    11 |    +0.0% | -555.837 |  -368897.8 |  -333870.2 |   3963 | k_rsp_data[209]
+     330* |      10 |     124 |       15 |      6 |    12 |    +0.0% | -555.869 |  -368838.8 |  -334710.1 |   3963 | k_rsp_data[209]
+     340* |      10 |     133 |       16 |      6 |    12 |    +0.0% | -555.869 |  -368845.6 |  -334792.8 |   3963 | k_rsp_data[209]
+     340* |       9 |     110 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368904.9 |  -337844.2 |   3963 | k_rsp_data[209]
+     350* |       9 |     116 |       10 |      5 |    12 |    +0.0% | -559.740 |  -368860.1 |  -338297.1 |   3963 | k_rsp_data[71]
+     360* |       9 |     122 |       17 |      5 |    12 |    +0.0% | -567.597 |  -368867.3 |  -338817.4 |   3963 | k_rsp_data[45]
+     370* |      10 |     130 |       17 |      6 |    12 |    +0.0% | -559.516 |  -368800.7 |  -337295.5 |   3963 | k_rsp_data[45]
+     372* |       9 |     111 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368868.2 |  -337836.6 |   3963 | k_rsp_data[209]
+     380* |       9 |     115 |       14 |      4 |    11 |    +0.0% | -555.587 |  -368818.9 |  -337051.1 |   3963 | k_rsp_data[209]
+     390* |       9 |     122 |       14 |      6 |    12 |    +0.0% | -555.837 |  -368802.9 |  -335205.9 |   3963 | k_rsp_data[209]
+     400* |       9 |     131 |       15 |      6 |    12 |    +0.0% | -555.837 |  -368809.5 |  -335292.1 |   3963 | k_rsp_data[209]
+     400* |       9 |     112 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368826.2 |  -337825.3 |   3963 | k_rsp_data[209]
+     410* |       9 |     118 |       10 |      5 |    12 |    +0.0% | -559.847 |  -368787.9 |  -338288.9 |   3963 | k_rsp_data[71]
+     420* |       9 |     124 |       17 |      5 |    12 |    +0.0% | -567.597 |  -368795.0 |  -338791.8 |   3963 | k_rsp_data[45]
+     430* |      10 |     132 |       17 |      6 |    12 |    +0.0% | -559.516 |  -368736.7 |  -337269.8 |   3963 | k_rsp_data[45]
+     432* |       9 |     112 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368825.9 |  -337825.2 |   3963 | k_rsp_data[209]
+     440* |       9 |     116 |       10 |      5 |    12 |    +0.0% | -557.336 |  -368790.9 |  -338033.2 |   3963 | k_rsp_data[71]
+     450* |       9 |     124 |       13 |      5 |    12 |    +0.0% | -566.040 |  -368797.7 |  -336958.0 |   3963 | k_rsp_data[132]
+     460* |      10 |     132 |       13 |      6 |    12 |    +0.0% | -558.215 |  -368744.2 |  -335421.2 |   3963 | k_rsp_data[132]
+     462* |       9 |     112 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368825.5 |  -337825.1 |   3963 | k_rsp_data[209]
+     470* |       9 |     116 |       14 |      4 |    11 |    +0.0% | -555.587 |  -368780.5 |  -337040.9 |   3963 | k_rsp_data[209]
+     480* |       9 |     123 |       14 |      6 |    12 |    +0.0% | -555.837 |  -368766.0 |  -335195.7 |   3963 | k_rsp_data[209]
+     490* |       9 |     132 |       15 |      6 |    12 |    +0.0% | -555.837 |  -368774.5 |  -335283.2 |   3963 | k_rsp_data[209]
+     491* |       9 |     113 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368785.3 |  -337814.8 |   3963 | k_rsp_data[209]
+     500* |       9 |     119 |       10 |      4 |    12 |    +0.0% | -556.345 |  -368745.3 |  -337762.9 |   3963 | k_rsp_data[71]
+     510* |       9 |     127 |       12 |      4 |    12 |    +0.0% | -555.837 |  -368725.3 |  -335169.3 |   3963 | k_rsp_data[209]
+     520* |      10 |     135 |       12 |      5 |    12 |    +0.0% | -555.922 |  -368698.2 |  -335173.9 |   3963 | k_rsp_data[73]
+     522* |       9 |     114 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368776.0 |  -337707.5 |   3963 | k_rsp_data[209]
+     530* |       9 |     119 |       13 |      4 |    10 |    +0.0% | -555.048 |  -368703.3 |  -336627.7 |   3963 | k_rsp_data[209]
+     540* |       9 |     124 |       17 |      5 |    10 |    +0.0% | -574.796 |  -368668.8 |  -338206.6 |   3963 | k_rsp_data[45]
+     550* |       9 |     131 |       19 |      6 |    11 |    +0.0% | -565.218 |  -368626.8 |  -337285.6 |   3963 | k_rsp_data[45]
+     558* |       9 |     116 |       10 |      4 |    10 |    +0.0% | -554.927 |  -368720.3 |  -337686.5 |   3963 | k_rsp_data[209]
+     560* |       9 |     116 |       10 |      4 |    11 |    +0.0% | -554.927 |  -368718.7 |  -337684.6 |   3963 | k_rsp_data[209]
+     570* |       9 |     123 |       11 |      5 |    12 |    +0.0% | -559.892 |  -368708.5 |  -338445.5 |   3963 | k_rsp_data[209]
+     580* |      10 |     131 |       11 |      6 |    12 |    +0.0% | -561.604 |  -368652.9 |  -338650.9 |   3963 | k_rsp_data[209]
+     580* |       9 |     118 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368703.2 |  -337673.1 |   3963 | k_rsp_data[209]
+     590* |       9 |     123 |       14 |      5 |    13 |    +0.0% | -561.709 |  -368661.5 |  -338365.7 |   3963 | k_rsp_data[50]
+     600* |       9 |     131 |       14 |      6 |    14 |    +0.0% | -555.837 |  -368644.9 |  -335090.8 |   3963 | k_rsp_data[209]
+     608* |       9 |     119 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368662.7 |  -337662.4 |   3963 | k_rsp_data[209]
+     610* |       9 |     120 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368641.6 |  -337656.7 |   3963 | k_rsp_data[209]
+     617* |       9 |     121 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368634.4 |  -337654.8 |   3963 | k_rsp_data[209]
+     620* |       9 |     123 |       10 |      4 |    12 |    +0.0% | -555.940 |  -368624.1 |  -337629.8 |   3963 | k_rsp_data[229]
+     624* |       9 |     121 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368634.4 |  -337654.8 |   3963 | k_rsp_data[209]
+     630* |       9 |     125 |       10 |      5 |    12 |    +0.0% | -566.201 |  -368571.5 |  -339481.5 |   3963 | k_rsp_data[209]
+     640* |      10 |     133 |       10 |      6 |    12 |    +0.0% | -566.703 |  -368517.0 |  -339375.4 |   3963 | k_rsp_data[209]
+     647* |       9 |     124 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368560.0 |  -337593.7 |   3963 | k_rsp_data[209]
+     650* |       9 |     126 |       10 |      4 |    12 |    +0.0% | -555.940 |  -368549.5 |  -337569.0 |   3963 | k_rsp_data[229]
+     654* |       9 |     124 |       10 |      4 |    12 |    +0.0% | -554.927 |  -368560.0 |  -337593.7 |   3963 | k_rsp_data[209]
+     660* |      10 |     128 |       10 |      4 |    12 |    +0.0% | -555.940 |  -368554.9 |  -337578.9 |   3963 | k_rsp_data[229]
+     661* |       9 |     124 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368559.0 |  -337593.4 |   3963 | k_rsp_data[229]
+     670* |       9 |     132 |       10 |      4 |    12 |    +0.0% | -555.940 |  -368524.9 |  -337575.3 |   3963 | k_rsp_data[229]
+     670* |       9 |     126 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368530.4 |  -337585.8 |   3963 | k_rsp_data[229]
+     680* |       9 |     132 |       16 |      4 |    12 |    +0.0% | -572.059 |  -368499.5 |  -336855.8 |   3963 | k_rsp_data[113]
+     690* |      10 |     140 |       17 |      4 |    12 |    +0.0% | -555.770 |  -368433.9 |  -335154.8 |   3963 | k_rsp_data[191]
+     699* |       9 |     126 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368530.3 |  -337585.8 |   3963 | k_rsp_data[229]
+     700* |       9 |     126 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368530.3 |  -337585.8 |   3963 | k_rsp_data[229]
+     710* |       9 |     132 |       12 |      4 |    14 |    +0.0% | -554.946 |  -368414.1 |  -336717.6 |   3963 | k_rsp_data[229]
+     720* |       9 |     139 |       16 |      4 |    14 |    +0.0% | -555.770 |  -368397.1 |  -335159.2 |   3963 | k_rsp_data[191]
+     724* |       9 |     127 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368460.1 |  -337560.3 |   3963 | k_rsp_data[229]
+     730* |       9 |     132 |       10 |      4 |    12 |    +0.0% | -555.940 |  -368420.1 |  -337539.0 |   3963 | k_rsp_data[229]
+     731* |       9 |     129 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368431.3 |  -337552.8 |   3963 | k_rsp_data[229]
+     740* |       9 |     134 |       10 |      5 |    14 |    +0.0% | -558.393 |  -368385.3 |  -337855.6 |   3963 | k_rsp_data[71]
+     750* |       9 |     142 |       13 |      5 |    14 |    +0.0% | -565.268 |  -368391.5 |  -336707.1 |   3963 | k_rsp_data[132]
+     760* |      10 |     149 |       14 |      6 |    14 |    +0.0% | -561.931 |  -368334.5 |  -335264.4 |   3963 | k_rsp_data[128]
+     764* |       9 |     130 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368394.1 |  -337545.2 |   3963 | k_rsp_data[229]
+     770* |       9 |     135 |       10 |      4 |    12 |    +0.0% | -555.940 |  -368377.0 |  -337520.5 |   3963 | k_rsp_data[229]
+     773* |       9 |     131 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368386.7 |  -337543.2 |   3963 | k_rsp_data[229]
+     780* |       9 |     134 |       14 |      4 |    13 |    +0.0% | -554.946 |  -368341.8 |  -337032.8 |   3963 | k_rsp_data[229]
+     790* |       9 |     141 |       14 |      6 |    14 |    +0.0% | -555.770 |  -368326.4 |  -334927.7 |   3963 | k_rsp_data[191]
+     800* |       9 |     150 |       15 |      6 |    14 |    +0.0% | -555.770 |  -368326.4 |  -335008.7 |   3963 | k_rsp_data[191]
+     802* |       9 |     132 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368346.6 |  -337533.2 |   3963 | k_rsp_data[229]
+     810* |       9 |     137 |       11 |      5 |    12 |    +0.0% | -559.533 |  -368321.3 |  -338398.8 |   3963 | k_rsp_data[229]
+     820* |      10 |     145 |       11 |      6 |    12 |    +0.0% | -561.506 |  -368274.3 |  -338485.3 |   3963 | k_rsp_data[229]
+     820* |       9 |     133 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368316.4 |  -337523.5 |   3963 | k_rsp_data[229]
+     830* |       9 |     138 |       15 |      4 |    13 |    +0.0% | -566.712 |  -368320.1 |  -336207.5 |   3963 | k_rsp_data[48]
+     840* |       9 |     142 |       20 |      5 |    13 |    +0.0% | -564.852 |  -368291.7 |  -336808.2 |   3963 | k_rsp_data[45]
+     850* |       9 |     150 |       22 |      5 |    13 |    +0.0% | -561.171 |  -368285.8 |  -336541.7 |   3963 | k_rsp_data[45]
+     850* |       9 |     135 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368307.9 |  -337416.6 |   3963 | k_rsp_data[229]
+     860* |       9 |     141 |       11 |      5 |    13 |    +0.0% | -559.806 |  -368308.2 |  -338178.7 |   3963 | k_rsp_data[229]
+     870* |      10 |     148 |       12 |      6 |    13 |    +0.0% | -561.506 |  -368236.7 |  -338462.4 |   3963 | k_rsp_data[229]
+     871* |       9 |     136 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368300.3 |  -337410.5 |   3963 | k_rsp_data[229]
+     878* |       9 |     138 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368271.7 |  -337403.0 |   3963 | k_rsp_data[229]
+     880* |       9 |     139 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368272.8 |  -337401.6 |   3963 | k_rsp_data[229]
+     890* |       9 |     146 |       11 |      5 |    13 |    +0.0% | -559.806 |  -368228.7 |  -338151.3 |   3963 | k_rsp_data[229]
+     900* |      10 |     153 |       11 |      6 |    14 |    +0.0% | -561.506 |  -368174.4 |  -338364.9 |   3963 | k_rsp_data[229]
+     901* |       9 |     141 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368222.2 |  -337383.4 |   3963 | k_rsp_data[229]
+     910* |       9 |     147 |       10 |      5 |    13 |    +0.0% | -558.920 |  -368188.9 |  -338124.2 |   3963 | k_rsp_data[45]
+     920* |       9 |     155 |       11 |      5 |    14 |    +0.0% | -555.770 |  -368166.6 |  -334964.2 |   3963 | k_rsp_data[191]
+     920* |       9 |     142 |       10 |      4 |    12 |    +0.0% | -554.826 |  -368214.9 |  -337351.8 |   3963 | k_rsp_data[229]
+     928* |       9 |     143 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368192.5 |  -337343.1 |   3963 | k_rsp_data[229]
+     930* |       9 |     144 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368178.4 |  -337335.1 |   3963 | k_rsp_data[229]
+     940* |       9 |     152 |       11 |      5 |    13 |    +0.0% | -559.806 |  -368136.0 |  -338096.5 |   3963 | k_rsp_data[229]
+     948* |       9 |     145 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368158.9 |  -337327.2 |   3963 | k_rsp_data[229]
+     950* |       9 |     146 |       10 |      4 |    13 |    +0.0% | -555.565 |  -368157.4 |  -337182.8 |   3963 | k_rsp_data[103]
+     960* |       9 |     149 |       16 |      5 |    14 |    +0.0% | -576.963 |  -368173.2 |  -336475.8 |   3963 | k_rsp_data[45]
+     970* |       9 |     156 |       20 |      6 |    14 |    +0.0% | -565.225 |  -368119.2 |  -337349.3 |   3963 | k_rsp_data[45]
+     980* |       9 |     163 |       22 |      7 |    14 |    +0.0% | -561.171 |  -368115.0 |  -336715.9 |   3963 | k_rsp_data[45]
+     980* |       9 |     145 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368158.9 |  -337327.2 |   3963 | k_rsp_data[229]
+     988* |       9 |     146 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368152.2 |  -337325.3 |   3963 | k_rsp_data[229]
+     990* |      10 |     146 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368124.7 |  -337311.2 |   3963 | k_rsp_data[229]
+    1000* |      10 |     155 |       10 |      4 |    14 |    +0.0% | -555.940 |  -368075.6 |  -337259.3 |   3963 | k_rsp_data[229]
+    1008* |      10 |     146 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368122.4 |  -337310.1 |   3963 | k_rsp_data[229]
+    1010* |      10 |     147 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368102.9 |  -337304.9 |   3963 | k_rsp_data[229]
+    1015* |      10 |     148 |       10 |      4 |    13 |    +0.0% | -554.826 |  -368095.5 |  -337302.9 |   3963 | k_rsp_data[229]
+    1020* |      11 |     150 |       10 |      4 |    14 |    +0.0% | -554.826 |  -368040.1 |  -337278.3 |   3963 | k_rsp_data[229]
+    1028* |      11 |     150 |       10 |      4 |    14 |    +0.0% | -554.826 |  -368040.1 |  -337278.3 |   3963 | k_rsp_data[229]
+    1030* |      11 |     151 |       10 |      4 |    14 |    +0.0% | -554.946 |  -368040.2 |  -336358.4 |   3963 | k_rsp_data[229]
+    1040* |      11 |     159 |       10 |      5 |    15 |    +0.0% | -555.770 |  -367992.0 |  -337038.7 |   3963 | k_rsp_data[191]
+    1045* |      11 |     150 |       10 |      4 |    14 |    +0.0% | -554.826 |  -368040.1 |  -337278.3 |   3963 | k_rsp_data[229]
+    1049* |      11 |     150 |       10 |      4 |    14 |    +0.0% | -554.826 |  -368040.1 |  -337278.3 |   3963 | k_rsp_data[229]
+    1050* |      11 |     150 |       10 |      4 |    14 |    +0.0% | -554.826 |  -368040.1 |  -337278.3 |   3963 | k_rsp_data[229]
+    1060* |      11 |     156 |       13 |      6 |    15 |    +0.0% | -555.485 |  -367987.9 |  -336311.0 |   3963 | k_rsp_data[229]
+    1070* |      11 |     163 |       18 |      6 |    16 |    +0.0% | -555.770 |  -367932.1 |  -335882.3 |   3963 | k_rsp_data[191]
+    1078* |      11 |     153 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367987.5 |  -337765.4 |   3963 | k_rsp_data[229]
+    1080* |      11 |     154 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367944.8 |  -337753.7 |   3963 | k_rsp_data[229]
+    1090* |      11 |     161 |       13 |      6 |    15 |    +0.0% | -555.770 |  -367874.9 |  -335665.1 |   3963 | k_rsp_data[191]
+    1099* |      11 |     154 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367944.1 |  -337753.3 |   3963 | k_rsp_data[229]
+    1100* |      11 |     154 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367944.1 |  -337753.3 |   3963 | k_rsp_data[229]
+    1100* |      11 |     154 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367944.1 |  -337753.3 |   3963 | k_rsp_data[229]
+    1101* |      11 |     154 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367944.1 |  -337753.3 |   3963 | k_rsp_data[229]
+    1110* |      13 |     159 |       13 |      4 |    15 |    +0.0% | -555.940 |  -367842.0 |  -337650.7 |   3963 | k_rsp_data[229]
+    1120* |      13 |     167 |       14 |      5 |    15 |    +0.0% | -555.940 |  -367815.9 |  -337698.8 |   3963 | k_rsp_data[229]
+    1121* |      12 |     154 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367917.7 |  -337739.6 |   3963 | k_rsp_data[229]
+    1130* |      12 |     160 |       14 |      5 |    14 |    +0.0% | -559.806 |  -367876.1 |  -338749.5 |   3963 | k_rsp_data[229]
+    1134* |      12 |     155 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367901.4 |  -337732.9 |   3963 | k_rsp_data[229]
+    1140* |      12 |     159 |       13 |      5 |    14 |    +0.0% | -566.069 |  -367873.8 |  -339647.0 |   3963 | k_rsp_data[229]
+    1150* |      12 |     168 |       14 |      5 |    14 |    +0.0% | -561.506 |  -367856.3 |  -338748.9 |   3963 | k_rsp_data[229]
+    1150* |      12 |     158 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367862.5 |  -337720.7 |   3963 | k_rsp_data[229]
+    1160* |      12 |     165 |       13 |      5 |    15 |    +0.0% | -558.395 |  -367773.4 |  -338086.0 |   3963 | k_rsp_data[45]
+    1170* |      12 |     170 |       20 |      5 |    16 |    +0.0% | -562.593 |  -367779.8 |  -338754.9 |   3963 | k_rsp_data[120]
+    1180* |      13 |     178 |       20 |      6 |    16 |    +0.0% | -555.770 |  -367729.1 |  -337772.0 |   3963 | k_rsp_data[191]
+    1181* |      12 |     159 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367808.3 |  -337697.1 |   3963 | k_rsp_data[229]
+    1190* |      12 |     165 |       13 |      4 |    16 |    +0.0% | -554.946 |  -367761.3 |  -336809.3 |   3963 | k_rsp_data[229]
+    1200* |      12 |     171 |       17 |      4 |    16 |    +0.0% | -555.770 |  -367715.0 |  -336568.8 |   3963 | k_rsp_data[191]
+    1210* |      12 |     179 |       17 |      5 |    17 |    +0.0% | -556.747 |  -367704.5 |  -336672.2 |   3963 | k_rsp_data[90]
+    1211* |      12 |     159 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367807.8 |  -337696.8 |   3963 | k_rsp_data[229]
+    1220* |      12 |     164 |       18 |      4 |    14 |    +0.0% | -568.184 |  -367759.8 |  -338891.7 |   3963 | k_rsp_data[220]
+    1224* |      12 |     161 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367768.6 |  -337685.0 |   3963 | k_rsp_data[229]
+    1230* |      12 |     163 |       14 |      5 |    15 |    +0.0% | -570.344 |  -367768.4 |  -340899.6 |   3963 | k_rsp_data[191]
+    1240* |      12 |     171 |       15 |      6 |    15 |    +0.0% | -561.506 |  -367732.6 |  -338746.7 |   3963 | k_rsp_data[229]
+    1243* |      12 |     162 |       14 |      4 |    15 |    +0.0% | -554.826 |  -367752.9 |  -337678.3 |   3963 | k_rsp_data[229]
+    1250* |      12 |     166 |       15 |      5 |    15 |    +0.0% | -554.946 |  -367711.9 |  -337163.7 |   3963 | k_rsp_data[229]
+    1260* |      12 |     172 |       17 |      5 |    17 |    +0.0% | -555.485 |  -367672.5 |  -336784.2 |   3963 | k_rsp_data[229]
+    1270* |      13 |     179 |       18 |      5 |    18 |    +0.0% | -555.770 |  -367636.5 |  -335239.2 |   3963 | k_rsp_data[191]
+    1275* |      12 |     162 |       14 |      4 |    15 |    +0.0% | -554.826 |  -367752.1 |  -337678.0 |   3963 | k_rsp_data[229]
+    1280* |      12 |     166 |       14 |      4 |    15 |    +0.0% | -555.890 |  -367713.8 |  -337590.6 |   3963 | k_rsp_data[45]
+    1290* |      13 |     169 |       19 |      4 |    17 |    +0.0% | -555.485 |  -367687.3 |  -336426.1 |   3963 | k_rsp_data[229]
+    1300* |      13 |     177 |       21 |      4 |    17 |    +0.0% | -558.683 |  -367671.9 |  -337915.8 |   3963 | k_rsp_data[90]
+    1300* |      12 |     162 |       14 |      4 |    15 |    +0.0% | -554.826 |  -367751.9 |  -337677.9 |   3963 | k_rsp_data[229]
+    1309* |      12 |     164 |       14 |      4 |    15 |    +0.0% | -554.826 |  -367716.7 |  -337664.2 |   3963 | k_rsp_data[229]
+    1310* |      12 |     164 |       14 |      4 |    15 |    +0.0% | -554.826 |  -367716.7 |  -337664.2 |   3963 | k_rsp_data[229]
+    1320* |      12 |     171 |       15 |      5 |    16 |    +0.0% | -561.506 |  -367682.3 |  -338739.9 |   3963 | k_rsp_data[229]
+    1328* |      12 |     166 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367682.4 |  -337650.8 |   3963 | k_rsp_data[229]
+    1330* |      12 |     167 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367669.3 |  -337645.2 |   3963 | k_rsp_data[229]
+    1340* |      12 |     174 |       14 |      5 |    18 |    +0.0% | -558.632 |  -367637.9 |  -337932.3 |   3963 | k_rsp_data[45]
+    1347* |      12 |     167 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367669.3 |  -337645.2 |   3963 | k_rsp_data[229]
+    1350* |      12 |     169 |       14 |      4 |    16 |    +0.0% | -555.615 |  -367591.8 |  -337653.7 |   3963 | k_rsp_data[45]
+    1360* |      12 |     175 |       16 |      5 |    18 |    +0.0% | -554.946 |  -367584.2 |  -336812.6 |   3963 | k_rsp_data[229]
+    1370* |      12 |     183 |       18 |      5 |    18 |    +0.0% | -555.770 |  -367546.3 |  -336258.9 |   3963 | k_rsp_data[191]
+    1379* |      12 |     168 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367604.0 |  -337616.8 |   3963 | k_rsp_data[229]
+    1380* |      12 |     168 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367604.0 |  -337616.8 |   3963 | k_rsp_data[229]
+    1390* |      12 |     176 |       14 |      5 |    17 |    +0.0% | -558.632 |  -367565.7 |  -337892.2 |   3963 | k_rsp_data[45]
+    1399* |      12 |     170 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367589.4 |  -337611.0 |   3963 | k_rsp_data[229]
+    1400* |      12 |     170 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367589.4 |  -337611.0 |   3963 | k_rsp_data[229]
+    1410* |      12 |     173 |       20 |      5 |    17 |    +0.0% | -579.025 |  -367607.1 |  -338419.4 |   3963 | k_rsp_data[45]
+    1420* |      12 |     180 |       21 |      6 |    18 |    +0.0% | -568.802 |  -367570.2 |  -337150.6 |   3963 | k_rsp_data[45]
+    1430* |      12 |     187 |       25 |      7 |    18 |    +0.0% | -565.145 |  -367548.2 |  -337341.4 |   3963 | k_rsp_data[45]
+    1432* |      12 |     170 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367589.4 |  -337611.0 |   3963 | k_rsp_data[229]
+    1440* |      12 |     175 |       14 |      5 |    17 |    +0.0% | -558.363 |  -367550.0 |  -338332.3 |   3963 | k_rsp_data[45]
+    1450* |      12 |     183 |       15 |      5 |    18 |    +0.0% | -555.770 |  -367528.8 |  -335167.9 |   3963 | k_rsp_data[191]
+    1451* |      12 |     171 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367574.4 |  -337604.9 |   3963 | k_rsp_data[229]
+    1460* |      12 |     174 |       21 |      4 |    16 |    +0.0% | -579.025 |  -367596.8 |  -338496.0 |   3963 | k_rsp_data[45]
+    1470* |      12 |     181 |       23 |      5 |    16 |    +0.0% | -568.802 |  -367547.9 |  -337366.2 |   3963 | k_rsp_data[45]
+    1480* |      12 |     189 |       25 |      5 |    16 |    +0.0% | -565.145 |  -367552.0 |  -337120.1 |   3963 | k_rsp_data[45]
+    1481* |      12 |     171 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367574.4 |  -337604.9 |   3963 | k_rsp_data[229]
+    1490* |      12 |     178 |       14 |      5 |    16 |    +0.0% | -554.946 |  -367473.6 |  -337141.2 |   3963 | k_rsp_data[229]
+    1500* |      12 |     184 |       19 |      5 |    17 |    +0.0% | -562.498 |  -367458.5 |  -338243.5 |   3963 | k_rsp_data[45]
+    1500* |      12 |     172 |       14 |      4 |    16 |    +0.0% | -554.826 |  -367507.9 |  -337576.1 |   3963 | k_rsp_data[229]
+    1510* |      12 |     178 |       14 |      5 |    18 |    +0.0% | -569.977 |  -367477.8 |  -339838.2 |   3963 | k_rsp_data[229]
+    1520* |      12 |     185 |       15 |      6 |    19 |    +0.0% | -561.506 |  -367441.6 |  -338609.5 |   3963 | k_rsp_data[229]
+    1522* |      12 |     174 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367488.1 |  -337566.3 |   3963 | k_rsp_data[229]
+    1530* |      12 |     180 |       14 |      5 |    18 |    +0.0% | -568.004 |  -367440.1 |  -339784.2 |   3963 | k_rsp_data[229]
+    1535* |      12 |     178 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367433.3 |  -337543.9 |   3963 | k_rsp_data[229]
+    1540* |      12 |     180 |       18 |      4 |    18 |    +0.0% | -554.946 |  -367431.9 |  -336678.2 |   3963 | k_rsp_data[229]
+    1550* |      12 |     186 |       23 |      4 |    18 |    +0.0% | -562.727 |  -367396.2 |  -337395.2 |   3963 | k_rsp_data[73]
+    1560* |      12 |     192 |       25 |      5 |    19 |    +0.0% | -559.072 |  -367388.8 |  -337200.6 |   3963 | k_rsp_data[73]
+    1566* |      12 |     178 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367433.0 |  -337543.8 |   3963 | k_rsp_data[229]
+    1567* |      12 |     178 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367433.0 |  -337543.8 |   3963 | k_rsp_data[229]
+    1570* |      12 |     180 |       14 |      4 |    18 |    +0.0% | -554.946 |  -367430.8 |  -336488.1 |   3963 | k_rsp_data[229]
+    1580* |      12 |     183 |       20 |      5 |    19 |    +0.0% | -575.791 |  -367447.2 |  -337751.2 |   3963 | k_rsp_data[45]
+    1590* |      12 |     190 |       24 |      6 |    19 |    +0.0% | -568.011 |  -367409.6 |  -337983.0 |   3963 | k_rsp_data[45]
+    1597* |      12 |     178 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367433.0 |  -337543.8 |   3963 | k_rsp_data[229]
+    1600* |      12 |     180 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367397.2 |  -337529.6 |   3963 | k_rsp_data[229]
+    1607* |      12 |     180 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367396.6 |  -337529.5 |   3963 | k_rsp_data[229]
+    1610* |      12 |     182 |       14 |      4 |    18 |    +0.0% | -555.615 |  -367356.1 |  -337516.7 |   3963 | k_rsp_data[45]
+    1620* |      12 |     187 |       16 |      6 |    19 |    +0.0% | -570.087 |  -367371.9 |  -336643.6 |   3963 | k_rsp_data[45]
+    1630* |      13 |     195 |       19 |      6 |    19 |    +0.0% | -557.712 |  -367293.0 |  -337199.1 |   3963 | k_rsp_data[45]
+    1634* |      12 |     180 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367396.3 |  -337529.4 |   3963 | k_rsp_data[229]
+    1640* |      12 |     182 |       18 |      4 |    18 |    +0.0% | -569.753 |  -367410.2 |  -336573.3 |   3963 | k_rsp_data[48]
+    1650* |      12 |     188 |       22 |      4 |    19 |    +0.0% | -562.727 |  -367363.9 |  -337332.5 |   3963 | k_rsp_data[73]
+    1660* |      12 |     195 |       26 |      4 |    20 |    +0.0% | -559.072 |  -367319.8 |  -337223.9 |   3963 | k_rsp_data[73]
+    1663* |      12 |     181 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367395.3 |  -337523.3 |   3963 | k_rsp_data[229]
+    1670* |      12 |     186 |       14 |      4 |    19 |    +0.0% | -555.485 |  -367385.9 |  -336378.5 |   3963 | k_rsp_data[229]
+    1680* |      12 |     192 |       17 |      4 |    20 |    +0.0% | -555.770 |  -367355.6 |  -336413.8 |   3963 | k_rsp_data[191]
+    1690* |      12 |     200 |       19 |      5 |    20 |    +0.0% | -555.770 |  -367353.0 |  -337177.5 |   3963 | k_rsp_data[191]
+    1690* |      12 |     181 |       14 |      4 |    18 |    +0.0% | -554.826 |  -367395.3 |  -337523.3 |   3963 | k_rsp_data[229]
+    1700* |      12 |     188 |       14 |      5 |    19 |    +0.0% | -556.137 |  -367222.8 |  -337797.6 |   3963 | k_rsp_data[45]
+    1700* |      12 |     185 |       14 |      4 |    19 |    +0.0% | -554.826 |  -367227.6 |  -337476.5 |   3963 | k_rsp_data[229]
+    1710* |      12 |     191 |       14 |      6 |    20 |    +0.0% | -555.485 |  -367204.7 |  -335436.7 |   3963 | k_rsp_data[229]
+    1720* |      12 |     199 |       15 |      6 |    21 |    +0.0% | -555.770 |  -367165.4 |  -334859.9 |   3963 | k_rsp_data[191]
+    1721* |      12 |     185 |       14 |      4 |    20 |    +0.0% | -554.826 |  -367225.5 |  -337475.6 |   3963 | k_rsp_data[229]
+    1730* |      13 |     191 |       14 |      4 |    21 |    +0.0% | -555.940 |  -367152.7 |  -337422.6 |   3963 | k_rsp_data[229]
+    1740* |      13 |     199 |       15 |      5 |    21 |    +0.0% | -555.940 |  -367151.5 |  -337483.0 |   3963 | k_rsp_data[229]
+    1741* |      13 |     185 |       14 |      4 |    20 |    +0.0% | -554.826 |  -367192.5 |  -337458.2 |   3963 | k_rsp_data[229]
+    1746* |      13 |     185 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367192.5 |  -337451.9 |   3963 | k_rsp_data[229]
+    1750* |      13 |     187 |       18 |      4 |    20 |    +0.0% | -554.946 |  -367191.1 |  -336576.2 |   3963 | k_rsp_data[229]
+    1760* |      13 |     193 |       22 |      4 |    20 |    +0.0% | -568.011 |  -367164.5 |  -337174.6 |   3963 | k_rsp_data[45]
+    1770* |      13 |     198 |       26 |      5 |    20 |    +0.0% | -563.406 |  -367159.7 |  -337178.8 |   3963 | k_rsp_data[45]
+    1775* |      13 |     186 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367190.9 |  -337412.8 |   3963 | k_rsp_data[229]
+    1780* |      13 |     190 |       15 |      4 |    20 |    +0.0% | -554.946 |  -367182.3 |  -336567.6 |   3963 | k_rsp_data[229]
+    1790* |      13 |     196 |       18 |      4 |    21 |    +0.0% | -555.770 |  -367160.4 |  -336319.6 |   3963 | k_rsp_data[191]
+    1800* |      13 |     204 |       21 |      5 |    21 |    +0.0% | -555.770 |  -367147.2 |  -337236.5 |   3963 | k_rsp_data[191]
+    1801* |      13 |     186 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367190.9 |  -337412.8 |   3963 | k_rsp_data[229]
+    1810* |      13 |     192 |       15 |      5 |    21 |    +0.0% | -572.336 |  -367150.2 |  -340860.5 |   3963 | k_rsp_data[191]
+    1820* |      13 |     199 |       16 |      6 |    22 |    +0.0% | -561.506 |  -367132.9 |  -338452.8 |   3963 | k_rsp_data[229]
+    1821* |      13 |     190 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367132.6 |  -337390.3 |   3963 | k_rsp_data[229]
+    1830* |      13 |     194 |       21 |      4 |    20 |    +0.0% | -575.791 |  -367131.8 |  -337816.5 |   3963 | k_rsp_data[45]
+    1840* |      13 |     201 |       25 |      4 |    20 |    +0.0% | -567.606 |  -367085.2 |  -337440.0 |   3963 | k_rsp_data[45]
+    1849* |      13 |     190 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367132.6 |  -337390.3 |   3963 | k_rsp_data[229]
+    1850* |      13 |     190 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367132.6 |  -337390.3 |   3963 | k_rsp_data[229]
+    1853* |      13 |     190 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367132.6 |  -337390.3 |   3963 | k_rsp_data[229]
+    1860* |      14 |     194 |       15 |      4 |    21 |    +0.0% | -555.940 |  -367101.4 |  -337360.5 |   3963 | k_rsp_data[229]
+    1870* |      15 |     202 |       16 |      4 |    21 |    +0.0% | -555.940 |  -367045.7 |  -337364.3 |   3963 | k_rsp_data[229]
+    1870* |      14 |     191 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367101.4 |  -337379.9 |   3963 | k_rsp_data[229]
+    1880* |      14 |     199 |       15 |      5 |    20 |    +0.0% | -568.004 |  -367055.8 |  -339589.0 |   3963 | k_rsp_data[229]
+    1881* |      14 |     194 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367056.7 |  -337363.6 |   3963 | k_rsp_data[229]
+    1890* |      14 |     201 |       16 |      4 |    20 |    +0.0% | -555.485 |  -367006.1 |  -336147.7 |   3963 | k_rsp_data[229]
+    1900* |      14 |     209 |       18 |      4 |    20 |    +0.0% | -555.770 |  -366983.8 |  -336069.4 |   3963 | k_rsp_data[191]
+    1904* |      14 |     194 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367056.7 |  -337363.6 |   3963 | k_rsp_data[229]
+    1910* |      14 |     198 |       15 |      4 |    21 |    +0.0% | -554.946 |  -367047.6 |  -336521.3 |   3963 | k_rsp_data[229]
+    1920* |      14 |     205 |       18 |      4 |    21 |    +0.0% | -555.770 |  -367017.2 |  -336270.0 |   3963 | k_rsp_data[191]
+    1930* |      14 |     212 |       22 |      4 |    21 |    +0.0% | -555.770 |  -367011.3 |  -336401.1 |   3963 | k_rsp_data[191]
+    1930* |      14 |     194 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367056.2 |  -337363.4 |   3963 | k_rsp_data[229]
+    1940* |      14 |     201 |       15 |      5 |    21 |    +0.0% | -559.648 |  -366986.2 |  -337105.3 |   3963 | k_rsp_data[142]
+    1950* |      14 |     209 |       17 |      5 |    22 |    +0.0% | -555.770 |  -366972.1 |  -334606.0 |   3963 | k_rsp_data[191]
+    1960* |      15 |     215 |       20 |      5 |    22 |    +0.0% | -555.770 |  -366908.6 |  -334699.1 |   3963 | k_rsp_data[191]
+    1961* |      14 |     195 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367009.0 |  -337351.1 |   3963 | k_rsp_data[229]
+    1970* |      14 |     202 |       15 |      4 |    21 |    +0.0% | -554.946 |  -366946.3 |  -336448.9 |   3963 | k_rsp_data[229]
+    1980* |      14 |     209 |       19 |      4 |    21 |    +0.0% | -555.770 |  -366934.0 |  -335970.6 |   3963 | k_rsp_data[191]
+    1988* |      14 |     195 |       15 |      4 |    20 |    +0.0% | -554.826 |  -367009.0 |  -337351.1 |   3963 | k_rsp_data[229]
+    1990* |      14 |     196 |       15 |      4 |    20 |    +0.0% | -554.826 |  -366966.8 |  -337338.9 |   3963 | k_rsp_data[229]
+    2000* |      14 |     202 |       17 |      5 |    21 |    +0.0% | -564.579 |  -366967.7 |  -336429.8 |   3963 | k_rsp_data[50]
+    2000* |      14 |     197 |       15 |      4 |    20 |    +0.0% | -554.826 |  -366959.8 |  -337336.8 |   3963 | k_rsp_data[229]
+    2010* |      14 |     203 |       17 |      4 |    21 |    +0.0% | -572.400 |  -366916.4 |  -338351.8 |   3963 | k_rsp_data[220]
+    2020* |      14 |     210 |       20 |      5 |    21 |    +0.0% | -557.108 |  -366905.4 |  -338142.2 |   3963 | k_rsp_data[207]
+    2022* |      14 |     201 |       15 |      4 |    21 |    +0.0% | -554.826 |  -366912.7 |  -337342.2 |   3963 | k_rsp_data[229]
+    2030* |      14 |     206 |       16 |      5 |    21 |    +0.0% | -568.031 |  -366865.6 |  -339739.2 |   3963 | k_rsp_data[229]
+    2034* |      14 |     204 |       16 |      4 |    21 |    +0.0% | -554.826 |  -366866.0 |  -337512.9 |   3963 | k_rsp_data[229]
+    2040* |      15 |     207 |       16 |      4 |    22 |    +0.0% | -555.940 |  -366749.8 |  -337397.1 |   3963 | k_rsp_data[229]
+    2050* |      15 |     216 |       17 |      4 |    22 |    +0.0% | -555.940 |  -366716.8 |  -337405.4 |   3963 | k_rsp_data[229]
+    2053* |      15 |     206 |       16 |      4 |    22 |    +0.0% | -554.826 |  -366747.0 |  -337421.1 |   3963 | k_rsp_data[229]
+    2060* |      15 |     211 |       16 |      4 |    23 |    +0.0% | -554.826 |  -366701.4 |  -337406.0 |   3963 | k_rsp_data[229]
+    2065* |      15 |     214 |       16 |      4 |    23 |    +0.0% | -554.826 |  -366697.8 |  -337404.2 |   3963 | k_rsp_data[229]
+    2070* |      16 |     216 |       16 |      4 |    24 |    +0.0% | -555.940 |  -366680.9 |  -337371.7 |   3963 | k_rsp_data[229]
+    2080* |      16 |     225 |       17 |      4 |    24 |    +0.0% | -555.940 |  -366613.8 |  -337388.2 |   3963 | k_rsp_data[229]
+    2084* |      16 |     214 |       16 |      4 |    23 |    +0.0% | -554.826 |  -366667.0 |  -337387.8 |   3963 | k_rsp_data[229]
+    2090* |      17 |     217 |       16 |      5 |    23 |    +0.0% | -569.171 |  -366692.6 |  -339578.8 |   3963 | k_rsp_data[229]
+    2091* |      16 |     214 |       16 |      4 |    23 |    +0.0% | -554.826 |  -366666.1 |  -337387.6 |   3963 | k_rsp_data[229]
+    2100* |      17 |     219 |       16 |      5 |    24 |    +0.0% | -560.768 |  -366661.3 |  -337734.3 |   3963 | k_rsp_data[191]
+    2100* |      16 |     214 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366666.0 |  -337383.9 |   3963 | k_rsp_data[229]
+    2100* |      16 |     214 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366666.0 |  -337383.9 |   3963 | k_rsp_data[229]
+    2100+ |      16 |     214 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366666.0 |  -337383.9 |   3963 | k_rsp_data[229]
+    2101+ |      16 |     214 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366666.0 |  -337383.9 |   3963 | k_rsp_data[229]
+    2105+ |      16 |     217 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366560.1 |  -337198.6 |   3963 | k_rsp_data[229]
+    2107+ |      16 |     218 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366541.0 |  -337193.6 |   3963 | k_rsp_data[229]
+    2108+ |      16 |     218 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366541.0 |  -337193.6 |   3963 | k_rsp_data[229]
+    2110+ |      16 |     219 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366450.1 |  -337156.6 |   3963 | k_rsp_data[229]
+    2112+ |      16 |     221 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366401.3 |  -337068.6 |   3963 | k_rsp_data[229]
+    2114+ |      16 |     222 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366308.2 |  -337024.5 |   3963 | k_rsp_data[229]
+    2115+ |      16 |     222 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366308.2 |  -337024.5 |   3963 | k_rsp_data[229]
+    2116+ |      16 |     222 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366308.2 |  -337024.5 |   3963 | k_rsp_data[229]
+    2117+ |      16 |     222 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366308.2 |  -337024.5 |   3963 | k_rsp_data[229]
+    2120+ |      16 |     224 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366292.0 |  -337017.4 |   3963 | k_rsp_data[229]
+    2121+ |      16 |     225 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366248.2 |  -337007.8 |   3963 | k_rsp_data[229]
+    2122+ |      16 |     225 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366248.2 |  -337007.8 |   3963 | k_rsp_data[229]
+    2123+ |      16 |     225 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366248.2 |  -337007.8 |   3963 | k_rsp_data[229]
+    2124+ |      16 |     225 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366248.2 |  -337007.8 |   3963 | k_rsp_data[229]
+    2125+ |      16 |     225 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366248.2 |  -337007.8 |   3963 | k_rsp_data[229]
+    2127+ |      16 |     226 |       16 |      4 |    23 |    +0.0% | -554.791 |  -366157.9 |  -336965.0 |   3963 | k_rsp_data[229]
+    2130+ |      16 |     227 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366138.0 |  -336954.8 |   3963 | k_rsp_data[229]
+    2131+ |      16 |     228 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366125.4 |  -336951.7 |   3963 | k_rsp_data[229]
+    2132+ |      16 |     228 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366125.4 |  -336951.7 |   3963 | k_rsp_data[229]
+    2135+ |      16 |     230 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366107.4 |  -336821.8 |   3963 | k_rsp_data[229]
+    2136+ |      16 |     230 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366107.4 |  -336821.8 |   3963 | k_rsp_data[229]
+    2137+ |      16 |     230 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366107.4 |  -336821.8 |   3963 | k_rsp_data[229]
+    2138+ |      16 |     230 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366107.4 |  -336821.8 |   3963 | k_rsp_data[229]
+    2139+ |      16 |     230 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366107.4 |  -336821.8 |   3963 | k_rsp_data[229]
+    2140+ |      16 |     230 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366107.4 |  -336821.8 |   3963 | k_rsp_data[229]
+    2142+ |      16 |     232 |       16 |      4 |    24 |    +0.0% | -554.791 |  -366006.0 |  -336783.1 |   3963 | k_rsp_data[229]
+    2144+ |      16 |     233 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365952.7 |  -336755.9 |   3963 | k_rsp_data[229]
+    2145+ |      16 |     233 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365952.7 |  -336755.9 |   3963 | k_rsp_data[229]
+    2146+ |      16 |     233 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365952.7 |  -336755.9 |   3963 | k_rsp_data[229]
+    2147+ |      16 |     233 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365952.7 |  -336755.9 |   3963 | k_rsp_data[229]
+    2149+ |      16 |     234 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365908.6 |  -336736.9 |   3963 | k_rsp_data[229]
+    2150+ |      16 |     234 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365908.6 |  -336736.9 |   3963 | k_rsp_data[229]
+    2150+ |      16 |     234 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365908.6 |  -336736.9 |   3963 | k_rsp_data[229]
+    2154+ |      16 |     237 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365831.2 |  -336647.8 |   3963 | k_rsp_data[229]
+    2156+ |      16 |     238 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365765.8 |  -336615.9 |   3963 | k_rsp_data[229]
+    2157+ |      16 |     238 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365765.8 |  -336615.9 |   3963 | k_rsp_data[229]
+    2158+ |      16 |     238 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365765.8 |  -336615.9 |   3963 | k_rsp_data[229]
+    2159+ |      16 |     238 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365765.8 |  -336615.9 |   3963 | k_rsp_data[229]
+    2160+ |      16 |     238 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365765.8 |  -336615.9 |   3963 | k_rsp_data[229]
+    2161+ |      16 |     239 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365696.9 |  -336582.8 |   3963 | k_rsp_data[229]
+    2162+ |      16 |     239 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365696.9 |  -336582.8 |   3963 | k_rsp_data[229]
+    2165+ |      16 |     241 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365601.2 |  -336547.5 |   3963 | k_rsp_data[229]
+    2167+ |      16 |     242 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365586.4 |  -336541.1 |   3963 | k_rsp_data[229]
+    2170+ |      16 |     244 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365493.5 |  -336507.2 |   3963 | k_rsp_data[229]
+    2170+ |      16 |     244 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365493.5 |  -336507.2 |   3963 | k_rsp_data[229]
+    2172+ |      16 |     245 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365428.8 |  -336476.0 |   3963 | k_rsp_data[229]
+    2173+ |      16 |     245 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365428.8 |  -336476.0 |   3963 | k_rsp_data[229]
+    2175+ |      16 |     246 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365362.8 |  -336444.6 |   3963 | k_rsp_data[229]
+    2178+ |      16 |     248 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365256.0 |  -336402.7 |   3963 | k_rsp_data[229]
+    2179+ |      16 |     248 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365256.0 |  -336402.7 |   3963 | k_rsp_data[229]
+    2180+ |      16 |     248 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365256.0 |  -336402.7 |   3963 | k_rsp_data[229]
+    2182+ |      16 |     250 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365146.9 |  -336359.7 |   3963 | k_rsp_data[229]
+    2183+ |      16 |     250 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365146.9 |  -336359.7 |   3963 | k_rsp_data[229]
+    2184+ |      16 |     250 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365146.9 |  -336359.7 |   3963 | k_rsp_data[229]
+    2187+ |      16 |     252 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365039.2 |  -336317.4 |   3963 | k_rsp_data[229]
+    2188+ |      16 |     252 |       16 |      4 |    24 |    +0.0% | -554.791 |  -365039.2 |  -336317.4 |   3963 | k_rsp_data[229]
+    2190+ |      16 |     253 |       16 |      4 |    24 |    +0.0% | -554.791 |  -364969.0 |  -336283.8 |   3963 | k_rsp_data[229]
+    2190+ |      16 |     253 |       16 |      4 |    24 |    +0.0% | -554.791 |  -364969.0 |  -336283.8 |   3963 | k_rsp_data[229]
+    2192+ |      16 |     254 |       16 |      4 |    24 |    +0.0% | -554.791 |  -364967.9 |  -336283.7 |   3963 | k_rsp_data[229]
+    2195+ |      16 |     255 |       16 |      4 |    25 |    +0.0% | -554.791 |  -364898.0 |  -336253.3 |   3963 | k_rsp_data[229]
+    2196+ |      16 |     255 |       16 |      4 |    25 |    +0.0% | -554.791 |  -364898.0 |  -336253.3 |   3963 | k_rsp_data[229]
+    2197+ |      16 |     255 |       16 |      4 |    25 |    +0.0% | -554.791 |  -364894.6 |  -336251.7 |   3963 | k_rsp_data[229]
+    2198+ |      16 |     255 |       16 |      4 |    25 |    +0.0% | -554.791 |  -364894.6 |  -336251.7 |   3963 | k_rsp_data[229]
+    2200+ |      16 |     255 |       16 |      4 |    26 |    +0.0% | -554.791 |  -364887.8 |  -336248.3 |   3963 | k_rsp_data[229]
+    2201+ |      16 |     255 |       16 |      4 |    26 |    +0.0% | -554.791 |  -364887.8 |  -336248.3 |   3963 | k_rsp_data[229]
+    2203+ |      16 |     255 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364880.8 |  -336244.8 |   3963 | k_rsp_data[229]
+    2204+ |      16 |     255 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364880.8 |  -336244.8 |   3963 | k_rsp_data[229]
+    2205+ |      16 |     255 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364880.8 |  -336244.8 |   3963 | k_rsp_data[229]
+    2207+ |      16 |     256 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364887.6 |  -336244.2 |   3963 | k_rsp_data[229]
+    2208+ |      16 |     256 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364887.6 |  -336244.2 |   3963 | k_rsp_data[229]
+    2209+ |      16 |     256 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364887.6 |  -336244.2 |   3963 | k_rsp_data[229]
+    2210+ |      16 |     256 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364887.6 |  -336244.2 |   3963 | k_rsp_data[229]
+    2212+ |      16 |     258 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364785.5 |  -336204.6 |   3963 | k_rsp_data[229]
+    2214+ |      16 |     259 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364741.2 |  -336195.8 |   3963 | k_rsp_data[229]
+    2215+ |      16 |     259 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364741.2 |  -336195.8 |   3963 | k_rsp_data[229]
+    2220+ |      16 |     263 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364641.9 |  -336176.7 |   3963 | k_rsp_data[229]
+    2221+ |      16 |     264 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364640.6 |  -336176.3 |   3963 | k_rsp_data[229]
+    2222+ |      16 |     264 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364640.6 |  -336176.3 |   3963 | k_rsp_data[229]
+    2225+ |      16 |     266 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364537.9 |  -336136.0 |   3963 | k_rsp_data[229]
+    2227+ |      16 |     267 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364479.0 |  -336108.1 |   3963 | k_rsp_data[229]
+    2230+ |      16 |     269 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364376.2 |  -336067.6 |   3963 | k_rsp_data[229]
+    2230+ |      16 |     269 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364376.2 |  -336067.6 |   3963 | k_rsp_data[229]
+    2233+ |      16 |     271 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364273.0 |  -336027.8 |   3963 | k_rsp_data[229]
+    2234+ |      16 |     271 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364273.0 |  -336027.8 |   3963 | k_rsp_data[229]
+    2237+ |      16 |     273 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364170.9 |  -335988.4 |   3963 | k_rsp_data[229]
+    2238+ |      16 |     273 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364166.1 |  -335985.9 |   3963 | k_rsp_data[229]
+    2240+ |      16 |     274 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364166.1 |  -335971.1 |   3963 | k_rsp_data[229]
+    2241+ |      16 |     275 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364149.6 |  -335966.8 |   3963 | k_rsp_data[229]
+    2243+ |      16 |     276 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364087.6 |  -335937.2 |   3963 | k_rsp_data[229]
+    2244+ |      16 |     276 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364085.2 |  -335936.1 |   3963 | k_rsp_data[229]
+    2246+ |      16 |     277 |       16 |      4 |    27 |    +0.0% | -554.791 |  -364043.9 |  -335924.9 |   3963 | k_rsp_data[229]
+    2248+ |      16 |     278 |       16 |      4 |    27 |    +0.0% | -554.791 |  -363981.6 |  -335895.5 |   3963 | k_rsp_data[229]
+    2250+ |      16 |     278 |       16 |      4 |    28 |    +0.0% | -554.791 |  -363978.8 |  -335893.2 |   3963 | k_rsp_data[229]
+    2250+ |      16 |     278 |       16 |      4 |    28 |    +0.0% | -554.791 |  -363978.8 |  -335893.2 |   3963 | k_rsp_data[229]
+    2254+ |      16 |     281 |       16 |      4 |    28 |    +0.0% | -554.791 |  -363830.1 |  -335794.3 |   3963 | k_rsp_data[229]
+    2257+ |      16 |     283 |       16 |      4 |    28 |    +0.0% | -554.791 |  -363727.5 |  -335755.2 |   3963 | k_rsp_data[229]
+    2260+ |      16 |     284 |       16 |      4 |    29 |    +0.0% | -554.791 |  -363726.4 |  -335751.3 |   3963 | k_rsp_data[229]
+    2260+ |      16 |     284 |       16 |      4 |    29 |    +0.0% | -554.791 |  -363726.4 |  -335751.3 |   3963 | k_rsp_data[229]
+    2261+ |      16 |     284 |       16 |      4 |    29 |    +0.0% | -554.791 |  -363726.4 |  -335751.3 |   3963 | k_rsp_data[229]
+    2263+ |      16 |     285 |       16 |      4 |    29 |    +0.0% | -554.791 |  -363717.8 |  -335747.7 |   3963 | k_rsp_data[229]
+    2265+ |      16 |     285 |       16 |      4 |    30 |    +0.0% | -554.791 |  -363710.8 |  -335744.2 |   3963 | k_rsp_data[229]
+    2267+ |      16 |     285 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363704.6 |  -335740.5 |   3963 | k_rsp_data[229]
+    2268+ |      16 |     285 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363704.6 |  -335740.5 |   3963 | k_rsp_data[229]
+    2270+ |      16 |     286 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363645.8 |  -335712.9 |   3963 | k_rsp_data[229]
+    2270+ |      16 |     286 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363645.8 |  -335712.9 |   3963 | k_rsp_data[229]
+    2271+ |      16 |     286 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363645.8 |  -335712.9 |   3963 | k_rsp_data[229]
+    2272+ |      16 |     286 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363645.8 |  -335712.9 |   3963 | k_rsp_data[229]
+    2273+ |      16 |     286 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363645.8 |  -335712.9 |   3963 | k_rsp_data[229]
+    2275+ |      16 |     287 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363562.4 |  -335669.2 |   3963 | k_rsp_data[229]
+    2276+ |      16 |     287 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363562.4 |  -335669.2 |   3963 | k_rsp_data[229]
+    2277+ |      16 |     287 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363562.4 |  -335669.2 |   3963 | k_rsp_data[229]
+    2280+ |      16 |     289 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363464.8 |  -335631.9 |   3963 | k_rsp_data[229]
+    2280+ |      16 |     289 |       16 |      4 |    31 |    +0.0% | -554.791 |  -363464.8 |  -335632.0 |   3963 | k_rsp_data[229]
+    2282+ |      16 |     289 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363459.5 |  -335629.3 |   3963 | k_rsp_data[229]
+    2286+ |      16 |     292 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363406.0 |  -335612.0 |   3963 | k_rsp_data[229]
+    2287+ |      16 |     292 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363406.0 |  -335612.0 |   3963 | k_rsp_data[229]
+    2290+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363294.8 |  -335563.5 |   3963 | k_rsp_data[229]
+    2290+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363294.8 |  -335563.5 |   3963 | k_rsp_data[229]
+    2291+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363294.8 |  -335563.5 |   3963 | k_rsp_data[229]
+    2292+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363294.8 |  -335563.5 |   3963 | k_rsp_data[229]
+    2293+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363294.8 |  -335563.5 |   3963 | k_rsp_data[229]
+    2294+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363289.7 |  -335560.9 |   3963 | k_rsp_data[229]
+    2295+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363289.7 |  -335560.9 |   3963 | k_rsp_data[229]
+    2296+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363285.0 |  -335558.5 |   3963 | k_rsp_data[229]
+    2297+ |      16 |     294 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363285.0 |  -335558.5 |   3963 | k_rsp_data[229]
+    2299+ |      16 |     295 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363225.8 |  -335530.7 |   3963 | k_rsp_data[229]
+    2300+ |      16 |     295 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363225.8 |  -335530.7 |   3963 | k_rsp_data[229]
+    final |      16 |     295 |       16 |      4 |    32 |    +0.0% | -554.791 |  -363225.8 |  -335530.7 |   3963 | k_rsp_data[229]
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 16 buffers.
+[INFO RSZ-0040] Inserted 16 buffers.
+[INFO RSZ-0051] Resized 295 instances: 288 up, 7 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 32 instances.
+[INFO RSZ-0049] Cloned 4 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 1521.47s
+[INFO RSZ-0046] Found 754 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -214.001 | -108164.227 | u_iq.m0[54]$_DFFE_PP_/D
+       10 |       0 |      74 |            0 |    +0.0% | -210.202 | -104987.617 | u_iq.m0[51]$_DFFE_PP_/D
+       20 |       0 |     157 |            0 |    +0.0% | -207.015 | -101424.547 | u_iq.m0[73]$_DFFE_PP_/D
+       30 |       0 |     233 |            0 |    +0.1% | -204.561 | -98249.617 | u_iq.m0[74]$_DFFE_PP_/D
+       40 |       0 |     293 |            0 |    +0.1% | -203.313 | -95848.969 | u_iq.m1[65]$_DFFE_PP_/D
+       50 |       0 |     345 |            0 |    +0.1% | -202.104 | -93835.375 | u_iq.m1[38]$_DFFE_PP_/D
+       60 |       0 |     403 |            0 |    +0.1% | -198.301 | -91457.906 | u_iq.m0[179]$_DFFE_PP_/D
+       70 |       0 |     461 |            0 |    +0.1% | -194.638 | -89161.055 | u_iq.m1[187]$_DFFE_PP_/D
+       80 |       0 |     500 |            0 |    +0.1% | -187.963 | -87694.773 | k_wr_done$_DFF_PN0_/D
+       90 |       0 |     549 |            0 |    +0.2% | -186.520 | -85778.438 | u_iq.m0[61]$_DFFE_PP_/D
+      100 |       0 |     600 |            0 |    +0.2% | -184.895 | -83635.227 | u_iq.m1[63]$_DFFE_PP_/D
+      110 |       0 |     649 |            0 |    +0.2% | -182.915 | -81528.500 | u_iq.m1[93]$_DFFE_PP_/D
+      120 |       0 |     686 |            0 |    +0.2% | -182.344 | -80155.844 | u_iq.m0[279]$_DFFE_PP_/D
+      130 |       0 |     759 |            0 |    +0.2% | -180.240 | -77142.367 | u_iq.m0[123]$_DFFE_PP_/D
+      140 |       0 |     816 |            0 |    +0.2% | -179.322 | -74714.250 | u_iq.m0[107]$_DFFE_PP_/D
+      150 |       0 |     872 |            0 |    +0.2% | -178.399 | -72374.758 | u_iq.m0[178]$_DFFE_PP_/D
+      160 |       0 |     921 |            0 |    +0.3% | -177.987 | -70328.203 | u_iq.m0[175]$_DFFE_PP_/D
+      170 |       0 |     969 |            0 |    +0.3% | -176.954 | -68353.164 | u_iq.m0[228]$_DFFE_PP_/D
+      180 |       0 |    1025 |            0 |    +0.3% | -176.294 | -65989.031 | u_iq.m1[221]$_DFFE_PP_/D
+      190 |       0 |    1081 |            0 |    +0.3% | -175.498 | -63687.168 | u_iq.m1[264]$_DFFE_PP_/D
+      200 |       0 |    1151 |            0 |    +0.3% | -174.887 | -60740.418 | u_iq.m1[219]$_DFFE_PP_/D
+      210 |       0 |    1199 |            0 |    +0.3% | -174.171 | -58819.789 | u_iq.m0[227]$_DFFE_PP_/D
+      220 |       0 |    1277 |            0 |    +0.4% | -173.566 | -55556.973 | u_iq.m0[218]$_DFFE_PP_/D
+      230 |       0 |    1329 |            0 |    +0.4% | -172.948 | -53271.289 | u_iq.m0[126]$_DFFE_PP_/D
+      240 |       0 |    1383 |            0 |    +0.4% | -172.244 | -50967.945 | u_iq.m1[117]$_DFFE_PP_/D
+      250 |       0 |    1434 |            0 |    +0.4% | -171.648 | -48699.086 | u_iq.m1[233]$_DFFE_PP_/D
+      260 |       0 |    1493 |            0 |    +0.4% | -171.237 | -46094.379 | u_iq.m1[105]$_DFFE_PP_/D
+      270 |       0 |    1549 |            0 |    +0.4% | -170.549 | -43473.082 | u_iq.m0[247]$_DFFE_PP_/D
+      280 |       0 |    1606 |            0 |    +0.5% | -170.099 | -40939.762 | u_iq.m0[209]$_DFFE_PP_/D
+      290 |       0 |    1663 |            0 |    +0.5% | -169.486 | -38359.258 | u_iq.m1[155]$_DFFE_PP_/D
+      300 |       0 |    1712 |            0 |    +0.5% | -169.140 | -36151.711 | u_iq.m1[287]$_DFFE_PP_/D
+      310 |       0 |    1768 |            0 |    +0.5% | -168.660 | -33563.395 | u_iq.m0[205]$_DFFE_PP_/D
+      320 |       0 |    1824 |            0 |    +0.5% | -168.270 | -31036.506 | u_iq.m1[148]$_DFFE_PP_/D
+      330 |       0 |    1874 |            0 |    +0.5% | -167.825 | -28847.426 | u_iq.m0[212]$_DFFE_PP_/D
+      340 |       0 |    1923 |            0 |    +0.6% | -167.384 | -26684.020 | u_iq.m1[184]$_DFFE_PP_/D
+      350 |       0 |    1979 |            0 |    +0.6% | -166.847 | -24202.223 | u_iq.m1[141]$_DFFE_PP_/D
+      360 |       0 |    2035 |            0 |    +0.6% | -166.022 | -21752.230 | u_iq.m1[137]$_DFFE_PP_/D
+      370 |       0 |    2091 |            0 |    +0.6% | -165.029 | -19266.736 | u_iq.m0[206]$_DFFE_PP_/D
+      380 |       0 |    2147 |            0 |    +0.6% | -164.354 | -16795.291 | u_iq.m1[213]$_DFFE_PP_/D
+      390 |       0 |    2203 |            0 |    +0.6% | -163.550 | -14369.306 | u_iq.m0[170]$_DFFE_PP_/D
+      400 |       0 |    2259 |            0 |    +0.6% | -162.233 | -11920.405 | u_iq.m0[16]$_DFFE_PP_/D
+      410 |       0 |    2301 |            0 |    +0.7% | -159.899 | -10118.749 | u_iq.m0[269]$_DFFE_PP_/D
+      420 |       0 |    2336 |            0 |    +0.7% | -158.162 | -8611.374 | u_iq.m0[164]$_DFFE_PP_/D
+      430 |       0 |    2358 |            0 |    +0.7% | -154.222 | -7744.244 | u_iq.m1[166]$_DFFE_PP_/D
+      440 |       0 |    2365 |            0 |    +0.7% | -146.433 | -7462.496 | u_iq.m0[334]$_DFFE_PP_/D
+      450 |       0 |    2365 |            0 |    +0.7% | -146.433 | -7462.496 | u_iq.m0[334]$_DFFE_PP_/D
+      460 |       0 |    2365 |            0 |    +0.7% | -146.433 | -7462.496 | u_iq.m0[334]$_DFFE_PP_/D
+      470 |       0 |    2365 |            0 |    +0.7% | -146.433 | -7462.496 | u_iq.m0[334]$_DFFE_PP_/D
+      480 |       0 |    2371 |            0 |    +0.7% | -141.459 | -7196.589 | u_iq.m0[129]$_DFFE_PP_/D
+      490 |       0 |    2371 |            0 |    +0.7% | -141.459 | -7196.589 | u_iq.m0[129]$_DFFE_PP_/D
+      500 |       0 |    2371 |            0 |    +0.7% | -141.459 | -7196.589 | u_iq.m0[129]$_DFFE_PP_/D
+      510 |       0 |    2371 |            0 |    +0.7% | -141.459 | -7196.589 | u_iq.m0[129]$_DFFE_PP_/D
+      520 |       0 |    2371 |            0 |    +0.7% | -141.459 | -7196.589 | u_iq.m0[129]$_DFFE_PP_/D
+      530 |       0 |    2377 |            0 |    +0.7% | -138.243 | -6914.805 | u_iq.m1[331]$_DFFE_PP_/D
+      540 |       0 |    2377 |            0 |    +0.7% | -138.243 | -6914.805 | u_iq.m1[331]$_DFFE_PP_/D
+      550 |       0 |    2377 |            0 |    +0.7% | -138.243 | -6914.805 | u_iq.m1[331]$_DFFE_PP_/D
+      560 |       0 |    2377 |            0 |    +0.7% | -138.243 | -6914.805 | u_iq.m1[331]$_DFFE_PP_/D
+      570 |       0 |    2389 |            0 |    +0.7% | -135.871 | -6417.980 | u_iq.m0[309]$_DFFE_PP_/D
+      580 |       0 |    2389 |            0 |    +0.7% | -135.871 | -6417.980 | u_iq.m0[309]$_DFFE_PP_/D
+      590 |       0 |    2401 |            0 |    +0.7% | -135.698 | -5932.772 | u_iq.m1[336]$_DFFE_PP_/D
+      600 |       0 |    2428 |            0 |    +0.7% | -133.604 | -4714.756 | u_iq.m1[305]$_DFFE_PP_/D
+      610 |       0 |    2454 |            0 |    +0.7% | -132.298 | -3519.957 | u_iq.m1[302]$_DFFE_PP_/D
+      620 |       0 |    2474 |            0 |    +0.7% | -130.297 | -2575.890 | u_iq.m1[304]$_DFFE_PP_/D
+      630 |       0 |    2509 |            0 |    +0.7% | -122.667 | -990.829 | u_iq.m1[317]$_DFFE_PP_/D
+      640 |       0 |    2524 |            0 |    +0.7% | -71.100 | -340.202 | k_wr_done$_DFF_PN0_/D
+      650 |       0 |    2524 |            0 |    +0.7% | -71.100 | -340.202 | k_wr_done$_DFF_PN0_/D
+      660 |       0 |    2524 |            0 |    +0.7% | -71.100 | -340.202 | k_wr_done$_DFF_PN0_/D
+      670 |       0 |    2532 |            0 |    +0.7% | -71.100 | -181.887 | k_wr_done$_DFF_PN0_/D
+      680 |       0 |    2539 |            0 |    +0.7% | -71.100 | -124.123 | k_wr_done$_DFF_PN0_/D
+      690 |       0 |    2543 |            0 |    +0.7% | -71.100 | -114.135 | k_wr_done$_DFF_PN0_/D
+      700 |       0 |    2544 |            0 |    +0.7% | -71.100 | -111.037 | k_wr_done$_DFF_PN0_/D
+      710 |       0 |    2552 |            0 |    +0.7% | -71.100 | -91.493 | k_wr_done$_DFF_PN0_/D
+      720 |       0 |    2559 |            0 |    +0.7% | -71.100 | -75.373 | k_wr_done$_DFF_PN0_/D
+      730 |       0 |    2563 |            0 |    +0.7% | -71.100 | -72.526 | k_wr_done$_DFF_PN0_/D
+      740 |       0 |    2569 |            0 |    +0.7% | -71.100 | -71.100 | k_wr_done$_DFF_PN0_/D
+      750 |       0 |    2572 |            0 |    +0.7% | -71.100 | -71.100 | k_wr_done$_DFF_PN0_/D
+    final |       0 |    2578 |            0 |    +0.7% |   0.016 |   0.000 | g_q[0].u_q.m[5][113]$_DFFE_PP_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 2578 hold buffers.
+[INFO RSZ-0506] Runtime: 2763.00s
+Took 4285 seconds: repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -max_buffer_percent 100 -verbose
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 94087.19 um^2
+[INFO DPL-0007] Movable instances area: 25432.64 um^2
+[INFO DPL-0008] Fixed instances area within core: 225.06 um^2
+[INFO DPL-0009] Utilization: 27.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 216601 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        146 |        44 |       102
+        1 |         20 |         6 |        14
+        2 |         18 |         4 |        14
+        3 |         12 |         2 |        10
+        4 |         13 |         3 |        10
+        5 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 5.
+[INFO DPL-0500] Runtime: 3.24s
+Placement Analysis
+---------------------------------
+total displacement        893.2 u
+average displacement        0.0 u
+max displacement            2.2 u
+original HPWL         1045901.2 u
+legalized HPWL        1046369.8 u
+delta HPWL                    0 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/congestion_post_repair_timing.rpt
+Took 5 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+Took 19 seconds: estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0094] Found 3962 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 3962 (0.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       7 |        0 |      0 |     0 |    +0.0% | -555.839 |  -363230.8 |  -335545.9 |   3962 | k_rsp_data[229]
+       1* |       0 |       7 |        0 |      0 |     0 |    +0.0% | -555.839 |  -363230.8 |  -335545.9 |   3962 | k_rsp_data[229]
+       1* |       0 |       7 |        0 |      0 |     0 |    +0.0% | -555.839 |  -363230.8 |  -335545.9 |   3962 | k_rsp_data[229]
+    final |       0 |       7 |        0 |      0 |     0 |    +0.0% | -555.839 |  -363230.8 |  -335545.9 |   3962 | k_rsp_data[229]
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0051] Resized 7 instances: 0 up, 7 up match, 0 down, 0 VT
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 22.42s
+Took 23 seconds: repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Took 22 seconds: estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 25658 um^2 27% utilization.
+[INFO FLW-0007] clock core_clk period 833.000000
+[INFO FLW-0008] Clock core_clk period 1319.397
+[INFO FLW-0009] Clock core_clk slack -555.839
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/updated_clks.sdc
+[INFO FLW-0011] Path endpoint path count 35873
+write_db /work/results/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.sdc
+Elapsed time: 1:25:11.77[h:]min:sec. CPU time: user 7387.34 sys 31.43 (145%). Peak memory: 5006676KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb         5111           4889 c66f5ec6b7dc481e4ff7
+5_1_grt                   .sdc                             8cc31bf5838bea2217db

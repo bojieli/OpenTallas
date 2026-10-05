@@ -1,0 +1,95 @@
+{
+ "schema": "opentallas.w18b.exhaustive_hash.v2",
+ "sources": {
+  "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv": "1744424bfb96dd1a6db9e601d615838e5b612c1efa5cdc1fa4150e5994c3e32b",
+  "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv": "8e3ee1fba61f867dac2a8ad83abe703962c1902913bafe99c40e63e7905f0b84",
+  "rtl/chip/ot_chip_v41x_karb_proot.sv": "d1251c4ba195c2067cb3f791882a1280c6d95459d9f120d1b87493182be0b4fa",
+  "rtl/chip/ot_chip_v41x_karb_pregion.sv": "41b99296a692978f1ab8e69a1485dd2fd3bcac75026b69f136ed980959813023",
+  "rtl/chip/ot_chip_v41x_karb_pslice.sv": "2df9d5ccd396d76426037ae01f036e71922e385088281358af272cf8119d5499",
+  "rtl/chip/ot_chip_v41x_karb_pipe.sv": "378fd81d0de101435aa662bb59d2aa18ec19585adb6c8e0bd570dab9da9ae0f0",
+  "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
+  "rtl/chip/ot_chip_v41x_karb_stack_ep.sv": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
+  "rtl/chip/ot_chip_v41x_karb_region.sv": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477",
+  "rtl/chip/ot_chip_v41x_karb_region_kq.sv": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+  "rtl/chip/ot_chip_v41x_karb_slice.sv": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
+  "rtl/chip/ot_chip_v41x_karb_q2.sv": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+  "rtl/chip/ot_chip_v41x_karb_qn.sv": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+  "rtl/chip/ot_chip_v41x_karb_qh.sv": "4e1df73be39514a48481613810f2956aae8de2149e972127879f1b87156e0860",
+  "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+  "tools/rtl_chip_v41x_karb_local.py": "837469118d598141208bea47eb6cb18a8a4fb4ed443b1c60375726a3477601a1",
+  "tools/w18/hash_parallel_gate.py": "970bd282d7957c3f416fda78400cb628cb9b321b6a78017dd02d0dd66d70a0fd"
+ },
+ "compiler_inputs": [
+  "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv",
+  "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv",
+  "rtl/chip/ot_chip_v41x_karb_proot.sv",
+  "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+  "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+  "rtl/chip/ot_chip_v41x_karb_pipe.sv",
+  "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+  "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+  "rtl/chip/ot_chip_v41x_karb_region.sv",
+  "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+  "rtl/chip/ot_chip_v41x_karb_slice.sv",
+  "rtl/chip/ot_chip_v41x_karb_q2.sv",
+  "rtl/chip/ot_chip_v41x_karb_qn.sv",
+  "rtl/chip/ot_chip_v41x_karb_qh.sv",
+  "rtl/chip/ot_chip_v41x_hbm_karb.sv"
+ ],
+ "recipe": {
+  "compiler_args": [
+   "-g2012",
+   "-s",
+   "tb_chip_v41x_karb_local_hash_parallel",
+   "-o",
+   "{exe}",
+   "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv",
+   "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv",
+   "rtl/chip/ot_chip_v41x_karb_proot.sv",
+   "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+   "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+   "rtl/chip/ot_chip_v41x_karb_pipe.sv",
+   "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+   "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+   "rtl/chip/ot_chip_v41x_karb_region.sv",
+   "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+   "rtl/chip/ot_chip_v41x_karb_slice.sv",
+   "rtl/chip/ot_chip_v41x_karb_q2.sv",
+   "rtl/chip/ot_chip_v41x_karb_qn.sv",
+   "rtl/chip/ot_chip_v41x_karb_qh.sv",
+   "rtl/chip/ot_chip_v41x_hbm_karb.sv"
+  ],
+  "simulator_args": [
+   "-n",
+   "{exe}"
+  ]
+ },
+ "tools": {
+  "compiler": {
+   "path": "/usr/bin/iverilog",
+   "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+   "version_stdout": "Icarus Verilog version 11.0 (stable) ()\n\nCopyright 1998-2020 Stephen Williams\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\nIcarus Verilog Preprocessor version 11.0 (stable) ()\n\nCopyright (c) 1999-2020 Stephen Williams (steve@icarus.com)\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\nIcarus Verilog Parser/Elaborator version 11.0 (stable) ()\n\nCopyright (c) 1998-2020 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n FLAGS DLL vvp.tgt\nvvp.tgt: Icarus Verilog VVP Code Generator 11.0 (stable) ()\n\nCopyright (c) 2001-2020 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n",
+   "version_stderr": ""
+  },
+  "simulator": {
+   "path": "/usr/bin/vvp",
+   "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+   "version_stdout": "",
+   "version_stderr": "Icarus Verilog runtime version 11.0 (stable) ()\n\nCopyright 1998-2020 Stephen Williams\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n"
+  },
+  "python": {
+   "version": "3.10.12",
+   "sha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae"
+  }
+ },
+ "sources_unchanged": true,
+ "source_root": "/home/ubuntu/w18work/main_gate_4033c6b12_src",
+ "source_commit": "4033c6b12f7627d519a564f63aa4431e38e07b0f",
+ "compile_returncode": 0,
+ "simulation_returncode": 0,
+ "executable_sha256": "18b9c67677ad8c4b4a2281e8e45d82acc40e495eab7449d71304d2b8b12fc6d3",
+ "compile_stdout": "",
+ "compile_stderr": "/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/main_gate_4033c6b12_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:109: warning: @* found no sensitivities so it will never trigger.\n",
+ "simulation_stderr": "",
+ "log_sha256": "84776310ad712d325a198370b0b6539f0d42f92ab719e427e83e9190e20a2ca6"
+}

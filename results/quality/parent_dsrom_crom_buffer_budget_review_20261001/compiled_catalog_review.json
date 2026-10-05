@@ -1,0 +1,29 @@
+{
+  "owner_commits": [
+    "e57e08aad",
+    "3c99ce15f"
+  ],
+  "canonical_catalog_and_words_fresh_byte_replay_equal": true,
+  "focused_tests_passed": 11,
+  "persisted_lane_uses_verified": 549760,
+  "counts": {
+    "bank_waves": 4540,
+    "coefficient_uses_per_rank": 549760,
+    "commands_per_rank": 491,
+    "fill_control_words": 38103,
+    "request_control_words": 13620
+  },
+  "independent_padded_page_bytes_and_SHA_verified": 16,
+  "old7bit_mutant_selectors": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134
+  ],
+  "missing_source_guard_failure_retained": "parentce7f34f45 predicate/zero-command mutants accepted; verifierfix required beforeadmission",
+  "arithmetic_payload_and_runtime_context_not_qualified": true,
+  "hardware_admission": false
+}

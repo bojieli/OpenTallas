@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.qcnam.owned-watcher-retirement.v1",
+  "utc": "2026-10-01T11:29:53.024432+00:00",
+  "pid": 431062,
+  "start_ticks": "304917012",
+  "argv": [
+    "/usr/bin/python3",
+    "/tmp/opentallas-qcnam-w16-recovery/tools/watch_qcnam_readiness.py",
+    "--state-dir",
+    "/tmp/claude-1000/qcnam/readiness-watch-72b3718d1"
+  ],
+  "terminal_commit": "6f691ef74ba92718fa032118924db682ef1684b6",
+  "15_committed_inputs_verified": true,
+  "verdict_sha256": "f72b847c5ee38b616d40b16a3ced0da7399cba58fafc6c53e519818fcf979531",
+  "full_quality_complete": true,
+  "stability_pass": false,
+  "adopted": false,
+  "action": "SIGTERM pending while stopped, then SIGCONT only to deliver termination; no evaluation resume",
+  "protected_control_and_terminal_archives_preserved": true,
+  "checkpoint_deletion_performed": false,
+  "process_exited": true
+}

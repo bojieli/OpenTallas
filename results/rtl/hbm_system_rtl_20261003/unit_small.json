@@ -1,0 +1,113 @@
+{
+ "schema": "opentallas.gpu_sys.unit_small.v1",
+ "tool": "tools/gpu_sys/run_unit_small.py",
+ "simulators": [
+  "Icarus Verilog version 11.0 (stable) ()",
+  "Verilator 5.050 2026-07-01 rev v5.050"
+ ],
+ "source_sha256": {
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/gpu_sys/ot_gpu_cmdproc.sv": "d0b1f0710af11ea1f60acb790ad23c9192e0794fd94383f23728ea663d327c5a",
+  "rtl/gpu_sys/ot_gpu_coll_mux.sv": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+  "rtl/gpu_sys/ot_gpu_host_bridge.sv": "015ee63361328844b27e407f1fb48497e6788eaf54387b64e49741c7e74a0a96",
+  "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+  "rtl/gpu_sys/ot_gpu_simt_lane.sv": "9c19569e5e6ccea50bdc64e93511e9fa94629e36fd956ee940e591db6787343b",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/test/gpu_sys/tb_gpu_cmdproc_unit.sv": "d1edc8c0cfb85d30c3fec684d4a1d28707aaff63e8def1bd2c1da0f430076ece"
+ },
+ "status": "pass",
+ "lint": [
+  {
+   "top": "ot_gpu_cmdproc",
+   "enable": 0,
+   "fatal": [],
+   "warnings": 13,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_cmdproc",
+   "enable": 1,
+   "fatal": [],
+   "warnings": 3,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_host_bridge",
+   "enable": 0,
+   "fatal": [],
+   "warnings": 16,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_host_bridge",
+   "enable": 1,
+   "fatal": [],
+   "warnings": 8,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_coll_mux",
+   "enable": 0,
+   "fatal": [],
+   "warnings": 11,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_coll_mux",
+   "enable": 1,
+   "fatal": [],
+   "warnings": 0,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_mreq_cdc",
+   "enable": 0,
+   "fatal": [],
+   "warnings": 17,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_mreq_cdc",
+   "enable": 1,
+   "fatal": [],
+   "warnings": 3,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_cdc_fifo",
+   "enable": 0,
+   "fatal": [],
+   "warnings": 8,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_cdc_fifo",
+   "enable": 1,
+   "fatal": [],
+   "warnings": 3,
+   "pass_": true
+  },
+  {
+   "top": "ot_gpu_simt_lane",
+   "enable": 1,
+   "fatal": [],
+   "warnings": 4,
+   "pass_": true
+  }
+ ],
+ "benches": [
+  {
+   "bench": "tb_gpu_cmdproc_unit",
+   "pass_": true,
+   "log": [
+    "PASS step tok 11 status 0 token 1111 kernels 7 cycles 1006",
+    "PASS step tok 12 status 0 token 4369 kernels 7 cycles 1140",
+    "PASS step tok 13 status 2 token 4369 kernels 7 cycles 831",
+    "PASS step tok 14 status 1 token 0 kernels 4 cycles 597",
+    "PASS step tok 15 status 3 token 0 kernels 2 cycles 365",
+    "PASS ENABLE=0 outputs all 0",
+    "TB_GPU_CMDPROC_UNIT PASS fails=0 kernels_counter=27"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,260 @@
+{
+  "status": "FAIL",
+  "scope": "Combined fullshape Qwen P8191 L0 functional layer only; SIM_ONLY unfinished service; no full-token or timing/adoption claim",
+  "position": 8191,
+  "context_tokens": 8192,
+  "token": 24,
+  "layers_measured": [
+    0
+  ],
+  "tp": 4,
+  "groups": 6144,
+  "sw": 64,
+  "nw": 18,
+  "one_stream_ar": true,
+  "async_collective": false,
+  "returncode": -11,
+  "x_checks": {
+    "0": {
+      "words": 4096,
+      "expected_words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    "1": {
+      "words": 4096,
+      "expected_words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    "2": {
+      "words": 4096,
+      "expected_words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    },
+    "3": {
+      "words": 4096,
+      "expected_words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb"
+    }
+  },
+  "current_kv_checks": {
+    "0": {
+      "K": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "V": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "actual_sha256": "e6751ad771fc6c10016ce1b8c53c1b904478e55182f84df84722d0c65fc45379",
+      "expected_sha256": "fae00a33c73005e793d7d40735f00fb6437e59b6dc576eab6c9c15a80206b3ca"
+    },
+    "1": {
+      "K": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "V": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "actual_sha256": "669452fe2b51e4b9af5aa27382bd8cd13cd0a3f1ffa83bc64b34d6b4635d86d6",
+      "expected_sha256": "d23d12adf8bcd4620779f7471a11c42b85610d2a49410fbdff9eae0c5bfc81b9"
+    },
+    "2": {
+      "K": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "V": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "actual_sha256": "22a9d80b262dfcf896e417c3ee50815b4cf71f39a3fbe6f49bf54edbc464ecac",
+      "expected_sha256": "92313650eec0a3bdd14348f26dc8b0ba9cb8da1b95df32b59ad0274bea579941"
+    },
+    "3": {
+      "K": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "V": {
+        "codes": 256,
+        "expected_codes": 256,
+        "mismatches": 0,
+        "first_mismatch": null
+      },
+      "actual_sha256": "114b552690c33234f6dc8f9a32480281297ac8d0d0ba196398253b7ae03ca08e",
+      "expected_sha256": "aac616aefdb006ea04eab516d13d788d1a2b11bd9689e98152602d199b08ee09"
+    }
+  },
+  "near_outputs": [
+    {
+      "rank": 0,
+      "words": 1024,
+      "simulation_cycles": 1784
+    },
+    {
+      "rank": 1,
+      "words": 1024,
+      "simulation_cycles": 1784
+    },
+    {
+      "rank": 2,
+      "words": 1024,
+      "simulation_cycles": 1784
+    },
+    {
+      "rank": 3,
+      "words": 1024,
+      "simulation_cycles": 1784
+    }
+  ],
+  "native_model_cycles": null,
+  "native_prefix_cycles": 8741,
+  "native_suffix_cycles": null,
+  "wall_seconds": null,
+  "rss_kib": null,
+  "timing_excluded": true,
+  "simulation_standins": [
+    "Cached near-HBM RTL with SIM_ONLY IEEE FP DPI arithmetic; source pipeline timing not claimed",
+    "In-order functional shared-row responses from the actual mutable HBM array",
+    "Existing tagged REAL_MEM controller stands in for unfinished STREAM4 shared-row/controller join; not STREAM4 bandwidth/timing"
+  ],
+  "native_execution": [
+    "Initialized fullshape core, weight/config ROM and tile archives execute actual prefix and original suffix",
+    "Actual native one-stream collective between O and MLP segments",
+    "Actual tagged write ACK/drain/row fences; split suffix h_start repeats prefill"
+  ],
+  "prefill_sectors_per_rank": 262128,
+  "prefill_count": 2,
+  "source_sha256": "434deab8c2bea110da7b841e3b2201e0e3d42b5e6f17b2e096ff2e0c0ef389f6",
+  "runtime_command": [
+    "/srv/opentallas-scratch/jobs/laplace-qwen-P8191-runfirst-r1/sim-only-r2/qwen_p8191_sim_only",
+    "--stages",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-P8191-runfirst-r1/sim-only-r2/stages.txt",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-P8191-runfirst-r1/sim-only-r2/run",
+    "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/x_preload.hex",
+    "--pos",
+    "8191",
+    "--token",
+    "24",
+    "--kv-dir",
+    "/srv/opentallas-scratch/claude/realmem-ctx8k/runs/P8191/L0/w/kv_pre_bin",
+    "--kv-ideal",
+    "0",
+    "--embed-bin",
+    "/srv/opentallas-scratch/claude/realmem-ctx8k/runs/P8191/L0/w/embedding_row.bin",
+    "--core-period-fs",
+    "1000000",
+    "--core-first-rise-fs",
+    "500000",
+    "--service-period-fs",
+    "1000000",
+    "--service-first-rise-fs",
+    "300000"
+  ],
+  "link_command": [
+    "g++-15",
+    "-I/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse",
+    "-std=c++20",
+    "-O2",
+    "-pthread",
+    "-DGROUPS=6144",
+    "-DCOUNTWIDTH=18",
+    "-DSWIDTH=64",
+    "-DSMAXB=11",
+    "-DTCUTL=7",
+    "-DNWSD=5",
+    "-DXVMD=1",
+    "-DTPD=4",
+    "-DCBANKS=5",
+    "-DSMINV=7",
+    "-DHBM_CLOCK_PS=1000",
+    "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+    "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+    "-I/srv/opentallas/repos/dewey-qwen-rom-fullhead-2255438d2/rtl/test/qwen_runtime",
+    "-I/srv/opentallas/repos/dewey-qwen-rom-fullhead-2255438d2/tools/runtime/qwen_combined",
+    "-I/srv/opentallas-scratch/claude/realmem/build_v2/tile",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/coll",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_fmul",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_qadd",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_vstream_lane_a",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/hbm",
+    "-I/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/runtime_link_head_dewey_r2_initialized",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-P8191-runfirst-r1/qwen_p8191_sim_only.cpp",
+    "-Wl,--start-group",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vdie__ALL.a",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_fmul/libot_hdc_fmul.a",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_qadd/libot_hdc_qadd.a",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/hbm/Vhbm__ALL.a",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/coll/Vcoll__ALL.a",
+    "/srv/opentallas-scratch/claude/realmem/build_v2/tile/Vtile__ALL.a",
+    "/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse/Vot_qwen_nearhbm_sys_tb__ALL.a",
+    "/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse/sim_hdc_v41x_fastfp_dpi.o",
+    "/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse/sim_nhb_fp_lat_dpi.o",
+    "-Wl,--end-group",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp",
+    "-o",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-P8191-runfirst-r1/sim-only-r2/qwen_p8191_sim_only"
+  ],
+  "archive_sha256": {
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vdie__ALL.a": "1056e1425dfedddd624599ebcd3840ddcc07b01a06281e2012b54c6b5db4dff7",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_fmul/libot_hdc_fmul.a": "1e5c745088789aeecbecc8d548fdeec05b8cdee26fb1d2319c0b653eb882b953",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_qadd/libot_hdc_qadd.a": "fbe3afe9242dbd2b38f6c9af311b040df79e02ef4a34b050e520c38dcd0b1496",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a": "52a64350a882c2e22ef95c416be0ccb80748aef4947d44cfc1762d32d7d39c4c",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/hbm/Vhbm__ALL.a": "1ed5282651c3d73dc7637f1ebf9708360685c0b174351bbedf1eb282c625beb6",
+    "/srv/opentallas-scratch/jobs/russell-qwen-rom-combined-r1/build/coll/Vcoll__ALL.a": "6a5884d6a4604c2eefdebe14d2ef815b68fe58e8ef359b8386485df24784fa61",
+    "/srv/opentallas-scratch/claude/realmem/build_v2/tile/Vtile__ALL.a": "5b7d86fd46be2d34f27070b3b29f19301503c748c133b2d71841ec6c18a54101",
+    "/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse/Vot_qwen_nearhbm_sys_tb__ALL.a": "190cf6eeac268ff749313078e01e46bc5661dc812b7984ce7dbc827ac2f0396b",
+    "/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse/sim_hdc_v41x_fastfp_dpi.o": "5c2bb18d0cd19f2ce1ee79340cabfaff2bc77f636cf72c61f3c333c32f5431f1",
+    "/srv/opentallas-scratch/claude/qwen-rom-system/nhb-realmem-62edfe308/reuse/sim_nhb_fp_lat_dpi.o": "24e3161348e5fcdb212ea27dd597c063a96a90c39c6268a788ab6e9c0eef8f82"
+  },
+  "original_archives_stable": true,
+  "terminal_log_sha256": "2803c10258fd6812834f7caffa7b602f106c2b668ffb285d3077314b13007150",
+  "existing_inputs": "/srv/opentallas-scratch/codex/qwen-nearbaseline-P8191-L0-inputs-r1/inputs.json",
+  "oracle_use": "Entering X/history are actual inputs; cached post-layer X and current-token KV golden are read only by this terminal comparator, after runtime exited; no golden computation/regeneration",
+  "numerical_status": "PASS",
+  "process_status": "FAIL_SIGSEGV",
+  "host_cleanup_status": "Unresolved; no core dump available; no corrected host run",
+  "stage_terminal": {
+    "native_model_cycles": 17387,
+    "native_prefix_cycles": 8741,
+    "native_suffix_cycles": 8646,
+    "wall_seconds_rounded": 3535,
+    "seq_fault": 0,
+    "core_fault": 0,
+    "collective_fault": 0
+  },
+  "source_path": "tools/runtime/qwen_combined/qwen_p8191_sim_only.cpp"
+}

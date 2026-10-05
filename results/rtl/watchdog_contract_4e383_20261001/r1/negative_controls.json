@@ -1,0 +1,1872 @@
+{
+  "absent_response": {
+    "accepted_cycle": 0,
+    "authority": "synthetic",
+    "checked_cycle": 11,
+    "classification": "response deadline violation under supplied synthetic bound, not proof of causal deadlock",
+    "identity": "op0/sector0",
+    "response_bound": 10,
+    "verdict": [
+      [
+        0,
+        "RESPONSE_DEADLINE"
+      ]
+    ]
+  },
+  "long_healthy_refill": {
+    "authority": "synthetic",
+    "budget": {
+      "admission": 3,
+      "authority": "synthetic serial composition",
+      "conditions": [
+        "one credit",
+        "no competitor"
+      ],
+      "drain": 2,
+      "issue_gap": 1,
+      "requests": 30,
+      "response": 4,
+      "scope": "synthetic",
+      "stage": 2
+    },
+    "legacy_timeout": 6,
+    "samples": [
+      {
+        "cycle": 0,
+        "identity": "op0/sector0",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 1,
+        "identity": "op0/sector0",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 4,
+        "identity": "op0/sector0",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 5,
+        "identity": "op0/sector1",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 6,
+        "identity": "op0/sector1",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 9,
+        "identity": "op0/sector1",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 10,
+        "identity": "op0/sector2",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 11,
+        "identity": "op0/sector2",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 14,
+        "identity": "op0/sector2",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 15,
+        "identity": "op0/sector3",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 16,
+        "identity": "op0/sector3",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 19,
+        "identity": "op0/sector3",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 20,
+        "identity": "op0/sector4",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 21,
+        "identity": "op0/sector4",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 24,
+        "identity": "op0/sector4",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 25,
+        "identity": "op0/sector5",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 26,
+        "identity": "op0/sector5",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 29,
+        "identity": "op0/sector5",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 30,
+        "identity": "op0/sector6",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 31,
+        "identity": "op0/sector6",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 34,
+        "identity": "op0/sector6",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 35,
+        "identity": "op0/sector7",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 36,
+        "identity": "op0/sector7",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 39,
+        "identity": "op0/sector7",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 40,
+        "identity": "op0/sector8",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 41,
+        "identity": "op0/sector8",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 44,
+        "identity": "op0/sector8",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 45,
+        "identity": "op0/sector9",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 46,
+        "identity": "op0/sector9",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 49,
+        "identity": "op0/sector9",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 50,
+        "identity": "op0/sector10",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 51,
+        "identity": "op0/sector10",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 54,
+        "identity": "op0/sector10",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 55,
+        "identity": "op0/sector11",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 56,
+        "identity": "op0/sector11",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 59,
+        "identity": "op0/sector11",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 60,
+        "identity": "op0/sector12",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 61,
+        "identity": "op0/sector12",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 64,
+        "identity": "op0/sector12",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 65,
+        "identity": "op0/sector13",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 66,
+        "identity": "op0/sector13",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 69,
+        "identity": "op0/sector13",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 70,
+        "identity": "op0/sector14",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 71,
+        "identity": "op0/sector14",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 74,
+        "identity": "op0/sector14",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 75,
+        "identity": "op0/sector15",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 76,
+        "identity": "op0/sector15",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 79,
+        "identity": "op0/sector15",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 80,
+        "identity": "op0/sector16",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 81,
+        "identity": "op0/sector16",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 84,
+        "identity": "op0/sector16",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 85,
+        "identity": "op0/sector17",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 86,
+        "identity": "op0/sector17",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 89,
+        "identity": "op0/sector17",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 90,
+        "identity": "op0/sector18",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 91,
+        "identity": "op0/sector18",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 94,
+        "identity": "op0/sector18",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 95,
+        "identity": "op0/sector19",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 96,
+        "identity": "op0/sector19",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 99,
+        "identity": "op0/sector19",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 100,
+        "identity": "op0/sector20",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 101,
+        "identity": "op0/sector20",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 104,
+        "identity": "op0/sector20",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 105,
+        "identity": "op0/sector21",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 106,
+        "identity": "op0/sector21",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 109,
+        "identity": "op0/sector21",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 110,
+        "identity": "op0/sector22",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 111,
+        "identity": "op0/sector22",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 114,
+        "identity": "op0/sector22",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 115,
+        "identity": "op0/sector23",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 116,
+        "identity": "op0/sector23",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 119,
+        "identity": "op0/sector23",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 120,
+        "identity": "op0/sector24",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 121,
+        "identity": "op0/sector24",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 124,
+        "identity": "op0/sector24",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 125,
+        "identity": "op0/sector25",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 126,
+        "identity": "op0/sector25",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 129,
+        "identity": "op0/sector25",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 130,
+        "identity": "op0/sector26",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 131,
+        "identity": "op0/sector26",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 134,
+        "identity": "op0/sector26",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 135,
+        "identity": "op0/sector27",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 136,
+        "identity": "op0/sector27",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 139,
+        "identity": "op0/sector27",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 140,
+        "identity": "op0/sector28",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 141,
+        "identity": "op0/sector28",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 144,
+        "identity": "op0/sector28",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 145,
+        "identity": "op0/sector29",
+        "kind": "offer",
+        "verdict": []
+      },
+      {
+        "cycle": 146,
+        "identity": "op0/sector29",
+        "kind": "accept",
+        "verdict": []
+      },
+      {
+        "cycle": 149,
+        "identity": "op0/sector29",
+        "kind": "response",
+        "verdict": []
+      },
+      {
+        "cycle": 150,
+        "kind": "complete",
+        "verdict": []
+      }
+    ]
+  },
+  "one_rank_starvation": {
+    "authority": "synthetic",
+    "budget": {
+      "admission": 3,
+      "authority": "synthetic trace formula only",
+      "conditions": [
+        "one credit",
+        "no competitor"
+      ],
+      "drain": 2,
+      "issue_gap": 1,
+      "requests": 1,
+      "response": 10,
+      "scope": "synthetic",
+      "stage": 2
+    },
+    "legacy_timeout": null,
+    "samples": [
+      {
+        "cycle": 0,
+        "pcs": [
+          24,
+          0,
+          24,
+          24
+        ],
+        "verdict": []
+      },
+      {
+        "cycle": 1,
+        "pcs": [
+          24,
+          1,
+          24,
+          24
+        ],
+        "verdict": []
+      },
+      {
+        "cycle": 2,
+        "pcs": [
+          24,
+          2,
+          24,
+          24
+        ],
+        "verdict": []
+      },
+      {
+        "cycle": 3,
+        "pcs": [
+          24,
+          3,
+          24,
+          24
+        ],
+        "verdict": []
+      },
+      {
+        "cycle": 4,
+        "pcs": [
+          24,
+          4,
+          24,
+          24
+        ],
+        "verdict": []
+      },
+      {
+        "cycle": 5,
+        "pcs": [
+          24,
+          5,
+          24,
+          24
+        ],
+        "verdict": []
+      },
+      {
+        "cycle": 6,
+        "pcs": [
+          24,
+          6,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 7,
+        "pcs": [
+          24,
+          7,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 8,
+        "pcs": [
+          24,
+          8,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 9,
+        "pcs": [
+          24,
+          9,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 10,
+        "pcs": [
+          24,
+          10,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 11,
+        "pcs": [
+          24,
+          11,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 12,
+        "pcs": [
+          24,
+          12,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 13,
+        "pcs": [
+          24,
+          13,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 14,
+        "pcs": [
+          24,
+          14,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 15,
+        "pcs": [
+          24,
+          15,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 16,
+        "pcs": [
+          24,
+          16,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 17,
+        "pcs": [
+          24,
+          17,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 18,
+        "pcs": [
+          24,
+          18,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 19,
+        "pcs": [
+          24,
+          19,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 20,
+        "pcs": [
+          24,
+          20,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 21,
+        "pcs": [
+          24,
+          21,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 22,
+        "pcs": [
+          24,
+          22,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 23,
+        "pcs": [
+          24,
+          23,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 24,
+        "pcs": [
+          24,
+          24,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 25,
+        "pcs": [
+          24,
+          25,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 26,
+        "pcs": [
+          24,
+          26,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 27,
+        "pcs": [
+          24,
+          27,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 28,
+        "pcs": [
+          24,
+          28,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 29,
+        "pcs": [
+          24,
+          29,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 30,
+        "pcs": [
+          24,
+          30,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "cycle": 31,
+        "pcs": [
+          24,
+          31,
+          24,
+          24
+        ],
+        "verdict": [
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            1,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            2,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            3,
+            "OPERATION_DEADLINE"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      }
+    ]
+  },
+  "spurious_busy": {
+    "authority": "synthetic",
+    "samples": [
+      {
+        "busy": 0,
+        "cycle": 0,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ]
+        ]
+      },
+      {
+        "busy": 1,
+        "cycle": 1,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ]
+        ]
+      },
+      {
+        "busy": 0,
+        "cycle": 2,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ]
+        ]
+      },
+      {
+        "busy": 1,
+        "cycle": 3,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ]
+        ]
+      },
+      {
+        "busy": 0,
+        "cycle": 4,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ]
+        ]
+      },
+      {
+        "busy": 1,
+        "cycle": 5,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ]
+        ]
+      },
+      {
+        "busy": 0,
+        "cycle": 6,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      },
+      {
+        "busy": 1,
+        "cycle": 7,
+        "verdict": [
+          [
+            0,
+            "BOUND_MISSING"
+          ],
+          [
+            0,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            1,
+            "BOUND_MISSING"
+          ],
+          [
+            1,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            2,
+            "BOUND_MISSING"
+          ],
+          [
+            2,
+            "NO_OBSERVED_PROGRESS"
+          ],
+          [
+            3,
+            "BOUND_MISSING"
+          ],
+          [
+            3,
+            "NO_OBSERVED_PROGRESS"
+          ]
+        ]
+      }
+    ]
+  }
+}

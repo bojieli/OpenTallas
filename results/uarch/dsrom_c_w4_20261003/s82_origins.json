@@ -1,0 +1,52 @@
+{
+  "inventory": {
+    "commit": "717a32dcf",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/inventory.json",
+    "sha256": "fff53a93d36baacefa12f19d1916702b3fb3741f12e6fa07172987f186c9132d"
+  },
+  "stage_map": {
+    "commit": "717a32dcf",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/stage_map.json",
+    "sha256": "57833f8087fe3126bd0aa2ebf55f25b6908d61498bc5f2d82530248794405089"
+  },
+  "area_ledger": {
+    "commit": "717a32dcf",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/area_ledger.json",
+    "sha256": "59223967b1e9ec7dc5518ca2070e2265115d3e91dfdccdece620efd76a082423"
+  },
+  "physical_contract": {
+    "commit": "717a32dcf",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/physical_contract.json",
+    "sha256": "07176ba5025009bc42a432bec580a78aac33c3f482bc192a94ad51d76bca7d56"
+  },
+  "return_baseline": {
+    "commit": "717a32dcf",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/return_baseline.json",
+    "sha256": "be88231de315d364620c350606b04752f74af3bbf1baa92bf6863e512a74be46"
+  },
+  "model": {
+    "commit": "717a32dcf",
+    "path": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/model.json",
+    "sha256": "f96d4be043eac12d27c7ee55601c02cee5c8f0bb517411ffd59203b6a85bfd43"
+  },
+  "W3": {
+    "commit": "7c5b6a79b",
+    "path": "results/uarch/dsrom_c_w3_kv_shoreline_20261003/model.json",
+    "sha256": "9036d2689da5beb3ab4bef37f8e1438fc2cb20105f17b5e8ab4d7a81e8889754"
+  },
+  "R49": {
+    "commit": "8ac4252a662200722b60a027a934f438d3a35565",
+    "path": "results/uarch/dsrom_capture_home_r49_20261002/model.json",
+    "sha256": "05beef441966843bb925370d33b514015fbd0ea236442bf8e82a67d8923b270c"
+  },
+  "C9": {
+    "commit": "21523b6bbe364204a04cfd08ee285edae32b1f71",
+    "path": "results/uarch/dsrom_c9_selected_clock_access_20261003/inputs/model.json",
+    "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0"
+  },
+  "cfg": {
+    "commit": "adc7d25fa613492db0a7c3c4a2d5c905483f2f0d",
+    "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+  }
+}

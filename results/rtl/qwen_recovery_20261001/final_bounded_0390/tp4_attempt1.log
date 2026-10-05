@@ -1,0 +1,25 @@
+
+==================================== ERRORS ====================================
+____________ ERROR collecting tests/test_w19_qwen_hbm_checkpoint.py ____________
+tests/test_w19_qwen_hbm_checkpoint.py:9: in <module>
+    import w19_qwen_hbm_checkpoint as C
+tools/w19_qwen_hbm_checkpoint.py:22: in <module>
+    from w19_qwen_hbm_preflight_w12 import ROOT, sha, sm_snapshot
+tools/w19_qwen_hbm_preflight_w12.py:10: in <module>
+    import uarch_model as U
+tools/uarch_model.py:36: in <module>
+    import arch_budget_v41 as A  # noqa: E402
+tools/arch_budget_v41.py:64: in <module>
+    import decode_critical_path as D  # noqa: E402
+tools/decode_critical_path.py:139: in <module>
+    SK = sinkhorn_unit()
+tools/decode_critical_path.py:130: in sinkhorn_unit
+    d = json.loads((PHYS / SINKHORN_BLOCK / "physical.json").read_text())["design"]
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+/usr/lib/python3.10/pathlib.py:1119: in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-currentmain-bounded-20261001/results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json'
+=========================== short test summary info ============================
+ERROR tests/test_w19_qwen_hbm_checkpoint.py - FileNotFoundError: [Errno 2] No...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!

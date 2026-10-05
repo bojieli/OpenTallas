@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.ha5-milestone.v1",
+  "parent_sha": "8564e79eaf906c820aec5eb92bfda1cca80ee43d",
+  "source_sha": "5a161b428b6802188cb31bfeea4cab9ffdb1b3f0",
+  "branch": "codex/ha5-hbm-accel-program-20261003",
+  "host": "ubuntu",
+  "run_pid": 331626,
+  "terminal_exit": 0,
+  "tests": {
+    "passed": 14,
+    "failed": 0,
+    "log": "tests_r4.log",
+    "scope": "source/synthetic original executor operators; no actual layer/head RTL"
+  },
+  "pinned_originals_byte_identical": {
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/w19_hbm_token_compose.py": "532e750860030c2142cc514da714582083a70519f28dff0fc49cdd7d46ca936a",
+    "tools/uarch_model.py": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/rtl/w19_hbm_tp96_isa_oreduce.json": "1dc297a176e2f50d46eb6b1c4769be58d4be84ab2a1d986493f0fefaefc63245",
+    "results/rtl/w19_sm_real_ops.json": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+    "results/rtl/w19_expert_fetch.json": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+    "results/rtl/w15_hbm_nvls.json": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+    "results/rtl/w15_topk_merge_hbm96_p1024f256.json": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e"
+  },
+  "d2_trace_source_sha": "d2aff19ef877c4dfbef22b1c037a6cd6839953af",
+  "compiler": {
+    "shared_first_default": false,
+    "fetch_issue": "original point",
+    "expert_issue_order": [
+      6,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "accumulation_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "executor_adapter": "tools.hbm_accel_program.execute_layer",
+    "output_sha256": "107c6d2ce313bd0a68dfa24115660b87c43ca4b8f9abd45dbd7c0c75134840e7"
+  },
+  "ledger": {
+    "rung": "HA5 R5b/R6a",
+    "status": "UNVALIDATED / NOT ADOPTED",
+    "estimated_hide_window_us": 10.6,
+    "system_measured_hide_window_us": null,
+    "analytical_serial_delta_us": 0,
+    "measured_gain_us": null,
+    "measured_tokens_s": null,
+    "exact_transport_merges": 0
+  },
+  "gates": {
+    "exact": "PENDING",
+    "serial_latency": "PENDING",
+    "area": "ESTIMATE incomplete",
+    "routed_corridor": "NOT RUN",
+    "timing": "NOT RUN",
+    "composed_gain": "PENDING"
+  },
+  "next": "Actual DS20/union engine integration and released-checkpoint layer/head21946 at1M gate; measure wire/CDC/credit/refresh critical path before area/route/SS60/FF25/gain. Reuse Sagan15a1d3749 and Kepler checkpoint, no duplicate job.",
+  "retained_negative": "serial_before_fetch_negative.json",
+  "retained_failures": [
+    "test_attempt_r1_failure.json",
+    "model_attempt_r2_failure.json"
+  ]
+}

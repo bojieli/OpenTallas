@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.qwen-rom-bank5-provider-context.v1",
+  "status": "ACTUAL_SOURCE_OWNERS_BOUND_PHYSICAL_ARRIVALS_BLOCKED",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rom_tile_bank5_control_candidate.sv": "3151731991eae1293b48959df685208b6b52388efa9fecabfe3ddcdc551e6b71",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea"
+  },
+  "program_contract": {
+    "tp": 4,
+    "groups": 6144,
+    "banks": 5,
+    "W": 16,
+    "TG": 4,
+    "MEM_EXTRA": 1,
+    "ACC_LAT": 7,
+    "TREE_LAT": 7,
+    "MUL_LAT": 6,
+    "FAST_ISSUE": 1,
+    "KV_PREP": 3,
+    "arithmetic_extra": 55,
+    "program_sha256": "86b63fe3c1086c8a02df9c07353d2497434b923ca4bec1df7e61d34a5a899770",
+    "selected_for_source_preparation_only": true
+  },
+  "actual_registered_producer": {
+    "module": "ot_qwen_w12_matvec_part",
+    "tile_instance": "u_logic.u_me",
+    "fast_issue_branch": "g_issue_fast",
+    "source": "rtl/hdc/ot_qwen_w12_matvec.sv:491",
+    "strobe": "wrom_re is asynchronous-reset outputreg, assigned !wsrc_r during active issue",
+    "address": "wrom_addr is registered from cur; it is not assigned in reset branch, and is only meaningful for accepted CE",
+    "address_clockQ_and_minmax_arrival_ps": null,
+    "source_location_is_not_mapped_launch_timing": true
+  },
+  "actual_reset_owner": {
+    "simulation_source": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv:119",
+    "simulation_event": "rt_rst_n starts0 and is assigned1 by nonblocking assignment on posedge when cyc==5; CXX Fabric propagates it to tile rst_n",
+    "reset_tree_implemented_in_fixture": false,
+    "physical_assertion_release_provider": null,
+    "physical_release_phase_ps": null,
+    "do_not_adopt_simulation_edge0_as_physical_inputdelay": true
+  },
+  "source_clock_reset_boundary": {
+    "tile_and_matvec_share": "clk/rst_n",
+    "complete_array_passes": "clk/rst_n without new synchronizer in ot_qwen_me_array_w12",
+    "bank5_metadata_reset_count": 90,
+    "bank5_loaded_clock_sink_count": 3172,
+    "count_scope": "10macroCLK +3072 data/consumerCLK +90 metadataCLK; excludes other complete tile arithmetic, KV, issue, RF and pipeline clock/reset pins",
+    "upstream_added_strobe_D_sinks": 4,
+    "upstream_address_sinks": "12lowbits*10ROM address pins plus actual decodeport;36root/leafbuffers priced but not installed"
+  },
+  "priced_exact_control_plan": {
+    "bank_strobe_buffers": 15,
+    "bank_hold_term_buffers": 10,
+    "low_address_buffers": 36,
+    "reset_buffers": 15,
+    "total": 76,
+    "bank_strobeFF": 5,
+    "new_strobeFF": 4,
+    "model_metadata_total": 90,
+    "added_cycles": 0,
+    "area_overlay_um2": 23.1822,
+    "polarity_requirement": "Characterize both QN transitions and actual load tree; do not assume source positive read_q is directly the QN pin or hide an unpriced inverter."
+  },
+  "contextual_STA_admission_required": {
+    "actual_parent_mapped_strobe_and_address_CLKQ": false,
+    "upstream_clock_and_skew_bound": false,
+    "actual_reset_assertion_release_owner_and_phase": false,
+    "actual_buffers_materialized_and_survival_counts": false,
+    "full_macro_pin_OBS_PG_slot_join": false
+  },
+  "constraints": {
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "address_min_arrival_plus_distribution_minus_skew_required_ps": 42.422199,
+    "reset_min_arrival_plus_distribution_minus_skew_required_ps": 50.049297,
+    "unknown_arrivals_may_not_be_zero_filled": true
+  },
+  "retained_failure": "f28f30496",
+  "implementation_scope": "New defaultoff bank5 strobes + same-edge metadata only; buffers and clock/reset/address context pending. Existing rejected candidate not overwritten, no routing/timing adoption."
+}

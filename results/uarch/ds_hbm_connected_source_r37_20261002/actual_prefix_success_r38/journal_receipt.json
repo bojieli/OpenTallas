@@ -1,0 +1,29 @@
+{
+  "actual_numeric_source_calls": 96,
+  "actual_sector_journal": "/tmp/kepler-ds-r38-PC0-96rank-execution-20261002/actual-prefix-journal/events.sqlite",
+  "all_future_use_versions_retained_until_prefix_terminal": true,
+  "checkpoint_payload_committed": false,
+  "compared_published_results": 384,
+  "events": {
+    "C0_actual_native_numeric_call": 480,
+    "consumer_accept": 738816,
+    "request_accept": 738816,
+    "reverse_credit_accept": 738816,
+    "software_backing_visible": 492288,
+    "software_owned_issue": 738816,
+    "software_read_capture": 246528,
+    "software_service_phases_reserved": 738816,
+    "validated_reverse_grant": 738816,
+    "write_residence_reserved": 492288
+  },
+  "full_token_GO": false,
+  "hardware_qualified": false,
+  "independent_expected_output_elements": 1968384,
+  "no_source_primitive_scratch_transport_credit": true,
+  "source_commit": "f6f47d0cca604983dc26456ad7fb9a3f6ab8b1dc",
+  "sqlite_bytes": 1393061888,
+  "sqlite_sha256": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+  "status": "PASS_ACTUAL_96_RANK_PC0_NATIVE_PUBLICATION_AND_GOLDEN",
+  "unique_journal_preserved": true,
+  "validated_ranks": 96
+}

@@ -1,0 +1,52 @@
+{
+  "scope": "Matched 36-matrix Sinkhorn arithmetic corpus. Both divider choices bit-exact; cycle counts are aggregate bench work, not model inference. Matched synthesis selects pipelined divider at 2 ns; neither prelayout timing passes.",
+  "functional": [
+    {
+      "revision": "baseline",
+      "pipelined_divider": 0,
+      "cases": 36,
+      "cycles": 759229,
+      "failures": 0,
+      "log": "baseline_divider0.log",
+      "sha256": "20ad634e8b3ccc4cbe1590e8ea5c89e0da2f24ccd8cf3571805512b2e685e9c1"
+    },
+    {
+      "revision": "baseline",
+      "pipelined_divider": 1,
+      "cases": 36,
+      "cycles": 1129736,
+      "failures": 0,
+      "log": "baseline_divider1.log",
+      "sha256": "dcace3883010629c63638ef8ee2cc33a712d25a1123a182bc735bd9f61f69fe9"
+    },
+    {
+      "revision": "candidate",
+      "pipelined_divider": 0,
+      "cases": 36,
+      "cycles": 744721,
+      "failures": 0,
+      "log": "candidate_divider0.log",
+      "sha256": "13bfbada8d767200b22b38e587db066d388603b327fd2e88ca88ccf0b971616c"
+    },
+    {
+      "revision": "candidate",
+      "pipelined_divider": 1,
+      "cases": 36,
+      "cycles": 1115228,
+      "failures": 0,
+      "log": "candidate_divider1.log",
+      "sha256": "2775bc5cc42bf3ccc0b9925dec2f069e6f8e403e3d15034b622b0133f63ec515"
+    }
+  ],
+  "sources": {
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv": "1d0f3e62b508554c5f2946c7d6578b9a0a17151d2894f7cdaad02fbfb1a4cc03",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/proto/ot_fp32_add_positive_rne_pipe.sv": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+    "rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv": "08e02ef94d71db49d39ea7bc446971fa4fe4a2253ddb939633eefdf77389b95e"
+  },
+  "synthesis_area_before_um2": 2538.28,
+  "synthesis_area_after_um2": 2595.169,
+  "decision": "Retain same-edge handoff for latency with +2.24% mapped area pending containing-block route. Divider default remains reference; no validated parent clock change."
+}

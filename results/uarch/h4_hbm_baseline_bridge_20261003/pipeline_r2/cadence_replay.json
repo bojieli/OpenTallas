@@ -1,0 +1,22 @@
+{
+  "equalclock": {
+    "edges": 640,
+    "first_delivery_edge": 38,
+    "lanes": 4,
+    "observed_payload_Bpc_die": 4096.0,
+    "origin": "cycle model only; actual target timing unqualified",
+    "stages": 38,
+    "steady_deliveries_per_lane": 512,
+    "steady_window_edges": 512
+  },
+  "ratio3to4": {
+    "edges": 640,
+    "first_delivery_edge": 38,
+    "lanes": 4,
+    "observed_payload_Bpc_die": 3072.0,
+    "origin": "cycle model only; actual target timing unqualified",
+    "stages": 38,
+    "steady_deliveries_per_lane": 384,
+    "steady_window_edges": 512
+  }
+}

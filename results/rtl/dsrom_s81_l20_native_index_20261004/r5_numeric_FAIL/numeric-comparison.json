@@ -1,0 +1,99 @@
+{
+  "scope": "native rank3 L20 I36 keywriter + I44 fullquarter score readback vs retained exact reference at DS1048575; other ranks and token unvalidated",
+  "rank": 3,
+  "position": 1048575,
+  "words": 262144,
+  "bit_mismatches": 48,
+  "first_mismatches": [
+    {
+      "local_index": 65528,
+      "global_index": 851960,
+      "actual_raw32": 0,
+      "expected_raw32": 1041825792
+    },
+    {
+      "local_index": 65529,
+      "global_index": 851961,
+      "actual_raw32": 0,
+      "expected_raw32": 1061552128
+    },
+    {
+      "local_index": 65530,
+      "global_index": 851962,
+      "actual_raw32": 0,
+      "expected_raw32": 3171680256
+    },
+    {
+      "local_index": 65531,
+      "global_index": 851963,
+      "actual_raw32": 0,
+      "expected_raw32": 1062731776
+    },
+    {
+      "local_index": 65532,
+      "global_index": 851964,
+      "actual_raw32": 0,
+      "expected_raw32": 1060110336
+    },
+    {
+      "local_index": 65533,
+      "global_index": 851965,
+      "actual_raw32": 0,
+      "expected_raw32": 1067581440
+    },
+    {
+      "local_index": 65534,
+      "global_index": 851966,
+      "actual_raw32": 0,
+      "expected_raw32": 1062797312
+    },
+    {
+      "local_index": 65535,
+      "global_index": 851967,
+      "actual_raw32": 0,
+      "expected_raw32": 1065615360
+    }
+  ],
+  "runtime": {
+    "scope": "I36.I44.native-SIM_ONLY-boundary-inputs",
+    "rank": "3",
+    "position": "1048575",
+    "key_accept": "6240",
+    "key_visible": "6943",
+    "scan_accept": "35838",
+    "terminal": "1610376",
+    "requested_bytes": "17825792",
+    "delivered_bytes": "17825792"
+  },
+  "reference": "/home/ubuntu/w17work/isa/scratch_s20260930/ctx1048576_L20.npz:L20.index_scores[786432:1048576]",
+  "expected_used": "comparison only; no runtime input",
+  "verdict": "FAIL_NATIVE_RANK3_INDEX_BIT_MISMATCH",
+  "native_tokens": false,
+  "mismatch_ranges": [
+    {
+      "local_first": 65528,
+      "local_last": 65535,
+      "count": 8,
+      "all_actual_zero": true
+    },
+    {
+      "local_first": 131056,
+      "local_last": 131071,
+      "count": 16,
+      "all_actual_zero": true
+    },
+    {
+      "local_first": 196584,
+      "local_last": 196607,
+      "count": 24,
+      "all_actual_zero": true
+    }
+  ],
+  "current_home_row": {
+    "local": 262143,
+    "global_position": 1048575,
+    "actual_raw32": 1075052544,
+    "expected_raw32": 1075052544,
+    "exact": true
+  }
+}

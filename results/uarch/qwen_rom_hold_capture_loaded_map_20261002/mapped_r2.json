@@ -1,0 +1,79 @@
+{
+  "status": "FAIL_ENDPOINT_RESOLVER_BEFORE_STA",
+  "error": "Actual512bit endpoint cells missing: resolver omitted mapped QN-to-INV-to-consumer_q path",
+  "RTL_failure": false,
+  "replicas_preserved": true,
+  "unique_local_selector_bits": 80,
+  "mapped_cell_counts": {
+    "INVx1_ASAP7_75t_R": 598,
+    "NOR2xp33_ASAP7_75t_R": 2569,
+    "OR3x1_ASAP7_75t_R": 1024,
+    "OR4x1_ASAP7_75t_R": 2,
+    "NOR5xp2_ASAP7_75t_R": 1,
+    "AND3x1_ASAP7_75t_R": 3,
+    "NOR3xp33_ASAP7_75t_R": 3,
+    "AND2x2_ASAP7_75t_R": 3,
+    "AO21x1_ASAP7_75t_R": 83,
+    "AO32x1_ASAP7_75t_R": 2,
+    "DFFASRHQNx1_ASAP7_75t_R": 86,
+    "DFFHQNx1_ASAP7_75t_R": 3072,
+    "ot_rom_4096x266_m8": 10
+  },
+  "source_commit": "15c60c298",
+  "archive": {
+    "fourstate_bench.sv.gz": {
+      "uncompressed_sha256": "7e4ac158072c9c8a20c689409a86889231a4cea736eac6a83e1ef7ad6c1ade45",
+      "sha256": "fc294a49c7d2ad6373faf28ee53c9af6bee7eaa5124efef41aaf1c1e6d92509a"
+    },
+    "synth.ys.gz": {
+      "uncompressed_sha256": "5b08f75fec646be52439e59fbf170f8c7ff1687886fe3f25e78c3479f837f246",
+      "sha256": "5f28c1af7cb4e88cd7e359427f5f9fb1b5959cfe99d4d7bf19958343a73474bf"
+    },
+    "full_loaded_cone.sv.gz": {
+      "uncompressed_sha256": "1c77024944bf917bde73a9ef493e681b15a7ff4944fa03231c6cff668f685dc8",
+      "sha256": "dd3df64b1205af0eaa7c37c6c1dc7021e25cd5b6c5675709be5ffe0d12accef9"
+    },
+    "proc.json.gz": {
+      "uncompressed_sha256": "aefc23203d86ab092d9f9862927bb2f6e33906166ce5666dd31353872482bec2",
+      "sha256": "384f14f78a1c36ed9b2be2204b07867d2424d7bb6f2ca1df4d43e596dc20a96e"
+    },
+    "proc.log.gz": {
+      "uncompressed_sha256": "f3eb5a2d88bee141ede240ff91e107f4427cf9c57091abc95abe6bb55d7ebefd",
+      "sha256": "bfca7e0b02ad204352e290ccb09ad77a2a1bb409157bf2e557fe36fa2ede2c7a"
+    },
+    "original_logic_cone.sv.gz": {
+      "uncompressed_sha256": "b34727134008e1b77070f7bfeb07d4fc6734102fa41673004232dfe7057c6e47",
+      "sha256": "2926ff2d60e1fd22b17d2489ae074e37111d0f705ec7b70ea4addaab45a0adaf"
+    },
+    "proc.ys.gz": {
+      "uncompressed_sha256": "c4190b1d2e693a7bc0b948b574bd65c88307defaa902c4c6f8d44524089bc18b",
+      "sha256": "815bbbe2acf519acb5ecedb90952aa514764031852242cb2f21bfdae408ddb6b"
+    },
+    "mapped_ss.lib.gz": {
+      "uncompressed_sha256": "ee44bae210ec31f31b817ce80cd820f3eed3061683babafe2af2cb3dd0fde8df",
+      "sha256": "0f4e61ae85f8b0d953eb2e446e79ee88c8cbd2bf5f9cddaa1850081b9d7afce2"
+    },
+    "readiness.json.gz": {
+      "uncompressed_sha256": "bf644b2c0156d29909d37f9d06a5131a63ebe5f274ec91f457c0d978b6052259",
+      "sha256": "0880a22db245950d6cb39307eec7741da7a62b8f23d5dbc3015d3d116397ba0f"
+    },
+    "synth.log.gz": {
+      "uncompressed_sha256": "d00eb015707cec23185e49f1fde337c19b42db4611687c7d021bf6387eadf234",
+      "sha256": "d6b39a982337a31d5e4383565dce16ae4e5604ea25c579d43535b23581ebca93"
+    },
+    "mapped.v.gz": {
+      "uncompressed_sha256": "88a8cb8a61b2139547f018a866170e3a6abd16e14a9b1099b725f45e23634de7",
+      "sha256": "896d638db6e1d7df6705c59e3709484a17ad128e391838ce407d767f455dfcfb"
+    },
+    "Maxwell_model.json.gz": {
+      "uncompressed_sha256": "205a489f2b16f66293c5af90e9d61427f3bc476f8354633b8ad036606de1793b",
+      "sha256": "79a0554b65ef160f2e1707af71213b46ad13c614fe5b8c887502f1167e5980d6"
+    },
+    "mapped.json.gz": {
+      "uncompressed_sha256": "34deda9d063c9de7212d3fe637cd6d1535a383894482a28831cee06105b1866d",
+      "sha256": "bdff8a3e86ed75265a1f349dba98ac16923cec52778c27674050799459580370"
+    }
+  },
+  "PnR": false,
+  "adoption": false
+}

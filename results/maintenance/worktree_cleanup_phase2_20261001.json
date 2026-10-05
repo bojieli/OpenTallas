@@ -1,0 +1,207 @@
+{
+  "schema": "opentallas.worktree_cleanup.v1",
+  "authorization": "User authorized removal of old unused worktrees",
+  "checked_at": "2026-10-01T08:43:04.843428+00:00",
+  "process_observations": {
+    "observed_utc": "2026-10-01T08:38:47.854409+00:00",
+    "targets": [
+      "/home/ubuntu/otwt4",
+      "/tmp/opentallas-prefill-ingest-quantizer",
+      "/tmp/opentallas-qe-weight-stall",
+      "/tmp/opentallas-qwen-fullshape-int8-image",
+      "/tmp/opentallas-qwen-int8-rom-pipeline",
+      "/tmp/opentallas-v41-hbm-arb",
+      "/tmp/opentallas-v41-physical-inventory",
+      "/tmp/opentallas-v41-model-reprice",
+      "/tmp/opentallas-v41-integration-compat",
+      "/tmp/opentallas-v41-quarter-collector-pipeline",
+      "/tmp/opentallas-v41-transpose-physical-pilot"
+    ],
+    "observations": [
+      {
+        "host": "local",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "ot-pve1",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "ot-pve2",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "ot-pve3",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "155.103.253.114",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "155.103.253.133",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "155.103.253.16",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "155.103.253.191",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "155.103.253.39",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      },
+      {
+        "host": "155.103.253.78",
+        "rc": 0,
+        "processes": [],
+        "error": ""
+      }
+    ]
+  },
+  "queue_script_scan": "No listed path references in local queue, W18 jobs and W17/W12 top-level shell scripts",
+  "removed": [
+    {
+      "path": "/home/ubuntu/otwt4",
+      "status": "",
+      "head": "b831dff02110a6ee6e1c11ca15d90b5020dca7a4",
+      "clean": true,
+      "size_kib": 1128140,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-otwt4",
+      "remove_rc": 0,
+      "scope": "Removed by first parent pass before interruption"
+    },
+    {
+      "path": "/tmp/opentallas-prefill-ingest-quantizer",
+      "status": "",
+      "head": "4d88ddd177b79f6c450fb8faeae7694b16dfe13b",
+      "clean": true,
+      "size_kib": 3581036,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-prefill-ingest-quantizer",
+      "remove_rc": 0,
+      "scope": "Removed by first parent pass before interruption"
+    },
+    {
+      "path": "/tmp/opentallas-qe-weight-stall",
+      "status": "",
+      "head": "eecca665d4207484bafa1675db1aa7316347567c",
+      "clean": true,
+      "size_kib": 3829788,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-qe-weight-stall",
+      "remove_rc": 0,
+      "scope": "Removed by first parent pass before interruption"
+    },
+    {
+      "path": "/tmp/opentallas-v41-hbm-arb",
+      "status": "",
+      "head": "c17b2831427bb334eeb3719691c5c66a83e03313",
+      "clean": true,
+      "size_kib": 3818688,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-v41-hbm-arb",
+      "remove_rc": 0,
+      "output": ""
+    },
+    {
+      "path": "/tmp/opentallas-v41-physical-inventory",
+      "status": "",
+      "head": "f7479972b517c5c78b73b303ac580fdd12f9ae9c",
+      "clean": true,
+      "size_kib": 3580164,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-v41-physical-inventory",
+      "remove_rc": 0,
+      "output": ""
+    },
+    {
+      "path": "/tmp/opentallas-v41-model-reprice",
+      "status": "",
+      "head": "b2dcf9b7fe8623c9b61fdd15d3eb1c516edecc12",
+      "clean": true,
+      "size_kib": 3805096,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-v41-model-reprice",
+      "remove_rc": 0,
+      "output": ""
+    },
+    {
+      "path": "/tmp/opentallas-v41-integration-compat",
+      "status": "",
+      "head": "09a6e42c307a28fd643ba5375a30a369acfd2619",
+      "clean": true,
+      "size_kib": 3824324,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-v41-integration-compat",
+      "remove_rc": 0,
+      "output": ""
+    },
+    {
+      "path": "/tmp/opentallas-v41-quarter-collector-pipeline",
+      "status": "",
+      "head": "69e61bbfde2b7d19436e91dadf259b05b06402db",
+      "clean": true,
+      "size_kib": 3814132,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-v41-quarter-collector-pipeline",
+      "remove_rc": 0,
+      "output": ""
+    },
+    {
+      "path": "/tmp/opentallas-v41-transpose-physical-pilot",
+      "status": "",
+      "head": "54ff86375142d3dd663deb8ac26727541a5bedf3",
+      "clean": true,
+      "size_kib": 3818676,
+      "archive_ref": "refs/heads/codex/archive-unused/20261001-phase2-opentallas-v41-transpose-physical-pilot",
+      "remove_rc": 0,
+      "output": ""
+    }
+  ],
+  "retained": [
+    {
+      "path": "/tmp/opentallas-v41-me-hbm-service",
+      "status": " M rtl/hdc/hbm/ot_hdc_qstream.sv\n M rtl/test/tb_hdc_v41x_me_bank_hbm_service.sv\n M tools/hdc_program_v41.py\n M tools/rtl_hdc_v41x_me_bank_hbm_service.py\n?? docs/V41_QSTREAM_FULL_DESCRIPTOR_ABI.md\n?? results/rtl/hdc_v41x_me_bank_hbm_full_high.json\n?? results/rtl/v41_weight_hbm_width_contract.json\n?? rtl/test/tb_hdc_qstream_full_descriptor.sv\n?? tests/test_hdc_qstream_full_descriptor.py\n?? tests/test_v41_weight_hbm_width_contract.py\n?? tools/hdc_qstream_descriptor.py\n?? tools/v41_weight_hbm_width_contract.py\n",
+      "head": "a073b52d55d3ba0b3c21bd79929cf42c0ef5ab98",
+      "clean": false,
+      "size_kib": 3801140
+    }
+  ],
+  "already_absent": [
+    {
+      "path": "/tmp/opentallas-qwen-fullshape-int8-image",
+      "status": "",
+      "head": "ad99f60adced58f82664ad11bb6ed9c14095a348",
+      "clean": true,
+      "size_kib": 3803708,
+      "reason": "Path already absent at revalidation; no parent removal attempted"
+    },
+    {
+      "path": "/tmp/opentallas-qwen-int8-rom-pipeline",
+      "status": "",
+      "head": "eadcbcc7162241665f560d54fb7ff02e858bc8b6",
+      "clean": true,
+      "size_kib": 3814392,
+      "reason": "Path already absent at revalidation; no parent removal attempted"
+    }
+  ],
+  "available_before_resumed_cleanup_bytes": 96648073216,
+  "interrupted_first_pass": "First three removals succeeded; a concurrently retired fourth path was absent at revalidation. No forced removal. Resumed after reconciling archived refs.",
+  "protected": "Dirty legacy trees, live jobs and model checkpoint copies preserved; non-force removal only.",
+  "available_after_bytes": 119859253248
+}

@@ -1,0 +1,26 @@
+test_KV5_not_reassigned_and_DS_die_not_from_rank (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_actual_leaf_opcode_and_rounding_refuse (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_actual_program_inventory_and_envelope (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_bad_owner_is_sticky_and_cannot_return_seat (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_calendar_zero_cost_refuses (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_continuation_after64B_does_not_release_physical_lease (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_credit_held_to_commonACK_is_constructive_deadlock (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_exact_parent55_slot_mutation_refuses (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_exhaustion_requires_fence_not_runtime_cap (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_mutated_candidate_cannot_impersonate_W2_accept (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_no_continuation_before_both_sector_captures (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_one_assembler_reuse_keeps_all_completed_frame_identities (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_one_global_parent_port_and_physical_alias_exclusion (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_parent_held_until_all_child_reverseCDC (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_physical_tag12_reuse_refused_even_with_new_backend_generation (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_positive_calendar_capture_vs_reverse_and_no_duplicate_eventIDs (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_production_views_cannot_be_inferred_from_leaf_inventory (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_tuple_carry_not_native64_truncation (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_tuple_stall_and_parent_binding_before_W2 (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_typed_SELECT_emits7frames_not_padding_to8 (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+test_wrong_home_missing_address_and_packed_partial_refuse (test_h4_hbm_native_frame_emitter.FrameEmitterTests) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 41.462s
+
+OK

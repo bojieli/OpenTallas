@@ -1,0 +1,13 @@
+test_analysis_has_no_mutating_flow_commands (__main__.ExistingGRT) ... ok
+test_exact_report_reproduction (__main__.ExistingGRT) ... ok
+test_fail_not_physical_adoption (__main__.ExistingGRT) ... ok
+test_indexer_original_failure_source_and_scope (__main__.ExistingGRT) ... ok
+test_missing_or_duplicate_paths_refused (__main__.ExistingGRT) ... ok
+test_worst_path_and_arc_accounting (__main__.ExistingGRT) ... ok
+test_wrong_corner_or_endpoint_refused (__main__.ExistingGRT) ... ok
+test_wrong_original_slack_refused (__main__.ExistingGRT) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.066s
+
+OK

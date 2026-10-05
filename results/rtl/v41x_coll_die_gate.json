@@ -1,0 +1,59 @@
+{
+  "cases": {
+    "bad_tag": {
+      "pass": true,
+      "stdout": "PAIRWISE_PASS skewed_four_rank tag_mismatch_fault"
+    },
+    "dma": {
+      "pass": true,
+      "stdout": "CDMA_PASS gather_rank_major bf16_rne overlap_fault reads=4 writes=10"
+    },
+    "pairwise": {
+      "pass": true,
+      "stdout": "PAIRWISE_PASS skewed_four_rank exact 0x00000000 linear_would_be_4"
+    },
+    "real_wo_b": {
+      "pass": true,
+      "stdout": "WO_B_PASS 64_real_layer0_rows 4_ranks pairwise_exact skewed first=37 last=40"
+    }
+  },
+  "scope": "bounded die collective block; no full-shape token or route claim",
+  "source_head": "820330c1469e16890dc2d0c35d3f9c4f62946992",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_coll_dma.sv": "c6bd78193661693fa7942edd634cc120c57f828e7b663d484a77b3056ca82980",
+    "rtl/chip/ot_chip_v41x_die.sv": "a76c93e7212b957785fa23e5b3546b876de57262b1d2cda5b63fc83d4b7ea6ee",
+    "rtl/chip/ot_chip_v41x_tile.sv": "9655ec1170415339b589b3ca2a3a4173711b7a16d0a9280e4637ef3d5df076bd",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "b618658a65128afc252638bd445885ee5b82a5a97ee22b52039b494be687c0c8",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "7b041eff5208f9e523f43816f299d2b388d5ea68665a704bafc512370b456fb0",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/rom/ot_rom_oneshot_px.sv": "4a14585915d7c0ac0202d9c92cff6cc5bc4c918d63b43af81f0b7bd87a3da2ff",
+    "rtl/test/data/v41x_coll/wo_b_expected.hex": "b767d6731229d3ebbe0a0ec8de28bb8482b3a94e0d88b029fad435c3a69cd714",
+    "rtl/test/data/v41x_coll/wo_b_rank0.hex": "a7d9ed48ed11d673ee87efd1d0c7915cb18f88e9fe332a2a21271bd19dd55c1b",
+    "rtl/test/data/v41x_coll/wo_b_rank1.hex": "f7091a78f640c4a3369d5e0b52d17a82d081942bf42a6aec46c19989ebfe395a",
+    "rtl/test/data/v41x_coll/wo_b_rank2.hex": "44d1bf14973a18c55639e13d8089fde3839450c984901784319fd0c7f43cbbf7",
+    "rtl/test/data/v41x_coll/wo_b_rank3.hex": "58140841960ecd55f69eaacaf3f6036b186a66076d190f2242826bb1c3d44902",
+    "rtl/test/tb_v41x_coll_dma.sv": "0b7b0ba1e8e8f6b6bf4332567be702513d8208fac78208c4e33041bf95c80ca0",
+    "rtl/test/tb_v41x_coll_pairwise.sv": "7a9df5ac6bb38766a8cf35b5e0aca13f577926888b5c3b5f5834af3f126cbcf7",
+    "rtl/test/tb_v41x_coll_wo_b.sv": "942275520f5c052179b2494d614600b457b634375a3fdce561682efb092ed387",
+    "tools/rtl_v41x_coll_die_gate.py": "23588decc4e78f270f6e90b1a57beedc7a6645779677215df4d43fe935d53d3c"
+  },
+  "status": "PASS",
+  "tools": {
+    "iverilog": "Icarus Verilog version 11.0 (stable) ()",
+    "vvp": "Icarus Verilog runtime version 11.0 (stable) ()"
+  },
+  "wo_b_fixture": {
+    "context": 200000,
+    "layer": 0,
+    "origin_full_5120_row_partial_sha256_by_rank": [
+      "afeb46f26a82368a279e7e572dcfafa7c604f271f79313e339d75308ace888fd",
+      "ed2e52a8f22a51d0a7fcc9b4b0dee1a852e4eb968c7842de2c27323443429d36",
+      "52524a8b7a247aed93b255b4198958677d40805c5a9c7a75bb21414a8ec69b5a",
+      "99d7b30447ffdfc3571fc67225be0a71a17995284e73378f1607a45b2306ccf1"
+    ],
+    "partial_format": "unrounded_fp32",
+    "reference": "FP32 RNE ((r0+r1)+(r2+r3)); +0 canonical",
+    "rows": 64
+  }
+}

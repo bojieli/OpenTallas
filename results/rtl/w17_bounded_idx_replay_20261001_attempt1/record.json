@@ -1,0 +1,368 @@
+{
+  "scope": "SIMULATION_ONLY_DIRECT_BACKEND_MODEL_VS_SOURCE_PREREQUISITE",
+  "source_commit": "ea18acdff675bdaa605f5cad92ca8e10daf3c6c8",
+  "source_status": "",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "tools/w17_L0_window_service_expectation.py": "00960b3f28c7e2a168f4251ecfc8d10d68da397152d6a54574c63c7889d6ef35",
+    "rtl/test/w17_bounded_idx_replay/tb.sv": "c9a013a385359836946aee974d9980bf69896dc75fdbd0fad272fdeeac89ae46",
+    "tools/w17_bounded_idx_replay.py": "30f47d0ed5b72c65c47088314c5af4cdeaccbe0c973f7c82b1e3a22b9299b096"
+  },
+  "source_pins_match": true,
+  "tool_versions": {
+    "iverilog": "Icarus Verilog version 11.0 (stable) ()",
+    "vvp": "Icarus Verilog runtime version 11.0 (stable) ()"
+  },
+  "scenario": {
+    "start_cycle": 12300,
+    "rows": 128,
+    "reads": 2176,
+    "cold_closed_banks": true,
+    "queues_initially_empty": true,
+    "competitors": 0,
+    "credits": 1,
+    "row_overhead": 3,
+    "response_to_next_request_cycles": 2,
+    "NPC": 32,
+    "AW": 30,
+    "LENW": 4,
+    "MEM_WORDS": 1,
+    "MEM_MODE": 1,
+    "QD": 64,
+    "RQD": 32,
+    "REFPB": 3,
+    "CLK_PS": 1000
+  },
+  "edge_alignment": "cyc is sampled before posedge; request accepted at cyc; registered response valid is sampled before posedge at ceil((tcol+23524)/1000). Next request at response+2, plus3 on each new row. Scalar end_cycle is next-request boundary after final response, not final response edge.",
+  "limitations": [
+    "Timing-only pattern data is NOT payload qualification.",
+    "Direct backend excludes muxes, arbiters, row controller and full die.",
+    "Cold/empty is constructed in this bench, NOT proved for protected live state.",
+    "No live completion, hardware rate, exhaustive bound, SS/FF or numerical claim."
+  ],
+  "caps": {
+    "cpu_affinity": "one local CPU, highest allowed index",
+    "nice": 10,
+    "address_space_bytes": 2147483648,
+    "cpu_seconds_per_process": 120,
+    "compile_wall_seconds": 60,
+    "runtime_wall_seconds": 120,
+    "cycles": 200000,
+    "output_file_bytes": 33554432
+  },
+  "scalar_summary": {
+    "start_cycle": 12300,
+    "end_cycle": 137927,
+    "elapsed_cycles": 125627,
+    "reads": 2176,
+    "activations": 2154,
+    "refresh_events_all_channels": 35242,
+    "min_sector_cycles": 36,
+    "max_sector_cycles": 248,
+    "row_overhead": 3,
+    "edge_overhead": 2
+  },
+  "compile": {
+    "command": [
+      "iverilog",
+      "-g2012",
+      "-s",
+      "tb",
+      "-o",
+      "/home/ubuntu/w17-bounded-idx-replay/results/rtl/w17_bounded_idx_replay_20261001_attempt1/sim.vvp",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "rtl/test/w17_bounded_idx_replay/tb.sv"
+    ],
+    "status": 0,
+    "wall_seconds": 0.01711869426071644,
+    "log": "results/rtl/w17_bounded_idx_replay_20261001_attempt1/compile.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "binary_sha256": "b2aceb84e1912a4da685ad3d55524fe81d4f4aba22ec210fa3158ce4f94264d7",
+  "runtime": {
+    "command": [
+      "vvp",
+      "/home/ubuntu/w17-bounded-idx-replay/results/rtl/w17_bounded_idx_replay_20261001_attempt1/sim.vvp",
+      "+START=12300"
+    ],
+    "status": 0,
+    "wall_seconds": 54.002911324147135,
+    "log": "results/rtl/w17_bounded_idx_replay_20261001_attempt1/runtime.log",
+    "log_sha256": "f66e4c2905606685d869b8aa013119afe3f4993c08cac6960b14dd2412953671"
+  },
+  "verdict": "PASS_BOUNDED_TIMING_EQUIVALENCE",
+  "mismatch_count": 0,
+  "mismatches": [],
+  "rtl_summary": [
+    [
+      12300,
+      137925,
+      137927,
+      2176,
+      2176,
+      35242,
+      2154,
+      1,
+      1
+    ]
+  ],
+  "per_channel": [
+    [
+      0,
+      68,
+      68,
+      68,
+      1103,
+      68
+    ],
+    [
+      1,
+      68,
+      68,
+      68,
+      1105,
+      68
+    ],
+    [
+      2,
+      68,
+      68,
+      68,
+      1106,
+      68
+    ],
+    [
+      3,
+      68,
+      68,
+      68,
+      1108,
+      68
+    ],
+    [
+      4,
+      68,
+      68,
+      68,
+      1110,
+      68
+    ],
+    [
+      5,
+      68,
+      68,
+      68,
+      1112,
+      68
+    ],
+    [
+      6,
+      68,
+      68,
+      68,
+      1114,
+      68
+    ],
+    [
+      7,
+      68,
+      68,
+      68,
+      1115,
+      68
+    ],
+    [
+      8,
+      68,
+      68,
+      68,
+      1117,
+      68
+    ],
+    [
+      9,
+      68,
+      68,
+      68,
+      1119,
+      68
+    ],
+    [
+      10,
+      68,
+      68,
+      68,
+      1121,
+      68
+    ],
+    [
+      11,
+      68,
+      68,
+      68,
+      1123,
+      68
+    ],
+    [
+      12,
+      68,
+      68,
+      68,
+      1125,
+      68
+    ],
+    [
+      13,
+      68,
+      68,
+      68,
+      1127,
+      68
+    ],
+    [
+      14,
+      68,
+      68,
+      68,
+      1129,
+      68
+    ],
+    [
+      15,
+      68,
+      68,
+      68,
+      1130,
+      68
+    ],
+    [
+      16,
+      68,
+      68,
+      68,
+      1074,
+      65
+    ],
+    [
+      17,
+      68,
+      68,
+      68,
+      1076,
+      65
+    ],
+    [
+      18,
+      68,
+      68,
+      68,
+      1077,
+      65
+    ],
+    [
+      19,
+      68,
+      68,
+      68,
+      1078,
+      65
+    ],
+    [
+      20,
+      68,
+      68,
+      68,
+      1080,
+      65
+    ],
+    [
+      21,
+      68,
+      68,
+      68,
+      1081,
+      65
+    ],
+    [
+      22,
+      68,
+      68,
+      68,
+      1082,
+      65
+    ],
+    [
+      23,
+      68,
+      68,
+      68,
+      1084,
+      67
+    ],
+    [
+      24,
+      68,
+      68,
+      68,
+      1085,
+      68
+    ],
+    [
+      25,
+      68,
+      68,
+      68,
+      1087,
+      68
+    ],
+    [
+      26,
+      68,
+      68,
+      68,
+      1091,
+      68
+    ],
+    [
+      27,
+      68,
+      68,
+      68,
+      1093,
+      68
+    ],
+    [
+      28,
+      68,
+      68,
+      68,
+      1095,
+      68
+    ],
+    [
+      29,
+      68,
+      68,
+      68,
+      1097,
+      68
+    ],
+    [
+      30,
+      68,
+      68,
+      68,
+      1098,
+      68
+    ],
+    [
+      31,
+      68,
+      68,
+      68,
+      1100,
+      68
+    ]
+  ],
+  "reproduce": "python3 tools/w17_bounded_idx_replay.py --start 12300 --out results/rtl/w17_bounded_idx_replay_rerun_NEW"
+}

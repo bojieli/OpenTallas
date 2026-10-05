@@ -1,0 +1,20 @@
+{
+  "status": "PASS_PYTHON_SOURCE_AND_MODEL_ONLY",
+  "tests": 25,
+  "seconds": 0.07,
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "-q",
+    "tests/test_w17_connected_observation_preparation.py"
+  ],
+  "native_CXX_compiled": false,
+  "RTL_or_model_compiled": false,
+  "simulation_executed": false,
+  "live_access": false,
+  "limitations": "Tests bind source inverse and real validated1020bit ABI/model behavior. They do not substitute for future native host build and actual connected execution.",
+  "causal_deadlines": "BOUND_MISSING"
+}

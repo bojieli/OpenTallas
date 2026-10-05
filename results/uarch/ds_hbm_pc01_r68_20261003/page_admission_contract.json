@@ -1,0 +1,30 @@
+{
+  "Peirce_contract": "/tmp/claude-1000/queue/h4-c0-bridge-20261002/Peirce_PC01_write_set_contract_1791004992454673162.json",
+  "admission": false,
+  "baseline_or_filecache_reuse_credit_bytes": 0,
+  "fleet_field": "fleet_remaining_RAM_budget_bytes for ot-agidock128",
+  "guest_plus_host_sum": false,
+  "mandatory_fields": [
+    "reviewed",
+    "guest_alias",
+    "actual_output_root",
+    "physical_membership_verified",
+    "write_set_source_model_sha256",
+    "write_set_COW_overlap_reviewed",
+    "source_projection_sha256",
+    "measured_ns",
+    "valid_until_ns",
+    "allocator_page_upper_bytes",
+    "filecache_page_upper_bytes",
+    "page_tables_and_kernel_upper_bytes",
+    "guest_extra_page_upper_bytes",
+    "physical_new_page_union_upper_bytes",
+    "other_owned_reservations_and_live_growth_bytes",
+    "MemAvailable_bytes"
+  ],
+  "page_rule": "new physical touched-page allocation/COW union counted ONCE; sharedDirty+roof alternative exposure ceiling is not an additional debit; no baseline address exclusion without proof",
+  "physical_membership_not_assumed": true,
+  "source_component_not_physical_bound": true,
+  "source_staging_or_tmpfs_not_admitted": true,
+  "unknown_page_kernel_filecache_costs": null
+}

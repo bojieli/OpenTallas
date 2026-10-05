@@ -1,0 +1,72 @@
+# r1 SS screen (WC, 0.833 ns, 60 ps setup uncertainty) of ot_hbm_r14_stream_stack NCH=1 at source commit 8e3ef3923.
+# Route stopped by hand during global-route timing repair: CTS-stage WNS -5,747 ps, TNS -1,388,535 ps, 1,855 failing endpoints.
+# Worst path: n[6] -> REFpb key -> 32-step serial argmin -> rb[1]. Verdict: FAIL (not closable); superseded by the r2 pipelined choice.
+# Synthesised area (WC): 2,226.06 um2, 17,304 cells.
+
+==========================================================================
+cts final report_tns
+--------------------------------------------------------------------------
+tns max -1388535.00
+
+==========================================================================
+cts final report_wns
+--------------------------------------------------------------------------
+wns max -5747.21
+
+==========================================================================
+cts final report_worst_slack
+--------------------------------------------------------------------------
+worst slack max -5747.21
+
+==========================================================================
+cts final report_clock_min_period
+--------------------------------------------------------------------------
+core_clk period_min = 6580.21 fmax = 151.97
+
+==========================================================================
+cts final report_checks -path_delay max
+--------------------------------------------------------------------------
+Startpoint: on.pc[1].u.on.n[6]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: on.pc[1].u.on.rb[1]$_DFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   13.21    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 27.90    8.80    8.80 ^ clkbuf_0_clk/A (BUFx16f_ASAP7_75t_R)
+     4   20.34   30.54   37.56   46.36 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+                                         clknet_0_clk (net)
+                 33.30    4.85   51.21 ^ clkbuf_2_0_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    7.54   16.68   39.90   91.12 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_2_0_0_clk (net)
+                 17.28    1.62   92.73 ^ clkbuf_3_1__f_clk/A (BUFx16f_ASAP7_75t_R)
+    14   46.42   55.80   45.72  138.46 ^ clkbuf_3_1__f_clk/Y (BUFx16f_ASAP7_75t_R)
+...
+                 16.01    1.30  920.50 ^ clkbuf_3_3__f_clk/A (BUFx16f_ASAP7_75t_R)
+    13   35.86   45.39   40.59  961.09 ^ clkbuf_3_3__f_clk/Y (BUFx16f_ASAP7_75t_R)
+                                         clknet_3_3__leaf_clk (net)
+                 45.47    1.15  962.24 ^ clkbuf_leaf_43_clk/A (BUFx24_ASAP7_75t_R)
+    15    9.14   18.12   44.92 1007.16 ^ clkbuf_leaf_43_clk/Y (BUFx24_ASAP7_75t_R)
+                                         clknet_leaf_43_clk (net)
+                 18.19    0.53 1007.69 ^ on.pc[1].u.on.rb[1]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                        -60.00  947.69   clock uncertainty
+                          2.35  950.04   clock reconvergence pessimism
+                        -28.36  921.68   library setup time
+                                921.68   data required time
+-----------------------------------------------------------------------------
+                                921.68   data required time
+                               -6668.89   data arrival time
+-----------------------------------------------------------------------------
+                               -5747.21   slack (VIOLATED)
+
+
+
+==========================================================================
+cts final report_checks -unconstrained

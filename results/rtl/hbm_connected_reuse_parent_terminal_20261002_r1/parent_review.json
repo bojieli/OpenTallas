@@ -1,0 +1,61 @@
+{
+  "verdict": "FAIL_BUILD_BUDGET_PRESERVED_NO_RUNTIME",
+  "pins": {
+    "GO.json": {
+      "bytes": 1879,
+      "sha256": "213205fbbd5e301d434443e2cbc34a699ad9a694a614e0d54328c3ec0e76bdc1"
+    },
+    "proposal.json": {
+      "bytes": 32926,
+      "sha256": "1f83cd8fcfb9a4929a2d0348396db20a34cba2bd889027a96490ff9b5a6bdebc"
+    },
+    "run_start.json": {
+      "bytes": 3669,
+      "sha256": "9462d87e143fb1a9698d106e269dd5c5789ed76a54d8f9189165468ae888b586"
+    },
+    "DS-reuse_frontend-start.json": {
+      "bytes": 586,
+      "sha256": "3a2a6ffa0cbeba7843912621c60d3975f0203be2fe384dbe6cc46d4b6ccd3dda"
+    },
+    "DS-reuse_frontend-end.json": {
+      "bytes": 714,
+      "sha256": "a86894df88774388b8e5482beac3f4d49eb78edc42afba8590bc7910f3321b02"
+    },
+    "DS-CXX-start.json": {
+      "bytes": 618,
+      "sha256": "4bb89e92c7b9e7e6446543e4a1695643e08d1eb2db1ac605ffa79e75890602a4"
+    },
+    "DS-CXX-end.json": {
+      "bytes": 762,
+      "sha256": "4cce397b414c0f86e5c18815faf2aeabf59a095d40095ba3f27a1c43f11a5212"
+    },
+    "verdict.json": {
+      "bytes": 6237,
+      "sha256": "1afe8e4a20450312ac15ccf585f8d255d0a873c756375f8a6f10fa98b0bcfc53"
+    },
+    "DS/reuse_frontend.log": {
+      "bytes": 527,
+      "sha256": "4fd7c74afdaf224e8ffdcaa0d403be3e20d88f082d8508a1fe63b45ba850000b"
+    },
+    "DS/reuse_receipt.json": {
+      "bytes": 548,
+      "sha256": "dabaeea57646dfb73c12ab628337b3f8ab57fb294cdee08817d57c0c5dc9c4b7"
+    },
+    "DS/CXX.log": {
+      "bytes": 3814360,
+      "sha256": "29fe8820892673f9bc620bd5b8bdf1a1cc11345954a64be92e0190d95a25bbc4"
+    }
+  },
+  "successful_frontend_reuse_seconds": 5.425185037776828,
+  "CXX_seconds": 601.2547480189241,
+  "CXX_limit_seconds": 600,
+  "objects_retained": 5322,
+  "generated_CXX_inventory_files": 11383,
+  "capped_output_bytes": 2692334909,
+  "source_commit": "e0315e1d28a6d02cb210f5013eab51ea8c75e915",
+  "physical_credit": false,
+  "token_credit": false,
+  "connected_numerical_runtime": false,
+  "DUT_fault_diagnosis": false,
+  "next_action": "Measured build-resource successor and independent review before fresh GO; no automatic extension or retry; preserve generated and object artifacts."
+}

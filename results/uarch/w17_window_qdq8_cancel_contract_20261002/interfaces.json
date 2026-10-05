@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.qdq8.cancel_contract.interfaces.v1",
+  "status": "MODEL_ONLY_PENDING_PROVIDER_COMPOSITION_NO_RTL",
+  "local_ports": {
+    "inputs": {
+      "freeze": 1,
+      "cancel_request": 1,
+      "alternating_control_token": 1,
+      "QE_suffix_closed_source_idle": 1
+    },
+    "outputs": {
+      "producer_frozen": 1,
+      "local_cancel_ack": 1,
+      "ack_control_token": 1,
+      "sticky_fault": 1
+    }
+  },
+  "local_ack_contract": "Freeze observed; admitted mode1 operation terminal16 outputs drained/discarded including poison and VM side effects; actualsourceidle; resident producer metadata logicallycancelled. Not dependent on consumerready and never clears acceptedWINDOWWCWScredit.",
+  "proposed_metadata_transition": "Cancel priority suppresses newcapcommit/issue/newblk; preserve acceptedblock copy at WINDOW. Clear local state/count/rd_idx to EMPTY only after suffixclosed; no payloadzero or provider reset. Preserve stickycause until explicitrearm after complete retirement.",
+  "selected_owner_ports": "Peirce maps selectedWINDOWowner fence request/ack with independent1bit alternatingcontroltoken; exact physicalprovider port/ledger implementation and sizes remain external unresolved. Do not insert context142 into tag17 or assert timer certification.",
+  "retirement": "localcancelack && QEidle && WINDOWempty && selectedmux/KARB/backendownerzero && deliveryfence && causalvisibilityfence && provenance_valid; token/context match. Localcancelack cannot cancel credits.",
+  "same_edge": "Knownfatalcut excludes newtransaction acceptance at that edge; delayedregisteredfault cannot erase earlierhandshakes. Retire same-edge oldcompletion before next-statecreditcheck; match exactlyonce. Newlatecaptureresults counted discarded, not silently accepted.",
+  "read_fault_sink": "Consumerready0 cannot block matchingowner READ retirement. Wrong/stale/duplicate tags never decrement newcredits; poisonmatchedoldreturn retiresoldcredit and preservesfault. Closedprovider no samewireghost assumed, not detected.",
+  "cost": "Reuse Peirce19bit localadapter estimate. 278bit conservative observer metadata and228bit singlebeat readledger are separatelypriced modelcheck options, not duplicatedminimumRTL. Actualprovider hardwarebuffer/routingcount pending owner mapping.",
+  "clock": "Producer/QE streaming clock; CLK_PS1000 applies pinnedidx timingmodel only. No clockfrequency/SSFF proof.",
+  "scope": "No currentlive producersafe, physicalWR/recovery/fulltoken/adoption claim."
+}

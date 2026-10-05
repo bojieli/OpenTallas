@@ -1,0 +1,15 @@
+{
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/w17-epoch9-producer-20261002-r1.service",
+  "memory_max": "4294967296",
+  "swap_max": "0",
+  "actual_affinity": [
+    30,
+    31
+  ],
+  "file_limit": [
+    268435456,
+    268435456
+  ],
+  "service_properties": "RuntimeMaxUSec=3min\nMemoryMax=4294967296\nMemorySwapMax=0\nLimitFSIZE=268435456\nCPUAffinity=30-31\nKillMode=control-group\nKillSignal=9\n",
+  "verdict": "PASS_VERIFIED_BEFORE_COMPILE"
+}

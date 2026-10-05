@@ -1,0 +1,74 @@
+{
+  "answer": "NOTHING, on every issue, at both of the lowest key-owning layers. All 160 issues of layer 2's selection and all 80 of layer 8's return the padding index in every slot. The vendor selects five compressed positions per query row at the same layers. Layer 20, whose compression ratio is 1, does select. So the finding survives a complete sample; what stays withdrawn is the explanation -- the rows are walked, and every walk comes back empty.",
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "naming the mask's position operand as the suspect is a hypothesis; what is measured is that every one of 240 issues across two layers selects nothing",
+    "layer 14's selection differs from the vendor's on 9 of 10 rows in the earlier comparison, but that comparison used first-occurrence data and has not been redone on a complete sample"
+  ],
+  "per_operator": [
+    {
+      "dims_per_issue": [
+        1,
+        512
+      ],
+      "issues_recorded": 160,
+      "issues_total": 160,
+      "issues_with_a_real_selection": 0,
+      "operator": 3322
+    },
+    {
+      "dims_per_issue": [
+        1,
+        512
+      ],
+      "issues_recorded": 80,
+      "issues_total": 80,
+      "issues_with_a_real_selection": 0,
+      "operator": 7083
+    },
+    {
+      "dims_per_issue": [
+        10,
+        2048
+      ],
+      "issues_recorded": 8,
+      "issues_total": 8,
+      "issues_with_a_real_selection": 8,
+      "operator": 8421
+    },
+    {
+      "dims_per_issue": [
+        10,
+        512
+      ],
+      "issues_recorded": 8,
+      "issues_total": 8,
+      "issues_with_a_real_selection": 8,
+      "operator": 8434
+    },
+    {
+      "dims_per_issue": [
+        10,
+        512
+      ],
+      "issues_recorded": 32,
+      "issues_total": 32,
+      "issues_with_a_real_selection": 0,
+      "operator": 10817
+    }
+  ],
+  "producer": {
+    "git": {
+      "commit": "70ff02bbcf711da7378b69830a71c979ef91225b"
+    },
+    "tool": "tools/probe_deepseek_v41_device_index_selection.py"
+  },
+  "question": "the one-query-row reading was withdrawn because the selection operator is issued 160 times and the probe recorded the first. On a COMPLETE sample of every issue, what does the device select?",
+  "schema": "opentallas.result.v41_key_owning_layers_select_nothing.v1",
+  "the_hypothesis_this_leaves": "the operator's causal mask is compressed_group_completed_before_position, and a group covering positions 2g and 2g+1 has completed before query position r only when 2g+1 < r. At r = 9 four of the five groups qualify. Every issue returning nothing means the position the mask compares against is too small on every issue -- a span-relative index where an absolute position belongs, or a zero. That is one operand, not an architectural limit, and it is where the next measurement goes.",
+  "what_this_rules_out": [
+    "a frozen view extent: the operator is issued once per query row per node, and the count is 160 at layer 2 and 80 at layer 8 rather than 1",
+    "a wrong span or a false operand-present predicate from the symbol table: SPAN_TOKENS 10, POSITION_START 0, POSITION_END 10, CONTEXT_LENGTH 10, SPAN_LAST_INDEX 9, all correct, so context_groups_ratio2 is five and the predicate holds",
+    "a compression fault: the compressor produces five completed groups from the ten-token span at ratio 2, which is what the vendor produces, and the index score sees five candidates per issue"
+  ]
+}

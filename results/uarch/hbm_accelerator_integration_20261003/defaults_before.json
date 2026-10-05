@@ -1,0 +1,395 @@
+{
+  "base": "8564e79eaf906c820aec5eb92bfda1cca80ee43d",
+  "v41_hbm_chain": {
+    "False/1": [
+      409.2838232357999,
+      {
+        "sm_matvec": 126.10020311442061,
+        "x_broadcast_fill": 7.6216268497920385,
+        "dedicated_and_su": 120.44141101024675,
+        "verify_extra_issue": 0.0,
+        "barrier": 24.820582261340554,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      },
+      329
+    ],
+    "False/6": [
+      684.336328524002,
+      {
+        "sm_matvec": 126.10020311442061,
+        "x_broadcast_fill": 45.729761098752306,
+        "dedicated_and_su": 120.44141101024675,
+        "verify_extra_issue": 229.4443710392419,
+        "barrier": 24.820582261340554,
+        "collective_latency": 125.9,
+        "collective_bytes": 9.0,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      },
+      329
+    ],
+    "True/1": [
+      356.91512220088396,
+      {
+        "sm_matvec": 73.73150207950466,
+        "x_broadcast_fill": 7.6216268497920385,
+        "dedicated_and_su": 120.44141101024675,
+        "verify_extra_issue": 0.0,
+        "barrier": 24.820582261340554,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      },
+      329
+    ],
+    "True/6": [
+      631.9676274890862,
+      {
+        "sm_matvec": 73.73150207950466,
+        "x_broadcast_fill": 45.729761098752306,
+        "dedicated_and_su": 120.44141101024675,
+        "verify_extra_issue": 229.4443710392419,
+        "barrier": 24.820582261340554,
+        "collective_latency": 125.9,
+        "collective_bytes": 9.0,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      },
+      329
+    ]
+  },
+  "qwen_hbm_rows": [
+    {
+      "design": "qwen_hbm_ideal",
+      "T_us": 1135.4,
+      "tokens_s": 880.7,
+      "supply_frac": 1.0,
+      "boundaries": 181,
+      "form": "bandwidth only"
+    },
+    {
+      "design": "qwen_hbm_gpu",
+      "T_us": 1135.7,
+      "tokens_s": 880.5,
+      "supply_frac": 1.0,
+      "boundaries": 181,
+      "barrier_cycles": 64,
+      "exposed_over_hbm_cycles": 154,
+      "form": "prefetching bulk copy (stream_overlap); barrier derived from the floorplan"
+    },
+    {
+      "design": "qwen_hbm_adapter_as_built_no_prefetch",
+      "T_us": 95408.7,
+      "tokens_s": 10.5,
+      "supply_frac": 0.01190112908147696,
+      "barrier_us_per_token": 1.2,
+      "boundaries": 181,
+      "form": "additive (pre-W13)"
+    },
+    {
+      "design": "qwen_hbm_gpu_derived_barrier_no_prefetch",
+      "T_us": 1147.3,
+      "tokens_s": 871.6,
+      "supply_frac": 1.0,
+      "barrier_us_per_token": 10.5,
+      "boundaries": 181,
+      "form": "additive (pre-W13)"
+    },
+    {
+      "design": "qwen_hbm_gpu_assumed200_no_prefetch",
+      "T_us": 1169.7,
+      "tokens_s": 854.9,
+      "supply_frac": 1.0,
+      "barrier_us_per_token": 32.9,
+      "boundaries": 181,
+      "form": "additive (pre-W13)"
+    },
+    {
+      "design": "qwen_hbm_gpu_grid_sync_v100_no_prefetch",
+      "T_us": 1395.6,
+      "tokens_s": 716.6,
+      "supply_frac": 1.0,
+      "barrier_us_per_token": 258.8,
+      "boundaries": 181,
+      "form": "additive (pre-W13)"
+    },
+    {
+      "design": "qwen_hbm_gpu_grid_sync_v100",
+      "T_us": 1320.6,
+      "tokens_s": 757.2,
+      "supply_frac": 1.0,
+      "boundaries": 181,
+      "form": "prefetching bulk copy, V100 grid sync 1.43 us per boundary"
+    }
+  ],
+  "v41_hbm_rows": [
+    {
+      "design": "v41_hbm_gpu_rowslot",
+      "T_us": 409.3,
+      "tokens_s": 2443.3,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "K-chain-aware SM chain, prefetching bulk copy",
+      "breakdown_us": {
+        "sm_matvec": 126.1,
+        "x_broadcast_fill": 7.6,
+        "dedicated_and_su": 120.4,
+        "verify_extra_issue": 0.0,
+        "barrier": 24.8,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      }
+    },
+    {
+      "design": "v41_hbm_gpu_groupslot",
+      "T_us": 356.9,
+      "tokens_s": 2801.8,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "K-chain-aware SM chain, prefetching bulk copy",
+      "breakdown_us": {
+        "sm_matvec": 73.7,
+        "x_broadcast_fill": 7.6,
+        "dedicated_and_su": 120.4,
+        "verify_extra_issue": 0.0,
+        "barrier": 24.8,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      }
+    },
+    {
+      "design": "v41_hbm_gpu_groupslot_grid_sync_v100",
+      "T_us": 802.6,
+      "tokens_s": 1246.0,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "K-chain-aware SM chain, prefetching bulk copy",
+      "breakdown_us": {
+        "sm_matvec": 73.7,
+        "x_broadcast_fill": 7.6,
+        "dedicated_and_su": 120.4,
+        "verify_extra_issue": 0.0,
+        "barrier": 470.5,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      }
+    },
+    {
+      "design": "v41_hbm_published",
+      "T_us": 279.4,
+      "tokens_s": 3579.1,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "additive",
+      "breakdown_us": {
+        "compute_chain": 111.7,
+        "weight_sweep": 37.4,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0,
+        "barrier": 0.0
+      }
+    },
+    {
+      "design": "v41_hbm_pooled_chain_prefetch",
+      "T_us": 264.6,
+      "tokens_s": 3779.4,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "pooled-width chain (superseded upper bound)",
+      "breakdown_us": {
+        "compute_chain": 111.7,
+        "weight_sweep": 37.4,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0,
+        "barrier": 22.6,
+        "weight_sweep_exposed": 0.0
+      }
+    },
+    {
+      "design": "v41_hbm_adapter_as_built_no_prefetch",
+      "T_us": 3581.1,
+      "tokens_s": 279.2,
+      "supply_frac": 0.0112,
+      "boundaries": 329,
+      "form": "additive",
+      "breakdown_us": {
+        "compute_chain": 111.7,
+        "weight_sweep": 3339.1,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0,
+        "barrier": 0.0
+      }
+    },
+    {
+      "design": "v41_hbm_gpu_derived_barrier_no_prefetch",
+      "T_us": 302.0,
+      "tokens_s": 3311.3,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "additive",
+      "breakdown_us": {
+        "compute_chain": 111.7,
+        "weight_sweep": 37.4,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0,
+        "barrier": 22.6
+      }
+    },
+    {
+      "design": "v41_hbm_gpu_assumed200_no_prefetch",
+      "T_us": 340.8,
+      "tokens_s": 2934.1,
+      "supply_frac": 1.0,
+      "boundaries": 329,
+      "form": "additive",
+      "breakdown_us": {
+        "compute_chain": 111.7,
+        "weight_sweep": 37.4,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0,
+        "barrier": 61.4
+      }
+    }
+  ],
+  "gpu_tier2": [
+    {
+      "tier": 2,
+      "design": "Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated",
+      "tokens_s": 331.0,
+      "spec_tokens_s_reasoning_mix": 853.3,
+      "spec_tokens_s_math_code": [
+        1390.3,
+        1688.2
+      ],
+      "effective_bandwidth_TBps": 5.25,
+      "terms_us": {
+        "fixed": 1464,
+        "bytes": 1557
+      }
+    },
+    {
+      "tier": 2,
+      "design": "DeepSeek-V4.1-Flash on 8x B200, calibrated",
+      "tokens_s": 282.4,
+      "spec_tokens_s": 547.8,
+      "terms_us": {
+        "fixed": 1627,
+        "bytes": 315,
+        "collectives": 1600
+      },
+      "index_scan": {
+        "context": 1048576,
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "per_layer": [
+          {
+            "layer": 2,
+            "KV_source_layer": 2,
+            "compression_ratio": 2,
+            "full_source_entries": 524288,
+            "candidate_cap": 0,
+            "entries": 524288,
+            "bytes": 35651584
+          },
+          {
+            "layer": 8,
+            "KV_source_layer": 8,
+            "compression_ratio": 2,
+            "full_source_entries": 524288,
+            "candidate_cap": 0,
+            "entries": 524288,
+            "bytes": 35651584
+          },
+          {
+            "layer": 14,
+            "KV_source_layer": 14,
+            "compression_ratio": 2,
+            "full_source_entries": 524288,
+            "candidate_cap": 0,
+            "entries": 524288,
+            "bytes": 35651584
+          },
+          {
+            "layer": 20,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 0,
+            "entries": 1048576,
+            "bytes": 71303168
+          },
+          {
+            "layer": 24,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          },
+          {
+            "layer": 28,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          },
+          {
+            "layer": 32,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          },
+          {
+            "layer": 36,
+            "KV_source_layer": 20,
+            "compression_ratio": 1,
+            "full_source_entries": 1048576,
+            "candidate_cap": 16384,
+            "entries": 16384,
+            "bytes": 1114112
+          }
+        ],
+        "entries": 2686976,
+        "bytes": 182714368,
+        "key_bytes": 68,
+        "candidate_gather": true,
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "check": "DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)"
+    }
+  ]
+}

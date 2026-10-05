@@ -1,0 +1,51 @@
+{
+  "binary": {
+    "bytes": 45451664,
+    "sha256": "9d024fc9ae60507bccc339be0dada6af01a0b92abdca12b2bee5c54eb7255ba3"
+  },
+  "build_resources_released_after_terminal": true,
+  "compiler_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+  "current_compiler_stable_before_after": true,
+  "earlier_generic_r7_receipt_preserved": true,
+  "elapsed_s": 42.35866737365723,
+  "focused_tests": 47,
+  "fresh_source_files": 33,
+  "host_object": {
+    "bytes": 118392,
+    "sha256": "403d46ca2b04da3a8fc2d8a1ed52d4c1918cf0d3f0d454640514afc0e3e39ae2"
+  },
+  "lease_directory": "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1",
+  "maximum_native_RSS_KiB": 486016,
+  "model_composed_conditional_s": 0.0003610713,
+  "model_r4_sha256": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
+  "numerical_execution_launched": false,
+  "original_historical_compiler_digest_available": false,
+  "program_descriptor_pins": 296,
+  "retained_original_pins": 47,
+  "reusable_outputs": {
+    "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/host-observed.o": {
+      "bytes": 118392,
+      "sha256": "403d46ca2b04da3a8fc2d8a1ed52d4c1918cf0d3f0d454640514afc0e3e39ae2"
+    },
+    "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/qwen_rom_rt_observed": {
+      "bytes": 45451664,
+      "sha256": "9d024fc9ae60507bccc339be0dada6af01a0b92abdca12b2bee5c54eb7255ba3"
+    },
+    "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/verilated.o": {
+      "bytes": 383600,
+      "sha256": "0c4bc9669535b3ca57bb603d75afc7780d4b19c6388c0739291350a9f1c74d5c"
+    },
+    "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/verilated_dpi.o": {
+      "bytes": 59704,
+      "sha256": "3b504fe95698289fec016e754cf0e6309d0e655edca275f8220d30708c28eff1"
+    },
+    "/home/ubuntu/w12/qrom-observer-host-9d7-20261003-r1/verilated_threads.o": {
+      "bytes": 65560,
+      "sha256": "9c0508eefa0d462a6a62e2d6080fd02374a39175b13404ffc0b3527a7ee1afbb"
+    }
+  },
+  "runtime_hold": "explicit user authorization permits build/relink only; minimum-capture review remains required",
+  "status": "PASS_HOST_ONLY_RELINK_NOT_RUN",
+  "supervisor_pid": 2092241,
+  "support_pins": 71
+}

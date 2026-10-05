@@ -1,0 +1,613 @@
+{
+  "schema": "published-doc-basis-audit-r1",
+  "base_commit": "dcba5c0ab0a61485b8e4a2fd59e591151e8f9f3d",
+  "branch": "codex/ds-hbm-doc-basis-review-20261003",
+  "scope": "read-only existing record audit, scoped documentation and additive proof only",
+  "unchanged_source_sha256": {
+    "results/uarch/hbm_gpu.json": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+    "results/uarch/fabric.json": "c15c3b0844d25b1dde99c96070f75d7943fc80d0e2e436fb0c81a20e7f9ffd38",
+    "results/uarch/economics.json": "4f584946473201c60fcf1ac2c0509b0816ae138f134629cf50f5ed8f081166db",
+    "results/uarch/economics_levers.json": "e0992d14d084a80c1cc1ef99cb3561a84b349f9c2c8285111e602b91f2b157df",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+    "results/arch/headline_bundle.json": "2eb21c31346c6b583c8d2c60881c63cd36fdff9519915bd61b48763f56600d1d",
+    "docs/HEADLINE_BUNDLE.md": "8bca06d8df8c9d10c61f540a6d52b1b09cd7fbacfc2005e1fc2a83fef3af9cce",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/verification_replay.json": "f8c846e2ee3812e3cfd0345172483fe499039c7f730d5d7814a2d329a54b046b",
+    "results/uarch/qwen_rom_kv_successor_20261002/model-r7.json": "b47d505ce39511508e815652a5ef5c69c8806dcffda9eb84a36450e356708c05",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/headline_bundle.py": "57e525d085f41f6a57b3cc9233051b101e3a3a648a577ee239b52824fa14c485",
+    "docs/INTEGRATED_PHYSICAL_PLAN.md": "6e54c30ae30cb20aeea5d9521dd53559d671b1011662a50dc174275a5097544c"
+  },
+  "final_document_sha256": {
+    "docs/ARCHITECTURE_ATLAS.html": "5b44af463de3d44c13ef4ef757f7a191fceaa1c6b432b3e1ab6af272887ca296",
+    "docs/MICROARCH_MODEL.md": "b6bb975d9af5784a11d270564f968555cacbca9ebb080ef0a750dcba21d0fca4",
+    "docs/HEADLINE_BUNDLE_SCOPE.md": "924ca3712e3400ae338cad4affb2e938b95fd6e988852cdd74f63ecbf84ef20d",
+    "docs/EVIDENCE_LEDGER.md": "799276c8cb119579470574b2aeb3560274f66918a55bef1778e3d2677a0fd641",
+    "docs/UNIFIED_EXECUTION_CHECKLIST.md": "0a2260a179ec9f341b9ebd85fb1d1e7538c70812d134c8c9963fbb02fca6e09e",
+    "results/abi3/prose_figure_coverage.json": "7ab1ce30da0f8e7480d14ed31f6af4a56102d1e2d9be937acea3a2f05c8c0802",
+    "TASKS.md": "4da4696c1757f551949a46f96a366ee4d4adcfe0e57090dad8f5488e3b276a00"
+  },
+  "record_assertions": [
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "rows[design=v41_hbm_gpu_groupslot].tokens_s",
+      "expected": 2801.8
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "rows[design=v41_hbm_gpu_groupslot].T_us",
+      "expected": 356.9
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "rows[design=v41_hbm_gpu_groupslot].breakdown_us",
+      "expected": {
+        "sm_matvec": 73.7,
+        "x_broadcast_fill": 7.6,
+        "dedicated_and_su": 120.4,
+        "verify_extra_issue": 0.0,
+        "barrier": 24.8,
+        "collective_latency": 125.9,
+        "collective_bytes": 1.5,
+        "pipeline_hops": 0.9,
+        "control": 2.0
+      }
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "rows[design=v41_hbm_gpu_rowslot].tokens_s",
+      "expected": 2443.3
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "rows[design=v41_hbm_gpu_groupslot_grid_sync_v100].tokens_s",
+      "expected": 1246.0
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "rows[design=v41_hbm_pooled_chain_prefetch].tokens_s",
+      "expected": 3779.4
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "designs.v41.clock_hz",
+      "expected": 1033900000.0
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "designs.v41.barrier.boundary_cycles",
+      "expected": 78
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "designs.v41.barrier.measured_round_trip_cycles",
+      "expected": 62
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "designs.v41.barrier.x_broadcast_tail_cycles",
+      "expected": 16
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "speculation[10]",
+      "expected": {
+        "design": "v41_hbm_ar",
+        "tokens_s": 2801.8,
+        "T_us": 356.9
+      }
+    },
+    {
+      "path": "results/uarch/hbm_gpu.json",
+      "selector": "speculation[11]",
+      "expected": {
+        "design": "v41_hbm_mtp",
+        "positions": 6,
+        "tau": 3.649,
+        "verify_us": 632.0,
+        "draft_us": 26.8,
+        "tokens_s": 5539.4,
+        "speedup": 1.977,
+        "verify_breakdown_us": {
+          "sm_matvec": 73.7,
+          "x_broadcast_fill": 45.7,
+          "dedicated_and_su": 120.4,
+          "verify_extra_issue": 229.4,
+          "barrier": 24.8,
+          "collective_latency": 125.9,
+          "collective_bytes": 9.0,
+          "pipeline_hops": 0.9,
+          "control": 2.0
+        }
+      }
+    },
+    {
+      "path": "results/uarch/fabric.json",
+      "selector": "sweep[8]",
+      "expected": {
+        "design": "v41_hbm_gpu_groupslot",
+        "collective_latency_us": 0.668,
+        "tokens_s": 2919.7
+      }
+    },
+    {
+      "path": "results/uarch/economics.json",
+      "selector": "v41_hbm.ar",
+      "expected": {
+        "tokens_s_b1": 2801.8,
+        "rows": [
+          {
+            "batch": 1,
+            "per_user_tokens_s": 2801.8,
+            "aggregate_tokens_s": 2801.8,
+            "per_user_ms_per_token": 0.3569,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 3780.853,
+            "system_w": 10593.0
+          },
+          {
+            "batch": 2,
+            "per_user_tokens_s": 2427.6,
+            "aggregate_tokens_s": 4855.2,
+            "per_user_ms_per_token": 0.4119,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 2326.973,
+            "system_w": 11298.0
+          },
+          {
+            "batch": 4,
+            "per_user_tokens_s": 1915.9,
+            "aggregate_tokens_s": 7663.6,
+            "per_user_ms_per_token": 0.5219,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 1594.334,
+            "system_w": 12218.0
+          },
+          {
+            "batch": 8,
+            "per_user_tokens_s": 1347.7,
+            "aggregate_tokens_s": 10781.8,
+            "per_user_ms_per_token": 0.742,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 1217.024,
+            "system_w": 13122.0
+          },
+          {
+            "batch": 16,
+            "per_user_tokens_s": 1347.7,
+            "aggregate_tokens_s": 21563.7,
+            "per_user_ms_per_token": 0.742,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 915.659,
+            "system_w": 19745.0
+          },
+          {
+            "batch": 32,
+            "per_user_tokens_s": 681.0,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 1.4684,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 912.504,
+            "system_w": 19885.0
+          },
+          {
+            "batch": 64,
+            "per_user_tokens_s": 340.5,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 2.9369,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 912.504,
+            "system_w": 19885.0
+          },
+          {
+            "batch": 128,
+            "per_user_tokens_s": 170.2,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 5.8738,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 912.504,
+            "system_w": 19885.0
+          },
+          {
+            "batch": 256,
+            "per_user_tokens_s": 85.1,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 11.7476,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 912.504,
+            "system_w": 19885.0
+          },
+          {
+            "batch": 512,
+            "per_user_tokens_s": 42.6,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 23.4951,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 912.504,
+            "system_w": 19885.0
+          },
+          {
+            "batch": 811,
+            "per_user_tokens_s": 26.7,
+            "aggregate_tokens_s": 21658.2,
+            "per_user_ms_per_token": 37.4453,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 917.966,
+            "system_w": 19882.0
+          }
+        ],
+        "saturated_tokens_s": 21791.8,
+        "sat_batch": 32
+      }
+    },
+    {
+      "path": "results/uarch/economics.json",
+      "selector": "v41_hbm.mtp",
+      "expected": {
+        "tokens_s_b1": 5539.4,
+        "rows": [
+          {
+            "batch": 1,
+            "per_user_tokens_s": 5539.4,
+            "aggregate_tokens_s": 5539.4,
+            "per_user_ms_per_token": 0.1805,
+            "binding": "chain (latency)",
+            "energy_mJ_per_token": 2311.928,
+            "system_w": 12807.0
+          },
+          {
+            "batch": 2,
+            "per_user_tokens_s": 5539.4,
+            "aggregate_tokens_s": 11078.8,
+            "per_user_ms_per_token": 0.1805,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1725.353,
+            "system_w": 19115.0
+          },
+          {
+            "batch": 4,
+            "per_user_tokens_s": 3019.7,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 0.3312,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 8,
+            "per_user_tokens_s": 1509.8,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 0.6623,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 16,
+            "per_user_tokens_s": 754.9,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 1.3246,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 32,
+            "per_user_tokens_s": 377.5,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 2.6493,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 64,
+            "per_user_tokens_s": 188.7,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 5.2986,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 128,
+            "per_user_tokens_s": 94.4,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 10.5972,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 256,
+            "per_user_tokens_s": 47.2,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 21.1943,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 512,
+            "per_user_tokens_s": 23.6,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 42.3886,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          },
+          {
+            "batch": 811,
+            "per_user_tokens_s": 14.9,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 67.1429,
+            "binding": "busiest resource per column pass",
+            "energy_mJ_per_token": 1676.795,
+            "system_w": 20254.0
+          }
+        ],
+        "saturated_tokens_s": 12078.7,
+        "sat_batch": 4,
+        "tau": 3.649,
+        "positions": 6
+      }
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "selector": "adaptive_mtp.v41_hbm",
+      "expected": {
+        "rows": [
+          {
+            "batch": 1,
+            "mode": "MTP",
+            "per_user_tokens_s": 5539.4,
+            "aggregate_tokens_s": 5539.4,
+            "per_user_ms_per_token": 0.1805,
+            "energy_mJ_per_token": 2311.928,
+            "ar_aggregate_tokens_s": 2801.8,
+            "mtp_aggregate_tokens_s": 5539.4
+          },
+          {
+            "batch": 2,
+            "mode": "MTP",
+            "per_user_tokens_s": 5539.4,
+            "aggregate_tokens_s": 11078.8,
+            "per_user_ms_per_token": 0.1805,
+            "energy_mJ_per_token": 1725.353,
+            "ar_aggregate_tokens_s": 4855.2,
+            "mtp_aggregate_tokens_s": 11078.8
+          },
+          {
+            "batch": 4,
+            "mode": "MTP",
+            "per_user_tokens_s": 3019.7,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 0.3312,
+            "energy_mJ_per_token": 1676.795,
+            "ar_aggregate_tokens_s": 7663.6,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 8,
+            "mode": "MTP",
+            "per_user_tokens_s": 1509.8,
+            "aggregate_tokens_s": 12078.7,
+            "per_user_ms_per_token": 0.6623,
+            "energy_mJ_per_token": 1676.795,
+            "ar_aggregate_tokens_s": 10781.8,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 16,
+            "mode": "AR",
+            "per_user_tokens_s": 1347.7,
+            "aggregate_tokens_s": 21563.7,
+            "per_user_ms_per_token": 0.742,
+            "energy_mJ_per_token": 915.659,
+            "ar_aggregate_tokens_s": 21563.7,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 32,
+            "mode": "AR",
+            "per_user_tokens_s": 681.0,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 1.4684,
+            "energy_mJ_per_token": 912.504,
+            "ar_aggregate_tokens_s": 21791.8,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 64,
+            "mode": "AR",
+            "per_user_tokens_s": 340.5,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 2.9369,
+            "energy_mJ_per_token": 912.504,
+            "ar_aggregate_tokens_s": 21791.8,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 128,
+            "mode": "AR",
+            "per_user_tokens_s": 170.2,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 5.8738,
+            "energy_mJ_per_token": 912.504,
+            "ar_aggregate_tokens_s": 21791.8,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 256,
+            "mode": "AR",
+            "per_user_tokens_s": 85.1,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 11.7476,
+            "energy_mJ_per_token": 912.504,
+            "ar_aggregate_tokens_s": 21791.8,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 512,
+            "mode": "AR",
+            "per_user_tokens_s": 42.6,
+            "aggregate_tokens_s": 21791.8,
+            "per_user_ms_per_token": 23.4951,
+            "energy_mJ_per_token": 912.504,
+            "ar_aggregate_tokens_s": 21791.8,
+            "mtp_aggregate_tokens_s": 12078.7
+          },
+          {
+            "batch": 811,
+            "mode": "AR",
+            "per_user_tokens_s": 26.7,
+            "aggregate_tokens_s": 21658.2,
+            "per_user_ms_per_token": 37.4453,
+            "energy_mJ_per_token": 917.966,
+            "ar_aggregate_tokens_s": 21658.2,
+            "mtp_aggregate_tokens_s": 12078.7
+          }
+        ],
+        "switch_users": null,
+        "switch_bracket": [
+          8,
+          16
+        ],
+        "rule": "MTP while batch < switch_users, AR at and above it",
+        "ar_b1": 2801.8,
+        "mtp_b1": 5539.4,
+        "ar_saturated": 21791.8,
+        "mtp_saturated": 12078.7
+      }
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "selector": "gated_alike.rows[6]",
+      "expected": {
+        "design": "V4.1 HBM tier 3 AR",
+        "point": "batch1",
+        "tokens_s": 2801.8,
+        "ungated_static_w": 6498.5,
+        "ungated_mJ_per_token": 3780.86,
+        "clock_gated_static_w": 5856.9,
+        "clock_gated_mJ_per_token": 3551.87,
+        "clock_and_power_gated_static_w": 5230.4,
+        "clock_and_power_gated_mJ_per_token": 3328.25
+      }
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "selector": "gated_alike.rows[7]",
+      "expected": {
+        "design": "V4.1 HBM tier 3 AR",
+        "point": "saturated",
+        "tokens_s": 21791.8,
+        "ungated_static_w": 6498.5,
+        "ungated_mJ_per_token": 912.51,
+        "clock_gated_static_w": 6131.5,
+        "clock_gated_mJ_per_token": 895.66,
+        "clock_and_power_gated_static_w": 3144.9,
+        "clock_and_power_gated_mJ_per_token": 758.61
+      }
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "selector": "gated_alike.rows[8]",
+      "expected": {
+        "design": "V4.1 HBM tier 3 MTP",
+        "point": "batch1",
+        "tokens_s": 5539.4,
+        "ungated_static_w": 6498.5,
+        "ungated_mJ_per_token": 2311.93,
+        "clock_gated_static_w": 5922.2,
+        "clock_gated_mJ_per_token": 2207.88,
+        "clock_and_power_gated_static_w": 4462.3,
+        "clock_and_power_gated_mJ_per_token": 1944.35
+      }
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "selector": "gated_alike.rows[9]",
+      "expected": {
+        "design": "V4.1 HBM tier 3 MTP",
+        "point": "saturated",
+        "tokens_s": 12078.7,
+        "ungated_static_w": 6498.5,
+        "ungated_mJ_per_token": 1676.8,
+        "clock_gated_static_w": 6258.5,
+        "clock_gated_mJ_per_token": 1656.93,
+        "clock_and_power_gated_static_w": 4160.5,
+        "clock_and_power_gated_mJ_per_token": 1483.23
+      }
+    },
+    {
+      "path": "results/arch/qwen3_budget.json",
+      "selector": "die_split.kind",
+      "expected": "tensor-parallel 2 (TP-2: every layer split across both dies)"
+    },
+    {
+      "path": "results/arch/qwen3_budget.json",
+      "selector": "rom_design.dies",
+      "expected": 2
+    },
+    {
+      "path": "results/arch/qwen3_budget.json",
+      "selector": "design_point.context",
+      "expected": 8192
+    },
+    {
+      "path": "results/arch/qwen3_budget.json",
+      "selector": "power.points.ar_batch1.at.design.tokens_s",
+      "expected": 10873.6
+    },
+    {
+      "path": "results/arch/qwen3_budget.json",
+      "selector": "dflash.rom[\"8192/fp8/m5\"].best.tokens_s",
+      "expected": 18719.9
+    },
+    {
+      "path": "results/rtl/qwen_rom_TP4_terminal_20261002/verification_replay.json",
+      "selector": "status",
+      "expected": "pass"
+    },
+    {
+      "path": "results/rtl/qwen_rom_TP4_terminal_20261002/verification_replay.json",
+      "selector": "adoption",
+      "expected": false
+    },
+    {
+      "path": "results/rtl/qwen_rom_TP4_terminal_20261002/verification_replay.json",
+      "selector": "full_token_exact_at_runtime_scope",
+      "expected": true
+    },
+    {
+      "path": "results/uarch/qwen_rom_kv_successor_20261002/model-r7.json",
+      "selector": "configuration.global_fill_lanes",
+      "expected": 7
+    },
+    {
+      "path": "results/uarch/qwen_rom_kv_successor_20261002/model-r7.json",
+      "selector": "admission.production_qualified",
+      "expected": false
+    },
+    {
+      "path": "results/uarch/qwen_rom_kv_successor_20261002/model-r7.json",
+      "selector": "physical.actual_sustained_PHY_Bps",
+      "expected": null
+    }
+  ],
+  "qualification": "No current product headline or hardware/model adoption; no model regeneration; stale original source pins remain history.",
+  "generated_bundle_scope": "Generated HEADLINE_BUNDLE.md and its JSON are byte-identical to base. HEADLINE_BUNDLE_SCOPE.md supplies explicit configuration/adoption scope with Atlas links; no generator edit.",
+  "failed_evidence_preserved": [
+    "headline-anchor-FAIL-r1.log",
+    "check-figures-r2-tasks.log"
+  ],
+  "parent_context_reference": {
+    "commit": "c5ae2f69dcd64f042d1c75d0d0d92c3005295605",
+    "path": "results/uarch/qwen_rom_parent_calibration_audit_20261003/audit.json",
+    "sha256": "ceda3fc7e042805b18383bb777b1e224df5c9bbe27780d1f7b63bd10d0ffc8d6",
+    "override_semantics": "full_extras_not_increment",
+    "adoption": false,
+    "scope": "Read-only parent object; TASKS names full override/collective reconciliation and leaves current calibration unknown. No new rate or local model import."
+  },
+  "final_check_log": "check-figures-r3-final.log"
+}

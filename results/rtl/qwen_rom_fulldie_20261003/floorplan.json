@@ -1,0 +1,610 @@
+{
+ "schema": "opentallas.qwen-rom-fulldie.floorplan.v1",
+ "tool": "tools/qwen_rom_fulldie.py",
+ "tool_sha256": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
+ "sources_sha256": {
+  "results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r2.json": "e1e8ac2ddab4711d1a6e476a31a7b9f01813a67aa6c27dfd473225d771e7b951",
+  "results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r1.json": "205279c5497bb71fbf5e4a30ccc45597530a4a8ded300dd8e43e1e54f2d22e38",
+  "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy.lef": "b640d6229a29c17790a3a6b03649481fb61a7144154becc2a982d266cdd52011",
+  "physical/common/ot_macro_track_snap.tcl": "27750ba8772da99f6c067286b596b2ac003ee56a01ef486892ea475ee4382143"
+ },
+ "die": {
+  "w": 24156.144,
+  "h": 32801.76,
+  "mm2": 792.364,
+  "budget_mm2": 815.0,
+  "margin_mm2": 22.636
+ },
+ "r2_die_um": [
+  24146.64,
+  32799.6
+ ],
+ "r2_die_mm2": 792.0,
+ "delta_vs_r2": {
+  "die_w_um": 9.504,
+  "die_h_um": 2.16,
+  "die_mm2": 0.364,
+  "why": [
+   "spine content packed as two columns beside a centred vertical link channel with both horizontal link channels crossing it, and the hub element row: needs 1223.856 um against r2 1214.784 um",
+   "every origin on the die-origin 0.432 x 2.16 lattice (r2 used a core-relative lattice)"
+  ]
+ },
+ "geometry": {
+  "x_wband": 20.304,
+  "x_arr_w": 1429.92,
+  "x_spine": 11466.144,
+  "spine_w": 1223.856,
+  "cw": 524.88,
+  "x_vch": 11991.024,
+  "x_arr_e": 12690.0,
+  "x_eband": 22726.224000000002,
+  "y0": 21.6,
+  "y_top": 31216.320000000007,
+  "mid": 15618.960000000003,
+  "ch_y": [
+   9063.36,
+   22077.360000000004
+  ],
+  "y_io": 31216.320000000007,
+  "stack_cy": [
+   9111.960000000001,
+   22125.960000000003
+  ],
+  "band": 1409.616,
+  "spine_content_mm2": 32.318000000000005,
+  "spine_w_needed": 1223.856,
+  "spine_w_r2": 1214.784,
+  "spine_parts": [
+   {
+    "name": "vector_memory",
+    "mm2": 0.725,
+    "placed_mm2": 0.7256,
+    "col": "W",
+    "seg": 1,
+    "src": "W5 spine_vm (serial side of X1/X2)"
+   },
+   {
+    "name": "su64_sfu",
+    "mm2": 1.6,
+    "placed_mm2": 1.6008,
+    "col": "W",
+    "seg": 1,
+    "src": "SU64 + SFU (estimated)"
+   },
+   {
+    "name": "tree_top",
+    "mm2": 2.397,
+    "placed_mm2": 2.3979,
+    "col": "W",
+    "seg": "1a",
+    "src": "W5 split-tree top registers and result compaction"
+   },
+   {
+    "name": "constants_sequencer",
+    "mm2": 2.157,
+    "placed_mm2": 2.1575,
+    "col": "E",
+    "seg": 1,
+    "src": "W5 constant ROM, program, sequencer"
+   },
+   {
+    "name": "port_tiles_0",
+    "mm2": 1.8467,
+    "placed_mm2": 1.8469,
+    "col": "W",
+    "seg": 0,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "port_tiles_1",
+    "mm2": 1.8467,
+    "placed_mm2": 1.8469,
+    "col": "W",
+    "seg": 0,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "port_tiles_2",
+    "mm2": 1.0521,
+    "placed_mm2": 1.0521,
+    "col": "W",
+    "seg": 0,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "port_tiles_3",
+    "mm2": 1.8467,
+    "placed_mm2": 1.8469,
+    "col": "E",
+    "seg": 0,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "port_tiles_4",
+    "mm2": 1.8467,
+    "placed_mm2": 1.8469,
+    "col": "E",
+    "seg": 0,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "port_tiles_5",
+    "mm2": 1.0521,
+    "placed_mm2": 1.0521,
+    "col": "E",
+    "seg": 0,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "port_tiles_6",
+    "mm2": 1.5891,
+    "placed_mm2": 1.5895,
+    "col": "W",
+    "seg": 2,
+    "src": "W5 spine_port_tiles (96 port groups)"
+   },
+   {
+    "name": "scale_rom_0",
+    "mm2": 2.3932,
+    "placed_mm2": 2.3933,
+    "col": "W",
+    "seg": 2,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_1",
+    "mm2": 0.763,
+    "placed_mm2": 0.763,
+    "col": "W",
+    "seg": 2,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_2",
+    "mm2": 2.3932,
+    "placed_mm2": 2.3933,
+    "col": "E",
+    "seg": 2,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_3",
+    "mm2": 2.3525,
+    "placed_mm2": 2.3525,
+    "col": "E",
+    "seg": 2,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_4",
+    "mm2": 2.3932,
+    "placed_mm2": 2.3933,
+    "col": "E",
+    "seg": 1,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_5",
+    "mm2": 2.2289,
+    "placed_mm2": 2.2289,
+    "col": "E",
+    "seg": 1,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_6",
+    "mm2": 0.9557,
+    "placed_mm2": 0.9557,
+    "col": "W",
+    "seg": 1,
+    "src": "W5 spine_scale_rom"
+   },
+   {
+    "name": "scale_rom_7",
+    "mm2": 0.8793,
+    "placed_mm2": 0.8798,
+    "col": "W",
+    "seg": "1a",
+    "src": "W5 spine_scale_rom"
+   }
+  ],
+  "spine_unplaced_mm2": 0.0,
+  "spine_w_area_bound": 1222.128
+ },
+ "instances": {
+  "tile": 1536,
+  "station": 1536,
+  "head": 64,
+  "hub_element": 1,
+  "spine_block": 19,
+  "phy": 4,
+  "ctrl": 4,
+  "row_engine": 24,
+  "link_fifo": 4,
+  "io": 4,
+  "link_station": 28
+ },
+ "area_mm2_by_kind": {
+  "tile": 517.686,
+  "station": 5.595,
+  "head": 0.233,
+  "hub_element": 0.17,
+  "spine_block": 32.323,
+  "phy": 40.009,
+  "ctrl": 12.005,
+  "row_engine": 15.744,
+  "link_fifo": 0.053,
+  "io": 28.647,
+  "link_station": 0.137
+ },
+ "bus_classes": {
+  "corridor": {
+   "buses": 1536,
+   "wires": 978432
+  },
+  "tap": {
+   "buses": 1536,
+   "wires": 784896
+  },
+  "head_chain": {
+   "buses": 64,
+   "wires": 40768
+  },
+  "tree_block": {
+   "buses": 2880,
+   "wires": 1474560
+  },
+  "tree_spine": {
+   "buses": 96,
+   "wires": 49152
+  },
+  "link_spine": {
+   "buses": 8,
+   "wires": 16896
+  },
+  "link_channel": {
+   "buses": 24,
+   "wires": 25344
+  },
+  "strip_fan": {
+   "buses": 24,
+   "wires": 25344
+  },
+  "hbm_read": {
+   "buses": 28,
+   "wires": 26624
+  },
+  "phy_dfi": {
+   "buses": 4,
+   "wires": 36836
+  },
+  "spine_local": {
+   "buses": 2,
+   "wires": 1024
+  },
+  "io": {
+   "buses": 5,
+   "wires": 3584
+  },
+  "clock_trunk": {
+   "buses": 6,
+   "wires": 18
+  }
+ },
+ "notes": [],
+ "tree_mode": "central",
+ "regions": [
+  {
+   "name": "tile_field_w",
+   "kind": "tile_field",
+   "rect": [
+    1429.92,
+    21.6,
+    11466.144,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "tile_field_e",
+   "kind": "tile_field",
+   "rect": [
+    12690.0,
+    21.6,
+    22726.224,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "hchan_s_w",
+   "kind": "channel",
+   "rect": [
+    1429.92,
+    9063.36,
+    11466.144,
+    9160.56
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "hchan_s_e",
+   "kind": "channel",
+   "rect": [
+    12690.0,
+    9063.36,
+    22726.224,
+    9160.56
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "hchan_n_w",
+   "kind": "channel",
+   "rect": [
+    1429.92,
+    22077.36,
+    11466.144,
+    22174.56
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "hchan_n_e",
+   "kind": "channel",
+   "rect": [
+    12690.0,
+    22077.36,
+    22726.224,
+    22174.56
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "spine",
+   "kind": "hub",
+   "rect": [
+    11466.144,
+    21.6,
+    12690.0,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.025,
+   "peak_w_per_mm2": 0.385
+  },
+  {
+   "name": "spine_vchan",
+   "kind": "channel",
+   "rect": [
+    11991.024,
+    21.6,
+    12165.12,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.0439,
+   "peak_w_per_mm2": 1.05
+  },
+  {
+   "name": "strip_W",
+   "kind": "strip",
+   "rect": [
+    1101.6,
+    21.6,
+    1429.92,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.1639,
+   "peak_w_per_mm2": 3.924
+  },
+  {
+   "name": "ctrl_W",
+   "kind": "ctrl",
+   "rect": [
+    854.064,
+    21.6,
+    1101.6,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.1639,
+   "peak_w_per_mm2": 3.924
+  },
+  {
+   "name": "phy_W",
+   "kind": "phy",
+   "rect": [
+    20.304,
+    21.6,
+    854.064,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.0,
+   "peak_w_per_mm2": 0.36
+  },
+  {
+   "name": "strip_E",
+   "kind": "strip",
+   "rect": [
+    22726.224,
+    21.6,
+    23054.544,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.1639,
+   "peak_w_per_mm2": 3.924
+  },
+  {
+   "name": "ctrl_E",
+   "kind": "ctrl",
+   "rect": [
+    23054.544,
+    21.6,
+    23302.08,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.1639,
+   "peak_w_per_mm2": 3.924
+  },
+  {
+   "name": "phy_E",
+   "kind": "phy",
+   "rect": [
+    23302.08,
+    21.6,
+    24135.84,
+    31216.32
+   ],
+   "pg_coverage_per_net": 0.0,
+   "peak_w_per_mm2": 0.36
+  },
+  {
+   "name": "io_band",
+   "kind": "io",
+   "rect": [
+    1429.92,
+    31216.32,
+    22726.224,
+    32780.16
+   ],
+   "pg_coverage_per_net": 0.025,
+   "peak_w_per_mm2": 0.385
+  }
+ ],
+ "link_stages": {
+  "paths": [
+   {
+    "stack": "WS",
+    "trunk_um": 17204.6,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   },
+   {
+    "stack": "WN",
+    "trunk_um": 17202.5,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   },
+   {
+    "stack": "ES",
+    "trunk_um": 17204.6,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   },
+   {
+    "stack": "EN",
+    "trunk_um": 17202.5,
+    "fan_um": 5063.0,
+    "stages_504": 46,
+    "stages_450": 51,
+    "stages_430": 52
+   }
+  ],
+  "worst": "WS",
+  "r2_model_total_stages": 46,
+  "delta_stages_at_430": 6,
+  "per_token_cycles_delta": 432,
+  "per_token_us_delta": 0.36,
+  "hub_to_io": {
+   "um": 15596.3,
+   "stages_504": 31,
+   "stages_430": 37
+  },
+  "note": "hub<->stack stations re-pitched to <= 430.56 um (corridor gate: 504 um spans miss SS setup by 29-79 ps); the tile-column corridor already runs 3 x 430.56 um per tile hop (closes). Report to the model: the selected entry prices 45-46 stages."
+ },
+ "corridor_gate_constraints": {
+  "source": "claude/qwen-corridor-gate-20261003 @ 89e70dd78 verdict",
+  "centred_pin_row": "tile tap pin row centred on its station (station at tile mid-height; tap rows on both sides centred on the station centre): satisfied by construction",
+  "station_slab": "station frame 52.704 x 69.12 um >= the 17.28 um slab variant",
+  "long_haul_layers": "bundled GRT: M2-M5 adjustment 1.0 (no long haul); M6/M8 horizontal, M7/M9 vertical",
+  "stage_pitch_um": 430.56
+ },
+ "corridors": {
+  "count": 64,
+  "width_um": 52.704,
+  "bits": 637,
+  "stations_per_column": 24,
+  "heads": 64,
+  "station_frame_um": [
+   52.704,
+   69.12
+  ],
+  "tap_bits": 511
+ },
+ "clock_domains": {
+  "stream_1p2": {
+   "period_ns": 0.833,
+   "regions": [
+    "tile field",
+    "corridors",
+    "channels",
+    "near-HBM strips",
+    "hub element",
+    "link stations",
+    "tree top / port / scale"
+   ]
+  },
+  "serial_0p9": {
+   "period_ns": 1.111,
+   "regions": [
+    "SU64/SFU",
+    "vector memory (serial side)",
+    "collective reducers"
+   ]
+  },
+  "hbm_976p6": {
+   "period_ns": 1.024,
+   "regions": [
+    "controller bands",
+    "PHY DFI"
+   ]
+  }
+ },
+ "crossings": [
+  {
+   "id": "X1-X3",
+   "where": "hub spine centre (SU/VM <-> hub element / x root)",
+   "kind": "ratio CDC FIFO 3:4",
+   "rtl": "rtl/common/ot_ratio_cdc_fifo.sv (claude/two-clock-rtl-20261003 @ 27d86cfe)",
+   "count": 3
+  },
+  {
+   "id": "H1-H24",
+   "where": "controller band west/east face -> each row engine",
+   "kind": "async two-clock FIFO (976.6 -> 1,200 MHz: 625:768, not a small ratio)",
+   "count": 24,
+   "new": true,
+   "note": "r1/r2 list P1-P4 at the PHY boundary assuming a 1.2 GHz service; the streaming controller closes at CK/2 = 976.6 MHz, so the crossing moves to the controller/row-engine face"
+  },
+  {
+   "id": "K1-K4",
+   "where": "strip FIFO -> controller (new-token K/V write)",
+   "kind": "async FIFO",
+   "count": 4,
+   "new": true
+  },
+  {
+   "id": "M1-M4",
+   "where": "strip-end link FIFO",
+   "kind": "mesochronous bisync FIFO",
+   "count": 4
+  },
+  {
+   "id": "L1-L2",
+   "where": "IO band",
+   "kind": "plesiochronous link crossing",
+   "count": 2
+  }
+ ],
+ "instances_list_sha256": "e432956db0ab0392e47da147b7b4a68509f1d36602fff62a0d6d98d92d237ef6"
+}

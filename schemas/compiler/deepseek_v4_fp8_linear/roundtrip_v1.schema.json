@@ -1,0 +1,65 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/roundtrip_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "application_id": { "$ref": "#/$defs/sha256" },
+    "checked_artifact_count": { "const": 2 },
+    "checked_payload_bytes": { "minimum": 1, "type": "integer" },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "reconstructed": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "deployment_path": { "$ref": "#/$defs/path" },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "size_bytes": { "minimum": 1, "type": "integer" },
+          "source_assignment_path": { "$ref": "#/$defs/path" },
+          "tensor_name": {
+            "enum": [
+              "layers.0.attn.wq_a.scale",
+              "layers.0.attn.wq_a.weight"
+            ]
+          }
+        },
+        "required": [
+          "deployment_path",
+          "sha256",
+          "size_bytes",
+          "source_assignment_path",
+          "tensor_name"
+        ],
+        "type": "object"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "roundtrip_id": { "$ref": "#/$defs/sha256" },
+    "schema": { "const": "opentallas.deepseek_v4_fp8_linear_roundtrip.v1" },
+    "status": { "const": "full_selected_payload_match" }
+  },
+  "required": [
+    "application_id",
+    "checked_artifact_count",
+    "checked_payload_bytes",
+    "model_id",
+    "reconstructed",
+    "roundtrip_id",
+    "schema",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 selected-row FP8 roundtrip v1",
+  "type": "object",
+  "$defs": {
+    "path": {
+      "minLength": 1,
+      "not": { "pattern": "(^/|(^|/)\\.\\.?(/|$)|\\\\|\\u0000)" },
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

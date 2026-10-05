@@ -1,0 +1,14 @@
+..............F.                                                         [100%]
+=================================== FAILURES ===================================
+_____________ test_head_exact_source_storage_coordinates_and_ties ______________
+
+    def test_head_exact_source_storage_coordinates_and_ties():
+        a=M.head_address(0,0,0);z=M.head_address(3,32319,5119)
+        assert a['pair']==2525 and a['physical_row']==0
+>       assert z['pair']==5049 and z['mb']==1 and z['physical_row']==2047 and z['bit_range']==[240,256]
+E       assert (5049 == 5049 and 1 == 1 and 4095 == 2047)
+
+tests/test_dsrom_native_mode_contract.py:103: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_native_mode_contract.py::test_head_exact_source_storage_coordinates_and_ties
+1 failed, 15 passed in 5.33s

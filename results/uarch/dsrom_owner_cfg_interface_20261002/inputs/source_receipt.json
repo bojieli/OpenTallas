@@ -1,0 +1,51 @@
+{
+  "scope": "Read-only source snapshots for exact interfaces and provider absence; no images, compiler, synthesis or P&R",
+  "source_commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+  "sources": {
+    "ot_rom_4096x72_m8.json": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.json",
+      "sha256": "5a0d43ff6fadb327f5f91cd3bec44ea1a6e3b0312e0835ea883656c7495266f9"
+    },
+    "ot_rom_4096x72_m8.lef": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+      "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+    },
+    "ot_rom_4096x72_m8.v": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+      "sha256": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994"
+    },
+    "ot_v41_bf16_lanes2_rne_prepare.sv": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+      "sha256": "f5d76c5ac689e4aac774a098e5f08f75ceac3552c456a48d5bc2af419dd1eabe"
+    },
+    "ot_v41_bmul2_rne_prepare.sv": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+      "sha256": "308532d2b6a1ab6aa9170e4a692dda9e1ca6a1ae0a60d0a071ba5c3b353222b3"
+    },
+    "ot_v41_bmul_subnormal_rne_prepare.sv": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+      "sha256": "2bf1f96455fe42b6b14bd9c1ffa3f79da3021ff0ca9f975644b3d5b555da8cf6"
+    },
+    "ot_v41_pair_w17w10_rne_wake_prepare.sv": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "rtl/v41die/ot_v41_pair_w17w10_rne_wake_prepare.sv",
+      "sha256": "6268b4c17ef3d4fef18f60de9ad7fdddc467efb2e1b51e260bb58467430c4c88"
+    },
+    "ot_v41_rom_adapt.sv": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "rtl/v41die/ot_v41_rom_adapt.sv",
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+    },
+    "ot_v41_rom_elem_w10_rne_wake_prepare.sv": {
+      "commit": "dd48d128eb5cea4f5ca2b09cf36e41321f0d8b1a",
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+      "sha256": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79"
+    }
+  }
+}

@@ -1,0 +1,652 @@
+{
+  "actual_provider_ACK_count": null,
+  "actual_provider_credit_release_count": null,
+  "actual_provider_reader_debt": null,
+  "current_SMIN6_plus55_transfer": false,
+  "finite_calendar_adoption": false,
+  "full_return_gate": "FAIL_INTERLEAVED_RECORDS_PRESERVED",
+  "next_source_join": "Reuse this actual L0 program, writes, scalar-to-word identities and request deadlines as conditional service stimulus. Bind effective mask/copy membership and owned provider write visibility, reader acquire/discharge, reverse ACK and tag retirement. No duplicated full token implied.",
+  "provider_ACK_records_in_observer_format": 0,
+  "provider_credit_release_records_in_observer_format": 0,
+  "ranks": {
+    "L0/die0": {
+      "K_hex": "cd3b4428c8b4a23b2a3a892f4399b3b333b730a92ac0b6403238aeb8b5bbd4ae39b7ae21d036284323beae312328331fc638c3ebb037b5c4b0acbb303c433d3f4ec51b4428a8b8bd1bba39b2002dbb01b8432ba8b7421fc0c02e9c3828bbb731a11ca332a1a9b83daeb730433c3e1dbb99308136b33819c12e27293d34c437c1130e8120a2aa95acb03e831933bf2231233d25a927c092be211eb1371821491b21962a2049ad1ba62c1e05a8149225aca3292370991fa289218614290fad272aaa1d9523b32a2ca71b33b5978436b0239aa21faa28b7aa362b9c15c599a93930201da42c2e22aea1a3ab29a0889b288d129f1f3f002228af1a909b0b03a3221a",
+      "V_hex": "059b0a1c1d128b0916a08884129283849c85871489981607920293128e8802900d030e828198110784058a96190004180611050999869001a013121288178512850f1a0a028e8c15888899018b148f0185130b91120785859d888393108c06041105028797061712100a1a878e939785109d81121008071514050f0d030b969a0604000088088c8d838183058586849a84050382078203848b090505858602048805820100010503810083838a0808020a848d048a828a81898d070a85828185818209820b8102040983020303010283850a08058100838104040387860003000190018205010c0486068201020a011f89018706040483888404178604870005",
+      "accepted_KV_consumer_count": 2,
+      "accepted_issues": 26,
+      "actual_current_row_scalar_writes": 512,
+      "actual_current_row_snapshot_scalars": 512,
+      "actual_first_request_edge_range": [
+        573,
+        854
+      ],
+      "consumer_accepts": [
+        {
+          "edge": 530,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 128,
+            "ks": 128,
+            "mbase": 16192,
+            "mmode": 1,
+            "nout": 1,
+            "obase": 1015,
+            "oen": 1,
+            "ojs": 512,
+            "ots": 1,
+            "rmax": 1,
+            "round": 1,
+            "split": 7,
+            "tiles": 1,
+            "ts": 128,
+            "wbase": 0,
+            "wcs": 1,
+            "wsrc": 1,
+            "xbase": 15104,
+            "xcs": 1,
+            "xjs": 128,
+            "xks": 128
+          },
+          "ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "pc": 11,
+          "ticket": 11
+        },
+        {
+          "edge": 807,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 1,
+            "ks": 4096,
+            "mbase": 0,
+            "mmode": 1,
+            "nout": 128,
+            "obase": 5111,
+            "oen": 1,
+            "ojs": 8,
+            "ots": 1,
+            "rmax": 0,
+            "round": 1,
+            "split": 9,
+            "tiles": 1,
+            "ts": 1,
+            "wbase": 131072,
+            "wcs": 8,
+            "wsrc": 1,
+            "xbase": 16240,
+            "xcs": 1,
+            "xjs": 8192,
+            "xks": 512
+          },
+          "ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "pc": 13,
+          "ticket": 13
+        }
+      ],
+      "first_write_edge": 291,
+      "last_write_edge": 528,
+      "producer_completions": [
+        {
+          "accepted_edge": 270,
+          "first_write_edge": 291,
+          "last_write_edge": 294,
+          "pc": 3,
+          "ticket": 3,
+          "write_count": 256
+        },
+        {
+          "accepted_edge": 494,
+          "first_write_edge": 515,
+          "last_write_edge": 516,
+          "pc": 8,
+          "ticket": 8,
+          "write_count": 128
+        },
+        {
+          "accepted_edge": 506,
+          "first_write_edge": 527,
+          "last_write_edge": 528,
+          "pc": 10,
+          "ticket": 10,
+          "write_count": 128
+        }
+      ],
+      "provider_visibility_release_or_residence_deadline": null,
+      "snapshot_edge": 4676,
+      "source_ME_idle_edge_after_last_KV_consumer": 1003,
+      "source_word_request_profiles": {
+        "die0/PC11": {
+          "accepted_ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "accepted_issue_edge": 530,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 573,
+          "last_source_request_edge": 580,
+          "request_edges": [
+            573,
+            574,
+            575,
+            576,
+            577,
+            578,
+            579,
+            580
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        },
+        "die0/PC13": {
+          "accepted_ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "accepted_issue_edge": 807,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 850,
+          "last_source_request_edge": 857,
+          "request_edges": [
+            850,
+            851,
+            852,
+            853,
+            854,
+            855,
+            856,
+            857
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        }
+      },
+      "source_write_to_first_request_slack_range": [
+        46,
+        561
+      ],
+      "state_sha256": "c39b0a2e41bd1132062e1a1cbf62ce2b44483d3643d6757afb38e1940aaacbdc"
+    },
+    "L0/die1": {
+      "K_hex": "a92cb9ac243393bb33c3b6afb7c0372c293a3114a5bd8339a12941352a2d4919b22a99b1d18db11fa89da81eb42e2f9529969bf12e8b9a00a199abaa27ae23a13bbab81bbd390d3ca2bac1b98736b31e352e1319b93a86ae043135c4a6a534b2b10e942db5b19a3220aaa2aaa0a895a52da4a2bc2f33b9baa3242eaa2e21b0abbdba3d36bcbeb5bb37a8c0b944b31ac3343c3abf2228c3c13999b4342f35593cc1393b3ad331bd2c2b3334beaf37bfb4bdb1b271b234b4b4322cb8c537b51f9841c3b31e33bf40ac27bf2b39053d3697b9c52fa23ac11a3c2e43c0c52d383ec3bb37b8b7ae3f34381dac132e39b4abc22ca39b2835c131bcb1bdb33c1dbabfba",
+      "V_hex": "0a0711830e118291900f0e0d1804860496140600850917830f010a088183838b951402848e8b040c0005900c1211921386058d0c968108090b0812070785881691851a8b840c8b01038a8708930b0484868484918c0314820284960d09830c88a1040b0e00850506810e06090f89889284179388819a8d8b0b1900988119010a8212848f0b880e03138481901312028a0e108c02058d8e8c8781078d00950110820414010c93880a1409130d03878887000a8d030985050214108e8690080393020408020084810b888b900e038503088282840505838e120b0e8586018b83018785038c0189049687838501070788038f108591898a858d0a000a8d86079085",
+      "accepted_KV_consumer_count": 2,
+      "accepted_issues": 26,
+      "actual_current_row_scalar_writes": 512,
+      "actual_current_row_snapshot_scalars": 512,
+      "actual_first_request_edge_range": [
+        573,
+        854
+      ],
+      "consumer_accepts": [
+        {
+          "edge": 530,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 128,
+            "ks": 128,
+            "mbase": 16192,
+            "mmode": 1,
+            "nout": 1,
+            "obase": 1015,
+            "oen": 1,
+            "ojs": 512,
+            "ots": 1,
+            "rmax": 1,
+            "round": 1,
+            "split": 7,
+            "tiles": 1,
+            "ts": 128,
+            "wbase": 0,
+            "wcs": 1,
+            "wsrc": 1,
+            "xbase": 15104,
+            "xcs": 1,
+            "xjs": 128,
+            "xks": 128
+          },
+          "ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "pc": 11,
+          "ticket": 11
+        },
+        {
+          "edge": 807,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 1,
+            "ks": 4096,
+            "mbase": 0,
+            "mmode": 1,
+            "nout": 128,
+            "obase": 5111,
+            "oen": 1,
+            "ojs": 8,
+            "ots": 1,
+            "rmax": 0,
+            "round": 1,
+            "split": 9,
+            "tiles": 1,
+            "ts": 1,
+            "wbase": 131072,
+            "wcs": 8,
+            "wsrc": 1,
+            "xbase": 16240,
+            "xcs": 1,
+            "xjs": 8192,
+            "xks": 512
+          },
+          "ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "pc": 13,
+          "ticket": 13
+        }
+      ],
+      "first_write_edge": 291,
+      "last_write_edge": 528,
+      "producer_completions": [
+        {
+          "accepted_edge": 270,
+          "first_write_edge": 291,
+          "last_write_edge": 294,
+          "pc": 3,
+          "ticket": 3,
+          "write_count": 256
+        },
+        {
+          "accepted_edge": 494,
+          "first_write_edge": 515,
+          "last_write_edge": 516,
+          "pc": 8,
+          "ticket": 8,
+          "write_count": 128
+        },
+        {
+          "accepted_edge": 506,
+          "first_write_edge": 527,
+          "last_write_edge": 528,
+          "pc": 10,
+          "ticket": 10,
+          "write_count": 128
+        }
+      ],
+      "provider_visibility_release_or_residence_deadline": null,
+      "snapshot_edge": 4676,
+      "source_ME_idle_edge_after_last_KV_consumer": 1003,
+      "source_word_request_profiles": {
+        "die1/PC11": {
+          "accepted_ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "accepted_issue_edge": 530,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 573,
+          "last_source_request_edge": 580,
+          "request_edges": [
+            573,
+            574,
+            575,
+            576,
+            577,
+            578,
+            579,
+            580
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        },
+        "die1/PC13": {
+          "accepted_ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "accepted_issue_edge": 807,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 850,
+          "last_source_request_edge": 857,
+          "request_edges": [
+            850,
+            851,
+            852,
+            853,
+            854,
+            855,
+            856,
+            857
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        }
+      },
+      "source_write_to_first_request_slack_range": [
+        46,
+        561
+      ],
+      "state_sha256": "3a3de295fb41741489c470dba5ca8ec9c5311e83413a9b4219b43fe95af31c94"
+    },
+    "L0/die2": {
+      "K_hex": "24ac121d33ac131338c0b6a5a8bcae271c3aa99f1f41a5ad231dc1b3af154620a5281f2cc48528111422a79ca9a2a59c932392efa52e2ab02b2f24af1321a72ba6190ea8ae9a2da6a03632ab0535ac9888b3a129173c1c35021fba472a98410c13aa2ba1b72584180aa91e9a21a292068e1fa1c2232dabb92cae2a8f22172a2f2badb3adbe3096c0b4323ea9b9b82e3ca938bc23c0bc2632243c46233d3851bea42e3ec1d2b29cbc413c273abc41c12dc1218e702834b0a9bab13533baa029b9c42a0c3c353a39960e3a42b4043bb91c2db63d20be3c26aa34ad41c62a293fb743bc3c31b235b62a3ab73fb5362a353bb0373a35be41434782953da93a42b139",
+      "V_hex": "8484008107878a0082060001008306858402010483000202000581848101020401048983840704820228060b8386820183820407020501068587030a868200850795020089828183828402810101020f01050402030b850b08838607820204858704819100000084008181888302810181858506040884860182070783048703880110828b880082840684880705879093920203840f0001860092828c0b0c8d8416920307070f92108402058282830992898c090789040f8e01878403830385008e0f8187838287010f878f8f928d8109088e020b0b81838587000a04060d058a0083098d0d828f90068e84860d84060f830302081e02848387028104109401",
+      "accepted_KV_consumer_count": 2,
+      "accepted_issues": 26,
+      "actual_current_row_scalar_writes": 512,
+      "actual_current_row_snapshot_scalars": 512,
+      "actual_first_request_edge_range": [
+        573,
+        854
+      ],
+      "consumer_accepts": [
+        {
+          "edge": 530,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 128,
+            "ks": 128,
+            "mbase": 16192,
+            "mmode": 1,
+            "nout": 1,
+            "obase": 1015,
+            "oen": 1,
+            "ojs": 512,
+            "ots": 1,
+            "rmax": 1,
+            "round": 1,
+            "split": 7,
+            "tiles": 1,
+            "ts": 128,
+            "wbase": 0,
+            "wcs": 1,
+            "wsrc": 1,
+            "xbase": 15104,
+            "xcs": 1,
+            "xjs": 128,
+            "xks": 128
+          },
+          "ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "pc": 11,
+          "ticket": 11
+        },
+        {
+          "edge": 807,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 1,
+            "ks": 4096,
+            "mbase": 0,
+            "mmode": 1,
+            "nout": 128,
+            "obase": 5111,
+            "oen": 1,
+            "ojs": 8,
+            "ots": 1,
+            "rmax": 0,
+            "round": 1,
+            "split": 9,
+            "tiles": 1,
+            "ts": 1,
+            "wbase": 131072,
+            "wcs": 8,
+            "wsrc": 1,
+            "xbase": 16240,
+            "xcs": 1,
+            "xjs": 8192,
+            "xks": 512
+          },
+          "ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "pc": 13,
+          "ticket": 13
+        }
+      ],
+      "first_write_edge": 291,
+      "last_write_edge": 528,
+      "producer_completions": [
+        {
+          "accepted_edge": 270,
+          "first_write_edge": 291,
+          "last_write_edge": 294,
+          "pc": 3,
+          "ticket": 3,
+          "write_count": 256
+        },
+        {
+          "accepted_edge": 494,
+          "first_write_edge": 515,
+          "last_write_edge": 516,
+          "pc": 8,
+          "ticket": 8,
+          "write_count": 128
+        },
+        {
+          "accepted_edge": 506,
+          "first_write_edge": 527,
+          "last_write_edge": 528,
+          "pc": 10,
+          "ticket": 10,
+          "write_count": 128
+        }
+      ],
+      "provider_visibility_release_or_residence_deadline": null,
+      "snapshot_edge": 4676,
+      "source_ME_idle_edge_after_last_KV_consumer": 1003,
+      "source_word_request_profiles": {
+        "die2/PC11": {
+          "accepted_ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "accepted_issue_edge": 530,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 573,
+          "last_source_request_edge": 580,
+          "request_edges": [
+            573,
+            574,
+            575,
+            576,
+            577,
+            578,
+            579,
+            580
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        },
+        "die2/PC13": {
+          "accepted_ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "accepted_issue_edge": 807,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 850,
+          "last_source_request_edge": 857,
+          "request_edges": [
+            850,
+            851,
+            852,
+            853,
+            854,
+            855,
+            856,
+            857
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        }
+      },
+      "source_write_to_first_request_slack_range": [
+        46,
+        561
+      ],
+      "state_sha256": "d016c5af4ea7c972e8d40c7da3eb85a5005a127ef53e8b01922b2ecd2ed4c33c"
+    },
+    "L0/die3": {
+      "K_hex": "44c53f2031b1a3c1393f2b35c0bcad08b6bc3ab0a6c23338c03936a2a2bd56aebfc5aab6d0a731b93b2a09309aa7a733be97baf0beaa203b9029c14735451c3241b81f3ac6a8bb3b3839a9be8232b3182d46adb1b24838bd3a4224c236993fc33c22262a21b69d36342b29c0b1bb222033b1aa3216baa6cb373fb8bfb921a592221da4a7aaa6b031adbd9f31b93b151c19bda09b1cc22db1ab269daa9d27cea7a02c999ac5ac20229aab2ea31a1aafa823a3896e9e0d211f26a220971518af238f14a327b7aa22b5a1ba363102bb2e1427271e9819bca6320596a92dac23c7a7a5a29b22b525a722a920a7a1251d219b07182940a098832a25a3299829a59fa9",
+      "V_hex": "0d029000841e1315898684010391090d0790868488870e0802060288069083878f10030187908f81938891860306929106098805821011048605138600030004848788028b818211100c058f030c08098483010c8c1d85040082060783810d060082028406038207080c8c03060904080c0393000a810c84898312018510920d820201098801090581049284838191020286870a83038183850b8b88000184880606858f91008188830587020183848503008a9d0585030d83038f0100840307028401060d860907090820868a82830a8282810b88050b048b05830200048302020406008804050b098604018782080302818e84820105850203868812060185",
+      "accepted_KV_consumer_count": 2,
+      "accepted_issues": 26,
+      "actual_current_row_scalar_writes": 512,
+      "actual_current_row_snapshot_scalars": 512,
+      "actual_first_request_edge_range": [
+        573,
+        854
+      ],
+      "consumer_accepts": [
+        {
+          "edge": 530,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 128,
+            "ks": 128,
+            "mbase": 16192,
+            "mmode": 1,
+            "nout": 1,
+            "obase": 1015,
+            "oen": 1,
+            "ojs": 512,
+            "ots": 1,
+            "rmax": 1,
+            "round": 1,
+            "split": 7,
+            "tiles": 1,
+            "ts": 128,
+            "wbase": 0,
+            "wcs": 1,
+            "wsrc": 1,
+            "xbase": 15104,
+            "xcs": 1,
+            "xjs": 128,
+            "xks": 128
+          },
+          "ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "pc": 11,
+          "ticket": 11
+        },
+        {
+          "edge": 807,
+          "fields": {
+            "amax": 0,
+            "js": 65536,
+            "jsh": 2,
+            "k": 1,
+            "ks": 4096,
+            "mbase": 0,
+            "mmode": 1,
+            "nout": 128,
+            "obase": 5111,
+            "oen": 1,
+            "ojs": 8,
+            "ots": 1,
+            "rmax": 0,
+            "round": 1,
+            "split": 9,
+            "tiles": 1,
+            "ts": 1,
+            "wbase": 131072,
+            "wcs": 8,
+            "wsrc": 1,
+            "xbase": 16240,
+            "xcs": 1,
+            "xjs": 8192,
+            "xks": 512
+          },
+          "ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "pc": 13,
+          "ticket": 13
+        }
+      ],
+      "first_write_edge": 291,
+      "last_write_edge": 528,
+      "producer_completions": [
+        {
+          "accepted_edge": 270,
+          "first_write_edge": 291,
+          "last_write_edge": 294,
+          "pc": 3,
+          "ticket": 3,
+          "write_count": 256
+        },
+        {
+          "accepted_edge": 494,
+          "first_write_edge": 515,
+          "last_write_edge": 516,
+          "pc": 8,
+          "ticket": 8,
+          "write_count": 128
+        },
+        {
+          "accepted_edge": 506,
+          "first_write_edge": 527,
+          "last_write_edge": 528,
+          "pc": 10,
+          "ticket": 10,
+          "write_count": 128
+        }
+      ],
+      "provider_visibility_release_or_residence_deadline": null,
+      "snapshot_edge": 4676,
+      "source_ME_idle_edge_after_last_KV_consumer": 1003,
+      "source_word_request_profiles": {
+        "die3/PC11": {
+          "accepted_ib379": "0000000000000000010000000000000000010000000000100000001000000000000000000000000000000000000000010000000000000000000000010000000000000010000000000000000000000000011101100000000000000000000000010000000000000000000000010000000000000000000000000000001010011100000000000000000000000110000000000000011111101110000000000000000000000010000000000000010000000001101000000000011111101000000",
+          "accepted_issue_edge": 530,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 573,
+          "last_source_request_edge": 580,
+          "request_edges": [
+            573,
+            574,
+            575,
+            576,
+            577,
+            578,
+            579,
+            580
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        },
+        "die3/PC13": {
+          "accepted_ib379": "0000000000100000000000000000000000010000000000000000011000000100000000000000000000000000000000000000001000000000001000000000000000000010000000000000000000000000011111101110000000000000000001000000000000000000010000000000000000000000000000000000001010100100000000000000000000100010000000000010011111101110000000000000000000000010000000000000000000010001100000000000000000000000000",
+          "accepted_issue_edge": 807,
+          "effective_attention_mask_qualified": false,
+          "first_source_request_edge": 850,
+          "last_source_request_edge": 857,
+          "request_edges": [
+            850,
+            851,
+            852,
+            853,
+            854,
+            855,
+            856,
+            857
+          ],
+          "response_payload_qualified": false,
+          "word_requests": 49152
+        }
+      },
+      "source_write_to_first_request_slack_range": [
+        46,
+        561
+      ],
+      "state_sha256": "7c1d377b4a3503e385b85816c265d92bf9ea335b764c246aa09340213f138062"
+    }
+  },
+  "raw_sha256": "29aa39b0017ff2afa2bd28b40f557c3d9be10580b1a684a5100e5137e1109617",
+  "schema": "QROM_L0_ACCEPTED_PRODUCER_REQUEST_CONTEXT_HANDOFF_R1",
+  "source_ME_idle_is_provider_ACK": false,
+  "source_context": {
+    "FP32_bytes_per_rank": 33554432,
+    "KV_host_scalar_words_per_rank": 8388608,
+    "KV_init": "zero-filled host vector before first stage; original L0 payload/preload retained",
+    "actual_provider_instantiated": false,
+    "host_source_sha256": "d42a775f630831d3f7640e1b439902f1d3ee07d1b92629375f090a5e4b93b6ad",
+    "layers": 1,
+    "physical_home_or_144MiB_provider_binding": false,
+    "position": 0,
+    "ranks": 4,
+    "source_locations": {
+      "conditional_layer_reset": 541,
+      "read": 446,
+      "write": 489,
+      "zero_init": 254
+    },
+    "stage_reset_flag": "1"
+  },
+  "tag_retirement_count": null,
+  "whole36_accepted_journal": false
+}

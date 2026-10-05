@@ -1,0 +1,1103 @@
+{
+ "checkpoints": [
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "embed",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_input.s0",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_input.s1",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_input.s2",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_input.s3",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 166,
+   "checkpoint": "L00.hc_attn.mixes_input",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 640
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 332,
+   "checkpoint": "L00.hc_attn.pre",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    8.332858577088161e-06,
+    4.8155186688146655e-06,
+    3.9200481239362415e-06,
+    4.635015138672522e-06,
+    5.0576837759976845e-06,
+    8.075564481957289e-06,
+    4.57583060536575e-06,
+    8.53860576427044e-06
+   ],
+   "tokens": 8,
+   "width": 4
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 332,
+   "checkpoint": "L00.hc_attn.post",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    2.142359052785373e-05,
+    1.3244336167024682e-05,
+    9.357061586060779e-06,
+    1.266802447367614e-05,
+    1.3459235311790208e-05,
+    1.0746854419330923e-05,
+    3.246416340027995e-06,
+    6.381632998431537e-06
+   ],
+   "tokens": 8,
+   "width": 4
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 68,
+   "checkpoint": "L00.hc_attn.comb",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    1.7614558552045845,
+    1.7461044742308955,
+    1.5894488888077205,
+    1.7246905159385766,
+    1.7371345782431782,
+    1.4609438150145522,
+    1.6665688434710046,
+    1.9941211036163455
+   ],
+   "tokens": 8,
+   "width": 16
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_pre_call0.output",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.attn_norm",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.attn_input",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 1354,
+   "checkpoint": "L00.attn.wq_a",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 32
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 1354,
+   "checkpoint": "L00.attn.q_norm",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 32
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 400,
+   "checkpoint": "L00.attn.wq_b",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 2048
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 1354,
+   "checkpoint": "L00.attn.wkv",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 32
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 1354,
+   "checkpoint": "L00.attn.kv_norm",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 32
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.attn.wo_b",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 8,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.attn_output",
+   "differing_tokens": [],
+   "exact_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call0.output.s0",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.2926829268292683,
+    0.6037037037037037,
+    0.5402843601895735,
+    0.34692028985507245,
+    0.328125,
+    0.40061475409836067,
+    0.4466059602649007,
+    0.4575892857142857
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call0.output.s1",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.2935323383084577,
+    0.6055555555555555,
+    0.5436893203883495,
+    0.35082116788321166,
+    0.34412202380952384,
+    0.39979338842975204,
+    0.45427852348993286,
+    0.4572072072072072
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call0.output.s2",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.2926829268292683,
+    0.6100746268656716,
+    0.5432692307692307,
+    0.3560185185185185,
+    0.34337797619047616,
+    0.39814814814814814,
+    0.4526006711409396,
+    0.4572072072072072
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call0.output.s3",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.2916666666666667,
+    0.6100746268656716,
+    0.5432692307692307,
+    0.35340073529411764,
+    0.33260233918128657,
+    0.39814814814814814,
+    0.4526006711409396,
+    0.4527027027027027
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 3,
+   "candidates_of_that_size": 166,
+   "checkpoint": "L00.hc_ffn.mixes_input",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "exact_tokens": [
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    1.9054878048780488e-05,
+    0.000462962962962963,
+    0.002369668246445498,
+    5.661231884057971e-05,
+    0.0003633720930232558,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 640
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 332,
+   "checkpoint": "L00.hc_ffn.pre",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    1.196907072434123e-07,
+    2.3950988612981486e-07,
+    4.78882709173573e-07,
+    1.7963422161258358e-07,
+    2.3947392368445e-07,
+    2.9953826775102717e-07,
+    3.592633663935467e-07,
+    2.9940469364762045e-07
+   ],
+   "tokens": 8,
+   "width": 4
+  },
+  {
+   "best_exact_rows": 1,
+   "candidates_of_that_size": 332,
+   "checkpoint": "L00.hc_ffn.post",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "exact_tokens": [
+    6
+   ],
+   "per_row_max_relative_difference": [
+    1.1786702642826254e-07,
+    1.1789103779362679e-07,
+    1.1788595123647627e-07,
+    1.178801842231519e-07,
+    1.1788529807651275e-07,
+    1.1790264401395307e-07,
+    0.0,
+    1.1784842712418255e-07
+   ],
+   "tokens": 8,
+   "width": 4
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 68,
+   "checkpoint": "L00.hc_ffn.comb",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    1.996231781000088,
+    1.3659243643037313,
+    1.8875254362054865,
+    1.888612420615449,
+    1.2750443588368277,
+    1.936043424019278,
+    1.9164758390406604,
+    1.6975921309038393
+   ],
+   "tokens": 8,
+   "width": 16
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_pre_call1.output",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.5985221674876847,
+    0.6996268656716418,
+    0.7019230769230769,
+    0.5165441176470589,
+    0.6346153846153846,
+    0.6590909090909091,
+    0.62248322147651,
+    0.695067264573991
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 5,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.ffn_norm",
+   "differing_tokens": [
+    2,
+    3,
+    4
+   ],
+   "exact_tokens": [
+    0,
+    1,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0017605633802816902,
+    0.0012690355329949238,
+    0.0001307531380753138,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 5,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.ffn_input",
+   "differing_tokens": [
+    2,
+    3,
+    4
+   ],
+   "exact_tokens": [
+    0,
+    1,
+    5,
+    6,
+    7
+   ],
+   "per_row_max_relative_difference": [
+    0.0,
+    0.0,
+    0.0017605633802816902,
+    0.0012690355329949238,
+    0.0001307531380753138,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call1.output.s0",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9976734834558824,
+    0.9989908854166667,
+    0.9962964327830188,
+    0.9939856150793651,
+    0.9936638779527559,
+    0.9968350821167883,
+    0.9938976990049752,
+    1.0019940281413613
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call1.output.s1",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9925866788321168,
+    0.9896816037735849,
+    0.9994455497955608,
+    0.9986749387254902,
+    1.002044677734375,
+    0.995895606884058,
+    1.002261006773399,
+    0.99871826171875
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call1.output.s2",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9976734834558824,
+    0.9989908854166667,
+    0.9963138204225352,
+    0.9940093873517787,
+    0.993688725490196,
+    0.9968350821167883,
+    0.9938976990049752,
+    1.0019940281413613
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.hc_post_call1.output.s3",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9925321691176471,
+    0.9896327014218009,
+    0.9994429467429577,
+    0.9986697219488189,
+    1.0020526960784313,
+    0.995865647810219,
+    1.0022721998762376,
+    0.9987115510471204
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_output.s0",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9976734834558824,
+    0.9989908854166667,
+    0.9962964327830188,
+    0.9939856150793651,
+    0.9936638779527559,
+    0.9968350821167883,
+    0.9938976990049752,
+    1.0019940281413613
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_output.s1",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9925866788321168,
+    0.9896816037735849,
+    0.9994455497955608,
+    0.9986749387254902,
+    1.002044677734375,
+    0.995895606884058,
+    1.002261006773399,
+    0.99871826171875
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_output.s2",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9976734834558824,
+    0.9989908854166667,
+    0.9963138204225352,
+    0.9940093873517787,
+    0.993688725490196,
+    0.9968350821167883,
+    0.9938976990049752,
+    1.0019940281413613
+   ],
+   "tokens": 8,
+   "width": 160
+  },
+  {
+   "best_exact_rows": 0,
+   "candidates_of_that_size": 564,
+   "checkpoint": "L00.block_output.s3",
+   "differing_tokens": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "exact_tokens": [],
+   "per_row_max_relative_difference": [
+    0.9925321691176471,
+    0.9896327014218009,
+    0.9994429467429577,
+    0.9986697219488189,
+    1.0020526960784313,
+    0.995865647810219,
+    1.0022721998762376,
+    0.9987115510471204
+   ],
+   "tokens": 8,
+   "width": 160
+  }
+ ],
+ "device_emitted_token_ids": [
+  1126
+ ],
+ "device_trace_tensors": 8740,
+ "first_checkpoint_not_fully_exact": "L00.hc_attn.pre",
+ "method": "for each oracle checkpoint, every device engine output of the same element count is scored by HOW MANY ROWS MATCH EXACTLY, and the best is reported.  A partial exact-row count is a fingerprint -- an unrelated tensor of the same size scores zero -- so the match is self-evidencing in a way a cosine ranking is not.",
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "a checkpoint with 0 exact rows is NOT evidence of a fault there: the device may not materialise that tensor at all, and then the best same-size candidate is unrelated.  Only a PARTIAL count (between 1 and tokens-1) identifies the tensor and localises the difference"
+ ],
+ "producer": {
+  "git": {
+   "commit": "3fa7ded40e607bcf1faeb65bdaacf99fac7f772c"
+  },
+  "tool": "tools/localise_v41_layer0_exact_rows.py"
+ },
+ "question": "inside layer 0, at which checkpoint do tokens 2, 3 and 4 stop being bit-identical to the oracle?",
+ "schema": "opentallas.abi3.v41_layer0_exact_row_localisation.v1",
+ "workload": {
+  "token_ids": [
+   0,
+   3563,
+   3745,
+   418,
+   170,
+   16,
+   3564,
+   3582
+  ],
+  "workload_id": "TA-DS41-REDUCED-EOS-1"
+ }
+}

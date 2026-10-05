@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.qwen-rom-fulltile-context-preflight.v1",
+  "status": "COMPLETE_SOURCE_ASSEMBLY_READY_G0_CONTEXT_ADMISSION_OPEN",
+  "source_base": "51218664b",
+  "parent_observed": "68a05aca9",
+  "top": "ot_qwen_rom_fulltile_tp4_context_top",
+  "source": "rtl/physical/ot_qwen_rom_fulltile_tp4_context_top.sv",
+  "source_sha256": "6f1f5118f97afe4b02494c60b5b1f9aec6ca227dd2e539d9bc6e7d60730f5a22",
+  "optin_parameter": {
+    "CONTROL_CONTEXT_CANDIDATE": 0,
+    "characterization_value_after_admission": 1
+  },
+  "explicit_current_target": {
+    "GT": 6144,
+    "TG": 4,
+    "W": 16,
+    "NW": 18,
+    "AW": 24,
+    "CODE_BANKS": 5,
+    "KV_NH": 2,
+    "KV_VB": 131072,
+    "KV_AW": 7,
+    "MEM_EXTRA": 1,
+    "ACC_LAT": 7,
+    "TREE_LAT": 7,
+    "MUL_LAT": 6,
+    "FAST_ISSUE": 1,
+    "KV_PREP": 3,
+    "arithmetic_extra": 55
+  },
+  "actual_macro_inventory": {
+    "ot_rom_4096x266_m8": 10,
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+  },
+  "KV_boundary": {
+    "K_rows": 22,
+    "V_rows": 32,
+    "active_rows": 54,
+    "physical_rows": 128,
+    "capacity_bytes": 8192,
+    "fill_bits": 512,
+    "fill_mask_bits": 512,
+    "fill_address_bits": 7,
+    "fill_capture_then_write_edges": 2,
+    "reader_and_writer_same_word_groups": 4,
+    "physical_provider_and_owner_visibility_bound": false,
+    "drain_and_owner_generation_bound": false
+  },
+  "pricing_owner": "Ampere01a0fd69-551c-7521-bb30-67c4bd8c3c6b",
+  "KV_owner": "Russell01a0fd4d-36ca-7780-9515-f0094cf8cae2",
+  "Russell_snapshot": "results/uarch/qwen_rom_bank5_control_20261002/Russell_snapshot_r1/origin.json",
+  "current_r33_loweredwindow_integration_gap_retained": true,
+  "census_requirement": "Bind full TP4 wrapper KV_NH2/KV_VB131072 to Ampere source inventory; inspect model/census parameters before transferring totals. 134610/58919 are source inventory, not mapped physical pin loads. Add 12 actual macro clock loads and proposed two root FFs only in their own priced scopes.",
+  "reset_requirement": "Externalreset_stream_n remains unbound. Ampere must commit rootproducer/protocol and fulltree price before rootRTL or mapping. No freezero-delay or async recovery/removal waiver.",
+  "reader_drain_requirement": "u_me ready()/idle() are currently unconnected in candidate; do not claim true tile reader drain or silently add a queue/port. Coordinate actual last-read/pipeline retirement handshake with Russell and price exposure route.",
+  "contextual_constraints": {
+    "SS_period_ps": 833.3333333333334,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "serial_parent_clock_Hz": 900000000,
+    "serial_parent_reset_release_CDC_scope": "Outside streamingtile wrapper; bind at realparent, not pretendtile2FF coversserialdomain."
+  },
+  "next_sequence": [
+    "Ampere refresh completewrapper census + priceroot/tree/clock/sourceprotocol and publishconditionaladmission",
+    "Euclid implement admittedreset/start/launchbindings; rerun necessary literal/connections gate",
+    "One leased complete-element mapping,10ROM/2KV +actualproviders/fullclockresetload, bothSS/FF; reject measuredfailedsuccessor",
+    "Onlyafter fullcontextproof andslot/pinOBS/PG review considerP&R; macro11psidealnotclosure"
+  ],
+  "mapping_job_launched": false,
+  "tile_PR": false,
+  "hardware_adoption": false,
+  "second_position": false,
+  "new_token_run": false,
+  "Ampere_commit": "b0fe38886f9b14375780f83f18d07eb40800894c",
+  "Ampere_snapshot": "results/uarch/qwen_rom_bank5_control_20261002/Ampere_snapshot_r1/origin.json",
+  "Ampere_complete_wrapper_inventory": {
+    "source_clock_bits": 134610,
+    "source_async_reset_bits": 58919,
+    "metadata_reset_bits": 90,
+    "other_async_reset_bits": 58829,
+    "macro_clock_pins": 12,
+    "proposed_root_clock_pins": 2,
+    "mapped_clock_and_reset_loads": null,
+    "source_TP4_parameter_rebind_required": true
+  },
+  "child_source": "rtl/hdc/ot_qwen_rom_tile_context_candidate_r2.sv",
+  "child_source_sha256": "8454cbb977f47f7109afb9ca9f6453cf53286f10346924ea956e3167c23a15d0"
+}

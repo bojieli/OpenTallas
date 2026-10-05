@@ -1,0 +1,41 @@
+{
+ "answer": "NO.  The depth-1 CONTROL at the same 2.6 ns target, the same twelve sources and the same flags routes at 74.9 MHz with 490,020 cells, against depth 2's 73.8 MHz with 487,492.  That is 1.5 percent apart, not 4.3x: the split costs the sequencer essentially nothing and the gap to 317 MHz is elsewhere.",
+ "consequence_for_iso_area": "sustained iso-area stays on the committed depth-1 closures, 317.1 and 299.7 MHz, giving 1.216x and 1.287x.  The ~74 MHz family is this configuration's number and not the sequencer's, so it does not enter the iso-area figure.",
+ "not_a_claim": [
+  "this does not say DEP_CHECK_STAGES=2 is free in every block -- only that it is not what separates this sequencer configuration from 317 MHz",
+  "it does not identify which source or parameter accounts for the 60,000 extra cells; that is the next measurement, not a conclusion here"
+ ],
+ "question": "the ASAP7 audit called DEP_CHECK_STAGES=2 the highest-leverage change, and the full 12-module sequencer routes at ~74 MHz with it against committed depth-1 closures of 317.1 MHz.  Is the DEPTH what costs it?",
+ "schema": "opentallas.result.microsequencer_dep_depth_control.v1",
+ "the_committed_closures_for_comparison": {
+  "pnr_3p4ns_full_hierarchy_closed": "317.1 MHz closed, 430,151 cells",
+  "pnr_4p4ns_full_hierarchy_closed": "299.7 MHz closed, 430,151 cells"
+ },
+ "the_runs": {
+  "pnr_1p8ns_dep2_not_met.json": {
+   "cells": 507727,
+   "closed": false,
+   "fmax_mhz": 72.9,
+   "slew": 0,
+   "status": "not_met",
+   "target_ns": 1.8
+  },
+  "pnr_2p6ns_dep1_control_not_met.json": {
+   "cells": 490020,
+   "closed": false,
+   "fmax_mhz": 74.9,
+   "slew": 0,
+   "status": "not_met",
+   "target_ns": 2.6
+  },
+  "pnr_2p6ns_dep2_not_met.json": {
+   "cells": 487492,
+   "closed": false,
+   "fmax_mhz": 73.8,
+   "slew": 0,
+   "status": "not_met",
+   "target_ns": 2.6
+  }
+ },
+ "what_the_gap_actually_is": "490,020 and 487,492 cells against the committed 430,151.  Two things differed between these runs and the committed ones all along -- the depth AND the cell count -- and this control removes the depth, leaving the configuration.  A 4.3x frequency claim cannot rest on a comparison with two variables in it, and now it rests on one."
+}

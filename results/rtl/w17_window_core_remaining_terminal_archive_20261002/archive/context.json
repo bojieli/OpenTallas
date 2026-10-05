@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "runs": {
+    "remaining": {
+      "original_output": "/tmp/opentallas-core-remaining-acceptance-edge-parent-20261002-r1",
+      "GO_commit": "fef50c307a3367e7883985b4a0c9969391daafab",
+      "GO_path": "results/uarch/w17_window_core_cancel_acceptance_edge_targeted_20261002/parent_remaining_GO_r1.json",
+      "record_verdict": "PASS_ACCEPTANCE_EDGE_REMAINING_CONTROL_ONLY"
+    },
+    "first": {
+      "original_output": "/tmp/opentallas-core-first-acceptance-edge-parent-20261002-r1",
+      "GO_commit": "641a90674d62233efad1ecafe64c5b91105390c0",
+      "GO_path": "results/uarch/w17_window_core_cancel_acceptance_edge_targeted_20261002/parent_first_GO_r1.json",
+      "record_verdict": "PASS_ACCEPTANCE_EDGE_FIRST_CONTROL_ONLY"
+    },
+    "baseline": {
+      "original_output": "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2",
+      "GO_commit": "fd9c4f7be3095b9fc567f6edfd80a1b82dac50e4",
+      "GO_path": "results/uarch/w17_window_core_cancel_retained_binary_campaign_20261002/plan_r1/parent_GO_r2.json",
+      "record_verdict": "FAIL_RUNTIME_PRESERVED"
+    }
+  },
+  "archive_claim": "Offline receipt/source/expectation replay only, not RTL rerun or binary qualification.",
+  "binary_files_included": false,
+  "physical_provider": false,
+  "fulltoken": false,
+  "changed_bench_healthy23_qualification": false
+}

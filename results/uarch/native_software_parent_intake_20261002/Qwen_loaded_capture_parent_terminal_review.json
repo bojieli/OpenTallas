@@ -1,0 +1,51 @@
+{
+  "status": "PASS_INDEPENDENT_REPLAY_OF_BLOCKED_LOADED_CHARACTERIZATION",
+  "owner_commit": "f28f30496",
+  "archive_hashes_verified": 37,
+  "source_pins_verified": 3,
+  "tests_pass": 8,
+  "selector_replicas_preserved": 80,
+  "consumer_endpoint_bits": 512,
+  "six_STA_reports_reproduced": true,
+  "timings": [
+    {
+      "corner": "ss",
+      "scope": "all",
+      "slack_ps": -33.478386
+    },
+    {
+      "corner": "ss",
+      "scope": "macro",
+      "slack_ps": 11.028789
+    },
+    {
+      "corner": "ss",
+      "scope": "merge",
+      "slack_ps": 459.284515
+    },
+    {
+      "corner": "ff",
+      "scope": "all",
+      "slack_ps": -50.049297
+    },
+    {
+      "corner": "ff",
+      "scope": "macro",
+      "slack_ps": 453.370972
+    },
+    {
+      "corner": "ff",
+      "scope": "merge",
+      "slack_ps": 24.022469
+    }
+  ],
+  "ideal_clock_and_wire": true,
+  "library_limits_exceeded": true,
+  "physical_closure": false,
+  "adoption": false,
+  "next": "priced contextual control distribution and reset/input/clock context, not automatic timing tuning",
+  "SS_failure_scope": "internal code_rd_q control setup,85loads",
+  "FF_negative_scope": "reset removal and zero-delay external address hold, not proven internal data hold failure",
+  "scope_record_sha256": "137c3d83e0997bc0fe5231425be4bf03d184191a22f61d6668f4b93fdd960b6b",
+  "contextual_reset_address_producers_qualified": false
+}

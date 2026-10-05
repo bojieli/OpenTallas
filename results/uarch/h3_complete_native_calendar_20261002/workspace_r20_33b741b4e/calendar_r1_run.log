@@ -1,0 +1,98 @@
+{
+  "Qwen": {
+    "status": "PASS_COMPLETE_NATIVE_SOFTWARE_CALENDAR",
+    "PC_count": 1737,
+    "proof": {
+      "events": 108441,
+      "resource_slots_used": 449,
+      "dependency_edges": 356675,
+      "status": "PASS_FINITE_INTERVAL_PROOF"
+    },
+    "cycles": 1729318542447,
+    "source_backed_extent_admission": false,
+    "constrained_extent_successors": [
+      {
+        "rank_group": [
+          0
+        ],
+        "class": "native_temporary_scratch",
+        "required_bytes": 2801511424,
+        "alignment_bytes": 512,
+        "additional_bytes": 2801511424,
+        "required_minimum_AW": 32,
+        "source_provider_AW": 34,
+        "source_provider_address_width_fits": true,
+        "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED",
+        "constraints": [
+          "distinct from all version spill, checkpoint and persistent extents",
+          "capacity >= maximum bound recipe arena; no modulo alias",
+          "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+        ],
+        "calendar_binding": "producer concrete software base and lease; physical residence unqualified",
+        "producer_workspace_layout": {
+          "capacity_fit": true,
+          "end_address": 7549844480,
+          "rank": 0,
+          "residence_qualified": false,
+          "source_spill_base": 4714740864,
+          "source_spill_bytes": 33554432,
+          "stack_capacity_bytes": 20250000000,
+          "stack_count": 4,
+          "stripe": "global128Bline stack=line%4; stackline=line//4",
+          "workspace_base": 4748333056,
+          "workspace_bytes": 2801511424
+        },
+        "bounded_tiled_allocation": false,
+        "admission_scope": "outside retained source spill extent; software workspace reservation only"
+      },
+      {
+        "rank_group": [
+          1
+        ],
+        "class": "native_temporary_scratch",
+        "required_bytes": 2801511424,
+        "alignment_bytes": 512,
+        "additional_bytes": 2801511424,
+        "required_minimum_AW": 32,
+        "source_provider_AW": 34,
+        "source_provider_address_width_fits": true,
+        "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED",
+        "constraints": [
+          "distinct from all version spill, checkpoint and persistent extents",
+          "capacity >= maximum bound recipe arena; no modulo alias",
+          "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+        ],
+        "calendar_binding": "producer concrete software base and lease; physical residence unqualified",
+        "producer_workspace_layout": {
+          "capacity_fit": true,
+          "end_address": 7549844480,
+          "rank": 1,
+          "residence_qualified": false,
+          "source_spill_base": 4714740864,
+          "source_spill_bytes": 33554432,
+          "stack_capacity_bytes": 20250000000,
+          "stack_count": 4,
+          "stripe": "global128Bline stack=line%4; stackline=line//4",
+          "workspace_base": 4748333056,
+          "workspace_bytes": 2801511424
+        },
+        "bounded_tiled_allocation": false,
+        "admission_scope": "outside retained source spill extent; software workspace reservation only"
+      }
+    ],
+    "native_lowering_PC_count": 1737,
+    "native_operator_lowering_complete": true,
+    "native_primitive_count_gate": "PASS_ALL_PC_EXPORTED_COUNTS",
+    "workspace_provider_proof": {
+      "status": "PASS_CONCRETE_SOFTWARE_WORKSPACE_INTERVALS",
+      "temporary_home_count": 19620,
+      "rank_PC_leases": 1956,
+      "final_native_source_match": true,
+      "older_calendar_source_mismatch_preserved": true,
+      "review_candidate_arena_adopted": false,
+      "physical_or_clock_admission": false,
+      "I64_software_codec": "LE lower/upper32; equal owner/definition/iteration; two visible writes before publication",
+      "I64_physical_codec_implemented": false
+    }
+  }
+}

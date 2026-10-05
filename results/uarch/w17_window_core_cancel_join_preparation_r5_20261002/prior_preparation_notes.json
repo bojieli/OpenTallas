@@ -1,0 +1,20 @@
+{
+  "status": "PREBUILD_REVISIONS_ALL_UNCOMPILED",
+  "prior_immutable_recovery_PASS": "618ab551661f0383409c861f49c4ebb975a79fd4",
+  "prior_provider_FAILs_retained": true,
+  "own_core_review_fixes": [
+    "Anchored actual port-header boundary (fastpp228 ports)",
+    "No producer ready -> stop feedback",
+    "Current IR in S_DEC rather than stale registered decode",
+    "Capture-base validation deferred until all16 suffix terminals",
+    "Physicalgo and S_GO stop same fault edge",
+    "Accepted SU suppress held until actual su_idle; shared rearm also waits SU idle",
+    "Known raw engine faults included in immediate stop OR"
+  ],
+  "static_failures": [
+    "First test default inverse trailing newline boundary mismatch:1FAIL/11PASS",
+    "Next test pointed to old plan directory and used 3-module text as single module:10FAIL/2PASS; full log retained"
+  ],
+  "no_RTL_failure_overwritten": true,
+  "no_actual_core_QE_SU_runtime_yet": true
+}

@@ -1,0 +1,32 @@
+{
+  "cold_full_record_identical": true,
+  "commit": "aafbe3a75",
+  "expert_split_1M": {
+    "actual_replacement_allocation_proved": false,
+    "with_overlap_us": 394.14,
+    "without_overlap_us": 399.94
+  },
+  "focused_tests_passed": 6,
+  "hardware_admission": false,
+  "limitations": [
+    "65.17ns crossing and4.2TB/s not bound to selected endpoints, packet credit or CDC",
+    "Coarse graph-node charges do not prove actual accepted cfg/input/return/visibility/retirement event timing",
+    "Expert alternative retains original row-split census; no replacement bank/phase/address, per-die capacity or exact provider contract",
+    "232logical layerdies in extension is not464physical PAR2 layerdie inventory",
+    "MTP overlap and accepted-token assumption remain conditional",
+    "Independent current global physical constraints and live solver remain unchanged"
+  ],
+  "placement_authority_changed": false,
+  "qualified_AR_or_MTP_rate": false,
+  "row_split_1M": {
+    "AR_penalty_percent": 8.44,
+    "conditional_baseline_us": 390.06,
+    "conditional_with_term_us": 426.0,
+    "field_added_us": 31.28,
+    "topology_collective_added_us_approx": 4.662
+  },
+  "schema": "DSROM_PAR2_BOUNDARY_PARENT_REVIEW_V1",
+  "selected_mapping_changed": false,
+  "source_hashes_verified": 8,
+  "verdict": "PASS_ANALYTICAL_REPLAY_NOT_ADOPTED"
+}

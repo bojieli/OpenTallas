@@ -1,0 +1,1403 @@
+{
+  "CDC_provider_and_grant_latency": null,
+  "VMlease_release_after": "all accepted required sourceVM reads + matched R+2 tag retirement, then positive captured lease feedback; never idle alone",
+  "VMversion_release": "accepted consuming VM read(s), exact address/version and fullcontext association, all corresponding R+2 tags retired; no timed promise",
+  "actual_callback_handle": null,
+  "actual_consumer_first_edge": null,
+  "actual_consumer_last_edge": null,
+  "all_matrix_minimum_metadata": {
+    "comparator_guard_pending_tag_counter_and_routes_not_included": true,
+    "counts": {
+      "BUFx4_ASAP7_75t_R": 3826,
+      "DFFASRHQNx1_ASAP7_75t_R": 1672,
+      "INVx1_ASAP7_75t_R": 1672,
+      "NAND2x1_ASAP7_75t_R": 5016,
+      "TIEHIx1_ASAP7_75t_R": 1672
+    },
+    "entries_lower_bound": 8,
+    "existing_context_containment_credit": 0,
+    "full169_copies_are_priced_proposal_not_information_theoretic_requirement": true,
+    "metadata_50pct_floor_mm2": 0.00321873912,
+    "metadata_FF": 1672,
+    "metadata_body_um2": 1609.3695599999999,
+    "physical_home_clone_count_not_bound": true
+  },
+  "bank_and_VMlease_distinct": true,
+  "bank_phase_release": "source-idle + every formatted row VMvisible + packet debts + positive captured sourcecredit terminal; next edge rearm for I67, separately from retained VM version leases",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "capture_minimum_metadata": {
+    "comparator_guard_pending_tag_counter_and_routes_not_included": true,
+    "counts": {
+      "BUFx4_ASAP7_75t_R": 1916,
+      "DFFASRHQNx1_ASAP7_75t_R": 836,
+      "INVx1_ASAP7_75t_R": 836,
+      "NAND2x1_ASAP7_75t_R": 2508,
+      "TIEHIx1_ASAP7_75t_R": 836
+    },
+    "entries_lower_bound": 4,
+    "existing_context_containment_credit": 0,
+    "full169_copies_are_priced_proposal_not_information_theoretic_requirement": true,
+    "metadata_50pct_floor_mm2": 0.00160998192,
+    "metadata_FF": 836,
+    "metadata_body_um2": 804.99096,
+    "physical_home_clone_count_not_bound": true
+  },
+  "competing_writer_families": [
+    "ww_h",
+    "rom",
+    "vw_me",
+    "vw_su",
+    "vw_rd",
+    "xs_vm",
+    "xs_res",
+    "vw_xe",
+    "ww_q",
+    "ww_x",
+    "xa",
+    "xb"
+  ],
+  "composed_token_delta_cycles": null,
+  "consumer_ordering_equation": "native_SUaccept >= max(native_prerequisite_accept_lower, last_required_VMvisible + 2 native edges); only ordering lower bound, guard delay and physical CDC unknown",
+  "contextual_PR_admitted": false,
+  "current_PHW10_program_user_generation_origin": null,
+  "first_W1_W3_consumers": [
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 70,
+      "producer_pc": 66,
+      "wait": 2
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 70,
+      "producer_pc": 67,
+      "wait": 2
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 80,
+      "producer_pc": 68,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 80,
+      "producer_pc": 69,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 85,
+      "producer_pc": 72,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 85,
+      "producer_pc": 73,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 90,
+      "producer_pc": 82,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 90,
+      "producer_pc": 83,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 95,
+      "producer_pc": 87,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 95,
+      "producer_pc": 88,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 98,
+      "producer_pc": 92,
+      "wait": 0
+    },
+    {
+      "explicit_ME_wait": false,
+      "explicit_QE_wait": false,
+      "first_consumer_pc": 98,
+      "producer_pc": 93,
+      "wait": 0
+    }
+  ],
+  "guard_implemented": false,
+  "lower_bound_not_deadline": true,
+  "metadata_bits_per_VMversion": 209,
+  "metadata_fields": {
+    "VM_base": 19,
+    "VM_end_exclusive": 20,
+    "lease_valid": 1,
+    "producer_context": 169
+  },
+  "named_hook": "core S_ISSUE d_unit==2 admission conjunction before su_go NBA; NEW opt-in guard implementation/source equivalence and acceptance callback required",
+  "native_scalar_publication_slot": 0,
+  "new_jobs": [],
+  "no_new_payloadseat_or_VM512_lease_assumed": true,
+  "one_bank_generation_until_SUread_deadlocks_I66_I67_I70": true,
+  "required_defaultoff_guard": "Before actual registered SUgo for dependent descriptor, require all exact operand-version extents sameidentity and VMvisible with live VMversion lease; annotate and verify each xs_rd_re+src0/address and aligned vx/cwx at read R+2. Existing unit_ready/waited are necessary but insufficient. No rom_idle or producerbanklease substitute.",
+  "sameaddress_equaldata_veto": true,
+  "schema": "DS_CAPTURE_VM_VERSION_CONSUMER_ADMISSION_1",
+  "selected_VMlease_capacity": null,
+  "source_census": {
+    "all_matrix_frames_lower_bound": 8,
+    "capture_frames_lower_bound": 4,
+    "exact_peak_accepted_read_and_Rplus2_tail": null,
+    "optimistic_first_descriptor_release_trace": [
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 0
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 1
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 2
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 3
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 4
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 5
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 6
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 7
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 8
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 9
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 10
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 11
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 12
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 13
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 14
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 15
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 16
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 17
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 18
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 19
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 20
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 21
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 22
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 23
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 24
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 25
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 26
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 27
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 28
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 29
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 30
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 31
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 32
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 33
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 34
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 35
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 36
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 37
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 38
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 39
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 40
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 41
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 42
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 43
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 44
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 45
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 46
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 47
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 48
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 49
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 50
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 51
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 52
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 53
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 54
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 55
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 56
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 57
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 58
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 59
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 60
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 61
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 62
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 63
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 64
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 65
+      },
+      {
+        "capture_frames": 1,
+        "frames": 1,
+        "live_producer_pcs": [
+          66
+        ],
+        "pc": 66
+      },
+      {
+        "capture_frames": 2,
+        "frames": 2,
+        "live_producer_pcs": [
+          66,
+          67
+        ],
+        "pc": 67
+      },
+      {
+        "capture_frames": 3,
+        "frames": 3,
+        "live_producer_pcs": [
+          66,
+          67,
+          68
+        ],
+        "pc": 68
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          66,
+          67,
+          68,
+          69
+        ],
+        "pc": 69
+      },
+      {
+        "capture_frames": 2,
+        "frames": 2,
+        "live_producer_pcs": [
+          68,
+          69
+        ],
+        "pc": 70
+      },
+      {
+        "capture_frames": 2,
+        "frames": 2,
+        "live_producer_pcs": [
+          68,
+          69
+        ],
+        "pc": 71
+      },
+      {
+        "capture_frames": 3,
+        "frames": 3,
+        "live_producer_pcs": [
+          68,
+          69,
+          72
+        ],
+        "pc": 72
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73
+        ],
+        "pc": 73
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73
+        ],
+        "pc": 74
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73
+        ],
+        "pc": 75
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73
+        ],
+        "pc": 76
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73
+        ],
+        "pc": 77
+      },
+      {
+        "capture_frames": 4,
+        "frames": 4,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73
+        ],
+        "pc": 78
+      },
+      {
+        "capture_frames": 4,
+        "frames": 5,
+        "live_producer_pcs": [
+          68,
+          69,
+          72,
+          73,
+          79
+        ],
+        "pc": 79
+      },
+      {
+        "capture_frames": 2,
+        "frames": 3,
+        "live_producer_pcs": [
+          72,
+          73,
+          79
+        ],
+        "pc": 80
+      },
+      {
+        "capture_frames": 2,
+        "frames": 3,
+        "live_producer_pcs": [
+          72,
+          73,
+          79
+        ],
+        "pc": 81
+      },
+      {
+        "capture_frames": 3,
+        "frames": 4,
+        "live_producer_pcs": [
+          72,
+          73,
+          79,
+          82
+        ],
+        "pc": 82
+      },
+      {
+        "capture_frames": 4,
+        "frames": 5,
+        "live_producer_pcs": [
+          72,
+          73,
+          79,
+          82,
+          83
+        ],
+        "pc": 83
+      },
+      {
+        "capture_frames": 4,
+        "frames": 6,
+        "live_producer_pcs": [
+          72,
+          73,
+          79,
+          82,
+          83,
+          84
+        ],
+        "pc": 84
+      },
+      {
+        "capture_frames": 2,
+        "frames": 4,
+        "live_producer_pcs": [
+          79,
+          82,
+          83,
+          84
+        ],
+        "pc": 85
+      },
+      {
+        "capture_frames": 2,
+        "frames": 4,
+        "live_producer_pcs": [
+          79,
+          82,
+          83,
+          84
+        ],
+        "pc": 86
+      },
+      {
+        "capture_frames": 3,
+        "frames": 5,
+        "live_producer_pcs": [
+          79,
+          82,
+          83,
+          84,
+          87
+        ],
+        "pc": 87
+      },
+      {
+        "capture_frames": 4,
+        "frames": 6,
+        "live_producer_pcs": [
+          79,
+          82,
+          83,
+          84,
+          87,
+          88
+        ],
+        "pc": 88
+      },
+      {
+        "capture_frames": 4,
+        "frames": 7,
+        "live_producer_pcs": [
+          79,
+          82,
+          83,
+          84,
+          87,
+          88,
+          89
+        ],
+        "pc": 89
+      },
+      {
+        "capture_frames": 2,
+        "frames": 5,
+        "live_producer_pcs": [
+          79,
+          84,
+          87,
+          88,
+          89
+        ],
+        "pc": 90
+      },
+      {
+        "capture_frames": 2,
+        "frames": 5,
+        "live_producer_pcs": [
+          79,
+          84,
+          87,
+          88,
+          89
+        ],
+        "pc": 91
+      },
+      {
+        "capture_frames": 3,
+        "frames": 6,
+        "live_producer_pcs": [
+          79,
+          84,
+          87,
+          88,
+          89,
+          92
+        ],
+        "pc": 92
+      },
+      {
+        "capture_frames": 4,
+        "frames": 7,
+        "live_producer_pcs": [
+          79,
+          84,
+          87,
+          88,
+          89,
+          92,
+          93
+        ],
+        "pc": 93
+      },
+      {
+        "capture_frames": 4,
+        "frames": 8,
+        "live_producer_pcs": [
+          79,
+          84,
+          87,
+          88,
+          89,
+          92,
+          93,
+          94
+        ],
+        "pc": 94
+      },
+      {
+        "capture_frames": 2,
+        "frames": 6,
+        "live_producer_pcs": [
+          79,
+          84,
+          89,
+          92,
+          93,
+          94
+        ],
+        "pc": 95
+      },
+      {
+        "capture_frames": 2,
+        "frames": 6,
+        "live_producer_pcs": [
+          79,
+          84,
+          89,
+          92,
+          93,
+          94
+        ],
+        "pc": 96
+      },
+      {
+        "capture_frames": 2,
+        "frames": 7,
+        "live_producer_pcs": [
+          79,
+          84,
+          89,
+          92,
+          93,
+          94,
+          97
+        ],
+        "pc": 97
+      },
+      {
+        "capture_frames": 0,
+        "frames": 5,
+        "live_producer_pcs": [
+          79,
+          84,
+          89,
+          94,
+          97
+        ],
+        "pc": 98
+      },
+      {
+        "capture_frames": 0,
+        "frames": 5,
+        "live_producer_pcs": [
+          79,
+          84,
+          89,
+          94,
+          97
+        ],
+        "pc": 99
+      },
+      {
+        "capture_frames": 0,
+        "frames": 6,
+        "live_producer_pcs": [
+          79,
+          84,
+          89,
+          94,
+          97,
+          100
+        ],
+        "pc": 100
+      },
+      {
+        "capture_frames": 0,
+        "frames": 4,
+        "live_producer_pcs": [
+          89,
+          94,
+          97,
+          100
+        ],
+        "pc": 101
+      },
+      {
+        "capture_frames": 0,
+        "frames": 3,
+        "live_producer_pcs": [
+          94,
+          97,
+          100
+        ],
+        "pc": 102
+      },
+      {
+        "capture_frames": 0,
+        "frames": 2,
+        "live_producer_pcs": [
+          97,
+          100
+        ],
+        "pc": 103
+      },
+      {
+        "capture_frames": 0,
+        "frames": 1,
+        "live_producer_pcs": [
+          100
+        ],
+        "pc": 104
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 105
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 106
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 107
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 108
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 109
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 110
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 111
+      },
+      {
+        "capture_frames": 0,
+        "frames": 0,
+        "live_producer_pcs": [],
+        "pc": 112
+      }
+    ],
+    "producers": [
+      {
+        "base": 398720,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 399296,
+        "first_consumer_pc": 70,
+        "label": "GU0",
+        "producer_pc": 66,
+        "wait": 2,
+        "words": 576
+      },
+      {
+        "base": 399296,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 399872,
+        "first_consumer_pc": 70,
+        "label": "GU0",
+        "producer_pc": 67,
+        "wait": 2,
+        "words": 576
+      },
+      {
+        "base": 401728,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 402304,
+        "first_consumer_pc": 80,
+        "label": "GU1",
+        "producer_pc": 68,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 402304,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 402880,
+        "first_consumer_pc": 80,
+        "label": "GU1",
+        "producer_pc": 69,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 404736,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 405312,
+        "first_consumer_pc": 85,
+        "label": "GU2",
+        "producer_pc": 72,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 405312,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 405888,
+        "first_consumer_pc": 85,
+        "label": "GU2",
+        "producer_pc": 73,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 400448,
+        "capture_W1_W3": false,
+        "consumer_unit": 2,
+        "end_exclusive": 401728,
+        "first_consumer_pc": 101,
+        "label": "E0",
+        "producer_pc": 79,
+        "wait": 0,
+        "words": 1280
+      },
+      {
+        "base": 407744,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 408320,
+        "first_consumer_pc": 90,
+        "label": "GU3",
+        "producer_pc": 82,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 408320,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 408896,
+        "first_consumer_pc": 90,
+        "label": "GU3",
+        "producer_pc": 83,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 403456,
+        "capture_W1_W3": false,
+        "consumer_unit": 2,
+        "end_exclusive": 404736,
+        "first_consumer_pc": 101,
+        "label": "E1",
+        "producer_pc": 84,
+        "wait": 0,
+        "words": 1280
+      },
+      {
+        "base": 410752,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 411328,
+        "first_consumer_pc": 95,
+        "label": "GU4",
+        "producer_pc": 87,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 411328,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 411904,
+        "first_consumer_pc": 95,
+        "label": "GU4",
+        "producer_pc": 88,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 406464,
+        "capture_W1_W3": false,
+        "consumer_unit": 2,
+        "end_exclusive": 407744,
+        "first_consumer_pc": 102,
+        "label": "E2",
+        "producer_pc": 89,
+        "wait": 0,
+        "words": 1280
+      },
+      {
+        "base": 413760,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 414336,
+        "first_consumer_pc": 98,
+        "label": "GU5",
+        "producer_pc": 92,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 414336,
+        "capture_W1_W3": true,
+        "consumer_unit": 2,
+        "end_exclusive": 414912,
+        "first_consumer_pc": 98,
+        "label": "GU5",
+        "producer_pc": 93,
+        "wait": 0,
+        "words": 576
+      },
+      {
+        "base": 409472,
+        "capture_W1_W3": false,
+        "consumer_unit": 2,
+        "end_exclusive": 410752,
+        "first_consumer_pc": 103,
+        "label": "E3",
+        "producer_pc": 94,
+        "wait": 0,
+        "words": 1280
+      },
+      {
+        "base": 412480,
+        "capture_W1_W3": false,
+        "consumer_unit": 2,
+        "end_exclusive": 413760,
+        "first_consumer_pc": 104,
+        "label": "E4",
+        "producer_pc": 97,
+        "wait": 0,
+        "words": 1280
+      },
+      {
+        "base": 415488,
+        "capture_W1_W3": false,
+        "consumer_unit": 2,
+        "end_exclusive": 416768,
+        "first_consumer_pc": 105,
+        "label": "E5",
+        "producer_pc": 100,
+        "wait": 4,
+        "words": 1280
+      }
+    ]
+  },
+  "source_core_pc66_to_pc70_native_accept_lower_bound_edges": 24,
+  "source_native_singleclk": true,
+  "source_wait_bits": {
+    "HE": 16,
+    "ME": 1,
+    "QE": 4,
+    "SU": 2,
+    "XU": 8
+  },
+  "station_C": null,
+  "suppress_native_ROM_slots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127
+  ],
+  "target_SU_GHz": 0.9,
+  "target_stream_GHz": 1.2,
+  "two_metadata_scopes_alternatives_not_additive": true
+}

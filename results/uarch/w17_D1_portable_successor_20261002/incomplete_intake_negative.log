@@ -1,0 +1,203 @@
+......................F......F.FFFF......                                [100%]
+=================================== FAILURES ===================================
+__________________ test_original_sources_and_five_case_scope ___________________
+
+    def test_original_sources_and_five_case_scope():
+>       m=json.loads((ROOT/'results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json').read_text())
+
+tests/test_w17_D1_frozen_package.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+___________ test_unmodified_original_fixture_and_canonical_calendar ____________
+
+    def test_unmodified_original_fixture_and_canonical_calendar():
+>       old=(gate.OLD/'tb.sv').read_bytes()
+
+tests/test_w17_D1_frozen_package.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.10/pathlib.py:1126: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/opentallas-D1-portable-successor-20261002/rtl/test/w17_owner_progress_watchdog/tb.sv')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-D1-portable-successor-20261002/rtl/test/w17_owner_progress_watchdog/tb.sv'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+____________ test_first_failure_stops_remaining_processes[compile] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6628/test_first_failure_stops_remai0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72a4d2823700>
+bad_stage = 'compile'
+
+    @pytest.mark.parametrize('bad_stage',['compile','HEALTHY','HOLD_REQ','WRITER'])
+    def test_first_failure_stops_remaining_processes(tmp_path,monkeypatch,bad_stage):
+        from types import SimpleNamespace
+>       plan=gate.make_plan();seen=[]
+
+tests/test_w17_D1_frozen_package.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/w17_D1_frozen_gate.py:15: in make_plan
+    m=json.loads((ROOT/'results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json').read_text())
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+____________ test_first_failure_stops_remaining_processes[HEALTHY] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6628/test_first_failure_stops_remai1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72a4d2409900>
+bad_stage = 'HEALTHY'
+
+    @pytest.mark.parametrize('bad_stage',['compile','HEALTHY','HOLD_REQ','WRITER'])
+    def test_first_failure_stops_remaining_processes(tmp_path,monkeypatch,bad_stage):
+        from types import SimpleNamespace
+>       plan=gate.make_plan();seen=[]
+
+tests/test_w17_D1_frozen_package.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/w17_D1_frozen_gate.py:15: in make_plan
+    m=json.loads((ROOT/'results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json').read_text())
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+____________ test_first_failure_stops_remaining_processes[HOLD_REQ] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6628/test_first_failure_stops_remai2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72a4d281fbb0>
+bad_stage = 'HOLD_REQ'
+
+    @pytest.mark.parametrize('bad_stage',['compile','HEALTHY','HOLD_REQ','WRITER'])
+    def test_first_failure_stops_remaining_processes(tmp_path,monkeypatch,bad_stage):
+        from types import SimpleNamespace
+>       plan=gate.make_plan();seen=[]
+
+tests/test_w17_D1_frozen_package.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/w17_D1_frozen_gate.py:15: in make_plan
+    m=json.loads((ROOT/'results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json').read_text())
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_____________ test_first_failure_stops_remaining_processes[WRITER] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6628/test_first_failure_stops_remai3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72a4d3aaef50>
+bad_stage = 'WRITER'
+
+    @pytest.mark.parametrize('bad_stage',['compile','HEALTHY','HOLD_REQ','WRITER'])
+    def test_first_failure_stops_remaining_processes(tmp_path,monkeypatch,bad_stage):
+        from types import SimpleNamespace
+>       plan=gate.make_plan();seen=[]
+
+tests/test_w17_D1_frozen_package.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/w17_D1_frozen_gate.py:15: in make_plan
+    m=json.loads((ROOT/'results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json').read_text())
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/opentallas-D1-portable-successor-20261002/results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_w17_D1_frozen_package.py::test_original_sources_and_five_case_scope
+FAILED tests/test_w17_D1_frozen_package.py::test_unmodified_original_fixture_and_canonical_calendar
+FAILED tests/test_w17_D1_frozen_package.py::test_first_failure_stops_remaining_processes[compile]
+FAILED tests/test_w17_D1_frozen_package.py::test_first_failure_stops_remaining_processes[HEALTHY]
+FAILED tests/test_w17_D1_frozen_package.py::test_first_failure_stops_remaining_processes[HOLD_REQ]
+FAILED tests/test_w17_D1_frozen_package.py::test_first_failure_stops_remaining_processes[WRITER]

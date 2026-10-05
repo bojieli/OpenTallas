@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-observer-lint-runner/tools/prepare_observer_lint_gate.py", line 112, in <module>
+    ap=__import__('argparse').ArgumentParser();ap.add_argument('--repo',default='.');a=ap.parse_args();p=prepare(a.repo)
+  File "/tmp/opentallas-observer-lint-runner/tools/prepare_observer_lint_gate.py", line 94, in prepare
+    if missing or c['ambiguous']:raise ValueError('unresolved ownership '+str(missing)+str(c['ambiguous']))
+ValueError: unresolved ownership {'ot_hdc_v41x_idx_ring_kwr', 'ot_hdc_fp32_mul_lat_CUTS_must_match_LAT'}{}

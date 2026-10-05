@@ -1,0 +1,44 @@
+{
+  "status": "PENDING_NOT_AUTHORIZATION",
+  "requested_status": "PARENT_ACTUAL_CORE_SU_QE_GUARD_REUSED_FRONTEND_PHASE_SINGLE_GO",
+  "plan_sha256": "bf0a97628ee9cf354fa7f1a6b6e7e7d1baa14a2f913cdfe2fc54b6c69ae108b3",
+  "runner_sha256": "c81b507a08cb93d476e5234844306906aac0c7160020fbf2ef75383e8a26728b",
+  "source_digest": "37bd3a8035aea33568ac3cc3e27c537afd1f12b23434ba6d17231c8bd9c37aa4",
+  "profile_digest": "286901d0799b91ade8b61c81928c6f34492b87023cd43b0cd574438b2ba060dd",
+  "dependencies_digest": "c3394bf9ab398d6d95284fb804e1921214bd35bd96ce5d8f52786f9082bd5b2a",
+  "build_toolchain_digest": "92293d8f73c47d81d8a2cbe38298aced7bd24df03f8337574c8f246f59c5ddf7",
+  "jobs_digest": "0ab23c11d296e4e5ce47d86776e6f04364a47a45542315e823b906bbe36755d2",
+  "caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 2400,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 2250,
+    "phase_compile_seconds": 450,
+    "frontend_phase_seconds": 300,
+    "runtime_shared_seconds": 26,
+    "positive_case_seconds": 0.9,
+    "negative_case_seconds": 1,
+    "supervision_reserve_seconds": 124,
+    "whole_seconds": 2400,
+    "aggregate_output_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "compile_workers_max": 2,
+    "automatic_retries": 0,
+    "phase_count": 5,
+    "baseline_frontend_repeats": 0,
+    "new_frontend_processes": 4,
+    "CXX_processes": 5,
+    "prior_profile_service_charged_separately_seconds": 600
+  }
+}

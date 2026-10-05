@@ -1,0 +1,389 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_canonical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "inputs": {
+      "items": {
+        "$ref": "#/$defs/input"
+      },
+      "maxItems": 72317,
+      "minItems": 72317,
+      "type": "array"
+    },
+    "plan_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "profile": {
+      "$ref": "#/$defs/profile"
+    },
+    "rank_summaries": {
+      "items": {
+        "$ref": "#/$defs/rankSummary"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_canonical_plan.v1"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "status": {
+      "const": "complete_transform_plan_pending_full_payload_application"
+    }
+  },
+  "required": [
+    "coverage",
+    "inputs",
+    "plan_id",
+    "profile",
+    "rank_summaries",
+    "schema",
+    "source",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 Flash canonical tensor plan v1",
+  "type": "object",
+  "$defs": {
+    "action": {
+      "enum": [
+        "consume_wo_a_scale",
+        "omit_duplicate_mtp_embedding_or_head",
+        "replicate_identity",
+        "route_and_reinterpret_native_mxfp4",
+        "route_whole_tensor_to_expert_rank",
+        "slice_then_dequantize_wo_a_to_bf16",
+        "tensor_parallel_slice_axis_0",
+        "tensor_parallel_slice_axis_1"
+      ]
+    },
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "consumed_source_tensor_count": {
+          "const": 46
+        },
+        "input_payload_bytes": {
+          "const": 166878536440
+        },
+        "input_tensor_count": {
+          "const": 72317
+        },
+        "omitted_duplicate_tensor_count": {
+          "const": 0
+        },
+        "output_assignment_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "output_payload_bytes_across_ranks": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "transform_source_tensor_counts": {
+          "$ref": "#/$defs/transformCounts"
+        }
+      },
+      "required": [
+        "consumed_source_tensor_count",
+        "input_payload_bytes",
+        "input_tensor_count",
+        "omitted_duplicate_tensor_count",
+        "output_assignment_count",
+        "output_payload_bytes_across_ranks",
+        "transform_source_tensor_counts"
+      ],
+      "type": "object"
+    },
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/action"
+        },
+        "logical_dtype": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "name": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "outputs": {
+          "items": {
+            "$ref": "#/$defs/output"
+          },
+          "type": "array"
+        },
+        "semantic_role": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "storage_dtype": {
+          "$ref": "#/$defs/nonempty"
+        }
+      },
+      "required": [
+        "action",
+        "logical_dtype",
+        "name",
+        "outputs",
+        "semantic_role",
+        "shape",
+        "size_bytes",
+        "storage_dtype"
+      ],
+      "type": "object"
+    },
+    "nonempty": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "nullableSlice": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/slice"
+        }
+      ]
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_dtype": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "name": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "payload_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "rank": {
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "scale_source": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/nonempty"
+            }
+          ]
+        },
+        "scale_source_slice": {
+          "$ref": "#/$defs/nullableSlice"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape"
+        },
+        "source_slice": {
+          "$ref": "#/$defs/nullableSlice"
+        },
+        "storage_dtype": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "transform": {
+          "enum": [
+            "dequantize_fp8_e8m0_to_bf16_rne",
+            "identity",
+            "reinterpret_i8_bytes_as_native_mxfp4_low_nibble_first"
+          ]
+        }
+      },
+      "required": [
+        "logical_dtype",
+        "name",
+        "payload_bytes",
+        "rank",
+        "scale_source",
+        "scale_source_slice",
+        "shape",
+        "source_slice",
+        "storage_dtype",
+        "transform"
+      ],
+      "type": "object"
+    },
+    "profile": {
+      "additionalProperties": false,
+      "properties": {
+        "expert_storage": {
+          "const": "native_mxfp4_e2m1_x2_with_e8m0"
+        },
+        "model_parallel": {
+          "maximum": 256,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "output_a_storage": {
+          "const": "bf16_dequantized_from_fp8_e8m0"
+        },
+        "routed_experts_per_rank": {
+          "maximum": 256,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "expert_storage",
+        "model_parallel",
+        "output_a_storage",
+        "routed_experts_per_rank"
+      ],
+      "type": "object"
+    },
+    "rankSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "rank": {
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "tensor_names_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "payload_bytes",
+        "rank",
+        "tensor_count",
+        "tensor_names_sha256"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "shape": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "type": "array"
+    },
+    "slice": {
+      "additionalProperties": false,
+      "properties": {
+        "axis": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "stop": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "axis",
+        "start",
+        "stop"
+      ],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "convert_sha256": {
+          "const": "6efe65ebc66b18c9f2656816608f941cacfe20da79c2dee19040ecbee8b42bfe"
+        },
+        "model_id": {
+          "const": "deepseek-v4-flash-0731"
+        },
+        "repository": {
+          "const": "deepseek-ai/DeepSeek-V4-Flash-0731"
+        },
+        "revision": {
+          "const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+        },
+        "tensor_count": {
+          "const": 72317
+        },
+        "tensor_payload_bytes": {
+          "const": 166878536440
+        },
+        "tensor_structure_sha256": {
+          "const": "18285fe60ca3655be488bbabb88b59489b8ee03cff7fc4f4729424051ca83e0e"
+        }
+      },
+      "required": [
+        "convert_sha256",
+        "model_id",
+        "repository",
+        "revision",
+        "tensor_count",
+        "tensor_payload_bytes",
+        "tensor_structure_sha256"
+      ],
+      "type": "object"
+    },
+    "transformCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "consume_wo_a_scale": {
+          "const": 46
+        },
+        "replicate_identity": {
+          "const": 1272
+        },
+        "route_and_reinterpret_native_mxfp4": {
+          "const": 35328
+        },
+        "route_whole_tensor_to_expert_rank": {
+          "const": 35328
+        },
+        "slice_then_dequantize_wo_a_to_bf16": {
+          "const": 46
+        },
+        "tensor_parallel_slice_axis_0": {
+          "const": 205
+        },
+        "tensor_parallel_slice_axis_1": {
+          "const": 92
+        }
+      },
+      "required": [
+        "consume_wo_a_scale",
+        "replicate_identity",
+        "route_and_reinterpret_native_mxfp4",
+        "route_whole_tensor_to_expert_rank",
+        "slice_then_dequantize_wo_a_to_bf16",
+        "tensor_parallel_slice_axis_0",
+        "tensor_parallel_slice_axis_1"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "status": "FAIL_LEGACY_FRONTEND_SOURCE_CLOSURE",
+  "independently_observed": "MODMISSING ot_hdc_cg at rtl/v41rom/ot_v41_rom_elem.sv:106",
+  "functional_comparison_reached": false,
+  "selected_runtime_regression_established": false,
+  "current_PHW10_connected_validation": false,
+  "legacy_entrypoint": "tools/v41_field_rt_gate.py",
+  "legacy_die_namespace": "rtl/v41die",
+  "runtime_entrypoint": "tools/w17_runtime_v41_field_rt_gate.py",
+  "runtime_die_namespace": "rtl/w17_runtime/v41die",
+  "runtime_common_contains_cg": true,
+  "runtime_rerun_performed": false,
+  "selection_authority": [
+    "tools/v41_die_rt.py:38,66,105,107",
+    "tools/w11_ckvdie_src_l20.txt:117",
+    "tools/w17_runtime_rtl_chip_v41x_die_smoke.py:113"
+  ],
+  "plan_boundary": "G0-G5 must bind same configuration; reduced/historical results do not qualify successors. No current product-rate headline adopted.",
+  "historical_pass_scope": "All recorded source hashes match e9bd212f9; six source paths differ at f06; NBF8 and phase list differ from current invocation.",
+  "peer_claims_not_independently_replayed": [
+    "With cg added, composition differs at tick252 port=o_data",
+    "Legacy flat writes wrong addresses and values"
+  ],
+  "peer_claim_authority": {
+    "commit": "b98b0522243835062c0700b60a462fe8c0acaf89",
+    "path": "results/uarch/free_levers_audit_20261003/REPLAY.md"
+  },
+  "next_action": "Claude DSsystem binds selected runtime/PHW10 compiled source and real accepted callbacks; Maxwell must not transfer this legacy frontend failure to adopted field/backend timing or physical feasibility. Corrected cg legacy control requires distinct source receipt and is not product qualification."
+}

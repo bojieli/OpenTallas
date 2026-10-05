@@ -1,0 +1,92 @@
+{
+  "adopted": false,
+  "build_returncode": 0,
+  "physical_status": "UNQUALIFIED_CONTEXTUAL_SS_FF_AND_HUB_ROUTING",
+  "positions": {
+    "0": {
+      "baseline_cycles": 16152,
+      "baseline_record_sha256": "3cf3b23b7dd7e9e912a2b8de6ee0c3d1a8f40ac4674f4dbd3fd6630612312076",
+      "cycles_saved": 1469,
+      "exact_source_and_input_match": true,
+      "first_mismatches": {},
+      "measured_prefix_rate_gain_pct": 10.004767418102567,
+      "posted_cycles": 14683,
+      "stage_cycles": {
+        "E": {
+          "baseline": 98,
+          "posted": 98
+        },
+        "L0": {
+          "baseline": 4960,
+          "posted": 4804
+        },
+        "L1": {
+          "baseline": 5736,
+          "posted": 4857
+        },
+        "L2": {
+          "baseline": 5348,
+          "posted": 4914
+        }
+      }
+    },
+    "1023": {
+      "baseline_cycles": 20095,
+      "baseline_record_sha256": "3fa194ec5587d14d9991553b218cba150dfa5eb05ee625635d86b0c137b61ddb",
+      "cycles_saved": -2,
+      "exact_source_and_input_match": true,
+      "first_mismatches": {},
+      "measured_prefix_rate_gain_pct": -0.009951734089663766,
+      "posted_cycles": 20097,
+      "stage_cycles": {
+        "E": {
+          "baseline": 98,
+          "posted": 98
+        },
+        "L0": {
+          "baseline": 5789,
+          "posted": 5602
+        },
+        "L1": {
+          "baseline": 7171,
+          "posted": 7256
+        },
+        "L2": {
+          "baseline": 7027,
+          "posted": 7131
+        }
+      }
+    },
+    "255": {
+      "baseline_cycles": 16206,
+      "baseline_record_sha256": "42bd8be7dac7602933fcdc9449d1b51bd8c33a27fd9160b8dfd0bd61ffe0e226",
+      "cycles_saved": 325,
+      "exact_source_and_input_match": true,
+      "first_mismatches": {},
+      "measured_prefix_rate_gain_pct": 2.046470625275476,
+      "posted_cycles": 15881,
+      "stage_cycles": {
+        "E": {
+          "baseline": 98,
+          "posted": 98
+        },
+        "L0": {
+          "baseline": 5075,
+          "posted": 4828
+        },
+        "L1": {
+          "baseline": 5436,
+          "posted": 5502
+        },
+        "L2": {
+          "baseline": 5587,
+          "posted": 5443
+        }
+      }
+    }
+  },
+  "schema": "opentallas.qwen-posted-kv-measured.v1",
+  "scope": "E plus L0-L2 TP4 runtime prefix; product mixed-clock/full-token recomposition pending",
+  "source_commit": "d245e5805f6efde99cd9d41288cc54f757b9220c",
+  "verdict": "REJECT_GAIN_BELOW_ONE_PERCENT"
+}

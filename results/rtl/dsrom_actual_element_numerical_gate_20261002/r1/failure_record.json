@@ -1,0 +1,19 @@
+{
+  "bench_line": 74,
+  "candidate": "cbfffffc",
+  "candidate_error": 1,
+  "expected": "cbfffffc",
+  "explicit_DIFF": false,
+  "macro": 0,
+  "observation": "Value bits agree at failing sample; assertion also rejects DUT error outputs. Runner NUMERICAL_VALUE is the assertion category, not evidence of differing value bits.",
+  "phase": 3,
+  "position": 0,
+  "reference": "cbfffffc",
+  "reference_error": 1,
+  "retry": false,
+  "root_cause": "Not yet diagnosed; no fixture-only or helper arithmetic mismatch conclusion",
+  "segment": 0,
+  "source_or_expectation_changes": false,
+  "status": "PRESERVED_FIRST_BF_FAILURE_UNQUALIFIED",
+  "time_ps": 7002616
+}

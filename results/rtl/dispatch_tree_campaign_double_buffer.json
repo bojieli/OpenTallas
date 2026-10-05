@@ -1,0 +1,302 @@
+{
+ "control_model": {
+  "basis": "116.4 control cycles per engine command measured by G1e (results/rtl/abi3_g1e_control_end_to_end.json) at the place-and-routed 265 MHz of ot_a3_microsequencer, seen from the place-and-routed 1,290 MHz of ot_compute_unit",
+  "interval_datapath_cycles": 567
+ },
+ "git": {
+  "branch": "token-path-end-to-end",
+  "commit": "49381da1a1b6f2426e3a3bce7fff381f56061a7a",
+  "worktree_dirty": true
+ },
+ "question": "Does a hierarchical descriptor distributor hold array utilisation at the fan-out widths tools/audit_control_path_throughput.py requires, with results bit-identical to the reference at every width?",
+ "records": [
+  {
+   "compute_units": 512,
+   "credits": 2,
+   "distributor_module": "ot_dispatch_tree",
+   "finished": true,
+   "functional_line": "PASS functional units=512 leaves=32 group=16 radix=16 flat=0 skew=2: 512 units x 16 lanes = 8192 results bit-identical to the reference, 3-pass descriptor, retired=1, 32 sub-range origins checked and correct, signature=0",
+   "functional_pass": true,
+   "group": 16,
+   "interior_nodes": 3,
+   "leaves": 32,
+   "radix": 16,
+   "refill_decoupled": 1,
+   "refill_skew": 2,
+   "stdout_tail": [
+    "operand delivery: REFILL_DECOUPLED=1 WGT_BANKS=2",
+    "dispatch tree: UNITS=512 LEAVES=32 GROUP=16 RADIX=16 CREDITS=2 SKEW=2, real ot_compute_unit at every unit",
+    "PASS functional units=512 leaves=32 group=16 radix=16 flat=0 skew=2: 512 units x 16 lanes = 8192 results bit-identical to the reference, 3-pass descriptor, retired=1, 32 sub-range origins checked and correct, signature=0",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=1 interval=567 descs=12 passes_launched=12 completions=6144 cycles=6522 util=55.43 starved=99.63 rootstall=0.00 timeout=0 grants=1700128 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=2 interval=567 descs=12 passes_launched=24 completions=12288 cycles=7052 util=95.75 starved=99.49 rootstall=0.00 timeout=0 grants=1703936 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=3 interval=567 descs=12 passes_launched=36 completions=18432 cycles=10316 util=96.86 starved=39.77 rootstall=59.82 timeout=0 grants=1703936 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=4 interval=567 descs=12 passes_launched=48 completions=24576 cycles=13580 util=97.44 starved=20.62 rootstall=79.01 timeout=0 grants=1703936 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=8 interval=567 descs=12 passes_launched=96 completions=49152 cycles=26636 util=98.33 starved=7.14 rootstall=92.49 timeout=0 grants=1703936 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=64 passes=1 interval=567 descs=12 passes_launched=12 completions=6144 cycles=6330 util=15.86 starved=99.62 rootstall=0.00 timeout=0 grants=425248 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=64 passes=8 interval=567 descs=12 passes_launched=96 completions=49152 cycles=7820 util=96.62 starved=19.94 rootstall=78.76 timeout=0 grants=425984 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=1 interval=1 descs=12 passes_launched=12 completions=6144 cycles=6450 util=57.03 starved=55.77 rootstall=44.03 timeout=0 grants=1700128 decoupled=1 banks=2",
+    "UTIL units=512 leaves=32 group=16 radix=16 flat=0 skew=2 K=256 passes=4 interval=1 descs=12 passes_launched=48 completions=24576 cycles=13580 util=97.44 starved=14.01 rootstall=85.63 timeout=0 grants=1703936 decoupled=1 banks=2",
+    "DONE dispatch sweep UNITS=512 LEAVES=32 GROUP=16 RADIX=16 FLAT=0 SKEW=2",
+    "- /home/ubuntu/OpenTallas/rtl/test/tb_dispatch_tree_throughput.sv:434: Verilog $finish",
+    "- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01",
+    "- Verilator: $finish at 99us; walltime 31.602 s; speed 3.121 us/s",
+    "- Verilator: cpu 31.598 s on 1 threads; allocated 24 MB"
+   ],
+   "structure": "tree",
+   "tree_depth_levels": 2,
+   "utilisation": [
+    {
+     "array_utilisation_percent": 55.43,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 6522,
+     "expected_unit_completions": 6144,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 543.5,
+     "passes_launched": 12,
+     "passes_per_descriptor": 1,
+     "refill_decoupled": 1,
+     "refill_grants": 1700128,
+     "refill_grants_per_unit_pass_column": 1.0809122721354167,
+     "root_idle_queue_empty_percent": 99.63,
+     "root_stalled_for_credit_percent": 0.0,
+     "unit_completions": 6144,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 95.75,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 7052,
+     "expected_unit_completions": 12288,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 293.8333333333333,
+     "passes_launched": 24,
+     "passes_per_descriptor": 2,
+     "refill_decoupled": 1,
+     "refill_grants": 1703936,
+     "refill_grants_per_unit_pass_column": 0.5416666666666666,
+     "root_idle_queue_empty_percent": 99.49,
+     "root_stalled_for_credit_percent": 0.0,
+     "unit_completions": 12288,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 96.86,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 10316,
+     "expected_unit_completions": 18432,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 286.55555555555554,
+     "passes_launched": 36,
+     "passes_per_descriptor": 3,
+     "refill_decoupled": 1,
+     "refill_grants": 1703936,
+     "refill_grants_per_unit_pass_column": 0.3611111111111111,
+     "root_idle_queue_empty_percent": 39.77,
+     "root_stalled_for_credit_percent": 59.82,
+     "unit_completions": 18432,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 97.44,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 13580,
+     "expected_unit_completions": 24576,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 282.9166666666667,
+     "passes_launched": 48,
+     "passes_per_descriptor": 4,
+     "refill_decoupled": 1,
+     "refill_grants": 1703936,
+     "refill_grants_per_unit_pass_column": 0.2708333333333333,
+     "root_idle_queue_empty_percent": 20.62,
+     "root_stalled_for_credit_percent": 79.01,
+     "unit_completions": 24576,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 98.33,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 26636,
+     "expected_unit_completions": 49152,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 277.4583333333333,
+     "passes_launched": 96,
+     "passes_per_descriptor": 8,
+     "refill_decoupled": 1,
+     "refill_grants": 1703936,
+     "refill_grants_per_unit_pass_column": 0.13541666666666666,
+     "root_idle_queue_empty_percent": 7.14,
+     "root_stalled_for_credit_percent": 92.49,
+     "unit_completions": 49152,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 15.86,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 6330,
+     "expected_unit_completions": 6144,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 64,
+     "pass_rate_per_unit_cycles": 527.5,
+     "passes_launched": 12,
+     "passes_per_descriptor": 1,
+     "refill_decoupled": 1,
+     "refill_grants": 425248,
+     "refill_grants_per_unit_pass_column": 1.0814615885416667,
+     "root_idle_queue_empty_percent": 99.62,
+     "root_stalled_for_credit_percent": 0.0,
+     "unit_completions": 6144,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 96.62,
+     "control_interval_datapath_cycles": 567,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 7820,
+     "expected_unit_completions": 49152,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 64,
+     "pass_rate_per_unit_cycles": 81.45833333333333,
+     "passes_launched": 96,
+     "passes_per_descriptor": 8,
+     "refill_decoupled": 1,
+     "refill_grants": 425984,
+     "refill_grants_per_unit_pass_column": 0.13541666666666666,
+     "root_idle_queue_empty_percent": 19.94,
+     "root_stalled_for_credit_percent": 78.76,
+     "unit_completions": 49152,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 57.03,
+     "control_interval_datapath_cycles": 1,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 6450,
+     "expected_unit_completions": 6144,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 537.5,
+     "passes_launched": 12,
+     "passes_per_descriptor": 1,
+     "refill_decoupled": 1,
+     "refill_grants": 1700128,
+     "refill_grants_per_unit_pass_column": 1.0809122721354167,
+     "root_idle_queue_empty_percent": 55.77,
+     "root_stalled_for_credit_percent": 44.03,
+     "unit_completions": 6144,
+     "weight_banks": 2,
+     "work_conserved": true
+    },
+    {
+     "array_utilisation_percent": 97.44,
+     "control_interval_datapath_cycles": 1,
+     "descriptors_retired": 12,
+     "elapsed_cycles": 13580,
+     "expected_unit_completions": 24576,
+     "hit_cycle_limit": false,
+     "kernel_depth_k": 256,
+     "pass_rate_per_unit_cycles": 282.9166666666667,
+     "passes_launched": 48,
+     "passes_per_descriptor": 4,
+     "refill_decoupled": 1,
+     "refill_grants": 1703936,
+     "refill_grants_per_unit_pass_column": 0.2708333333333333,
+     "root_idle_queue_empty_percent": 14.01,
+     "root_stalled_for_credit_percent": 85.63,
+     "unit_completions": 24576,
+     "weight_banks": 2,
+     "work_conserved": true
+    }
+   ],
+   "weight_banks": 2,
+   "why_this_width": "compute units in rom_deepseek_v4 and rom_deepseek_v41_wafer; their required_fanout rate factor is 1,076",
+   "work_conserved_all_cases": true
+  }
+ ],
+ "refusals": [
+  "refill-write-is-charged-only-in-the-decoupled-mode: under REFILL_DECOUPLED=0 a granted refill writes NOTHING -- the weight image is preloaded through the host port and refill_valid is a pure token, so the baseline stall numbers charge for waiting but not for storing. Under REFILL_DECOUPLED=1 the grant carries the column and writes the macro, which costs a port slot whenever the fill and the walk are in the same bank. The two modes are therefore NOT equal fidelity on the write side, and the decoupled mode is the stricter of the two.",
+  "flat-cannot-be-decoupled: ot_cluster_dispatcher has no per-pass output, so it cannot tell a unit which pass brings a new weight tile. Flat rows are measured at REFILL_DECOUPLED=0 only; a flat row with the flag tied high would charge a tile fetch per pass and would not be comparable to the tree.",
+  "activation-delivery-not-modelled: the fill frontier covers the WEIGHT path. Activations are written through a bench port with no rate limit at all, so nothing here says what an activation-starved array would do.",
+  "utilisation-requires-correctness: a configuration whose functional, sub-range or work-conservation check fails has its utilisation refused, not reported.",
+  "no-frequency-claim: this campaign measures cycles. Whether the structure closes at the 1,290 MHz the cycle counts are quoted against is a place-and-route question, answered by tools/run_abi3_physical.py on ot_probe_dispatch_tree and by nothing here.",
+  "output-stationary-only: every unit walks the same K and the same scale and differs only by its sub-range index. A descriptor whose extent had to be split unequally across units is out of scope for this distributor and for this measurement.",
+  "one-descriptor-stream: the control plane is modelled as a periodic source at its measured rate. A real sequencer's descriptor stream is bursty and interleaved with other engines' commands, which this does not model.",
+  "tensor-engine-only: LEAVES here are tensor compute units. Vector, attention and reduction engines also consume descriptors and are not distributed by this tree in this measurement."
+ ],
+ "schema": "opentallas.rtl.dispatch_tree_campaign.v1",
+ "simulator": {
+  "name": "verilator",
+  "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "version": "5.050"
+ },
+ "sources": [
+  {
+   "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+   "sha256": "15f6e8c7c98b856cb4141e36326d0d9821d59ebae217cc0dd7ccfd34171bba2c",
+   "size_bytes": 7485
+  },
+  {
+   "path": "rtl/proto/ot_mac_lane.sv",
+   "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283",
+   "size_bytes": 4997
+  },
+  {
+   "path": "rtl/proto/ot_mac_tile.sv",
+   "sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
+   "size_bytes": 8993
+  },
+  {
+   "path": "rtl/proto/ot_compute_unit.sv",
+   "sha256": "4f6448ddbd5c188c71d82c987b591b7b076930af5f222bd77a6c01fd297fd255",
+   "size_bytes": 22117
+  },
+  {
+   "path": "rtl/proto/ot_dispatch_tree.sv",
+   "sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
+   "size_bytes": 32503
+  },
+  {
+   "path": "rtl/proto/ot_cluster_dispatcher.sv",
+   "sha256": "fbd1891be4120fc2efdaecb7a5c6cbf1137814e59e856c02343d59ceb7e01c31",
+   "size_bytes": 7889
+  },
+  {
+   "path": "rtl/test/tb_dispatch_tree_throughput.sv",
+   "sha256": "56d8b1385a930161e79b4a6d4717469a4e088d1c2bcc57eeec042586d279d860",
+   "size_bytes": 21667
+  }
+ ],
+ "vectors": [
+  {
+   "path": "testdata/rtl/a3_mac_tile/act.hex",
+   "sha256": "bc891e81ec43d6fad9b092c2493f6cd9edf27c1c7f03a00a4cfc8e1d2fb09c6d"
+  },
+  {
+   "path": "testdata/rtl/a3_mac_tile/wgt.hex",
+   "sha256": "89f334a730383b8f25f8661359a4ab98941d451e4b5059ba58946ead6272b81b"
+  },
+  {
+   "path": "testdata/rtl/a3_mac_tile/expected.hex",
+   "sha256": "52ffc078f41b811e3179ec00ce2634764516c671667b3966ec86b3e68d4ac1fd"
+  }
+ ]
+}

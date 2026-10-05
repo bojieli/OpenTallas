@@ -1,0 +1,42 @@
+TO parent / Popper / Nash(W2) / Euclid(W4) / Goodall(W6) / Dewey
+CANONICAL NOW: canonical-fullwidth-C0-KV-read-r1.json.
+Full-width source-compatible baseline; compact proof REMOVED from critical path.
+
+Source CTAG32/PTAG35 retained. W2 adds explicit gen4 echo sideband for model
+pricing, never repurposes tag bits. Accepted PC7 + PTAG35 + gen4 = owner46:
+{PC7, client3, original_client_tag32, generation4}. All fields must come from
+actual accepted request/port/allocator. Exact per-PC/client live match plus
+unique originaltag32/gen4/direction key prevents ambiguous duplicate entries.
+Read/write-completion data/type/identity unchanged while stalled.
+
+W4 real write_go captures owner46 + actual RFslot9 =55bits per SM;32SM=1760raw
+leaf bits, plus separately retained internal SIMD55bits/SM IF required and
+55bit mux. Gen4 is owner[3:0], not extra duplicate FFs. One held combined ACK
+for both write copies, source identity not benchreceipt/fence-local epoch.
+W6 carries same owner46/RFslot9 through visibility/consumer/reverse. Actual SM
+is accepted per-SM port identity; any shared routing must preserve that source.
+
+NC5/CTAG32/MAX16 is Nash's selected standalone model (PTAG35). NC5/CTAG17/tag20
+is a separate default/fixture variant. Complete HBM wrapper uses NC6 and its
+fixture has KVclient5; no free sixth directory lane is proven. For minimal
+C0/KVread don't introduce directory traffic unless actual caller needs it.
+
+Parent can shorten path by confirming full-width baseline and actual source
+C0/KVread accepted caller/RFwriter instances. Peers need not wait for compact
+mapping or Qcalendar. Nash prices W2 live table/selectors/protection/echo/ready
+ports/latency; Euclid prices55bit capture/SIMD/mux/protection/reset/clock/wires;
+Goodall prices same-owner fence/consumer/reverse storage and finite holds;
+Popper composes actual ports/corridors/CDC/slots/calendar with baseline once.
+
+Reuse/reset:4bitgen conservative, no1bit assumption, no silent monotonic run
+cap. Whole1737/2213PC and repeated tokens need actual all-copy/backend/ACK/
+consumer/child-parent-reverse/CDC drain, coordinated backend reset epoch and
+positive added wait. Source-owned predicate and costs remain UNKNOWN.
+
+REPLAY (cheap; no duplicate cold/build):
+python3 results/uarch/h4_hbm_f0_field_freeze_review_20261003/fullwidth_review.py
+15 Euclid f53d artifact pins +7 source pins verified. Its frozen5test PASS log
+inspected; no new test or hardware run. Field dimensions FROZEN, compact not
+blocking. Model pricing/actual caller/drain joins remain open; parallel model
+prep can start NOW, actual RTL/build release requires parent model admission.
+No credible hardware completion ETA until those concrete owner receipts.

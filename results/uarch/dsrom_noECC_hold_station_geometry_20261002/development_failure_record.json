@@ -1,0 +1,20 @@
+{
+  "initial_static_failure": "initial_region_index_failure.log",
+  "observed_failures": [
+    {
+      "cause": "D timing reconstruction ran before paths were populated; moved reconstruction after route assembly.",
+      "exception": "StopIteration",
+      "exit_code": 1
+    },
+    {
+      "cause": "Regex read commented MINSIZE0.112/0.072 instead of active0.037/0.018; ignore comments before source parse.",
+      "exception": "ValueError: Source M2 landing minimum changed",
+      "exit_code": 1
+    }
+  ],
+  "physical_negative_records_separate": [
+    "negative_all_M8_geometry.json"
+  ],
+  "physical_verdict": false,
+  "type": "DEVELOPMENT_IMPLEMENTATION_ERRORS_PRESERVED"
+}

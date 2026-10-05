@@ -1,0 +1,1311 @@
+{
+ "schema": "opentallas.v41-dspark-onpolicy-greedy.v1",
+ "question": "DeepSeek-V4.1-Flash DSpark acceptance length tau at the design draft length (gamma 5, 6 verified positions), measured on the model's OWN greedy continuations on this machine.",
+ "grade": "measured",
+ "model": {
+  "checkpoint": "deepseek-ai/DeepSeek-V4.1-Flash",
+  "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "drafter": "built-in DSpark (mtp.0-2, dspark_block_size 5, Markov head), vendor inference/model.py"
+ },
+ "method": {
+  "phase_a": "Greedy decode of the main model with the vendor inference/model.py modules (Block, Attention, Compressor, Indexer, Engram, Gate, hc_*) verbatim; its six tilelang kernels replaced by torch equivalents written from kernel.py (quantizers exact: fp8 e4m3 per-32 ue8m0 activations, fp4 e2m1 RNE; fp8/fp4 GEMMs dequantize both operands exactly to bf16 and accumulate in fp32 -- only the summation order differs; sparse_attn same math incl. the sink and bf16 P, without the online rescaling). Layer-streamed on a shared GPU: non-expert weights resident in pinned host RAM, the routed experts each step pread from the safetensors shards (only those the batch routes to), Engram rows pread per lookup. Each trace keeps its own vendor decode caches (window ring, compressor state, compressed KV, index keys) and runs attention at its own position (bsz 1); the MoE runs over all traces' tokens. Prefill is one chunk per prompt (start_pos 0), then one token per step (the vendor decode path).",
+  "phase_b": "DSpark via the vendor Transformer.forward_spec: seeded with the prompt's DSpark inputs at start_pos 0, then called at every generated position p with the verified token tok[p+1] and main_hidden[p] (the attention input of layers 37, 38, 39, mean over the hc copies, recorded in phase A), temperature 0 (argmax, greedy Markov chain).",
+  "acceptance": "Row p drafts d1..d5 for tok[p+2..p+6] (the main model's greedy tokens); a = leading matches; committed = a + 1. tau_walk replays a greedy speculative decode exactly (start at the first decode position, advance by a + 1; only full-depth cycles), so it is the tau a lossless greedy DSpark server would see on these continuations. tau_rows averages every full-depth position.",
+  "sampling": "greedy (temperature 0) for target and drafter",
+  "gamma": 5,
+  "verified_positions": 6,
+  "max_new_tokens": 160
+ },
+ "prompts": {
+  "source": "results/speculative/raw/prompts.jsonl.gz (the acceptance_tau.json prompt set, seed 42): the first 4 prompts in file order per workload with <= 4,500 V4.1 tokens; xcheck_* workloads (duplicates in the other thinking mode) not used",
+  "encoding": "V4.1 encoding/encoding.py; enable_thinking true -> thinking_mode \"thinking\" (reasoning effort default 75), else \"chat\"; tools attached to a leading system message",
+  "selection_file_sha256": "f7e1a21859fd8b2b859601ea8a5b0089c9f05f33fc712e26f18104cbfe13b9ba",
+  "skipped": [
+   [
+    "retail-task41-trial2-turn28",
+    "len 8073"
+   ],
+   [
+    "retail-task96-trial1-turn14",
+    "len 5693"
+   ],
+   [
+    "retail-task59-trial3-turn16",
+    "len 5262"
+   ],
+   [
+    "retail-task87-trial0-turn12",
+    "len 4934"
+   ],
+   [
+    "retail-task108-trial2-turn24",
+    "len 7296"
+   ],
+   [
+    "retail-task7-trial0-turn12",
+    "len 4509"
+   ],
+   [
+    "retail-task94-trial0-turn24",
+    "len 8428"
+   ],
+   [
+    "retail-task1-trial2-turn26",
+    "len 7975"
+   ],
+   [
+    "retail-task62-trial2-turn14",
+    "len 4946"
+   ],
+   [
+    "retail-task108-trial1-turn24",
+    "len 6352"
+   ],
+   [
+    "matchms__matchms-493-swe-agent-llama-70b-step16",
+    "len 4674"
+   ],
+   [
+    "pydantic__pydantic-4399-swe-agent-llama-70b-step22",
+    "len 6738"
+   ],
+   [
+    "Erotemic__ubelt-64-swe-agent-llama-70b-step12",
+    "len 6133"
+   ]
+  ]
+ },
+ "hardware": {
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell 96 GB, shared (other tenants at ~100% utilisation); this run capped at 15% of device memory (set_per_process_memory_fraction), phase A peak allocation from the log",
+  "host": "188 GB RAM, 32 cores, md0 RAID5 NVMe"
+ },
+ "tools": {
+  "dir": "tools/v41_dspark_onpolicy/",
+  "files": {
+   "prompts.py": "f6ed4b1eaf1732d810b4e22d14962798dbcf738bd704e05786c80c58ae6a6cd1",
+   "v41gen.py": "20590f60198858fbb24fa7f823f59a33e61f6c53944103fb32af9828d900dff7",
+   "v41draft.py": "cb33be825b413161ae4c421867ab115ed78b79b1de33d40e3a9d5c48c29014d6",
+   "analyze.py": "5bf365e7bf3430282c85ac098542fc7787e69c0abe250ef414d3a86ca48767c4"
+  },
+  "run": [
+   "python3 prompts.py 4",
+   "python3 v41gen.py --max-new 160 --out gen_out.pt",
+   "python3 v41draft.py --gen gen_out.pt --out drafts.json",
+   "python3 analyze.py drafts.json analysis.json"
+  ]
+ },
+ "validation": [
+  "Smoke: the drafter's first drafts reproduce the main model's own greedy continuation (e.g. \" need\" -> \" solve.\") and the confidence head is high on them, so phase A hidden states and phase B wiring agree.",
+  "The Triton-free fp4 path: LUT dequant x fp32 accumulate reproduces a fused fp4 GEMV bit-exactly on real layer-10 expert weights.",
+  "Prompt selection re-derived from the committed tool reproduces the run's selection file hash."
+ ],
+ "results": {
+  "per_workload": {
+   "agentic_bfcl": {
+    "prompts": 4,
+    "thinking_mode": "chat",
+    "walk": {
+     "n": 59,
+     "tau": 5.338983050847458,
+     "histogram_accepted_0_5": [
+      3,
+      2,
+      3,
+      2,
+      3,
+      46
+     ],
+     "survival_by_position": [
+      0.9492,
+      0.9153,
+      0.8644,
+      0.8305,
+      0.7797
+     ],
+     "conditional_acceptance_by_position": [
+      0.9492,
+      0.9643,
+      0.9444,
+      0.9608,
+      0.9388
+     ]
+    },
+    "rows": {
+     "n": 299,
+     "tau": 5.591973244147157,
+     "histogram_accepted_0_5": [
+      9,
+      7,
+      10,
+      6,
+      7,
+      260
+     ],
+     "survival_by_position": [
+      0.9699,
+      0.9465,
+      0.913,
+      0.893,
+      0.8696
+     ],
+     "conditional_acceptance_by_position": [
+      0.9699,
+      0.9759,
+      0.9647,
+      0.978,
+      0.9738
+     ]
+    }
+   },
+   "agentic_json_mode": {
+    "prompts": 4,
+    "thinking_mode": "chat",
+    "walk": {
+     "n": 53,
+     "tau": 5.754716981132075,
+     "histogram_accepted_0_5": [
+      0,
+      1,
+      1,
+      2,
+      2,
+      47
+     ],
+     "survival_by_position": [
+      1.0,
+      0.9811,
+      0.9623,
+      0.9245,
+      0.8868
+     ],
+     "conditional_acceptance_by_position": [
+      1.0,
+      0.9811,
+      0.9808,
+      0.9608,
+      0.9592
+     ]
+    },
+    "rows": {
+     "n": 292,
+     "tau": 5.828767123287672,
+     "histogram_accepted_0_5": [
+      2,
+      3,
+      3,
+      5,
+      9,
+      270
+     ],
+     "survival_by_position": [
+      0.9932,
+      0.9829,
+      0.9726,
+      0.9555,
+      0.9247
+     ],
+     "conditional_acceptance_by_position": [
+      0.9932,
+      0.9897,
+      0.9895,
+      0.9824,
+      0.9677
+     ]
+    }
+   },
+   "agentic_mind2web": {
+    "prompts": 4,
+    "thinking_mode": "chat",
+    "walk": {
+     "n": 42,
+     "tau": 3.761904761904762,
+     "histogram_accepted_0_5": [
+      6,
+      7,
+      8,
+      4,
+      4,
+      13
+     ],
+     "survival_by_position": [
+      0.8571,
+      0.6905,
+      0.5,
+      0.4048,
+      0.3095
+     ],
+     "conditional_acceptance_by_position": [
+      0.8571,
+      0.8056,
+      0.7241,
+      0.8095,
+      0.7647
+     ]
+    },
+    "rows": {
+     "n": 152,
+     "tau": 3.875,
+     "histogram_accepted_0_5": [
+      18,
+      23,
+      23,
+      27,
+      18,
+      43
+     ],
+     "survival_by_position": [
+      0.8816,
+      0.7303,
+      0.5789,
+      0.4013,
+      0.2829
+     ],
+     "conditional_acceptance_by_position": [
+      0.8816,
+      0.8284,
+      0.7928,
+      0.6932,
+      0.7049
+     ]
+    }
+   },
+   "agentic_swe_agent": {
+    "prompts": 4,
+    "thinking_mode": "chat",
+    "walk": {
+     "n": 43,
+     "tau": 4.209302325581396,
+     "histogram_accepted_0_5": [
+      4,
+      2,
+      8,
+      10,
+      5,
+      14
+     ],
+     "survival_by_position": [
+      0.907,
+      0.8605,
+      0.6744,
+      0.4419,
+      0.3256
+     ],
+     "conditional_acceptance_by_position": [
+      0.907,
+      0.9487,
+      0.7838,
+      0.6552,
+      0.7368
+     ]
+    },
+    "rows": {
+     "n": 175,
+     "tau": 4.354285714285714,
+     "histogram_accepted_0_5": [
+      8,
+      21,
+      27,
+      31,
+      21,
+      67
+     ],
+     "survival_by_position": [
+      0.9543,
+      0.8343,
+      0.68,
+      0.5029,
+      0.3829
+     ],
+     "conditional_acceptance_by_position": [
+      0.9543,
+      0.8743,
+      0.8151,
+      0.7395,
+      0.7614
+     ]
+    }
+   },
+   "agentic_tau_bench": {
+    "prompts": 4,
+    "thinking_mode": "chat",
+    "walk": {
+     "n": 63,
+     "tau": 3.984126984126984,
+     "histogram_accepted_0_5": [
+      9,
+      8,
+      8,
+      11,
+      4,
+      23
+     ],
+     "survival_by_position": [
+      0.8571,
+      0.7302,
+      0.6032,
+      0.4286,
+      0.3651
+     ],
+     "conditional_acceptance_by_position": [
+      0.8571,
+      0.8519,
+      0.8261,
+      0.7105,
+      0.8519
+     ]
+    },
+    "rows": {
+     "n": 248,
+     "tau": 4.379032258064516,
+     "histogram_accepted_0_5": [
+      23,
+      31,
+      27,
+      29,
+      24,
+      114
+     ],
+     "survival_by_position": [
+      0.9073,
+      0.7823,
+      0.6734,
+      0.5565,
+      0.4597
+     ],
+     "conditional_acceptance_by_position": [
+      0.9073,
+      0.8622,
+      0.8608,
+      0.8263,
+      0.8261
+     ]
+    }
+   },
+   "chat_mt_bench": {
+    "prompts": 4,
+    "thinking_mode": "chat",
+    "walk": {
+     "n": 201,
+     "tau": 2.45771144278607,
+     "histogram_accepted_0_5": [
+      68,
+      53,
+      37,
+      20,
+      9,
+      14
+     ],
+     "survival_by_position": [
+      0.6617,
+      0.398,
+      0.2139,
+      0.1144,
+      0.0697
+     ],
+     "conditional_acceptance_by_position": [
+      0.6617,
+      0.6015,
+      0.5375,
+      0.5349,
+      0.6087
+     ]
+    },
+    "rows": {
+     "n": 490,
+     "tau": 2.6551020408163266,
+     "histogram_accepted_0_5": [
+      162,
+      119,
+      78,
+      46,
+      27,
+      58
+     ],
+     "survival_by_position": [
+      0.6694,
+      0.4265,
+      0.2673,
+      0.1735,
+      0.1184
+     ],
+     "conditional_acceptance_by_position": [
+      0.6694,
+      0.6372,
+      0.6268,
+      0.6489,
+      0.6824
+     ]
+    }
+   },
+   "reasoning_aime25": {
+    "prompts": 4,
+    "thinking_mode": "thinking",
+    "walk": {
+     "n": 164,
+     "tau": 3.823170731707317,
+     "histogram_accepted_0_5": [
+      24,
+      24,
+      29,
+      19,
+      16,
+      52
+     ],
+     "survival_by_position": [
+      0.8537,
+      0.7073,
+      0.5305,
+      0.4146,
+      0.3171
+     ],
+     "conditional_acceptance_by_position": [
+      0.8537,
+      0.8286,
+      0.75,
+      0.7816,
+      0.7647
+     ]
+    },
+    "rows": {
+     "n": 616,
+     "tau": 4.090909090909091,
+     "histogram_accepted_0_5": [
+      68,
+      79,
+      93,
+      79,
+      83,
+      214
+     ],
+     "survival_by_position": [
+      0.8896,
+      0.7614,
+      0.6104,
+      0.4821,
+      0.3474
+     ],
+     "conditional_acceptance_by_position": [
+      0.8896,
+      0.8558,
+      0.8017,
+      0.7899,
+      0.7205
+     ]
+    }
+   },
+   "reasoning_humaneval": {
+    "prompts": 4,
+    "thinking_mode": "thinking",
+    "walk": {
+     "n": 190,
+     "tau": 3.3,
+     "histogram_accepted_0_5": [
+      35,
+      41,
+      31,
+      31,
+      19,
+      33
+     ],
+     "survival_by_position": [
+      0.8158,
+      0.6,
+      0.4368,
+      0.2737,
+      0.1737
+     ],
+     "conditional_acceptance_by_position": [
+      0.8158,
+      0.7355,
+      0.7281,
+      0.6265,
+      0.6346
+     ]
+    },
+    "rows": {
+     "n": 616,
+     "tau": 3.4107142857142856,
+     "histogram_accepted_0_5": [
+      105,
+      128,
+      102,
+      96,
+      60,
+      125
+     ],
+     "survival_by_position": [
+      0.8295,
+      0.6218,
+      0.4562,
+      0.3003,
+      0.2029
+     ],
+     "conditional_acceptance_by_position": [
+      0.8295,
+      0.7495,
+      0.7337,
+      0.6584,
+      0.6757
+     ]
+    }
+   },
+   "reasoning_math500": {
+    "prompts": 4,
+    "thinking_mode": "thinking",
+    "walk": {
+     "n": 167,
+     "tau": 3.7425149700598803,
+     "histogram_accepted_0_5": [
+      29,
+      28,
+      25,
+      18,
+      9,
+      58
+     ],
+     "survival_by_position": [
+      0.8263,
+      0.6587,
+      0.509,
+      0.4012,
+      0.3473
+     ],
+     "conditional_acceptance_by_position": [
+      0.8263,
+      0.7971,
+      0.7727,
+      0.7882,
+      0.8657
+     ]
+    },
+    "rows": {
+     "n": 616,
+     "tau": 3.9740259740259742,
+     "histogram_accepted_0_5": [
+      84,
+      88,
+      86,
+      73,
+      72,
+      213
+     ],
+     "survival_by_position": [
+      0.8636,
+      0.7208,
+      0.5812,
+      0.4627,
+      0.3458
+     ],
+     "conditional_acceptance_by_position": [
+      0.8636,
+      0.8346,
+      0.8063,
+      0.7961,
+      0.7474
+     ]
+    }
+   }
+  },
+  "per_class": {
+   "agentic": {
+    "prompts": 20,
+    "walk": {
+     "n": 260,
+     "tau": 4.653846153846154,
+     "histogram_accepted_0_5": [
+      22,
+      20,
+      28,
+      29,
+      18,
+      143
+     ],
+     "survival_by_position": [
+      0.9154,
+      0.8385,
+      0.7308,
+      0.6192,
+      0.55
+     ],
+     "conditional_acceptance_by_position": [
+      0.9154,
+      0.916,
+      0.8716,
+      0.8474,
+      0.8882
+     ]
+    },
+    "rows": {
+     "n": 1166,
+     "tau": 4.983704974271012,
+     "histogram_accepted_0_5": [
+      60,
+      85,
+      90,
+      98,
+      79,
+      754
+     ],
+     "survival_by_position": [
+      0.9485,
+      0.8756,
+      0.7985,
+      0.7144,
+      0.6467
+     ],
+     "conditional_acceptance_by_position": [
+      0.9485,
+      0.9231,
+      0.9119,
+      0.8947,
+      0.9052
+     ]
+    },
+    "tau_walk_ci95": [
+     4.4586,
+     4.8833
+    ]
+   },
+   "chat": {
+    "prompts": 4,
+    "walk": {
+     "n": 201,
+     "tau": 2.45771144278607,
+     "histogram_accepted_0_5": [
+      68,
+      53,
+      37,
+      20,
+      9,
+      14
+     ],
+     "survival_by_position": [
+      0.6617,
+      0.398,
+      0.2139,
+      0.1144,
+      0.0697
+     ],
+     "conditional_acceptance_by_position": [
+      0.6617,
+      0.6015,
+      0.5375,
+      0.5349,
+      0.6087
+     ]
+    },
+    "rows": {
+     "n": 490,
+     "tau": 2.6551020408163266,
+     "histogram_accepted_0_5": [
+      162,
+      119,
+      78,
+      46,
+      27,
+      58
+     ],
+     "survival_by_position": [
+      0.6694,
+      0.4265,
+      0.2673,
+      0.1735,
+      0.1184
+     ],
+     "conditional_acceptance_by_position": [
+      0.6694,
+      0.6372,
+      0.6268,
+      0.6489,
+      0.6824
+     ]
+    },
+    "tau_walk_ci95": [
+     2.0531,
+     2.9932
+    ]
+   },
+   "reasoning": {
+    "prompts": 12,
+    "walk": {
+     "n": 521,
+     "tau": 3.6065259117082533,
+     "histogram_accepted_0_5": [
+      88,
+      93,
+      85,
+      68,
+      44,
+      143
+     ],
+     "survival_by_position": [
+      0.8311,
+      0.6526,
+      0.4894,
+      0.3589,
+      0.2745
+     ],
+     "conditional_acceptance_by_position": [
+      0.8311,
+      0.7852,
+      0.75,
+      0.7333,
+      0.7647
+     ]
+    },
+    "rows": {
+     "n": 1848,
+     "tau": 3.82521645021645,
+     "histogram_accepted_0_5": [
+      257,
+      295,
+      281,
+      248,
+      215,
+      552
+     ],
+     "survival_by_position": [
+      0.8609,
+      0.7013,
+      0.5492,
+      0.415,
+      0.2987
+     ],
+     "conditional_acceptance_by_position": [
+      0.8609,
+      0.8146,
+      0.7832,
+      0.7557,
+      0.7197
+     ]
+    },
+    "tau_walk_ci95": [
+     3.4705,
+     3.759
+    ]
+   }
+  },
+  "per_prompt": [
+   {
+    "workload": "reasoning_math500",
+    "prompt_id": "test/intermediate_algebra/956.json",
+    "n_prompt": 98,
+    "n_generated": 160,
+    "cycles": 44,
+    "tau_walk": 3.5909
+   },
+   {
+    "workload": "reasoning_math500",
+    "prompt_id": "test/prealgebra/2086.json",
+    "n_prompt": 79,
+    "n_generated": 160,
+    "cycles": 36,
+    "tau_walk": 4.2778
+   },
+   {
+    "workload": "reasoning_math500",
+    "prompt_id": "test/counting_and_probability/525.json",
+    "n_prompt": 99,
+    "n_generated": 160,
+    "cycles": 46,
+    "tau_walk": 3.4565
+   },
+   {
+    "workload": "reasoning_math500",
+    "prompt_id": "test/intermediate_algebra/190.json",
+    "n_prompt": 95,
+    "n_generated": 160,
+    "cycles": 41,
+    "tau_walk": 3.7561
+   },
+   {
+    "workload": "reasoning_aime25",
+    "prompt_id": "aime2025-24",
+    "n_prompt": 133,
+    "n_generated": 160,
+    "cycles": 43,
+    "tau_walk": 3.6744
+   },
+   {
+    "workload": "reasoning_aime25",
+    "prompt_id": "aime2025-2",
+    "n_prompt": 662,
+    "n_generated": 160,
+    "cycles": 39,
+    "tau_walk": 4.0513
+   },
+   {
+    "workload": "reasoning_aime25",
+    "prompt_id": "aime2025-9",
+    "n_prompt": 140,
+    "n_generated": 160,
+    "cycles": 45,
+    "tau_walk": 3.4444
+   },
+   {
+    "workload": "reasoning_aime25",
+    "prompt_id": "aime2025-4",
+    "n_prompt": 95,
+    "n_generated": 160,
+    "cycles": 37,
+    "tau_walk": 4.2162
+   },
+   {
+    "workload": "reasoning_humaneval",
+    "prompt_id": "HumanEval/31",
+    "n_prompt": 143,
+    "n_generated": 160,
+    "cycles": 46,
+    "tau_walk": 3.413
+   },
+   {
+    "workload": "reasoning_humaneval",
+    "prompt_id": "HumanEval/102",
+    "n_prompt": 138,
+    "n_generated": 160,
+    "cycles": 52,
+    "tau_walk": 3.0577
+   },
+   {
+    "workload": "reasoning_humaneval",
+    "prompt_id": "HumanEval/17",
+    "n_prompt": 218,
+    "n_generated": 160,
+    "cycles": 43,
+    "tau_walk": 3.5814
+   },
+   {
+    "workload": "reasoning_humaneval",
+    "prompt_id": "HumanEval/124",
+    "n_prompt": 305,
+    "n_generated": 160,
+    "cycles": 49,
+    "tau_walk": 3.2041
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_219",
+    "n_prompt": 355,
+    "n_generated": 76,
+    "cycles": 15,
+    "tau_walk": 4.9333
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_199",
+    "n_prompt": 342,
+    "n_generated": 76,
+    "cycles": 13,
+    "tau_walk": 5.6154
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_168",
+    "n_prompt": 423,
+    "n_generated": 114,
+    "cycles": 21,
+    "tau_walk": 5.381
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_149",
+    "n_prompt": 309,
+    "n_generated": 57,
+    "cycles": 10,
+    "tau_walk": 5.5
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task95-trial2-turn8",
+    "n_prompt": 4392,
+    "n_generated": 57,
+    "cycles": 10,
+    "tau_walk": 5.1
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task83-trial3-turn6",
+    "n_prompt": 4275,
+    "n_generated": 32,
+    "cycles": 8,
+    "tau_walk": 3.375
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "airline-task42-trial2-turn6",
+    "n_prompt": 4229,
+    "n_generated": 71,
+    "cycles": 18,
+    "tau_walk": 3.6111
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "airline-task10-trial1-turn8",
+    "n_prompt": 4438,
+    "n_generated": 112,
+    "cycles": 27,
+    "tau_walk": 4.0
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "aio-libs__aioftp-97-swe-agent-llama-70b-step10",
+    "n_prompt": 2917,
+    "n_generated": 46,
+    "cycles": 10,
+    "tau_walk": 4.3
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "johnsyweb__python_sparse_list-17-swe-agent-llama-70b-step2",
+    "n_prompt": 1891,
+    "n_generated": 21,
+    "cycles": 4,
+    "tau_walk": 3.75
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "RDFLib__rdflib-1130-swe-agent-llama-70b-step2",
+    "n_prompt": 1933,
+    "n_generated": 24,
+    "cycles": 6,
+    "tau_walk": 3.5
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "geomet__geomet-101-swe-agent-llama-8b-step4",
+    "n_prompt": 2418,
+    "n_generated": 108,
+    "cycles": 23,
+    "tau_walk": 4.4348
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step7",
+    "n_prompt": 2758,
+    "n_generated": 50,
+    "cycles": 12,
+    "tau_walk": 3.75
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step4",
+    "n_prompt": 2319,
+    "n_generated": 45,
+    "cycles": 12,
+    "tau_walk": 3.3333
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step2",
+    "n_prompt": 1837,
+    "n_generated": 41,
+    "cycles": 7,
+    "tau_walk": 5.1429
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step9",
+    "n_prompt": 2801,
+    "n_generated": 40,
+    "cycles": 11,
+    "tau_walk": 3.3636
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-29",
+    "n_prompt": 424,
+    "n_generated": 105,
+    "cycles": 17,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-83",
+    "n_prompt": 236,
+    "n_generated": 46,
+    "cycles": 7,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-51",
+    "n_prompt": 214,
+    "n_generated": 53,
+    "cycles": 9,
+    "tau_walk": 5.7778
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-33",
+    "n_prompt": 273,
+    "n_generated": 112,
+    "cycles": 20,
+    "tau_walk": 5.45
+   },
+   {
+    "workload": "chat_mt_bench",
+    "prompt_id": "mtbench-158",
+    "n_prompt": 18,
+    "n_generated": 160,
+    "cycles": 65,
+    "tau_walk": 2.3846
+   },
+   {
+    "workload": "chat_mt_bench",
+    "prompt_id": "mtbench-107",
+    "n_prompt": 27,
+    "n_generated": 98,
+    "cycles": 27,
+    "tau_walk": 3.4815
+   },
+   {
+    "workload": "chat_mt_bench",
+    "prompt_id": "mtbench-85",
+    "n_prompt": 26,
+    "n_generated": 96,
+    "cycles": 49,
+    "tau_walk": 1.8367
+   },
+   {
+    "workload": "chat_mt_bench",
+    "prompt_id": "mtbench-87",
+    "n_prompt": 36,
+    "n_generated": 160,
+    "cycles": 60,
+    "tau_walk": 2.5833
+   }
+  ],
+  "overall": {
+   "prompts": 36,
+   "walk": {
+    "n": 982,
+    "tau": 3.6486761710794298,
+    "histogram_accepted_0_5": [
+     178,
+     166,
+     150,
+     117,
+     71,
+     300
+    ],
+    "survival_by_position": [
+     0.8187,
+     0.6497,
+     0.4969,
+     0.3778,
+     0.3055
+    ],
+    "conditional_acceptance_by_position": [
+     0.8187,
+     0.7935,
+     0.7649,
+     0.7602,
+     0.8086
+    ]
+   },
+   "rows": {
+    "n": 3504,
+    "tau": 4.047089041095891,
+    "histogram_accepted_0_5": [
+     479,
+     499,
+     449,
+     392,
+     321,
+     1364
+    ],
+    "survival_by_position": [
+     0.8633,
+     0.7209,
+     0.5928,
+     0.4809,
+     0.3893
+    ],
+    "conditional_acceptance_by_position": [
+     0.8633,
+     0.835,
+     0.8222,
+     0.8113,
+     0.8095
+    ]
+   },
+   "tau_walk_pooled_ci95": [
+    3.4995,
+    3.8412
+   ],
+   "tau_walk_macro_over_workloads": 4.041381249793994,
+   "tau_walk_macro_over_workloads_ci95": [
+    3.9199,
+    4.1847
+   ],
+   "tau_walk_equal_tokens_per_workload": 3.8230589217721263,
+   "tau_walk_equal_tokens_per_workload_ci95": [
+    3.6564,
+    3.9896
+   ],
+   "tau_walk_equal_tokens_per_class": 3.336915807193184,
+   "tau_walk_equal_tokens_per_class_ci95": [
+    3.0554,
+    3.6451
+   ]
+  }
+ },
+ "headline": {
+  "tau": 3.649,
+  "ci95_stratified_prompt_bootstrap": [
+   3.4995,
+   3.8412
+  ],
+  "tau_macro_over_workloads": 4.041,
+  "tau_macro_ci95": [
+   3.9199,
+   4.1847
+  ],
+  "definition": "tau (bonus token included) of an exact greedy speculative replay at gamma 5; \"tau\" pools all cycles (workloads weighted by their generated tokens)",
+  "tau_equal_tokens_per_workload": 3.823,
+  "tau_equal_tokens_per_workload_ci95": [
+   3.6564,
+   3.9896
+  ],
+  "tau_equal_tokens_per_class": 3.337,
+  "tau_equal_tokens_per_class_ci95": [
+   3.0554,
+   3.6451
+  ],
+  "per_class": {
+   "agentic": {
+    "tau": 4.654,
+    "ci95": [
+     4.4586,
+     4.8833
+    ]
+   },
+   "chat": {
+    "tau": 2.458,
+    "ci95": [
+     2.0531,
+     2.9932
+    ]
+   },
+   "reasoning": {
+    "tau": 3.607,
+    "ci95": [
+     3.4705,
+     3.759
+    ]
+   }
+  },
+  "note": "tau_macro_over_workloads is an arithmetic mean of per-workload tau and overstates the token rate of a mix; use tau or the equal-token (harmonic) figures."
+ },
+ "caveats": [
+  "Numerics: torch replacements of the vendor kernels (exact quantizers, fp32-accumulated GEMMs in a different summation order) -- greedy continuations can differ from the vendor fp8 kernels at near-ties; acceptance is measured self-consistently on this implementation's own greedy text.",
+  "Short continuations: up to 160 generated tokens per prompt (reasoning prompts sit inside their thinking span); acceptance deep into long generations or at 200K-1M context is not measured.",
+  "Greedy only; T = 1.0 serving (probabilistic draft sampling, block rejection) is lower per InferenceX (3.51 thinking-on / 4.07 thinking-off, coding) -- not measured here.",
+  "Prompt count is small (4 per workload, 9 workloads); CIs are prompt-level bootstrap and dominate any per-token precision."
+ ],
+ "run_log_summary": {
+  "steps": 159,
+  "last": "step 159 active 14 29.9s experts 609409 moe 7593 attn 2005 h2d 0 gpu_peak 8.13"
+ },
+ "rederived_v41_mtp_rates": {
+  "tool_chain": "tools/arch_utilization_v41.py -> arch_latency_ladder_v41.py -> arch_hbm_best_v41.py -> arch_lanes_v41.py -> v41_collective_exposure.py --levers -> v41_rack_design.py, run on a HEAD export with TAU (arch_utilization_v41.py) and POSITIONS, TAU (v41_rack_design.py) patched; nothing hand-computed",
+  "headline_path": "v41_rack.json demonstration_plan.overlap.steps[1].result.headline_tokens_s_per_user.<ctx>.with_adopted_levers.mtp",
+  "by_tau": {
+   "3.337": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 15895.949274622262
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 16593.98458391732
+    }
+   },
+   "3.43": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 16338.958948742691
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 17056.448044002518
+    }
+   },
+   "3.51": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 16720.042539383918
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 17454.266074183335
+    }
+   },
+   "3.649": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 17382.175278123053
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 18145.474901622503
+    }
+   },
+   "3.823": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 18211.032087767726
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 19010.72911726578
+    }
+   },
+   "3.8248": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 18219.606468557155
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 19019.68002294485
+    }
+   },
+   "3.8879": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 18520.186150675425
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 19333.45899424997
+    }
+   },
+   "4.07": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 19387.62767387252
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 20238.992285449054
+    }
+   },
+   "5.0": {
+    "1048576": {
+     "ar": 8184.912902114869,
+     "mtp": 23817.724415076806
+    },
+    "200000": {
+     "ar": 8567.550390932485,
+     "mtp": 24863.62688630105
+    }
+   }
+  }
+ },
+ "raw_records": {
+  "file": "results/speculative/raw/v41_dspark_onpolicy_drafts.json.gz",
+  "sha256": "6e4d6a2aa1b21584d4b25086f34e43aa57eab90d3e6ef9fbd2c5ec1760d4dab2",
+  "content": "per prompt: item, L, full token ids (prompt + greedy continuation), DSpark drafts and confidence (sigmoid) at every generated position; analyze.py reproduces results from it"
+ }
+}

@@ -1,0 +1,60 @@
+{
+ "core_area_um2": 116054,
+ "die_area_um2": 116336,
+ "evidence": [
+  "results/rtl/dsrom_qframe_20261003/B_r3_mig/6_report.json",
+  "results/rtl/dsrom_qframe_20261003/B_r3_mig/5_route_drc.rpt",
+  "results/rtl/dsrom_qframe_20261003/B_r3_mig/5_2_route_progress.log",
+  "results/rtl/dsrom_qframe_20261003/B_r3_mig/signoff_ss_ff.json",
+  "results/rtl/dsrom_qframe_20261003/B_r3_mig/final_artifact_sha256.txt"
+ ],
+ "frame_um": [
+  521.64,
+  223.02
+ ],
+ "instance_utilisation": 0.484251,
+ "launch_manifests": [
+  "results/rtl/dsrom_qframe_20261003/launch_B_r3.json",
+  "results/rtl/dsrom_qframe_20261003/migration_pve1_to_epyc.json"
+ ],
+ "macro_area_um2": 31525.5,
+ "remote_preserved": "ot-epyc1tb:/srv/opentallas-scratch/claude/qframe/B_r3_mig/orfs (6_final.odb/.v/.sdc/.spef)",
+ "routing": {
+  "antenna_net_violations": 0,
+  "antenna_pin_violations": 0,
+  "detail_route_final_violations": 0,
+  "drt_0255": 0,
+  "drt_0419": 0,
+  "drv": {
+   "max_cap": 1,
+   "max_fanout": 0,
+   "max_slew": 1
+  },
+  "route_drc_rpt_lines": 0,
+  "verdict": "FAIL_DRV (DRC 0, but routed max-slew/max-cap violations)"
+ },
+ "run": "B_r3_mig",
+ "schema": "opentallas.dsrom_qframe.verdict.v1",
+ "stdcell_area_um2": 24674.1,
+ "timing": {
+  "FF": {
+   "hold_tns_ns": -26.11,
+   "hold_wns_ps": -205.3,
+   "setup_wns_ps": -75.5
+  },
+  "SS": {
+   "fmax_mhz": 956.25,
+   "hold_wns_ps": 0.23,
+   "setup_tns_ns": -402.91,
+   "setup_wns_ps": -212.8
+  },
+  "notes": [
+   "SS setup misses in the clock-gate enable and the n_c -> fw_q1 fan-out path (owned by claude/dsrom-qelem-pipeline-20261003); identical in every frame",
+   "FF hold fails because this flow, like p12q9, repairs hold only at the primary SS corner (no --hold-corners WC,BC)"
+  ],
+  "policy": "setup at SS with 60 ps uncertainty, hold at FF with 25 ps (6_final.sdc + 6_final.spef; tools/signoff_analysis.py analyze --corners SS,FF --derate 0; ROM macro own ss/ff liberty)",
+  "verdict": "FAIL"
+ },
+ "verdict": "FAIL",
+ "verdict_basis": "PASS needs DRC 0, no DRV, SS setup >= 0 and FF hold >= 0. Routability: DRC clean, DRV FAIL; timing: FAIL."
+}

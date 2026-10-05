@@ -1,0 +1,223 @@
+{
+  "L1_generated_source": null,
+  "RTL_or_PnR_runs": false,
+  "all_source_obstacle_count": 14989,
+  "assumed_abstract_sizes_um": {
+    "ASSUMED_serdes_112g_lane": [
+      400,
+      1000
+    ],
+    "ASSUMED_ucie_a_x64": [
+      388.8,
+      1043
+    ]
+  },
+  "channel_capacity_note": "Existing640/1525 HBM corridors and832/1153 spines are source reservations, not free new800track lanes; selector/ACK/clock must be assigned available layers/cuts jointly.",
+  "checkpoint_reads": 0,
+  "examples": [
+    {
+      "bbox": [
+        21461.76,
+        12746.16,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_655"
+    },
+    {
+      "bbox": [
+        21812.544,
+        12746.16,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_656"
+    },
+    {
+      "bbox": [
+        21461.76,
+        12625.2,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_701"
+    },
+    {
+      "bbox": [
+        21812.544,
+        12625.2,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_702"
+    },
+    {
+      "bbox": [
+        21461.76,
+        12899.52,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_703"
+    },
+    {
+      "bbox": [
+        21812.544,
+        12899.52,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_704"
+    },
+    {
+      "bbox": [
+        21461.76,
+        12504.24,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_749"
+    },
+    {
+      "bbox": [
+        21812.544,
+        12504.24,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_750"
+    },
+    {
+      "bbox": [
+        21461.76,
+        13020.48,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_751"
+    },
+    {
+      "bbox": [
+        21812.544,
+        13020.48,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:ROM_MAC.dense_QE",
+      "name": "rom_752"
+    },
+    {
+      "bbox": [
+        21461.76,
+        12383.28,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:VM.CONSTANT_HE",
+      "name": "rom_805"
+    },
+    {
+      "bbox": [
+        21812.544,
+        12383.28,
+        125.712,
+        119.34
+      ],
+      "kind": "hard:VM.CONSTANT_HE",
+      "name": "rom_806"
+    }
+  ],
+  "generator_sha256": "c885e07fdf1506af5b3ce3d04c1a33a349732359e9786965a6ecc540d7ab3638",
+  "grid_bbox_overlap_source_counts": {
+    "channel:horizontal_spine": 8,
+    "channel:vertical_hbm_corridor": 2,
+    "hard:ENGRAM.spill": 30,
+    "hard:ROM_MAC.dense_QE": 10,
+    "hard:ROM_MAC.expert": 3596,
+    "hard:VM.CONSTANT_HE": 4,
+    "soft:ROM_MAC_strip": 135
+  },
+  "meaning": "192 grid passes core/hub/halo bounds only. Exact candidate R0 macro bboxes intersect retained current-role hard/soft/channel obstacles. It is not a legal fullhome floorplan. No obstacle is removed or treated free by this receipt.",
+  "next_owner_requirement": "Ram must compose a role-specific full floorplan specifying every retained/replaced field reservation, current hub/service/PHY, selector/hold/CTS area, channels and IO before placement admission. No implicit area-only conversion of the existing expert field.",
+  "per_populated_shard_size_macro_overlap_screen": [
+    {
+      "actual_macros_per_home": 6675,
+      "candidate_macros_with_any_retained_obstacle_overlap": 4520,
+      "overlap_pairs_by_kind": {
+        "channel:horizontal_spine": 352,
+        "channel:vertical_hbm_corridor": 83,
+        "hard:ENGRAM.spill": 54,
+        "hard:ROM_MAC.dense_QE": 18,
+        "hard:ROM_MAC.expert": 6298,
+        "hard:VM.CONSTANT_HE": 9,
+        "soft:ROM_MAC_strip": 3169
+      }
+    },
+    {
+      "actual_macros_per_home": 6676,
+      "candidate_macros_with_any_retained_obstacle_overlap": 4521,
+      "overlap_pairs_by_kind": {
+        "channel:horizontal_spine": 352,
+        "channel:vertical_hbm_corridor": 83,
+        "hard:ENGRAM.spill": 54,
+        "hard:ROM_MAC.dense_QE": 18,
+        "hard:ROM_MAC.expert": 6299,
+        "hard:VM.CONSTANT_HE": 9,
+        "soft:ROM_MAC_strip": 3170
+      }
+    },
+    {
+      "actual_macros_per_home": 8192,
+      "candidate_macros_with_any_retained_obstacle_overlap": 5827,
+      "overlap_pairs_by_kind": {
+        "channel:horizontal_spine": 448,
+        "channel:vertical_hbm_corridor": 83,
+        "hard:ENGRAM.spill": 54,
+        "hard:ROM_MAC.dense_QE": 18,
+        "hard:ROM_MAC.expert": 8133,
+        "hard:VM.CONSTANT_HE": 9,
+        "soft:ROM_MAC_strip": 4082
+      }
+    }
+  ],
+  "physical_admission": false,
+  "schema": "opentallas.engram.192-home-retained-obstacle-screen.v1",
+  "sensitivity_sha256": "cc1b938638f7e90ce1643c01fa15cd42aee641a607648bea43509992b00a97dd",
+  "source_LEF_pins": {
+    "ot_hbm3e_phy_v41x_aw30": {
+      "commit": "541a1d2f18c6c7eeae1577b0cc15eb859f097da2",
+      "path": "physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30/ot_hbm3e_phy_v41x_aw30.lef",
+      "sha256": "bab87674d8c11d6395d2d1492736fc3927726ab29545b25b8e1ae860daf0a177"
+    },
+    "ot_rom_8192x274_m8": {
+      "commit": "541a1d2f18c6c7eeae1577b0cc15eb859f097da2",
+      "path": "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.lef",
+      "sha256": "b897f8e0cc8368a321a96f0f7f30980cba32741e6ef5bff8fef6ce29e90a915f"
+    },
+    "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "commit": "541a1d2f18c6c7eeae1577b0cc15eb859f097da2",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+      "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4"
+    },
+    "ot_sram_1rw_2048x128_m4_r2c2": {
+      "commit": "541a1d2f18c6c7eeae1577b0cc15eb859f097da2",
+      "path": "physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.lef",
+      "sha256": "6f72948ce518c0d0d2cbabed97f4785b58e0702bd10559a2e32d13537ad16dd3"
+    }
+  },
+  "source_floorplan_pin": {
+    "commit": "541a1d2f18c6c7eeae1577b0cc15eb859f097da2",
+    "path": "results/floorplan/v41_pack_refit_w10_interim.json",
+    "sha256": "b0a2a7d98ba78d4476076b42ff2885bc18709ae907a17ddafc0f5416035306bc"
+  },
+  "verdict": "FAIL_IF_ALL_CURRENT_SOURCE_OBSTACLES_RETAINED"
+}

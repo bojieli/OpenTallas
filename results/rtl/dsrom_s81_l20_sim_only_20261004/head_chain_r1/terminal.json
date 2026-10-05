@@ -1,0 +1,87 @@
+{
+  "scope": "S81.L20.position1048575",
+  "functional": "SIM_ONLY",
+  "headline_timing": false,
+  "completed": true,
+  "exact": true,
+  "source_stage": 37,
+  "simulation_ticks": 151,
+  "native_cycles": null,
+  "source_fence": {
+    "node": "L20.fence",
+    "completed": true,
+    "scope": "SIM_ONLY_SYNCHRONOUS_CONSUMERS"
+  },
+  "mismatches": [
+    {
+      "rank": 0,
+      "region": "H",
+      "count": 0
+    },
+    {
+      "rank": 0,
+      "region": "PF",
+      "count": 0
+    },
+    {
+      "rank": 1,
+      "region": "H",
+      "count": 0
+    },
+    {
+      "rank": 1,
+      "region": "PF",
+      "count": 0
+    },
+    {
+      "rank": 2,
+      "region": "H",
+      "count": 0
+    },
+    {
+      "rank": 2,
+      "region": "PF",
+      "count": 0
+    },
+    {
+      "rank": 3,
+      "region": "H",
+      "count": 0
+    },
+    {
+      "rank": 3,
+      "region": "PF",
+      "count": 0
+    }
+  ],
+  "head": {
+    "component_chain": "produced_L20_H_PF_to_released_head_NOT_full40layer_token",
+    "instructions": 7,
+    "arithmetic": "SIM_ONLY_EXACT",
+    "storage_dies": 12,
+    "source_fence": "SIM_ONLY_SYNCHRONOUS_CONSUMERS",
+    "global_argmax_service": "SIM_ONLY",
+    "selected_id": 45411,
+    "selected_value_bits": 1099605158,
+    "errors": [
+      {
+        "rank": 0,
+        "logits_bit_mismatches": 0
+      },
+      {
+        "rank": 1,
+        "logits_bit_mismatches": 0
+      },
+      {
+        "rank": 2,
+        "logits_bit_mismatches": 0
+      },
+      {
+        "rank": 3,
+        "logits_bit_mismatches": 0
+      }
+    ],
+    "exact": true
+  },
+  "elapsed_seconds": 176.94793263962492
+}

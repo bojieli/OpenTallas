@@ -1,0 +1,12 @@
+{
+  "launches": 0,
+  "live_worker_mutations": 0,
+  "main_actual_replay_pending": true,
+  "main_base": "280c68212754f36deed860370116e886f08e7099",
+  "prior_failure_preserved": true,
+  "prior_failure_sha256": "17a986eb7af9f880027d89809a244e4cb8b605509e6c092b0b6ed94a5edcb585",
+  "production_runner_or_ROOT_guard_changes": false,
+  "schema": "opentallas.H1.r6.historical-validation-review.v1",
+  "tests": "16 unchangedr6 PASS;5 existingadapter controls PASS;7 realgit historical controls PASS;50pin pureprepare replay PASS against clean4e5 additive successor.",
+  "tradeoff": "Historical replay stays at actual mandated source_root, without relocating historical inputs or changing ROOT guards. A clean descendant is allowed only if git tree diff has additions exclusively; all original tracked blobs preserved. Any historical change/deletion, unrelated history, dirty state or head change during replay refuses validation. This proves pinned preparation equivalence, not fresh historical execution."
+}

@@ -1,0 +1,208 @@
+{
+  "schema": "opentallas.w10.allport.handoff.v1",
+  "base_commit": "952c5eb3ba4c0968bf2331422368aa706474c83d",
+  "verdict": "READY_FOR_PARENT_REVIEW_NECESSARY_PREDICATES_ONLY",
+  "source_tree": "/home/ubuntu/w10-allport-audit",
+  "primary_record": "results/uarch/w10_allport_necessary_access/audit.json",
+  "generator_preserved_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "tracked_preexisting_files_byte_identical": true,
+  "validation": {
+    "ports_per_macro": 288,
+    "orientations": [
+      "R0",
+      "MX",
+      "MY",
+      "R180"
+    ],
+    "port_instances": 1152,
+    "negative_tests_passed": 11,
+    "offline_reproduction_byte_identical": true,
+    "actual_PDN_polygon_counts": {
+      "M4": 1304,
+      "M5": 1642,
+      "V4": 2446
+    },
+    "source_and_structured_records_diff_check": "PASS; raw immutable OpenROAD logs retain original banner trailing space"
+  },
+  "classifications": {
+    "M4_track_intersects_port": {
+      "PROVABLE": 1152
+    },
+    "M5_track_intersects_port": {
+      "PROVABLE": 1152
+    },
+    "centered_M5_on_track_diagnostic": {
+      "REFUTED": 1152
+    },
+    "M4_center_on_track_diagnostic": {
+      "PROVABLE": 576,
+      "REFUTED": 576
+    },
+    "unextended_port_contains_centered_VIA45_M4": {
+      "REFUTED": 1152
+    },
+    "unextended_port_contains_nearest_M4_M5_track_V4_cut": {
+      "REFUTED": 1152
+    },
+    "unextended_port_contains_centered_V4_cut": {
+      "PROVABLE": 1152
+    },
+    "isolated_port_satisfies_M4_routing_minarea": {
+      "REFUTED": 1152
+    },
+    "port_pair_base_M4_spacing": {
+      "PROVABLE": 1152
+    },
+    "centered_M4_landing_avoids_macro_OBS": {
+      "PROVABLE": 1152
+    },
+    "centered_M4_landing_PDN_nonoverlap": {
+      "PROVABLE": 1152
+    },
+    "centered_M4_landing_PDN_base_spacing": {
+      "PROVABLE": 1152
+    },
+    "centered_M5_landing_PDN_nonoverlap": {
+      "PROVABLE": 1152
+    },
+    "centered_M5_landing_PDN_base_spacing": {
+      "PROVABLE": 1152
+    },
+    "centered_V4_landing_PDN_nonoverlap": {
+      "PROVABLE": 1152
+    },
+    "cut_spacing_and_enclosure_rules": {
+      "MISSING": 1152
+    },
+    "EOL_PRL_spacing": {
+      "MISSING": 1152
+    },
+    "extended_escape_minarea": {
+      "MISSING": 1152
+    },
+    "simultaneous_escape_and_signal_occupancy": {
+      "MISSING": 1152
+    },
+    "capture_mux_endpoint_capacity": {
+      "MISSING": 1152
+    },
+    "contextual_SS_FF_and_final_abstract": {
+      "MISSING": 1152
+    }
+  },
+  "witnesses": "Every refuted/missing predicate retains a per-port witness; rd_out[171]/[254] on MX identify the original failed nets.",
+  "hypothesis_boundary": "Centred/nearest-track landing and isolated routing-patch predicates only. Refutation is neither a macro DRC verdict nor proof access is impossible. Abstract pin minimum-area exemption is not adjudicated.",
+  "advanced_rules": "Actual EOL/enclosure objects and available numeric fields retained. Rule classes, complete cut/EOL/PRL applicability and connected metal unions remain missing.",
+  "PDN_scope": "Terminal c8 GRT power geometry in +/-2um strips covering all four macro edges; centred hypothetical landing only, no detailed signal occupancy or new wake route.",
+  "model_composition": {
+    "capacity": {
+      "wake_column_XF": 8,
+      "wake_incremental_placement_um2": 2128.58296,
+      "current_gross_spare_um2": 41464.8,
+      "escape_reservation_um2": 6957.34272,
+      "combined_reserved_um2": 9085.92568,
+      "gross_spare_after_both_um2": 32378.874320000003,
+      "fits_gross_existing_slot": true,
+      "local_contiguity_proved": false,
+      "fifo_storage_bits_are_not_corridor_tracks": "depth changes local storage/mux cost; crossing width depends on topology, not storage-bit sum"
+    },
+    "fully_additive_contingency": {
+      "outline_um": [
+        1066.62404657688,
+        142.56
+      ],
+      "extra_mm2_per_layer_die": 9.30398789632,
+      "stages": 42,
+      "total_dies": 212,
+      "ar_tokens_s": 2753.4,
+      "token_us": 363.18733202585895,
+      "local_latency_delta_cycles": "zero only for local capture/escape; long-span routing is conditional below",
+      "SS_wire_sensitivity": {
+        "expanded_half_span_um": 533.31202328844,
+        "measured_reach_um": 504.0,
+        "extra_stage_if_halfspan_crossed": 1,
+        "conservative_all_matvec_one_cycle": {
+          "ar_tokens_s": 2751.6,
+          "token_us": 363.4249164122692
+        },
+        "column_boundary_register_bits_upper": 1616,
+        "column_extra_placement_um2_at_50pct": 942.4512000000001,
+        "basis": "conditional upper bound; actual net topology must establish stage necessity; registers must fit local reserve or geometry be repriced before build"
+      },
+      "added_stage_hops_included": true,
+      "basis": "conservative all-additive reservation, no clock recovery; wire recalibration and actual local fit pending",
+      "adopted": false
+    },
+    "scope": "Existing 00e9 conditional reservations; no new geometry or latency adopted. Local fit and rule-complete escapes remain pending."
+  },
+  "no_new_PnR": true,
+  "no_retry_tuning": true,
+  "no_RTL_macro_owner_wake_edits": true,
+  "no_model_generator_change": true,
+  "existing_c8_status": "TERMINAL_FAIL rc1 DRT-0255; original committed archive preserved; recovery BLOCKED_INPUTS; no final abstract",
+  "prerequisites": {
+    "main": "952c5eb3b includes a37f3ee6f and integrated 00e9",
+    "current_wake_element_ledger_matches_00e9": true,
+    "before_any_build": [
+      "Parent-reviewed connected escape witnesses with complete cut/enclosure/EOL/PRL constraints",
+      "All-bank simultaneous signal and capture/mux endpoint topology, priced local area/latency",
+      "Preserve exclusive wake owner; this artifact does not authorize a separate hardware/P&R stream"
+    ]
+  },
+  "retained_attempts": [
+    {
+      "file": "inspection_attempt_wrong_binary.log",
+      "verdict": "ERROR_wrong_binary_path"
+    },
+    {
+      "file": "inspection_attempt_api_missing.log",
+      "source": "inspect_attempt_api_missing.tcl",
+      "verdict": "INCOMPLETE_API_and_block_via_coverage; owned read-only query stopped"
+    },
+    {
+      "file": "inspection_r1_without_completion_marker.log",
+      "source": "inspect_r1_without_completion_marker.tcl",
+      "verdict": "successful query superseded by completion-guarded extraction; retained"
+    }
+  ],
+  "reproduction": [
+    "python3 tools/w10_allport_access_audit.py --output /tmp/w10-allport-reproduction.json",
+    "cmp results/uarch/w10_allport_necessary_access/audit.json /tmp/w10-allport-reproduction.json",
+    "python3 -m unittest discover -s tests -p test_w10_allport_access_audit.py -v"
+  ],
+  "query": {
+    "image": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "binary": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "network": "none",
+    "cpus": 2,
+    "memory": "6g",
+    "mounts": "terminal c8 base mounted /inputs:ro; audit directory mounted /audit:ro",
+    "invocations": [
+      "-exit /audit/inspect.tcl",
+      "-exit /audit/rules.tcl"
+    ],
+    "database": {
+      "path": "/home/ubuntu/w10qjobs/work/c8/orfs/results/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_1_grt.odb",
+      "sha256": "85ef1ef5c8b54e52b3978b4d6e9c04594f691a9d6f7bde1bb6d253e05500c158",
+      "state": "terminal failed c8 GRT, not final route",
+      "query_image": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+    }
+  },
+  "owned_live_build_or_qualification_jobs_from_this_tree": [],
+  "files_sha256": {
+    "results/uarch/w10_allport_necessary_access/inspection_r1_without_completion_marker.log": "b8cf0e6483f2602b36229213ecb1417d218dee29a798117abbf987dedbdb9106",
+    "results/uarch/w10_allport_necessary_access/database.sha256": "fe227caaf3059ae10d0ac891b34fe232214d92028f9951ee845d9a762c44ac9d",
+    "results/uarch/w10_allport_necessary_access/audit.json": "1d24dfdc47fd9012aea9fe8a6a7b894a0843869e17b97803d1602802a2e89812",
+    "results/uarch/w10_allport_necessary_access/rules.tcl": "7732b94fece084f83815a1d87135b87c449f85f15a3ea55a3b0dedca392a8779",
+    "results/uarch/w10_allport_necessary_access/tests.log": "10d5070336097aed7aba541b86565c94f5b324f07f474af1aa0627021ca06950",
+    "results/uarch/w10_allport_necessary_access/inspection.log": "16c238a09bffed4b5f1a4e35681ee0c0a1ca38f46c14a8fb1fc987989677a430",
+    "results/uarch/w10_allport_necessary_access/inspect.tcl": "ac1c0efb0f0070be2ceaed3631912dc5639474c0f48adbf1afb0dc5587996cd2",
+    "results/uarch/w10_allport_necessary_access/inspect_attempt_api_missing.tcl": "1707dae22feee96c72d599f82689c406aebdfe510df8a683d935b732e64bd2f1",
+    "results/uarch/w10_allport_necessary_access/inspection_attempt_api_missing.log": "0e2bee265bce213fc36fa89134783d73c3821ef1e66482c04618214197be4754",
+    "results/uarch/w10_allport_necessary_access/rules.log": "b60fd055fe3e125651762ffcb2339201a9155881b3d5c749f8541b92f7c5f7cf",
+    "results/uarch/w10_allport_necessary_access/inspection_attempt_wrong_binary.log": "eb21cca9e8207194fc0191a451b4ce027c7cc0844aafedbdc4b33f25e97cca0b",
+    "results/uarch/w10_allport_necessary_access/inspect_r1_without_completion_marker.tcl": "d28554702bf3a83540c978c89cb364b7c97fa88228c4530ef9cd095eb5b4f66f",
+    "tools/w10_allport_access_audit.py": "4192ef433c26324ce7398e3df840a665ad4620576235122299949480a1387897",
+    "tests/test_w10_allport_access_audit.py": "84c8a15e3595e892eac8c1b685af97cc6a9759378bcd7d7ab747abdc8a21ea48"
+  }
+}

@@ -1,0 +1,186 @@
+PORT_EVENT fenced_rearm_accept cycle4
+PORT_EVENT request_accept cycle18 tag5fedcba98 genf we0
+PORT_EVENT backend_read_accept cycle19 tag5fedcba98 genf
+PORT_EVENT client_read_accept cycle33 client5
+CASE_PASS heldrequest_read_KV5 cycle=43
+PORT_EVENT fenced_rearm_accept cycle47
+PORT_EVENT request_accept cycle57 tag2ffffffff gen7 we1
+PORT_EVENT backend_write_accept cycle58 tag2ffffffff gen7
+PORT_EVENT client_write_accept cycle74 client2
+CASE_PASS heldwrite_ready cycle=84
+PORT_EVENT fenced_rearm_accept cycle88
+PORT_EVENT request_accept cycle98 tag000000000 gen1 we0
+PORT_EVENT request_accept cycle117 tag000000001 gen1 we0
+PORT_EVENT request_accept cycle136 tag000000002 gen1 we0
+PORT_EVENT request_accept cycle155 tag000000003 gen1 we0
+PORT_EVENT request_accept cycle174 tag000000004 gen1 we0
+PORT_EVENT request_accept cycle193 tag000000005 gen1 we0
+PORT_EVENT request_accept cycle212 tag000000006 gen1 we0
+PORT_EVENT request_accept cycle231 tag000000007 gen1 we0
+PORT_EVENT request_accept cycle250 tag000000008 gen1 we0
+PORT_EVENT request_accept cycle269 tag000000009 gen1 we0
+PORT_EVENT request_accept cycle288 tag00000000a gen1 we0
+PORT_EVENT request_accept cycle307 tag00000000b gen1 we0
+PORT_EVENT request_accept cycle326 tag00000000c gen1 we0
+PORT_EVENT request_accept cycle345 tag00000000d gen1 we0
+PORT_EVENT request_accept cycle364 tag00000000e gen1 we0
+PORT_EVENT request_accept cycle383 tag00000000f gen1 we0
+PORT_EVENT backend_read_accept cycle388 tag00000000f gen1
+PORT_EVENT client_read_accept cycle399 client0
+PORT_EVENT request_accept cycle418 tag000000063 gen1 we0
+PORT_EVENT backend_read_accept cycle419 tag000000000 gen1
+PORT_EVENT client_read_accept cycle433 client0
+PORT_EVENT backend_read_accept cycle438 tag000000001 gen1
+PORT_EVENT client_read_accept cycle451 client0
+PORT_EVENT backend_read_accept cycle456 tag000000002 gen1
+PORT_EVENT client_read_accept cycle469 client0
+PORT_EVENT backend_read_accept cycle474 tag000000003 gen1
+PORT_EVENT client_read_accept cycle487 client0
+PORT_EVENT backend_read_accept cycle492 tag000000004 gen1
+PORT_EVENT client_read_accept cycle505 client0
+PORT_EVENT backend_read_accept cycle510 tag000000005 gen1
+PORT_EVENT client_read_accept cycle523 client0
+PORT_EVENT backend_read_accept cycle528 tag000000006 gen1
+PORT_EVENT client_read_accept cycle541 client0
+PORT_EVENT backend_read_accept cycle546 tag000000007 gen1
+PORT_EVENT client_read_accept cycle559 client0
+PORT_EVENT backend_read_accept cycle564 tag000000008 gen1
+PORT_EVENT client_read_accept cycle577 client0
+PORT_EVENT backend_read_accept cycle582 tag000000009 gen1
+PORT_EVENT client_read_accept cycle595 client0
+PORT_EVENT backend_read_accept cycle600 tag00000000a gen1
+PORT_EVENT client_read_accept cycle613 client0
+PORT_EVENT backend_read_accept cycle618 tag00000000b gen1
+PORT_EVENT client_read_accept cycle631 client0
+PORT_EVENT backend_read_accept cycle636 tag00000000c gen1
+PORT_EVENT client_read_accept cycle649 client0
+PORT_EVENT backend_read_accept cycle654 tag00000000d gen1
+PORT_EVENT client_read_accept cycle667 client0
+PORT_EVENT backend_read_accept cycle672 tag00000000e gen1
+PORT_EVENT client_read_accept cycle685 client0
+PORT_EVENT backend_read_accept cycle690 tag000000063 gen1
+PORT_EVENT client_read_accept cycle703 client0
+CASE_PASS full16_oldcredit_no_bypass_outoforder cycle=713
+PORT_EVENT fenced_rearm_accept cycle717
+PORT_EVENT request_accept cycle727 tag000000001 gen1 we0
+PORT_EVENT request_accept cycle746 tag000000002 gen1 we0
+PORT_EVENT request_accept cycle765 tag000000003 gen1 we0
+PORT_EVENT backend_read_accept cycle766 tag000000001 gen1
+PORT_EVENT client_read_accept cycle784 client0
+PORT_EVENT backend_read_accept cycle789 tag000000002 gen1
+PORT_EVENT client_read_accept cycle802 client0
+PORT_EVENT backend_read_accept cycle807 tag000000003 gen1
+PORT_EVENT client_read_accept cycle820 client0
+CASE_PASS held_backend_read_and_finite_query cycle=830
+PORT_EVENT fenced_rearm_accept cycle834
+PORT_EVENT fenced_rearm_accept cycle849
+CASE_PASS stop_cancels_only_unaccepted_holder cycle=849
+PORT_EVENT fenced_rearm_accept cycle853
+PORT_EVENT request_accept cycle863 tag00000002a gen3 we0
+PORT_EVENT backend_read_accept cycle863 tag00000002a gen3
+CASE_PASS sameedge_issue_return_refused cycle=863
+PORT_EVENT fenced_rearm_accept cycle867
+PORT_EVENT request_accept cycle877 tag40000006f gen4 we1
+PORT_EVENT backend_write_accept cycle878 tag40000006f gen4
+PORT_EVENT backend_write_accept cycle889 tag40000006f gen4
+CASE_PASS duplicate_write_ack cycle=890
+PORT_EVENT fenced_rearm_accept cycle894
+PORT_EVENT request_accept cycle904 tag10000002c gen3 we0
+CASE_PASS duplicate_live_request cycle=915
+PORT_EVENT fenced_rearm_accept cycle919
+PORT_EVENT request_accept cycle929 tag10000002c gen3 we0
+PORT_EVENT backend_read_accept cycle930 tag10000002d gen3
+CASE_PASS validcode_wrongtag cycle=934
+PORT_EVENT fenced_rearm_accept cycle938
+PORT_EVENT request_accept cycle948 tag10000002c gen3 we0
+PORT_EVENT backend_read_accept cycle949 tag10000002c gen2
+CASE_PASS wronggeneration cycle=953
+PORT_EVENT fenced_rearm_accept cycle957
+PORT_EVENT request_accept cycle967 tag10000002c gen3 we1
+PORT_EVENT backend_read_accept cycle968 tag10000002c gen3
+CASE_PASS wrongdirection cycle=972
+PORT_EVENT fenced_rearm_accept cycle976
+PORT_EVENT request_accept cycle986 tag10000002c gen3 we0
+PORT_EVENT backend_read_accept cycle987 tag70000002c gen3
+CASE_PASS invalidclient cycle=987
+PORT_EVENT fenced_rearm_accept cycle991
+PORT_EVENT request_accept cycle1001 tag10000002c gen3 we0
+PORT_EVENT backend_read_accept cycle1002 tag10000002c gen3
+PORT_EVENT client_read_accept cycle1016 client1
+PORT_EVENT backend_read_accept cycle1027 tag10000002c gen3
+CASE_PASS duplicate_retired_return cycle=1028
+PORT_EVENT fenced_rearm_accept cycle1032
+PORT_EVENT request_accept cycle1042 tag10000002c gen3 we1
+CASE_PASS rearm_live_debt_refused cycle=1043
+PORT_EVENT fenced_rearm_accept cycle1047
+CASE_PASS unfenced_wrap_refused cycle=1049
+PORT_EVENT fenced_rearm_accept cycle1053
+PORT_EVENT request_accept cycle1063 tag300000058 genf we0
+PORT_EVENT backend_read_accept cycle1064 tag300000058 genf
+PORT_EVENT client_read_accept cycle1078 client3
+PORT_EVENT fenced_rearm_accept cycle1089
+PORT_EVENT request_accept cycle1098 tag300000058 gen0 we0
+PORT_EVENT backend_read_accept cycle1099 tag300000058 gen0
+PORT_EVENT client_read_accept cycle1113 client3
+CASE_PASS fenced_generation15_to0 cycle=1113
+PORT_EVENT backend_read_accept cycle1118 tag300000058 genf
+CASE_PASS reset_stale_old_generation cycle=1119
+PORT_EVENT fenced_rearm_accept cycle1123
+PORT_EVENT request_accept cycle1133 tag000000007 gen1 we0
+PORT_EVENT backend_read_accept cycle1134 tag000000007 gen1
+PORT_EVENT backend_write_accept cycle1145 tag400000063 gen1
+CASE_PASS badquery_blocks_simultaneous_release cycle=1147
+PORT_EVENT fenced_rearm_accept cycle1151
+PORT_EVENT request_accept cycle1161 tag080000001 gen9 we0
+PORT_EVENT request_accept cycle1180 tag080000002 gen9 we0
+MEASURE SAME_CLIENT_II observed_edges=19 source_prediction=19 first_edge=1161 second_edge=1180
+PORT_EVENT backend_read_accept cycle1181 tag080000002 gen9
+PORT_EVENT client_read_accept cycle1195 client0
+PORT_EVENT backend_read_accept cycle1200 tag080000001 gen9
+PORT_EVENT client_read_accept cycle1213 client0
+CASE_PASS sameclient_II19_measurement_no_fit cycle=1223
+PORT_EVENT fenced_rearm_accept cycle1227
+PORT_EVENT request_accept cycle1237 tag0ffffffff genf we0
+PORT_EVENT request_accept cycle1247 tag1ffffffff genf we0
+PORT_EVENT request_accept cycle1257 tag2ffffffff genf we0
+PORT_EVENT request_accept cycle1267 tag3ffffffff genf we0
+PORT_EVENT request_accept cycle1277 tag4ffffffff genf we0
+PORT_EVENT request_accept cycle1287 tag5ffffffff genf we0
+PORT_EVENT backend_read_accept cycle1288 tag5ffffffff genf
+PORT_EVENT client_read_accept cycle1302 client5
+PORT_EVENT backend_read_accept cycle1307 tag4ffffffff genf
+PORT_EVENT client_read_accept cycle1318 client4
+PORT_EVENT backend_read_accept cycle1323 tag3ffffffff genf
+PORT_EVENT client_read_accept cycle1334 client3
+PORT_EVENT backend_read_accept cycle1339 tag2ffffffff genf
+PORT_EVENT client_read_accept cycle1350 client2
+PORT_EVENT backend_read_accept cycle1355 tag1ffffffff genf
+PORT_EVENT client_read_accept cycle1366 client1
+PORT_EVENT backend_read_accept cycle1371 tag0ffffffff genf
+PORT_EVENT client_read_accept cycle1382 client0
+CASE_PASS sixclients_samefulltag_separatenamespace cycle=1392
+PORT_EVENT fenced_rearm_accept cycle1396
+PORT_EVENT request_accept cycle1406 tag1fedcba98 gen1 we0
+PORT_EVENT request_accept cycle1416 tag281234567 gen2 we1
+PORT_EVENT backend_read_accept cycle1417 tag1fedcba98 gen1
+PORT_EVENT backend_write_accept cycle1417 tag281234567 gen2
+PORT_EVENT client_read_accept cycle1435 client1
+PORT_EVENT client_write_accept cycle1435 client2
+CASE_PASS readwrite_joint_capture_and_retire cycle=1445
+PORT_EVENT fenced_rearm_accept cycle1449
+PORT_EVENT request_accept cycle1459 tag10000000a gen2 we1
+PORT_EVENT request_accept cycle1469 tag200000014 gen3 we1
+PORT_EVENT backend_write_accept cycle1470 tag10000000a gen2
+PORT_EVENT backend_write_accept cycle1478 tag200000014 gen3
+PORT_EVENT client_write_accept cycle1487 client1
+PORT_EVENT client_write_accept cycle1487 client2
+CASE_PASS held_backend_write_and_client_ready cycle=1497
+PORT_EVENT fenced_rearm_accept cycle1501
+CASE_PASS source_protocol_changed_held_request cycle=1511
+PORT_EVENT fenced_rearm_accept cycle1515
+CASE_PASS missing_reverse_allcopies_fence cycle=1517
+PORT_EVENT fenced_rearm_accept cycle1521
+PORT_EVENT request_accept cycle1531 tag10000002c gen3 we0
+[1533000] %Fatal: tb.sv:72: Assertion failed in tb_w2_fullnc6.consume_external_receipt.unnamedblk4: client terminal consumed quarantined reset orphan c1 r0
+%Error: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:72: Verilog $stop
+Aborting...

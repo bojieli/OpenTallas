@@ -1,0 +1,22 @@
+{
+  "status": "PASS_17_COMPONENT_TESTS_API_READY_FOR_PARENT_REVIEW_NO_PRODUCTION_CAPTURE",
+  "entrypoint": "tools/ds_producer_checkpoint_resume.py",
+  "base": "9762474b590a55a9dc9d1dd354dab72142d5592e",
+  "Kepler_runner_commit": "7b4046af628660c4bc698fc6db1e3b71f65f535f",
+  "test_command": "python3 -m pytest -q tests/test_ds_producer_checkpoint_resume.py",
+  "tests_log": "tests_milestone_r2.log",
+  "API": {
+    "project_checkpoint": "(engine,provider,witness,boundary_pc=9,destination=freshdir) -> exact payload bytes + metadata upper + FS reserve; no numeric execution",
+    "source_contract": "{identity: identity(unwrapped_actual_provider,engine), ... parent pinned source/constructor fields}; capture requires exact identity; runner adds its source/GO pins",
+    "capture_quiescent": "r47 arguments -> external trusted receipt; COMPLETE private closure and RUNNER_COMPLETE required; failed/partial dirs preserved",
+    "verify_checkpoint": "source_contract + next_pc + constructor_contract={identity: cold identity, checkpoint_receipt: capture receipt from trusted external record}; verifies all hashes before mutation",
+    "restore_quiescent": "verified_manifest, exact cold engine/provider/witness -> restores actual payload and identities; updates retired set IN PLACE so PC10Groups.retired reference survives",
+    "continue": "execute_remaining(engine,stop_after=...): only after successful verify/restore; source execute_operation unchanged for later PCs"
+  },
+  "no_expected_stimulus": "Witness expected payloads never stored, loaded or supplied to VM. Seen identities/initialization provenance/actual journal summary are metadata only. Fresh original witness constructor still required.",
+  "R45_not_recoverable": "No produced raw sectors/arrays persisted in exited R45 receipt directory. Do not synthesize checkpoint from 1568 comparison hashes.",
+  "scope_limits": "Unrecognised provider/engine attrs rejected; existing scratch contexts must be retired/removed; nonempty PC10 shared-memory objectgraph refused until separately source-priced schema. R45 PC0..9 is intended first production capture boundary.",
+  "headroom": "old journal + future reviewed continuation journal + projected checkpoint must fit measured disk; initial input source references retained; no wall/FSIZE/AS/CPU-time/memory process caps imposed",
+  "coordination": "parent relay to Kepler PC10 and Sagan PC11+; no messaging tool available, no duplicate numerical runner launched",
+  "hardware_fulltoken_qualified": false
+}

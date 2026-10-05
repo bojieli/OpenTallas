@@ -1,0 +1,251 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_agent_task_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actions": {
+      "items": {"$ref": "#/$defs/action"},
+      "maxItems": 16,
+      "type": "array"
+    },
+    "agent_execution_id": {"$ref": "#/$defs/sha256"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "all_model_turns_artifact_only": {"type": "boolean"},
+        "environment_actions_model_generated": {"type": "boolean"},
+        "isolated_environment_verified": {"const": true},
+        "semantic_rom_golden_exact": {"type": "boolean"},
+        "target_precision_reference_verified": {"const": false},
+        "timing_or_performance": {"const": false},
+        "withheld_task_tests_passed": {"type": "boolean"}
+      },
+      "required": [
+        "all_model_turns_artifact_only",
+        "environment_actions_model_generated",
+        "isolated_environment_verified",
+        "semantic_rom_golden_exact",
+        "target_precision_reference_verified",
+        "timing_or_performance",
+        "withheld_task_tests_passed"
+      ],
+      "type": "object"
+    },
+    "command_count": {"maximum": 16, "minimum": 0, "type": "integer"},
+    "comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_rom_actions": {"type": "boolean"},
+        "exact_rom_final_answer": {"type": "boolean"},
+        "exact_rom_image": {"type": "boolean"},
+        "exact_rom_tests": {"type": "boolean"},
+        "exact_rom_turns": {"type": "boolean"},
+        "turns": {
+          "items": {"$ref": "#/$defs/turn_comparison"},
+          "maxItems": 4,
+          "type": "array"
+        }
+      },
+      "required": [
+        "exact_rom_actions",
+        "exact_rom_final_answer",
+        "exact_rom_image",
+        "exact_rom_tests",
+        "exact_rom_turns",
+        "turns"
+      ],
+      "type": "object"
+    },
+    "docker": {
+      "additionalProperties": false,
+      "properties": {
+        "image_id": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "image_tag": {"minLength": 1, "type": "string"},
+        "server_version": {"minLength": 1, "type": "string"}
+      },
+      "required": ["image_id", "image_tag", "server_version"],
+      "type": "object"
+    },
+    "final_answer": {
+      "oneOf": [{"type": "string"}, {"type": "null"}]
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "instruction": {"minLength": 1, "type": "string"},
+    "isolation": {"$ref": "#/$defs/isolation"},
+    "model_generated_token_count": {"minimum": 1, "type": "integer"},
+    "runner_version": {"const": "tensor-accelerator-qwen-live-agent-runner-0.1.0"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_agent_task_execution.v1"},
+    "status": {"enum": ["fail", "pass"]},
+    "task_id": {"minLength": 1, "type": "string"},
+    "terminalbench_commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+    "test": {
+      "additionalProperties": false,
+      "properties": {
+        "exit_code": {"minimum": 0, "type": "integer"},
+        "stderr": {"type": "string"},
+        "stdout": {"type": "string"}
+      },
+      "required": ["exit_code", "stderr", "stdout"],
+      "type": "object"
+    },
+    "turn_count": {"maximum": 4, "minimum": 1, "type": "integer"},
+    "turns": {
+      "items": {"$ref": "#/$defs/turn"},
+      "maxItems": 4,
+      "minItems": 1,
+      "type": "array"
+    },
+    "workload_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "actions",
+    "agent_execution_id",
+    "build_id",
+    "claim_boundary",
+    "command_count",
+    "comparison",
+    "docker",
+    "final_answer",
+    "graph_id",
+    "instruction",
+    "isolation",
+    "model_generated_token_count",
+    "runner_version",
+    "schema",
+    "status",
+    "task_id",
+    "terminalbench_commit",
+    "test",
+    "turn_count",
+    "turns",
+    "workload_id"
+  ],
+  "title": "Qwen live isolated agent task execution",
+  "type": "object",
+  "$defs": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "call_index": {"maximum": 16, "minimum": 1, "type": "integer"},
+        "command": {"maxLength": 8192, "minLength": 1, "type": "string"},
+        "exit_code": {
+          "oneOf": [{"type": "integer"}, {"type": "null"}]
+        },
+        "stderr": {"type": "string"},
+        "stdout": {"type": "string"},
+        "timed_out": {"type": "boolean"},
+        "truncated": {"type": "boolean"},
+        "turn": {"maximum": 4, "minimum": 1, "type": "integer"},
+        "type": {"const": "bash_action"}
+      },
+      "required": [
+        "call_index",
+        "command",
+        "exit_code",
+        "stderr",
+        "stdout",
+        "timed_out",
+        "truncated",
+        "turn",
+        "type"
+      ],
+      "type": "object"
+    },
+    "call": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "additionalProperties": false,
+          "properties": {
+            "command": {"maxLength": 8192, "minLength": 1, "type": "string"}
+          },
+          "required": ["command"],
+          "type": "object"
+        },
+        "name": {"const": "bash"}
+      },
+      "required": ["arguments", "name"],
+      "type": "object"
+    },
+    "isolation": {
+      "additionalProperties": false,
+      "properties": {
+        "cap_drop_all": {"const": true},
+        "host_mounts": {"const": false},
+        "network": {"const": "none"},
+        "no_new_privileges": {"const": true},
+        "pids_limit": {"const": 128},
+        "privileged": {"const": false},
+        "read_only_rootfs": {"const": false}
+      },
+      "required": [
+        "cap_drop_all",
+        "host_mounts",
+        "network",
+        "no_new_privileges",
+        "pids_limit",
+        "privileged",
+        "read_only_rootfs"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "turn": {
+      "additionalProperties": false,
+      "properties": {
+        "base_session_id": {"$ref": "#/$defs/sha256"},
+        "content": {"type": "string"},
+        "control_id": {"$ref": "#/$defs/sha256"},
+        "controlled_execution_id": {"$ref": "#/$defs/sha256"},
+        "generated_text_raw": {"type": "string"},
+        "generated_text_visible": {"type": "string"},
+        "generated_token_count": {"maximum": 800, "minimum": 1, "type": "integer"},
+        "generated_token_ids": {
+          "items": {"maximum": 151668, "minimum": 0, "type": "integer"},
+          "maxItems": 800,
+          "minItems": 1,
+          "type": "array"
+        },
+        "parsed_calls": {
+          "items": {"$ref": "#/$defs/call"},
+          "maxItems": 16,
+          "type": "array"
+        },
+        "prompt_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "prompt_token_sha256": {"$ref": "#/$defs/sha256"},
+        "reasoning": {"type": "string"},
+        "status": {"enum": ["fail", "pass"]},
+        "stop_reason": {"const": "eos"},
+        "turn": {"maximum": 4, "minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "base_session_id",
+        "content",
+        "control_id",
+        "controlled_execution_id",
+        "generated_text_raw",
+        "generated_text_visible",
+        "generated_token_count",
+        "generated_token_ids",
+        "parsed_calls",
+        "prompt_token_count",
+        "prompt_token_sha256",
+        "reasoning",
+        "status",
+        "stop_reason",
+        "turn"
+      ],
+      "type": "object"
+    },
+    "turn_comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_rom_golden": {"type": "boolean"},
+        "turn": {"maximum": 4, "minimum": 1, "type": "integer"}
+      },
+      "required": ["exact_rom_golden", "turn"],
+      "type": "object"
+    }
+  }
+}

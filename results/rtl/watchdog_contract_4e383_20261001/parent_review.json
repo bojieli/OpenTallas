@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.watchdog-parent-review.v1",
+  "owner_commit": "1bab7000085843be2eac51750c6b3f3c88e2fa15",
+  "tests_passed": 34,
+  "substantive_reproduction": true,
+  "only_reproduced_record_difference": "authority.connected_case_path uses committed retained copy path rather than originaltmpcase",
+  "fixtures_preserved": [
+    "Initialwrongcasefilenames rejected beforeoutput; updatedbaselinepackagetoolSHA rejected because attempt9 pins originaltool; originalpinnedtool+bench used for finalreproduction. No pins relaxed."
+  ],
+  "actual_live_liveness_or_deadlock_verdict": null,
+  "universal_deadline_admitted": false,
+  "hardware_admission": false
+}

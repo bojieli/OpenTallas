@@ -1,0 +1,16 @@
+{
+  "verdict": "STATIC_BINDING_BLOCKER_NOT_COMPILER_VERDICT",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "observer_commit": "2c867b19139de1086b522cb15213dec80435af33",
+  "observer_sha256": "e952f745ad15a7b8193aefaaef5ae0f763381353403a1a2f987e48ee32ca75f3",
+  "actual_parent": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+  "actual_parent_sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+  "separate_ckv_parent": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+  "separate_ckv_parent_sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+  "trigger": ".CKV_SELECTED(SIM_OBS_CKV_SELECTED) is supplied unconditionally by copied wrapper",
+  "reason": "actual L0 parent has no CKV_SELECTED formal, including at SIM_OBS_CKV_SELECTED0",
+  "old_copy_changed": false,
+  "compiler_run": false,
+  "proposed_future_correction": "New L0-specific wrapper derivative omits only the unsupported CKV parameter actual; no existing file edits. Its inverse must recover original ot_v41_rt_die.sv exactly. Independently retain CKV derivative with real CKV parent; no L0/CKV source-list mixing.",
+  "limits": "Does not retract fake packet tests; prevents treating them as actual-parent hierarchy closure. No historical record overwritten."
+}

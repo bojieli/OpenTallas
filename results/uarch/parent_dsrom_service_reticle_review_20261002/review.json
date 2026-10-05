@@ -1,0 +1,24 @@
+{
+  "verdict": "PROPOSED_RECTANGULAR_GROWTH_FAILS_MODEL_RETICLE_ENVELOPE",
+  "draft_only_not_committed_owner_evidence": true,
+  "draft_sha256": "6f432ddd0fd51128ed1bc2a6721fd709cd34ef49ff2864b99e258de0cd37e5b0",
+  "draft_path": "/home/ubuntu/OpenTallas-controller-gap/results/uarch/dsrom_l20_hierarchical_reservation_20261002/reservation_outline.json",
+  "proposed_dimensions_mm": [
+    34.712928,
+    29.23992
+  ],
+  "proposed_area_mm2": 1015.00323768576,
+  "reticle_dimensions_mm": [
+    26,
+    33
+  ],
+  "reticle_source_path": "/home/ubuntu/OpenTallas/tools/uarch_model.py",
+  "reticle_source_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "reticle_source_lines": {
+    "4196": "    reticle_mm=(26.0, 33.0),",
+    "4222": "    fits_reticle = (max(W, H) <= HBM_SHORE[\"reticle_mm\"][1] and min(W, H) <= HBM_SHORE[\"reticle_mm\"][0])"
+  },
+  "fits_either_orientation": false,
+  "existing_field_debit_mm2": 52.97520248063999,
+  "next_action": "Owner must produce source-counted reticle-constrained composed layout preserving current target capacity and service ports, price added crossings and instance placement. Component-area sufficiency is not die feasibility. No P&R or adoption credit from draft."
+}

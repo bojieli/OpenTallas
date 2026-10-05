@@ -1,0 +1,140 @@
+{
+  "scope": "Matched current-workspace softmax specialization: omit sigmoid-transform division, preserve full engine default. Prelayout results only.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_matched_baseline_synth_sta_1ns.json",
+      "sha256": "2aa1ea404b65c31fe2fda32e18f05ea22148a4d5b118454bee730d70ecdb648d",
+      "mapped_area_um2": 12050.452,
+      "sequential_cells": 8584,
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+          "size_bytes": 3047
+        },
+        {
+          "path": "results/rtl/softmax_exp_only/before_softmax.sv",
+          "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7",
+          "size_bytes": 20439
+        },
+        {
+          "path": "results/rtl/softmax_exp_only/before_engine.sv",
+          "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+          "size_bytes": 31225
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+          "size_bytes": 11904
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+          "size_bytes": 6360
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+          "size_bytes": 6639
+        },
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+          "size_bytes": 9667
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 6478,
+            "setup_wns_ns": -10.577502471764124,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_synth_sta_1ns.json",
+      "sha256": "c18762fa6aa25d993887207d8ce01129e28eef77242658a21c5290e5a67f62be",
+      "mapped_area_um2": 10895.162,
+      "sequential_cells": 7247,
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+          "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+          "size_bytes": 3047
+        },
+        {
+          "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+          "sha256": "a6113740db44bf1f3ebe7e550ede74d696e68312d8d439d9d0d16de0eb697975",
+          "size_bytes": 20461
+        },
+        {
+          "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+          "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+          "size_bytes": 31759
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+          "size_bytes": 11904
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+          "size_bytes": 6360
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+          "size_bytes": 6639
+        },
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+          "size_bytes": 9667
+        }
+      ],
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.046632781156392696,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 6424,
+            "setup_wns_ns": -10.100401444504245,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_reduction_percent": 9.58710926361932,
+  "sequential_cells_removed": 1337,
+  "verification": {
+    "protocol_tests": 10,
+    "softmax": "9 cases and 2 refusals pass; unchanged 767158 cycles, 276 evaluations, 121 hits.",
+    "specialized_engine": "4200 requests: all 2100 sigmoid requests refused, exponential vectors unchanged; 3136052 checks, stalls and active reset pass.",
+    "default_engine": "Task-only staged engine passes original 4200-case full exp/sigmoid corpus, 6637132 checks, same normalized summary.",
+    "attention": "9 complete reference transactions pass; all phase counts and 2388699 aggregate active cycles identical to before."
+  },
+  "physical_pending": "results/physical_abi3/asap7/a3_attention_softmax_block/exp_only_cts12_1ns.json",
+  "limitation": "Both matched configurations fail 1 ns prelayout; no high-clock or energy qualification. Measured workspace includes prior unstaged divisor tuning preserved separately from task commit."
+}

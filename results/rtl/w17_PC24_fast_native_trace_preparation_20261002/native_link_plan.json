@@ -1,0 +1,128 @@
+{
+  "argv": [
+    "g++",
+    "-DW17_EXISTING_PORT_TRACE_OPT_IN=1",
+    "-std=c++20",
+    "-O2",
+    "-pthread",
+    "-DROM_PHW=6",
+    "-DCL_PW_BITS=547",
+    "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+    "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_qadd",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_merge_6",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_staging_3",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_tile_e",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pb",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pq",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/retn",
+    "-I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/root",
+    "-I/home/ubuntu/w17-current-fastpp-l0-cli-r4/rtl/test/qwen_runtime",
+    "-I/home/ubuntu/w17-current-fastpp-l0-cli-r4/rtl/test/v41_runtime",
+    "/tmp/opentallas-observer-successor-owned-progress/rtl/test/v41_runtime/w17_existing_port_trace_die_rt.cpp",
+    "-Wl,--start-group",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0/Vdie0__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1/Vdie1__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2/Vdie2__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3/Vdie3__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pq/Vpq__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pb/Vpb__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/retn/Vretn__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/root/Vroot__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vattn__ALL.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_qadd/libot_hdc_qadd.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_merge_6/libot_hdc_v41x_attn_merge_6.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_staging_3/libot_hdc_v41x_attn_staging_3.a",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_tile_e/libot_hdc_v41x_attn_tile_e.a",
+    "-Wl,--end-group",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp",
+    "-o",
+    "FRESH_EXTERNAL_NATIVE_TRACE_SCRATCH/v41_existing_port_trace"
+  ],
+  "existing_source_include_and_archive_bindings_unchanged": true,
+  "original_link_log": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/link.log",
+  "original_link_log_sha256": "5847274dea7fb28c92e706bb5f454ab7fe2a89c9707bdedbae120bf6945acb60",
+  "measured_original": {
+    "wall_seconds": 8.3,
+    "CPU_seconds": 7.35,
+    "maxRSS_KiB": 906084
+  },
+  "proposed": {
+    "host": "local preferred: archives already retained here; avoids transfer/duplicate frontend builds",
+    "CPU": 2,
+    "AS_GiB": 4,
+    "wall_seconds": 60,
+    "log_MiB": 2,
+    "new_output_allowance_GiB": 2,
+    "disk_reserve_GiB": 16,
+    "live_RAM_reserve_GiB": 24
+  },
+  "estimate": "About10-30s host compile/relink if retained archives and headers verify unchanged;60s bounded experiment cap, not measured successor time guarantee.",
+  "new_frontend_or_engine_compilations": 0,
+  "reused_archive_metadata": {
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0/Vdie0__ALL.a": {
+      "bytes": 92061266,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1/Vdie1__ALL.a": {
+      "bytes": 92061154,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2/Vdie2__ALL.a": {
+      "bytes": 92061266,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3/Vdie3__ALL.a": {
+      "bytes": 92061322,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pq/Vpq__ALL.a": {
+      "bytes": 562636,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pb/Vpb__ALL.a": {
+      "bytes": 2732652,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/retn/Vretn__ALL.a": {
+      "bytes": 35368,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/root/Vroot__ALL.a": {
+      "bytes": 36418,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vattn__ALL.a": {
+      "bytes": 124022076,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_qadd/libot_hdc_qadd.a": {
+      "bytes": 95610,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_merge_6/libot_hdc_v41x_attn_merge_6.a": {
+      "bytes": 831748,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_staging_3/libot_hdc_v41x_attn_staging_3.a": {
+      "bytes": 285920,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_tile_e/libot_hdc_v41x_attn_tile_e.a": {
+      "bytes": 3185442,
+      "source_provenance": "Retained current4e build lineage, no contents read in preparation; content identity verification required before relink"
+    }
+  },
+  "runtime_launch": false,
+  "build_execution": false,
+  "output_handle": null,
+  "missing": "Verify exact generated header/archive content identity and readonly build provenance, apply reviewed cap runner; no compiler executed by this preparation.",
+  "qualification": "Native existing-port diagnostics only; no owned/provider progress, fulltoken, or hardware credit"
+}

@@ -1,0 +1,15 @@
+{
+  "focused_tests": 40,
+  "pins": {
+    "results/uarch/qwen_rom_source_release_20261002/Russell-02e9-euclid-dependency-r1.json": "a0324a9737147667a466fc717f078cad9dc8fbeb9c4e34e054a9eebdf372224c",
+    "results/uarch/qwen_rom_source_release_20261002/Russell-02e9-model-r7.json": "b47d505ce39511508e815652a5ef5c69c8806dcffda9eb84a36450e356708c05",
+    "results/uarch/qwen_rom_source_release_20261002/dispatch-tests.log": "0e6726d50e803379d5dba8bffa695156ec8dd968c17d4b7aceb115bede57015c",
+    "results/uarch/qwen_rom_source_release_20261002/handoff-r1.json": "3f2867d1f041d636c3f206ee959093e05812508c7332a48c440f0afbb8481220",
+    "results/uarch/qwen_rom_source_release_20261002/observer-tests.log": "46908edc705b00062b130202285cfddf5f850a6cd3b2cd7969150990ba7caf29",
+    "results/uarch/qwen_rom_source_release_20261002/program-tests.log": "0716b579b5d74651f66c819c7cb16b74ffcf523df214a75cc74aca0eac870d8e",
+    "tests/test_qwen_rom_source_observer.py": "7f6e7c9e0f6870088f65f8ee8387957e81f84bb6ae4f07beaf5b9a85f64bbb98",
+    "tools/qwen_rom_source_observer_replay.py": "8a2baacfb0d03a603b36c27818faec24764d51e4af184801389c0f52313edd4e",
+    "tools/qwen_rom_source_release_export.py": "8071113c843d4c6b248964a084d8f917fb389f5ca95fa79b362d8b72074e004d"
+  },
+  "scope": "source release export readiness, fixture tests only; no actual journal or calendar adoption"
+}

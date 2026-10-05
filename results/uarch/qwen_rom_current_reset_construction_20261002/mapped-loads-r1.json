@@ -1,0 +1,51 @@
+{
+  "caps_are_pins_only": true,
+  "census_records": 158929,
+  "census_sha256": "bf4c7d2c6b83f73116a160c9f9193944eae9daa0e2b2d9fa60060fad671ad7fc",
+  "constant_reset_set_pins": 56630,
+  "groups": {
+    "KV_clock": {
+      "ff_cap_fF": 20.7464,
+      "pins": 2,
+      "ss_cap_fF": 17.3676
+    },
+    "ROM_clock": {
+      "ff_cap_fF": 103.73199999999999,
+      "pins": 10,
+      "ss_cap_fF": 86.83800000000001
+    },
+    "direct_parent_reset": {
+      "ff_cap_fF": 45439.0290370084,
+      "pins": 56593,
+      "ss_cap_fF": 39842.8868249592
+    },
+    "distributed_reset": {
+      "ff_cap_fF": 29.70763299999999,
+      "pins": 37,
+      "ss_cap_fF": 26.048925000000015
+    },
+    "logic_clock": {
+      "ff_cap_fF": 52326.90833002949,
+      "pins": 102287,
+      "ss_cap_fF": 44968.551826032184
+    }
+  },
+  "hardware_admission": false,
+  "mapped_survival_qualified": false,
+  "original_mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "original_terminal": {
+    "commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "contextual_SSFF": false,
+    "current_SMIN6_async_reset_bits_preopt": 58160,
+    "current_SMIN6_clock_bits_preopt": 109984,
+    "error": "unmapped cell $scopeinfo",
+    "status": "FAIL_SOURCE_MAP_RETAINED",
+    "synthesis_map_only": true,
+    "tile_PR": false,
+    "work": "/tmp/qwen-fulltile-source-map-smin6-r1-20261002"
+  },
+  "persistent_KV_service_tail_clock_domain": "Independent service;384+128macro clock ports/rank remain separate from tile10ROM+2KV.",
+  "schema": "QWEN_CURRENT_MAPPED_SINK_LOADS_V1",
+  "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "wire_construction": "Prospective construction prices nominal RC separately. Failed survival forbids a complete instantiated tile."
+}

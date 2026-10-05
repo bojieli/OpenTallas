@@ -1,0 +1,19 @@
+{
+  "change": "positive current record acceptance and native write ACK/drain certificate",
+  "old_empty_drained_predicate_rejected": true,
+  "RTL_changed": false,
+  "native_archive_reused": "/tmp/dsrom-s81-index-hbm-native-r1/obj/VDsromS81IndexHbm__ALL.a",
+  "new_callback_object": "/tmp/dsrom-s81-index-hbm-native-r1/s81_minimum_index_hbm_current_commit.o",
+  "regression": "PASS absent writer, actual record acceptance, native final writeACK/migration drain, wrong position and scan read independence",
+  "record_fixture": "two protocol-only records using retained raw prior bits; 108 native write ACKs; NOT actual current encoder or L20 payload qualification",
+  "L20_runtime": false,
+  "measured_TBps": null,
+  "source_pins": {
+    "tools/runtime/dsrom/s81_minimum_index_hbm.hpp": "f418590d306e6a901a637b0a9490513651b70e8bbf9c2348b08b97364d4127cc",
+    "tools/runtime/dsrom/s81_minimum_index_hbm.cpp": "9ee867eb70a55fe9dad90d942e5ea8905466fccfd364ae255a89550e8c4e5400",
+    "tests/native/dsrom_s81_index_hbm_current_commit.cpp": "72865fa379e530d6202a0ef295afba13eeae8783bfd445858f892436e7abd7d2",
+    "rtl/test/dsrom_s81_native_index_hbm/DsromS81IndexHbm.sv": "4b87a29166c0618698ce694e30c9003e269de5a36806c0cb0da66b9258f71c81",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": "9bbb649dea5f5ff7a65fd1eef897b76e2774a6fbbcad91b1f3df4dd8a055ab15",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047"
+  }
+}

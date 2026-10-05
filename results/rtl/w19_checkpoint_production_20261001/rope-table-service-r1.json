@@ -1,0 +1,5725 @@
+{
+  "schema": "opentallas.w19.gpu-rope-resident-service.v1",
+  "status": "ALLOCATION_SERVICE_CANDIDATE_NOT_ADMITTED",
+  "source_pins": {
+    "tools/w19_rope_table_service.py": "4a3ee6d4c797e308904938d8a4d13353e60802f970178fb7399cb828c93575a6",
+    "tools/w19_resident_contract.py": "ea5e6944ccf347537a38864d8e261a1257b7dbb1639d2cddf8af5f3fa36f722d",
+    "results/rtl/w19_checkpoint_production_20261001/resident-service-candidate-r1.json": "00f369307f174a3aa25bb6251b056d78b5df26cd091f460f573d6cd298d991f3",
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "format": {
+    "positions": 1048577,
+    "position_min": 0,
+    "position_max": 1048576,
+    "variants": 2,
+    "rowsize": 256,
+    "columns": "COS32 followedbySIN32 exactF32bits",
+    "unique_logical_bytes": 536871424
+  },
+  "ownership": {
+    "plain_full_replicas": 64,
+    "yarn_full_replicas": 96,
+    "reason": "plain q_rope/attend onlyheadowners0..63; yarn index_q all96 and compressor cyclicowner across96",
+    "raw_replica_bytes": 42949713920,
+    "chosen_policy": true,
+    "no_wholeembedding_orEngram_replication": true
+  },
+  "allocation": {
+    "ranks": [
+      {
+        "rank": 0,
+        "historical_stack_end": [
+          3175005696,
+          3169082368,
+          2216397312,
+          1895965440
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175005696,
+              3169082368,
+              2216397312,
+              1895965440
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242114816,
+              3236191488,
+              2283506176,
+              1963074304
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309223936,
+          3303300608,
+          2350615040,
+          2030183168
+        ]
+      },
+      {
+        "rank": 1,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 2,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 3,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 4,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 5,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 6,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 7,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 8,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 9,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 10,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 11,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 12,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 13,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 14,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 15,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 16,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 17,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 18,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 19,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 20,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 21,
+        "historical_stack_end": [
+          3174990336,
+          3169067008,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990336,
+              3169067008,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099456,
+              3236176128,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208576,
+          3303285248,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 22,
+        "historical_stack_end": [
+          3175051776,
+          3169067008,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051776,
+              3169067008,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160896,
+              3236176128,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309270016,
+          3303285248,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 23,
+        "historical_stack_end": [
+          3175215616,
+          3169906688,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215616,
+              3169906688,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324736,
+              3237015808,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433856,
+          3304124928,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 24,
+        "historical_stack_end": [
+          3174990080,
+          3169066752,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990080,
+              3169066752,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099200,
+              3236175872,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208320,
+          3303284992,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 25,
+        "historical_stack_end": [
+          3175051520,
+          3169066752,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051520,
+              3169066752,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160640,
+              3236175872,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269760,
+          3303284992,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 26,
+        "historical_stack_end": [
+          3175215360,
+          3169906432,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215360,
+              3169906432,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324480,
+              3237015552,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433600,
+          3304124672,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 27,
+        "historical_stack_end": [
+          3174990080,
+          3169066752,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990080,
+              3169066752,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099200,
+              3236175872,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208320,
+          3303284992,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 28,
+        "historical_stack_end": [
+          3175051520,
+          3169066752,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051520,
+              3169066752,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160640,
+              3236175872,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269760,
+          3303284992,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 29,
+        "historical_stack_end": [
+          3175215360,
+          3169906432,
+          2280197632,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215360,
+              3169906432,
+              2280197632,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324480,
+              3237015552,
+              2347306496,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433600,
+          3304124672,
+          2414415360,
+          2030245632
+        ]
+      },
+      {
+        "rank": 30,
+        "historical_stack_end": [
+          3174990080,
+          3169066752,
+          2216381952,
+          1895950080
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174990080,
+              3169066752,
+              2216381952,
+              1895950080
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242099200,
+              3236175872,
+              2283490816,
+              1963058944
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309208320,
+          3303284992,
+          2350599680,
+          2030167808
+        ]
+      },
+      {
+        "rank": 31,
+        "historical_stack_end": [
+          3175051520,
+          3169066752,
+          2216381952,
+          1896027904
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051520,
+              3169066752,
+              2216381952,
+              1896027904
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160640,
+              3236175872,
+              2283490816,
+              1963136768
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269760,
+          3303284992,
+          2350599680,
+          2030245632
+        ]
+      },
+      {
+        "rank": 32,
+        "historical_stack_end": [
+          3175215104,
+          3169906176,
+          2280197120,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175215104,
+              3169906176,
+              2280197120,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242324224,
+              3237015296,
+              2347305984,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433344,
+          3304124416,
+          2414414848,
+          2030244864
+        ]
+      },
+      {
+        "rank": 33,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 34,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 35,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 36,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 37,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 38,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 39,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 40,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 41,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 42,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 43,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 44,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 45,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 46,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 47,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 48,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 49,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 50,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 51,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 52,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 53,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 54,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 55,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 56,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 57,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 58,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 59,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 60,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 61,
+        "historical_stack_end": [
+          3175051008,
+          3169066240,
+          2216381184,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175051008,
+              3169066240,
+              2216381184,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242160128,
+              3236175360,
+              2283490048,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309269248,
+          3303284480,
+          2350598912,
+          2030244864
+        ]
+      },
+      {
+        "rank": 62,
+        "historical_stack_end": [
+          3175214848,
+          3169905920,
+          2280196864,
+          1896027136
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3175214848,
+              3169905920,
+              2280196864,
+              1896027136
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242323968,
+              3237015040,
+              2347305728,
+              1963136000
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309433088,
+          3304124160,
+          2414414592,
+          2030244864
+        ]
+      },
+      {
+        "rank": 63,
+        "historical_stack_end": [
+          3174989568,
+          3169066240,
+          2216381184,
+          1895949312
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.plain",
+            "bytes": 268435712,
+            "base": [
+              3174989568,
+              3169066240,
+              2216381184,
+              1895949312
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          },
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3242098688,
+              3236175360,
+              2283490048,
+              1963058176
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3309207808,
+          3303284480,
+          2350598912,
+          2030167040
+        ]
+      },
+      {
+        "rank": 64,
+        "historical_stack_end": [
+          3131988992,
+          3126003456,
+          2173317888,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131988992,
+              3126003456,
+              2173317888,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199098112,
+          3193112576,
+          2240426752,
+          1920072704
+        ]
+      },
+      {
+        "rank": 65,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133568,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133568,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242432,
+          1920072704
+        ]
+      },
+      {
+        "rank": 66,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317888,
+          1852886016
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317888,
+              1852886016
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426752,
+          1919994880
+        ]
+      },
+      {
+        "rank": 67,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317888,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317888,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426752,
+          1920072704
+        ]
+      },
+      {
+        "rank": 68,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133568,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133568,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242432,
+          1920072704
+        ]
+      },
+      {
+        "rank": 69,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317888,
+          1852886016
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317888,
+              1852886016
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426752,
+          1919994880
+        ]
+      },
+      {
+        "rank": 70,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317888,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317888,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426752,
+          1920072704
+        ]
+      },
+      {
+        "rank": 71,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133568,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133568,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242432,
+          1920072704
+        ]
+      },
+      {
+        "rank": 72,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317888,
+          1852886016
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317888,
+              1852886016
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426752,
+          1919994880
+        ]
+      },
+      {
+        "rank": 73,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317888,
+          1852963840
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317888,
+              1852963840
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426752,
+          1920072704
+        ]
+      },
+      {
+        "rank": 74,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 75,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 76,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 77,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 78,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 79,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 80,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 81,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 82,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 83,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 84,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 85,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 86,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 87,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 88,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 89,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 90,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 91,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 92,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      },
+      {
+        "rank": 93,
+        "historical_stack_end": [
+          3131926016,
+          3126002688,
+          2173317632,
+          1852885760
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131926016,
+              3126002688,
+              2173317632,
+              1852885760
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199035136,
+          3193111808,
+          2240426496,
+          1919994624
+        ]
+      },
+      {
+        "rank": 94,
+        "historical_stack_end": [
+          3131987456,
+          3126002688,
+          2173317632,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3131987456,
+              3126002688,
+              2173317632,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199096576,
+          3193111808,
+          2240426496,
+          1920072448
+        ]
+      },
+      {
+        "rank": 95,
+        "historical_stack_end": [
+          3132151296,
+          3126842368,
+          2237133312,
+          1852963584
+        ],
+        "regions": [
+          {
+            "family": "rope.coefficients.yarn",
+            "bytes": 268435712,
+            "base": [
+              3132151296,
+              3126842368,
+              2237133312,
+              1852963584
+            ],
+            "extent": [
+              67109120,
+              67109120,
+              67108864,
+              67108864
+            ],
+            "dtype": "F32 row[COS32,SIN32]",
+            "readonly": true
+          }
+        ],
+        "stack_end": [
+          3199260416,
+          3193951488,
+          2304242176,
+          1920072448
+        ]
+      }
+    ],
+    "max_stack_end": 3309433856,
+    "required_sector_bits": 27,
+    "required_bulk_line_bits": 25,
+    "added_allocated_bytes": 42949754880
+  },
+  "source_graph_binding": [
+    {
+      "layer": 0,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "plain",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 0,
+      "op": 8,
+      "function": "attend",
+      "variant": "plain",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 1,
+      "op": 12,
+      "function": "q_rope",
+      "variant": "plain",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 1,
+      "op": 13,
+      "function": "attend",
+      "variant": "plain",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 2,
+      "op": 9,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 2,
+      "op": 10,
+      "function": "compressor",
+      "variant": "yarn",
+      "owners": [
+        63
+      ],
+      "row_position": "currenttokenpos+1-compressratio onlywhen group closes",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 2,
+      "op": 13,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 2,
+      "op": 18,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 3,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 3,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 4,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 4,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 5,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 5,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 6,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 6,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 7,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 7,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 8,
+      "op": 9,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 8,
+      "op": 10,
+      "function": "compressor",
+      "variant": "yarn",
+      "owners": [
+        63
+      ],
+      "row_position": "currenttokenpos+1-compressratio onlywhen group closes",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 8,
+      "op": 13,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 8,
+      "op": 18,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 9,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 9,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 10,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 10,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 11,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 11,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 12,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 12,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 13,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 13,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 14,
+      "op": 14,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 14,
+      "op": 15,
+      "function": "compressor",
+      "variant": "yarn",
+      "owners": [
+        63
+      ],
+      "row_position": "currenttokenpos+1-compressratio onlywhen group closes",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 14,
+      "op": 18,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 14,
+      "op": 23,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 15,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 15,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 16,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 16,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 17,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 17,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 18,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 18,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 19,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 19,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 20,
+      "op": 9,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 20,
+      "op": 10,
+      "function": "compressor",
+      "variant": "yarn",
+      "owners": [
+        31
+      ],
+      "row_position": "currenttokenpos+1-compressratio onlywhen group closes",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 20,
+      "op": 13,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 20,
+      "op": 21,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 21,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 21,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 22,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 22,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 23,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 23,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 24,
+      "op": 8,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 24,
+      "op": 11,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 24,
+      "op": 17,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 25,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 25,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 26,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 26,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 27,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 27,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 28,
+      "op": 8,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 28,
+      "op": 11,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 28,
+      "op": 17,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 29,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 29,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 30,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 30,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 31,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 31,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 32,
+      "op": 8,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 32,
+      "op": 11,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 32,
+      "op": 17,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 33,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 33,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 34,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 34,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 35,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 35,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 36,
+      "op": 8,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 36,
+      "op": 11,
+      "function": "index_q",
+      "variant": "yarn",
+      "owners": "all",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 36,
+      "op": 17,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 37,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 37,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 38,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 38,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 39,
+      "op": 7,
+      "function": "q_rope",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    },
+    {
+      "layer": 39,
+      "op": 8,
+      "function": "attend",
+      "variant": "yarn",
+      "owners": "heads",
+      "row_position": "currenttokenpos",
+      "runtime_read_bytes": 256,
+      "cache_hit_credit": false
+    }
+  ],
+  "runtime": {
+    "requester": "existing SM0 ordinaryGPU load/DMA client, not inventedextraendpoint",
+    "row_commands": 2,
+    "sectors_per_command": 4,
+    "bytes_per_lookup": 256,
+    "length_limit": 16,
+    "request": "immutable typedvariant +currenttokenposition,tagged two128B loads routed toactualfourstack addresses",
+    "client_count": "32SM baseline; no +4injector inference",
+    "coefficient_cache": "proposed two256B rows +32Bvalid/tag ownership in SM0shared;544B explicitlyreserved, no cachehitlatency credit",
+    "private_coefficient_staging": "256BperconsumerSM explicitlyreserved inshared, notfreeRF/L2",
+    "ordinary_warp_reads": 2,
+    "shared_read_bytes": 256,
+    "shared128B_cycle_floor": 2,
+    "RF_read_latency_cycles": 2,
+    "coefficient_RF_words_per_pair": 2,
+    "register_demand": "cos/sin heldlane-local acrossfourFMUL/twoFADD; shared ports compete withallotherloads",
+    "NoC_tail_consumers": "q_rope/inverseattend fourSMtailgroups,64B each=>256B delivery",
+    "NoC_index_consumers": "32indexheadSMs,256B each=>8192B delivery; nocfreebroadcast",
+    "fetch_count": 92,
+    "read_bytes_rank_token_upper_candidate": 23552,
+    "actual_source_graph_lookup_count_rank": [
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      89,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      91,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8
+    ],
+    "actual_source_graph_read_bytes_rank": [
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22784,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      22528,
+      23296,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048,
+      2048
+    ],
+    "service_wait_cycles": null,
+    "events": [
+      "boundscheckposition+actualvariant beforeissue",
+      "bothsectorcommands acceptedwithreserved landingcredit",
+      "all8sectorpayloads returnedwith matchingtag/address",
+      "bothcoefficienthalves staged+writevisibility",
+      "actualfiniteNoC+CDC deliveries acknowledged",
+      "consumer RFloads finish",
+      "allreaderconsumerdone before cache/staging slot reuse"
+    ]
+  },
+  "offline_producer": {
+    "recipe": "F32(position)*F32freq thennumpyF64cos/sin thenF32; fullrange128/640proofcoeffinputs bindthisdefinition",
+    "generator_source_pinned": true,
+    "full_images_emitted": false,
+    "producer_platform_must_be_pinned": "NumPy version/ufunc ELF+CPU ISA configuration for immutable emittedtable hash",
+    "production_host_arithmetic": false,
+    "native_GPU_sin_cos": false
+  },
+  "alternatives": "exactGPUsoftware sin/cos backend is UNPRICED/UNQUALIFIED; no approximate SFU substitute adopted",
+  "prerequisites": [
+    "Ram accepts actualconsumer policy/newfamily and correctedfullresident aperture/traffic",
+    "sourcebound offlinewhole-table content identity beforeimagesemit, boundedlogicalsource proof nowonly",
+    "commoncontroller finitecoalescer/landing/NoC/CDC+readerepoch waits priced andconnected",
+    "544Bcache+256Bconsumer staging against64KB shared schedule/ports inclHC overlap",
+    "full composedarea/routes/floorplan admission"
+  ],
+  "full_token_cycles": null,
+  "physical_qualified": false,
+  "adopted": false
+}

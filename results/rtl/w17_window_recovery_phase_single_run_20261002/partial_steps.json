@@ -1,0 +1,60 @@
+[
+  {
+    "command": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--binary",
+      "--timing",
+      "--assert",
+      "--top-module",
+      "tb",
+      "-j",
+      "2",
+      "-Wno-fatal",
+      "--Mdir",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/window_prefetch_recovery.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/kv_reqmux_recovery.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/kv_rope_reqmux_recovery.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/hbm_karb_recovery.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/idx_hbm_recovery.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_window_stage4.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/tb.sv"
+    ],
+    "returncode": 0,
+    "wall_seconds": 16.02799649303779,
+    "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/compile.log",
+    "log_sha256": "76ed3082d336e8dec763cf732b615dd920e5b295562666e853931452237ef7a6"
+  },
+  {
+    "command": [
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj/Vtb",
+      "+CASE=READ_HELD"
+    ],
+    "returncode": 0,
+    "wall_seconds": 0.1025195699185133,
+    "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/case0.log",
+    "log_sha256": "61946d3d68bfcea622bfd04c014f1c61fdf26202d2e021d8c4d7bec91c0a955b"
+  },
+  {
+    "command": [
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj/Vtb",
+      "+CASE=WC_INTENT"
+    ],
+    "returncode": 0,
+    "wall_seconds": 0.10253798495978117,
+    "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/case1.log",
+    "log_sha256": "70556201e584a8b2fcb92a4550a89e3fa905f4b1e0db637e11e29696af69e869"
+  },
+  {
+    "command": [
+      "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj/Vtb",
+      "+CASE=WS_VISIBLE"
+    ],
+    "returncode": 0,
+    "wall_seconds": 0.10257532307878137,
+    "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/case2.log",
+    "log_sha256": "a782a0ae171315bc9a617d6ef52b5f45a94502adf9fa17b8587e3da07a18231f"
+  }
+]

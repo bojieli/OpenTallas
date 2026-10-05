@@ -1,0 +1,72 @@
+{
+ "P0_token0_vs_retained_oracle_tp4": {
+  "layer_x_equal": 144,
+  "layer_x_total": 144,
+  "next_token": [
+   50994,
+   50994
+  ],
+  "next_logit_bits": [
+   "419c72b5",
+   "419c72b5"
+  ],
+  "head_die_fields_equal": true
+ },
+ "P255_vs_cpu_position_oracle_L0_L2": {
+  "layer_x_sha256": [
+   12,
+   12
+  ],
+  "kv_pre_sha256": [
+   12,
+   12
+  ],
+  "kv_at_P_sha256": [
+   12,
+   12
+  ],
+  "token": [
+   6280,
+   6280
+  ]
+ },
+ "P1023_vs_cpu_position_oracle_L0_L2": {
+  "layer_x_sha256": [
+   12,
+   12
+  ],
+  "kv_pre_sha256": [
+   12,
+   12
+  ],
+  "kv_at_P_sha256": [
+   12,
+   12
+  ],
+  "token": [
+   1796,
+   1796
+  ]
+ },
+ "cpu_references": {
+  "oracle_tp4": "retained TP4 36-layer+head token-0 oracle (layer-parallel-sim/data/oracle_tp4/oracle.json)",
+  "position_oracle": "ot-epyc1tb:/srv/opentallas-scratch/claude/realmem/gold/prompt_big/oracle.json (tools/qwen_rom_position_oracle_w12.py, layers 0-2)"
+ },
+ "all_exact": true,
+ "golden_results": {
+  "255": {
+   "token_in": 6280,
+   "next_token": 98951,
+   "next_logit_bits": "42098785",
+   "top2_margin": 7.600162506103516
+  },
+  "1023": {
+   "token_in": 1796,
+   "next_token": 12147,
+   "next_logit_bits": "41f4268a",
+   "top2_margin": 6.992454528808594
+  }
+ },
+ "bulk_location": "ot-epyc1tb:/srv/opentallas-scratch/claude/realmem-fulltoken/gold/P{255,1023} (x, kv_pre, kv_at_P, logits); sha256 of every file in gpu_prompt_oracle.json",
+ "host": "local GPU (NVIDIA RTX PRO 6000 Blackwell), never a CPU host; wall 2,702 s for 1,024 positions x 36 layers + 2 heads"
+}

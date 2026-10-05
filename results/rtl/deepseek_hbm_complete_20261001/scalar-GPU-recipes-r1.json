@@ -1,0 +1,5031 @@
+{
+  "schema": "opentallas.deepseek.hbm.scalar-GPU-recipes.v1",
+  "source_pins": {
+    "tools/deepseek_hbm_complete_isa.py": "e445151213290c2e2aaf9375bd68fb4747781b86bebf8f8f9652fb1acc87cdd3",
+    "tools/deepseek_hbm_complete_executor.py": "da1c0eac8427c3b997fa8bc0ae7bf2f8e900c7f499d7508a8bc5c0d8ed97f8f1",
+    "tools/deepseek_hbm_complete_program.py": "eaaeeea2297a547547b6a2292cc828a183b34f403cffd6efe8d0ec0d68dc41fb",
+    "tools/deepseek_hbm_complete_memory.py": "ea1bbe4f09973438323adad64154311d22bb493be13af2c68f3521af0aaa8719",
+    "tools/w19_gpu_compare_lowering.py": "bdd8fbb87a132bdd0c81e8b7f917e0f8abb86197fb12b4ae61386c86ef69a986",
+    "tools/w19_gpu_compare_vm.py": "7c1dd389cd27b3d85eb71acdcc113ccf56c512d3a5c026bd2b63c295e46d3688",
+    "tools/w19_gpu_attention_finish.py": "3c98573a2dad2d5680fc90da3d38fb70afcffbda710b54e7f08970a76382bbc5",
+    "tools/w19_norm_opcode_proof.py": "541c89829a632d325678ea5e4667f5fdbbb8bf2105de57a5e46aedbdb9194a1c",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "recipes": {
+    "FADD": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "b",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "b"
+          }
+        },
+        {
+          "op": "FADD",
+          "dst": "r",
+          "src": [
+            "a",
+            "b"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 15,
+        "warp_instructions": {
+          "LOAD": 2,
+          "FADD": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 3,
+        "shared_issue_cycles": 3,
+        "active_lanes": 32,
+        "peak_live_value_registers": 2,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "FMUL": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "b",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "b"
+          }
+        },
+        {
+          "op": "FMUL",
+          "dst": "r",
+          "src": [
+            "a",
+            "b"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 15,
+        "warp_instructions": {
+          "LOAD": 2,
+          "FMUL": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 3,
+        "shared_issue_cycles": 3,
+        "active_lanes": 32,
+        "peak_live_value_registers": 2,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "DIV": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "b",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "b"
+          }
+        },
+        {
+          "op": "DIV",
+          "dst": "r",
+          "src": [
+            "a",
+            "b"
+          ],
+          "latency": 21,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 58,
+        "warp_instructions": {
+          "LOAD": 2,
+          "DIV": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 3,
+        "shared_issue_cycles": 3,
+        "active_lanes": 32,
+        "peak_live_value_registers": 2,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "NEG": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "XOR",
+          "dst": "r",
+          "src": [
+            "a",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 8,
+        "warp_instructions": {
+          "LOAD": 1,
+          "XOR": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 2,
+        "shared_issue_cycles": 2,
+        "active_lanes": 32,
+        "peak_live_value_registers": 1,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "ABS": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "mask",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "abs_mask"
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "r",
+          "src": [
+            "a",
+            "mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 9,
+        "warp_instructions": {
+          "LOAD": 2,
+          "AND": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 3,
+        "shared_issue_cycles": 3,
+        "active_lanes": 32,
+        "peak_live_value_registers": 2,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "BF16": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "SHR",
+          "dst": "hi",
+          "src": [
+            "a",
+            "@U16"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "lsb",
+          "src": [
+            "hi",
+            "@U1"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "bias",
+          "src": [
+            "a",
+            "@U7FFF"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "rounded",
+          "src": [
+            "bias",
+            "lsb"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "r",
+          "src": [
+            "rounded",
+            "@UFFFF0000"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 18,
+        "warp_instructions": {
+          "LOAD": 1,
+          "SHR": 1,
+          "AND": 2,
+          "IADD": 2,
+          "STORE32": 1
+        },
+        "RF_write_slots": 6,
+        "shared_issue_cycles": 2,
+        "active_lanes": 32,
+        "peak_live_value_registers": 2,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "EXP": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "x",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_a_exp",
+          "src": [
+            "x",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp0_a_exp_all",
+          "src": [
+            "cmp0_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_a_mant",
+          "src": [
+            "x",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp0_a_mant_nonzero",
+          "src": [
+            "cmp0_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_a_nan",
+          "src": [
+            "cmp0_a_exp_all",
+            "cmp0_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_b_exp",
+          "src": [
+            "@EXP_MIN",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp0_b_exp_all",
+          "src": [
+            "cmp0_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_b_mant",
+          "src": [
+            "@EXP_MIN",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp0_b_mant_nonzero",
+          "src": [
+            "cmp0_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_b_nan",
+          "src": [
+            "cmp0_b_exp_all",
+            "cmp0_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_GT",
+          "dst": "cmp0_ordered_cmp",
+          "src": [
+            "x",
+            "@EXP_MIN"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp0_b_not_nan",
+          "src": [
+            "cmp0_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_ordered_a",
+          "src": [
+            "cmp0_ordered_cmp",
+            "cmp0_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp0_choose_a",
+          "src": [
+            "cmp0_a_nan",
+            "cmp0_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp0_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp0_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp0_inverse_mask",
+          "src": [
+            "cmp0_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_a_bits",
+          "src": [
+            "x",
+            "cmp0_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp0_b_bits",
+          "src": [
+            "@EXP_MIN",
+            "cmp0_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "xlo",
+          "src": [
+            "cmp0_a_bits",
+            "cmp0_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_a_exp",
+          "src": [
+            "xlo",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp1_a_exp_all",
+          "src": [
+            "cmp1_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_a_mant",
+          "src": [
+            "xlo",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp1_a_mant_nonzero",
+          "src": [
+            "cmp1_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_a_nan",
+          "src": [
+            "cmp1_a_exp_all",
+            "cmp1_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_b_exp",
+          "src": [
+            "@EXP_MAX",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp1_b_exp_all",
+          "src": [
+            "cmp1_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_b_mant",
+          "src": [
+            "@EXP_MAX",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp1_b_mant_nonzero",
+          "src": [
+            "cmp1_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_b_nan",
+          "src": [
+            "cmp1_b_exp_all",
+            "cmp1_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp1_ordered_cmp",
+          "src": [
+            "xlo",
+            "@EXP_MAX"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp1_b_not_nan",
+          "src": [
+            "cmp1_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_ordered_a",
+          "src": [
+            "cmp1_ordered_cmp",
+            "cmp1_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp1_choose_a",
+          "src": [
+            "cmp1_a_nan",
+            "cmp1_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp1_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp1_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp1_inverse_mask",
+          "src": [
+            "cmp1_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_a_bits",
+          "src": [
+            "xlo",
+            "cmp1_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp1_b_bits",
+          "src": [
+            "@EXP_MAX",
+            "cmp1_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "xc",
+          "src": [
+            "cmp1_a_bits",
+            "cmp1_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "FMUL",
+          "dst": "t",
+          "src": [
+            "xc",
+            "@LOG2E"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "u",
+          "src": [
+            "t",
+            "@MAGIC"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "n",
+          "src": [
+            "u",
+            "@NEG_MAGIC"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "nhi",
+          "src": [
+            "n",
+            "@LN2_HI"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "nlo",
+          "src": [
+            "n",
+            "@LN2_LO"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neghi",
+          "src": [
+            "nhi",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neglo",
+          "src": [
+            "nlo",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "rhi",
+          "src": [
+            "xc",
+            "neghi"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "r",
+          "src": [
+            "rhi",
+            "neglo"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "@POLY0",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY1"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY2"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY3"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY4"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY5"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY6"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "F2I",
+          "dst": "ni",
+          "src": [
+            "n"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "mode": "exact integral signed32"
+          }
+        },
+        {
+          "op": "SHL",
+          "dst": "delta",
+          "src": [
+            "ni",
+            "@U23"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "e",
+          "src": [
+            "p",
+            "delta"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "XOR",
+          "dst": "r",
+          "src": [
+            "e",
+            "@ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 268,
+        "warp_instructions": {
+          "LOAD": 1,
+          "AND": 18,
+          "IEQ": 4,
+          "INE": 4,
+          "FCMP_GT": 1,
+          "XOR": 7,
+          "OR": 4,
+          "ISUB": 2,
+          "FCMP_LT": 1,
+          "FMUL": 9,
+          "FADD": 10,
+          "F2I": 1,
+          "SHL": 1,
+          "IADD": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 64,
+        "shared_issue_cycles": 2,
+        "active_lanes": 32,
+        "peak_live_value_registers": 4,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "RSQRT": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "seed",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "seed"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "halfcoef",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "halfcoef"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "corrcoef",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "corrcoef"
+          }
+        },
+        {
+          "op": "SHR",
+          "dst": "shift",
+          "src": [
+            "a",
+            "@U1"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "y",
+          "src": [
+            "seed",
+            "shift"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "half",
+          "src": [
+            "a",
+            "halfcoef"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "yy",
+          "src": [
+            "y",
+            "y"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "hyy",
+          "src": [
+            "half",
+            "yy"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neg",
+          "src": [
+            "hyy",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "corr",
+          "src": [
+            "corrcoef",
+            "neg"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "y",
+          "src": [
+            "y",
+            "corr"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "yy",
+          "src": [
+            "y",
+            "y"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "hyy",
+          "src": [
+            "half",
+            "yy"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neg",
+          "src": [
+            "hyy",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "corr",
+          "src": [
+            "corrcoef",
+            "neg"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "y",
+          "src": [
+            "y",
+            "corr"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "yy",
+          "src": [
+            "y",
+            "y"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "hyy",
+          "src": [
+            "half",
+            "yy"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neg",
+          "src": [
+            "hyy",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "corr",
+          "src": [
+            "corrcoef",
+            "neg"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "y",
+          "src": [
+            "y",
+            "corr"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "r",
+          "src": [
+            "y",
+            "@ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 133,
+        "warp_instructions": {
+          "LOAD": 4,
+          "SHR": 1,
+          "ISUB": 1,
+          "FMUL": 10,
+          "XOR": 4,
+          "FADD": 3,
+          "STORE32": 1
+        },
+        "RF_write_slots": 23,
+        "shared_issue_cycles": 5,
+        "active_lanes": 32,
+        "peak_live_value_registers": 5,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "MAX": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "b",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "b"
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_exp",
+          "src": [
+            "a",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp_a_exp_all",
+          "src": [
+            "cmp_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_mant",
+          "src": [
+            "a",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp_a_mant_nonzero",
+          "src": [
+            "cmp_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_nan",
+          "src": [
+            "cmp_a_exp_all",
+            "cmp_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_exp",
+          "src": [
+            "b",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp_b_exp_all",
+          "src": [
+            "cmp_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_mant",
+          "src": [
+            "b",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp_b_mant_nonzero",
+          "src": [
+            "cmp_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_nan",
+          "src": [
+            "cmp_b_exp_all",
+            "cmp_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_GT",
+          "dst": "cmp_ordered_cmp",
+          "src": [
+            "a",
+            "b"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp_b_not_nan",
+          "src": [
+            "cmp_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_ordered_a",
+          "src": [
+            "cmp_ordered_cmp",
+            "cmp_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp_choose_a",
+          "src": [
+            "cmp_a_nan",
+            "cmp_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp_inverse_mask",
+          "src": [
+            "cmp_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_bits",
+          "src": [
+            "a",
+            "cmp_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_bits",
+          "src": [
+            "b",
+            "cmp_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "r",
+          "src": [
+            "cmp_a_bits",
+            "cmp_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 51,
+        "warp_instructions": {
+          "LOAD": 2,
+          "AND": 9,
+          "IEQ": 2,
+          "INE": 2,
+          "FCMP_GT": 1,
+          "XOR": 2,
+          "OR": 2,
+          "ISUB": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 21,
+        "shared_issue_cycles": 3,
+        "active_lanes": 32,
+        "peak_live_value_registers": 5,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "MIN": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "a",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "a"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "b",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "b"
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_exp",
+          "src": [
+            "a",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp_a_exp_all",
+          "src": [
+            "cmp_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_mant",
+          "src": [
+            "a",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp_a_mant_nonzero",
+          "src": [
+            "cmp_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_nan",
+          "src": [
+            "cmp_a_exp_all",
+            "cmp_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_exp",
+          "src": [
+            "b",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp_b_exp_all",
+          "src": [
+            "cmp_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_mant",
+          "src": [
+            "b",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp_b_mant_nonzero",
+          "src": [
+            "cmp_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_nan",
+          "src": [
+            "cmp_b_exp_all",
+            "cmp_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp_ordered_cmp",
+          "src": [
+            "a",
+            "b"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp_b_not_nan",
+          "src": [
+            "cmp_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_ordered_a",
+          "src": [
+            "cmp_ordered_cmp",
+            "cmp_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp_choose_a",
+          "src": [
+            "cmp_a_nan",
+            "cmp_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp_inverse_mask",
+          "src": [
+            "cmp_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_a_bits",
+          "src": [
+            "a",
+            "cmp_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp_b_bits",
+          "src": [
+            "b",
+            "cmp_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "r",
+          "src": [
+            "cmp_a_bits",
+            "cmp_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "r"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 51,
+        "warp_instructions": {
+          "LOAD": 2,
+          "AND": 9,
+          "IEQ": 2,
+          "INE": 2,
+          "FCMP_LT": 1,
+          "XOR": 2,
+          "OR": 2,
+          "ISUB": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 21,
+        "shared_issue_cycles": 3,
+        "active_lanes": 32,
+        "peak_live_value_registers": 5,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "SWIGLU_ROUTED": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "g",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "g"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "u",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "u"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "limit",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "limit"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "route",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "route"
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_a_exp",
+          "src": [
+            "g",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp4_a_exp_all",
+          "src": [
+            "cmp4_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_a_mant",
+          "src": [
+            "g",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp4_a_mant_nonzero",
+          "src": [
+            "cmp4_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_a_nan",
+          "src": [
+            "cmp4_a_exp_all",
+            "cmp4_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_b_exp",
+          "src": [
+            "limit",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp4_b_exp_all",
+          "src": [
+            "cmp4_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_b_mant",
+          "src": [
+            "limit",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp4_b_mant_nonzero",
+          "src": [
+            "cmp4_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_b_nan",
+          "src": [
+            "cmp4_b_exp_all",
+            "cmp4_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp4_ordered_cmp",
+          "src": [
+            "g",
+            "limit"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp4_b_not_nan",
+          "src": [
+            "cmp4_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_ordered_a",
+          "src": [
+            "cmp4_ordered_cmp",
+            "cmp4_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp4_choose_a",
+          "src": [
+            "cmp4_a_nan",
+            "cmp4_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp4_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp4_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp4_inverse_mask",
+          "src": [
+            "cmp4_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_a_bits",
+          "src": [
+            "g",
+            "cmp4_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp4_b_bits",
+          "src": [
+            "limit",
+            "cmp4_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "gc",
+          "src": [
+            "cmp4_a_bits",
+            "cmp4_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "XOR",
+          "dst": "nlimit",
+          "src": [
+            "limit",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_exp",
+          "src": [
+            "u",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp6_a_exp_all",
+          "src": [
+            "cmp6_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_mant",
+          "src": [
+            "u",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp6_a_mant_nonzero",
+          "src": [
+            "cmp6_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_nan",
+          "src": [
+            "cmp6_a_exp_all",
+            "cmp6_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_exp",
+          "src": [
+            "nlimit",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp6_b_exp_all",
+          "src": [
+            "cmp6_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_mant",
+          "src": [
+            "nlimit",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp6_b_mant_nonzero",
+          "src": [
+            "cmp6_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_nan",
+          "src": [
+            "cmp6_b_exp_all",
+            "cmp6_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_GT",
+          "dst": "cmp6_ordered_cmp",
+          "src": [
+            "u",
+            "nlimit"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp6_b_not_nan",
+          "src": [
+            "cmp6_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_ordered_a",
+          "src": [
+            "cmp6_ordered_cmp",
+            "cmp6_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp6_choose_a",
+          "src": [
+            "cmp6_a_nan",
+            "cmp6_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp6_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp6_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp6_inverse_mask",
+          "src": [
+            "cmp6_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_bits",
+          "src": [
+            "u",
+            "cmp6_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_bits",
+          "src": [
+            "nlimit",
+            "cmp6_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "ulo",
+          "src": [
+            "cmp6_a_bits",
+            "cmp6_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_a_exp",
+          "src": [
+            "ulo",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp7_a_exp_all",
+          "src": [
+            "cmp7_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_a_mant",
+          "src": [
+            "ulo",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp7_a_mant_nonzero",
+          "src": [
+            "cmp7_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_a_nan",
+          "src": [
+            "cmp7_a_exp_all",
+            "cmp7_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_b_exp",
+          "src": [
+            "limit",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp7_b_exp_all",
+          "src": [
+            "cmp7_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_b_mant",
+          "src": [
+            "limit",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp7_b_mant_nonzero",
+          "src": [
+            "cmp7_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_b_nan",
+          "src": [
+            "cmp7_b_exp_all",
+            "cmp7_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp7_ordered_cmp",
+          "src": [
+            "ulo",
+            "limit"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp7_b_not_nan",
+          "src": [
+            "cmp7_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_ordered_a",
+          "src": [
+            "cmp7_ordered_cmp",
+            "cmp7_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp7_choose_a",
+          "src": [
+            "cmp7_a_nan",
+            "cmp7_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp7_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp7_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp7_inverse_mask",
+          "src": [
+            "cmp7_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_a_bits",
+          "src": [
+            "ulo",
+            "cmp7_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp7_b_bits",
+          "src": [
+            "limit",
+            "cmp7_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "uc",
+          "src": [
+            "cmp7_a_bits",
+            "cmp7_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "XOR",
+          "dst": "x",
+          "src": [
+            "gc",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_exp",
+          "src": [
+            "x",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp9_a_exp_all",
+          "src": [
+            "cmp9_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_mant",
+          "src": [
+            "x",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp9_a_mant_nonzero",
+          "src": [
+            "cmp9_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_nan",
+          "src": [
+            "cmp9_a_exp_all",
+            "cmp9_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_exp",
+          "src": [
+            "@EXP_MIN",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp9_b_exp_all",
+          "src": [
+            "cmp9_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_mant",
+          "src": [
+            "@EXP_MIN",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp9_b_mant_nonzero",
+          "src": [
+            "cmp9_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_nan",
+          "src": [
+            "cmp9_b_exp_all",
+            "cmp9_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_GT",
+          "dst": "cmp9_ordered_cmp",
+          "src": [
+            "x",
+            "@EXP_MIN"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp9_b_not_nan",
+          "src": [
+            "cmp9_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_ordered_a",
+          "src": [
+            "cmp9_ordered_cmp",
+            "cmp9_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp9_choose_a",
+          "src": [
+            "cmp9_a_nan",
+            "cmp9_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp9_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp9_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp9_inverse_mask",
+          "src": [
+            "cmp9_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_bits",
+          "src": [
+            "x",
+            "cmp9_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_bits",
+          "src": [
+            "@EXP_MIN",
+            "cmp9_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "xlo",
+          "src": [
+            "cmp9_a_bits",
+            "cmp9_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_a_exp",
+          "src": [
+            "xlo",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp10_a_exp_all",
+          "src": [
+            "cmp10_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_a_mant",
+          "src": [
+            "xlo",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp10_a_mant_nonzero",
+          "src": [
+            "cmp10_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_a_nan",
+          "src": [
+            "cmp10_a_exp_all",
+            "cmp10_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_b_exp",
+          "src": [
+            "@EXP_MAX",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp10_b_exp_all",
+          "src": [
+            "cmp10_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_b_mant",
+          "src": [
+            "@EXP_MAX",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp10_b_mant_nonzero",
+          "src": [
+            "cmp10_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_b_nan",
+          "src": [
+            "cmp10_b_exp_all",
+            "cmp10_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp10_ordered_cmp",
+          "src": [
+            "xlo",
+            "@EXP_MAX"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp10_b_not_nan",
+          "src": [
+            "cmp10_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_ordered_a",
+          "src": [
+            "cmp10_ordered_cmp",
+            "cmp10_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp10_choose_a",
+          "src": [
+            "cmp10_a_nan",
+            "cmp10_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp10_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp10_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp10_inverse_mask",
+          "src": [
+            "cmp10_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_a_bits",
+          "src": [
+            "xlo",
+            "cmp10_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp10_b_bits",
+          "src": [
+            "@EXP_MAX",
+            "cmp10_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "xc",
+          "src": [
+            "cmp10_a_bits",
+            "cmp10_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "FMUL",
+          "dst": "t",
+          "src": [
+            "xc",
+            "@LOG2E"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "u",
+          "src": [
+            "t",
+            "@MAGIC"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "n",
+          "src": [
+            "u",
+            "@NEG_MAGIC"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "nhi",
+          "src": [
+            "n",
+            "@LN2_HI"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "nlo",
+          "src": [
+            "n",
+            "@LN2_LO"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neghi",
+          "src": [
+            "nhi",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neglo",
+          "src": [
+            "nlo",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "rhi",
+          "src": [
+            "xc",
+            "neghi"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "r",
+          "src": [
+            "rhi",
+            "neglo"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "@POLY0",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY1"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY2"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY3"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY4"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY5"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY6"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "F2I",
+          "dst": "ni",
+          "src": [
+            "n"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "mode": "exact integral signed32"
+          }
+        },
+        {
+          "op": "SHL",
+          "dst": "delta",
+          "src": [
+            "ni",
+            "@U23"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "e",
+          "src": [
+            "p",
+            "delta"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "FADD",
+          "dst": "den",
+          "src": [
+            "e",
+            "@ONE"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "DIV",
+          "dst": "sig",
+          "src": [
+            "gc",
+            "den"
+          ],
+          "latency": 21,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "a",
+          "src": [
+            "sig",
+            "uc"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "scaled",
+          "src": [
+            "route",
+            "a"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "SHR",
+          "dst": "hi",
+          "src": [
+            "scaled",
+            "@U16"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "lsb",
+          "src": [
+            "hi",
+            "@U1"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "bias",
+          "src": [
+            "scaled",
+            "@U7FFF"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "rounded",
+          "src": [
+            "bias",
+            "lsb"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "out",
+          "src": [
+            "rounded",
+            "@UFFFF0000"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "out"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 497,
+        "warp_instructions": {
+          "LOAD": 4,
+          "AND": 47,
+          "IEQ": 10,
+          "INE": 10,
+          "FCMP_LT": 3,
+          "XOR": 14,
+          "OR": 10,
+          "ISUB": 5,
+          "FCMP_GT": 2,
+          "FMUL": 11,
+          "FADD": 11,
+          "F2I": 1,
+          "SHL": 1,
+          "IADD": 3,
+          "DIV": 1,
+          "SHR": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 134,
+        "shared_issue_cycles": 5,
+        "active_lanes": 32,
+        "peak_live_value_registers": 8,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    },
+    "SWIGLU_SHARED": {
+      "program": [
+        {
+          "op": "LOAD",
+          "dst": "g",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "g"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "u",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "u"
+          }
+        },
+        {
+          "op": "LOAD",
+          "dst": "limit",
+          "src": [],
+          "latency": 2,
+          "shared": true,
+          "attributes": {
+            "source": "limit"
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_a_exp",
+          "src": [
+            "g",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp3_a_exp_all",
+          "src": [
+            "cmp3_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_a_mant",
+          "src": [
+            "g",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp3_a_mant_nonzero",
+          "src": [
+            "cmp3_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_a_nan",
+          "src": [
+            "cmp3_a_exp_all",
+            "cmp3_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_b_exp",
+          "src": [
+            "limit",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp3_b_exp_all",
+          "src": [
+            "cmp3_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_b_mant",
+          "src": [
+            "limit",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp3_b_mant_nonzero",
+          "src": [
+            "cmp3_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_b_nan",
+          "src": [
+            "cmp3_b_exp_all",
+            "cmp3_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp3_ordered_cmp",
+          "src": [
+            "g",
+            "limit"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp3_b_not_nan",
+          "src": [
+            "cmp3_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_ordered_a",
+          "src": [
+            "cmp3_ordered_cmp",
+            "cmp3_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp3_choose_a",
+          "src": [
+            "cmp3_a_nan",
+            "cmp3_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp3_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp3_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp3_inverse_mask",
+          "src": [
+            "cmp3_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_a_bits",
+          "src": [
+            "g",
+            "cmp3_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp3_b_bits",
+          "src": [
+            "limit",
+            "cmp3_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "gc",
+          "src": [
+            "cmp3_a_bits",
+            "cmp3_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "XOR",
+          "dst": "nlimit",
+          "src": [
+            "limit",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_a_exp",
+          "src": [
+            "u",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp5_a_exp_all",
+          "src": [
+            "cmp5_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_a_mant",
+          "src": [
+            "u",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp5_a_mant_nonzero",
+          "src": [
+            "cmp5_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_a_nan",
+          "src": [
+            "cmp5_a_exp_all",
+            "cmp5_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_b_exp",
+          "src": [
+            "nlimit",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp5_b_exp_all",
+          "src": [
+            "cmp5_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_b_mant",
+          "src": [
+            "nlimit",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp5_b_mant_nonzero",
+          "src": [
+            "cmp5_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_b_nan",
+          "src": [
+            "cmp5_b_exp_all",
+            "cmp5_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_GT",
+          "dst": "cmp5_ordered_cmp",
+          "src": [
+            "u",
+            "nlimit"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp5_b_not_nan",
+          "src": [
+            "cmp5_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_ordered_a",
+          "src": [
+            "cmp5_ordered_cmp",
+            "cmp5_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp5_choose_a",
+          "src": [
+            "cmp5_a_nan",
+            "cmp5_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp5_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp5_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp5_inverse_mask",
+          "src": [
+            "cmp5_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_a_bits",
+          "src": [
+            "u",
+            "cmp5_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp5_b_bits",
+          "src": [
+            "nlimit",
+            "cmp5_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "ulo",
+          "src": [
+            "cmp5_a_bits",
+            "cmp5_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_exp",
+          "src": [
+            "ulo",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp6_a_exp_all",
+          "src": [
+            "cmp6_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_mant",
+          "src": [
+            "ulo",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp6_a_mant_nonzero",
+          "src": [
+            "cmp6_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_nan",
+          "src": [
+            "cmp6_a_exp_all",
+            "cmp6_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_exp",
+          "src": [
+            "limit",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp6_b_exp_all",
+          "src": [
+            "cmp6_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_mant",
+          "src": [
+            "limit",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp6_b_mant_nonzero",
+          "src": [
+            "cmp6_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_nan",
+          "src": [
+            "cmp6_b_exp_all",
+            "cmp6_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp6_ordered_cmp",
+          "src": [
+            "ulo",
+            "limit"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp6_b_not_nan",
+          "src": [
+            "cmp6_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_ordered_a",
+          "src": [
+            "cmp6_ordered_cmp",
+            "cmp6_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp6_choose_a",
+          "src": [
+            "cmp6_a_nan",
+            "cmp6_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp6_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp6_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp6_inverse_mask",
+          "src": [
+            "cmp6_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_a_bits",
+          "src": [
+            "ulo",
+            "cmp6_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp6_b_bits",
+          "src": [
+            "limit",
+            "cmp6_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "uc",
+          "src": [
+            "cmp6_a_bits",
+            "cmp6_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "XOR",
+          "dst": "x",
+          "src": [
+            "gc",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_a_exp",
+          "src": [
+            "x",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp8_a_exp_all",
+          "src": [
+            "cmp8_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_a_mant",
+          "src": [
+            "x",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp8_a_mant_nonzero",
+          "src": [
+            "cmp8_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_a_nan",
+          "src": [
+            "cmp8_a_exp_all",
+            "cmp8_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_b_exp",
+          "src": [
+            "@EXP_MIN",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp8_b_exp_all",
+          "src": [
+            "cmp8_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_b_mant",
+          "src": [
+            "@EXP_MIN",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp8_b_mant_nonzero",
+          "src": [
+            "cmp8_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_b_nan",
+          "src": [
+            "cmp8_b_exp_all",
+            "cmp8_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_GT",
+          "dst": "cmp8_ordered_cmp",
+          "src": [
+            "x",
+            "@EXP_MIN"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp8_b_not_nan",
+          "src": [
+            "cmp8_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_ordered_a",
+          "src": [
+            "cmp8_ordered_cmp",
+            "cmp8_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp8_choose_a",
+          "src": [
+            "cmp8_a_nan",
+            "cmp8_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp8_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp8_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp8_inverse_mask",
+          "src": [
+            "cmp8_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_a_bits",
+          "src": [
+            "x",
+            "cmp8_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp8_b_bits",
+          "src": [
+            "@EXP_MIN",
+            "cmp8_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "xlo",
+          "src": [
+            "cmp8_a_bits",
+            "cmp8_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_exp",
+          "src": [
+            "xlo",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp9_a_exp_all",
+          "src": [
+            "cmp9_a_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_mant",
+          "src": [
+            "xlo",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp9_a_mant_nonzero",
+          "src": [
+            "cmp9_a_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_nan",
+          "src": [
+            "cmp9_a_exp_all",
+            "cmp9_a_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_exp",
+          "src": [
+            "@EXP_MAX",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IEQ",
+          "dst": "cmp9_b_exp_all",
+          "src": [
+            "cmp9_b_exp",
+            "@EXP_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_mant",
+          "src": [
+            "@EXP_MAX",
+            "@MANT_MASK"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "INE",
+          "dst": "cmp9_b_mant_nonzero",
+          "src": [
+            "cmp9_b_mant",
+            "@U_ZERO"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_nan",
+          "src": [
+            "cmp9_b_exp_all",
+            "cmp9_b_mant_nonzero"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FCMP_LT",
+          "dst": "cmp9_ordered_cmp",
+          "src": [
+            "xlo",
+            "@EXP_MAX"
+          ],
+          "latency": 5,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp9_b_not_nan",
+          "src": [
+            "cmp9_b_nan",
+            "@U_ONE"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_ordered_a",
+          "src": [
+            "cmp9_ordered_cmp",
+            "cmp9_b_not_nan"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "cmp9_choose_a",
+          "src": [
+            "cmp9_a_nan",
+            "cmp9_ordered_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "ISUB",
+          "dst": "cmp9_mask",
+          "src": [
+            "@U_ZERO",
+            "cmp9_choose_a"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "cmp9_inverse_mask",
+          "src": [
+            "cmp9_mask",
+            "@ALL_ONES"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_a_bits",
+          "src": [
+            "xlo",
+            "cmp9_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "cmp9_b_bits",
+          "src": [
+            "@EXP_MAX",
+            "cmp9_inverse_mask"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "OR",
+          "dst": "xc",
+          "src": [
+            "cmp9_a_bits",
+            "cmp9_b_bits"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "FMUL",
+          "dst": "t",
+          "src": [
+            "xc",
+            "@LOG2E"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "u",
+          "src": [
+            "t",
+            "@MAGIC"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "n",
+          "src": [
+            "u",
+            "@NEG_MAGIC"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "nhi",
+          "src": [
+            "n",
+            "@LN2_HI"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "nlo",
+          "src": [
+            "n",
+            "@LN2_LO"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neghi",
+          "src": [
+            "nhi",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "XOR",
+          "dst": "neglo",
+          "src": [
+            "nlo",
+            "@SIGN"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "rhi",
+          "src": [
+            "xc",
+            "neghi"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "r",
+          "src": [
+            "rhi",
+            "neglo"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "@POLY0",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY1"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY2"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY3"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY4"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY5"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "prod",
+          "src": [
+            "p",
+            "r"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FADD",
+          "dst": "p",
+          "src": [
+            "prod",
+            "@POLY6"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "F2I",
+          "dst": "ni",
+          "src": [
+            "n"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "mode": "exact integral signed32"
+          }
+        },
+        {
+          "op": "SHL",
+          "dst": "delta",
+          "src": [
+            "ni",
+            "@U23"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "e",
+          "src": [
+            "p",
+            "delta"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {
+            "typed_bit_view": true
+          }
+        },
+        {
+          "op": "FADD",
+          "dst": "den",
+          "src": [
+            "e",
+            "@ONE"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "DIV",
+          "dst": "sig",
+          "src": [
+            "gc",
+            "den"
+          ],
+          "latency": 21,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "FMUL",
+          "dst": "a",
+          "src": [
+            "sig",
+            "uc"
+          ],
+          "latency": 9,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "SHR",
+          "dst": "hi",
+          "src": [
+            "a",
+            "@U16"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "lsb",
+          "src": [
+            "hi",
+            "@U1"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "bias",
+          "src": [
+            "a",
+            "@U7FFF"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "IADD",
+          "dst": "rounded",
+          "src": [
+            "bias",
+            "lsb"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "AND",
+          "dst": "out",
+          "src": [
+            "rounded",
+            "@UFFFF0000"
+          ],
+          "latency": 3,
+          "shared": false,
+          "attributes": {}
+        },
+        {
+          "op": "STORE32",
+          "dst": null,
+          "src": [
+            "out"
+          ],
+          "latency": 3,
+          "shared": true,
+          "attributes": {}
+        }
+      ],
+      "warp32_calendar_candidate": {
+        "cycles": 487,
+        "warp_instructions": {
+          "LOAD": 3,
+          "AND": 47,
+          "IEQ": 10,
+          "INE": 10,
+          "FCMP_LT": 3,
+          "XOR": 14,
+          "OR": 10,
+          "ISUB": 5,
+          "FCMP_GT": 2,
+          "FMUL": 10,
+          "FADD": 11,
+          "F2I": 1,
+          "SHL": 1,
+          "IADD": 3,
+          "DIV": 1,
+          "SHR": 1,
+          "STORE32": 1
+        },
+        "RF_write_slots": 132,
+        "shared_issue_cycles": 4,
+        "active_lanes": 32,
+        "peak_live_value_registers": 7,
+        "reserved_address_loop_regs": 8,
+        "RF_read_ports": 2,
+        "RF_write_ports": 1,
+        "immediate_operand_mux_required": true
+      }
+    }
+  },
+  "RF_ports": "2R1W",
+  "register_limit_per_thread": 32,
+  "reserved_loop_registers": 8,
+  "SMs_per_rank": 32,
+  "F32_lanes_per_SM": 128,
+  "shared_bytes_per_0p9GHz_SM_cycle": 128,
+  "shared_bytes_per_fast_1p2GHz_cycle": 96,
+  "execution": "CPU typed instruction recipes; finite outerloop warp count, padding, RF bits and shared issue/stall candidates counted",
+  "full_program_GPU_lowering_complete": false,
+  "unlowered_macro_costs_are_not_zero": [
+    "packed quantization/scale producer",
+    "matrix blockdot single-round backend",
+    "index decode and selection",
+    "IEEE-F32 sqrt service",
+    "nonattention np.max/clip reductions outside explicit fused SwiGLU recipe",
+    "ordinaryINT and SFU physical costs",
+    "NoC/HBM/CDC/global spill and crossSM calendar"
+  ],
+  "full_graph_cycles": null,
+  "physical_qualified": false
+}

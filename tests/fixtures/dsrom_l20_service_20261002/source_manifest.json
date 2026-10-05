@@ -1,0 +1,113 @@
+{
+  "RTL_executed": false,
+  "copies": [
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+        "sha256": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+        "sha256": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+        "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+        "sha256": "22a8c3224c140293bfe5f8a4f957f7baa3e58b8baab37c99c62e4084486403ad"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+        "sha256": "7a2cb51b8c5784c9c74c40012dae318034da05da6f9bbb5598699a94925c86cc"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+        "sha256": "673cd79bb136b37684a128d13da23a05c6073f1f629d2f94f2ee275f698ae78a"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+        "sha256": "3ce5ca80f0a72d1b785689ae3bd854f94cc2fa96789b0a19c06d19b613ff1988"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+        "sha256": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_ckv_row_encoder.sv",
+        "sha256": "3b38f02de06b90b5881b82a77edf080cd740dec2c3c59750e778153943e48588"
+      }
+    },
+    {
+      "copy": "source/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+        "sha256": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d"
+      }
+    },
+    {
+      "copy": "source/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+        "sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84"
+      }
+    },
+    {
+      "copy": "source/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/hdc/v41/ot_hdc_v41_qe.sv",
+        "sha256": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7"
+      }
+    },
+    {
+      "copy": "source/rtl/hdc/ot_hdc_delay.sv",
+      "source_pin": {
+        "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+      }
+    }
+  ],
+  "corrected_sources": false,
+  "model_generator_sha256": "c8f4bea9af1b15e3ecbf755b1d92b40291f8b96eab46382c35b68d2ca0561185",
+  "model_record_sha256": "aa206232ad584dc87e918b4c46acb7adcbf465e59fc93d2efc172d1aa4e55682",
+  "scope": "Exact sourcecopies forisolatednegativewitnessandfuturecontrol/servicefixture; noactivationpayload"
+}

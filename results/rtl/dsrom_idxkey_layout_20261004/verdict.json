@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.dsrom-idxkey-layout.verdict.v1",
+ "verdict": "REJECT as a rate lever (owner rule: < 1% per-user gain after composition; control also fails the 1.2 GHz SS screen); code stays opt-in on main, the super-block layout and the adopted gather (ot_hdc_v41x_idx_kgather) remain the baseline",
+ "gather_worst_rank": {
+  "row_layout": {
+   "cycles": 546,
+   "TBps": 0.6471,
+   "fraction_of_peak": 0.1618,
+   "fraction_first_to_last_beat": 0.2128,
+   "acts_per_sector": 0.0588
+  },
+  "super_block_as_built_same_checker": {
+   "cycles": 757,
+   "TBps": 0.4667,
+   "fraction_of_peak": 0.1167,
+   "acts_per_sector": 0.7694
+  }
+ },
+ "ninety_percent_rule": {
+  "met": false,
+  "why": "a rank's gather is ~9.2K sectors of ~512 random 8-key blocks (4 x ~130 a stack, ~4 a pseudo-channel): row layout bound (block = 17 reads on one bank group, tCCD_L 2.56 ns) = 261 cycles = 34% of peak; channel balance of ANY static block->channel map on these lists <= 77% (sector-granular spreading, which is ACT/tFAW-bound) -- 90% is not reachable for this load"
+ },
+ "full_scan_row_layout": {
+  "scan_L20_p1": 0.7514,
+  "scan_L2_p1": 0.6004,
+  "scan_L20_p2": 0.7719,
+  "scan_L2_p2": 0.646
+ },
+ "full_scan_decision": "scanned layers (L2/L8/L14/L20) keep the super-block layout (92-94%, results/rtl/dsrom_1m_measured_20261004/reader.json); the row layout scans below 90% under the controller's per-bank refresh",
+ "exactness": {
+  "roundtrip": "pass",
+  "select_L24_L28": "pass"
+ },
+ "dram_check": {
+  "timing_runs_violations": "0 on every real-list gather and every scan; 1 in the functional 2,048-block case (func_full_list_2048_p1), the same REFpb rule below",
+  "roundtrip_violations": "90 over the five write->read runs (each ~73K-cycle write phase), all the REFpb rule below",
+  "roundtrip_rule": "REFpb during the bank's refresh: the controller model (ot_hdc_v41x_idx_hbm, REFPB 3) can refresh the same bank twice < tRFCpb apart across a 32-REFpb set boundary in long runs; pre-existing, independent of the layout",
+  "tRREFD": "not a rule of the controller model; counted: row-layout gathers 43-69 a run vs 595-735 for the super-block gather",
+  "asbuilt_gather_same_checker_violations": 0
+ },
+ "composition": {
+  "basis": "candidate_gather variant: re-index index read = the ROW-LAYOUT gather (worst rank of the real 1M lists, both placements) and the select on its RTL beat stream; previous = the super-block gather",
+  "previous": {
+   "AR_tok_s": 2532.2,
+   "MTP_fused_tok_s": 7319.9,
+   "AR_us": 394.911,
+   "II_us": 12.9
+  },
+  "row_layout": {
+   "AR_tok_s": 2536.7,
+   "MTP_fused_tok_s": 7328.9,
+   "AR_us": 394.212,
+   "II_us": 12.9
+  },
+  "AR_gain_pct": 0.178,
+  "MTP_gain_pct": 0.123
+ },
+ "screen": {
+  "ss_setup_wns_ps": -634.6,
+  "ff_hold_wns_ps": 8.4,
+  "ss_fmax_prelayout_hz": 681361567,
+  "worst": "per-channel issuer (round-robin over 16 entries + same-bank wait)",
+  "status": "fail"
+ },
+ "capacity": "row layout: 128 B a key instead of 68 B; re-index layers at 1M +240 MiB a user (+15 MiB a stack)"
+}

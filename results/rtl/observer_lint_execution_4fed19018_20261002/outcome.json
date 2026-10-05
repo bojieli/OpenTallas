@@ -1,0 +1,30 @@
+{
+  "status": "FAIL_RETAINED",
+  "first_failure": "WINDOW_actual_L0/baseline",
+  "first_compiler_error": "%Error: rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0.sv:303:71: Can't find definition of 'g_ckv' in dotted scope/variable: 'dut.g_packed_kv.g_window_hbm_attention.g_ckv'",
+  "error_diagnostics": 51,
+  "scope": "real hierarchy lint only",
+  "reason": "L0 observer retains CKV hierarchy references; Verilator cannot find g_ckv/u_ckv under the real L0 parent even with SIM_OBS_CKV_SELECTED0",
+  "not_reached": [
+    "WINDOW wrong_signal_path mutant",
+    "WINDOW wrong_parameter mutant",
+    "CKV baseline",
+    "CKV wrong_signal_path mutant",
+    "CKV wrong_parameter mutant"
+  ],
+  "caps_triggered": false,
+  "baseline_seconds": 0.256,
+  "baseline_peak_rss_kib": 128768,
+  "combined_compiler_log_bytes": 42751,
+  "retries": 0,
+  "fallbacks": 0,
+  "cap_lifts": 0,
+  "source_changes": 0,
+  "compiler_CC_or_build": false,
+  "simulator_run": false,
+  "live_getter": false,
+  "live_source_selection": false,
+  "causal_deadlines": "BOUND_MISSING",
+  "hardware_qualification": false,
+  "verification": "terminal receipt/log byte hashes; all planned source/tool/helper pins checked; materialized WINDOW bytes match plan; no additional compiler run"
+}

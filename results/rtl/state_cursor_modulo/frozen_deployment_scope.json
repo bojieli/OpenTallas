@@ -1,0 +1,33 @@
+{
+  "scope": "Four registered frozen evidence bundles, not current lowering or all-target coverage. No state descriptors means no performance gain from ring cursor optimization in these bundles; STATE_COMPAT=0 remains relevant.",
+  "records": [
+    {
+      "registration": "qwen3-8b-rom-e9",
+      "pin_kind": "frozen_evidence",
+      "descriptor_file": "build/abi3/qwen3-8b-rom-e9/descriptors.bin",
+      "descriptor_sha256": "fb3b453895b729e5a11fa1a2dc63bae53714099f1df844bdf76a47a159d5c836",
+      "state_descriptors": []
+    },
+    {
+      "registration": "qwen3-8b-hbm-e9",
+      "pin_kind": "frozen_evidence",
+      "descriptor_file": "build/abi3/qwen3-8b-hbm-e9/descriptors.bin",
+      "descriptor_sha256": "e20927409e93980c837ad9c1070b2efdf1731f751c87fc5775a2c66695ca7175",
+      "state_descriptors": []
+    },
+    {
+      "registration": "deepseek-v4-flash-rom-array-32-e9",
+      "pin_kind": "frozen_evidence",
+      "descriptor_file": "build/abi3/deepseek-v4-flash-rom-array-32-e9/descriptors.bin",
+      "descriptor_sha256": "2f31d7a6662d517c619a21478c898de25e07561aac326bc74631e08c67d42637",
+      "state_descriptors": []
+    },
+    {
+      "registration": "deepseek-v4-flash-hbm-e9",
+      "pin_kind": "frozen_evidence",
+      "descriptor_file": "build/abi3/deepseek-v4-flash-hbm-e9/descriptors.bin",
+      "descriptor_sha256": "1ea967305d5256d501b6d260a66d590b2607ca21167367c130fe17c2b127e924",
+      "state_descriptors": []
+    }
+  ]
+}

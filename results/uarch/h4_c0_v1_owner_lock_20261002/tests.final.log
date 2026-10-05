@@ -1,0 +1,19 @@
+test_concurrent_accept_is_atomic (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_contract_exports_missing_physical_binding_honestly (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_cross_model_same_physical_RF_excluded (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_default_off (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_destination_writeback_requires_mirror_ACK_and_delays_consumer (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_no_interleave_until_read_return_or_each_mirror_ACK (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_protocol_fixture_cannot_be_used_as_installed_inventory (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_refill_blocks_reads_until_matched_reverse (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_retired_tag_never_aliases_later_PC_command (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_three_reads_two_mirrored_writes_one_atomic_owner (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_unmapped_SM_never_implicitly_uses_SM0 (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_wrong_payload_address_event_does_not_drain (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_wrong_rank_SM_home_and_generation_rejected_without_owner (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+test_wrong_tag_cannot_consume_or_retire (test_h4_c0_v1_owner_lock.OwnerTests) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.050s
+
+OK

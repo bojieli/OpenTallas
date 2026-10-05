@@ -1,0 +1,132 @@
+{
+  "schema": "opentallas.w19.backend-completion-composition.v1",
+  "status": "MODEL_CALLBACK_COMPOSITION_PASS_ACTUAL_PROVIDERS_UNBOUND",
+  "source_pins": {
+    "provider": {
+      "commit": "6e1158394262bc47773993e04efce0672ac4552e",
+      "path": "tools/common_hbm_backend_provider_contract.py",
+      "sha256": "3c8edcb4cd4764f7fb6e230771790204d74571f5cedf8062f0b1bbc984f09759"
+    },
+    "completion": {
+      "commit": "83235527160371894cb27f9b8fd1e4be654faa4e",
+      "path": "tools/common_wrack_completion_calendar.py",
+      "sha256": "2d85173fb5361e9eafb27541f4417721fb2fb7ac8daef653b0cf2c77c20f7c9e"
+    },
+    "provider_record": {
+      "commit": "6e1158394262bc47773993e04efce0672ac4552e",
+      "path": "results/uarch/qwen_hbm_connected_20261001/common_HBM_backend_provider_binding_r2.json",
+      "sha256": "ecc6baef8ccdbe2350e9f3e516fd44426da35048dec8cf32ebd3220ba8ddc408"
+    },
+    "frontend_record": {
+      "commit": "ec3e96c4d39df355a577ec5d433b43965d808ff9",
+      "path": "results/uarch/qwen_hbm_connected_20261001/common_WRACK_frozen_model_bench_r2.json",
+      "sha256": "1da9011382dc71d81433225e3695ca2c1b1fe48d5899819fc70af847fb9b679e"
+    }
+  },
+  "callback_replay": {
+    "provider_callbacks": [
+      {
+        "tag": 0,
+        "sector": 134217728,
+        "column_ps": 2500
+      },
+      {
+        "tag": 1,
+        "sector": 134217729,
+        "column_ps": 3334
+      },
+      {
+        "tag": 2,
+        "sector": 134217730,
+        "column_ps": 4167
+      },
+      {
+        "tag": 3,
+        "sector": 134217731,
+        "column_ps": 5000
+      }
+    ],
+    "backing_commits": 4,
+    "backend_slots_free_before_frontend_done": true,
+    "timeline": [
+      {
+        "stack": 0,
+        "tag": 0,
+        "epoch": 42,
+        "ACK_delivery_ps": "40000/3",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 1,
+        "epoch": 42,
+        "ACK_delivery_ps": "130000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 2,
+        "epoch": 42,
+        "ACK_delivery_ps": "140000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 3,
+        "epoch": 42,
+        "ACK_delivery_ps": "50000/3",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      }
+    ],
+    "credit_release_ps": "122500",
+    "kernel_event_scope": "Synthetic supplied landing/opcode/result/finaldone only. No actual kernel cost provider or DRAMscheduler run.",
+    "actual_backend_RTL_provider_bound": false,
+    "actual_kernel_cost_provider_bound": false
+  },
+  "once_only_area": {
+    "backend_total_addon_mm2": "0.0443039744",
+    "backend_storage_subcomponent_mm2": "0.0047775744",
+    "backend_nonstorage_subcomponent_mm2": "0.0395264000",
+    "storage_added_again": false,
+    "frontend_addon_mm2": "0.0657152",
+    "backend_plus_frontend_addon_mm2": "0.1100191744",
+    "scope": "Backend total already includes storage. Frontend ec3 addon separate; no summation with RF/SM/L2/die baseline without role-ledger reconciliation."
+  },
+  "composed_constraints": {
+    "backend_slot_release": "Only both actual schedule and visible callbacks delivered",
+    "frontend_credit_release": "Only actual finalconsumerdone/resultvisibility plus reverseCDC",
+    "command_ports": "read/write share1command/stack/sourcecycle",
+    "byte_budget": "750B/stack/sourcecycle, finite1024B bucket",
+    "exact_clock": "ceil(cycle*2500/3)ps backend timestamps; rational frontend edges",
+    "publication": "External ownership/epoch permission required before read; benchmark Boolean permission is NOT physical publication qualification"
+  },
+  "remaining": [
+    "actual bank/refresh/turnaround DRAMscheduler and full-address loader providers",
+    "all shared client queues/port maps and RMW/epoch/publication ownership",
+    "actual kernel landing/opcode/result/finaldone costs",
+    "finite crossbar/CDC stage costs and once-only complete area/route ledger",
+    "whole-token dependency/contended calendar and legal full-size SS/FF physical fit"
+  ],
+  "graph_service_costs_bound": false,
+  "full_token_cycles": null,
+  "engine_RTL_build_ready": false,
+  "physical_admission": false,
+  "adopt": false,
+  "jobs_launched": 0
+}

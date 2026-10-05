@@ -1,0 +1,278 @@
+{
+ "schema": "opentallas.result.v41_rom_join_context_engram.v1",
+ "question": "with the three defects the state-read binding work measured and left open fixed -- the ROM ratio-1 prefill KV join interleaving its segments, the ROM decode context loop blocked by 1,048,576 positions, and the Engram token ring addressed without POSITION_START / CONTEXT_LENGTH -- do the ROM V4.1 cells emit the HBM cell's / oracle's tokens at P12 and P16, and do decode and prefill agree through the Engram?",
+ "fixes": [
+  {
+   "defect": "ROM ratio-1 prefill KV join (layers 20-39) interleaved [current r, compressed r] one token per iteration; ATTENTION.SPARSE addresses every current row, then compressed row j at span + j",
+   "root_cause": "CONCAT with a span_tokens*2 output is not a MULTIPLIED_SPAN_BATCH_KIND, so _shape_of gave it the per-token fallback (iteration t presents that token's multiplied rows)",
+   "fix": "a phase-selected axis-0 CONCAT is one block over the whole span (whole_span_join in compiler/backends/rom/common/program.py::_shape_of), whatever the target token block",
+   "commit": "1099340d",
+   "test": "tests/compiler/test_v41_rom_kv_join.py::test_ratio1_prefill_join_lays_its_segments_end_to_end (wafer, array64; resolves (10,512)+(10,512)->(20,512); HEAD gave (1,512)+(1,512)->(2,512))"
+  },
+  {
+   "defect": "ROM decode trapped at the first decode step on unmodified HEAD: GROUPED_CONCAT output view dims (16384, 512) differ from the axis-0 concatenation (8320, 512)",
+   "root_cause": "the phase-layout join and its consumers opened their CONTEXT_LENGTH loop with bound_divisor = capability max_context_positions (1,048,576) against a compressed plane of 8,192 rows, so A18's walk test (dim >= step, 3d33a008) resolved no extent",
+   "fix": "_context_capacity: the block is the kernel's context-led operands' declared rows in CONTEXT_LENGTH units, bounded by graph deployment_context_tokens; the runtime check is unchanged",
+   "commit": "c8146e7e",
+   "test": "tests/compiler/test_v41_rom_kv_join.py::test_decode_join_resolves_the_context_it_holds (context 14: 128+14->142 ratio 1, 128+7->135 ratio 2; HEAD resolved 16384 vs 128+8192)"
+  },
+  {
+   "defect": "Engram token ring: HBM wrote [0, span) and hashed [0, span); ROM hashed [0, context) but wrote [0, context) from a host window holding only this request's ids",
+   "root_cause": "neither backend honoured committed_row: absolute_position on main.compressed_token_ids",
+   "fix": "both write the request's rows at POSITION_START + row (HBM state-view POSITION_START term; ROM _absolute_row_view with the source as principal); HBM opens a context loop for the ring's NGRAM_HASH readers; the ring objects carry the capability POSITION_START range as an unreachable tail (HBM StatePlacement.position_pad_rows, ROM group object bytes) so the verifier proves the term in bounds",
+   "commit": "2f821c08",
+   "test": "tests/compiler/test_v41_engram_token_ring.py (HBM c512, ROM wafer, ROM array64; prefill and two decode steps)"
+  }
+ ],
+ "tokens": {
+  "hbm_c512_p12": {
+   "device": [
+    983,
+    344,
+    1902,
+    11300
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 2,
+   "failure": null,
+   "deployment_digest": "730cc7e0e2a486485bba1cf2b38c99f2226c53ebedfb4b0a8e394a3afbdeba4d",
+   "wall_seconds": 2689.679
+  },
+  "hbm_c512_p16": {
+   "device": [
+    436,
+    295,
+    223,
+    26
+   ],
+   "oracle": [
+    436,
+    295,
+    223,
+    24
+   ],
+   "first_divergence_index": 3,
+   "failure": null,
+   "deployment_digest": "730cc7e0e2a486485bba1cf2b38c99f2226c53ebedfb4b0a8e394a3afbdeba4d",
+   "wall_seconds": 4026.0
+  },
+  "rom_wafer_c8192_p12": {
+   "device": [
+    983,
+    344,
+    223,
+    23
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 2,
+   "failure": null,
+   "deployment_digest": "670eb53124b1f38d5eb7251bf263c47cac314e86ab347f6290c60305ec008789",
+   "wall_seconds": 5621.899
+  },
+  "rom_wafer_c8192_p16": {
+   "device": [
+    436,
+    295,
+    223,
+    26
+   ],
+   "oracle": [
+    436,
+    295,
+    223,
+    24
+   ],
+   "first_divergence_index": 3,
+   "failure": null,
+   "deployment_digest": "670eb53124b1f38d5eb7251bf263c47cac314e86ab347f6290c60305ec008789",
+   "wall_seconds": 10435.979
+  },
+  "rom_array64_c8192_p12": {
+   "device": [
+    983,
+    344,
+    223,
+    23
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 2,
+   "failure": null,
+   "deployment_digest": "5bd2eca734ef732276242effb5aea71038d6de823329d9503e30f296820d847a",
+   "wall_seconds": 37545.896
+  },
+  "rom_array64_c8192_p16": {
+   "status": "not run: the array P12 run took 37,546 s (10.4 h); P16 was skipped to report, not attempted"
+  }
+ },
+ "tokens_before_this_work": {
+  "rom_wafer_c8192_p12": {
+   "device": [
+    334
+   ],
+   "failure": "decode step 1 failed: GROUPED_CONCAT output view 6781 dims (16384, 512) differ from the axis-0 concatenation (8320, 512)",
+   "record": "results/abi3/deepseek_v41_state_read_binding/rom_wafer_c8192_p12.json"
+  },
+  "hbm_c512_p12": {
+   "device": [
+    983,
+    344,
+    1902,
+    11300
+   ],
+   "record": "results/abi3/deepseek_v41_state_read_binding/hbm_c512_p12.json"
+  },
+  "hbm_c512_p16": {
+   "device": [
+    436,
+    295,
+    223,
+    26
+   ],
+   "record": "results/abi3/deepseek_v41_state_read_binding/hbm_c512_p16.json"
+  },
+  "rom_wafer_c8192_p16": "not run before (would have trapped at decode step 1, as P12 did)",
+  "rom_array64": "not run at P12/P16 before; the same decode trap applies (same lowering)"
+ },
+ "near_misses": {
+  "p12_index_2": "oracle top-3 after decode [[11300, 27.16888], [1902, 26.76227], [223, 26.08743]] (results/abi3/deepseek_v41_state_read_binding/oracle_margins_p12_p16.json): HBM picks 1902 (0.41 behind), ROM wafer picks 223 (1.08 behind). NOT a pass on either cell.",
+  "p16_index_3": "oracle top-3 [[24, 29.3392], [26, 29.1909], [1484, 28.6876]]: HBM and ROM wafer both pick 26, 0.148 behind. NOT a pass."
+ },
+ "decode_vs_prefill_hbm_context14": {
+  "tool": "scratch probe decode_consistency.py (record every width-5120 RMS_NORM input; decode step at POSITION_START 13 vs prefill of the same 14 tokens, last row), compared tap by tap",
+  "before": {
+   "L00.attn_norm": 1.0,
+   "L00.ffn_norm": 1.0,
+   "L01.attn_norm": 0.886559,
+   "L01.ffn_norm": 0.828571,
+   "L02.attn_norm": 0.601222,
+   "L02.ffn_norm": 0.752684,
+   "L03.attn_norm": 0.796652,
+   "L03.ffn_norm": 0.816842
+  },
+  "after": {
+   "L00.attn_norm": 1.0,
+   "L00.ffn_norm": 1.0,
+   "L01.attn_norm": 1.0,
+   "L01.ffn_norm": 0.999999,
+   "L02.attn_norm": 0.999974,
+   "L02.ffn_norm": 0.915405,
+   "L03.attn_norm": 0.935301,
+   "L03.ffn_norm": 0.917991
+  },
+  "after_first_non_identical": {
+   "tap": "L01.ffn_norm",
+   "identical": false,
+   "cosine": 0.999999
+  },
+  "after_min_cosine_all_taps": 0.875596,
+  "before_min_cosine_all_taps": 0.245013,
+  "decode_tokens": [
+   983,
+   344,
+   1902
+  ],
+  "prefill14_tokens": [
+   223
+  ]
+ },
+ "rom_wafer_vs_hbm_prefill_taps_p10": {
+  "before": "bit-identical through L20.attn_norm, first differing at L20.ffn_norm rows 1-8 (results/abi3/deepseek_v41_state_read_binding/layer_residual_rom_wafer_p10_position7.json)",
+  "after_first_difference": {
+   "tap": "L24.ffn_norm",
+   "identical": false,
+   "min_cosine": 0.996301,
+   "rows_below_0_9999": [
+    7,
+    8,
+    9
+   ]
+  },
+  "after_identical_taps": 49,
+  "tap_count": 81
+ },
+ "deployment_digests": {
+  "unchanged": {
+   "v4_hbm_cluster32": "65f3554acd31a7e3034d10b55989bf2a992f1e1f5dadce4181ff491a7c8f3977",
+   "qwen3_hbm_single_chip": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+   "v4_rom_wafer": "59a719de96a9e1453b187a3337beeb5ee9d0912434710ac8f5efee3e7abfc0c7",
+   "v4_rom_array32": "4a56012ce29dfdc3fda45b3f9ec5648ebbf10d67477547111ef9ba1eae1703b1",
+   "qwen3_rom": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+   "checked_after": [
+    "1099340d",
+    "c8146e7e",
+    "2f821c08"
+   ]
+  },
+  "v41_hbm_c512": {
+   "before": "8f47989d15024629ec8ada255e5ac676e41ef20a507e3cfed0aa46ff9aaad462",
+   "after": "730cc7e0e2a486485bba1cf2b38c99f2226c53ebedfb4b0a8e394a3afbdeba4d"
+  },
+  "v41_rom_wafer_c8192": {
+   "before": "2402cd125afef5fd320ce05cabc02d67bb09852ae71c9f4f71039d3af7804c0b",
+   "after_fix1": "638a3674c8e7ce9d0999a217e1e13937733bd2f6f188f0f88a7a516fac96af29",
+   "after_fix2": "a2384b4bd864ecfdd539c3f3040020b510e80193b92e219595a37d99b7ace162",
+   "after": "670eb53124b1f38d5eb7251bf263c47cac314e86ab347f6290c60305ec008789"
+  },
+  "v41_rom_array64_c8192": {
+   "before": "082b8212fb7ebffc3b09f812b19093d38ca59a59dd5871ad0b0e0b5a5cdad84b",
+   "after_fix1": "eedab42e885a14158a8f8eca42361e21566a8f07cdf27bfc2c2aff3938f24107",
+   "after_fix2": "77ea31abd77dcfc3c37a1438d8fd12aa1d03b885c2fcd0d3fc94a424ed56b9b7",
+   "after": "5bd2eca734ef732276242effb5aea71038d6de823329d9503e30f296820d847a"
+  },
+  "all_admitted": true
+ },
+ "open": [
+  {
+   "what": "ROM wafer and HBM prefill taps first differ at L24.ffn_norm, rows 7-9 of 10 (min cosine 0.9963 there, 0.95 by L35-L39)",
+   "where": "layer 24 is the first layer whose own indexer reads layer 20's candidate pool mask (main.layer24.attention.indexer.pool_read STATE_READ -> indexer.select INDEX_TOPK in3). The score / admission views present the context axis at plane capacity: ROM (10, 8192) with block_max over 1,024 blocks, HBM (10, 512) with 64 blocks; resolved at span 10. Not yet attributed; a hypothesis, not a finding.",
+   "consequence": "the P12 index-2 pick differs between the cells (ROM 223, HBM 1902), both oracle runners-up"
+  },
+  {
+   "what": "HBM decode vs prefill still diverge from layer 2's attention on",
+   "where": "after the ring fix L00-L01.attn_norm are bit-identical and L01.ffn_norm is 0.999999, L02.attn_norm 0.999974, then L02.ffn_norm 0.915 (layer 2 is the first compressed-attention layer, ratio 2); final norm 0.94. Before the fix the step was at L01.attn_norm (0.887). The remaining decode path through layer 2's compressed attention/indexer is the next thing to measure."
+  }
+ ],
+ "commands": [
+  "pinned source: git archive 2f821c08 into a scratch tree with build/ symlinked (runs never read a tree being edited)",
+  "python3 tools/run_accelerator_tokens.py --kernel-ir build/ir-v3/deepseek-v4.1-flash-c512-amE10/kernel_ir.v3.json --backend hbm_sram --capability configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json --workload build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P{12,16}.json --reference results/abi3/deepseek_v41_reference_oracle_p{12,16}.json --checkpoint /home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277 --publish <scratch>/pub_hbm_p{12,16} --expert-numeric-path fp8 --max-new-tokens 4 --output <out> --force",
+  "same with --kernel-ir build/ir-v3/deepseek-v4.1-flash-c8192-amE10/kernel_ir.v3.json --backend rom_deepseek_v41 --capability configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+  "same with --kernel-ir build/ir-v3/deepseek-v4.1-flash-c8192-amE10/kernel_ir.v3.json --backend rom_deepseek_v41_array --capability configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+  "decode consistency: scratch decode_consistency.py <pub_hbm_p12> <hbm capability> <checkpoint> <out> {decode,prefill14} (P12 + [983, 344]; taps of the decode step at POSITION_START 13 vs the prefill-14 last row)",
+  "prefill taps: scratch prefill_taps.py <pub_romw_p12> <rom wafer capability> <checkpoint> build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json <out.npz>, compared against the committed-work HBM P10 taps",
+  "python3 -m pytest -q tests/compiler/test_v41_state_read_binding.py tests/compiler/test_rom_backend.py tests/compiler/test_hbm_sram_backend.py tests/compiler/test_deepseek_v41_hbm_comparator.py tests/test_deepseek_v41_rom_backend.py tests/compiler/test_v41_rom_kv_join.py tests/compiler/test_v41_engram_token_ring.py tests/sim/test_engines_dma_route.py -k \"not test_the_new_contracts_are_the_front_ends_own_names\"  (359 passed; the deselected test fails at HEAD, pre-existing)"
+ ],
+ "not_a_claim": [
+  "runtime.sim, not RTL",
+  "no V4.1 cell is closed: every graded record still misses the oracle at one of its four tokens; each miss is an oracle runner-up, recorded as a near-miss, not a pass",
+  "the oracle is self-consistent only at positions 0-7 (results/abi3/deepseek_v41_oracle_nondeterminism.json); grading is on tokens"
+ ],
+ "producer": {
+  "git": {
+   "commit": "2aea0d74734c11079172e4c31e7885ee5ab2a870"
+  },
+  "records": [
+   "decode_consistency_hbm_c512_context14.json",
+   "hbm_c512_p12.json",
+   "hbm_c512_p16.json",
+   "prefill_taps_rom_wafer_vs_hbm_p10.json",
+   "rom_array64_c8192_p12.json",
+   "rom_wafer_c8192_p12.json",
+   "rom_wafer_c8192_p16.json"
+  ]
+ }
+}

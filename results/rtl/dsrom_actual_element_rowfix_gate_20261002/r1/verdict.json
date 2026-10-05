@@ -1,0 +1,31 @@
+{
+  "artifact_manifest": "artifact_integrity.json",
+  "coverage": "coverage_classification.json",
+  "immutable_result_files_sha256": {
+    "artifact_integrity.json": "a13884feba526d13c10bd013beefaf25e970f3497a12510f1df43ffbb86978b5",
+    "cap_snapshot.json": "71db7c22f0e74d7dc439ab1831b3e0ae104d7d348d359947640679515eadb1af",
+    "coverage_classification.json": "88d0f82de0683447640d9330b04c1c38d3d0b99781146db2a447fc4f124b707a",
+    "launcher.json": "a120e6b96ff9c8856967709250ff77580ad358e59bdfa302346c6dd93666c7aa",
+    "launcher.log": "0d0edd67ab105da8cc20f0c969469e502b295c1fcca4129bc3d951b7b527cd3c",
+    "positive_bfcolumn_build.log": "c2a645193a0dbd99bfd3b75b44a5dfe5bb79deadf4705532f360d1e7be3be344",
+    "positive_bfcolumn_build_receipt.json": "1818b9cba962c81a53d6c95df53e1b1227f96d0d526ba5ab43bd014a706ba9c9",
+    "positive_bfcolumn_simulate.log": "99e10f816f5ea54770d261dae32f654d58a6ace0d8fdd2d50a2c74bb2e65ed9c",
+    "positive_bfcolumn_simulate_receipt.json": "bb3e78052387ce3beaaef94585767c20c375edf3d1b5e261796028496de85d20",
+    "positive_q_build.log": "c20d700c11b0473ff3a37a68801f9b84c16915182ae44d8bef224b650ffb3f77",
+    "positive_q_build_receipt.json": "ed2255a572b8a4db8e54230b41b77e0e3c1f65da6359baaf719264b647cf4c2a",
+    "positive_q_simulate.log": "3d3d94a32fcd7ff39749d81fe311aba5b610198ac1bfaee8136c0f91813ad0c1",
+    "positive_q_simulate_receipt.json": "d6feef768213bfd94c8a0febe14b8015564f15abd9d4adf44913aade7aabdc81",
+    "record.json": "37dd205a85ff596fea821b41474f93462722180c00a19f37c50a6bfe0e0e9016",
+    "resource_calibration.json": "e40b44819815a7a7f7e6673eb90973f3394e5f049df101ab45fb3d5b8e3e37dc",
+    "tool_preflight.json": "a76e5e553586afb95c30a3da89f9479c9eb0fcaba6f3f3bcf3e74913feb2faf4"
+  },
+  "model_sha256": "43daaeb259c1f3fc43782ec46a360570f41a6541777f15d6355070a09858a04b",
+  "next_gate": "Real-field numerical-golden/control contract coverage and clockgate contextual closure remain separate prerequisites; model before any physical RTL change. No field/die run or physical change authorized by this result.",
+  "parent_GO_commit": "868be934dd7d4718d8fc69bf03d217f2253fd6c1",
+  "prepared_commit": "492ff8d33cd0e6d2460d163036bfb4b01ba450d4",
+  "prior_failure_records_unchanged": true,
+  "record": "record.json",
+  "resources": "resource_calibration.json",
+  "runner_sha256": "b9e8c83a9db1294b509563f5f328689d33b0e676ab9bb58cfeadf4b1df12694d",
+  "status": "PASS_BOUNDED_REFERENCE_CANDIDATE_DIFFERENTIAL_AND_INDEPENDENT_CONFIGURATION_ROW_ORACLE"
+}

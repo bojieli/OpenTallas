@@ -1,0 +1,32 @@
+{
+  "C0_V1_I64_and_mirrors_recharged": false,
+  "DS_PCs": 2213,
+  "Qwen_PCs": 1737,
+  "boundary_costs_added_to_known_subledger": false,
+  "boundary_phase_unit_totals": {
+    "HBM32_read_return": 31211520,
+    "RF512_both_mirror_ACK": 1950720,
+    "consumer_capture": 1950720,
+    "owner_accept": 1950720,
+    "scratch64_read_return": 15605760,
+    "scratch64_write_ACK": 15605760,
+    "validated_reverse": 1950720
+  },
+  "changed_PCs": 40,
+  "complete_service_software_ticks": null,
+  "critical_path_software_tick_delta": -655360,
+  "current_C0_catalog_sha256": "cb40b52b8c77bdcf9d59295a2c7eca3a2bf908b08ab15dc2037fb1e0d3464e3c",
+  "current_known_subledger_software_ticks": 432013167537,
+  "hardware_admitted": false,
+  "reset_context": {
+    "HBM_runtime_cost_added": false,
+    "model": "Qwen_ROM",
+    "physical_reset_or_CTS_proven": false,
+    "source_tile_clock_bits": 134610,
+    "source_tile_reset_bits": 58919
+  },
+  "schema": "H4_R33_ONCE_ONLY_CALENDAR_AND_INPUT_RESERVATION_V1",
+  "shared_unknown_calls": 189476,
+  "status": "PASS_ONCE_ONLY_SOURCE_COST_REPRICE_FINITE_INPUT_RESERVATION_PARTIAL",
+  "window_rank_calls": 3840
+}

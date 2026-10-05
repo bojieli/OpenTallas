@@ -1,0 +1,141 @@
+{
+  "comparison_id": "qwen3_rom_single_chip_vs_hbm_single_chip",
+  "execution": {
+    "batch": 1,
+    "concurrency": 1,
+    "context_tokens": 8000,
+    "evidence_scope": "full_workload",
+    "generation": {
+      "eos_token_ids": [151645, 151643],
+      "include_eos_in_output": true,
+      "max_new_tokens": 256,
+      "selection_mode": "greedy_argmax_lowest_id",
+      "stop_condition": "first_official_eos_or_maximum_new_tokens",
+      "tie_rule": "lowest_token_id",
+      "vocabulary_size": 151936
+    },
+    "phases": ["prefill", "decode"]
+  },
+  "external_oracle": {
+    "evidence_class": "external_reference_comparator",
+    "path": "results/abi3/qwen3_reference_oracle_exact_8k_chat.json",
+    "producer": {
+      "source_sha256": null,
+      "tool": "tools/run_qwen3_reference_oracle.py"
+    },
+    "schema": "opentallas.abi3.reference_oracle.v1",
+    "source_sha256": null,
+    "status": "pending"
+  },
+  "model": {
+    "graph_id": "84bb97dd1243553f170fde014c15c76c6adf0b80f0ef3bdad27a015577b6c24b",
+    "kernel_ir_path": "build/ir-v3/qwen3-8b/kernel_ir.v3.json",
+    "kernel_ir_source_sha256": "62499454381d24641f8cedda00f049aff61b4aa96410fa3fe460e0044df567e6",
+    "model_id": "qwen3-8b",
+    "numeric_profile": "qwen3_bf16_gqa_target_v1"
+  },
+  "policy": {
+    "clock": {
+      "comparison_frequency_hz": null,
+      "policy_id": "common_routed_minimum_fmax_v1",
+      "same_frequency_required": true
+    },
+    "evidence_class": "predictive_asap7_characterized_or_explicit_assumption_v1",
+    "external_fabric_policy": "single_chip_no_external_fabric_v1",
+    "external_memory_policy": "source_locked_hbm_phy_and_stack_v1",
+    "latency_boundary": "host_request_to_terminal_completion_v1",
+    "pvt": {
+      "corner_id": "asap7_tt_0p70v_25c",
+      "process": "TT",
+      "temperature_c": 25,
+      "voltage_v": 0.7
+    },
+    "state_boundary": "fresh_session_live_hbm_kv_prefill_decode_fail_stop_v1",
+    "technology_claim": "predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim",
+    "technology_view": "asap7"
+  },
+  "schema": "opentallas.abi3.comparison_contract.v1",
+  "targets": {
+    "hbm": {
+      "backend": "hbm-sram-abi3",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/hbm_sram_single_chip_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-hbm-chip-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_hbm_chip_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "qwen_hbm_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/qwen3-8b-hbm-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_count": 1,
+      "role": "hbm",
+      "storage_class": "HBM",
+      "target_id": "hbm-sram-abi3-single_chip",
+      "topology_class": 0
+    },
+    "rom": {
+      "backend": "rom.single_chip",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/rom_qwen3_single_chip_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-asap7-qwen-rom-v1",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_asap7_qwen_rom_v1.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "qwen_rom_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/qwen3-8b-rom-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_count": 1,
+      "role": "rom",
+      "storage_class": "ROM",
+      "target_id": "qwen3-8b-rom-single-chip",
+      "topology_class": 0
+    }
+  },
+  "version": "1.2.0",
+  "workload": {
+    "digest": "5c8fce7d61afd1e06b7a061133c0a6d639fac7d65739227f84e199d6c870297e",
+    "index_path": "build/workloads/qwen3-8b/index.json",
+    "index_schema": "opentallas.abi3.workload_index.v1",
+    "index_source_sha256": "d92535c9845245221d788407afca98c1d3724184acb0d0e5e7b23a29e25138a3",
+    "kind": "long_natural_chat",
+    "max_new_tokens": 256,
+    "path": "build/workloads/qwen3-8b/TA-QW-8K-1.json",
+    "prompt_token_count": 8000,
+    "rendered_text_sha256": "1b85b8c0264a0f26054d69cbc1ffc076ba3971ecd91ad39e8ba51cd1820647cb",
+    "source_sha256": "4bd1ca5cad91a6006383c4470a16fd803e18bbfad9ec19fe8ed01373da118217",
+    "template": {
+      "mode": "source_file",
+      "path": "configs/abi3/workloads/qwen3_exact_8k_chat_v1.json",
+      "source_sha256": "38e4a9acc569fff5ffc23ed2187cb71a551133691acac7131f4b6a7d3c8909ca",
+      "template_id": "qwen3_official_chat_template"
+    },
+    "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "workload_id": "TA-QW-8K-1"
+  }
+}

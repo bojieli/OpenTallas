@@ -1,0 +1,81 @@
+{
+  "ASAP7_SS_area_mm2": null,
+  "FF_hold": null,
+  "L0_L20_occupancy": null,
+  "L0_exact": null,
+  "L20_exact": null,
+  "SS_setup": null,
+  "adopted": false,
+  "busiest_stage_rate_loss": null,
+  "label": "MEASURED_DIRECTED_RTL_NOT_PROGRAM_GATE",
+  "results": {
+    "nodes": {
+      "compile_exit": 0,
+      "fixture_latency_increase_fraction": 1.1797752808988764,
+      "fixture_rate_loss": 0.5412371134020619,
+      "measured": {
+        "count": 256,
+        "credit_last": 582,
+        "parent_peak": 1,
+        "peak_a": 4,
+        "peak_b": 4,
+        "reference_last": 267,
+        "stalls": 315
+      },
+      "measured_launch_to_downstream_pop_cycles": {
+        "max": 7,
+        "min": 7
+      },
+      "measured_saturated_slot_reuse_cycles": 9,
+      "run_exit": 0,
+      "status": "PASS_DIRECTED_RTL",
+      "summary": [
+        "RESULT nodes count=256 credit_last=582 reference_last=267 peak_a=4 peak_b=4 parent_peak=1 stalls=315"
+      ]
+    },
+    "ragged_elaboration": {
+      "NP": 5,
+      "R": 2,
+      "compile_exit": 0,
+      "scope": "actual RTL compile only; full2682 HDL not built"
+    },
+    "root": {
+      "compile_exit": 0,
+      "run_exit": 0,
+      "status": "PASS_DIRECTED_RTL",
+      "summary": [
+        "RESULT root count=129 cycles=394 peak_q=63 peak_held=128 blocked=1"
+      ]
+    },
+    "topology_2682": {
+      "nodes": 5236,
+      "padding_pairs": 0,
+      "roots": 128
+    },
+    "topology_4096": {
+      "nodes": 8064,
+      "padding_pairs": 0,
+      "roots": 128
+    },
+    "topology_5": {
+      "nodes": 8,
+      "padding_pairs": 0,
+      "roots": 2
+    }
+  },
+  "route": null,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/tb_dsrom_credit_return.sv": "51f6aaeeeb7d825f7158f8984b4ad5c9882fc2c5bf8ea6a4ed87b80a7999b149",
+    "rtl/test/tb_dsrom_credit_root.sv": "efc98f9b0a3b064156071aafb03850533559b7ab12eb60b1c8c74ab2762c6f3a",
+    "rtl/v41die/ot_v41_retn_credit.sv": "31d54cf03317a49f1245e484fb7a4acb87916d4fe7090a10e08922e92e5098c6",
+    "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/v41rom/ot_v41_ret_credit.sv": "a1f33c54ea4f73c23401eb7d6abecabdf0962ef1c8fc3ee4c7eb65e6e3be3d11",
+    "tools/dsrom_credit_return_gate.py": "35d53560693e8f796eed40ea073efa041dcd28c8b1f6a3179f52df65cdbd6398",
+    "tools/gen_dsrom_credit_return.py": "2a25d658583f0490b8865175c8182058b1886860582a18a062c25864c952adfe"
+  },
+  "source_stable": true,
+  "wall_s": 30.183255474999896
+}

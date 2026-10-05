@@ -1,0 +1,178 @@
+{
+  "all_source_pins_equal": true,
+  "available_CPUs": 28,
+  "loadavg": [
+    2.390625,
+    2.484375,
+    3.23876953125
+  ],
+  "pid1220907_exists": false,
+  "source_currency": {
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "actual": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "equal": true,
+      "expected": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": {
+      "actual": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+      "equal": true,
+      "expected": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f"
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "actual": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "equal": true,
+      "expected": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": {
+      "actual": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+      "equal": true,
+      "expected": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93"
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+      "actual": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "equal": true,
+      "expected": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "actual": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "equal": true,
+      "expected": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "actual": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "equal": true,
+      "expected": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "rtl/hdc/ot_hdc_isa.svh": {
+      "actual": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+      "equal": true,
+      "expected": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4"
+    },
+    "rtl/hdc/ot_hdc_matvec.sv": {
+      "actual": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18",
+      "equal": true,
+      "expected": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18"
+    },
+    "rtl/hdc/ot_hdc_qwen_int8_arith.sv": {
+      "actual": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+      "equal": true,
+      "expected": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d"
+    },
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": {
+      "actual": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+      "equal": true,
+      "expected": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c"
+    },
+    "rtl/hdc/ot_hdc_reduce.sv": {
+      "actual": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+      "equal": true,
+      "expected": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f"
+    },
+    "rtl/hdc/ot_hdc_reduce_q.sv": {
+      "actual": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+      "equal": true,
+      "expected": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32"
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+      "actual": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "equal": true,
+      "expected": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    "rtl/hdc/ot_hdc_sfu_q.sv": {
+      "actual": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+      "equal": true,
+      "expected": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338"
+    },
+    "rtl/hdc/ot_hdc_stream.sv": {
+      "actual": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+      "equal": true,
+      "expected": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61"
+    },
+    "rtl/hdc/ot_hdc_vreduce.sv": {
+      "actual": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+      "equal": true,
+      "expected": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb"
+    },
+    "rtl/hdc/ot_hdc_vstream.sv": {
+      "actual": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+      "equal": true,
+      "expected": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db"
+    },
+    "rtl/hdc/ot_hdc_vstream_lane.sv": {
+      "actual": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+      "equal": true,
+      "expected": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c"
+    },
+    "rtl/hdc/ot_qwen_me_array.sv": {
+      "actual": "dec28d11f13bd587788db4b6cb7cf90fad0a30f843a461c211006e6e62c5f218",
+      "equal": true,
+      "expected": "dec28d11f13bd587788db4b6cb7cf90fad0a30f843a461c211006e6e62c5f218"
+    },
+    "rtl/hdc/ot_qwen_rom_tile.sv": {
+      "actual": "a521b879ce3850e5c339dbf8e07aaf210c2632237c6d58b1364fac61f8c5a47b",
+      "equal": true,
+      "expected": "a521b879ce3850e5c339dbf8e07aaf210c2632237c6d58b1364fac61f8c5a47b"
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "actual": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "equal": true,
+      "expected": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": {
+      "actual": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+      "equal": true,
+      "expected": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": {
+      "actual": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+      "equal": true,
+      "expected": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3"
+    },
+    "rtl/rom/ot_rom_pkg_ctrl.sv": {
+      "actual": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+      "equal": true,
+      "expected": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46"
+    },
+    "rtl/rom/ot_rom_pkg_link.sv": {
+      "actual": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+      "equal": true,
+      "expected": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3"
+    },
+    "rtl/rom/ot_rom_tp_seq.sv": {
+      "actual": "63f919078a412bd790453d8e8a773a17e15bfc36e18acaa8862b8a270f3485ce",
+      "equal": true,
+      "expected": "63f919078a412bd790453d8e8a773a17e15bfc36e18acaa8862b8a270f3485ce"
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": {
+      "actual": "f3dd0c135949158ac32f37573133b246b4f1968f5778afc1faf7f6b6713a2bec",
+      "equal": true,
+      "expected": "f3dd0c135949158ac32f37573133b246b4f1968f5778afc1faf7f6b6713a2bec"
+    },
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": {
+      "actual": "67a8511c367296d3b3184c5f51643d236766bf605f3c9e3652c65c94ddb81c1b",
+      "equal": true,
+      "expected": "67a8511c367296d3b3184c5f51643d236766bf605f3c9e3652c65c94ddb81c1b"
+    },
+    "rtl/test/qwen_runtime/qwen_rt_matvec.hpp": {
+      "actual": "337ae8dedab0e49ddfa76c70a88589b7ea374548e0d88f4bce2628aadc4e453b",
+      "equal": true,
+      "expected": "337ae8dedab0e49ddfa76c70a88589b7ea374548e0d88f4bce2628aadc4e453b"
+    },
+    "rtl/test/qwen_runtime/qwen_rt_memory.hpp": {
+      "actual": "8b6f9b084ca2a20cc12c99da7d53629635141a9a28302a87cbfae16b54145b47",
+      "equal": true,
+      "expected": "8b6f9b084ca2a20cc12c99da7d53629635141a9a28302a87cbfae16b54145b47"
+    },
+    "tools/qwen_rom_rt_core_emit.py": {
+      "actual": "54ccf9f14b1ef7c09ea248e91dc83447213d68a086a5a317ee013ac914f6df2f",
+      "equal": true,
+      "expected": "54ccf9f14b1ef7c09ea248e91dc83447213d68a086a5a317ee013ac914f6df2f"
+    },
+    "tools/qwen_rom_rt_token.py": {
+      "actual": "00f08f7e327bb0b6239c6d0c0b211b68fb884350672b38472c225303e878ab2f",
+      "equal": true,
+      "expected": "00f08f7e327bb0b6239c6d0c0b211b68fb884350672b38472c225303e878ab2f"
+    }
+  },
+  "verilator_version_output": "Verilator 5.050 2026-07-01 rev v5.050\n\nCopyright 2003-2026 by Wilson Snyder.  Verilator is free software; you can\nredistribute it and/or modify the Verilator internals under the terms of\neither the GNU Lesser General Public License Version 3 or the Perl Artistic\nLicense Version 2.0.\n\nSee https://verilator.org for documentation\n\nSummary of configuration:\n  Compiled in defaults if not in environment:\n    SYSTEMC            = \n    SYSTEMC_ARCH       = \n    SYSTEMC_INCLUDE    = \n    SYSTEMC_LIBDIR     = \n    VERILATOR_ROOT     = /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator\n    VERILATOR_SOLVER   = z3 --in\n    SystemC system-wide = 1\n\nEnvironment:\n    MAKE               = \n    PERL               = \n    PYTHON3            = \n    SYSTEMC            = \n    SYSTEMC_ARCH       = \n    SYSTEMC_INCLUDE    = \n    SYSTEMC_LIBDIR     = \n    VERILATOR_BIN      = \n    VERILATOR_ROOT     = /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator\n    VERILATOR_SOLVER   = \n\nSupported features (compiled-in or forced by environment):\n    COROUTINES         = 1\n    SYSTEMC            = 1\n"
+}

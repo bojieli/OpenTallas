@@ -1,0 +1,253 @@
+{
+ "schema": "opentallas.dsrom-baseline-config.v1",
+ "design": "DeepSeek-V4.1-Flash ROM accelerator, S81 (81 stages, one die per rank, TP4), 1.2 GHz streaming / 0.9 GHz serial domains",
+ "date": "2026-10-04",
+ "target": {
+  "context": 1048576,
+  "position": 1048575,
+  "mtp": "DSpark gamma 5, tau 4.159 (6-class mix)"
+ },
+ "flags_header": "rtl/dsrom_sys/integration/dsrom_baseline_flags.svh",
+ "adopted_levers": [
+  {
+   "id": "wavefront_verify",
+   "main": [
+    "051813496",
+    "ecb8269b3",
+    "097ec24b0",
+    "025d24e3b",
+    "7231afc8d"
+   ],
+   "flags": {
+    "WAVE": 1,
+    "WIN": 6,
+    "die_top": {
+     "PKG_WAVE": 1,
+     "PKG_WAVE_WIN": 6
+    }
+   },
+   "rtl": [
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wf.sv",
+    "rtl/dsrom_sys/wavefront_parent/native/ot_rom_pkg_ctrl_wf_s81.sv",
+    "rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv",
+    "rtl/dsrom_sys/wavefront_parent/native/ot_v41_rt_die_l20_c8.sv",
+    "rtl/dsrom_sys/wavefront_parent/selection.json"
+   ],
+   "records": [
+    "results/rtl/dsrom_wavefront_verify_20261004/record.json",
+    "results/rtl/dsrom_wavefront_install_20261004/final_result.json"
+   ],
+   "measured_alone": "L20 stage (reduced vehicle): next same-user position starts 46 cycles (0.408 %) after the previous; K/V and index-key rows visible <= 264 cycles after write"
+  },
+  {
+   "id": "l1_fused_draft_head",
+   "main": [
+    "ec7b1ff18",
+    "2a235a9fe",
+    "3465b329a"
+   ],
+   "flags": {
+    "reduced_core": "+define+OT_MTP_FUSED_HEAD=1 (tools/dsrom_fused_draft_head.py enable())",
+    "s81_head": {
+     "FH": 1,
+     "per_op": "capture (draft lm_head) then fuse (Markov) on the same rank"
+    }
+   },
+   "rtl": [
+    "rtl/hdc/v41/dspark_fused_head/ot_hdc_core_v41.sv",
+    "rtl/hdc/v41/dspark_fused_head/ot_hdc_v41_matvec.sv",
+    "rtl/dsrom_sys/integration/ot_dsrom_s81_head_amax_fh.sv"
+   ],
+   "records": [
+    "results/rtl/dsrom_fused_draft_head_20261004/record.json",
+    "results/rtl/dsrom_integration_20261004/fused_head.json"
+   ],
+   "measured_alone": "reduced core: chain step 16,944 -> 12,371 cycles, drafts and argmax values == golden; full shape ratio 1.0106 -> draft 105.55 us"
+  },
+  {
+   "id": "reindex_candidate_gather_mask_drop",
+   "main": [
+    "876110b60",
+    "cc147772c",
+    "ed25c5c89",
+    "f3fbd5735",
+    "9db526f58",
+    "d35c34901"
+   ],
+   "flags": {
+    "MDROP": 1,
+    "kgather": "replaces the full-range scan on L24/L28/L32/L36",
+    "LSW": 3
+   },
+   "rtl": [
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kgather.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_mdrop.sv",
+    "rtl/dsrom_sys/integration/ot_hdc_v41x_idx_kgather_ps.sv",
+    "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv"
+   ],
+   "records": [
+    "results/rtl/dsrom_reindex_candidates_20261004/gather.json",
+    "results/rtl/dsrom_reindex_candidates_20261004/select.json",
+    "results/rtl/dsrom_reindex_candidates_20261004/screen.json",
+    "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+    "results/rtl/dsrom_integration_20261004/reindex_wf.json"
+   ],
+   "measured_alone": "AR 2,211.3 -> 2,532.2, MTP 6,332.0 -> 7,319.9 tok/s at 1M; SS setup +55.8 / +139.4 ps, FF hold +8.4 / +8.7 ps (pre-layout screens)"
+  },
+  {
+   "id": "s81_die_configuration_12_head_dies",
+   "main": [
+    "b65276167"
+   ],
+   "flags": {
+    "stages": 81,
+    "head_dies": 12,
+    "TP": 4,
+    "ROM_R": 128,
+    "ROM_PHW": 10
+   },
+   "rtl": [
+    "rtl/dsrom_sys/wavefront_parent/native/ot_v41_rt_die_l20_c8.sv (layer die top)",
+    "rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv",
+    "rtl/dsrom_sys/s81_native_head_connect/ot_s81_native_head_tp4.sv"
+   ],
+   "records": [
+    "results/rtl/dsrom_s81_fulldie_20261004/STATUS.md",
+    "results/rtl/dsrom_s81_fulldie_20261004/feasibility.json",
+    "results/rtl/dsrom_s81_fulldie_20261004/head_die/floorplan.json"
+   ],
+   "measured_alone": "layer die + head die: macro legality, on-track pins, GRT k16 i50 overflow 0, PSM IR <= 32.2 mV; open: q-element pin xs_q1[151] access"
+  },
+  {
+   "id": "window_stream",
+   "main": [
+    "3bad4e3c2"
+   ],
+   "flags": {
+    "ENABLE": 1,
+    "IW": 8
+   },
+   "rtl": [
+    "rtl/chip/ot_dsrom_window_stream_la.sv"
+   ],
+   "records": [
+    "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json"
+   ],
+   "binding": "PENDING: bound into the S81 element by claude/dsrom-s81-window-bind-20261004 (other agent; not duplicated here)"
+  }
+ ],
+ "excluded_variants": [
+  {
+   "id": "l2_nv5_batched_draft_head",
+   "status": "parked",
+   "why": "SS pre-layout screen fails vs NV1 on the 12 head dies (23bc18a24); composition key l1l2_nv5_us (8,018 tok/s) is NOT the baseline"
+  },
+  {
+   "id": "reindex_as_built_full_scan",
+   "status": "replaced",
+   "why": "scores all 1,048,576 keys then masks; select overflows and replays twice (12,359 cycles): AR 2,211.3"
+  },
+  {
+   "id": "reindex_mask_drop_without_gather",
+   "status": "superseded",
+   "why": "variant mask_drop (AR 2,427.6 / MTP 7,107.1) is dominated by gather + mask-drop"
+  },
+  {
+   "id": "mtp_pass_step_without_wavefront",
+   "status": "replaced",
+   "why": "pass_m1 step 974.94 us at 1M (4,266 tok/s) vs wavefront verify"
+  },
+  {
+   "id": "multi_column_verify_m6",
+   "status": "not adopted",
+   "why": "needs 1.6-2.1x the dies; wavefront verify is preferred (model 4f0c050b8)"
+  },
+  {
+   "id": "par2_row_split",
+   "status": "rejected",
+   "why": "owner: row-splitting a rank over two dies; scenario C is one die per rank, no PAR2"
+  },
+  {
+   "id": "c5hc_mapping",
+   "status": "rejected",
+   "why": "4.48 % < 5 % pre-registered gate with measured collectives (4ec2eef0e)"
+  },
+  {
+   "id": "window_refill_credits_prefetch_only",
+   "status": "to be replaced",
+   "why": "as-built per-row WINDOW prefetch (WINDOW_REFILL_CREDITS=8) stays in the die until the window stream binding lands"
+  },
+  {
+   "id": "rom_ecc_secded",
+   "status": "removed by owner policy 2026-10-02",
+   "why": "ROM storage needs no ECC"
+  }
+ ],
+ "integration_checkpoint": {
+  "records": [
+   "results/rtl/dsrom_integration_20261004/reindex_wf.json",
+   "results/rtl/dsrom_integration_20261004/fused_head.json",
+   "results/rtl/dsrom_integration_20261004/elaborate.json",
+   "results/rtl/dsrom_integration_20261004/composition.json"
+  ],
+  "tools": [
+   "tools/dsrom_integ_reindex_wf.py",
+   "tools/dsrom_integ_fused_head.py",
+   "tools/dsrom_integ_elaborate.py",
+   "tools/dsrom_integ_compose.py"
+  ],
+  "interactions": [
+   {
+    "id": "I1 flag conflict: L1 fused head absent from the S81 path",
+    "severity": "silent wrong drafts",
+    "found": "L1 was built on engine-0 ot_hdc_v41_matvec / reduced ot_hdc_core_v41; S81 runs ot_hdc_core_v41x with X_ME=1/X_ROM=1 and the native head argmax; v41x decodes `ad` only for the SU, so the fused encoding argmaxes the Markov output alone (FH=0 control: draft 3538 instead of 1366)",
+    "fix": "ot_dsrom_s81_head_amax_fh (FH=1, per-op capture/fuse, +6 cycles a chain step); bit-exact at 1,048,575 (verify 21946, draft 1366, 129,280/129,280 fused logits)",
+    "constraint": "addend memory banked by return lane: markov_head rows must return on the head rows' lanes (or a 128-word/cycle VM read path)"
+   },
+   {
+    "id": "I2 wavefront x re-index: single candidate list",
+    "severity": "wrong selections",
+    "found": "kgather holds one list; with WAVE=1 WIN=6 the lists of positions q+1.. arrive before L24..L36 consume q's; as-built single list run: job 0 = 518 selection errors",
+    "fix": "ot_hdc_v41x_idx_kgather_ps LSW=3 (8 slots >= WIN, slot = pos mod 8); both jobs exact on all 4 ranks"
+   },
+   {
+    "id": "I3 gather -> select handshake: no last beat",
+    "fix": "per-quarter block count marks the last beat; empty quarter sends an empty last beat (functional case passes)"
+   },
+   {
+    "id": "I4 gather has no causal bound",
+    "fix": "mask-drop keep = lane valid & position <= job position: MDROP must stay ON with the gather (job 0 drops position 1,048,575 given an adversarial score)"
+   },
+   {
+    "id": "I5 select overflow replay needs the source again",
+    "fix": "chain re-issues the gather from the held list slot; adversarial case: 2 replays, 3 passes, exact"
+   },
+   {
+    "id": "I6 select busy is not the next-segment condition",
+    "fix": "start allowed once every quarter emitted out_last (select contract); wavefront hand-off 1 cycle"
+   },
+   {
+    "id": "I7 same lifetime hazard for every per-user staged cross-stage state",
+    "severity": "requirement (not built here)",
+    "found": "reuse layers read their source layer's selection (L2 -> L3..19, L20 -> L21..23, L24 -> L25..39) and any SIDE payload is per-user (user << SIDE_USH) in ot_rom_pkg_ctrl_wf; with WAVE=1 these need position slots (>= WIN) too",
+    "owner": "S81 binding / Codex"
+   }
+  ],
+  "composition": {
+   "separate": {
+    "AR": 2532.2,
+    "MTP": 7319.9
+   },
+   "integrated": {
+    "AR": 2535.1,
+    "MTP": 7325.3
+   },
+   "delta_pct": {
+    "AR_pct": 0.115,
+    "MTP_pct": 0.074
+   },
+   "record": "results/rtl/dsrom_integration_20261004/composition.json"
+  }
+ },
+ "selection_successor": "rtl/dsrom_sys/integration/selection_baseline.json"
+}

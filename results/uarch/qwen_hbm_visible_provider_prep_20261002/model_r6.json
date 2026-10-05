@@ -1,0 +1,280 @@
+{
+  "actual_WR_bound_comparisons": [
+    {
+      "backing_ps": 94000,
+      "case": 0,
+      "column_ps": 94000,
+      "early_by_ps": 7274,
+      "elapsed_ps": 0,
+      "required_minimum_ps": 7274,
+      "tag": 4,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    },
+    {
+      "backing_ps": 99000,
+      "case": 0,
+      "column_ps": 99000,
+      "early_by_ps": 7274,
+      "elapsed_ps": 0,
+      "required_minimum_ps": 7274,
+      "tag": 5,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    },
+    {
+      "backing_ps": 114000,
+      "case": 0,
+      "column_ps": 114000,
+      "early_by_ps": 7274,
+      "elapsed_ps": 0,
+      "required_minimum_ps": 7274,
+      "tag": 6,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    },
+    {
+      "backing_ps": 121000,
+      "case": 0,
+      "column_ps": 121000,
+      "early_by_ps": 7274,
+      "elapsed_ps": 0,
+      "required_minimum_ps": 7274,
+      "tag": 7,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    },
+    {
+      "backing_ps": 21000,
+      "case": 2,
+      "column_ps": 20375,
+      "early_by_ps": 6649,
+      "elapsed_ps": 625,
+      "required_minimum_ps": 7274,
+      "tag": 0,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    },
+    {
+      "backing_ps": 74000,
+      "case": 2,
+      "column_ps": 73899,
+      "early_by_ps": 7173,
+      "elapsed_ps": 101,
+      "required_minimum_ps": 7274,
+      "tag": 1,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    }
+  ],
+  "actual_reorder_stage_costs": [
+    {
+      "isolated_reservation_ready_ps": 107000,
+      "isolated_scan_start_ps": 72000,
+      "observe_ps": 72000,
+      "queue_entries": 17,
+      "scan_shift_edges": 35,
+      "scope": "Isolated conventional-stage preparation from actual selected index. Loaded new scheduling requires a finite provider experiment; second observed swap is not replayed concurrently.",
+      "selected_index": 15,
+      "source_arrival_ps": 33000,
+      "tag": 32
+    },
+    {
+      "isolated_reservation_ready_ps": 108000,
+      "isolated_scan_start_ps": 73000,
+      "observe_ps": 73000,
+      "queue_entries": 16,
+      "scan_shift_edges": 35,
+      "scope": "Isolated conventional-stage preparation from actual selected index. Loaded new scheduling requires a finite provider experiment; second observed swap is not replayed concurrently.",
+      "selected_index": 15,
+      "source_arrival_ps": 34000,
+      "tag": 33
+    }
+  ],
+  "additional_to_r1_control": {
+    "FF_area_proxy_mm2": 0.08328096,
+    "PC_contexts": 256,
+    "command_context_fields": {
+      "next_command_ps": 64,
+      "phase": 3,
+      "request_snapshot": 472,
+      "reservation_slot": 2,
+      "reservation_valid": 1
+    },
+    "context_bits": 138752,
+    "context_width": 542,
+    "held_WR_completion_bits": 1744,
+    "held_WR_completion_width": 216,
+    "pending_add_bits": 2304,
+    "pending_add_fields": {
+      "beat": 5,
+      "column_ps": 64,
+      "lifecycle_phase": 3
+    },
+    "total_bits": 142800
+  },
+  "address_residence": {
+    "address_span_bytes": 549755813888,
+    "backing": "External HBM logical sector identity; Python sparse dictionary only test oracle. Never allocate512GiB as controller SRAM or alias modulo4096.",
+    "fullAW_sector_bits": 34,
+    "memorymacro": "Pending/control as sized FF proxy; request/return queues use pinned64x5121R1W candidate,512 total. No new macro port is assumed.",
+    "resident_pending_payload_bytes": 1024,
+    "resident_pending_rows": 32,
+    "sector_payload_bytes": 32
+  },
+  "clock_scope": "Explicit source preset1000ps candidate; no universal clock or SS/FF qualification",
+  "composed_dependency_expression": {
+    "backing_visible": "WR_column+CWL+burst",
+    "column": "max(command_ready, emitted_ACT+tRCD, tCCD/burst constraints, read/write turnarounds)",
+    "command_ready": "max(request_accept+REQ, frozen_scan_shift_complete, capacity_reservation_ready, RAW_WAW_ready, bank_recovery, refresh_complete, command_port_ready)",
+    "completion": "max(backing_visible, held_visible_arbiter_ready, ACK_capture_capacity)",
+    "critical_path": "Dependency maxima over the event DAG, never sum overlapping work floors.",
+    "publication": "max(all finite completions after forwardCDC/store/consumer_retire/reversecredit)",
+    "reader": "max(publication, reader_lease_acquire, read_command_ready)"
+  },
+  "event_contract": [
+    "accept snapshot immutable producer64+transport32",
+    "freeze PC18..35 scan/shift; charge head-prefetch bubbles",
+    "reserve pending WR or return capacity BEFORE any bank command/head pop",
+    "one conventional command chain/PC, emit at current explicit edge; held command under ready backpressure",
+    "autonomous current-time refresh fences PC and waits all open-bank recovery,PREall,tRP,REF,tRFC",
+    "ACT/PRE/column legality independently checked at actual emitted timestamp; no retrospective state mutation",
+    "WR column -> CWL+burst -> fulladdress backing commit -> immutable held-visible record",
+    "RAW waits for exact fulladdress commit; WAW cannot pass resident older sameaddress WR",
+    "ACKcapture -> forwardCDC -> completion_store -> consumer_retire -> reversecredit releases WRslot",
+    "drain includes contexts/reservations/heldread+WR/CDC/RMW/lease/consumer and bothdie return-zero"
+  ],
+  "exact_blockers": [
+    "Actual command port service, bank-state timer widths/wrap and independent autonomous refresh implementation remain unmeasured.",
+    "ACK/CDC/RMW/lease providers require exact finite clock/phase contracts; current r5 bench has neither WRvisible nor postWR KVread stage.",
+    "Loaded queue ranking changes after18..35 hardware scan and command residence; baseline timestamps cannot be replayed as a repaired controller.",
+    "Actual1737 issue/RF/shared/NoC stage dependencies and weight phase arbitration remain unbound.",
+    "Channel capacity, total slot fit and SSsetup/FFhold remain unqualified."
+  ],
+  "fullprogram_execution": false,
+  "geometry": {
+    "AW": 34,
+    "BEATW": 5,
+    "LENW": 6,
+    "NPC": 32,
+    "QD": 64,
+    "RQD": 32,
+    "TAGW": 16,
+    "dies": 2,
+    "pending_WR_per_stack": 4,
+    "stacks_per_die": 4
+  },
+  "hardware_build_ready": false,
+  "hardware_rate_credit": 0,
+  "inherited_queue_inventory": {
+    "FF_hold_ps": 19.67222053777778,
+    "SS_clk_to_q_ps": 460.3849396734295,
+    "SS_remaining_path_budget_at_target_ps": 273.1478524907372,
+    "area_subset_scope": "queue replacements plus new control proxy only; excludes inherited bank/timing state, existing common36r2, PHY, routing and clock tree; no total controller slot fit",
+    "bits": 512,
+    "channel_capacity": "unbound; width is wire demand before shielding/control/route duplication",
+    "inventory_claim_boundary": "abstract views from a calibrated analytical model on measured ASAP7 bitcells and ASAP7 standard-cell FO4; no transistor layout, no SPICE of the macro, not silicon; ASAP7 is a predictive PDK and nothing here is a foundry N7 number",
+    "macro_area_total_mm2": 6.819509698560001,
+    "macro_plus_new_control_subset_mm2": 7.231244232960001,
+    "name": "ot_sram_1r1w_64x512_m1_r2c2",
+    "per_die_macro_area_mm2": 3.4097548492800005,
+    "ports": "1R1W",
+    "read_latency_edges": 1,
+    "request_macros": 256,
+    "request_utilization": 0.921875,
+    "return_macros": 256,
+    "return_utilization": 0.4599609375,
+    "slot_fit": false,
+    "target_budget_scope": "1.2GHz candidate only: assumes same macro destination setup, excludes wires/skew; no setup or hold closure claim",
+    "total": 512,
+    "total_array_bits": 16777216,
+    "tracks_required_lower_bound": {
+      "all_PC_internal_queue_read_bits_per_stack": 15104,
+      "all_PC_internal_read_bits_per_stack": 15072,
+      "stack_WR_visible_bits": 211,
+      "stack_read_return_bits": 472,
+      "stack_request_bits": 409
+    },
+    "words": 64
+  },
+  "known_visibility_tail_ps": 7274,
+  "next_finite_provider_experiment": {
+    "admission": false,
+    "journal_fields": "accepted identity, scan start/end/selection, reservation slot, actual command valid/ready timestamp, bank state, fulladdress commit, held-visible valid/ready, CDC/store/retire/reversecredit/drain",
+    "metadata": "Same pinned actual-address subset and recorded weight addresses, synthetic marker only; retained loaded phase/provider must be measured.",
+    "source_changes_after_model_review": [
+      "Conventional accepted-command interface and current-refresh scheduler with finite registered contexts.",
+      "FullAW34 oracle/address identity and pre-command WRreservation; delayed backing+held-visible record.",
+      "Connect held ready/valid consumer contract; never fabricate WRdone pulse."
+    ]
+  },
+  "observed_commit": "952dc10e76d5b1eb7df2cbb7ad711fbf80630b05",
+  "parent_epoch_proof": "Do not duplicate; conservative64+32 retained, no epoch narrowing.",
+  "parent_independent_witness": {
+    "all_artifact_hashes_match": true,
+    "commit": "5e3b8773f07e08907c267768b7533baa2603a187",
+    "path": "results/rtl/parent_actual_hbm_observation_witnesses_20261002.json",
+    "sha256": "797c4e4f53d8815bfdca228e77bcdb420036de1f9098759159ba7551191428a7"
+  },
+  "provider_PASS": false,
+  "queue_ports": {
+    "PC_frozen_during_scan": true,
+    "RAW_address_compare_bits_total": 34816,
+    "bank_timer_replicas_total": 8192,
+    "conventional_PC_contexts_per_stack": 32,
+    "empty_enqueue_read_oldword_prefetch_edges": 2,
+    "head_advance_prefetch_edges": 1,
+    "logical_bank_command_address_bus_bits_per_PC": 27,
+    "one_locked_WR_visible_arbiter_per_stack": {
+      "inputs": 4,
+      "outputs": 1,
+      "payload_bits": 216,
+      "two_input_mux_nodes": 3
+    },
+    "one_locked_read_arbiter_per_stack": {
+      "inputs": 32,
+      "outputs": 1,
+      "payload_bits": 471,
+      "two_input_mux_nodes": 31
+    },
+    "pending_RAW_comparators_per_candidate": 4,
+    "per_macro_ports": "1R1W, registered read",
+    "physical_command_mapping": "Unbound HBM PHY channel lowering; this27-bit logical demand is not a qualified HBM pin interface.",
+    "request_macros": 256,
+    "return_macros": 256,
+    "scan_shift_edges": [
+      18,
+      35
+    ]
+  },
+  "schema": "Qwen_conventional_command_fulladdress_visible_provider_preparation_r6",
+  "source_timing_ps": {
+    "BURST_PS": 1024,
+    "CLK_PS": 1000,
+    "CL_PS": 12500,
+    "CWL_PS": 6250,
+    "FAW_PS": 15000,
+    "RAS_PS": 28125,
+    "RCDRD_PS": 19375,
+    "RCDWR_PS": 9375,
+    "REFI_PS": 3900000,
+    "REQ_PS": 10000,
+    "RFC_PS": 350000,
+    "RP_PS": 16250,
+    "RRDL_PS": 3125,
+    "RRDS_PS": 2500,
+    "RSP_PS": 10000,
+    "RTP_PS": 5625,
+    "RTW_PS": 9948,
+    "TCCDL_PS": 2560,
+    "WR_PS": 20625,
+    "WTRL_PS": 6250,
+    "WTRS_PS": 4375
+  },
+  "status": "MODEL_PREPARATION_NOT_CONTROLLER_RTL_ADMISSION",
+  "subset_area": {
+    "exclusions": [
+      "Inherited bank/timing control, common36, CDC queues, PHY, routing and clocktree.",
+      "FF proxy is analytical; memory abstracts do not establish physical signoff."
+    ],
+    "per_die_subset_proxy_mm2": 3.6572625964800003,
+    "queue_and_r1_r6_control_proxy_mm2": 7.314525192960001,
+    "queue_macro_count": 512,
+    "queue_macro_mm2": 6.819509698560001,
+    "slot_fit": false
+  }
+}

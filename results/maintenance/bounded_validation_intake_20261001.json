@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.bounded_validation_intake.v1",
+  "base_commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "evidence_head": "339bf08729b6b4d885b69cc2cb660b297fd7fb36",
+  "branch": "codex/bounded-validation-intake-20261001",
+  "changed_files": 126,
+  "only_added_files": true,
+  "test_command": "PYTHONPATH=tools:. python3 -m pytest -o addopts= -q tests/test_qwen_hbm_complete_controller_capture.py tests/test_qwen_hbm_complete_controller_capture_validated.py tests/test_w17_bounded_idx_replay.py tests/test_dsrom_prefix_sat.py tests/test_dsrom_generic_prefix_sat.py tests/test_dsrom_direct_generic_prefix_sat.py tests/test_w11_fastfp_prefix_sequential_gate.py",
+  "tests_passed": 753,
+  "elapsed_seconds": 10.93,
+  "qualified_scope": [
+    "finite supplied-event capture validation",
+    "one constructed cold idx-HBM event replay",
+    "unrestricted two-state arithmetic helper proofs at enumerated widths",
+    "bounded fast-FP sequential original/candidate simulation",
+    "retained-metadata searches",
+    "source-pinned field helper coverage census"
+  ],
+  "unqualified": [
+    "connected full-token correctness",
+    "actual full-program service and clock calibration",
+    "physical SS/FF closure",
+    "hardware admission",
+    "live substitution",
+    "per-user rate"
+  ],
+  "main_modified": false,
+  "live_jobs_modified": false,
+  "original_tracked_files_modified": false,
+  "adoption": false,
+  "remaining_first_principles_tasks": [
+    "composed WINDOW epoch/owner and drain/wrap contract",
+    "seven common field prefix specialization proofs",
+    "sequential field helper consumer equivalence",
+    "actual producer identity and complete token gates",
+    "whole-design contextual timing and physical service qualification"
+  ]
+}

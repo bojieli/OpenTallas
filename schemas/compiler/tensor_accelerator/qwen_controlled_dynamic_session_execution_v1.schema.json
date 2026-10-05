@@ -1,0 +1,290 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_controlled_dynamic_session_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aggregate_counter_sha256": {"$ref": "#/$defs/sha256"},
+    "aggregate_counters": {
+      "additionalProperties": false,
+      "maxProperties": 70,
+      "minProperties": 70,
+      "patternProperties": {
+        "^(arithmetic|commands|hbm|matrix|sram|state)\\.[A-Za-z0-9_.]+$": {"minimum": 0, "type": "integer"}
+      },
+      "type": "object"
+    },
+    "base_session_id": {"$ref": "#/$defs/sha256"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_only_dynamic_session_executed": {"const": true},
+        "semantic_rom_golden_exact": {"type": "boolean"},
+        "target_precision_reference_verified": {"const": false},
+        "token_legitimacy_verified": {"const": true},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "artifact_only_dynamic_session_executed",
+        "semantic_rom_golden_exact",
+        "target_precision_reference_verified",
+        "token_legitimacy_verified",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "comparison": {"$ref": "#/$defs/comparison"},
+    "control_id": {"$ref": "#/$defs/sha256"},
+    "controlled_execution_id": {"$ref": "#/$defs/sha256"},
+    "decode_transaction_count": {"maximum": 7999, "minimum": 0, "type": "integer"},
+    "decoded": {"$ref": "#/$defs/decoded"},
+    "eos_observed": {"type": "boolean"},
+    "final_state": {
+      "items": {"$ref": "#/$defs/state"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "generated_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "generated_token_ids": {
+      "items": {"maximum": 151668, "minimum": 0, "type": "integer"},
+      "maxItems": 8000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "mode": {"const": "artifact_only_data_bearing_controlled_dynamic_session"},
+    "prompt_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "prompt_token_ids": {
+      "items": {"maximum": 151935, "minimum": 0, "type": "integer"},
+      "maxItems": 8000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "runner_version": {"const": "tensor-accelerator-qwen-controlled-dynamic-runner-0.1.0"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_controlled_dynamic_session_execution.v1"},
+    "status": {"enum": ["fail", "pass"]},
+    "step_chain_sha256": {"$ref": "#/$defs/sha256"},
+    "steps": {
+      "items": {"$ref": "#/$defs/step"},
+      "maxItems": 8000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "stop_reason": {"enum": ["eos", "maximum_generated_token_count"]},
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "token_legitimacy": {"$ref": "#/$defs/token_legitimacy"},
+    "transaction_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "workload_binding": {"$ref": "qwen_dynamic_generation_control_v1.schema.json#/$defs/workload_binding"},
+    "workload_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "aggregate_counter_sha256",
+    "aggregate_counters",
+    "base_session_id",
+    "build_id",
+    "claim_boundary",
+    "comparison",
+    "control_id",
+    "controlled_execution_id",
+    "decode_transaction_count",
+    "decoded",
+    "eos_observed",
+    "final_state",
+    "generated_token_count",
+    "generated_token_ids",
+    "graph_id",
+    "mode",
+    "prompt_token_count",
+    "prompt_token_ids",
+    "runner_version",
+    "schema",
+    "status",
+    "step_chain_sha256",
+    "steps",
+    "stop_reason",
+    "timing",
+    "token_legitimacy",
+    "transaction_count",
+    "workload_binding",
+    "workload_id"
+  ],
+  "title": "Qwen EOS-controlled natural or agent-turn execution",
+  "type": "object",
+  "$defs": {
+    "comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_eos": {"type": "boolean"},
+        "exact_generated_text_raw": {"type": "boolean"},
+        "exact_generated_text_visible": {"type": "boolean"},
+        "exact_generated_token_ids": {"type": "boolean"},
+        "first_token_divergence_index": {
+          "oneOf": [
+            {"maximum": 7999, "minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "rom_result_id": {"$ref": "#/$defs/sha256"},
+        "status": {"enum": ["exact_match", "mismatch"]}
+      },
+      "required": [
+        "exact_eos",
+        "exact_generated_text_raw",
+        "exact_generated_text_visible",
+        "exact_generated_token_ids",
+        "first_token_divergence_index",
+        "rom_result_id",
+        "status"
+      ],
+      "type": "object"
+    },
+    "decoded": {
+      "additionalProperties": false,
+      "properties": {
+        "full_text_raw": {"type": "string"},
+        "full_text_visible": {"type": "string"},
+        "generated_text_raw": {"type": "string"},
+        "generated_text_visible": {"type": "string"},
+        "prompt_text_raw": {"type": "string"},
+        "prompt_text_visible": {"type": "string"}
+      },
+      "required": [
+        "full_text_raw",
+        "full_text_visible",
+        "generated_text_raw",
+        "generated_text_visible",
+        "prompt_text_raw",
+        "prompt_text_visible"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "generation": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "key_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "layer": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "length": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "resource_id": {"pattern": "^kv\\.layer\\.(?:[0-9]|[12][0-9]|3[0-5])$", "type": "string"},
+        "value_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "generation",
+        "key_payload_sha256",
+        "layer",
+        "length",
+        "resource_id",
+        "value_payload_sha256"
+      ],
+      "type": "object"
+    },
+    "step": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_token_index": {
+          "oneOf": [
+            {"maximum": 7999, "minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "input_role": {"enum": ["generated", "prompt"]},
+        "input_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "is_terminal_decision": {"type": "boolean"},
+        "logits_sha256": {"$ref": "#/$defs/sha256"},
+        "output_role": {"enum": ["generated_token", "prefill_intermediate"]},
+        "output_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "phase": {"enum": ["decode", "prefill"]},
+        "previous_report_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "report_sha256": {"$ref": "#/$defs/sha256"},
+        "report_size_bytes": {"minimum": 1, "type": "integer"},
+        "request_id": {"$ref": "#/$defs/sha256"},
+        "state_generation": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "state_length": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "state_metadata_after_sha256": {"$ref": "#/$defs/sha256"},
+        "state_metadata_before_sha256": {"$ref": "#/$defs/sha256"},
+        "step_index": {"maximum": 7999, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "generated_token_index",
+        "input_role",
+        "input_token_id",
+        "is_terminal_decision",
+        "logits_sha256",
+        "output_role",
+        "output_token_id",
+        "phase",
+        "previous_report_id",
+        "report_id",
+        "report_sha256",
+        "report_size_bytes",
+        "request_id",
+        "state_generation",
+        "state_length",
+        "state_metadata_after_sha256",
+        "state_metadata_before_sha256",
+        "step_index"
+      ],
+      "type": "object"
+    },
+    "token_legitimacy": {
+      "additionalProperties": false,
+      "properties": {
+        "all_generated_token_ids_resolve": {"const": true},
+        "all_generated_token_ids_within_explicit_vocabulary": {"const": true},
+        "explicit_vocabulary_size": {"const": 151669},
+        "padded_model_rows_rejected": {"const": true},
+        "records": {
+          "items": {"$ref": "#/$defs/token_record"},
+          "maxItems": 8000,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "all_generated_token_ids_resolve",
+        "all_generated_token_ids_within_explicit_vocabulary",
+        "explicit_vocabulary_size",
+        "padded_model_rows_rejected",
+        "records"
+      ],
+      "type": "object"
+    },
+    "token_record": {
+      "additionalProperties": false,
+      "properties": {
+        "decoded_piece_raw": {"type": "string"},
+        "decoded_piece_visible": {"type": "string"},
+        "generated_token_index": {"maximum": 7999, "minimum": 0, "type": "integer"},
+        "is_eos": {"type": "boolean"},
+        "is_special": {"type": "boolean"},
+        "token": {"minLength": 1, "type": "string"},
+        "token_id": {"maximum": 151668, "minimum": 0, "type": "integer"},
+        "vocabulary_class": {"enum": ["added", "base"]}
+      },
+      "required": [
+        "decoded_piece_raw",
+        "decoded_piece_visible",
+        "generated_token_index",
+        "is_eos",
+        "is_special",
+        "token",
+        "token_id",
+        "vocabulary_class"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,2056 @@
+{
+ "schema": "opentallas.dflash-step-timing.v1",
+ "tool": "tools/dflash_step_timing.py",
+ "drafter": "z-lab/Qwen3-8B-DFlash-b16",
+ "basis": {
+  "source": "tools/arch_budget_qwen3.py core()",
+  "sha256": "e45959d0184de52a57215b24f2313512a3fcf07c6f0f1e3b8908d8e04d6b64ab",
+  "groups": 12288,
+  "lanes": 196608,
+  "dies": 2,
+  "lane_multiplier_m": 5,
+  "hbm_stacks": 8,
+  "legacy_check_basis": "results/speculative/dflash_timing_basis.json",
+  "legacy_check_source": "74359092:results/arch/qwen3_budget.json"
+ },
+ "acceptance": {
+  "path": "results/speculative/dflash_block_acceptance.json",
+  "central": "primary workloads, cycle-weighted (the convention of the atlas's pooled 4.1)",
+  "band": "mean of the primary workloads' tau (each workload weighted equally)",
+  "per_block": {
+   "1": {
+    "direct": 1.0,
+    "truncated": 1.0,
+    "direct_mean_of_workloads": 1.0,
+    "truncated_mean_of_workloads": 1.0,
+    "direct_range": [
+     1.0,
+     1.0
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "2": {
+    "direct": 1.7361,
+    "truncated": 1.74,
+    "direct_mean_of_workloads": 1.7517,
+    "truncated_mean_of_workloads": 1.7545,
+    "direct_range": [
+     1.6302,
+     1.9552
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "3": {
+    "direct": 2.2654,
+    "truncated": 2.2451,
+    "direct_mean_of_workloads": 2.3207,
+    "truncated_mean_of_workloads": 2.3173,
+    "direct_range": [
+     1.9704,
+     2.8836
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "4": {
+    "direct": 2.6256,
+    "truncated": 2.5938,
+    "direct_mean_of_workloads": 2.7447,
+    "truncated_mean_of_workloads": 2.7424,
+    "direct_range": [
+     2.1635,
+     3.7913
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "5": {
+    "direct": 2.8591,
+    "truncated": 2.8463,
+    "direct_mean_of_workloads": 3.0823,
+    "truncated_mean_of_workloads": 3.0838,
+    "direct_range": [
+     2.3309,
+     4.6285
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "6": {
+    "direct": 3.0335,
+    "truncated": 3.0347,
+    "direct_mean_of_workloads": 3.3344,
+    "truncated_mean_of_workloads": 3.3601,
+    "direct_range": [
+     2.4057,
+     5.4229
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "8": {
+    "direct": 3.2956,
+    "truncated": 3.2911,
+    "direct_mean_of_workloads": 3.7478,
+    "truncated_mean_of_workloads": 3.7936,
+    "direct_range": [
+     2.4902,
+     6.8339
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "12": {
+    "direct": 3.4927,
+    "truncated": 3.5481,
+    "direct_mean_of_workloads": 4.2393,
+    "truncated_mean_of_workloads": 4.3485,
+    "direct_range": [
+     2.5148,
+     9.1983
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "16": {
+    "direct": 3.6559,
+    "truncated": 3.6559,
+    "direct_mean_of_workloads": 4.6623,
+    "truncated_mean_of_workloads": 4.6623,
+    "direct_range": [
+     2.6485,
+     11.1224
+    ],
+    "measured": true,
+    "complete": true
+   }
+  }
+ },
+ "clock_hz": 1098640000.0,
+ "rom": {
+  "8192/fp8/m1": {
+   "context": 8192,
+   "kv_format": "fp8",
+   "lane_multiplier": 1,
+   "plain_cycles": 121839,
+   "plain_tokens_s": 9017.1,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 121839,
+     "draft_cycles": 0,
+     "verify_cycles": 121839,
+     "commit_cycles": 0,
+     "tokens_s": 9017.1,
+     "tokens_s_band": 9017.1,
+     "speedup": 1.0,
+     "tokens_s_serial_timing_truncated_tau": 9017.1,
+     "draft_weight_macs": 0,
+     "draft_attention_macs": 0,
+     "verify_weight_macs": 7568097280,
+     "verify_attention_macs": 2415919104,
+     "macs_per_step": 9984016384
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 214917,
+     "draft_cycles": 30334,
+     "verify_cycles": 184577,
+     "commit_cycles": 6,
+     "tokens_s": 8874.8,
+     "tokens_s_band": 8954.6,
+     "speedup": 0.984,
+     "tokens_s_serial_timing_truncated_tau": 8894.8,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 671252480,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 23442653184,
+     "draft_detail": {
+      "fc": 1561,
+      "layers": 24995,
+      "final_norm": 208,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 30334,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 184577,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 289995,
+     "draft_cycles": 42672,
+     "verify_cycles": 247315,
+     "commit_cycles": 8,
+     "tokens_s": 8582.4,
+     "tokens_s_band": 8791.9,
+     "speedup": 0.952,
+     "tokens_s_serial_timing_truncated_tau": 8505.5,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 1007001600,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 35475267584,
+     "draft_detail": {
+      "fc": 2205,
+      "layers": 33465,
+      "final_norm": 212,
+      "lm_head": 6443,
+      "chain_latency_only": 8635,
+      "compute": 42672,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 247315,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 365070,
+     "draft_cycles": 55009,
+     "verify_cycles": 310053,
+     "commit_cycles": 8,
+     "tokens_s": 7901.5,
+     "tokens_s_band": 8259.9,
+     "speedup": 0.876,
+     "tokens_s_serial_timing_truncated_tau": 7805.8,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 1342832640,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 47507963904,
+     "draft_detail": {
+      "fc": 2849,
+      "layers": 41935,
+      "final_norm": 216,
+      "lm_head": 9611,
+      "chain_latency_only": 8635,
+      "compute": 55009,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 310053,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 440148,
+     "draft_cycles": 67347,
+     "verify_cycles": 372791,
+     "commit_cycles": 10,
+     "tokens_s": 7136.5,
+     "tokens_s_band": 7693.6,
+     "speedup": 0.791,
+     "tokens_s_serial_timing_truncated_tau": 7104.6,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 1678745600,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 12079595520,
+     "macs_per_step": 59540742144,
+     "draft_detail": {
+      "fc": 3493,
+      "layers": 50405,
+      "final_norm": 220,
+      "lm_head": 12779,
+      "chain_latency_only": 8635,
+      "compute": 67347,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 372791,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 515223,
+     "draft_cycles": 79684,
+     "verify_cycles": 435529,
+     "commit_cycles": 10,
+     "tokens_s": 6468.5,
+     "tokens_s_band": 7110.1,
+     "speedup": 0.717,
+     "tokens_s_serial_timing_truncated_tau": 6471.1,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 2014740480,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 14495514624,
+     "macs_per_step": 71573602304,
+     "draft_detail": {
+      "fc": 4137,
+      "layers": 58875,
+      "final_norm": 224,
+      "lm_head": 15947,
+      "chain_latency_only": 8635,
+      "compute": 79684,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 435529,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 665374,
+     "draft_cycles": 104359,
+     "verify_cycles": 561005,
+     "commit_cycles": 10,
+     "tokens_s": 5441.6,
+     "tokens_s_band": 6188.2,
+     "speedup": 0.603,
+     "tokens_s_serial_timing_truncated_tau": 5434.1,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 2686976000,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 19327352832,
+     "macs_per_step": 95639568384,
+     "draft_detail": {
+      "fc": 5425,
+      "layers": 75815,
+      "final_norm": 232,
+      "lm_head": 22283,
+      "chain_latency_only": 8635,
+      "compute": 104359,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 561005,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 965678,
+     "draft_cycles": 153709,
+     "verify_cycles": 811957,
+     "commit_cycles": 12,
+     "tokens_s": 3973.6,
+     "tokens_s_band": 4823.0,
+     "speedup": 0.441,
+     "tokens_s_serial_timing_truncated_tau": 4036.6,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 4032430080,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 28991029248,
+     "macs_per_step": 143772483584,
+     "draft_detail": {
+      "fc": 8001,
+      "layers": 109695,
+      "final_norm": 248,
+      "lm_head": 34955,
+      "chain_latency_only": 8635,
+      "compute": 153709,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 811957,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 1265978,
+     "draft_cycles": 203058,
+     "verify_cycles": 1062908,
+     "commit_cycles": 12,
+     "tokens_s": 3172.7,
+     "tokens_s_band": 4046.0,
+     "speedup": 0.352,
+     "tokens_s_serial_timing_truncated_tau": 3172.7,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 5379194880,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 38654705664,
+     "macs_per_step": 191906709504,
+     "draft_detail": {
+      "fc": 10577,
+      "layers": 143575,
+      "final_norm": 264,
+      "lm_head": 47627,
+      "chain_latency_only": 8635,
+      "compute": 203058,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 1062908,
+      "kv_stream": 92161
+     }
+    }
+   ],
+   "best": {
+    "block": 1,
+    "tokens_per_step": 1.0,
+    "tokens_per_step_truncated": 1.0,
+    "tokens_per_step_band": 1.0,
+    "step_cycles": 121839,
+    "draft_cycles": 0,
+    "verify_cycles": 121839,
+    "commit_cycles": 0,
+    "tokens_s": 9017.1,
+    "tokens_s_band": 9017.1,
+    "speedup": 1.0,
+    "tokens_s_serial_timing_truncated_tau": 9017.1,
+    "draft_weight_macs": 0,
+    "draft_attention_macs": 0,
+    "verify_weight_macs": 7568097280,
+    "verify_attention_macs": 2415919104,
+    "macs_per_step": 9984016384
+   }
+  },
+  "8192/fp8/m5": {
+   "context": 8192,
+   "kv_format": "fp8",
+   "lane_multiplier": 5,
+   "plain_cycles": 121839,
+   "plain_tokens_s": 9017.1,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 121839,
+     "draft_cycles": 0,
+     "verify_cycles": 121839,
+     "commit_cycles": 0,
+     "tokens_s": 9017.1,
+     "tokens_s_band": 9017.1,
+     "speedup": 1.0,
+     "tokens_s_serial_timing_truncated_tau": 9017.1,
+     "draft_weight_macs": 0,
+     "draft_attention_macs": 0,
+     "verify_weight_macs": 7568097280,
+     "verify_attention_macs": 2415919104,
+     "macs_per_step": 9984016384
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 149205,
+     "draft_cycles": 21934,
+     "verify_cycles": 127265,
+     "commit_cycles": 6,
+     "tokens_s": 12783.4,
+     "tokens_s_band": 12898.3,
+     "speedup": 1.418,
+     "tokens_s_serial_timing_truncated_tau": 12812.1,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 671252480,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 23442653184,
+     "draft_detail": {
+      "fc": 921,
+      "layers": 17235,
+      "final_norm": 208,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 21934,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 127265,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 155403,
+     "draft_cycles": 22704,
+     "verify_cycles": 132691,
+     "commit_cycles": 8,
+     "tokens_s": 16015.5,
+     "tokens_s_band": 16406.5,
+     "speedup": 1.776,
+     "tokens_s_serial_timing_truncated_tau": 15872.0,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 1007001600,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 35475267584,
+     "draft_detail": {
+      "fc": 925,
+      "layers": 17945,
+      "final_norm": 212,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 22704,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 132691,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 161598,
+     "draft_cycles": 23473,
+     "verify_cycles": 138117,
+     "commit_cycles": 8,
+     "tokens_s": 17850.4,
+     "tokens_s_band": 18660.1,
+     "speedup": 1.98,
+     "tokens_s_serial_timing_truncated_tau": 17634.2,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 1342832640,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 47507963904,
+     "draft_detail": {
+      "fc": 929,
+      "layers": 18655,
+      "final_norm": 216,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 23473,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 138117,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 167796,
+     "draft_cycles": 24243,
+     "verify_cycles": 143543,
+     "commit_cycles": 10,
+     "tokens_s": 18719.9,
+     "tokens_s_band": 20181.3,
+     "speedup": 2.076,
+     "tokens_s_serial_timing_truncated_tau": 18636.1,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 1678745600,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 12079595520,
+     "macs_per_step": 59540742144,
+     "draft_detail": {
+      "fc": 933,
+      "layers": 19365,
+      "final_norm": 220,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 24243,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 143543,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 239703,
+     "draft_cycles": 33412,
+     "verify_cycles": 206281,
+     "commit_cycles": 10,
+     "tokens_s": 13903.6,
+     "tokens_s_band": 15282.7,
+     "speedup": 1.542,
+     "tokens_s_serial_timing_truncated_tau": 13909.1,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 2014740480,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 14495514624,
+     "macs_per_step": 71573602304,
+     "draft_detail": {
+      "fc": 1577,
+      "layers": 27835,
+      "final_norm": 224,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 33412,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 206281,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 255262,
+     "draft_cycles": 38119,
+     "verify_cycles": 217133,
+     "commit_cycles": 10,
+     "tokens_s": 14184.2,
+     "tokens_s_band": 16130.4,
+     "speedup": 1.573,
+     "tokens_s_serial_timing_truncated_tau": 14164.8,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 2686976000,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 19327352832,
+     "macs_per_step": 95639568384,
+     "draft_detail": {
+      "fc": 1585,
+      "layers": 29255,
+      "final_norm": 232,
+      "lm_head": 6443,
+      "chain_latency_only": 8635,
+      "compute": 38119,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 217133,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 348926,
+     "draft_cycles": 52765,
+     "verify_cycles": 296149,
+     "commit_cycles": 12,
+     "tokens_s": 10997.2,
+     "tokens_s_band": 13348.0,
+     "speedup": 1.22,
+     "tokens_s_serial_timing_truncated_tau": 11171.7,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 4032430080,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 28991029248,
+     "macs_per_step": 143772483584,
+     "draft_detail": {
+      "fc": 2241,
+      "layers": 39855,
+      "final_norm": 248,
+      "lm_head": 9611,
+      "chain_latency_only": 8635,
+      "compute": 52765,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 296149,
+      "kv_stream": 92161
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 439418,
+     "draft_cycles": 64242,
+     "verify_cycles": 375164,
+     "commit_cycles": 12,
+     "tokens_s": 9140.5,
+     "tokens_s_band": 11656.8,
+     "speedup": 1.014,
+     "tokens_s_serial_timing_truncated_tau": 9140.5,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 5379194880,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 38654705664,
+     "macs_per_step": 191906709504,
+     "draft_detail": {
+      "fc": 2897,
+      "layers": 50455,
+      "final_norm": 264,
+      "lm_head": 9611,
+      "chain_latency_only": 8635,
+      "compute": 64242,
+      "kv_stream": 12800
+     },
+     "verify_detail": {
+      "compute": 375164,
+      "kv_stream": 92161
+     }
+    }
+   ],
+   "best": {
+    "block": 5,
+    "tokens_per_step": 2.8591,
+    "tokens_per_step_truncated": 2.8463,
+    "tokens_per_step_band": 3.0823,
+    "step_cycles": 167796,
+    "draft_cycles": 24243,
+    "verify_cycles": 143543,
+    "commit_cycles": 10,
+    "tokens_s": 18719.9,
+    "tokens_s_band": 20181.3,
+    "speedup": 2.076,
+    "tokens_s_serial_timing_truncated_tau": 18636.1,
+    "draft_weight_macs": 7941914624,
+    "draft_attention_macs": 1678745600,
+    "verify_weight_macs": 37840486400,
+    "verify_attention_macs": 12079595520,
+    "macs_per_step": 59540742144,
+    "draft_detail": {
+     "fc": 933,
+     "layers": 19365,
+     "final_norm": 220,
+     "lm_head": 3275,
+     "chain_latency_only": 8635,
+     "compute": 24243,
+     "kv_stream": 12800
+    },
+    "verify_detail": {
+     "compute": 143543,
+     "kv_stream": 92161
+    }
+   }
+  },
+  "2048/fp8/m1": {
+   "context": 2048,
+   "kv_format": "fp8",
+   "lane_multiplier": 1,
+   "plain_cycles": 104559,
+   "plain_tokens_s": 10507.4,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 104559,
+     "draft_cycles": 0,
+     "verify_cycles": 104559,
+     "commit_cycles": 0,
+     "tokens_s": 10507.4,
+     "tokens_s_band": 10507.4,
+     "speedup": 1.0,
+     "tokens_s_serial_timing_truncated_tau": 10507.4,
+     "draft_weight_macs": 0,
+     "draft_attention_macs": 0,
+     "verify_weight_macs": 7568097280,
+     "verify_attention_macs": 603979776,
+     "macs_per_step": 8172077056
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 175557,
+     "draft_cycles": 25534,
+     "verify_cycles": 150017,
+     "commit_cycles": 6,
+     "tokens_s": 10864.6,
+     "tokens_s_band": 10962.2,
+     "speedup": 1.034,
+     "tokens_s_serial_timing_truncated_tau": 10889.0,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 167936000,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 1207959552,
+     "macs_per_step": 19315458048,
+     "draft_detail": {
+      "fc": 1561,
+      "layers": 20195,
+      "final_norm": 208,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 25534,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 150017,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 230955,
+     "draft_cycles": 35472,
+     "verify_cycles": 195475,
+     "commit_cycles": 8,
+     "tokens_s": 10776.4,
+     "tokens_s_band": 11039.4,
+     "speedup": 1.026,
+     "tokens_s_serial_timing_truncated_tau": 10679.8,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 252026880,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 1811939328,
+     "macs_per_step": 29284474880,
+     "draft_detail": {
+      "fc": 2205,
+      "layers": 26265,
+      "final_norm": 212,
+      "lm_head": 6443,
+      "chain_latency_only": 8635,
+      "compute": 35472,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 195475,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 286350,
+     "draft_cycles": 45409,
+     "verify_cycles": 240933,
+     "commit_cycles": 8,
+     "tokens_s": 10073.6,
+     "tokens_s_band": 10530.6,
+     "speedup": 0.959,
+     "tokens_s_serial_timing_truncated_tau": 9951.6,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 336199680,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 2415919104,
+     "macs_per_step": 39253573632,
+     "draft_detail": {
+      "fc": 2849,
+      "layers": 32335,
+      "final_norm": 216,
+      "lm_head": 9611,
+      "chain_latency_only": 8635,
+      "compute": 45409,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 240933,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 341748,
+     "draft_cycles": 55347,
+     "verify_cycles": 286391,
+     "commit_cycles": 10,
+     "tokens_s": 9191.3,
+     "tokens_s_band": 9908.9,
+     "speedup": 0.875,
+     "tokens_s_serial_timing_truncated_tau": 9150.2,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 420454400,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 3019898880,
+     "macs_per_step": 49222754304,
+     "draft_detail": {
+      "fc": 3493,
+      "layers": 38405,
+      "final_norm": 220,
+      "lm_head": 12779,
+      "chain_latency_only": 8635,
+      "compute": 55347,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 286391,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 397143,
+     "draft_cycles": 65284,
+     "verify_cycles": 331849,
+     "commit_cycles": 10,
+     "tokens_s": 8391.7,
+     "tokens_s_band": 9224.1,
+     "speedup": 0.799,
+     "tokens_s_serial_timing_truncated_tau": 8395.1,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 504791040,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 3623878656,
+     "macs_per_step": 59192016896,
+     "draft_detail": {
+      "fc": 4137,
+      "layers": 44475,
+      "final_norm": 224,
+      "lm_head": 15947,
+      "chain_latency_only": 8635,
+      "compute": 65284,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 331849,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 507934,
+     "draft_cycles": 85159,
+     "verify_cycles": 422765,
+     "commit_cycles": 10,
+     "tokens_s": 7128.2,
+     "tokens_s_band": 8106.3,
+     "speedup": 0.678,
+     "tokens_s_serial_timing_truncated_tau": 7118.5,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 673710080,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 79130787840,
+     "draft_detail": {
+      "fc": 5425,
+      "layers": 56615,
+      "final_norm": 232,
+      "lm_head": 22283,
+      "chain_latency_only": 8635,
+      "compute": 85159,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 422765,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 729518,
+     "draft_cycles": 124909,
+     "verify_cycles": 604597,
+     "commit_cycles": 12,
+     "tokens_s": 5259.9,
+     "tokens_s_band": 6384.3,
+     "speedup": 0.501,
+     "tokens_s_serial_timing_truncated_tau": 5343.4,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 1012531200,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 119009312768,
+     "draft_detail": {
+      "fc": 8001,
+      "layers": 80895,
+      "final_norm": 248,
+      "lm_head": 34955,
+      "chain_latency_only": 8635,
+      "compute": 124909,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 604597,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 951098,
+     "draft_cycles": 164658,
+     "verify_cycles": 786428,
+     "commit_cycles": 12,
+     "tokens_s": 4223.0,
+     "tokens_s_band": 5385.6,
+     "speedup": 0.402,
+     "tokens_s_serial_timing_truncated_tau": 4223.0,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 1352663040,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 158889148416,
+     "draft_detail": {
+      "fc": 10577,
+      "layers": 105175,
+      "final_norm": 264,
+      "lm_head": 47627,
+      "chain_latency_only": 8635,
+      "compute": 164658,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 786428,
+      "kv_stream": 23040
+     }
+    }
+   ],
+   "best": {
+    "block": 2,
+    "tokens_per_step": 1.7361,
+    "tokens_per_step_truncated": 1.74,
+    "tokens_per_step_band": 1.7517,
+    "step_cycles": 175557,
+    "draft_cycles": 25534,
+    "verify_cycles": 150017,
+    "commit_cycles": 6,
+    "tokens_s": 10864.6,
+    "tokens_s_band": 10962.2,
+    "speedup": 1.034,
+    "tokens_s_serial_timing_truncated_tau": 10889.0,
+    "draft_weight_macs": 2803367936,
+    "draft_attention_macs": 167936000,
+    "verify_weight_macs": 15136194560,
+    "verify_attention_macs": 1207959552,
+    "macs_per_step": 19315458048,
+    "draft_detail": {
+     "fc": 1561,
+     "layers": 20195,
+     "final_norm": 208,
+     "lm_head": 3275,
+     "chain_latency_only": 8635,
+     "compute": 25534,
+     "kv_stream": 3200
+    },
+    "verify_detail": {
+     "compute": 150017,
+     "kv_stream": 23040
+    }
+   }
+  },
+  "2048/fp8/m5": {
+   "context": 2048,
+   "kv_format": "fp8",
+   "lane_multiplier": 5,
+   "plain_cycles": 104559,
+   "plain_tokens_s": 10507.4,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 104559,
+     "draft_cycles": 0,
+     "verify_cycles": 104559,
+     "commit_cycles": 0,
+     "tokens_s": 10507.4,
+     "tokens_s_band": 10507.4,
+     "speedup": 1.0,
+     "tokens_s_serial_timing_truncated_tau": 10507.4,
+     "draft_weight_macs": 0,
+     "draft_attention_macs": 0,
+     "verify_weight_macs": 7568097280,
+     "verify_attention_macs": 603979776,
+     "macs_per_step": 8172077056
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 125589,
+     "draft_cycles": 19054,
+     "verify_cycles": 106529,
+     "commit_cycles": 6,
+     "tokens_s": 15187.2,
+     "tokens_s_band": 15323.7,
+     "speedup": 1.445,
+     "tokens_s_serial_timing_truncated_tau": 15221.3,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 167936000,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 1207959552,
+     "macs_per_step": 19315458048,
+     "draft_detail": {
+      "fc": 921,
+      "layers": 14355,
+      "final_norm": 208,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 19054,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 106529,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 127851,
+     "draft_cycles": 19344,
+     "verify_cycles": 108499,
+     "commit_cycles": 8,
+     "tokens_s": 19466.9,
+     "tokens_s_band": 19942.1,
+     "speedup": 1.853,
+     "tokens_s_serial_timing_truncated_tau": 19292.4,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 252026880,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 1811939328,
+     "macs_per_step": 29284474880,
+     "draft_detail": {
+      "fc": 925,
+      "layers": 14585,
+      "final_norm": 212,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 19344,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 108499,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 130110,
+     "draft_cycles": 19633,
+     "verify_cycles": 110469,
+     "commit_cycles": 8,
+     "tokens_s": 22170.4,
+     "tokens_s_band": 23176.1,
+     "speedup": 2.11,
+     "tokens_s_serial_timing_truncated_tau": 21901.9,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 336199680,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 2415919104,
+     "macs_per_step": 39253573632,
+     "draft_detail": {
+      "fc": 929,
+      "layers": 14815,
+      "final_norm": 216,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 19633,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 110469,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 132372,
+     "draft_cycles": 19923,
+     "verify_cycles": 112439,
+     "commit_cycles": 10,
+     "tokens_s": 23729.5,
+     "tokens_s_band": 25582.0,
+     "speedup": 2.258,
+     "tokens_s_serial_timing_truncated_tau": 23623.3,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 420454400,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 3019898880,
+     "macs_per_step": 49222754304,
+     "draft_detail": {
+      "fc": 933,
+      "layers": 15045,
+      "final_norm": 220,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 19923,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 112439,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 184599,
+     "draft_cycles": 26692,
+     "verify_cycles": 157897,
+     "commit_cycles": 10,
+     "tokens_s": 18053.9,
+     "tokens_s_band": 19844.7,
+     "speedup": 1.718,
+     "tokens_s_serial_timing_truncated_tau": 18061.0,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 504791040,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 3623878656,
+     "macs_per_step": 59192016896,
+     "draft_detail": {
+      "fc": 1577,
+      "layers": 21115,
+      "final_norm": 224,
+      "lm_head": 3275,
+      "chain_latency_only": 8635,
+      "compute": 26692,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 157897,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 192286,
+     "draft_cycles": 30439,
+     "verify_cycles": 161837,
+     "commit_cycles": 10,
+     "tokens_s": 18829.6,
+     "tokens_s_band": 21413.3,
+     "speedup": 1.792,
+     "tokens_s_serial_timing_truncated_tau": 18803.9,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 673710080,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 79130787840,
+     "draft_detail": {
+      "fc": 1585,
+      "layers": 21575,
+      "final_norm": 232,
+      "lm_head": 6443,
+      "chain_latency_only": 8635,
+      "compute": 30439,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 161837,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 254462,
+     "draft_cycles": 41245,
+     "verify_cycles": 213205,
+     "commit_cycles": 12,
+     "tokens_s": 15079.7,
+     "tokens_s_band": 18303.2,
+     "speedup": 1.435,
+     "tokens_s_serial_timing_truncated_tau": 15318.9,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 1012531200,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 119009312768,
+     "draft_detail": {
+      "fc": 2241,
+      "layers": 28335,
+      "final_norm": 248,
+      "lm_head": 9611,
+      "chain_latency_only": 8635,
+      "compute": 41245,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 213205,
+      "kv_stream": 23040
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 313466,
+     "draft_cycles": 48882,
+     "verify_cycles": 264572,
+     "commit_cycles": 12,
+     "tokens_s": 12813.2,
+     "tokens_s_band": 16340.5,
+     "speedup": 1.219,
+     "tokens_s_serial_timing_truncated_tau": 12813.2,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 1352663040,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 158889148416,
+     "draft_detail": {
+      "fc": 2897,
+      "layers": 35095,
+      "final_norm": 264,
+      "lm_head": 9611,
+      "chain_latency_only": 8635,
+      "compute": 48882,
+      "kv_stream": 3200
+     },
+     "verify_detail": {
+      "compute": 264572,
+      "kv_stream": 23040
+     }
+    }
+   ],
+   "best": {
+    "block": 5,
+    "tokens_per_step": 2.8591,
+    "tokens_per_step_truncated": 2.8463,
+    "tokens_per_step_band": 3.0823,
+    "step_cycles": 132372,
+    "draft_cycles": 19923,
+    "verify_cycles": 112439,
+    "commit_cycles": 10,
+    "tokens_s": 23729.5,
+    "tokens_s_band": 25582.0,
+    "speedup": 2.258,
+    "tokens_s_serial_timing_truncated_tau": 23623.3,
+    "draft_weight_macs": 7941914624,
+    "draft_attention_macs": 420454400,
+    "verify_weight_macs": 37840486400,
+    "verify_attention_macs": 3019898880,
+    "macs_per_step": 49222754304,
+    "draft_detail": {
+     "fc": 933,
+     "layers": 15045,
+     "final_norm": 220,
+     "lm_head": 3275,
+     "chain_latency_only": 8635,
+     "compute": 19923,
+     "kv_stream": 3200
+    },
+    "verify_detail": {
+     "compute": 112439,
+     "kv_stream": 23040
+    }
+   }
+  }
+ },
+ "hbm": {
+  "bf16": {
+   "context": 8192,
+   "weight_bytes_per_mac": 2.0,
+   "plain_tokens_s": 457.4,
+   "sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0055,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 652.2,
+     "tokens_s_band": 658.1,
+     "speedup": 1.426,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 671252480,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 23442653184
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_band": 2.3207,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 851.0,
+     "tokens_s_band": 871.8,
+     "speedup": 1.86,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 1007001600,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 35475267584
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_band": 2.7447,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 986.3,
+     "tokens_s_band": 1031.1,
+     "speedup": 2.156,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 1342832640,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 47507963904
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1074.1,
+     "tokens_s_band": 1157.9,
+     "speedup": 2.348,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 1678745600,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 12079595520,
+     "macs_per_step": 59540742144
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_band": 3.3344,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1139.6,
+     "tokens_s_band": 1252.6,
+     "speedup": 2.491,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 2014740480,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 14495514624,
+     "macs_per_step": 71573602304
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_band": 3.7478,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1238.0,
+     "tokens_s_band": 1407.9,
+     "speedup": 2.707,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 2686976000,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 19327352832,
+     "macs_per_step": 95639568384
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_band": 4.2393,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1312.1,
+     "tokens_s_band": 1592.6,
+     "speedup": 2.868,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 4032430080,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 28991029248,
+     "macs_per_step": 143772483584
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_us": 2661.95,
+     "draft_us": 475.81,
+     "verify_us": 2186.14,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1373.4,
+     "tokens_s_band": 1751.5,
+     "speedup": 3.002,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 5379194880,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 38654705664,
+     "macs_per_step": 191906709504
+    }
+   ],
+   "best": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 2661.95,
+    "draft_us": 475.81,
+    "verify_us": 2186.14,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1373.4,
+    "tokens_s_band": 1751.5,
+    "speedup": 3.002,
+    "draft_weight_macs": 26783252480,
+    "draft_attention_macs": 5379194880,
+    "verify_weight_macs": 121089556480,
+    "verify_attention_macs": 38654705664,
+    "macs_per_step": 191906709504
+   },
+   "block16": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 2661.95,
+    "draft_us": 475.81,
+    "verify_us": 2186.14,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1373.4,
+    "tokens_s_band": 1751.5,
+    "speedup": 3.002,
+    "draft_weight_macs": 26783252480,
+    "draft_attention_macs": 5379194880,
+    "verify_weight_macs": 121089556480,
+    "verify_attention_macs": 38654705664,
+    "macs_per_step": 191906709504
+   }
+  },
+  "fp8": {
+   "context": 8192,
+   "weight_bytes_per_mac": 1.0,
+   "plain_tokens_s": 881.0,
+   "sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_us": 1378.74,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0055,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1259.2,
+     "tokens_s_band": 1270.5,
+     "speedup": 1.429,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 671252480,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 23442653184
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_band": 2.3207,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1643.1,
+     "tokens_s_band": 1683.2,
+     "speedup": 1.865,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 1007001600,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 35475267584
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_band": 2.7447,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1904.3,
+     "tokens_s_band": 1990.7,
+     "speedup": 2.161,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 1342832640,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 47507963904
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2073.7,
+     "tokens_s_band": 2235.6,
+     "speedup": 2.354,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 1678745600,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 12079595520,
+     "macs_per_step": 59540742144
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_band": 3.3344,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2200.2,
+     "tokens_s_band": 2418.4,
+     "speedup": 2.497,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 2014740480,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 14495514624,
+     "macs_per_step": 71573602304
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_band": 3.7478,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2390.3,
+     "tokens_s_band": 2718.3,
+     "speedup": 2.713,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 2686976000,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 19327352832,
+     "macs_per_step": 95639568384
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_band": 4.2393,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2533.2,
+     "tokens_s_band": 3074.7,
+     "speedup": 2.875,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 4032430080,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 28991029248,
+     "macs_per_step": 143772483584
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_us": 1378.75,
+     "draft_us": 243.73,
+     "verify_us": 1135.01,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2651.6,
+     "tokens_s_band": 3381.5,
+     "speedup": 3.01,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 5379194880,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 38654705664,
+     "macs_per_step": 191906709504
+    }
+   ],
+   "best": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1378.75,
+    "draft_us": 243.73,
+    "verify_us": 1135.01,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 2651.6,
+    "tokens_s_band": 3381.5,
+    "speedup": 3.01,
+    "draft_weight_macs": 26783252480,
+    "draft_attention_macs": 5379194880,
+    "verify_weight_macs": 121089556480,
+    "verify_attention_macs": 38654705664,
+    "macs_per_step": 191906709504
+   },
+   "block16": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1378.75,
+    "draft_us": 243.73,
+    "verify_us": 1135.01,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 2651.6,
+    "tokens_s_band": 3381.5,
+    "speedup": 3.01,
+    "draft_weight_macs": 26783252480,
+    "draft_attention_macs": 5379194880,
+    "verify_weight_macs": 121089556480,
+    "verify_attention_macs": 38654705664,
+    "macs_per_step": 191906709504
+   }
+  },
+  "rom_format_int8": {
+   "context": 8192,
+   "weight_bytes_per_mac": 1.0004103456767406,
+   "plain_tokens_s": 880.7,
+   "sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_us": 1379.27,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0055,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1258.7,
+     "tokens_s_band": 1270.0,
+     "speedup": 1.429,
+     "draft_weight_macs": 2803367936,
+     "draft_attention_macs": 671252480,
+     "verify_weight_macs": 15136194560,
+     "verify_attention_macs": 4831838208,
+     "macs_per_step": 23442653184
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_band": 2.3207,
+     "step_us": 1379.27,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1642.5,
+     "tokens_s_band": 1682.6,
+     "speedup": 1.865,
+     "draft_weight_macs": 4516216832,
+     "draft_attention_macs": 1007001600,
+     "verify_weight_macs": 22704291840,
+     "verify_attention_macs": 7247757312,
+     "macs_per_step": 35475267584
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_band": 2.7447,
+     "step_us": 1379.27,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1903.6,
+     "tokens_s_band": 1990.0,
+     "speedup": 2.161,
+     "draft_weight_macs": 6229065728,
+     "draft_attention_macs": 1342832640,
+     "verify_weight_macs": 30272389120,
+     "verify_attention_macs": 9663676416,
+     "macs_per_step": 47507963904
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_us": 1379.27,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2072.9,
+     "tokens_s_band": 2234.7,
+     "speedup": 2.354,
+     "draft_weight_macs": 7941914624,
+     "draft_attention_macs": 1678745600,
+     "verify_weight_macs": 37840486400,
+     "verify_attention_macs": 12079595520,
+     "macs_per_step": 59540742144
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_band": 3.3344,
+     "step_us": 1379.27,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2199.3,
+     "tokens_s_band": 2417.5,
+     "speedup": 2.497,
+     "draft_weight_macs": 9654763520,
+     "draft_attention_macs": 2014740480,
+     "verify_weight_macs": 45408583680,
+     "verify_attention_macs": 14495514624,
+     "macs_per_step": 71573602304
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_band": 3.7478,
+     "step_us": 1379.27,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2389.4,
+     "tokens_s_band": 2717.2,
+     "speedup": 2.713,
+     "draft_weight_macs": 13080461312,
+     "draft_attention_macs": 2686976000,
+     "verify_weight_macs": 60544778240,
+     "verify_attention_macs": 19327352832,
+     "macs_per_step": 95639568384
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_band": 4.2393,
+     "step_us": 1379.28,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2532.3,
+     "tokens_s_band": 3073.6,
+     "speedup": 2.875,
+     "draft_weight_macs": 19931856896,
+     "draft_attention_macs": 4032430080,
+     "verify_weight_macs": 90817167360,
+     "verify_attention_macs": 28991029248,
+     "macs_per_step": 143772483584
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_us": 1379.28,
+     "draft_us": 243.82,
+     "verify_us": 1135.44,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2650.6,
+     "tokens_s_band": 3380.3,
+     "speedup": 3.01,
+     "draft_weight_macs": 26783252480,
+     "draft_attention_macs": 5379194880,
+     "verify_weight_macs": 121089556480,
+     "verify_attention_macs": 38654705664,
+     "macs_per_step": 191906709504
+    }
+   ],
+   "best": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1379.28,
+    "draft_us": 243.82,
+    "verify_us": 1135.44,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 2650.6,
+    "tokens_s_band": 3380.3,
+    "speedup": 3.01,
+    "draft_weight_macs": 26783252480,
+    "draft_attention_macs": 5379194880,
+    "verify_weight_macs": 121089556480,
+    "verify_attention_macs": 38654705664,
+    "macs_per_step": 191906709504
+   },
+   "block16": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1379.28,
+    "draft_us": 243.82,
+    "verify_us": 1135.44,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 2650.6,
+    "tokens_s_band": 3380.3,
+    "speedup": 3.01,
+    "draft_weight_macs": 26783252480,
+    "draft_attention_macs": 5379194880,
+    "verify_weight_macs": 121089556480,
+    "verify_attention_macs": 38654705664,
+    "macs_per_step": 191906709504
+   }
+  }
+ },
+ "checks": {
+  "legacy_rom_sweep_reproduced/8192/fp8/m1": true,
+  "legacy_rom_sweep_reproduced/8192/fp8/m3": true,
+  "legacy_hbm_block16_reproduced/bf16": true,
+  "legacy_hbm_block16_reproduced/fp8": true,
+  "legacy_hbm_block16_reproduced/rom_format_3.5b": true,
+  "legacy_rom_sweep_reproduced/2048/fp8/m1": true,
+  "legacy_rom_sweep_reproduced/2048/fp8/m3": true,
+  "all": true
+ },
+ "notes": [
+  "Tokens per step are measured at BF16 on a GPU (results/speculative/dflash_block_acceptance.json), not in the deployment arithmetic (INT8 per-channel ROM weights, FP8 KV).",
+  "Blocks below 16 run the block-16 drafter out of its training distribution; the direct runs measure that.",
+  "The draft phase projects B new context positions (an upper bound: the last step committed tau of them).",
+  "DRAFT and VERIFY are serial; each overlaps its own KV stream with its compute, as the atlas's rom_token does. Only one KV layer is buffered (the ring of the atlas's area ledger), so neither phase's stream runs ahead into the other.",
+  "The HBM comparator's draft re-reads the shared lm_head (151,936 x 4096) at the weight format, and each phase is capped by the package's MAC lanes.",
+  "Both dies split every layer (tensor-parallel 2): the chain carries the 73 UCIe exchanges a token (the control component), once a step for all of its slots; the drafter's layers are split the same way."
+ ]
+}

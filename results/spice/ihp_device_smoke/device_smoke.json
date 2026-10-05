@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "experiment_id": "ihp_sg13g2_official_device_smoke_v1",
+  "status": "pass",
+  "generated_at_utc": "2026-08-28T08:49:10.674384+00:00",
+  "pdk": {
+    "status": "pass",
+    "root": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0",
+    "root_commit": "5cccb161f7492697cfa52eb14dc03beb00bdca9e",
+    "submodules": {
+      "ihp-sg13g2/libs.tech/digital": "9a6e7c9d404f9f4334513a24788aa8454918d400",
+      "ihp-sg13g2/libs.tech/klayout/python/pycell4klayout-api": "4c463c43991fb0967a824906518b66047bfb33c4",
+      "ihp-sg13g2/libs.tech/klayout/python/pypreprocessor": "cf1ff9bad0fb5338cf1c5b990b2b816b1ea01a64",
+      "ihp-sg13g2/libs.tech/openems/openems_ihp_sg13g2": "e29417aa1e5fb97b4ebd27dd1e4fcf043f97ef63",
+      "ihp-sg13g2/libs.tech/palace": "bb0edb0fb73b242db3f3bb6a552a47f4c32890d4"
+    },
+    "tree": {
+      "gitlinks": 5,
+      "payload_entries": 5121,
+      "regular_files": 5120,
+      "semantic_records": 5126,
+      "symlinks": 1,
+      "payload_bytes": 812058771,
+      "manifest_sha256": "4f68be98efe69635e11b412296e54300f70b5d583cabc4cd0d5a8659e7943ae3"
+    }
+  },
+  "tools": {
+    "openvaf": {
+      "path": "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+      "sha256": "1b4417e5faad179e3a3abe7eb6ef03f23f95edeb31bf2c5167ca74082a0c3fb3",
+      "size_bytes": 239991808,
+      "version_output": "openvaf 23.5.0"
+    },
+    "ngspice": {
+      "path": "/home/ubuntu/.local/opentallas-tools/ngspice-43-osdi/bin/ngspice",
+      "sha256": "ae32c8d9862d2b8611e133a7bf055dd6b1c5c760a208728456987b1eadd1f2d0",
+      "size_bytes": 8110504,
+      "version_output": "******\n** ngspice-43 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2024, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Fri Aug 28 08:22:35 UTC 2026\n******"
+    }
+  },
+  "model_compilation": {
+    "define": "__NGSPICE__",
+    "target_cpu": "generic",
+    "output_location": "ephemeral directory outside immutable PDK",
+    "primary": {
+      "psp103": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/primary/psp103.osdi",
+          "psp103.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103/psp103.va",
+        "source_sha256": "127be82891919323e60eec7ae02b0c034b396800884e8daf5561c9d3588684ba",
+        "output_sha256": "97b6aeb215fbe98b6cb6ad71e4fbf50a468955e8530895e75cd603b09ef21091",
+        "output_size_bytes": 725928,
+        "detailed_warnings": 0,
+        "log": "compile_primary_psp103.log",
+        "elf": "ELF64 DYN x86-64"
+      },
+      "psp103_nqs": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/primary/psp103_nqs.osdi",
+          "psp103_nqs.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103/psp103_nqs.va",
+        "source_sha256": "5612aa9e75aa467e320f19db7cc40f01dbb9a81212e9660e3939cf3bc2cac00d",
+        "output_sha256": "e82230ea41719cac2d9bfccf06d235d4a7d6b0530d9383af2ea4d6cb33b1f84d",
+        "output_size_bytes": 1124704,
+        "detailed_warnings": 0,
+        "log": "compile_primary_psp103_nqs.log",
+        "elf": "ELF64 DYN x86-64"
+      },
+      "r3_cmc": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/primary/r3_cmc.osdi",
+          "r3_cmc.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc/r3_cmc.va",
+        "source_sha256": "398746f45048a9e075913e85a982258b929c9042257339bf1fc47d7e25303551",
+        "output_sha256": "ad6b78a518677111dccc920007b9a7b2024d2625383fd8311ebc336a1522c009",
+        "output_size_bytes": 117144,
+        "detailed_warnings": 3,
+        "log": "compile_primary_r3_cmc.log",
+        "elf": "ELF64 DYN x86-64"
+      },
+      "mosvar": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/primary/mosvar.osdi",
+          "mosvar.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/mosvar",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/mosvar/mosvar.va",
+        "source_sha256": "146eec0c2a9c3c437c53109f8ec42af68f75bd9d341e79797d2feda0340a19f6",
+        "output_sha256": "b62bae8ecbdada070a4c6524b015b11a69e0810a26f76873954b8175fa90eb12",
+        "output_size_bytes": 101536,
+        "detailed_warnings": 0,
+        "log": "compile_primary_mosvar.log",
+        "elf": "ELF64 DYN x86-64"
+      }
+    },
+    "replay": {
+      "psp103": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/replay/psp103.osdi",
+          "psp103.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103/psp103.va",
+        "source_sha256": "127be82891919323e60eec7ae02b0c034b396800884e8daf5561c9d3588684ba",
+        "output_sha256": "97b6aeb215fbe98b6cb6ad71e4fbf50a468955e8530895e75cd603b09ef21091",
+        "output_size_bytes": 725928,
+        "detailed_warnings": 0,
+        "log": "compile_replay_psp103.log",
+        "elf": "ELF64 DYN x86-64"
+      },
+      "psp103_nqs": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/replay/psp103_nqs.osdi",
+          "psp103_nqs.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/psp103/psp103_nqs.va",
+        "source_sha256": "5612aa9e75aa467e320f19db7cc40f01dbb9a81212e9660e3939cf3bc2cac00d",
+        "output_sha256": "e82230ea41719cac2d9bfccf06d235d4a7d6b0530d9383af2ea4d6cb33b1f84d",
+        "output_size_bytes": 1124704,
+        "detailed_warnings": 0,
+        "log": "compile_replay_psp103_nqs.log",
+        "elf": "ELF64 DYN x86-64"
+      },
+      "r3_cmc": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/replay/r3_cmc.osdi",
+          "r3_cmc.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/r3_cmc/r3_cmc.va",
+        "source_sha256": "398746f45048a9e075913e85a982258b929c9042257339bf1fc47d7e25303551",
+        "output_sha256": "ad6b78a518677111dccc920007b9a7b2024d2625383fd8311ebc336a1522c009",
+        "output_size_bytes": 117144,
+        "detailed_warnings": 3,
+        "log": "compile_replay_r3_cmc.log",
+        "elf": "ELF64 DYN x86-64"
+      },
+      "mosvar": {
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/openvaf-23.5.0-target-cpu-fix/bin/openvaf",
+          "-D__NGSPICE__",
+          "--target_cpu",
+          "generic",
+          "-o",
+          "/tmp/opentallas-ihp-smoke-io6gcehu/osdi/replay/mosvar.osdi",
+          "mosvar.va"
+        ],
+        "cwd": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/mosvar",
+        "source": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0/ihp-sg13g2/libs.tech/verilog-a/mosvar/mosvar.va",
+        "source_sha256": "146eec0c2a9c3c437c53109f8ec42af68f75bd9d341e79797d2feda0340a19f6",
+        "output_sha256": "b62bae8ecbdada070a4c6524b015b11a69e0810a26f76873954b8175fa90eb12",
+        "output_size_bytes": 101536,
+        "detailed_warnings": 0,
+        "log": "compile_replay_mosvar.log",
+        "elf": "ELF64 DYN x86-64"
+      }
+    },
+    "semantic_replay": {
+      "status": "pass",
+      "models": {
+        "psp103": {
+          "byte_identical": true,
+          "sha256": "97b6aeb215fbe98b6cb6ad71e4fbf50a468955e8530895e75cd603b09ef21091"
+        },
+        "psp103_nqs": {
+          "byte_identical": true,
+          "sha256": "e82230ea41719cac2d9bfccf06d235d4a7d6b0530d9383af2ea4d6cb33b1f84d"
+        },
+        "r3_cmc": {
+          "byte_identical": true,
+          "sha256": "ad6b78a518677111dccc920007b9a7b2024d2625383fd8311ebc336a1522c009"
+        },
+        "mosvar": {
+          "byte_identical": true,
+          "sha256": "b62bae8ecbdada070a4c6524b015b11a69e0810a26f76873954b8175fa90eb12"
+        }
+      }
+    }
+  },
+  "simulation": {
+    "status": "pass",
+    "metrics": {
+      "dc_out_low_v": 1.199998,
+      "dc_out_high_v": 1.924622e-07,
+      "tran_out_low_v": 1.924775e-07,
+      "tran_out_high_v": 1.197298,
+      "tphl_s": 4.979198e-11,
+      "tplh_s": 1.796912e-10
+    },
+    "expected_warnings": [
+      "Warning: m=xx on .subckt line will override multiplier m hierarchy!"
+    ],
+    "unexpected_errors": [],
+    "log": "ngspice_device_smoke.log",
+    "analyses": [
+      "DC transfer",
+      "transient"
+    ],
+    "official_subcircuits": [
+      "sg13_lv_nmos",
+      "sg13_lv_pmos"
+    ],
+    "model_corner": "mos_tt",
+    "supply_v": 1.2,
+    "temperature_c": 27
+  },
+  "inputs": {
+    "contract": {
+      "path": "spice/ihp_sg13g2/device_smoke/device_smoke_contract.json",
+      "sha256": "1a5fdb0805d74657a58f213f266ee07e39351fa0c240f93819e6257b08d36811"
+    },
+    "pdk_lock": {
+      "path": "configs/pdk/ihp_sg13g2_physical_lock.json",
+      "sha256": "77e3cf64452b30cbd9c8786140340fde46670fb577ed01c2124671e9a3adac41"
+    },
+    "spice_init": {
+      "path": "spice/ihp_sg13g2/device_smoke/.spiceinit",
+      "sha256": "3bd51bc991eb68fb125a90a39dd9d4c678fd6f49cd783f7bbe3771aa03d9e6eb"
+    },
+    "deck": {
+      "path": "spice/ihp_sg13g2/device_smoke/device_smoke.spice",
+      "sha256": "5338f534e14584a1af7e36fdc166a1554644c3dc7aadfc498851ce4f42e907c3"
+    },
+    "runner": {
+      "path": "tools/run_ihp_device_smoke.py",
+      "sha256": "fcc27e709605d82814709b38a88647bdf00e8f6349e1015aff5664ee632ff4d8"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_primary_mosvar.log",
+      "sha256": "b176ea6f89a69838769b1f90ba869939f10838537140ac6735905c705cfa3334",
+      "size_bytes": 37
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_primary_psp103.log",
+      "sha256": "161822707cd4e74fdaf66145605580b2234c2172e700459ab51d34ab40db9014",
+      "size_bytes": 37
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_primary_psp103_nqs.log",
+      "sha256": "2e5594621b8b6bc27942c922b0c471066ddb79becd4c16d9aae7198f0cf728c7",
+      "size_bytes": 41
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_primary_r3_cmc.log",
+      "sha256": "fcebed6d7505fc9295bc000d888c7694cb48fe96353084ca7bdd33403e9ddf1c",
+      "size_bytes": 1610
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_replay_mosvar.log",
+      "sha256": "ac55cfecda8c5660dd06b2b988e1f890c6ce9311d30ec938475ad731220a859a",
+      "size_bytes": 37
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_replay_psp103.log",
+      "sha256": "02fb36f9ea8ae97957edef2ff9baaee68b1b63503168ad265c148cf5ca8f66f9",
+      "size_bytes": 37
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_replay_psp103_nqs.log",
+      "sha256": "282d129163dc2e51c22f3417c88aadec766cbbc3876155fdd74d97bffc4eeffa",
+      "size_bytes": 41
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/compile_replay_r3_cmc.log",
+      "sha256": "fcebed6d7505fc9295bc000d888c7694cb48fe96353084ca7bdd33403e9ddf1c",
+      "size_bytes": 1610
+    },
+    {
+      "path": "results/spice/ihp_device_smoke/artifacts/ngspice_device_smoke.log",
+      "sha256": "c2c861f91d88bfc4e869fdfbbf749e0ac8365b24341d1479bd99cf4b9e9cb6cf",
+      "size_bytes": 1327
+    }
+  ],
+  "claim_boundary": {
+    "evidence_class": "public_pdk_official_device_model_smoke",
+    "establishes": [
+      "all four official IHP ngspice Verilog-A modules compile reproducibly for generic x86-64",
+      "official IHP SG13G2 1.2 V NMOS and PMOS wrappers load and show sensible DC and transient inverter behavior",
+      "the immutable PDK checkout remains pristine before and after generated-model compilation"
+    ],
+    "forbidden_inferences": [
+      "ROM topology, density, array delay, array energy, sense margin, mismatch yield, or silicon yield",
+      "N7 or N4 scaling of any local result",
+      "wafer-scale bandwidth, throughput, cost, or GPU speedup",
+      "production signoff or measured silicon behavior"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  }
+}

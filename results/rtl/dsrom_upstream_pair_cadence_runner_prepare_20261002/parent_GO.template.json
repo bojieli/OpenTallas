@@ -1,0 +1,50 @@
+{
+  "GO": "PARENT_MUST_SET_BOUNDED_ACTUAL_UPSTREAM_PAIR_CADENCE_ONLY",
+  "approval_id": "PARENT_NEW_UNIQUE_APPROVAL_ID",
+  "bench_sha256": "380eb3b19fe2be2bef13a6a19aa622b31edec5a1fa38a39dc8184d77998b6be8",
+  "cases": [
+    "production5",
+    "existing_fast8"
+  ],
+  "claims": {
+    "adoption": false,
+    "arithmetic_domain_qualification": false,
+    "fullfield": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "continue_control_after_negative_failure": true,
+  "expected_contract_sha256": "a993bc9fe8bf2dd30ad11a2fe05fa848d5ef04d63aac7368779028e66219257b",
+  "generated_package_sha256": "b1eb791657126a0ba60be89395ce70e204100494bda26900454e5342e16c89d1",
+  "limits": {
+    "automatic_retries": 0,
+    "build_log_hard_bytes": 16777216,
+    "build_summed_seconds": 600,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_quota_percent": 200,
+    "disk_is_hard_aggregate_quota": false,
+    "disk_poll_seconds": 0.1,
+    "fallback": false,
+    "launcher_log_hard_bytes": 1048576,
+    "memory_max_bytes": 4294967296,
+    "memory_swap_max_bytes": 0,
+    "output_bound": "stored stream bytes hard bounded; inherited RLIMIT_FSIZE128MiB/core0. Combined generated/output disk and file counts sampled at0.1s, may overshoot before whole kill; not hard aggregate disk quota.",
+    "per_file_hard_bytes": 134217728,
+    "sampled_aggregate_disk_bytes": 2147483648,
+    "sampled_aggregate_files": 4096,
+    "simulate_log_hard_bytes": 8388608,
+    "simulate_summed_seconds": 60,
+    "whole_cgroup_seconds": 660,
+    "whole_kill": "cgroup.kill=1, in finally even if receipt fails; independent phase and whole timers; service RuntimeMaxSec660 and KillSignalSIGKILL/KillModecontrolgroup"
+  },
+  "model_sha256": "dbb108e80d3a4ae75de57bf0cdc3d2b05d3a6bd2a885a939a4f56e5f19119b5b",
+  "prepared_commit": "PARENT_FULL_REVIEWED_RUNNER_COMMIT_SHA",
+  "runner_plan_sha256": "2dcc1c463dc67979c81e630a68f24b2c70f38b5082e10217138342668cc269cb",
+  "runner_sha256": "40afc1e5cf5b24c1aee76797fb2a587b59ebabbfa1674c765d618ddf59980144",
+  "runner_sourceplan_sha256": "8b694522a7a1f249fc5f4ace87527dfcc9ae57de316276e1fd07ad74544dac48",
+  "source_prepare_commit": "6649e1759b9bdd170a8abba15cc0f70aefd15fa8",
+  "sourceplan_sha256": "2fda2347c8ab3abed2b2b39eeb9a2bb478e57ad50059bcdf584ba8b2568f3fa1"
+}

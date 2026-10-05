@@ -1,0 +1,48 @@
+{
+  "area_basis_used": "core",
+  "array": {
+    "array_level_ops_s_per_mm2_by_core": 2912092780818.3477,
+    "array_level_ops_s_per_mm2_by_standard_cell": 8677148729945.714,
+    "closed": false,
+    "closed_reason": null,
+    "core_area_mm2": 0.0122784,
+    "fmax_hz": 1117370000.0,
+    "lanes": 16,
+    "ops_s": 35755840000.0,
+    "record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/probe/pnr16.json",
+    "record_git_commit": "994526c39818",
+    "record_worktree_dirty": true,
+    "stages": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "standard_cell_area_mm2": 0.00412069
+  },
+  "array_level_ops_s_per_mm2": 2912092780818.3477,
+  "comparator": {
+    "bf16_dense_ops_s": 312000000000000.0,
+    "device_level_ops_s_per_mm2": 377723970944.30994,
+    "die_area_mm2": 826.0,
+    "logic_area_mm2": 495.59999999999997,
+    "logic_fraction_assumed": 0.6,
+    "logic_level_ops_s_per_mm2": 629539951573.85,
+    "part": "a100_sxm_80gb",
+    "process": "TSMC N7",
+    "source": "configs/hardware/technology_inputs.json"
+  },
+  "git": {
+    "commit": "f92fd0ad9cc504e6c15b74d8fc002ca2de1c763a",
+    "worktree_dirty": true
+  },
+  "question": "Does the MAC array's throughput per unit area stand comparison with a same-node GPU, at matched levels of inclusion?",
+  "ratio_vs_device_level": 7.709578964602421,
+  "ratio_vs_logic_level": 4.625747378761451,
+  "refusals": [
+    "not-a-device-claim: the array has no register file, shared memory, scheduler, interconnect or memory controller. Its density is an upper bound on a complete design, never a product figure.",
+    "not-a-silicon-claim: ASAP7 is a predictive, non-manufacturable academic PDK. The comparator is fabricated silicon. The node family matches; the confidence does not.",
+    "device-level-ratio-is-not-the-verdict: array-only area against whole-die area flatters the array by every mm2 of cache and PHY it does not have. The logic-level ratio is the one that means anything."
+  ],
+  "schema": "opentallas.audit.mac_array_density.v1",
+  "verdict": "array clears the logic-level comparator"
+}

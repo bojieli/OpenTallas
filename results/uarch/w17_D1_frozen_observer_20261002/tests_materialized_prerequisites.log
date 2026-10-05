@@ -1,0 +1,24 @@
+......................F........................                          [100%]
+=================================== FAILURES ===================================
+__________________ test_original_sources_and_five_case_scope ___________________
+
+    def test_original_sources_and_five_case_scope():
+        m=json.loads((ROOT/'results/uarch/w17_owner_progress_watchdog_20261002/source_manifest.json').read_text())
+        for p,r in m['source_files'].items():
+            original=subprocess.check_output(['git','show',gate.PIN+':'+r['origin']],cwd=ROOT)
+            assert hashlib.sha256(original).hexdigest()==r['sha256']==gate.sha(ROOT/p)
+>       p=gate.validate_plan(gate.REC/'plan.json')
+
+tests/test_w17_D1_frozen_package.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/opentallas-D1-frozen-fixture-20261002/results/uarch/w17_D1_frozen_observer_20261002/plan.json')
+
+    def validate_plan(path):
+     p=json.loads(Path(path).read_text())
+>    if p!=make_plan():raise ValueError('plan/source/options/caps mismatch')
+E    ValueError: plan/source/options/caps mismatch
+
+tools/w17_D1_frozen_gate.py:32: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_w17_D1_frozen_package.py::test_original_sources_and_five_case_scope

@@ -1,0 +1,23 @@
+{
+  "artifacts": {
+    "final/Dewey_Sagan_handoff.json": "9483ead124902e29493a8d3cc266040767df021d96bbfdae8b82711fee84e5a9",
+    "final/model.json": "0bfc2397f1c7d48390a67c0b62504007e266ccdebb093f5481d1711f27288d94",
+    "final/source_pins.json": "9358476c1ed559971a7a987eae693062136e2e75d903b1f629f148e005fd2cbe",
+    "replay.txt": "e9a9637f0845fdcdf8d951dc7e50d5715273185643d3eb19be173d85091e3bb3",
+    "replay_final.txt": "e9a9637f0845fdcdf8d951dc7e50d5715273185643d3eb19be173d85091e3bb3",
+    "run/Dewey_Sagan_handoff.json": "eb95c6914bc6930077335a0b6e397ced08862f62e20103cf3bf0fbf98898fa27",
+    "run/model.json": "6fa67b259cb8cef7f3a75a2d0fbd4a351eed7346d4ce0ff4db363af896b071cc",
+    "run/source_pins.json": "88105fe3305840287e4a65958eea4129b0e7151105f775757d2cf97bfd1035c7",
+    "run/source_snapshot/h4_v1_physical_join.py": "942c05a3af386d22ab78b8040cfce274aacad3d6b72196c79dafdd0f013f9fc8",
+    "run/source_snapshot/test_h4_v1_physical_join.py": "b148403abf7a15b249645b2c27b555c34700fab01953d280526eccbb054d4553",
+    "tests.txt": "b2c6720453f06d35157bf6fc9703ffce184bf1d11bc189b38e5a9b17338d728b",
+    "tests_final.txt": "2fdbfd8ca4b1f03517583a95c9d797258bdf9116d64cf90fbdaa175b61869611"
+  },
+  "base_commit": "f7fa8e290d419f6de3356385c0b55ded768c2090",
+  "earlier_record": "run/ is retained earlier passing protocol model; final/ adds separately charged owner gate logic and finite64bit stall counter",
+  "hardware_admitted": false,
+  "live_job_sources_edited": false,
+  "replay": "PASS_EXACT_V1_PHYSICAL_JOIN_REPLAY",
+  "schema": "opentallas.H4.V1.physical-join-validation.v1",
+  "tests_passed": 46
+}

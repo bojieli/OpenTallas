@@ -1,0 +1,48 @@
+In file included from /home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_pair_source.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:6,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+/home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_runtime.hpp:13:8: error: redefinition of ‘struct DsromS81PairDrive’
+   13 | struct DsromS81PairDrive {
+      |        ^~~~~~~~~~~~~~~~~
+In file included from tools/runtime/dsrom/s81_native_bf_head_producer.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+tools/runtime/dsrom/s81_minimum_runtime.hpp:13:8: note: previous definition of ‘struct DsromS81PairDrive’
+   13 | struct DsromS81PairDrive {
+      |        ^~~~~~~~~~~~~~~~~
+In file included from /home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_pair_source.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:6,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+/home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_runtime.hpp:23:8: error: redefinition of ‘struct DsromS81PairResult’
+   23 | struct DsromS81PairResult {
+      |        ^~~~~~~~~~~~~~~~~~
+In file included from tools/runtime/dsrom/s81_native_bf_head_producer.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+tools/runtime/dsrom/s81_minimum_runtime.hpp:23:8: note: previous definition of ‘struct DsromS81PairResult’
+   23 | struct DsromS81PairResult {
+      |        ^~~~~~~~~~~~~~~~~~
+In file included from /home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_pair_source.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:6,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+/home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_runtime.hpp:34:8: error: redefinition of ‘struct DsromS81MinimumParticipant’
+   34 | struct DsromS81MinimumParticipant {
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from tools/runtime/dsrom/s81_native_bf_head_producer.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+tools/runtime/dsrom/s81_minimum_runtime.hpp:34:8: note: previous definition of ‘struct DsromS81MinimumParticipant’
+   34 | struct DsromS81MinimumParticipant {
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_pair_source.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:6,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+/home/ubuntu/OpenTallas/tools/runtime/dsrom/s81_minimum_runtime.hpp:41:8: error: redefinition of ‘struct DsromS81MinimumRuntime’
+   41 | struct DsromS81MinimumRuntime {
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+In file included from tools/runtime/dsrom/s81_native_bf_head_producer.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.hpp:2,
+                 from tools/runtime/dsrom/s81_native_bf_head_factory.cpp:1:
+tools/runtime/dsrom/s81_minimum_runtime.hpp:41:8: note: previous definition of ‘struct DsromS81MinimumRuntime’
+   41 | struct DsromS81MinimumRuntime {
+      |        ^~~~~~~~~~~~~~~~~~~~~~

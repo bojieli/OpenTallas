@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.parent-fastfp-sequential-review.v1",
+  "recorded_utc": "2026-10-01T22:25:49.059450+00:00",
+  "owner_commits": [
+    "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+    "38f65a224720566fc68e32785e8f7622e8652b50"
+  ],
+  "intake_commits": [
+    "5d4be0d91",
+    "553efcf8d"
+  ],
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "raw_rerun_record": {
+    "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_rerun_r2.json",
+    "sha256": "537c8d7febdff9a5ec187f399f622427adceafa0e382b563d11dc63ae4f91154"
+  },
+  "retained_rerun_logs": [
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/build.log",
+      "sha256": "85218914c24e5617a1fbd508bf4fbc2b5da01aa5e502c419f08aa2191da8b08c"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_305419896.log",
+      "sha256": "a7c834d0684825ba030cbf5dabe7d493bf80d14ead715c5ce8cb7ffdc0126b39"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_2654435769.log",
+      "sha256": "4e5e3461ed6448658a5096a2a3a8e9b810a05f7c8909d90ff1288af4e13045ca"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_3221344269.log",
+      "sha256": "e325bb2202abd22fc31f0fb6a8f113513fd4143ad0d06304d1dfc8e734d24729"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/build.log",
+      "sha256": "8cddc7791dbf0d3bbd17d6f02ceb59b0b6f70f41cf7524af87ca31465f9173a5"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/seed_305419896.log",
+      "sha256": "00566cc1f2eaaaa30b3dbf619121bb0dbf6bf20bdd559a6da2410ef8a842e6ce"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/build.log",
+      "sha256": "59abc0df2f51c167a4068be529a3859caa1b9983f861c1d876617918178fe777"
+    },
+    {
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/seed_305419896.log",
+      "sha256": "f490524fe947e8036b13aa82a3876b03a13aa722675e9dffe872a980899910b5"
+    }
+  ],
+  "independent_pytest": "3 passed in0.04s",
+  "positive_3_seeds_and_both_mutants_exact_result_match": true,
+  "generated_candidates_and_reference_exact_hash_match": true,
+  "original_source_unchanged": true,
+  "source_transformation": "Only KSA module body becomes W+1 widened addition, plus reversible module namespace changes. Sequential logic/wrappers unchanged.",
+  "independent_LAT3_valid_queue_checked": true,
+  "checked_states": 25332,
+  "async_reset_samples": 171,
+  "valid_output_cycles": 18437,
+  "combinational_proof_bound": {
+    "path": "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/proof.json",
+    "sha256": "85aca989a60f0a3b2a5f7693384d1684513a0dc3ee596bcc79c72ffa080ab8e8",
+    "source_SHA_matches": true,
+    "all6used_KSA_widths_proved": true
+  },
+  "initial_parent_attempt": {
+    "outcome": "SPARSE_CHECKOUT_INPUT_MISSING, not a simulation failure",
+    "tests": "2pass/1FileNotFoundError for newbench; run failed before build/evidence stage",
+    "action": "Materialized exact tracked bench/C++ bytes, retained incomplete scratch/tmp/opentallas-parent-fastfp-seq-r1, then reran in fresh r2."
+  },
+  "remaining_acceptance": [
+    "Whole-die numerical gate before any source-list substitution",
+    "Full actual resource/service/producer validation and SSFF physical gates",
+    "Generic/cadd substitutions have no pipeline/full-die credit from this fastfp-only gate"
+  ],
+  "hardware_admission": false,
+  "full_token_cycles": null,
+  "verdict": "PASS_BOUNDED_SEQUENTIAL_PREREQUISITE_REVIEW"
+}

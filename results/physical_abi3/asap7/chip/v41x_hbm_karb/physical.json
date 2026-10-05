@@ -1,0 +1,168 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-28T08:40:18.489088+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 3286.19,
+    "block": "ot_chip_v41x_hbm_karb",
+    "cells": 31703,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+        "sha256": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+        "size_bytes": 7184
+      }
+    ],
+    "top": "ot_chip_v41x_hbm_karb"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n2974 |  1.299110e+05 |   -0.79% |  2.85e-06 |      \n      390 |   0.2678 |  1.293524e+05 |   -0.43% |  4.20e-06 |      \n      400 |   0.2368 |  1.286938e+05 |   -0.51% |  6.18e-06 |      \n      410 |   0.2115 |  1.283010e+05 |   -0.31% |  9.11e-06 |      \n      420 |   0.1892 |  1.280792e+05 |   -0.17% |  1.34e-05 |      \n      430 |   0.1699 |  1.279696e+05 |   -0.09% |  1.98e-05 |      \n      440 |   0.1498 |  1.280289e+05 |   +0.05% |  2.91e-05 |      \n      450 |   0.1249 |  1.282216e+05 |   +0.15% |  4.29e-05 |      \n      460 |   0.0987 |  1.283527e+05 |   +0.10% |  6.32e-05 |      \n      460 |   0.0987 |  1.283527e+05 |          |  6.57e-05 |      \n---------------------------------------------------------------\n[INFO GPL-1001] Global placement finished at iteration 460\n[INFO GPL-1002] Placed Cell Area             5284.6462\n[INFO GPL-1003] Available Free Area         13762.6744\n[INFO GPL-1004] Minimum Feasible Density        0.3900 (cell_area / free_area)\n[INFO GPL-1006]   Suggested Target Densities:\n[INFO GPL-1007]     - For 90% usage of free space: 0.4266\n[INFO GPL-1008]     - For 80% usage of free space: 0.4800\n[INFO GPL-1009]     - For 50% usage of free space: 0.7680\n[INFO GPL-1014] Final placement area: 5284.65 (+0.00%)\nTook 205 seconds: global_placement -skip_io -density 0.430499986410141 -pad_left 0 -pad_right 0\nDesign area 4928 um^2 36% utilization.\nwrite_db /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_asap7_codex_v41_die_karb_092/base/3_1_place_gp_skip_io.odb\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n3_1_place_gp_skip_io      .odb          208            459 9c97732b518db0332c08\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement\nRunning io_placement.tcl, stage 3_2_place_iop\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_db /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_asap7_codex_v41_die_karb_092/base/3_1_place_gp_skip_io.odb\nread_sdc /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_asap7_codex_v41_die_karb_092/base/2_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nplace_pins -hor_layers M4 -ver_layers M5\nFound 0 macro blocks.\nUsing 2 tracks default min distance between IO pins.\n[ERROR PPL-0024] Number of IO pins (40332) exceeds maximum number of available positions (5008). Increase the die perimeter from 486.74um to 3871.87um.\nError: io_placement.tcl, 21 PPL-0024\n\nElapsed time: 0:03.70[h:]min:sec. CPU time: user 3.41 sys 0.25 (98%). Peak memory: 414556KB.\nElapsed time: 2:05.69[h:]min:sec. CPU time: user 122.89 sys 5.40 (102%). Peak memory: 511488KB.\nElapsed time: 0:02.50[h:]min:sec. CPU time: user 2.35 sys 0.13 (99%). Peak memory: 356848KB.\nElapsed time: 0:02.60[h:]min:sec. CPU time: user 2.47 sys 0.13 (99%). Peak memory: 325632KB.\nElapsed time: 0:03.12[h:]min:sec. CPU time: user 2.95 sys 0.15 (99%). Peak memory: 375732KB.\nElapsed time: 3:28.06[h:]min:sec. CPU time: user 1203.23 sys 1.34 (578%). Peak memory: 470256KB.\nElapsed time: 0:04.78[h:]min:sec. CPU time: user 4.43 sys 0.32 (99%). Peak memory: 382316KB.\nmake[1]: *** [Makefile:495: do-3_2_place_iop] Error 1\nmake: *** [Makefile:495: /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_asap7_codex_v41_die_karb_092/base/3_2_place_iop.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-28T08:33:01.630652+00:00",
+  "git": {
+    "commit": "8458580674f8f75094024685585312820c1b4b34",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_chip_v41x_hbm_karb",
+      "--source",
+      "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+      "--clock-period-ns",
+      "0.92",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--nickname-tag",
+      "codex_v41_die_karb_092",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41x_hbm_karb/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/v41-die-karb-route",
+      "--force"
+    ],
+    "driver": {
+      "commit": "8458580674f8f75094024685585312820c1b4b34",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas-v41-die-physical/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "937999677650feeb6c0084d71afd8b341aa7d0a5a701525b9e9852b572e3ea84",
+      "tree": "/home/ubuntu/OpenTallas-v41-die-physical"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas-v41-die-physical"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 920.0,
+    "cell_area_um2": 3286.19,
+    "cell_count": 31703,
+    "cell_types_used": 32,
+    "chip_area_um2": 3286.82772,
+    "combinational_cell_count": 31063,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "2a8654abd79c4aa11268e8e38dde64bad82d7e36293e3f1a7fa116f8f5335551",
+      "raw_netlist_sha256": "2a8654abd79c4aa11268e8e38dde64bad82d7e36293e3f1a7fa116f8f5335551",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 242.611,
+    "sequential_cell_count": 640,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

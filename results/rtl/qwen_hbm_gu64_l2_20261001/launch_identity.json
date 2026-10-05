@@ -1,0 +1,21 @@
+{
+  "host": "155.103.253.114",
+  "local_pid": 800965,
+  "source_commit": "1a6e6383a",
+  "work": "/home/ubuntu/qwen-recovery-jobs/gu64_l2_inputs_r2",
+  "remote": "/home/ubuntu/qwen-gu64-l2-pair-1a6e6383a-r2",
+  "container": "qwen-gu64-l2-1a6e6383a-r2",
+  "lease_paths": [
+    "/tmp/claude-1000/agd_slots/155.103.253.114.1",
+    "/tmp/claude-1000/agd_slots/155.103.253.114.wt.270b3127fbd4"
+  ],
+  "start_utc": "2026-10-01T11:06:30Z",
+  "fresh_admission": {
+    "load": 1.083984375,
+    "cpus": 16,
+    "memory": 22705278976,
+    "disk": 85714833408
+  },
+  "startticks": 305764527,
+  "host_boot_id": "dd8d7231-d8d5-4f25-bfd4-f3390877d2eb"
+}

@@ -1,0 +1,644 @@
+{
+ "cells": [
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: the DeepSeek ROM array is a CLUSTER_32 target; a wafer or single-chip capability cannot host it"
+    ],
+    "peak_rss_kb": 208592,
+    "product": "deepseek-v4-flash-array",
+    "step": "rom_build",
+    "wall_s": 1.24
+   },
+   "context_tokens": 200000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 1499.2648712262255,
+   "hbm_design": "DSV4-Flash/b200_sxm-x16-hybrid",
+   "hbm_half_measured": {
+    "note": "the GPU side of this cell built and timed; the cell is unfilled because its ROM half has no deployment, so no ratio can be formed",
+    "per_user_tokens_s": 526.5008961045252,
+    "total_cycles": 1899332
+   },
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Flash-0731",
+   "pair_id": "deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid",
+   "published_ratio": 1.7524392031103204,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 2627.370536182984,
+   "rom_design": "DSV4-Flash/ROM-N5-native-HBMKV-array-hybrid-x32",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4.DeepSeekV4RomError: DeepSeek-V4-Flash ROM is a mandatory wafer-scale logical device; a single-chip or cluster capability cannot host it"
+    ],
+    "peak_rss_kb": 209244,
+    "product": "deepseek-v4-flash",
+    "step": "rom_build",
+    "wall_s": 1.01
+   },
+   "context_tokens": 200000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "link_latency",
+   "hbm_analytical_per_user_tokens_s": 1300.7208717198528,
+   "hbm_design": "DSV4-Flash/b200_sxm-x29-tensor",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Flash-0731",
+   "pair_id": "deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+   "published_ratio": 3.619465527730169,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 4707.914356389142,
+   "rom_design": "DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: the DeepSeek ROM array is a CLUSTER_32 target; a wafer or single-chip capability cannot host it"
+    ],
+    "peak_rss_kb": 209244,
+    "product": "deepseek-v4-flash-array",
+    "step": "rom_build",
+    "wall_s": 1.05
+   },
+   "context_tokens": 200000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 1465.0545169559307,
+   "hbm_design": "DSV4-Flash/b200_sxm-x15-hybrid",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Flash-0731",
+   "pair_id": "deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid",
+   "published_ratio": 1.793360250949635,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 2627.370536182984,
+   "rom_design": "DSV4-Flash/ROM-N5-native-SRAMKV-array-hybrid-x30",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4.DeepSeekV4RomError: DeepSeek-V4-Flash ROM is a mandatory wafer-scale logical device; a single-chip or cluster capability cannot host it"
+    ],
+    "peak_rss_kb": 209384,
+    "product": "deepseek-v4-flash",
+    "step": "rom_build",
+    "wall_s": 0.85
+   },
+   "context_tokens": 200000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "link_latency",
+   "hbm_analytical_per_user_tokens_s": 1300.7208717198528,
+   "hbm_design": "DSV4-Flash/b200_sxm-x29-tensor",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Flash-0731",
+   "pair_id": "deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor",
+   "published_ratio": 3.729170813151439,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 4850.610310874572,
+   "rom_design": "DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: the DeepSeek ROM array is a CLUSTER_32 target; a wafer or single-chip capability cannot host it"
+    ],
+    "peak_rss_kb": 364780,
+    "product": "deepseek-v4-pro-array",
+    "step": "rom_build",
+    "wall_s": 1.54
+   },
+   "context_tokens": 1000000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "link_latency",
+   "hbm_analytical_per_user_tokens_s": 746.7912517268198,
+   "hbm_design": "DSV4-Pro/b200_sxm-x87-tensor",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Pro-0813",
+   "pair_id": "deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor",
+   "published_ratio": 1.4105891097492045,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 1053.4156069418289,
+   "rom_design": "DSV4-Pro/ROM-N5-native-HBMKV-array-tensor-x170",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: the DeepSeek ROM array is a CLUSTER_32 target; a wafer or single-chip capability cannot host it"
+    ],
+    "peak_rss_kb": 364780,
+    "product": "deepseek-v4-pro-array",
+    "step": "rom_build",
+    "wall_s": 2.21
+   },
+   "context_tokens": 1000000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "link_latency",
+   "hbm_analytical_per_user_tokens_s": 746.7912517268198,
+   "hbm_design": "DSV4-Pro/b200_sxm-x87-tensor",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Pro-0813",
+   "pair_id": "deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor",
+   "published_ratio": 3.5468723121957404,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 2648.7732137398566,
+   "rom_design": "DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: the DeepSeek ROM array is a CLUSTER_32 target; a wafer or single-chip capability cannot host it"
+    ],
+    "peak_rss_kb": 364836,
+    "product": "deepseek-v4-pro-array",
+    "step": "rom_build",
+    "wall_s": 1.97
+   },
+   "context_tokens": 1000000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "link_latency",
+   "hbm_analytical_per_user_tokens_s": 741.8098372081337,
+   "hbm_design": "DSV4-Pro/b200_sxm-x79-tensor",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Pro-0813",
+   "pair_id": "deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor",
+   "published_ratio": 1.3975507337316178,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 1036.716882279559,
+   "rom_design": "DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x155",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "compiler.backends.rom.deepseek_v4_array.DeepSeekV4ArrayError: the DeepSeek ROM array is a CLUSTER_32 target; a wafer or single-chip capability cannot host it"
+    ],
+    "peak_rss_kb": 365244,
+    "product": "deepseek-v4-pro-array",
+    "step": "rom_build",
+    "wall_s": 1.57
+   },
+   "context_tokens": 1000000,
+   "deployment_audit": null,
+   "hbm_analytical_binding": "link_latency",
+   "hbm_analytical_per_user_tokens_s": 746.7912517268198,
+   "hbm_design": "DSV4-Pro/b200_sxm-x87-tensor",
+   "hbm_total_cycles": null,
+   "model": "DeepSeek-V4-Pro-0813",
+   "pair_id": "deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor",
+   "published_ratio": 3.5468723121957404,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 2648.7732137398566,
+   "rom_design": "DSV4-Pro/ROM-N5-native-SRAMKV-wafer-hybrid-x3",
+   "rom_total_cycles": null,
+   "status": "unfilled",
+   "steps": {}
+  },
+  {
+   "analytical_ratio_with_link_removed_from_both": 15.578685463090416,
+   "batch_size": 1,
+   "context_tokens": 8192,
+   "cycle_ratio": 4.125368903709878,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 693.5852718493809,
+   "hbm_cycle_binding": "weight_read",
+   "hbm_cycle_per_user_tokens_s": 673.6211312254381,
+   "hbm_design": "Qwen3-8B/b200_sxm-x2-tensor",
+   "hbm_total_cycles": 1484514,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor",
+   "published_ratio": 5.6392842689793605,
+   "reconciliation": "results/derived/n5_design_target_cycle/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_reconciliation.json",
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 3911.324512735987,
+   "rom_cycle_binding": "kv_read",
+   "rom_cycle_per_user_tokens_s": 2778.935667639294,
+   "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4",
+   "rom_total_cycles": 359850,
+   "status": "filled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 247012,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.78
+    },
+    "hbm_build": {
+     "peak_rss_kb": 101104,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.59
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18550240,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 29.06
+    },
+    "rom_build": {
+     "peak_rss_kb": 101104,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.74
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18545768,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 37.94
+    }
+   }
+  },
+  {
+   "analytical_ratio_with_link_removed_from_both": 8.592419025257753,
+   "batch_size": 1,
+   "context_tokens": 8192,
+   "cycle_ratio": 2.2063171806167405,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 1866.2534448824474,
+   "hbm_cycle_binding": "weight_read",
+   "hbm_cycle_per_user_tokens_s": 1996.6695551819564,
+   "hbm_design": "Qwen3-8B/b200_sxm-x29-hybrid",
+   "hbm_total_cycles": 500834,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid",
+   "published_ratio": 2.9787648811712577,
+   "reconciliation": "results/derived/n5_design_target_cycle/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_reconciliation.json",
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 5559.130220980714,
+   "rom_cycle_binding": "kv_read",
+   "rom_cycle_per_user_tokens_s": 4405.286343612335,
+   "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x1",
+   "rom_total_cycles": 227000,
+   "status": "filled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 18550240,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.7
+    },
+    "hbm_build": {
+     "peak_rss_kb": 18550240,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.53
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 31.13
+    },
+    "rom_build": {
+     "peak_rss_kb": 18550240,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.46
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18550240,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 29.62
+    }
+   }
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "cell holds KV in SRAM and its ROM machine carries 1 HBM channel(s), but the deployment spent 33,271,977 HBM busy cycles against 403,673 SRAM: the qwen3-8b ROM product stores KV in HBM, so this run does not exercise the design point's KV placement and is not evidence for this cell"
+    ],
+    "rejected_rom_cycle_per_user_tokens_s": 29.86868263547994,
+    "run_taken": true,
+    "step": "kv_store_mismatch"
+   },
+   "context_tokens": 8192,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 978.7441385422231,
+   "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+   "hbm_total_cycles": 1012818,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor",
+   "published_ratio": 5.04830632979099,
+   "request_position_start": 128,
+   "rom_analytical_binding": "weight_read",
+   "rom_analytical_per_user_tokens_s": 4941.000229848535,
+   "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill",
+   "rom_total_cycles": 33479883,
+   "status": "unfilled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.96
+    },
+    "hbm_build": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.64
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 32.15
+    },
+    "rom_build": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 1.02
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 32.44
+    }
+   }
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "cell holds KV in SRAM and its ROM machine carries 1 HBM channel(s), but the deployment spent 33,271,977 HBM busy cycles against 484,298 SRAM: the qwen3-8b ROM product stores KV in HBM, so this run does not exercise the design point's KV placement and is not evidence for this cell"
+    ],
+    "rejected_rom_cycle_per_user_tokens_s": 29.868867309229636,
+    "run_taken": true,
+    "step": "kv_store_mismatch"
+   },
+   "context_tokens": 8192,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 978.7441385422231,
+   "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+   "hbm_total_cycles": 1012818,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor",
+   "published_ratio": 5.098993350523259,
+   "request_position_start": 128,
+   "rom_analytical_binding": "weight_read",
+   "rom_analytical_per_user_tokens_s": 4990.609854290412,
+   "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x6-romfill",
+   "rom_total_cycles": 33479676,
+   "status": "unfilled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.51
+    },
+    "hbm_build": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.42
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 25.98
+    },
+    "rom_build": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.36
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18551600,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 32.39
+    }
+   }
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "cell holds KV in SRAM and its ROM machine carries 1 HBM channel(s), but the deployment spent 33,271,977 HBM busy cycles against 567,663 SRAM: the qwen3-8b ROM product stores KV in HBM, so this run does not exercise the design point's KV placement and is not evidence for this cell"
+    ],
+    "rejected_rom_cycle_per_user_tokens_s": 29.871077326391614,
+    "run_taken": true,
+    "step": "kv_store_mismatch"
+   },
+   "context_tokens": 8192,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 1232.0060368981908,
+   "hbm_design": "Qwen3-8B/b200_sxm-x4-tensor",
+   "hbm_total_cycles": 777663,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor",
+   "published_ratio": 4.071643546912829,
+   "request_position_start": 128,
+   "rom_analytical_binding": "weight_read",
+   "rom_analytical_per_user_tokens_s": 5016.2894298941665,
+   "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x7-romfill",
+   "rom_total_cycles": 33477199,
+   "status": "unfilled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.92
+    },
+    "hbm_build": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.53
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 39.35
+    },
+    "rom_build": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.37
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 25.25
+    }
+   }
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "cell holds KV in SRAM and its ROM machine carries 1 HBM channel(s), but the deployment spent 33,271,977 HBM busy cycles against 648,218 SRAM: the qwen3-8b ROM product stores KV in HBM, so this run does not exercise the design point's KV placement and is not evidence for this cell"
+    ],
+    "rejected_rom_cycle_per_user_tokens_s": 29.87074629371248,
+    "run_taken": true,
+    "step": "kv_store_mismatch"
+   },
+   "context_tokens": 8192,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 1232.0060368981908,
+   "hbm_design": "Qwen3-8B/b200_sxm-x4-tensor",
+   "hbm_total_cycles": 777663,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor",
+   "published_ratio": 4.080494401579304,
+   "request_position_start": 128,
+   "rom_analytical_binding": "weight_read",
+   "rom_analytical_per_user_tokens_s": 5027.193736274973,
+   "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x8-romfill",
+   "rom_total_cycles": 33477570,
+   "status": "unfilled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.39
+    },
+    "hbm_build": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.38
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 35.12
+    },
+    "rom_build": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.44
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 32.04
+    }
+   }
+  },
+  {
+   "batch_size": 1,
+   "blocked_by": {
+    "error": [
+     "cell holds KV in SRAM and its ROM machine carries 1 HBM channel(s), but the deployment spent 33,271,977 HBM busy cycles against 81,316 SRAM: the qwen3-8b ROM product stores KV in HBM, so this run does not exercise the design point's KV placement and is not evidence for this cell"
+    ],
+    "rejected_rom_cycle_per_user_tokens_s": 29.967637049720892,
+    "run_taken": true,
+    "step": "kv_store_mismatch"
+   },
+   "context_tokens": 8192,
+   "deployment_audit": "COMPARABLE: both deployments present the same effective tensor width caps at lanes=1024 ([1024]), so the machine files alone decide the tensor rate.",
+   "hbm_analytical_binding": "weight_read",
+   "hbm_analytical_per_user_tokens_s": 1866.2534448824474,
+   "hbm_design": "Qwen3-8B/b200_sxm-x29-hybrid",
+   "hbm_total_cycles": 500834,
+   "model": "Qwen3-8B",
+   "pair_id": "qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid",
+   "published_ratio": 3.4638351957813565,
+   "request_position_start": 128,
+   "rom_analytical_binding": "link_latency",
+   "rom_analytical_per_user_tokens_s": 6464.394366632023,
+   "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill",
+   "rom_total_cycles": 33369331,
+   "status": "unfilled",
+   "steps": {
+    "audit": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.81
+    },
+    "hbm_build": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.62
+    },
+    "hbm_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 27.35
+    },
+    "rom_build": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 0.5
+    },
+    "rom_cycle": {
+     "peak_rss_kb": 18552204,
+     "rc": 0,
+     "stderr_tail": [],
+     "wall_s": 41.12
+    }
+   }
+  }
+ ],
+ "cells_filled": 2,
+ "cells_total": 15,
+ "cells_unfilled": 13,
+ "generator": "tools/derive_cycle_machine.py + tools/build_rom_deployment.py --capability + tools/run_abi3_cycle.py",
+ "matrix": "results/derived/n5_design_target_matrix.json",
+ "request_note": "Every cell is timed at ONE governed decode request -- batch 1, a single token at POSITION_START, so the cells are comparable to each other and not only within a pair.  The position is small on purpose (rule 3) and that costs nothing here: the ROM anchor returns 359,850 cycles at position 128 and at position 8,000 alike, because the deployment reads a whole KV arena rather than the live prefix, and the HBM anchor moves by 24 cycles in 1,484,514 (0.0016%).",
+ "schema": "opentallas.derived_cycle_machine.cycle_matrix.v1"
+}

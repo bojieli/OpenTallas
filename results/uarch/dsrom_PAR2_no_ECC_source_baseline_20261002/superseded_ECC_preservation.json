@@ -1,0 +1,17 @@
+{
+  "policy": "USER_EXPLICIT_REMOVAL_WEIGHT_ROM_ECC_QWEN_AND_DS",
+  "old_ECC_records_UNCHANGED": true,
+  "r3_replay_failure_preserved": {
+    "original_model_sha256": "2e024aae12c692109011624396569d372fed14a44669879b1b16d3de74704e8c",
+    "difference_keys": [
+      "source_pins"
+    ],
+    "cause": "receiptlist extended afterr3 generation, numerical/calendar fields identical"
+  },
+  "r4_completed_before_user_policy_change": true,
+  "r4_is_ARCHIVED_NOT_CURRENT_POLICY": true,
+  "r4_sha256": "13a830844098c856b067e24d7046c72db1b9aacecff019107e784e2edec66787",
+  "owned_live_ECC_or_P_and_R_jobs": [],
+  "no_new_ECC_checker_corrector_sidecar_work": true,
+  "new_ECC_replay_NOT_requested": true
+}

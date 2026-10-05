@@ -1,0 +1,278 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_CORNER ss
+OT_WS -3.6720380069965586e-9
+OT_TNS -6.582675268873572e-6
+Startpoint: g_on.g_die[0].u_store.g_on.u_data.g_on.u_fifo.rbin[2]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_on.g_die[0].u_store.g_on.crc_got[24]$_DFFE_PN1P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_host (in)
+  37.55   37.55 ^ wire60598/Y (BUFx12f_ASAP7_75t_R)
+  55.01   92.56 ^ clkbuf_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  38.47  131.03 ^ clkbuf_1_1_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  39.22  170.24 ^ clkbuf_2_2_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  40.54  210.78 ^ clkbuf_3_5_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  42.93  253.72 ^ clkbuf_5_20_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  41.61  295.33 ^ clkbuf_6_40__f_clk_host/Y (BUFx24_ASAP7_75t_R)
+  49.33  344.65 ^ clkbuf_leaf_540_clk_host/Y (BUFx24_ASAP7_75t_R)
+   1.26  345.91 ^ g_on.g_die[0].u_store.g_on.u_data.g_on.u_fifo.rbin[2]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 104.92  450.83 ^ g_on.g_die[0].u_store.g_on.u_data.g_on.u_fifo.rbin[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  50.80  501.63 ^ place50476/Y (BUFx2_ASAP7_75t_R)
+  49.68  551.31 ^ place50470/Y (BUFx6f_ASAP7_75t_R)
+  99.16  650.47 ^ place50464/Y (BUFx3_ASAP7_75t_R)
+  29.74  680.21 v _171531_/Y (NAND2x1_ASAP7_75t_R)
+  60.79  741.00 v _171532_/Y (OA211x2_ASAP7_75t_R)
+  37.94  778.94 v _171533_/Y (AO21x1_ASAP7_75t_R)
+  37.68  816.62 v _171541_/Y (OA21x2_ASAP7_75t_R)
+  85.68  902.30 v _171587_/Y (OR4x1_ASAP7_75t_R)
+  73.01  975.31 ^ _225918_/Y (XOR2x2_ASAP7_75t_R)
+  60.76 1036.07 v _225919_/Y (XNOR2x2_ASAP7_75t_R)
+  49.38 1085.45 ^ _225998_/Y (XNOR2x2_ASAP7_75t_R)
+  57.98 1143.43 v _225999_/Y (XNOR2x2_ASAP7_75t_R)
+  65.88 1209.31 ^ _226000_/Y (XOR2x2_ASAP7_75t_R)
+  34.43 1243.74 ^ place40339/Y (BUFx6f_ASAP7_75t_R)
+  55.92 1299.65 v _226144_/Y (XNOR2x2_ASAP7_75t_R)
+  50.89 1350.54 ^ _226226_/Y (XOR2x2_ASAP7_75t_R)
+  52.78 1403.32 v _226229_/Y (XNOR2x2_ASAP7_75t_R)
+  45.48 1448.80 v _226233_/Y (XNOR2x2_ASAP7_75t_R)
+  56.17 1504.97 ^ _226234_/Y (XNOR2x2_ASAP7_75t_R)
+  63.72 1568.69 v _226448_/Y (XNOR2x2_ASAP7_75t_R)
+  51.89 1620.58 ^ _226449_/Y (XOR2x2_ASAP7_75t_R)
+  71.38 1691.95 v _226450_/Y (XNOR2x2_ASAP7_75t_R)
+  59.89 1751.85 ^ _226451_/Y (XNOR2x2_ASAP7_75t_R)
+  56.31 1808.16 v _226452_/Y (XNOR2x2_ASAP7_75t_R)
+  55.02 1863.18 ^ _226453_/Y (XNOR2x2_ASAP7_75t_R)
+  49.43 1912.61 ^ _226481_/Y (XNOR2x1_ASAP7_75t_R)
+  50.56 1963.17 ^ _226497_/Y (XNOR2x1_ASAP7_75t_R)
+  79.84 2043.01 v _226498_/Y (XNOR2x2_ASAP7_75t_R)
+  61.82 2104.83 v _226838_/Y (XNOR2x1_ASAP7_75t_R)
+  65.94 2170.76 ^ _226865_/Y (XNOR2x2_ASAP7_75t_R)
+  39.79 2210.56 ^ _227015_/Y (XNOR2x1_ASAP7_75t_R)
+  67.69 2278.24 v _227022_/Y (XNOR2x2_ASAP7_75t_R)
+  59.56 2337.80 ^ _227038_/Y (XOR2x2_ASAP7_75t_R)
+  50.36 2388.16 v _227039_/Y (XOR2x2_ASAP7_75t_R)
+  57.27 2445.43 ^ _227043_/Y (XOR2x2_ASAP7_75t_R)
+  56.81 2502.25 v _227053_/Y (XNOR2x2_ASAP7_75t_R)
+  51.91 2554.16 ^ _227056_/Y (XNOR2x2_ASAP7_75t_R)
+  70.48 2624.63 v _227081_/Y (XNOR2x2_ASAP7_75t_R)
+  42.29 2666.92 v place37712/Y (BUFx2_ASAP7_75t_R)
+  50.53 2717.45 ^ _227535_/Y (XNOR2x2_ASAP7_75t_R)
+  59.71 2777.16 v _227560_/Y (XNOR2x2_ASAP7_75t_R)
+  52.10 2829.26 ^ _227561_/Y (XOR2x2_ASAP7_75t_R)
+  55.83 2885.09 v _227562_/Y (XNOR2x2_ASAP7_75t_R)
+  54.36 2939.45 ^ _227564_/Y (XNOR2x2_ASAP7_75t_R)
+  50.94 2990.39 v _227565_/Y (XOR2x2_ASAP7_75t_R)
+  63.30 3053.69 ^ _227740_/Y (XOR2x2_ASAP7_75t_R)
+  58.86 3112.54 v _227761_/Y (XNOR2x2_ASAP7_75t_R)
+  52.25 3164.79 ^ _227762_/Y (XNOR2x2_ASAP7_75t_R)
+  73.51 3238.30 v _227767_/Y (XNOR2x2_ASAP7_75t_R)
+  59.05 3297.35 ^ _227768_/Y (XOR2x2_ASAP7_75t_R)
+  61.55 3358.90 v _227769_/Y (XNOR2x2_ASAP7_75t_R)
+  45.41 3404.31 v _227835_/Y (XNOR2x2_ASAP7_75t_R)
+  62.00 3466.31 ^ _227841_/Y (XNOR2x2_ASAP7_75t_R)
+  66.67 3532.98 v _228169_/Y (XNOR2x2_ASAP7_75t_R)
+  51.03 3584.02 ^ _228170_/Y (XOR2x2_ASAP7_75t_R)
+  65.58 3649.60 v _228171_/Y (XNOR2x2_ASAP7_75t_R)
+  62.41 3712.00 ^ _228247_/Y (XOR2x2_ASAP7_75t_R)
+  60.14 3772.14 v _228298_/Y (XNOR2x2_ASAP7_75t_R)
+  57.13 3829.27 ^ _228299_/Y (XOR2x2_ASAP7_75t_R)
+  67.90 3897.17 v _228306_/Y (XNOR2x2_ASAP7_75t_R)
+  50.12 3947.29 ^ _228336_/Y (XNOR2x2_ASAP7_75t_R)
+  58.68 4005.97 v _228337_/Y (XNOR2x2_ASAP7_75t_R)
+  51.76 4057.73 v _228338_/Y (XOR2x2_ASAP7_75t_R)
+  61.86 4119.59 ^ _228487_/Y (XOR2x2_ASAP7_75t_R)
+  68.44 4188.03 v _228488_/Y (XNOR2x2_ASAP7_75t_R)
+  57.35 4245.38 ^ _228489_/Y (XOR2x2_ASAP7_75t_R)
+  60.54 4305.92 v _228522_/Y (XNOR2x2_ASAP7_75t_R)
+  52.53 4358.45 ^ _228525_/Y (XNOR2x2_ASAP7_75t_R)
+  67.51 4425.96 v _228647_/Y (XNOR2x2_ASAP7_75t_R)
+  32.67 4458.63 ^ _228648_/Y (XNOR2x1_ASAP7_75t_R)
+  71.15 4529.78 v _228770_/Y (XNOR2x2_ASAP7_75t_R)
+  57.53 4587.32 ^ _228771_/Y (XOR2x2_ASAP7_75t_R)
+  65.27 4652.58 v _228779_/Y (XNOR2x2_ASAP7_75t_R)
+  37.90 4690.48 v place35751/Y (BUFx3_ASAP7_75t_R)
+  44.71 4735.19 ^ _228883_/Y (XNOR2x2_ASAP7_75t_R)
+  55.20 4790.39 v _228886_/Y (XNOR2x2_ASAP7_75t_R)
+  31.85 4822.24 v _228887_/Y (XNOR2x1_ASAP7_75t_R)
+  18.73 4840.97 ^ _228889_/Y (AOI21x1_ASAP7_75t_R)
+   0.07 4841.04 ^ g_on.g_die[0].u_store.g_on.crc_got[24]$_DFFE_PN1P_/D (DFFASRHQNx1_ASAP7_75t_R)
+        4841.04   data arrival time
+
+1000.00 1000.00   clock core_clk (rise edge)
+   0.00 1000.00   clock source latency
+   0.00 1000.00 ^ clk_host (in)
+  36.23 1036.23 ^ wire60598/Y (BUFx12f_ASAP7_75t_R)
+  53.04 1089.27 ^ clkbuf_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  37.36 1126.63 ^ clkbuf_1_1_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  37.70 1164.33 ^ clkbuf_2_2_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  38.95 1203.28 ^ clkbuf_3_5_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  40.57 1243.85 ^ clkbuf_5_20_0_clk_host/Y (BUFx24_ASAP7_75t_R)
+  39.53 1283.37 ^ clkbuf_6_40__f_clk_host/Y (BUFx24_ASAP7_75t_R)
+  48.76 1332.14 ^ clkbuf_leaf_541_clk_host/Y (BUFx24_ASAP7_75t_R)
+   1.21 1333.35 ^ g_on.g_die[0].u_store.g_on.crc_got[24]$_DFFE_PN1P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1273.35   clock uncertainty
+  11.95 1285.30   clock reconvergence pessimism
+ -30.07 1255.23   library setup time
+        1255.23   data required time
+---------------------------------------------------------
+        1255.23   data required time
+        -4841.04   data arrival time
+---------------------------------------------------------
+        -3585.81   slack (VIOLATED)
+
+
+Startpoint: g_on.g_die[0].u_store.g_on.retired[2]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by mem_clk)
+Endpoint: g_on.g_die[0].u_store.g_on.mcrc[26]$_DFFE_PN1P_
+          (rising edge-triggered flip-flop clocked by mem_clk)
+Path Group: mem_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock mem_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_mem (in)
+  41.90   41.90 ^ wire60599/Y (BUFx12f_ASAP7_75t_R)
+  60.77  102.68 ^ clkbuf_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  41.48  144.16 ^ clkbuf_1_0_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  40.93  185.08 ^ clkbuf_2_1_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  40.34  225.43 ^ clkbuf_3_3_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  43.40  268.82 ^ clkbuf_4_7_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  42.35  311.18 ^ clkbuf_6_30_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  42.98  354.16 ^ clkbuf_7_61__f_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  49.51  403.67 ^ clkbuf_leaf_283_clk_mem/Y (BUFx24_ASAP7_75t_R)
+   3.58  407.26 ^ g_on.g_die[0].u_store.g_on.retired[2]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 119.46  526.71 v g_on.g_die[0].u_store.g_on.retired[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  52.43  579.15 v clone64314/Y (BUFx3_ASAP7_75t_R)
+  39.17  618.32 v place54742/Y (BUFx3_ASAP7_75t_R)
+  63.79  682.11 v _230330_/Y (OR3x1_ASAP7_75t_R)
+  49.91  732.02 v place47833/Y (BUFx3_ASAP7_75t_R)
+  54.66  786.68 v _230418_/Y (OA211x2_ASAP7_75t_R)
+  55.05  841.73 v _230429_/Y (AO32x1_ASAP7_75t_R)
+  73.07  914.80 ^ _230430_/Y (XOR2x2_ASAP7_75t_R)
+  64.05  978.85 v _231027_/Y (XNOR2x2_ASAP7_75t_R)
+  52.38 1031.23 ^ _231028_/Y (XOR2x2_ASAP7_75t_R)
+  58.04 1089.27 v _231030_/Y (XNOR2x2_ASAP7_75t_R)
+  53.88 1143.14 ^ _231031_/Y (XNOR2x2_ASAP7_75t_R)
+  67.20 1210.35 v _231287_/Y (XNOR2x2_ASAP7_75t_R)
+  55.36 1265.70 ^ _231318_/Y (XOR2x2_ASAP7_75t_R)
+  60.78 1326.48 v _231319_/Y (XNOR2x2_ASAP7_75t_R)
+  58.63 1385.11 ^ _231340_/Y (XOR2x2_ASAP7_75t_R)
+  58.28 1443.39 v _231388_/Y (XNOR2x2_ASAP7_75t_R)
+  62.12 1505.52 ^ _231389_/Y (XOR2x2_ASAP7_75t_R)
+  31.53 1537.04 ^ rebuffer60640/Y (BUFx3_ASAP7_75t_R)
+  58.88 1595.93 v _231390_/Y (XNOR2x2_ASAP7_75t_R)
+  48.82 1644.74 v _231868_/Y (XNOR2x2_ASAP7_75t_R)
+  52.09 1696.83 ^ _231889_/Y (XOR2x2_ASAP7_75t_R)
+  64.50 1761.34 v _231890_/Y (XNOR2x2_ASAP7_75t_R)
+  55.71 1817.05 ^ _232693_/Y (XOR2x2_ASAP7_75t_R)
+  52.77 1869.82 v _232694_/Y (XNOR2x2_ASAP7_75t_R)
+  40.60 1910.42 v _232695_/Y (XNOR2x2_ASAP7_75t_R)
+  50.77 1961.18 ^ _232696_/Y (XOR2x2_ASAP7_75t_R)
+  59.14 2020.32 v _232697_/Y (XNOR2x2_ASAP7_75t_R)
+  56.95 2077.27 ^ _232698_/Y (XOR2x2_ASAP7_75t_R)
+  58.53 2135.81 v _232699_/Y (XNOR2x2_ASAP7_75t_R)
+  50.50 2186.31 ^ _232700_/Y (XNOR2x2_ASAP7_75t_R)
+  30.73 2217.04 ^ place38288/Y (BUFx3_ASAP7_75t_R)
+  54.73 2271.77 v _232874_/Y (XNOR2x2_ASAP7_75t_R)
+  37.87 2309.63 v _232875_/Y (XNOR2x1_ASAP7_75t_R)
+  62.44 2372.07 ^ _232876_/Y (XOR2x2_ASAP7_75t_R)
+  50.10 2422.18 v _232995_/Y (XOR2x2_ASAP7_75t_R)
+  55.16 2477.34 ^ _232996_/Y (XOR2x2_ASAP7_75t_R)
+  56.94 2534.28 v _233024_/Y (XNOR2x2_ASAP7_75t_R)
+  52.19 2586.47 v _233025_/Y (XOR2x2_ASAP7_75t_R)
+  61.68 2648.15 ^ _233561_/Y (XOR2x2_ASAP7_75t_R)
+  62.56 2710.71 v _233620_/Y (XNOR2x2_ASAP7_75t_R)
+  43.55 2754.26 v _233622_/Y (XNOR2x1_ASAP7_75t_R)
+  58.27 2812.53 ^ _233623_/Y (XOR2x2_ASAP7_75t_R)
+  39.17 2851.70 ^ _233624_/Y (XNOR2x1_ASAP7_75t_R)
+  73.36 2925.06 v _233684_/Y (XNOR2x2_ASAP7_75t_R)
+  33.35 2958.41 v place37344/Y (BUFx6f_ASAP7_75t_R)
+  42.80 3001.20 ^ _234371_/Y (XNOR2x2_ASAP7_75t_R)
+  60.18 3061.38 v _234372_/Y (XNOR2x2_ASAP7_75t_R)
+  53.43 3114.81 ^ _234602_/Y (XOR2x2_ASAP7_75t_R)
+  59.62 3174.43 v _234616_/Y (XNOR2x2_ASAP7_75t_R)
+  47.86 3222.29 ^ _234617_/Y (XNOR2x2_ASAP7_75t_R)
+  55.56 3277.84 v _234618_/Y (XNOR2x2_ASAP7_75t_R)
+  63.29 3341.14 ^ _234621_/Y (XNOR2x2_ASAP7_75t_R)
+  68.52 3409.65 v _234622_/Y (XNOR2x2_ASAP7_75t_R)
+  47.48 3457.13 ^ _234642_/Y (XNOR2x2_ASAP7_75t_R)
+  62.54 3519.67 v _234643_/Y (XNOR2x2_ASAP7_75t_R)
+  70.06 3589.73 ^ _235007_/Y (XNOR2x2_ASAP7_75t_R)
+  69.56 3659.29 v _235377_/Y (XNOR2x2_ASAP7_75t_R)
+  46.82 3706.12 ^ _235445_/Y (XNOR2x2_ASAP7_75t_R)
+  53.88 3759.99 v _235446_/Y (XNOR2x2_ASAP7_75t_R)
+  48.76 3808.75 ^ _235447_/Y (XNOR2x2_ASAP7_75t_R)
+  70.46 3879.21 v _235452_/Y (XNOR2x2_ASAP7_75t_R)
+  66.89 3946.10 ^ _235453_/Y (XOR2x2_ASAP7_75t_R)
+  58.46 4004.56 v _235454_/Y (XNOR2x2_ASAP7_75t_R)
+  47.26 4051.82 v _235455_/Y (XNOR2x2_ASAP7_75t_R)
+  60.22 4112.05 ^ _235683_/Y (XOR2x2_ASAP7_75t_R)
+  37.05 4149.10 ^ _235723_/Y (XNOR2x1_ASAP7_75t_R)
+  74.72 4223.82 v _235724_/Y (XNOR2x2_ASAP7_75t_R)
+  44.87 4268.69 v _235794_/Y (XNOR2x1_ASAP7_75t_R)
+  49.90 4318.59 v _235810_/Y (XOR2x2_ASAP7_75t_R)
+  54.85 4373.44 ^ _235833_/Y (XOR2x2_ASAP7_75t_R)
+  66.44 4439.88 v _236014_/Y (XNOR2x2_ASAP7_75t_R)
+  58.84 4498.72 ^ _236015_/Y (XOR2x2_ASAP7_75t_R)
+  65.08 4563.80 v _236035_/Y (XNOR2x2_ASAP7_75t_R)
+  35.60 4599.40 v place35785/Y (BUFx3_ASAP7_75t_R)
+  43.70 4643.10 v _236322_/Y (XOR2x2_ASAP7_75t_R)
+  75.96 4719.06 ^ _236323_/Y (XOR2x2_ASAP7_75t_R)
+  45.00 4764.06 ^ _236331_/Y (XNOR2x1_ASAP7_75t_R)
+  35.21 4799.27 ^ _236334_/Y (OA21x2_ASAP7_75t_R)
+   0.09 4799.36 ^ g_on.g_die[0].u_store.g_on.mcrc[26]$_DFFE_PN1P_/D (DFFASRHQNx1_ASAP7_75t_R)
+        4799.36   data arrival time
+
+ 833.00  833.00   clock mem_clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ clk_mem (in)
+  40.45  873.45 ^ wire60599/Y (BUFx12f_ASAP7_75t_R)
+  58.71  932.16 ^ clkbuf_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  38.39  970.55 ^ clkbuf_1_1_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  38.11 1008.66 ^ clkbuf_2_2_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  40.07 1048.73 ^ clkbuf_3_4_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  40.61 1089.34 ^ clkbuf_4_9_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  42.19 1131.53 ^ clkbuf_6_37_0_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  37.50 1169.02 ^ clkbuf_7_74__f_clk_mem/Y (BUFx24_ASAP7_75t_R)
+  39.18 1208.20 ^ clkbuf_leaf_807_clk_mem/Y (BUFx24_ASAP7_75t_R)
+   2.00 1210.20 ^ g_on.g_die[0].u_store.g_on.mcrc[26]$_DFFE_PN1P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1150.20   clock uncertainty
+   3.52 1153.72   clock reconvergence pessimism
+ -26.39 1127.33   library setup time
+        1127.33   data required time
+---------------------------------------------------------
+        1127.33   data required time
+        -4799.36   data arrival time
+---------------------------------------------------------
+        -3672.04   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 18167
+OT_WS_REG_D -3672.038086
+OT_WS_OUT -2078.278076
+OT_WS_R2R -3585.808594
+OT_WS_I2R -401.267914

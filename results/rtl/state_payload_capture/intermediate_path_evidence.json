@@ -1,0 +1,17 @@
+{
+  "scope": "Intermediate clock-tree repair evidence motivating free-entry payload capture; not final routed timing",
+  "source_snapshot": "results/rtl/state_payload_capture/before.sv",
+  "snapshot_sha256": "f5640be1d6bef809fb31f15c45bde568efe11b4fe2a76e4ea8e7b793c8a581df",
+  "log_path": "build/physical_state_sequential_modulo_1ns/orfs/logs/asap7/opentallas_ot_a3_state_controller_asap7/base/4_1_cts.log",
+  "log_sha256": "164a3ac75e3af483307cdcb803474050128a8c3677a731293463b9ae52f6e27c",
+  "observed_lines": [
+    "    1992+ |       0 |      81 |       13 |      0 |    22 |    +0.1% | -838.977 | -1083652.8 | -1308680.1 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    1993+ |       0 |      81 |       13 |      0 |    22 |    +0.1% | -838.977 | -1083652.8 | -1308680.1 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    1995+ |       0 |      81 |       13 |      0 |    23 |    +0.1% | -838.977 | -1083652.8 | -1308679.8 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    1996+ |       0 |      81 |       13 |      0 |    23 |    +0.1% | -838.977 | -1083652.8 | -1308679.8 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    1997+ |       0 |      81 |       13 |      0 |    23 |    +0.1% | -838.977 | -1083652.8 | -1308679.8 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    1999+ |       0 |      81 |       13 |      0 |    24 |    +0.1% | -838.977 | -1083652.8 | -1308679.5 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    2000+ |       0 |      81 |       13 |      0 |    24 |    +0.1% | -838.977 | -1083652.8 | -1308679.5 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D",
+    "    final |       0 |      81 |       13 |      0 |    24 |    +0.1% | -838.977 | -1083652.8 | -1308679.5 |   1895 | pending_rows\\[13\\]\\[29\\]$_DFFE_PN0P_/D"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "all_common_record_fields_equal": true,
+  "callback_contract_sha256": "ef2860cfcfee51e7931d616506564c0eed4b7a3e2877d8be9a72a8f31e9cd950",
+  "callbacks": 1737,
+  "focused_tests": {
+    "passed": 10,
+    "scope": "software protocol including eight synthetic full-graph sessions; not DUT execution",
+    "wall_seconds": 24.98
+  },
+  "full_generated_record_sha256": "2262e10287354f241eb7467cbd1397af24549faeee03e17dde48febc11461701",
+  "historical_counterexample": "rmw_retirement_counterexample.json",
+  "original_counterexample_now_rejected": "instruction still owns persistent RMW lock",
+  "qualification": {
+    "hardware_admitted": false,
+    "unresolved": [
+      "actual WR visibility, producer epoch and drain interfaces",
+      "real source-engine callbacks and RF/shared-memory issue",
+      "contextual SS/FF closure and physical resource fit"
+    ],
+    "whole_token_cycles": null
+  },
+  "record_commit": "0d3b55536",
+  "schema": "parent_common36_r2_independent_review",
+  "source_commit": "7f4e0f05ca08216eda8616437b7cafcb210d0ccf"
+}

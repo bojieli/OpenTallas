@@ -1,0 +1,23 @@
+{
+  "artifacts": {
+    "results/rtl/qwen_rom_model_propagation_20261002/live_source_join.json": "67303a927292a6c29e283144d5edee0c1d87540e8c18de16a13662c90396acd0",
+    "results/rtl/qwen_rom_model_propagation_20261002/price_join_fail.json": "bf383cd9200e921ddb71ace6260876bb70372b51280ed9cca59135e0e9acc8bf",
+    "results/rtl/qwen_rom_model_propagation_20261002/tests.log": "70bd93f29a65727e5cc0991aac37bb59b433f6d667824853361ad51e262a38ec",
+    "tests/test_qwen_rom_model_propagation_gate.py": "91a890b0d83513516aeb6f088e536b315642580ab8036a3eaafa15665bb1a9e5",
+    "tools/qwen_rom_model_propagation_gate.py": "bee9468f79b036bedec8c4b31ff2d01989a73dedfadc0b2fd33f96cb828856a2"
+  },
+  "command": "python3 -m pytest -q tests/test_qwen_rom_model_propagation_gate.py tests/test_qwen_rom_integration_preflight.py tests/test_qwen_rom_physical_join.py tests/test_qwen_rom_source_gate.py",
+  "expected_gate_returncode": 1,
+  "fresh_gate": "python3 tools/qwen_rom_model_propagation_gate.py --result /tmp/qwen-rom-physical-price-join-fresh.json",
+  "gate_meaning": "Mandatory model-price join FAIL while MUL6 is priced as +54. Tests PASS because the source-bound counterexample is reproducible. No published rate or implementation adoption.",
+  "parent_intake_commit": "bb845172da8a3b290041b475fc02476de0e4afff",
+  "parent_model_price_ast_matches": {
+    "QWEN_KV_PREP_CYCLES_TOKEN": true,
+    "QWEN_SS": true,
+    "QWEN_W12_TP4_ME_EXTRA_SS": true
+  },
+  "parent_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "physical_build_allowed": false,
+  "status": "pass",
+  "tests": 44
+}

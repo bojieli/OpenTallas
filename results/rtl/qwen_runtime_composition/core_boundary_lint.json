@@ -1,0 +1,434 @@
+{
+  "status": "generated_lint_pass",
+  "ports": [
+    {
+      "name": "ext_me_go",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_go",
+      "matvec_port": "go"
+    },
+    {
+      "name": "ext_me_ready",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "me_ready",
+      "matvec_port": "ready"
+    },
+    {
+      "name": "ext_me_idle",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "me_idle",
+      "matvec_port": "idle"
+    },
+    {
+      "name": "ext_me_i_nout",
+      "direction": "output",
+      "width_expression": "[NW-1:0]",
+      "original_core_net": "me_nout",
+      "matvec_port": "i_nout"
+    },
+    {
+      "name": "ext_me_i_tiles",
+      "direction": "output",
+      "width_expression": "[NW-1:0]",
+      "original_core_net": "me_tiles",
+      "matvec_port": "i_tiles"
+    },
+    {
+      "name": "ext_me_i_k",
+      "direction": "output",
+      "width_expression": "[NW-1:0]",
+      "original_core_net": "me_k",
+      "matvec_port": "i_k"
+    },
+    {
+      "name": "ext_me_i_wsrc",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_wsrc",
+      "matvec_port": "i_wsrc"
+    },
+    {
+      "name": "ext_me_i_wbase",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_wbase",
+      "matvec_port": "i_wbase"
+    },
+    {
+      "name": "ext_me_i_ts",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_ts",
+      "matvec_port": "i_ts"
+    },
+    {
+      "name": "ext_me_i_ks",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_ks",
+      "matvec_port": "i_ks"
+    },
+    {
+      "name": "ext_me_i_js",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_js",
+      "matvec_port": "i_js"
+    },
+    {
+      "name": "ext_me_i_xbase",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_xbase",
+      "matvec_port": "i_xbase"
+    },
+    {
+      "name": "ext_me_i_xks",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_xks",
+      "matvec_port": "i_xks"
+    },
+    {
+      "name": "ext_me_i_xjs",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_xjs",
+      "matvec_port": "i_xjs"
+    },
+    {
+      "name": "ext_me_i_xcs",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_xcs",
+      "matvec_port": "i_xcs"
+    },
+    {
+      "name": "ext_me_i_jsh",
+      "direction": "output",
+      "width_expression": "[2:0]",
+      "original_core_net": "me_jsh",
+      "matvec_port": "i_jsh"
+    },
+    {
+      "name": "ext_me_i_split",
+      "direction": "output",
+      "width_expression": "[3:0]",
+      "original_core_net": "me_split",
+      "matvec_port": "i_split"
+    },
+    {
+      "name": "ext_me_i_wcs",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_wcs",
+      "matvec_port": "i_wcs"
+    },
+    {
+      "name": "ext_me_i_round",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_round",
+      "matvec_port": "i_round"
+    },
+    {
+      "name": "ext_me_i_obase",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_obase",
+      "matvec_port": "i_obase"
+    },
+    {
+      "name": "ext_me_i_ots",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_ots",
+      "matvec_port": "i_ots"
+    },
+    {
+      "name": "ext_me_i_ojs",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_ojs",
+      "matvec_port": "i_ojs"
+    },
+    {
+      "name": "ext_me_i_mmode",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_mmode",
+      "matvec_port": "i_mmode"
+    },
+    {
+      "name": "ext_me_i_oen",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_oen",
+      "matvec_port": "i_oen"
+    },
+    {
+      "name": "ext_me_i_amax",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_amax",
+      "matvec_port": "i_amax"
+    },
+    {
+      "name": "ext_me_i_rmax",
+      "direction": "output",
+      "width_expression": "1",
+      "original_core_net": "me_rmax",
+      "matvec_port": "i_rmax"
+    },
+    {
+      "name": "ext_me_i_mbase",
+      "direction": "output",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_mbase",
+      "matvec_port": "i_mbase"
+    },
+    {
+      "name": "ext_me_wrom_re",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "me_wrom_re",
+      "matvec_port": "wrom_re"
+    },
+    {
+      "name": "ext_me_wrom_addr",
+      "direction": "input",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "me_wrom_addr",
+      "matvec_port": "wrom_addr"
+    },
+    {
+      "name": "ext_me_wrom_q",
+      "direction": "output",
+      "width_expression": "[G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0]",
+      "original_core_net": "me_wrom_q",
+      "matvec_port": "wrom_q"
+    },
+    {
+      "name": "ext_me_scale_re",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "scale_re",
+      "matvec_port": "scale_re"
+    },
+    {
+      "name": "ext_me_scale_gre",
+      "direction": "input",
+      "width_expression": "[G-1:0]",
+      "original_core_net": "scale_gre",
+      "matvec_port": "scale_gre"
+    },
+    {
+      "name": "ext_me_scale_addr",
+      "direction": "input",
+      "width_expression": "[G*AW-1:0]",
+      "original_core_net": "scale_addr",
+      "matvec_port": "scale_addr"
+    },
+    {
+      "name": "ext_me_scale_q",
+      "direction": "output",
+      "width_expression": "[G*W*16-1:0]",
+      "original_core_net": "scale_q",
+      "matvec_port": "scale_q"
+    },
+    {
+      "name": "ext_me_kv_re",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "kv_re",
+      "matvec_port": "kv_re"
+    },
+    {
+      "name": "ext_me_kv_addr",
+      "direction": "input",
+      "width_expression": "[G*AW-1:0]",
+      "original_core_net": "kv_raddr",
+      "matvec_port": "kv_addr"
+    },
+    {
+      "name": "ext_me_kv_q",
+      "direction": "output",
+      "width_expression": "[G*W*32-1:0]",
+      "original_core_net": "kv_q",
+      "matvec_port": "kv_q"
+    },
+    {
+      "name": "ext_me_x_re",
+      "direction": "input",
+      "width_expression": "[G-1:0]",
+      "original_core_net": "vx_re",
+      "matvec_port": "x_re"
+    },
+    {
+      "name": "ext_me_x_addr",
+      "direction": "input",
+      "width_expression": "[G*AW-1:0]",
+      "original_core_net": "vx_addr",
+      "matvec_port": "x_addr"
+    },
+    {
+      "name": "ext_me_x_q",
+      "direction": "output",
+      "width_expression": "[G*32-1:0]",
+      "original_core_net": "vx_q",
+      "matvec_port": "x_q"
+    },
+    {
+      "name": "ext_me_ov",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "me_ov",
+      "matvec_port": "ov"
+    },
+    {
+      "name": "ext_me_o_we",
+      "direction": "input",
+      "width_expression": "[G-1:0]",
+      "original_core_net": "vw_me_we",
+      "matvec_port": "o_we"
+    },
+    {
+      "name": "ext_me_o_addr",
+      "direction": "input",
+      "width_expression": "[G*AW-1:0]",
+      "original_core_net": "vw_me_addr",
+      "matvec_port": "o_addr"
+    },
+    {
+      "name": "ext_me_o_mask",
+      "direction": "input",
+      "width_expression": "[G*W-1:0]",
+      "original_core_net": "vw_me_mask",
+      "matvec_port": "o_mask"
+    },
+    {
+      "name": "ext_me_o_data",
+      "direction": "input",
+      "width_expression": "[G*W*32-1:0]",
+      "original_core_net": "vw_me_data",
+      "matvec_port": "o_data"
+    },
+    {
+      "name": "ext_me_am_idx",
+      "direction": "input",
+      "width_expression": "[NW-1:0]",
+      "original_core_net": "am_idx",
+      "matvec_port": "am_idx"
+    },
+    {
+      "name": "ext_me_am_val",
+      "direction": "input",
+      "width_expression": "[31:0]",
+      "original_core_net": "am_val",
+      "matvec_port": "am_val"
+    },
+    {
+      "name": "ext_me_am_any",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "am_any",
+      "matvec_port": "am_any"
+    },
+    {
+      "name": "ext_me_mx_we",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "vw_mx_we",
+      "matvec_port": "mx_we"
+    },
+    {
+      "name": "ext_me_mx_addr",
+      "direction": "input",
+      "width_expression": "[AW-1:0]",
+      "original_core_net": "vw_mx_addr",
+      "matvec_port": "mx_addr"
+    },
+    {
+      "name": "ext_me_mx_mask",
+      "direction": "input",
+      "width_expression": "[W-1:0]",
+      "original_core_net": "vw_mx_mask",
+      "matvec_port": "mx_mask"
+    },
+    {
+      "name": "ext_me_mx_data",
+      "direction": "input",
+      "width_expression": "[W*32-1:0]",
+      "original_core_net": "vw_mx_data",
+      "matvec_port": "mx_data"
+    },
+    {
+      "name": "ext_me_progress",
+      "direction": "input",
+      "width_expression": "[15:0]",
+      "original_core_net": "me_progress",
+      "matvec_port": "progress"
+    },
+    {
+      "name": "ext_me_fault",
+      "direction": "input",
+      "width_expression": "1",
+      "original_core_net": "me_fault",
+      "matvec_port": "fault"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "ba360f77517f0be29b07ca281bcfac10ad123aa0413407ac10dac706fb3edb0c",
+    "rtl/hdc/ot_hdc_matvec.sv": "af6e2be99cb1cfa7108e6ba2954d3f18723cf700b846bdd88c55ae5755cc5601"
+  },
+  "semantics": "u_me removed only from generated simulation controller; each original net exported without registers or queues; host drives all clocks simultaneously",
+  "lint_returncode": 0,
+  "lint_command": [
+    "verilator",
+    "--lint-only",
+    "-Wno-fatal",
+    "-Wno-TIMESCALEMOD",
+    "--top-module",
+    "replay_core_control",
+    "-GG=4",
+    "-GNW=18",
+    "-GINT8_WEIGHT=1",
+    "-GINT8_SCALE_WCS_BASE=1",
+    "-I/tmp/qwen-fullshape-isa-rtl/rtl/hdc",
+    "/tmp/qwen-kernel-replay/core-boundary/replay_core_control.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_delay.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_fpu.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_fastfp.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_sfu.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_sfu_q.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_reduce.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_reduce_q.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_matvec.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_stream.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_vstream_lane.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_vreduce.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_vstream.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_core.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_dyn_ttiles.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_qwen_int8_arith.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_pkg_link.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_pkg_ctrl.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_oneshot_allreduce.sv",
+    "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_tp_seq.sv"
+  ],
+  "landing_20260929": {
+    "integration_branch": "claude/land-frozen-20260929",
+    "action": "labelled_pins_moved",
+    "changed_pins": {
+      "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f"
+    },
+    "reason": "claude/w6-qwen-hbm added opt-in ME_STALL/ME_IDLE_GATE parameters and two ports (me_mem_ok in, me_clk_en out) to ot_hdc_core_vector_weight; defaults tie the engine clock to clk. Not re-linted."
+  }
+}

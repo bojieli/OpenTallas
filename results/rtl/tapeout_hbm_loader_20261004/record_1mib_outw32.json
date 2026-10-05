@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.hbm_accel.loader_gate.v1",
+ "date": "2026-10-04",
+ "dut": "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv (ENABLE=1, BURST 16, MAXOUT 8, OUTW 32, VOUT 16)",
+ "memory": "ot_gpu_memsys NC 1, NS 2, NPC 2, MEM_WORDS 2^21 per partition (128 MiB die), HBM model rtl/hdc/kv/ot_hdc_hbm_model.sv, no load-time image",
+ "image": {
+  "partitions": [
+   "/srv/opentallas-scratch/claude/hbm-system-rtl/sysv_t8/case/die0_p0.hex",
+   "/srv/opentallas-scratch/claude/hbm-system-rtl/sysv_t8/case/die0_p1.hex"
+  ],
+  "sha256": [
+   "0e4117b6c16d80905b4713fd4c99634939d974c1486e22120f92fa4f2cc97777",
+   "a4ca9754f4033fc65e3c72847238d6fa34765ede770a717b258acc7b0382b35a"
+  ],
+  "source": "DeepSeek-V4.1 HBM system run (results/rtl/hbm_system_rtl_20261003/STATUS.md) die image"
+ },
+ "host": {
+  "clock_ns": 1.0,
+  "read_latency_cycles": 400,
+  "beat_bytes": 32
+ },
+ "transfers": [
+  {
+   "name": "weights_densest",
+   "host_sector": 0,
+   "die_addr": 1048576,
+   "bytes": 1048576,
+   "crc": "e9dfe0de",
+   "verify": 1,
+   "nonzero_sectors": 32768
+  },
+  {
+   "name": "second_region",
+   "host_sector": 32768,
+   "die_addr": 2097152,
+   "bytes": 1048576,
+   "crc": "4820503a",
+   "verify": 0,
+   "nonzero_sectors": 32768
+  }
+ ],
+ "crc4k": "c0b4bceb",
+ "results": [
+  {
+   "name": "misaligned",
+   "status": 3,
+   "crc_got": "ffffffff",
+   "vcrc_got": "00000000",
+   "crc_exp": "00000000",
+   "sectors": 0,
+   "host_cycles": 0,
+   "bytes": 31,
+   "verify": 0,
+   "GBps": null
+  },
+  {
+   "name": "T0",
+   "status": 0,
+   "crc_got": "e9dfe0de",
+   "vcrc_got": "e9dfe0de",
+   "crc_exp": "e9dfe0de",
+   "sectors": 32768,
+   "host_cycles": 209985,
+   "bytes": 1048576,
+   "verify": 1,
+   "GBps": 4.994
+  },
+  {
+   "name": "T1",
+   "status": 0,
+   "crc_got": "4820503a",
+   "vcrc_got": "00000000",
+   "crc_exp": "4820503a",
+   "sectors": 32768,
+   "host_cycles": 107134,
+   "bytes": 1048576,
+   "verify": 0,
+   "GBps": 9.788
+  },
+  {
+   "name": "clean_4k",
+   "status": 0,
+   "crc_got": "c0b4bceb",
+   "vcrc_got": "c0b4bceb",
+   "crc_exp": "c0b4bceb",
+   "sectors": 128,
+   "host_cycles": 1266,
+   "bytes": 4096,
+   "verify": 1,
+   "GBps": 3.235
+  },
+  {
+   "name": "corrupt_beat",
+   "status": 1,
+   "crc_got": "ed483b43",
+   "vcrc_got": "00000000",
+   "crc_exp": "c0b4bceb",
+   "sectors": 128,
+   "host_cycles": 544,
+   "bytes": 4096,
+   "verify": 0,
+   "GBps": 7.529
+  },
+  {
+   "name": "axi_slverr",
+   "status": 4,
+   "crc_got": "c0b4bceb",
+   "vcrc_got": "00000000",
+   "crc_exp": "c0b4bceb",
+   "sectors": 128,
+   "host_cycles": 544,
+   "bytes": 4096,
+   "verify": 0,
+   "GBps": 7.529
+  }
+ ],
+ "compare": {
+  "words": 4194304,
+  "loaded": 65536,
+  "nonzero_loaded": 65536,
+  "mismatches": 0,
+  "memsys_fault": 0
+ },
+ "verdict": "PASS",
+ "simulator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+ "build_seconds": 16.3,
+ "run_seconds": 8.2,
+ "sources": {
+  "rtl/test/hbm_accel/tb_hbm_accel_loader.sv": "6fc449a25a93052bcf57a8d3ae4e5ab82ed95194141f91850cec0a29015b2f9a",
+  "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv": "c4dd011c5dc2eb9de6d76ea5be5a353c59abd06e47221741ce3fa176f52a6e58",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+  "rtl/gpu_sys/ot_gpu_xbar.sv": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+  "rtl/gpu_sys/ot_gpu_l2_slice.sv": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+  "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+  "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+  "tools/hbm_accel_loader_gate.py": "a9ea8e31d4a64864d2d153d59dbe76bcffb5ba1714065f5f10a95e9efcf574ab"
+ },
+ "seconds": 28.9
+}

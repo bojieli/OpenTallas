@@ -1,0 +1,28 @@
+{
+  "accepted_packed_beats": 64,
+  "beat_backpressure_cycles": 3,
+  "hbm_model": "one-cycle sector response, always-ready selected stack, no pooled-index/RoPE/CKV contention",
+  "hbm_sector_requests": 4352,
+  "jobs": 2,
+  "refill_cycles_per_job": [
+    4608,
+    4608
+  ],
+  "rows_per_job": 128,
+  "schema": "v41x_window_attn_source/1",
+  "scope": "WINDOW-only 128-row packed FP8 HBM refill, generation-tagged lifecycle stage/issue/drain, and two 32-beat replays with backpressure; ideal one-cycle single-client HBM response, no selected CKV, no full token or routed rate",
+  "sources": {
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/test/tb_chip_v41x_window_attn_source.sv": "443ed5c1fb54a2a98ea0d7497d3ef6bd8b9e9471585ad9d9d248ce9ca97dace4",
+    "tools/rtl_v41x_window_attn_source_gate.py": "569e33239c2f554fd0cca6c286b1f85f48a0a2fb9fd288f74ba0668a7b808924"
+  },
+  "stale_cross_user_fault": true,
+  "status": "pass",
+  "window_start": 126
+}

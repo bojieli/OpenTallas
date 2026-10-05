@@ -1,0 +1,10 @@
+test_aux_nested_reference_is_not_silently_dead (test_h4_c0_ds_rf_lifetime_audit.LifetimeTests) ... ok
+test_last_consumer_current_PC_still_live_during_publication (test_h4_c0_ds_rf_lifetime_audit.LifetimeTests) ... ok
+test_last_consumer_prior_PC_releases_before_reuse (test_h4_c0_ds_rf_lifetime_audit.LifetimeTests) ... ok
+test_source_output_declaration_is_not_a_hidden_reader (test_h4_c0_ds_rf_lifetime_audit.LifetimeTests) ... ok
+test_zero_reader_output_is_retained_by_actual_driver_rule (test_h4_c0_ds_rf_lifetime_audit.LifetimeTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK

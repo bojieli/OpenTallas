@@ -1,0 +1,35 @@
+{
+  "Qwen_full_and_fixture_unchanged": true,
+  "actual_parent_once_ABI_accepted": true,
+  "all_2213_PC_intervals_inspected": true,
+  "all_previous_rank_ledger_fields_byte_data_identical": true,
+  "artifacts": {
+    "all_PC_native_component_successor.json.gz": {
+      "bytes": 291277,
+      "sha256": "a81785c3557c42da8f198baeb0a986ddc5669a9bd2a037e86129aabf7706840b"
+    },
+    "initial_LOAD_boundary_reservations.json.gz": {
+      "bytes": 1190646,
+      "sha256": "e4e04bf6a9d7d19e06b7c5a93cfa6e42e91485a5358b93b1f45483dca12ed401"
+    },
+    "manifest.json": {
+      "bytes": 2973,
+      "sha256": "56304241f6d1b3e1fe3beba911d5a4dfecabaa3822bfc873db27b1e36333a864"
+    },
+    "once_reprice_receipt.json": {
+      "bytes": 9031,
+      "sha256": "835d77172c8120aee14fc04090569d4dc21c514c0725eaca1db0f9a1abed9c15"
+    },
+    "summary.json": {
+      "bytes": 1136,
+      "sha256": "970c4b68a88c879ae780d3c842c9225109fdc19b8323ce83ce7050a097e4a279"
+    }
+  },
+  "boundary_input_bytes": 998768640,
+  "changed_PC_duration_sum": -655360,
+  "hardware_qualified": false,
+  "provisional_boundary_phase_total_software_ticks": 169712640,
+  "remaining_unknown_shared_calls": 189476,
+  "schema": "H4_R33_ONCE_REPRICE_INDEPENDENT_INSPECTION_V1",
+  "source_pins_verified": 9
+}

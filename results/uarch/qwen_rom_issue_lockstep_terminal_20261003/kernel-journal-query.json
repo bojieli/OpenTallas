@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "journalctl",
+    "-k",
+    "--since",
+    "2026-10-03 04:30:00",
+    "--until",
+    "2026-10-03 04:40:00",
+    "--no-pager"
+  ],
+  "rc": 0,
+  "selection": "exact PID1998275 +invocation/globalOOM lines; dmesg was not used",
+  "stderr": ""
+}

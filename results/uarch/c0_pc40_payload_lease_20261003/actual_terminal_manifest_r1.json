@@ -1,0 +1,319 @@
+{
+  "actual_gate_owner": {
+    "lease": "value:Qwen.39.L0.d0.gu_post.49",
+    "logical_source_retire_PC": 40,
+    "mirror_word_sha256": "46e599ee3d76c224d688966baecfeee2f55400b80398cd71c3b918217ad0b8e0",
+    "published": true,
+    "source_key": [
+      "RF",
+      0,
+      0,
+      38
+    ],
+    "version": "Qwen.39.L0.d0.gu_post.49"
+  },
+  "actual_native_frame_capture_before_oracle": true,
+  "actual_producer_posthash_matches": 40,
+  "actual_up_NoC_caller_delivery_observed": false,
+  "artifact_pins": [
+    {
+      "bytes": 361,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/collection_verification.json",
+      "sha256": "70ebd43da39a4bdddb8947f61a755912362e087930c1689b7f8deab92b525dae"
+    },
+    {
+      "bytes": 3481,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/collector_source.py",
+      "sha256": "3c792cfbc5966ffecf0c4b16b1f32f38638314cfc2a8c5782482cb726523e1fd"
+    },
+    {
+      "bytes": 110,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/fleet_lease_released.json",
+      "sha256": "f051662b980e3bf8cc6f4398f916f6ba1b5d997e4c7474014d577e58d177ab34"
+    },
+    {
+      "bytes": 7583,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/journal.txt",
+      "sha256": "de0d067ee1cc32aa39cfb6192f81607dab20044ee6a3fe4f9092699a180e7e9f"
+    },
+    {
+      "bytes": 50795,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/offline_replay_cold_r1.json",
+      "sha256": "b7f5113e54dd4ffe61e59ba3ae954fcbfc845ec544f21598ae6d46753f400128"
+    },
+    {
+      "bytes": 50795,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/offline_replay_r1.json",
+      "sha256": "b7f5113e54dd4ffe61e59ba3ae954fcbfc845ec544f21598ae6d46753f400128"
+    },
+    {
+      "bytes": 512,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/FMAX.bin",
+      "sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e"
+    },
+    {
+      "bytes": 512,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/constant.bin",
+      "sha256": "cdd638cefd9b937f1a9f0db589f9fa21174d90e91defa7011cce26b644762a52"
+    },
+    {
+      "bytes": 512,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/gate.bin",
+      "sha256": "46e599ee3d76c224d688966baecfeee2f55400b80398cd71c3b918217ad0b8e0"
+    },
+    {
+      "bytes": 1969,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/native_capture.json",
+      "sha256": "2758204266ef3f9cb5471108b0d3e4a5fb93ea91f73bb41c2cf30ad95543ca83"
+    },
+    {
+      "bytes": 512,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/negative.bin",
+      "sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e"
+    },
+    {
+      "bytes": 8216,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/producer_progress.jsonl",
+      "sha256": "ff626451060e003740ba82ac4385232f039018382f03e1cb8f76501f9b455fbf"
+    },
+    {
+      "bytes": 2376,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/terminal.json",
+      "sha256": "e0a30f6c4f49032e02f124d3096abb92488be5d5402735d0dc32871c113c3c45"
+    },
+    {
+      "bytes": 1444,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/raw_artifact_pins.json",
+      "sha256": "6b6f34a44e82fbadecb01ffa0857aed56af909335ca73b08a4c91a74b4923103"
+    },
+    {
+      "bytes": 200,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/source_identity.txt",
+      "sha256": "08e85a3132005136fed1705270235cbf25fcc770342bc589c4da568059c2d417"
+    },
+    {
+      "bytes": 86,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/unit_terminal.txt",
+      "sha256": "2ff3298930900464d910c1438a37a4f947e2b67ce2149a821fc35fdde344fabe"
+    }
+  ],
+  "checkpoint_compare_scope": "independent checkpoint first128 gate rows, original native residual input, exact BF16 chunk tree/scale/rstd; oracle begins only after actual native frame files and capture record",
+  "checkpoint_provenance": {
+    "actual_hardware_memory_provider": false,
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "downloads": false,
+    "images_written": false,
+    "max_source_rows_per_read": 128,
+    "reads": [
+      {
+        "bytes": 8192,
+        "row_start": null,
+        "row_stop": null,
+        "sha256": "3df17c58e1832b24111c91cb19088b06f816de21702ce58acb514c91568cde5d",
+        "shape": [
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors",
+        "tensor": "model.layers.0.post_attention_layernorm.weight"
+      },
+      {
+        "bytes": 1048576,
+        "row_start": 0,
+        "row_stop": 128,
+        "sha256": "80545bc5076479cb691896a13041b7d5f04f1b5bb1505efa3288a797ed0bcbc9",
+        "shape": [
+          12288,
+          4096
+        ],
+        "shard": "model-00001-of-00005.safetensors",
+        "tensor": "model.layers.0.mlp.gate_proj.weight"
+      }
+    ],
+    "verified_shards": {
+      "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f"
+    }
+  },
+  "cold_replay_byte_exact": true,
+  "cold_replay_copies_compared": 3,
+  "elapsed_s": 4850.507343125995,
+  "fleet_lease_released": true,
+  "frame_comparisons": {
+    "FMAX": {
+      "actual_nonfinite": 0,
+      "bit_mismatches": 0,
+      "expected_sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "words": 128
+    },
+    "constant": {
+      "actual_nonfinite": 0,
+      "bit_mismatches": 0,
+      "expected_sha256": "cdd638cefd9b937f1a9f0db589f9fa21174d90e91defa7011cce26b644762a52",
+      "words": 128
+    },
+    "gate": {
+      "actual_nonfinite": 0,
+      "bit_mismatches": 0,
+      "expected_sha256": "46e599ee3d76c224d688966baecfeee2f55400b80398cd71c3b918217ad0b8e0",
+      "words": 128
+    },
+    "negative": {
+      "actual_nonfinite": 0,
+      "bit_mismatches": 0,
+      "expected_sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e",
+      "words": 128
+    }
+  },
+  "hardware_admitted": false,
+  "historical_interface_record_preserved": "results/uarch/c0_pc40_payload_lease_20261003/integration_handoff_r1.json",
+  "implementation_commit": "2896f09b335fbc486e012bf77f1e17619d66afd8",
+  "installed_RF_handshake_observed": false,
+  "installed_workspace_call": false,
+  "last_producer_PC": 39,
+  "maxrss_bytes": 1127268352,
+  "native_leaf": {
+    "PC": 40,
+    "arithmetic_dtype": "F32",
+    "frame_bytes": 512,
+    "opcode": "FMAX",
+    "step": 0,
+    "template": "exp",
+    "words": 128
+  },
+  "numerical_prefix_rerun": false,
+  "offline_replay_scope": "saved gate/negative/constant/FMAX bytes, independent sign-bit and finite FMAX checks plus planned RF lease events; no checkpoint or prefix rerun",
+  "original_executor_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "process_result": {
+    "ExecMainStatus": 0,
+    "MainPID": 0,
+    "Result": "success",
+    "actual_terminal_file_VERDICT": "PASS",
+    "unit": "ampere-c0-pc40-payload-20261003-r1.service"
+  },
+  "remaining_owner_integration": [
+    "actual gateRF38 delivery into native operand preparation",
+    "actual SM24/RF32 up NoC caller with finite port/CDC/calendar placement",
+    "installed commonACK owner binding for prospective workspace17/18/19",
+    "exp.step1 FMIN consumer and validated reverse before workspace retirement",
+    "component SS/FF timing and physical qualification"
+  ],
+  "runner_sha256": "05e64c4cca236b42135dd3d3bbd63955e0d34ce0921dc35058de8448dd190f1d",
+  "schema": "C0_PC40_FROZEN_ACTUAL_PAYLOAD_TERMINAL_R1",
+  "source_gate_RF38_released": false,
+  "source_input_token": 9707,
+  "source_pins": [
+    {
+      "bytes": 363,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/RF_port_source_r1.json",
+      "sha256": "ca8b7835f2f2656b5f1d026445e272b3bcdaa3c84b3132e30e60ab529e77adcc"
+    },
+    {
+      "bytes": 15120,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/historical_prefix_hashes_r1.json",
+      "sha256": "67fe2f9069f1f7f14e0ce1d413091319f6662f0d5d8af5e9fc1437ce935fb81c"
+    },
+    {
+      "bytes": 2920,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/checkpoint_source.json",
+      "sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607"
+    },
+    {
+      "bytes": 86695,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_bounded_native.py",
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    },
+    {
+      "bytes": 76407,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_complete_native.py",
+      "sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76"
+    },
+    {
+      "bytes": 2365,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "bytes": 66983,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/qwen3_deployment_quality.py",
+      "sha256": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715"
+    },
+    {
+      "bytes": 20599,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/qwen_hbm_complete_executor.py",
+      "sha256": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203"
+    },
+    {
+      "bytes": 17139,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/inputs/qwen_trained_byte_provider.py",
+      "sha256": "f507b8d1093ca496c1c0aceb83d6f8e2b10824a097cb31339aa1da06698b1250"
+    },
+    {
+      "bytes": 1987,
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/numeric_input_manifest_r1.json",
+      "sha256": "82461160e03285bebca32cd314d1bf1c1f71ca8231b3f60727f5bfa8b3d897e3"
+    },
+    {
+      "bytes": 2341,
+      "path": "results/uarch/c0_source_operand_views_20261003/input_manifest.json",
+      "sha256": "2e9cc881491a441f65f14bd99419f1ada7e6334fa6234efcec59897386cfa833"
+    },
+    {
+      "bytes": 3783521,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/Qwen_tiled.json.gz",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    },
+    {
+      "bytes": 24416,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/V1_source.py",
+      "sha256": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884"
+    },
+    {
+      "bytes": 24578,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/owner_guard.py",
+      "sha256": "38fd7d803d856d7cd29c1e43c95254754cf907bf7d84e532e2e44f4f8bc48b22"
+    },
+    {
+      "bytes": 18431,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/parent_join.py",
+      "sha256": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a"
+    },
+    {
+      "bytes": 27717,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/popper_emitter.py",
+      "sha256": "c2c17a5e6db2994e9e0a6c129970ea5c34fe8da7cdece5af2894734c1c04eb09"
+    },
+    {
+      "bytes": 76407,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/qwen_arithmetic.py",
+      "sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76"
+    },
+    {
+      "bytes": 86695,
+      "path": "results/uarch/c0_source_operand_views_20261003/inputs/qwen_provider.py",
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    },
+    {
+      "bytes": 11319,
+      "path": "tools/h4_c0_pc40_payload_r1.py",
+      "sha256": "05e64c4cca236b42135dd3d3bbd63955e0d34ce0921dc35058de8448dd190f1d"
+    },
+    {
+      "bytes": 4227,
+      "path": "tools/h4_c0_pc40_payload_replay_r1.py",
+      "sha256": "04bb39cef5ec8a1a9e96bbc6e808ffce2299804f21459d2bdb6f23e8edb86089"
+    },
+    {
+      "bytes": 14933,
+      "path": "tools/h4_c0_pc40_workspace_lease_r1.py",
+      "sha256": "d3e7614737f4d315409593e02673578239b8a461b1e655ae1b143fc7e3b1fbb9"
+    },
+    {
+      "bytes": 29643,
+      "path": "tools/h4_c0_source_operand_views_r1.py",
+      "sha256": "e342a4ffdc2cdd88653f34296edc8790e7ddec423bcb8e4a4425626476c4357d"
+    }
+  ],
+  "source_position": 0,
+  "verdict": "PASS_ACTUAL_SOURCE_PAYLOAD_AND_CHECKPOINT_COMPARE",
+  "whole_token_completed": false,
+  "workspace_owner_retained": true
+}

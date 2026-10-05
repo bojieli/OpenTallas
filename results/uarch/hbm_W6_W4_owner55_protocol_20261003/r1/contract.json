@@ -1,0 +1,143 @@
+{
+  "concrete_gaps": [
+    {
+      "gap": "Physical tuple handoff",
+      "kind": "RTL",
+      "needed": "Replace bareACK/locally reconstructed identity with selected W4 ACK_ID1 ports and ready/fault wiring; bind real accepted source owner and reserved slot.",
+      "owner": "Popper"
+    },
+    {
+      "gap": "External W4 error propagation",
+      "kind": "model+RTL",
+      "needed": "W6 has no external fault input. Price/install integration sticky error/admission-stop/quarantine and reset/drain recovery path while retaining pending W6 owner; masking invalid ACK alone is not a fault-retirement policy.",
+      "owner": "Popper"
+    },
+    {
+      "gap": "Adapter staging or CDC",
+      "kind": "model+RTL",
+      "needed": "Choose same-clock direct held connection or real CDC. Price mux/load/buffers, protected seats/state, positive latency and exposed port bits/tracks. No assumed free zero-edge adapter.",
+      "owner": "Popper"
+    },
+    {
+      "gap": "Reset authority",
+      "kind": "RTL+directed evidence",
+      "needed": "Actual source debt producer and matched allcopies bothCDC reset scopes; fixture constant all1 not accepted as production drain.",
+      "owner": "Popper with Dewey"
+    },
+    {
+      "gap": "Joint model ownership",
+      "kind": "model",
+      "needed": "Account W4 tuple shadow/SIMD shadow/comparator, W6 state and caller frame metadata once with identical indices/lifetimes/ports; price finite waits and route/slot capacities. Current component records do not sign composed bound.",
+      "owner": "UNASSIGNED until parent appoints joint closure signer"
+    },
+    {
+      "gap": "Connected negative bench ownership",
+      "kind": "directed gate",
+      "needed": "Source-enroll actual W4/W6/module/driver after adapter commit, run cases above. Existing local W4 and W6 gates and live bareACK PC40 gate do not prove new composed adapter.",
+      "owner": "Popper bench implementation; Goodall independent negative review"
+    },
+    {
+      "gap": "Loaded physical ACK-to-W6 timing",
+      "kind": "SSFF physical",
+      "needed": "Actual RFmacro capture clktoq and W4 SECDED/match/fanout/W6 SECDED/state logic at SS60ps FF25ps; actual32SM/slot/layer census under guardedlauncher. No physical launch authorized by this spec.",
+      "owner": "UNASSIGNED contextual timing owner"
+    }
+  ],
+  "frozen_W6": {
+    "RTL_changed": false,
+    "defaultoff": true,
+    "owner46_slot9": 55,
+    "source": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396"
+  },
+  "live_PC40_job_touched": false,
+  "mandatory_connected_cases": [
+    "Exact originaltag32 high bits, physicalPC7, client3, gen4, RFslot9 mutants with valid encoded W4 tuple; wrong tuple cannot consume ACK or retire.",
+    "Both actual macro-copy WCE on write_accept edge; readback both physical copies is byteexact; no frame-assembled or command-accepted pulse used as write ACK.",
+    "Hold W6 host_ack_ready: real W4 tuple stays held and new RF write remains blocked despite incoming owner/slot changes.",
+    "Host ACK cannot retire internal SIMD, and internal SIMD done cannot retire host; require actual saved W4 SIMD identity and destination.",
+    "Hold consumer result: no W6 consumer/reverse/retire; release only actual held numerical accept.",
+    "Duplicate/stale ACK at idle/new request and following consume; premature consumer/child/parent/CDC valid; sticky failclosed with retained owner.",
+    "Reset after accepted write before protected_ACK publish; after publish but before W6 accept; after visibility and held FMIN result; during reverseCDC and pending drain response.",
+    "Observe W4 local async reset abort, while W6 runtime reset preserves owner and quarantine. No automatic local reset release or new same-cycle request.",
+    "Old normal drain certificate, incorrect reset_scope/has_owner/tuple, and each of9 outstanding scoped debts reject release. BothCDC directions actually drained.",
+    "Gen15->0 only after actual all-copy source rearm and matched reverseCDC; no arbitrary generation limit.",
+    "Invalid/uncorrectable W4 ACK keeps ACKready0, stops source admission and propagates integration fault; no numerics/credit release under suppressed ACK."
+  ],
+  "mapping": {
+    "SM": "actual perSM port scope or admitted explicit SM5; do not cast software rank to SM",
+    "host_ACK55": "{W4.ack_owner, W4.ack_slot}",
+    "host_ACK_ready": "W6.host_ack_ready AND !W4.ack_identity_fault AND integration_fault_clear",
+    "host_ACK_valid": "W4.ack_valid AND !W4.ack_identity_fault; preserve held tuple until W6.host_ack_ready",
+    "internal_SIMD55": "{W4.simd_done_owner, W4.simd_done_slot}",
+    "internal_SIMD_valid": "actual W4 internal done after exact protected saved owner+dst match; never host ACK acceptance",
+    "native64": "retained in separate caller allocator; never truncate into originaltag32/gen4",
+    "request55": "{accepted source owner46, reserved physical RFslot9}"
+  },
+  "new_compiles": 0,
+  "new_system_MTP_or_token_runs": 0,
+  "owners": {
+    "W4": "Euclid frozen r10 provider",
+    "W6_receiver_specs_and_negative_review": "Goodall",
+    "adapter_connect_and_price": "Popper",
+    "fullHBM_integration": "Claude"
+  },
+  "physical_qualified": false,
+  "prospective_boundary_model": {
+    "CDC_seats_bits": null,
+    "MACs_added": 0,
+    "RF_copies": 2,
+    "RF_ports_added": 0,
+    "RF_total_mirrored_write_bytes_per_accepted_edge": 1024,
+    "RF_write_payload_bytes_per_copy_per_accepted_edge": 512,
+    "W4_added_local_ACK_edge": 1,
+    "W4_clock_model": "stream1.2GHz prospective, SS60ps/FF25ps qualification absent",
+    "W4_costs": "Archived r3 state/codec/mux plus r4 SIMD comparator cost are source/component proxies; no blanket addition or overlap debit",
+    "W6_state_71raw_144protected_unchanged": true,
+    "adapter_FF_bits": null,
+    "adapter_fanout_mux_area": null,
+    "clock_reset_faultbuffer_cost": null,
+    "each_ACK_control_bits_per_eligible_edge": 57,
+    "finite_backpressure_wait_bound": null,
+    "host_and_internal_ACK_sources": 2,
+    "latency_rule": "Composed adapter/caller must account registered W4 publish and actual W6 age guards and waits once; do not duplicate RF/ACK events already paid in current PC40 subtree",
+    "request_control_bits_per_eligible_edge": 58,
+    "slot_and_routing_track_capacity": null,
+    "tuple_storage_in_W6_charged_again": false,
+    "whole_token_latency": null,
+    "wire_tuple_bits_each": 55
+  },
+  "schema": "W6_W4_OWNER55_RECEIVER_PROTOCOL_SPEC_R1",
+  "scope": "Prospective source-bound receiver contract; executable oracle fixtures only. No adapter RTL, no installed connected tuple witness.",
+  "source_selection": {
+    "W4_ACK_ID": 1,
+    "exact_W4_design_once": true,
+    "exclude_original_RF_fullSM_duplicate_definitions": true
+  },
+  "tests": {
+    "count": 14,
+    "debt_bit_subtests": 9,
+    "field_alias_subtests": 4,
+    "result": "PASS_SPEC_FIXTURES_ONLY"
+  },
+  "trace_contract": {
+    "CLI": "python3 tools/hbm_w6_owner55_protocol.py --trace TRACE.json --owner 0xOWNER46 --slot SLOT9",
+    "normal_events": [
+      "rf_write_accept",
+      "mirror0_write",
+      "mirror1_write",
+      "W4_ACK_publish",
+      "W4_ACK_take",
+      "W6_visible",
+      "consumer",
+      "child_reverse",
+      "parent_reverse",
+      "reverse_CDC",
+      "drain_request",
+      "drain_response",
+      "retire"
+    ],
+    "reset_observer": "Capture runtime reset and RF abort at observed clock edges; reset-abort gate returns no numerical-retirement credit.",
+    "script": "tools/hbm_w6_owner55_protocol.py",
+    "trace_producer_binding": "Future admitted bench/collector must bind each logged owner/slot to actual W4/W6 ports/WCE, and source/tool/GO hashes; this oracle does not authenticate event origins."
+  }
+}

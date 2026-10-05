@@ -1,0 +1,75 @@
+{
+  "acceptance": {
+    "bbox_um": [
+      0.0,
+      0.0,
+      32.5,
+      11.5
+    ],
+    "device_counts": {
+      "sg13_lv_nmos": 6,
+      "sg13_lv_pmos": 4
+    },
+    "drc_errors_max": 0,
+    "lvs_final_result": "Circuits match uniquely.",
+    "net_count": 15,
+    "programming_via1": {
+      "absent_column_count": 5,
+      "expected_delta": 1,
+      "present_column_count": 6
+    }
+  },
+  "artifacts": [
+    "ihp_sg13g2_rom_slice.mag",
+    "ihp_sg13g2_rom_slice.gds",
+    "ihp_sg13g2_rom_slice.ext",
+    "ihp_sg13g2_rom_slice.extracted.spice",
+    "ihp_sg13g2_rom_slice.pex.spice",
+    "magic.log",
+    "netgen.stdout",
+    "lvs.log"
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "legal geometry under the exact installed public IHP SG13G2 Magic deck",
+      "schematic-versus-layout connectivity for an independently implemented two-column via-programmed ROM slice",
+      "one physical via1 programming difference between otherwise matched present and absent columns",
+      "device and coupling-capacitance extraction from the drawn local geometry"
+    ],
+    "evidence_class": "open_pdk_independent_drc_lvs_and_extraction",
+    "forbidden_inferences": [
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "availability or economics of target-foundry late-via ROM personalization",
+      "full-array decoder, wordline, bitline, sense, repair, simultaneous-read, IR-drop, noise, or thermal behavior",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "experiment_id": "ihp_sg13g2_via_rom_physical_v1",
+  "inputs": {
+    "generator": "spice/ihp_sg13g2/rom_slice/generate_layout.tcl",
+    "schematic": "spice/ihp_sg13g2/rom_slice/schematic.spice"
+  },
+  "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_physical/artifacts",
+    "json": "results/spice/ihp_sg13g2_physical/physical.json",
+    "markdown": "results/spice/ihp_sg13g2_physical/REPORT.md"
+  },
+  "schema_version": 1,
+  "top_cell": "ihp_sg13g2_rom_slice",
+  "top_ports": [
+    "VGND",
+    "VPWR",
+    "WL_PRESENT",
+    "EN_PRESENT",
+    "PRE_PRESENT",
+    "Q_PRESENT",
+    "WL_ABSENT",
+    "EN_ABSENT",
+    "PRE_ABSENT",
+    "Q_ABSENT"
+  ]
+}

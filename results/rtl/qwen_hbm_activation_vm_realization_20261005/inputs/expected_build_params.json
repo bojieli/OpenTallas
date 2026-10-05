@@ -1,0 +1,61 @@
+{
+  "coll": [
+    "-GN=4",
+    "-GLANES=16",
+    "-GTAGW=32",
+    "-GDEPTH=16",
+    "-GLAT=11",
+    "-GBPC_NUM=3600"
+  ],
+  "die": [
+    "-GG=6144",
+    "-GNW=18",
+    "-GSNW=18",
+    "-GQWEN_FULLSHAPE=1",
+    "-GME_IDLE_GATE=1",
+    "-GD=4",
+    "-GSW=64",
+    "-GLV=7",
+    "-GSCALE_LOCAL=0",
+    "-GMEM_EXTRA=1",
+    "-GENABLE_AR256=0",
+    "-GLAGW=40",
+    "-GSMIN=6",
+    "-GSMAX=11",
+    "-GTCUT=6",
+    "-GBD=31",
+    "-GXVM=1",
+    "-GNWS=4",
+    "-GTWS=30",
+    "-GORD=4",
+    "-GACC_LAT=7",
+    "-GTREE_LAT=7",
+    "-GMUL_LAT=6",
+    "-GFAST_ISSUE=1",
+    "-GKV_PREP=3",
+    "-DOT_SPINE_H_SCALE_LAT=6"
+  ],
+  "tile": [
+    "-GGT=6144",
+    "-GNW=18",
+    "-GSMIN=6",
+    "-GCODE_BANKS=10",
+    "-GIREG=1",
+    "-GMEM_EXTRA=1",
+    "-GNREG=1",
+    "-GKV_LOCAL=0",
+    "-GACC_LAT=7",
+    "-GTREE_LAT=7",
+    "-GMUL_LAT=6",
+    "-GFAST_ISSUE=1",
+    "-GKV_PREP=3"
+  ],
+  "wst": [
+    "-GENABLE=1",
+    "-GNSTK=4",
+    "-GREF_MODE=1",
+    "-GWINW=224",
+    "-GSPW=24",
+    "-GCRED=32"
+  ]
+}

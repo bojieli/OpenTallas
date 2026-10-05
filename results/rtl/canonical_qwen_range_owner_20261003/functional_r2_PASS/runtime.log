@@ -1,0 +1,5 @@
+PASS_RANGE_OWNER full239 source_input_rows frame_vs_lease bitmap32 held_query CE DUE reset cycles=73
+- /home/ubuntu/nash-range-owner-9edb24d0d-source/rtl/test/canonical_qwen_range_owner_20261003/tb_r2.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 73ns; walltime 0.187 s; speed 390.490 ns/s
+- Verilator: cpu 0.187 s on 1 threads; allocated 9 MB

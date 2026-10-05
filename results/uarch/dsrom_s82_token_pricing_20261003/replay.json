@@ -1,0 +1,10 @@
+{
+  "tests": "11 PASS",
+  "unified_entrypoint": "python3 tools/uarch_model.py --dsrom-s82 --out /tmp/s82.json",
+  "standalone_verify": "python3 tools/dsrom_s82_token_pricing.py --verify",
+  "unified_vs_record": "BYTE_IDENTICAL",
+  "unified_replay_sha256": "9048963cde4cea1fab67fe1296a2e29264fcf3192822d8135ec31afee7670ef6",
+  "defaults": "all preexisting calculation AST bodies unchanged; only opt-in function/CLI added",
+  "runtime_builds": 0,
+  "physical_qualification": false
+}

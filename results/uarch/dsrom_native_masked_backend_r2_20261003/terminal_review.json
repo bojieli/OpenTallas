@@ -1,0 +1,39 @@
+{
+  "actual_elaborated_macros_each": 256,
+  "artifact_hashes": {
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/compiler_runtime_versions.json": "1eb23bc13e5d01923637957794e214583586b965929a5703822d4a362300fc7d",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r1_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r1_compile.resource.txt": "fc2d7424f33768bd3a7a4234aa48a4c1c8692d6dce7b7b2ea310243d76968c7e",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r1_simulation.log": "a52f3bbe29124ef012255ec1d36ad17813d173330172bd94f4cc3c3ed7938db0",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r1_simulation.resource.txt": "6d0770f59aae8b515985c203f4011257c6db73e3a1467d6a07b4a6fb2235691f",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r2_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r2_compile.resource.txt": "efcbc95d80d137d49d0159bc7d367b47285d321a1a73982364be894b379c040b",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r2_simulation.log": "a1a3573e11d5ca79580c973a4f5d2ae6f867ed4039e8364168e7885a7c4bb0c4",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/r2_simulation.resource.txt": "2563026776093040839ac61658afe2cf30dc58341fb557607627df37a1859dfb",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/record.json": "ed10549c0df12fea6d36f31fa50633367005b1b6d489a41e59fb47234395d072",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/run.py": "4d5f3468376ffd0ef01da9ee26e419da9a5687694ff49b2db85517cbc90ef318",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/source_preflight.log": "5af0adf16668d34278d9cae5039a0264e485f1af5ba0df9c0f2f2f503efa3bea",
+    "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/source_preflight.resource.txt": "dba5259b86ff6cb852dfbfb180f4bdbd2ce2bdac0a899a9a4c2998ee93d205f7"
+  },
+  "cache_projection": "Only __pycache__/*.pyc ignored in historical artifact set; every other retained source/artifact hash checked. Nested modules compile source bytes directly and do not use cached loaders.",
+  "dependency": "ce81fae03 retained predecessor source/model/archive plus d33a531f7 r2 source/model/bench. No unrelated historical chain.",
+  "isolated_raw_component_correctness": true,
+  "mutable_protected_VM_build": false,
+  "native_sram_constructor_init_enabled": false,
+  "next": "Actual loaded W6 codec cuts/finite sidecar RMW checked publication, native reset wire/site construction and selected home containment remain separately priced before protected VM build.",
+  "physical_SSFF": false,
+  "predecessor_SHA": "ce81fae03fdc1a06bbc976a86026cfe4da535bf5",
+  "predecessor_receipt": "FAIL_CONTAINS_UNTRACKED_BYTECODE_HASH_PRESERVED",
+  "predecessor_terminal": "FAIL_RESET_ACCEPTANCE_REPRODUCED_FULL256",
+  "r2_terminal": "PASS RAW_NATIVE_R2_RESET_MASK_VISIBILITY cases=43",
+  "rate_or_whole_token_credit": false,
+  "schema": "DS_RAW_R2_TERMINAL_AND_SOURCE_CACHE_REVIEW_R1",
+  "scope": "Opt-in raw backend reset acceptance, per-lane writes and tagged N+3 visibility/N+4 raw reads. Does not authorize in-flight reset, checked publication, protected retirement or physical closure.",
+  "source_SHA": "d33a531f7c4237c10096a54339c88eadd8eb1328",
+  "source_only_preflight_log": "results/uarch/dsrom_native_masked_backend_r2_20261003/terminal_d33a531f7/source_preflight.log",
+  "tests": {
+    "actual_HDL_cases": 43,
+    "source_only_cache_verifier": 6
+  },
+  "unchanged_originals": true
+}

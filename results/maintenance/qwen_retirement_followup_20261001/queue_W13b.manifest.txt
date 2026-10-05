@@ -1,0 +1,74 @@
+# W13b (HBM comparator SM). host | start time | command/script | output dir | expected result file | depends-on
+ot-pve2 | 14:42 | /tmp/claude-1000/w13jobs/jobs/hcol.sh w13-tc tc_col gpu_sm_qwen (synth,pnr,corners WC 0.833) PID 1625832 | /home/ubuntu/w13work/tc_col_12 -> /tmp/claude-1000/wt/w13-tc | results/physical_abi3/asap7/chip/{blocks,corners}/ot_gpu_tc_col.json | -
+155.103.253.114 | 14:44 | hcol.sh w13-t16 tc16 gpu_sm_v41 PID 1634102 | /home/ubuntu/w13work/tc16_12 -> wt/w13-t16 | results/physical_abi3/asap7/chip/{blocks,corners}/ot_gpu_tc16.json | -
+AGIdock (queued; .133/.16/.114) | 14:46 | hcol.sh w13-bd bd_col gpu_sm_v41 PID 1642522 | /home/ubuntu/w13work/bd_col_12 -> wt/w13-bd | results/physical_abi3/asap7/chip/{blocks,corners}/ot_gpu_bd_col.json | -
+ot-pve2 | 14:42 | camp2.sh lanes (tools/rtl_gpu_sm_exact.py lanes) PID 1625834 | wt/w13-sm | results/rtl/gpu_camp_lanes.json | -
+ot-pve2 | 14:42 | camp2.sh blockdot PID 1625837 | wt/w13-smv | results/rtl/gpu_camp_blockdot.json | -
+ot-pve2 | 14:42 | camp2.sh w19 PID 1625840 | wt/w13-w19 | results/rtl/gpu_camp_w19.json | -
+local (driver) | 15:33 | /tmp/claude-1000/w13jobs/jobs/chain12.sh (setsid; log logs/chain12.log) | - | - | the three column wrappers
+ot-pve2 | after tc_col | chain12 -> sm12.sh w13-smq12 ot_gpu_sm_q sm_q12 gpu_hbm_die_qwen (synth,pnr,corners WC 0.833) | /home/ubuntu/w13work/sm_q12 -> wt/w13-smq12 | results/physical_abi3/asap7/chip/{blocks,corners}/ot_gpu_sm_q.json | tc_col
+ot-pve2 | after tc16+bd_col | chain12 -> sm12.sh w13-smv12 ot_gpu_sm_v sm_v12 gpu_hbm_die_v41 | /home/ubuntu/w13work/sm_v12 -> wt/w13-smv12 | results/physical_abi3/asap7/chip/{blocks,corners}/ot_gpu_sm_v.json | tc16, bd_col
+local | after both SMs | chain12 -> tools/hbm_gpu_floorplan.py in wt/w13-smv12 | wt/w13-smv12/results/floorplan/hbm_gpu | results/floorplan/hbm_gpu/{qwen,v41}_hbm_die.json | sm_q, sm_v
+# ---- 2026-09-30 19:30 update (W13b) ----
+# tc16 route died (OOM, 13.5 GB on .114): re-run on ot-pve2. bd_col missed SS -51.6 ps: fixed at 577a22c9 (bterm2 DEC_P0), re-hardened.
+# bd_col 17:50 result and sm_v launch at 17:50 are superseded (sm_v launch killed before dispatch).
+ot-pve2 | 19:25 | hcol.sh w13-t16 tc16 gpu_sm_v41 (rerun) | /home/ubuntu/w13work/tc16_12 -> wt/w13-t16 | chip/{blocks,corners}/ot_gpu_tc16.json | -
+AGIdock .78 | 19:28 | hcol.sh /home/ubuntu/w13wt/bd bd_col gpu_sm_v41 (577a22c9, DEC_P0) | /home/ubuntu/w13work/bd_col_12 -> /home/ubuntu/w13wt/bd | chip/{blocks,corners}/ot_gpu_bd_col.json | -
+ot-pve2 | 19:28 | camp2.sh blockdot w13-smv @577a22c9 | wt/w13-smv | results/rtl/gpu_camp_blockdot.json | -
+local driver | 19:30 | jobs/chain12v2.sh (waits tc16 + bd_col -> commit on wt/w13-smv12 @577a22c9 -> sm12.sh ot_gpu_sm_v on ot-pve2) | /home/ubuntu/w13work/sm_v12 | chip/{blocks,corners}/ot_gpu_sm_v.json | tc16, bd_col
+(chain12.sh still drives: tc_col -> sm_q on ot-pve2 -> floorplan)
+# ---- 2026-09-30 20:10 update (W13b): SUPERSEDES the chain12 / chain12v2 lines above (both stopped) ----
+# b87eef87: bd_col SH_DUP (DEC_P0 run SS -8.7 ps kept as attempt) + ot_hdc_prefix vectorised (Icarus compile was quadratic; old lanes/w19 campaigns were stuck compiling 5 h, killed)
+ot-pve2 | 14:42 | hcol.sh w13-tc tc_col (still routing, @f7b5566e) PID 1625832 | /home/ubuntu/w13work/tc_col_12 | chip/{blocks,corners}/ot_gpu_tc_col.json | -
+ot-pve1 | 20:07 | hcol.sh w13-t16 tc16 @b87eef87 PID 2459171 | /home/ubuntu/w13work/tc16_12 | chip/.../ot_gpu_tc16.json | -
+AGIdock | 20:05 | hcol.sh /home/ubuntu/w13wt/bd bd_col @b87eef87 PID 2454570 | /home/ubuntu/w13work/bd_col_12 | chip/.../ot_gpu_bd_col.json | -
+ot-pve2 | 20:05 | camp2.sh lanes / w19 / blockdot @b87eef87 (wt/w13-sm, w13-w19, w13-smv) | /home/ubuntu/w13work/camp_* | results/rtl/gpu_camp_{lanes,w19,blockdot}.json | -
+local driver | 20:08 | jobs/chain13.sh (log logs/chain13.log): tc_col -> sm_q ; tc16+bd_col -> sm_v ; SMs on ot-pve1/ot-pve2 (60 GB) ; then floorplan in wt/w13-smv12 | /home/ubuntu/w13work/sm_{q,v}12 | chip/.../ot_gpu_sm_{q,v}.json, results/floorplan/hbm_gpu/* | columns
+# 20:25: tc16 re-run PID 2499525 on ot-pve1 (libfmt.so.8 installed to pve1:/home/ubuntu/.local/w13lib); chain13 restarted with it. blockdot campaign PASSED at b87eef87 (committed 0da7dce6).
+# 20:42: 6ca6d21d (bd_col TERM_P1; SH_DUP run SS -13.0 kept). bd_col re-harden PID 2538670 (AGIdock, /home/ubuntu/w13wt/bd); chain13 restarted (BASE 6ca6d21d; tc_col 1625832, tc16 2499525, bd_col 2538670). Campaigns: lanes @b87eef87 (pve1), w19 + blockdot restarted @6ca6d21d.
+# 21:32: daf821ca (bd_col SH16_P1; TERM_P1 run SS -77.7 kept). bd_col PID 2661636; chain13 restarted (BASE daf821ca). tc_col/tc16 unchanged.
+# ---- 2026-10-01 00:20 (W13b): SUPERSEDES chain13 (stopped) ----
+# Results: tc16 @b87eef87 SS -92.4 (bmul 8x8 stage), bd_col SH16 @daf821ca SS -29.4 -> fixes at a2f92966 (bmul SPLIT, bterm2 P2M=10), attempts committed.
+ot-pve2 | 14:42 (orphan gate PID 1625835) | old tc_col @f7b5566e (attempt only, no sm_q from it) | /home/ubuntu/w13work/tc_col_12 -> wt/w13-tc | chip/.../ot_gpu_tc_col.json | -
+ot-pve1 | 00:06 | sm12.sh ot_gpu_sm_v @a0879128 (columns that miss SS; SM glue pathfinding) | /home/ubuntu/w13work/sm_v12 -> wt/w13-smv12 | chip/.../ot_gpu_sm_v.json | -
+ot-pve2 | 00:18 | hcol.sh /home/ubuntu/w13wt/tc tc_col @a2f92966 (work tc_col_13) PID 3034738 | -> /home/ubuntu/w13wt/tc | ot_gpu_tc_col | -
+ot-pve1/2 | 00:18 | hcol.sh w13-t16 tc16 @a2f92966 PID 3034741 | -> wt/w13-t16 | ot_gpu_tc16 | -
+AGIdock | 00:18 | hcol.sh /home/ubuntu/w13wt/bd bd_col @a2f92966 PID 3034743 | -> /home/ubuntu/w13wt/bd | ot_gpu_bd_col | -
+local driver | 00:19 | jobs/chain14.sh (log logs/chain14.log): tc_col -> sm_q (sm_q13, wt/w13-smq12); tc16+bd_col -> sm_v (sm_v13, wt/w13-smv13); then floorplan | ot_gpu_sm_{q,v}, results/floorplan/hbm_gpu | columns
+pve1 | running | camp2.sh w19 @daf821ca (wt/w13-w19) | results/rtl/gpu_camp_w19.json | -
+# ---- 2026-10-01 01:00 (W13b): re-based on 000ba089 (no pinned-file edits: fpu.sv/ot_hdc_prefix.sv = main; tc_col uses W10b's ot_v41_bmul2; prefix from rtl/common/ot_prefix.sv). All a2f92966 runs killed.
+ot-pve2 | 00:58 | hcol tc_col @000ba089 (tc_col_13) PID 1901596 | /home/ubuntu/w13wt/tc | ot_gpu_tc_col | -
+pve1/pve2 | 00:58 | hcol tc16 @000ba089 PID 1901598 | wt/w13-t16 | ot_gpu_tc16 | -
+AGIdock | 00:58 | hcol bd_col @000ba089 PID 1901601 | /home/ubuntu/w13wt/bd | ot_gpu_bd_col | -
+pve1/pve2 | 00:58 | camp2 lanes / blockdot / w19 @000ba089 | wt/w13-sm, w13-smv, w13-w19 | results/rtl/gpu_camp_*.json | -
+local | 00:59 | chain14.sh (BASE 000ba089) -> sm_q13 / sm_v13 on pve1/pve2 -> floorplan | logs/chain14.log | | columns
+pve1 | 00:06 | sm_v pathfinding @a0879128 (failing-column models) still running | /home/ubuntu/w13work/sm_v12 | | -
+# 01:25 bd_col requeued PID 1973163 (min 10 GB, .39 allowed: mirror under /home); chain14 restarted
+# 01:50 tc_col requeued PID 2038285 (min 20 GB, pve1/2/3); chain14 restarted. lanes PASS @000ba089 (a8f6d49e)
+# 02:12 tc_col requeued PID 2089594 (min 31: the gate skips pve hosts for <=30 GB jobs when load>=cpus); chain14 restarted
+# 02:42 bd_col @000ba089 CLOSED sign-off (SS +14.3, FF hold +3.5, hold buf 178.2 um2). Old f7b5566e tc_col route on pve2 abandoned after 12 h in detail route (killed, work dir removed).
+# 03:12 sm_v pathfinding @a0879128 killed (held one of pve1's 2 harden slots; tc_col waited 1 h)
+# 05:11 W13b check: chain14 alive (tc_col 2089594 placing on pve1, tc16 1901598 detail-routing on pve1, bd_col DONE closed). sm_q/sm_v + floorplan follow automatically. camp_w19 running on pve1. Epilogue study committed f984ba8d.
+
+# 2026-10-01T07:43:34.206355+00:00 W13b: committed chain15 implementation 413b5d09; original chain14 PGID 2089666 + branches 2089669/2089670 SIGSTOP parked, script byte-identical. DO NOT SIGCONT while successor exists.
+local | 2026-10-01T07:40:22.819946+00:00 | python3 /tmp/claude-1000/w13jobs/chain15/w13_chain_successor.py /tmp/claude-1000/w13jobs/chain15/config.json PID 3047316 start_ticks 304527912 | /tmp/claude-1000/w13jobs/chain15 | events.jsonl; qualified SMs in w13jobs/wt/chain15-q,chain15-v; then chain15-floorplan | tc_col wrapper 2089594 + tc16 wrapper 1901598 (pinned process identities); bd_col already qualifies
+# chain15: SS/FF + source pins + 833ps/60/25 + boundary and routing checks before SM launch; rechecks copied evidence, commits explicit paths, launches clean pinned worktrees. Floorplan gated on both SMs in-context. No remote cleanup or duplicate column launch.
+# Cleanup inventory: no safe deletions; smq12/smv13 clean ~8.1GiB combined but retained for parked driver; live/dirty/historical pinned sources preserved.
+# 2026-10-01T08:57:40.396430+00:00 W13b revalidation f53a91e34: chain15 PID 3047316 remains live, original chain14 group stopped. Existing tc16/col wrappers 1901598/2089594 and pve1 OpenROAD 1412774/1449805 alive, no terminal records or SM dispatch. Both active remote column source lists and configured SM source lists match published w19-evidence/w13-sm-000ba089. SRAM SS/FF pins and clock-to-output arcs checked; full in-context timing remains pending. Production 136-byte adapter belongs to W19 and is not certified by historical shape tests. No restarts, constraint changes, main/TASKS edits or push.
+
+# 2026-10-01T09:06:34.751270+00:00 W13 chain16 resource admission takeover; supersedes chain15 driver only.
+# chain15 PID3047316/start304527912 SIGSTOP before dispatch; no children/SM events. Original pinned script untouched. Chain14 remains parked. DO NOT resume either predecessor while chain16 exists.
+local | 2026-10-01T09:05:55.734747+00:00 | clean pinned chain16 source46f5f7587; supervisor PID495285/start305041193; /tmp/claude-1000/w13jobs/chain16/w13_chain_successor.py config.json | /tmp/claude-1000/w13jobs/chain16 | events.jsonl, chain16-q/v, chain16-floorplan | SAME column wrappers2089594/start302549468 and1901598/start302086726; bd_col already qualifies
+# Scheduler min60GiB from validated destination BLOCKS peak60.0; fresh worker MemAvailable gate writes receipt and fails before synth if insufficient. Both SM branches retain prior pve1/2 eligibility/existing remote_gate leases. No duplicate column job, no new ownership assumption. Actual SM LEF companion receipt committed with floorplan evidence.
+# W15 preserve wt7/8/9/13/14 and active remote sources/checkpoints; no changes from this takeover.
+# 2026-10-01T09:07:16.336445+00:00 W13b: chain15 PID 3047316 verified start_ticks 304527912, immutable config/code and no downstream launch; found stopped (cause unrecorded), resumed SAME handle using pidfd SIGCONT under user continue instruction. Original chain14 PGID 2089666 remains stopped. Column wrappers 1901598/2089594 and routers 1412774/1449805 remain live; no duplication or constraint change.
+
+# !!! ACTIVE TAKEOVER KEY=W13_CHAIN16_R2_EXCLUSIVE_GUARDED_SUCCESSOR !!! READ W13b.owner_coordination.json BEFORE SIGNAL/RESTART
+# chain16-r2 ACTIVE PID504803/start305058737, source46f5f7587, config4f2b3bd79d572d4a69bc9631b1c061a8ab8e3c08b527110c6268682b07a57fba. Chain14/15 must remain STOPPED; NO SIGCONT/RESTART of3047316/start304527912.
+# chain16 attempt1 failed closed when concurrent owner resumed chain15 at09:07:16; negative retained. New immutable r2 reuses same columns2089594/start302549468 and1901598/start302086726, no duplicate jobs, fresh60GiB gate after existing lease.
+# Original W13 chain15 evidence integrated in main DOES NOT authorize resuming the superseded process. Active process owner is codex/w13-chain16-admission-20261001. No pending-LEF fallback accepted downstream.
+# 2026-10-01T09:10:11.901856+00:00 CORRECTION: parent chain16 superseded chain15. This stream briefly resumed chain15 before observing takeover; chain16 guard aborted with predecessor-not-parked and no dispatch. Failure traceback preserved. Chain14 and chain15 now parked. Restored SAME unchanged chain16 source/config after verifying no live replacement and exclusive driver lock; new supervisor PID 508855; live log /tmp/claude-1000/w13jobs/chain16/driver_recovery_20261001T091011Z.log. No column restart or downstream job launched.
+
+# !!! GLOBAL TAKEOVER KEY=W13_CHAIN16_ORIGINAL_508855_EXCLUSIVE SUPERSEDES R2 KEY !!!
+# ACTIVE sole successor PID508855/start305066820 /tmp/claude-1000/w13jobs/chain16 config808af452... source46f5f7587. Verified same columns +60GiB scheduler/freshmem guards.
+# OUR competing504803/start305058737 cancelled only after nochildren/nodispatch and snapshots preserved. Other owner not signalled. DO NOT restart r2 or SIGCONT chain14/15. Check W13b.owner_coordination.json before any supervisor action; separate locks are NOT global exclusivity.

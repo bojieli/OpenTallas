@@ -1,0 +1,51 @@
+{
+  "125_sourcepins_verified": true,
+  "144_ISA_program_sha256_verified": "355a0095061e6a1ae4f39670b1199194a65537de76535dcb0df9f65b20113d56",
+  "GO_record_is_template_not_authorization": true,
+  "PnR": false,
+  "SS_FF_qualification_claim": false,
+  "activation_frequency_claim": false,
+  "compiled": false,
+  "diagnostic_bench_clock_ps": 1000,
+  "final_asset_hashes_and_cardinality_verified": true,
+  "full_FP32_exhaustive_claim": false,
+  "original_controller_FAIL_preserved": true,
+  "original_monolithic_area_track_FAIL_preserved": true,
+  "original_quantizer_sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+  "preflight": {
+    "collector_engine_elaboration": false,
+    "compiler_invoked": false,
+    "full_QE_elaboration": false,
+    "limits": {
+      "compile_parallel_jobs": 1,
+      "cpu_seconds_each_process": 120,
+      "file_descriptors": 64,
+      "individual_file_bytes": 67108864,
+      "memory_bytes": 2147483648,
+      "total_workdir_bytes": 134217728,
+      "wall_seconds_each_process": 180
+    },
+    "preparation_sha256": "abe8783a626255cf99e7acd7d5c09d08a48c6289e8c042da9ae5ac3b918d0b54",
+    "prepared_status": "PREPARED_NOT_COMPILED_NOT_SIMULATED",
+    "sources": [
+      "tb_l20_scale_optin.sv",
+      "source/original/ot_hdc_delay.sv",
+      "source/original/ot_hdc_fp4qdq.sv",
+      "source/optin/ot_hdc_fp4qdq_l20_scale_optin.sv"
+    ],
+    "status": "SOURCE_HASH_AND_RESOURCE_PREFLIGHT_ONLY"
+  },
+  "review_GO_record_required_fields": {
+    "compile_allowed": true,
+    "preparation_sha256": "abe8783a626255cf99e7acd7d5c09d08a48c6289e8c042da9ae5ac3b918d0b54",
+    "runner_sha256": "874a0124c015a7a59ab3caea1e81062b5b2c06a9a3f367ae72d58a99b12a688e",
+    "scope": "dsrom_l20_isolated_scale_quantizer_fixture",
+    "simulate_allowed": true,
+    "source_prepreview_reviewed": true
+  },
+  "runner_sha256": "874a0124c015a7a59ab3caea1e81062b5b2c06a9a3f367ae72d58a99b12a688e",
+  "schema": "opentallas.dsrom.L20-scale-source-review-verification.v1",
+  "simulated": false,
+  "status": "PASS_PREPARATION_AND_PINS_ONLY",
+  "unchanged_source_copies_verified": true
+}

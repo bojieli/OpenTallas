@@ -1,0 +1,44 @@
+{
+  "PR_admitted": false,
+  "arithmetic_source": "Source integer staged popcount/suffix/choose and balanced quota/compaction; actual FP32 order-key function unchanged",
+  "baseline_original_unchanged": true,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "candidate_default_off": true,
+  "compile_admitted": false,
+  "expected_values_assertions_only": true,
+  "gate_checks": [
+    "Same immutable score/ID/command input image in original/full staged selector; independent IEEE ranking and source-defined NaN/bad-command fault checks",
+    "Compare exact public IDs/word padding/nw/last/fault by source transaction ordinal, then separately assert measured event/cycle calibration; no timing alignment masking",
+    "Current full-shape native DMA acceptance and original packed loader fields; no invented ACK",
+    "Same formed addr/data/we/done through99 return+28 write edges; retain busy/ownership until last write and drain",
+    "Reset in every pipeline/transaction region, no stale valid/go/VMwe; fault persistence and bad busy-command refusal unchanged",
+    "Actual HDL mutants must log explicit DIFF, never compile/crash interpreted as DIFF"
+  ],
+  "geometry": {
+    "CB": 14,
+    "DIG": 8,
+    "LDW": 4,
+    "N": 4,
+    "NMAX": 2048,
+    "P": 64,
+    "PF": 64
+  },
+  "immutable_operands_only": true,
+  "models": {
+    "allowed_terminal": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/model.json",
+    "fullshape_proof": "results/uarch/dsrom_balanced_selector_fence_proof_20261002/proof.json"
+  },
+  "no_reduced_shape": true,
+  "owner": "Epicurus",
+  "remaining": [
+    "Arch/Maxwell source/model admission of single allowed terminal repair",
+    "Actual fullbalanced RTL implementation and sourceplan/package review before HDL launch",
+    "Separate full station site/clock/reset/PG and extracted SS/FF context closure"
+  ],
+  "resource_admission": "Fresh measured host memory/CPU/disk and source-sized reservation before any expensive build; no inherited arbitrary wall/FSIZE/process-AS pilot caps.",
+  "service_increment_cycles": 142,
+  "source_parent": "8356bdb264c88bed19e09f60cbbc813e3367b150",
+  "status": "PREPARE_AFTER_SOURCE_MODEL_ADMISSION_NO_COMPILE_GO",
+  "transport_increment_cycles": 226,
+  "whole_field_or_physical_credit": false
+}

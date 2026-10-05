@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hbm-pc10-r41-lineage-parent-review.v1",
+  "status": "PASS_EXACT_DIRECTORY_LINEAGE_ACTUAL_PRODUCER_EXECUTION_PENDING",
+  "source_commit": "dd6a1b123",
+  "focused_tests": 9,
+  "artifact_pins_verified": 10,
+  "live_source_pins_verified": 2,
+  "original_home_records": 286114,
+  "bound_home_records": 290730,
+  "appended_records": 4616,
+  "checks": [
+    "exact original physical prefix",
+    "complete pinned R41/R30 source regeneration",
+    "provider complete native equals regenerated program",
+    "PC9/PC10 instructions and referenced RF homes unchanged"
+  ],
+  "arbitrary_missing_or_mutated_extensions_refused": true,
+  "actual_R43_bound_artifact_check": "PASS_EXACT_REGENERATED_LINEAGE_ABSENT_PC9_SOURCES_REFUSED",
+  "actual_PC9_source_bytes_required": true,
+  "finite_hardware_waits_and_installed_L2_exclusion": false,
+  "hardware_qualified": false,
+  "full_token_qualified": false,
+  "actual_R43_bound_artifact_sha256": {
+    "bound_native.json.gz": "1bca266785a062b9396f6704116982b5944a1f915b8acdad945000b3d7ba612d",
+    "bound_homes.json.gz": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a"
+  },
+  "actual_bound_artifact_check_scope": "immutable live-run program/home files via metadata-only adapter; no actual producer payload or provider-memory execution comparison"
+}

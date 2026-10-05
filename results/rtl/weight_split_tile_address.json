@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "tests": 93,
+  "command": "python3 -m pytest -q tests/test_weight_tile_scheduler.py tests/test_weight_row_reuse.py tests/test_weight_pass_reuse.py tests/test_runtime_pass_transport.py",
+  "lint": "Verilator 5.050 --lint-only --Wall: pass",
+  "change": "Bounded low-ten-bit tile-base addition with parallel high increment; no added cycle",
+  "physical": "running: pnr_split_tile_address_cts12_1ns.json",
+  "sources": {
+    "rtl/abi3/ot_a3_weight_tile_scheduler.sv": "0c9b2243cf186636003b4ede868ebdf76cfe5bb9fa1db1f3a76e1bac4f3acf3b",
+    "rtl/abi3/ot_a3_weight_pass_scheduler.sv": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+    "tests/test_weight_tile_scheduler.py": "e29de19d489cbb91d0a961587b99a985feebb526606ed71dd579d71022c286fe",
+    "tests/test_weight_row_reuse.py": "3e111907a6593836b60c21c550c9e548ed138471dddf861c1ca211d42d563379",
+    "tests/test_weight_pass_reuse.py": "a910d9019964737e2402e6a20721aaef78bedeca7c70ba4d4748112bdaf8e557",
+    "tests/test_runtime_pass_transport.py": "88aea36fb6c604a7d5d53549302da14e7c7030605a3231080358966ee709ecbe"
+  }
+}

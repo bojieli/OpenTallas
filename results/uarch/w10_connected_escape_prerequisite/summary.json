@@ -1,0 +1,184 @@
+{
+  "schema": "opentallas.w10.connected_escape.handoff.v1",
+  "base_commit": "8b0837058c00df3160ed48d36e4e0aac98b01bc3",
+  "source_tree": "/home/ubuntu/w10-allport-audit",
+  "verdict": "BOUNDED_SOURCE_BACKED_PREREQUISITE_READY_FULL_INTERFACE_PENDING",
+  "primary_record": "results/uarch/w10_connected_escape_prerequisite/audit.json",
+  "all_port_instances": 1152,
+  "classifications": {
+    "pin_connected_positive_overlap": {
+      "PROVABLE": 1152
+    },
+    "M4_ordinary_Vx_enclosure_overhang": {
+      "PROVABLE": 1152
+    },
+    "M4_patch_area": {
+      "PROVABLE": 1152
+    },
+    "M4_VIA45_landing_containment": {
+      "PROVABLE": 1152
+    },
+    "M5_ordinary_Vx_enclosure_overhang": {
+      "PROVABLE": 1152
+    },
+    "M5_patch_area": {
+      "PROVABLE": 1152
+    },
+    "M5_VIA45_landing_containment": {
+      "PROVABLE": 1152
+    },
+    "M4_macro_OBS_nonoverlap": {
+      "PROVABLE": 1152
+    },
+    "M4_peer_PDN_spacing_bound": {
+      "PROVABLE": 1152
+    },
+    "M4_EOL_width_applicability": {
+      "PROVABLE": 1152
+    },
+    "M5_peer_PDN_spacing_bound": {
+      "PROVABLE": 1152
+    },
+    "M5_EOL_width_applicability": {
+      "PROVABLE": 1152
+    },
+    "V4_peer_PDN_spacing_bound": {
+      "PROVABLE": 1152
+    },
+    "patch_pin_union_rectangle_diagnostic": {
+      "PROVABLE": 576,
+      "REFUTED": 576
+    },
+    "Vx_EOL_enclosure_applicability": {
+      "MISSING": 1152
+    },
+    "pin_union_corner_keepout_rectonly": {
+      "MISSING": 1152
+    },
+    "detailed_signal_endpoints_SS_FF": {
+      "MISSING": 1152
+    }
+  },
+  "resolved_missing_predicates": [
+    "Actual loaded DB technology exported; image reference is not authority",
+    "V4 class-table default34nm edge spacing, explicit exception flags absent",
+    "Ordinary class Vx enclosure11/0nm above and below with actual checker axis semantics",
+    "24nm rectangular patch EOL applicability against25nm threshold and40nm end-to-end bound",
+    "PRL width row:24nm base;72nm for >=25nm width",
+    "Positive port overlap, connected via landings, metal minarea and scoped simultaneous patch/PG spacing"
+  ],
+  "unresolved": [
+    "EOL-specific Vx enclosure full physical applicability; ordinary checker trace excludes EOL collection",
+    "Connected macro pin union RECTONLY/corner/EOL keepout/width-table applicability, including576 nonrectangular mirrored joins",
+    "Detailed signal occupancy, capture/mux endpoints, contiguous local capacity and contextual SS/FF final abstract"
+  ],
+  "hypothesis_scope": "One fixed two-lane outward escape, not a placement/routing prescription; refutations are named hypotheses only. c8 root cause or impossibility not proved.",
+  "source_backing": {
+    "database_sha256": "85ef1ef5c8b54e52b3978b4d6e9c04594f691a9d6f7bde1bb6d253e05500c158",
+    "query_image": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "router_source_commit": "6cb3f2b704604a8961573218e1c8adaae9fe9937",
+    "source_scope": "matches inspection tool build identifier; selected checker trace only",
+    "actual_rule_export": "actual_db.lef",
+    "direct_field_log": "applicable_rules.log",
+    "source_witnesses": "router_source_witnesses.json"
+  },
+  "geometry": {
+    "maximum_outward_envelope_nm": 239,
+    "prior_reserved_edge_nm": 13824,
+    "geometric_edge_strip_upper_um2": 120.28392,
+    "local_added_cycles": 0,
+    "placement_fit_proved": false
+  },
+  "model_composition": {
+    "capacity": {
+      "wake_column_XF": 8,
+      "wake_incremental_placement_um2": 2128.58296,
+      "current_gross_spare_um2": 41464.8,
+      "escape_reservation_um2": 6957.34272,
+      "combined_reserved_um2": 9085.92568,
+      "gross_spare_after_both_um2": 32378.874320000003,
+      "fits_gross_existing_slot": true,
+      "local_contiguity_proved": false,
+      "fifo_storage_bits_are_not_corridor_tracks": "depth changes local storage/mux cost; crossing width depends on topology, not storage-bit sum"
+    },
+    "fully_additive_contingency": {
+      "outline_um": [
+        1066.62404657688,
+        142.56
+      ],
+      "extra_mm2_per_layer_die": 9.30398789632,
+      "stages": 42,
+      "total_dies": 212,
+      "ar_tokens_s": 2753.4,
+      "token_us": 363.18733202585895,
+      "local_latency_delta_cycles": "zero only for local capture/escape; long-span routing is conditional below",
+      "SS_wire_sensitivity": {
+        "expanded_half_span_um": 533.31202328844,
+        "measured_reach_um": 504.0,
+        "extra_stage_if_halfspan_crossed": 1,
+        "conservative_all_matvec_one_cycle": {
+          "ar_tokens_s": 2751.6,
+          "token_us": 363.4249164122692
+        },
+        "column_boundary_register_bits_upper": 1616,
+        "column_extra_placement_um2_at_50pct": 942.4512000000001,
+        "basis": "conditional upper bound; actual net topology must establish stage necessity; registers must fit local reserve or geometry be repriced before build"
+      },
+      "added_stage_hops_included": true,
+      "basis": "conservative all-additive reservation, no clock recovery; wire recalibration and actual local fit pending",
+      "adopted": false
+    },
+    "scope": "Existing 00e9 conditional reservations; no new geometry or latency adopted. Local fit and rule-complete escapes remain pending."
+  },
+  "model_generator_unchanged_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "validation": {
+    "final_tests": "tests_r3.log",
+    "tests_passed": 11,
+    "offline_reproduction_byte_identical": true,
+    "controls": "one lane 12nm adjacent-pad gap;46nm pad minarea;24nm pad zero enclosure;rule mutations and explicit table override",
+    "tracked_existing_files_byte_identical": true
+  },
+  "no_PnR": true,
+  "no_RTL_or_macro_or_owner_changes": true,
+  "no_c8_retry_tuning": true,
+  "no_headline_or_generator_change": true,
+  "c8": "TERMINAL_FAIL rc1 DRT-0255; canonical failures unchanged; recovery BLOCKED_INPUTS; no adoption",
+  "next_prerequisite": "Parent reviews union-rule applicability and source-backed polygon witnesses before considering any hardware/floorplan implementation; exclusive wake owner preserved",
+  "retained_intermediate_evidence": [
+    "export_rules.log: no write_tech_lef command; corrected to actual write_lef export",
+    "applicable_rules.log: direct PRL/table binding needs output args; authoritative serialized LEF resolves values",
+    "parser_attempt_r1.json: class-name digits misclassified as overrides; corrected grammar without geometry change",
+    "tests.log and tests_r2.log are intermediate; tests_r3.log is final gate"
+  ],
+  "reproduction": [
+    "python3 tools/w10_connected_escape_audit.py --output /tmp/w10-connected-escape-reproduction.json",
+    "cmp results/uarch/w10_connected_escape_prerequisite/audit.json /tmp/w10-connected-escape-reproduction.json",
+    "python3 -m unittest discover -s tests -p test_w10_connected_escape_audit.py -v"
+  ],
+  "owned_live_jobs_from_tree": [],
+  "existing_handles": {
+    "bankmap": "PID2711389 LIVE; result absent",
+    "W17": "PID532447 LIVE, W17 owned; result absent"
+  },
+  "files_sha256": {
+    "results/uarch/w10_connected_escape_prerequisite/tests_r2.log": "351f91405faeb12f437b7f805376aa44bb2e1370ed404721400ec160b91ccb5a",
+    "results/uarch/w10_connected_escape_prerequisite/router_source_files.json": "9239467cf96274b83b5130d1f95ff2d2ddbf3270db96748ca5bc9ac402f90c72",
+    "results/uarch/w10_connected_escape_prerequisite/audit.json": "784a6578ee4314bfa5e76300582932537a2393c58777b7aa7da25493b597a11e",
+    "results/uarch/w10_connected_escape_prerequisite/tests.log": "8031f076918b4f8a44d00a9fa0db0fac000a8751f73c3c2b0a37bac1df19f62e",
+    "results/uarch/w10_connected_escape_prerequisite/negative_control_witnesses.json": "f2633789b786b8f1b377b746b71ba8f2d737a94d9d586261a7952e23d821a9ca",
+    "results/uarch/w10_connected_escape_prerequisite/router_source_LICENSE": "28cfc93cb2b552192bc316259d2c2a1aa5a980018cda1c5cd9b1143c9151aebb",
+    "results/uarch/w10_connected_escape_prerequisite/parser_attempt_r1.json": "37a543d5e19aff29c0faa83f28e66aea585966f5dbdf2125f51c7b38117fed62",
+    "results/uarch/w10_connected_escape_prerequisite/applicable_rules.log": "c1858ee24635e6c029d401950c0a0e81956031f94df662374e67c0a616d83c10",
+    "results/uarch/w10_connected_escape_prerequisite/export_rules.log": "eed6969bbcb531022aaa0c8eaa0024715678e190d0ce31c392124f9cac6131a2",
+    "results/uarch/w10_connected_escape_prerequisite/router_source_witnesses.json": "d3ba655efd484b2b9c207951c40b492a4c4488b92f45d465a302a58465fb0700",
+    "results/uarch/w10_connected_escape_prerequisite/image_reference_tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "results/uarch/w10_connected_escape_prerequisite/tests_r3.log": "e0d22e8499c108c0cecb2893ceeb6aab0ceaa9d04467e4f750fa3cc483bb38bb",
+    "results/uarch/w10_connected_escape_prerequisite/export_rules.tcl": "1578256f820678380569961f3efee1c5d04c40052567119d023747543b1e30d1",
+    "results/uarch/w10_connected_escape_prerequisite/actual_db_1.lef": "d80ef66226182fef85b01756e5876caf811de13afe67930e12daac60e2e236cb",
+    "results/uarch/w10_connected_escape_prerequisite/actual_db.lef": "ef5c01d49b25dd535c20b7bc4ade26d6420ef87ad6a13d41fd9e85d4299aef04",
+    "results/uarch/w10_connected_escape_prerequisite/router_source_lookup.json": "7536fdd9c0b091299a7aa5a0bdc2e49b9680600819593be73ecde77400c958c5",
+    "results/uarch/w10_connected_escape_prerequisite/applicable_rules.tcl": "0d86b7069675291938bb5251f8422b645ac70f8a9f4de33f6783c10a8351faef",
+    "tools/w10_connected_escape_audit.py": "26b8da786a94133e729d4062617192fd9d6a834dfbcbe688449b42d739743760",
+    "tests/test_w10_connected_escape_audit.py": "b3105bea67af76af9e2ed8727c8a86072f65ea6f5dd180596cf021b066358f56"
+  }
+}

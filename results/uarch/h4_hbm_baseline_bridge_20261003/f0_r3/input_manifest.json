@@ -1,0 +1,83 @@
+{
+  "inputs": [
+    {
+      "archive": "inputs/pipeline.json",
+      "bytes": 11651,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/model.json",
+      "sha256": "08d13194e80ac27a5b149b455c5104104badacb9112b8c99d19ad23e3d012528"
+    },
+    {
+      "archive": "inputs/cadence.json",
+      "bytes": 570,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/cadence_replay.json",
+      "sha256": "788244eafb66c74fc23125c2913608ea50ea8c4d218670dffbd5330b941e0a5e"
+    },
+    {
+      "archive": "inputs/context.json",
+      "bytes": 105264,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_service_context_g0_20261002/final/model.json",
+      "sha256": "9097facd9fdf71d82240ad18b0d830fba4cc31a75a2a29fda7ddcde3e2eb62e8"
+    },
+    {
+      "archive": "inputs/vias.json.gz",
+      "bytes": 217841,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_gateway_via_arrays_20261002/model.json.gz",
+      "sha256": "7345715dd286663c250837f496f8fd753e29a2ca877a0ba8e1c72a82c9d91f38"
+    },
+    {
+      "archive": "inputs/via_handoff.json",
+      "bytes": 1976,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_gateway_via_arrays_20261002/handoff.json",
+      "sha256": "4329d8090a8a392f01fdaff4ee41f025abbdf528122bef99e25e74594f5cb23f"
+    },
+    {
+      "archive": "inputs/constructor.json.gz",
+      "bytes": 1602525,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_gateway_constructive_20261002/constructor_r10/model.json.gz",
+      "sha256": "f62cc27b88d740e2ad3133d14a9008e55a5012b33d065d866b5aa379d437f74b"
+    },
+    {
+      "archive": "inputs/authority.json",
+      "bytes": 67479,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h3_complete_native_calendar_20261002/authority_reconciliation_r4/reconciliation.json",
+      "sha256": "2c6691d1ca4516ea8cfe0ef22040e433ea8a98ecb0827f034d56f3133d072ebd"
+    },
+    {
+      "archive": "inputs/calendar.json",
+      "bytes": 6061,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_baseline_bridge_20261003/inputs/emitted_calendar_summary.json",
+      "sha256": "de32ca2223f4ea8b1699824b9b8ff443c5272444da96860cc67ee0d8683ceb2a"
+    },
+    {
+      "archive": "inputs/ingress.json",
+      "bytes": 9357,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_baseline_bridge_20261003/inputs/ingress_model.json",
+      "sha256": "fb70742365a23ba728f000ef4c23dc4f4f681f1128c483e00d5259083536cbcf"
+    },
+    {
+      "archive": "inputs/Qwen_homes.json.gz",
+      "bytes": 1813760,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_baseline_bridge_20261003/inputs/Qwen_homes.json.gz",
+      "sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1"
+    },
+    {
+      "archive": "inputs/DS_homes.json.gz",
+      "bytes": 4011420,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:results/uarch/h4_hbm_baseline_bridge_20261003/inputs/DS_homes.json.gz",
+      "sha256": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a"
+    },
+    {
+      "archive": "inputs/codec.py",
+      "bytes": 29996,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:tools/h4_hbm_baseline_bridge.py",
+      "sha256": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2"
+    },
+    {
+      "archive": "inputs/PC.sv",
+      "bytes": 4213,
+      "origin": "c67212f2aa98966b560b6e2f23291017132aa871:rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv",
+      "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+    }
+  ],
+  "schema": "HBM_F0_R3_EXACT_INPUTS"
+}

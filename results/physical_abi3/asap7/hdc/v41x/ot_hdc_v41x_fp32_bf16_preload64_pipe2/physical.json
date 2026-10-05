@@ -1,0 +1,146 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-28T13:15:55.600598+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hdc_v41x_fp32_bf16_preload64_pipe2",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.5,
+    "core_input_delay_min_ns": 0.35,
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2.sv",
+        "sha256": "49629f6e1b4d45f51f5b309d005ecd9e658e454a38badf6b81515b3c57a9754a",
+        "size_bytes": 2070
+      }
+    ],
+    "top": "ot_hdc_v41x_fp32_bf16_preload64_pipe2"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 143:\npeak = 3054.08 (MB)\n[INFO DRT-0194] Start detail routing.\n[INFO DRT-0195] Start 0th optimization iteration.\n    Completing 10% with 102 violations.\n    elapsed time = 00:00:28, memory = 7890.61 (MB).\n    Completing 20% with 255 violations.\n    elapsed time = 00:01:03, memory = 11117.88 (MB).\n    Completing 30% with 335 violations.\n    elapsed time = 00:01:30, memory = 11004.95 (MB).\n    Completing 40% with 400 violations.\n    elapsed time = 00:02:07, memory = 11982.40 (MB).\n    Completing 50% with 585 violations.\n    elapsed time = 00:02:40, memory = 11765.32 (MB).\n    Completing 60% with 712 violations.\n    elapsed time = 00:03:08, memory = 12552.04 (MB).\n    Completing 70% with 830 violations.\n    elapsed time = 00:03:44, memory = 13490.79 (MB).\n    Completing 80% with 956 violations.\n    elapsed time = 00:04:05, memory = 13361.18 (MB).\n    Completing 90% with 1061 violations.\n    elapsed time = 00:04:42, memory = 13843.27 (MB).\n    Completing 100% with 1254 violations.\n    elapsed time = 00:05:15, memory = 13150.23 (MB).\n[INFO DRT-0199]   Number of violations = 1648.\nViol/Layer          M1     M2     M3     V3     M4     V4     M5     V5     M6     V6     M7\nCutSpcTbl            0      0      0     33      0     25      0     18      0     29      0\nEOL                  0     74      3      0      1      0      2      0      0      0      0\nMetal Spacing      266     32     65      0      2      0      7      0     49      0      0\nRecheck              0    190     85      0     33      0     47      0     33      0      6\nShort                0     46      5      0      0      2      2      8     54      0      2\neolKeepOut           0    495     16      0      9      0      9      0      0      0      0\n[INFO DRT-0267] cpu time = 00:24:57, elapsed time = 00:05:16, memory = 13103.46 (MB), peak = 14403.30 (MB)\nTotal wire length = 246114 um.\nTotal wire length on LAYER M1 = 0 um.\nTotal wire length on LAYER M2 = 91379 um.\nTotal wire length on LAYER M3 = 87507 um.\nTotal wire length on LAYER M4 = 33683 um.\nTotal wire length on LAYER M5 = 17861 um.\nTotal wire length on LAYER M6 = 8507 um.\nTotal wire length on LAYER M7 = 7176 um.\nTotal wire length on LAYER M8 = 0 um.\nTotal wire length on LAYER M9 = 0 um.\nTotal wire length on LAYER Pad = 0 um.\nTotal number of vias = 155899.\nUp-via summary (total 155899):\n\n-----------------\n Active         0\n     M1     55167\n     M2     82189\n     M3      7936\n     M4      4629\n     M5      3069\n     M6      2909\n     M7         0\n     M8         0\n     M9         0\n-----------------\n       155899\n\n\n[INFO DRT-0195] Start 1st optimization iteration.\n    Completing 10% with 1534 violations.\n    elapsed time = 00:00:32, memory = 13687.85 (MB).\n    Completing 20% with 1327 violations.\n    elapsed time = 00:01:10, memory = 14268.17 (MB).\n    Completing 30% with 1146 violations.\n    elapsed time = 00:01:36, memory = 14247.10 (MB).\n    Completing 40% with 1039 violations.\n    elapsed time = 00:02:13, memory = 14328.68 (MB).\n\nElapsed time: 0:01.65[h:]min:sec. CPU time: user 1.50 sys 0.08 (95%). Peak memory: 232692KB.\nElapsed time: 0:03.95[h:]min:sec. CPU time: user 3.55 sys 0.17 (94%). Peak memory: 267992KB.\nElapsed time: 0:01.97[h:]min:sec. CPU time: user 1.75 sys 0.10 (93%). Peak memory: 223688KB.\nElapsed time: 0:01.69[h:]min:sec. CPU time: user 1.54 sys 0.08 (95%). Peak memory: 224512KB.\nElapsed time: 0:05.11[h:]min:sec. CPU time: user 4.94 sys 0.13 (99%). Peak memory: 286744KB.\nElapsed time: 11:03.70[h:]min:sec. CPU time: user 1437.61 sys 1.04 (216%). Peak memory: 485336KB.\nElapsed time: 0:01.96[h:]min:sec. CPU time: user 1.84 sys 0.12 (99%). Peak memory: 271672KB.\nElapsed time: 13:47.09[h:]min:sec. CPU time: user 1885.62 sys 1.75 (228%). Peak memory: 1354004KB.\nElapsed time: 0:11.14[h:]min:sec. CPU time: user 10.73 sys 0.33 (99%). Peak memory: 315320KB.\nElapsed time: 0:16.28[h:]min:sec. CPU time: user 15.71 sys 0.49 (99%). Peak memory: 886984KB.\nElapsed time: 0:25.73[h:]min:sec. CPU time: user 25.16 sys 0.99 (101%). Peak memory: 922772KB.\nElapsed time: 1:12.10[h:]min:sec. CPU time: user 135.96 sys 2.26 (191%). Peak memory: 2609856KB.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-28T12:40:05.253480+00:00",
+  "git": {
+    "commit": "89f7d49dc844d00d32b948bc0fc936bd378da3ef",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/rtl/hdc_v41x_me_preload64_pipe2.json"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2.sv",
+      "?? tools/rtl_v41x_me_preload64_pipe2.py"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hdc_v41x_fp32_bf16_preload64_pipe2",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2.sv",
+      "--clock-period-ns",
+      "0.92",
+      "--stages",
+      "pnr",
+      "--purpose",
+      "characterization",
+      "--max-transition-ns",
+      "--core-input-delay-min-ns",
+      "0.35",
+      "--core-input-delay-max-ns",
+      "0.5",
+      "--die-area",
+      "0",
+      "0",
+      "450",
+      "450",
+      "--core-area",
+      "20",
+      "20",
+      "430",
+      "430",
+      "--output",
+      "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/physical.json",
+      "--keep-workdir",
+      "/tmp/v41_me_preload64_pipe2_route"
+    ],
+    "driver": {
+      "commit": "89f7d49dc844d00d32b948bc0fc936bd378da3ef",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/opentallas-v41-me-preload-bypass/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "937999677650feeb6c0084d71afd8b341aa7d0a5a701525b9e9852b572e3ea84",
+      "tree": "/tmp/opentallas-v41-me-preload-bypass"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/opentallas-v41-me-preload-bypass"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

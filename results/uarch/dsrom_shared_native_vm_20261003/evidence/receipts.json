@@ -1,0 +1,99 @@
+{
+  "ds-shared-native-provider-epyc-r1": {
+    "archive": "ds-shared-native-provider-epyc-r1.tgz",
+    "sha256": "6be6e6d78817df6e335ed7fd6990ab0bb70cc379324e8d418b8dd8f57b04b86c",
+    "pid": 63315,
+    "status": "TERMINAL",
+    "terminal": "EVENT grant client=0 edge=39\nEVENT reply client=0 edge=54\nEVENT grant client=1 edge=55\nEVENT reply client=1 edge=64\nEVENT grant client=2 edge=65\nEVENT reply client=2 edge=74\nEVENT grant client=3 edge=75\nEVENT reply client=3 edge=108\nEVENT grant client=4 edge=109\nEVENT reply client=4 edge=148\nPASS SHARED_NATIVE_PROVIDER clients=8 macros=256 visible_bank_writes=17 replies=5 last_write_wins=1 bounds_refused=1 read_groups=13\n/tmp/ds-shared-native-provider-epyc-r1/sources/0_tb_provider.sv:68: $finish called at 1260000 (1ps)\n",
+    "scope": "raw actual single full2MiB provider,8client service functional; no physical/protected/fullparent adoption"
+  },
+  "ds-related-native-parent-epyc-r1": {
+    "archive": "ds-related-native-parent-epyc-r1.tgz",
+    "sha256": "a79036660f9111c043a3b2ba5f7f7992a6007e16afeb55d0d2ba663c87a689ea",
+    "pid": 129392,
+    "status": "TERMINAL",
+    "terminal": "/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:66: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:66: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:85: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:85: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:104: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:104: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:123: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:123: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:142: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:142: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:161: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:161: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:171: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:171: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:181: syntax error\n/tmp/ds-related-native-parent-epyc-r1/sources/1_ot_ds_native_vm_related_parent.sv:181: error: Invalid module item.\n/tmp/ds-related-native-parent-epyc-r1/sources/4_ot_ds_owned_ratio_boundary.sv:5: warning: timescale for ot_ds_owned_ratio_boundary inherited from another file.\n/tmp/ds-related-native-parent-epyc-r1/sources/3_ot_ds_shared_native_vm_provider.sv:1: ...: The inherited timescale is here.\n/tmp/ds-related-native-parent-epyc-r1/sources/5_ratio_fifo.sv:45: warning: timescale for ot_ratio_cdc_fifo inherited from another file.\n/tmp/ds-related-native-parent-epyc-r1/sources/3_ot_ds_shared_native_vm_provider.sv:1: ...: The inherited timescale is here.\n",
+    "scope": "raw related-clock typed parent,13planes and one full2MiB provider; no all-caller/protected/physical/fulltoken adoption"
+  },
+  "ds-related-native-parent-epyc-r2": {
+    "archive": "ds-related-native-parent-epyc-r2.tgz",
+    "sha256": "d597fc95b3b7149a4b362bfd9d6e72153ba0802ac1109950d27f5b72a1a143f8",
+    "pid": 131817,
+    "status": "TERMINAL",
+    "terminal": "EVENT transport_accept client=0 fast_edge=74\nEVENT transport_accept client=1 fast_edge=74\nEVENT transport_accept client=2 fast_edge=74\nEVENT transport_accept client=3 fast_edge=74\nEVENT transport_accept client=4 fast_edge=74\nEVENT caller_capture client=1 fast_edge=112\nEVENT caller_capture client=2 fast_edge=125\nEVENT caller_capture client=3 fast_edge=170\nEVENT caller_capture client=4 fast_edge=224\nEVENT caller_capture client=0 fast_edge=232\nEVENT all_reverse_receipts fast_edge=239 slow_edge=179\nEVENT transport_accept client=1 fast_edge=239\nPASS RELATED_NATIVE_PARENT native_clients=8 related_planes=13 macros=256 visible_bank_writes=17 replies=5 no_head_of_line_block=1 masked_row_receipt=1 reset_debt=1 groups=13\n/tmp/ds-related-native-parent-epyc-r2/sources/0_tb_related_parent.sv:80: $finish called at 1604000 (1ps)\n",
+    "scope": "raw related-clock typed parent,13planes and one full2MiB provider; no all-caller/protected/physical/fulltoken adoption"
+  },
+  "ds-related-transpose-epyc-r1": {
+    "archive": "ds-related-transpose-epyc-r1.tgz",
+    "sha256": "04ba63b22cb206bfd0d1ce362a5dd986d4ada22e4f335f4ee1b77f72b071cf58",
+    "pid": 135288,
+    "status": "TERMINAL",
+    "terminal": "FATAL: /tmp/ds-related-transpose-epyc-r1/sources/0_tb_transpose.sv:73: transpose counts sent=266 writes=1060 last=1\n       Time: 4120000  Scope: tb\n",
+    "scope": "actual registered full512bit/four-bank transpose held-output functional; no fullparent/physical/protected adoption"
+  },
+  "ds-transpose-first-word-trace": {
+    "archive": "ds-transpose-first-word-trace.tgz",
+    "sha256": "9f6adc1cc50582825355c258f00ae49f9a2ea3f67b536e6f25554283922cae76",
+    "pid": 137972,
+    "status": "TERMINAL",
+    "terminal": "TRACE c0 sent0 take0 addr0 commit0 clear0 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c0 sent0 take0 addr0 commit0 clear0 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c0 sent0 take0 addr0 commit0 clear0 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c0 sent0 take0 addr0 commit0 clear0 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c0 sent0 take0 addr0 commit0 clear0 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c1 sent0 take0 addr0 commitx clear0 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c2 sent0 take0 addr101 commitx clear1 mask0000 fill0 ready0 fetch0 rank0 out0000 addr0x\nTRACE c3 sent1 take1 addr102 commitx clear0 mask0000 fill1 ready0 fetch0 rank0 out0000 addr0x\nTRACE c4 sent2 take1 addr103 commit0 clear0 mask0000 fill2 ready0 fetch0 rank0 out0000 addr0x\nTRACE c5 sent3 take1 addr104 commit0 clear0 mask0100 fill3 ready0 fetch0 rank0 out0000 addr0x\nTRACE c6 sent4 take1 addr105 commit0 clear0 mask1100 fill3 ready0 fetch0 rank0 out0000 addr0x\nTRACE c7 sent5 take1 addr106 commit0 clear0 mask1101 fill3 ready1 fetch1 rank0 out0000 addr0x\nTRACE c8 sent6 take1 addr107 commit0 clear0 mask1101 fill3 ready1 fetch1 rank1 out1101 addr0104\nTRACE c9 sent7 take1 addr108 commit0 clear0 mask1101 fill3 ready1 fetch1 rank2 out0111 addr0368\nTRACE c10 sent8 take0 addr109 commit0 clear1 mask1101 fill3 ready1 fetch1 rank3 out1101 addr0636\nTRACE c11 sent8 take1 addr109 commit0 clear0 mask0000 fill0 ready0 fetch1 rank0 out0111 addr0900\nTRACE c12 sent9 take1 addr110 commit1 clear0 mask0000 fill1 ready0 fetch1 rank1 out1111 addr0108\nTRACE c13 sent10 take1 addr111 commit0 clear0 mask0010 fill2 ready0 fetch1 rank2 out1111 addr0372\nTRACE c14 sent11 take1 addr112 commit0 clear0 mask0110 fill3 ready0 fetch1 rank3 out1111 addr0640\nTRACE c15 sent12 take1 addr113 commit0 clear0 mask1110 fill3 ready0 fetch0 rank0 out1111 addr0904\nTRACE c16 sent13 take1 addr114 commit0 clear0 mask1111 fill3 ready1 fetch1 rank0 out0000 addr0104\nTRACE c17 sent14 take1 addr115 commit0 clear0 mask1111 fill3 ready1 fetch1 rank1 out1111 addr0112\nTRACE c18 sent15 take1 addr116 commit0 clear0 mask1111 fill3 ready1 fetch1 rank2 out1111 addr0376\nTRACE c19 sent16 take0 addr117 commit0 clear1 mask1111 fill3 ready1 fetch1 rank3 out1111 addr0644\nTRACE c20 sent16 take1 addr117 commit0 clear0 mask0000 fill0 ready0 fetch1 rank0 out1111 addr0908\nTRACE c21 sent17 take1 addr118 commit1 clear0 mask0000 fill1 ready0 fetch1 rank1 out1111 addr0116\nTRACE c22 sent18 take1 addr119 commit0 clear0 mask0010 fill2 ready0 fetch1 rank2 out1111 addr0380\nTRACE c23 sent19 take1 addr120 commit0 clear0 mask0110 fill3 ready0 fetch1 rank3 out1111 addr0648\nTRACE c24 sent20 take1 addr121 commit0 clear0 mask1110 fill3 ready0 fetch0 rank0 out1111 addr0912\nTRACE c25 sent21 take1 addr122 commit0 clear0 mask1111 fill3 ready1 fetch1 rank0 out0000 addr0112\nTRACE c26 sent22 take1 addr123 commit0 clear0 mask1111 fill3 ready1 fetch1 rank1 out1111 addr0120\nTRACE c27 sent23 take1 addr124 commit0 clear0 mask1111 fill3 ready1 fetch1 rank2 out1111 addr0384\nMISSING addr=101 rank=0 index=0\nMISSING addr=367 rank=1 index=0\nMISSING addr=633 rank=2 index=0\nMISSING addr=899 rank=3 index=0\nFATAL: /tmp/ds-transpose-first-word-trace/sources/0_tb_transpose.sv:75: transpose counts sent=266 writes=1060 last=1\n       Time: 4120000  Scope: tb\n",
+    "scope": "actual registered full512bit/four-bank transpose held-output functional; no fullparent/physical/protected adoption",
+    "diagnostic_source_hashes": {
+      "sources/0_tb_transpose.sv": "b26b58d787b05f6f7e14a9e61e6eae319bb3a45a01b64fa743718aa37ed7d24d",
+      "sources/1_ot_chip_v41x_coll_transpose_related_vm.sv": "625c1e68aa50b93bcc6e098c6acae2f0172d10ce0bc79f881f31f73464e5a6ec"
+    },
+    "source_manifest_valid": false,
+    "source_manifest_failure": "trace instrumentation changed bench after predecessor hashes were copied; diagnostic only, no source-exact gate credit"
+  },
+  "ds-related-transpose-epyc-r2": {
+    "archive": "ds-related-transpose-epyc-r2.tgz",
+    "sha256": "822cad2dcefa665039e0d93ddcd35cc7a870471af971354cc307733d1eeb34fe",
+    "pid": 149524,
+    "status": "TERMINAL",
+    "terminal": "TRANSPOSE_PASS words=266 writes=1064 stalls=132 holds=103 cycles=407\n/srv/opentallas/jobs/dsrom-shared-native-20261003/transpose-r2/sources/0_tb_transpose.sv:86: $finish called at 4120000 (1ps)\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
+    "source_commit": "d62b12a27f04bebbace202f7211ec6a79eca9bd2"
+  },
+  "ds-collective-epyc-r1": {
+    "archive": "ds-collective-epyc-r1.tgz",
+    "sha256": "98904927cdd9f0f9864566b4ceff7124155665fb68b79e314e08f8499f4e6f1d",
+    "pid": 288672,
+    "status": "TERMINAL",
+    "terminal": "/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/0_tb_coll_parent.sv:22: syntax error\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/0_tb_coll_parent.sv:22: error: Invalid module item.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/7_ot_ds_owned_ratio_boundary.sv:5: warning: timescale for ot_ds_owned_ratio_boundary inherited from another file.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/6_ot_coll_topk_merge.sv:1: ...: The inherited timescale is here.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/8_ratio_fifo.sv:45: warning: timescale for ot_ratio_cdc_fifo inherited from another file.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/6_ot_coll_topk_merge.sv:1: ...: The inherited timescale is here.\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
+    "source_commit": "3315423f0fdcf3d76391af2e14f09a77024a4c0c"
+  },
+  "ds-collective-epyc-r2": {
+    "archive": "ds-collective-epyc-r2.tgz",
+    "sha256": "a369197dc559e5190e133aca1361b10b89d39c551a4c471d341011ccdf5371ed",
+    "pid": 388755,
+    "status": "TERMINAL",
+    "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=5933\nFATAL: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r2/sources/0_tb_coll_parent.sv:95: full retainedK8192 queue not reserved count0\n       Time: 56757000  Scope: tb\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
+    "source_commit": "5ebf6cd569f98bd67bdd96dedf829f05dd5f456f"
+  },
+  "ds-collective-epyc-r3": {
+    "archive": "ds-collective-epyc-r3.tgz",
+    "sha256": "531ac71e313b26ac35279aba21b1d91246c7d2f0081ce7700b74315f7e5f2559",
+    "terminal": "[48675000] %Fatal: 0_tb_coll_parent.sv:90: Assertion failed in tb: gather counts read266 sent266 writes1064\n%Error: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r3/sources/0_tb_coll_parent.sv:90: Verilog $stop\nAborting...\n",
+    "scope": "causal native gather counts exact; fixture did not force output stall, rejected before full topk. No full collective PASS."
+  },
+  "ds-ID-agidock128-r1": {
+    "archive": "ds-ID-agidock128-r1.tgz",
+    "sha256": "e3be6d06a6267d35a9c2ee996bfd92582dd350a83756f43b1f48802171d25e69",
+    "terminal": "FATAL: /home/ubuntu/otjobs/dsrom-shared-native/ID-r1/sources/0_tb_id_parent.sv:54: indirect ID exact native result addr457 accepted1 delivered1\n       Time: 357000  Scope: tb\n",
+    "scope": "one real native ID request/reply and expected HBM457; fixture hold counter assertion failure, no caller PASS"
+  },
+  "ds-ID-agidock128-r2": {
+    "archive": "ds-ID-agidock128-r2.tgz",
+    "sha256": "19c230e1df4f861e632447056d4ba9f04ad1827046adeca1fa44f5fa002b1fe1",
+    "terminal": "ID_BOUNDARY fault0 requests1 replies1 hbm457 len17 rom221 held9\nPASS ID_NATIVE held_request=1 matching_reply=1 macros=256 expertID=3 rom=221 hbm=457 requests=1\nPASS ID_NATIVE_WRONG_COOKIE debt_held=1 no_publication=1 no_unchecked_retirement=1\n/home/ubuntu/otjobs/dsrom-shared-native/ID-r2/sources/0_tb_id_parent.sv:61: $finish called at 537000 (1ps)\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit"
+  },
+  "ds-collective-agidock128-r5": {
+    "archive": "ds-collective-agidock128-r5.tgz",
+    "sha256": "75a27e7f574a7f0825b52eece9db78e15f2ef52da6f136068594ecc81c144af4",
+    "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=3831\nPASS DMA_TOPK_NATIVE K=8192 NMAX=2048 queue=128 output_words=512 read_words=256 exact_order=1 visible_retirement=1\n- /home/ubuntu/otjobs/dsrom-shared-native/collective-r5/sources/0_tb_coll_parent.sv:101: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 105us; walltime 2.323 s; speed 45.319 us/s\n- Verilator: cpu 2.323 s on 1 threads; allocated 11 MB\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit"
+  }
+}

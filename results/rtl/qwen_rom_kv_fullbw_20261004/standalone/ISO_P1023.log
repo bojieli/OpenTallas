@@ -1,0 +1,4 @@
+STATS ISO_P1023 hbm_act=648 rd=16384 wr=136 refpb=556 violations=0 max_landing=12 rsp_tile_stall=2639 fill_sectors=16384 wr_sectors=136 wr_lat_max=65
+PASS ISO_P1023 "P":1023,"fill_cycles":239,"fill_sectors":16384,"sectors_per_cycle":68.55,"tb_s_at_1p2ghz":2.632,"kv_ok_after_start":679,"su_drain_wait":614,"violations":0 : slices and token HBM codes exact
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"ISO_P1023","pass":true,"P":1023,"fill_cycles":239,"fill_sectors":16384,"sectors_per_cycle":68.55,"tb_s_at_1p2ghz":2.632,"kv_ok_after_start":679,"su_drain_wait":614,"violations":0,"detail":"slices and token HBM codes exact"}],"status":"pass"}

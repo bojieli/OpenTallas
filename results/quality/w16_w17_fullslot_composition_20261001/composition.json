@@ -1,0 +1,2868 @@
+{
+  "schema": "opentallas.w17.fullslot-composition.v1",
+  "status": "FULL_PRODUCT_COMPOSITION_HOLD_NO_OLD_CAPACITY_CREDIT",
+  "expert_only_stage_count": 46,
+  "product_stage_count": null,
+  "old_45_stage_capacity_credit": false,
+  "mapped_BF_baseline": {
+    "source_netlist_sha256": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea",
+    "measured_stdcell_um2": 62705.9,
+    "measured_macro_um2": 31525.5,
+    "original_area_test": "FAIL_SIMPLE_50PCT_AREA_RESERVATION_TEST_NOT_A_ROUTED_FIT_VERDICT",
+    "conditional_625row_outline_um": [
+      "1002.89",
+      "173.07"
+    ],
+    "conditional_clock_slot_stdcell_spare_um2": "39.46534",
+    "spatial_clock_verdict": "DIRECT_STACK_HYPOTHESIS_REFUTED_PHYSICAL_HOLD",
+    "physical_admission": false,
+    "scope": "Mapped BF element only;625row integer sitebudget not adopted spatial/clock/SSFF fit, no q area transfer."
+  },
+  "q_template_composition": {
+    "historical_q_gross_um2": 64825.596,
+    "candidate_descriptor_affine_placement_um2": "4797.8544000000",
+    "addition_fraction_of_historical_gross": "0.07401172833027250532336023567",
+    "actual_q_fullmapped_stdcell_um2": null,
+    "actual_q_clock_and_escape_site_budget": null,
+    "old_outline_fit_transferred": false,
+    "mask_ROM_abstract_or_current_q_footprint": null
+  },
+  "owner_placement_proposal": [
+    {
+      "layer": 0,
+      "proposed_stage": 0,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 1,
+      "proposed_stage": 1,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 2,
+      "proposed_stage": 2,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 3,
+      "proposed_stage": 3,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 4,
+      "proposed_stage": 4,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 5,
+      "proposed_stage": 5,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 6,
+      "proposed_stage": 6,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 7,
+      "proposed_stage": 7,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 8,
+      "proposed_stage": 9,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 9,
+      "proposed_stage": 10,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 10,
+      "proposed_stage": 11,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 11,
+      "proposed_stage": 12,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 12,
+      "proposed_stage": 13,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 13,
+      "proposed_stage": 14,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 14,
+      "proposed_stage": 15,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 15,
+      "proposed_stage": 16,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 16,
+      "proposed_stage": 18,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 17,
+      "proposed_stage": 19,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 18,
+      "proposed_stage": 20,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 19,
+      "proposed_stage": 21,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 20,
+      "proposed_stage": 22,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 21,
+      "proposed_stage": 23,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 22,
+      "proposed_stage": 24,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 23,
+      "proposed_stage": 25,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 24,
+      "proposed_stage": 27,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 25,
+      "proposed_stage": 28,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 26,
+      "proposed_stage": 29,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 27,
+      "proposed_stage": 30,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 28,
+      "proposed_stage": 31,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 29,
+      "proposed_stage": 32,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 30,
+      "proposed_stage": 33,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 31,
+      "proposed_stage": 34,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 32,
+      "proposed_stage": 36,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 33,
+      "proposed_stage": 37,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 34,
+      "proposed_stage": 38,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 35,
+      "proposed_stage": 39,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 36,
+      "proposed_stage": 40,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 37,
+      "proposed_stage": 41,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 38,
+      "proposed_stage": 42,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    },
+    {
+      "layer": 39,
+      "proposed_stage": 43,
+      "TP4_ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "placement_role": "Layer router-hub readonlyowner lookup",
+      "physical_coordinates": null,
+      "actual_nonexpert_hub_stage": null
+    }
+  ],
+  "owner_space_test": {
+    "owner_register_mux_candidate_stdcell_um2": "4023.98720000000",
+    "conditional_BF_spare_um2": "39.46534",
+    "owner_register_mux_candidate_stdcell_mm2": "0.00402398720",
+    "owner_register_mux_candidate_placed_mm2": "0.0080479744",
+    "area_units": "Standard-cell comparison is in square micrometres (um2); placement screens are in square millimetres (mm2). 1 mm2 = 1000000 um2.",
+    "qcfg_affine_candidate_placed_mm2_per_stage_rank": "17.9871561456",
+    "owner_fits_one_conditional_BF_spare_under_candidate_register_realization": false,
+    "deficit_um2": "3984.52186000000",
+    "required": "Separate explicit hub reservation; do not hide owner tables in unallocatedBFspare orexpert ROM free words"
+  },
+  "stage_bundles": [
+    {
+      "stage": 0,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 1,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 2,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 3,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 4,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 5,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 6,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 7,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 8,
+      "experts": 341,
+      "owner_tables_per_rank": 0,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "17.9946211056",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7616369448",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 9,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 10,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 11,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 12,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 13,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 14,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 15,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 16,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 17,
+      "experts": 341,
+      "owner_tables_per_rank": 0,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "17.9946211056",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7616369448",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 18,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 19,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 20,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 21,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 22,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 23,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 24,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 25,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 26,
+      "experts": 341,
+      "owner_tables_per_rank": 0,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "17.9946211056",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7616369448",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 27,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 28,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 29,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 30,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 31,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 32,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 33,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 34,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 35,
+      "experts": 341,
+      "owner_tables_per_rank": 0,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "17.9946211056",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7616369448",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 36,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 37,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 38,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 39,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 40,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 41,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 42,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 43,
+      "experts": 341,
+      "owner_tables_per_rank": 1,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "18.0026690800",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7696849192",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 44,
+      "experts": 341,
+      "owner_tables_per_rank": 0,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "17.9946211056",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7616369448",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 12537856,
+        "minimum_q_spare_words_per_physical_bank": 4,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 4,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 1368,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 2732,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    },
+    {
+      "stage": 45,
+      "experts": 15,
+      "owner_tables_per_rank": 0,
+      "descriptor_spine_owner_candidate_screen_addition_mm2_per_rank": "17.9946211056",
+      "historical_q_plus_conditional_BF_outline_reference_mm2_per_rank": "420.7670158392",
+      "reference_plus_known_additions_mm2_per_rank": "438.7616369448",
+      "q_strip_physical_fit": null,
+      "dense_HC_addition_mm2": null,
+      "full_slot_fit": null,
+      "bank_slack": {
+        "q_physical_banks": 14996,
+        "total_q_spare_physical_words": 59273216,
+        "minimum_q_spare_words_per_physical_bank": 3916,
+        "spare_word_histogram": [
+          {
+            "words_per_bank": 3916,
+            "physical_banks": 10880
+          },
+          {
+            "words_per_bank": 3976,
+            "physical_banks": 640
+          },
+          {
+            "words_per_bank": 4036,
+            "physical_banks": 1920
+          },
+          {
+            "words_per_bank": 4096,
+            "physical_banks": 1556
+          }
+        ],
+        "reserved_BF_physical_banks": 4096,
+        "reserved_BF_capacity_words": 16777216,
+        "dense_HC_occupancy_words": null,
+        "shared_expert_occupancy_words": null,
+        "constants_occupancy_words": null,
+        "total_nonexpert_fit": null,
+        "scope": "Exact expert-only affine bank slack; aggregate free words do not prove segment/region/nonexpert fit. BF slots unallocated, not proof of enough storage."
+      }
+    }
+  ],
+  "omitted_nonexpert_contracts": {
+    "dense_attention": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "shared_experts": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "HC_coefficients": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "norm_constants": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "index_compressor": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "embedding_head": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "Engram": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    },
+    "MTP": {
+      "header_census_owner": "Avicenna",
+      "source_pin": null,
+      "actual_ROM_word_count": null,
+      "rank_consumer_replication": null,
+      "physical_stage_assignment": null,
+      "area_mm2": null
+    }
+  },
+  "no_double_count": {
+    "existing_element_cfg_registers_counted_once": true,
+    "new_cfg_template_ROM_and_affine_candidate_addition_separate": true,
+    "owner_tables_not_weight_bank_capacity": true,
+    "BF_mapping_not_q_area": true
+  },
+  "mandatory_CKV_baseline_correction": {
+    "failure_witness": {
+      "inner_ckv_completion_forced_zero": true,
+      "inner_ckv_write_enable_forced_zero": true,
+      "outer_ckv_write_rejected": true,
+      "outer_fault_asserted": true,
+      "persistent_KV_qualified": false,
+      "read_positive": true,
+      "scope": "Actual two unchanged mux modules only; not full service/token, physical timing, or a corrected write path.",
+      "source_commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "source_pins": {
+        "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+        "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c"
+      },
+      "verdict": "PASS_REPRODUCED_CONNECTED_WRITE_BLOCKER"
+    },
+    "classification": "Mandatory baseline correctness and persistent-state visibility; not an optional performance optimization.",
+    "one_percent_optimization_gate_applies": false,
+    "required_contract": [
+      "Writable CKV routing through both actual muxes",
+      "Completion ownership for the untagged controller write-done response",
+      "Actual backend backing-store update and done delayed through CWL plus BURST; legacy column-issue done is not visibility",
+      "Finite per-stack write credit retained until visibility completion",
+      "Publish row only after all nine sector writes are visible",
+      "Persistent next-token state and exact context/address range guards"
+    ],
+    "required_model_costs": [
+      "Write requests plus controller command/burst service",
+      "Completion routing, reverse CDC and publication fence latency",
+      "Backend delayed-visibility queue, full-address backing store and write-buffer reservation",
+      "Owner/credit registers, arbitration, staging, ports and routing area"
+    ],
+    "current_connected_write_path_qualified": false,
+    "corrected_path_exactness_qualified": false,
+    "corrected_path_composed_service_bound_available": false
+  },
+  "current_baseline_model_inputs": {
+    "CKV_exclusive_publication_candidate": {
+      "schema": "opentallas.w17.ckv-exclusive-publication-lease.v1",
+      "status": "BOUNDED_MODEL_CANDIDATE_REQUIRES_JOINT_ADMISSION",
+      "source_pins": {
+        "backend": {
+          "commit": "6e1158394262bc47773993e04efce0672ac4552e",
+          "path": "tools/common_hbm_backend_provider_contract.py",
+          "sha256": "3c8edcb4cd4764f7fb6e230771790204d74571f5cedf8062f0b1bbc984f09759"
+        },
+        "legacy_idx": {
+          "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+          "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+          "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+        },
+        "negative_mux": "d4391b2e0",
+        "negative_early_visibility": "a5839799b"
+      },
+      "publication_lease": {
+        "stacks": 4,
+        "exclusive_scope": "all32PCs perstack: reject newW/C/P/indexB requests duringlease; includeprioracceptedB/Kwrites,queuebeats,andreadreturns inprelease drain",
+        "maximum_CKV_write_outstanding_per_stack": 1,
+        "W_C_owner_token": "pending+owner heldthroughactual WRvisible +consumeraccept; no newleaseowner untiloldtokenreleased",
+        "row_sector_count": 9,
+        "sector_bits": 256,
+        "row_bits": 2304,
+        "prelease_required": "actual backend queued-request-empty AND readreturn-empty AND no pendingB/Kwrite; scheduledboundedconsumer reserves and drainsallpriorreadreturns",
+        "duringlease": "no competitorread/window/index/rope; soleCKVsector serialized tillactualvisible then next",
+        "publish_after": "all9 actual backing updates and visibleeventaccepts; readfence and nexttoken producercredit helduntilpublication; downstreamconsumercredit independently helduntilfinaldone"
+      },
+      "backend_correction": {
+        "clock": "exact1.2GHz timestamp ceil(cycle*2500/3)ps, explicitforwarding instead oflegacy1000psdefault",
+        "capture_scheduled": "retainactual h_tcol/sector/PC/data/strb beforequeuepop",
+        "backing_update": "once at orafter actual h_tcol+CWL6250+BURST1024, nevercolumnissue",
+        "WR_visible": "after backingupdate, hold stable untilaccepted; nohosttimer or guessedfutureack",
+        "read_fence": "sameaddressread cannotissueuntilall9rowpublication; preservebackendWTR/RTW/RAS/WR constraints",
+        "finite_backend_slots": 4,
+        "provider_storage": {
+          "bits_per_pending_backend_slot": 512,
+          "total_register_bits": 8192,
+          "fields": {
+            "data": 256,
+            "sector": 34,
+            "tag": 16,
+            "beat": 5,
+            "PC": 5,
+            "column_time": 64,
+            "burst_due_time": 64,
+            "actual_visible_time": 64,
+            "valid_scheduled_pending_visible_pending_backing_committed_flags": 4
+          },
+          "slots_reserved": "Reserve backend pending slot before actual WRissue; never pop a write into an unavailable slot. Four frontend credits cap all write events including RMW.",
+          "fulladdress_backing": "Finite capacity-checked DRAM address space; sparse simulation storage may omit untouched pages but never modulo alias. Initial unseen data policy must be explicit from checkpoint loader; no implicit populated checkpoint."
+        },
+        "additional_backend_ports_and_area": {
+          "register_bits": 8192,
+          "mux_bit_equivalents": 90624,
+          "comparison_bit_equivalents": 6144,
+          "control_gate_equivalents": 2048,
+          "additive_footprint_mm2": 0.0443039744,
+          "allocation": "Additional to ec3 frontend32PC-to4slot event mux/compare and helperr4 ACK cost; backend4slot-to32PC schedule/visible fanout and pending storage are not free reuse",
+          "not_physical": "First analytical gate equivalents only; exact implementation/placement/routing/SSFF remain unqualified"
+        }
+      },
+      "ownership_exclusion": {
+        "actual_karb": "k_ok disallowsKwrite whenbw_out!=0; b_ok disallowsBwrite whenkw_out!=0; incrementonacceptedwrite, decrementonrouted h_wr_done",
+        "required_stronger_event": "replace legacyh_wr_done withactualvisiblecommit event in source-selectedbackend/karb closure; preserve exclusion whilepending untilactualvisible",
+        "done_OR": "oneKpending/stack avoidlost simultaneousPC ORevents; W/C owner latch routes untagged Kdone"
+      },
+      "numeric_pricing": {
+        "write_envelope_terms_ps": {
+          "REQ": 10000,
+          "RAS": 28125,
+          "RP": 16250,
+          "RCDWR": 9375,
+          "RFCPB": 200000,
+          "CWL": 6250,
+          "BURST": 1024
+        },
+        "perwrite_conservative_candidate_ps": 271024,
+        "perwrite_cycles_exact1p2GHz": 326,
+        "ninewrite_group_cycles_with_sampling_turnover_publish": 2952,
+        "ninewrite_group_ns": 2460.0,
+        "one_time_row_CDC_and_consumer_publish_latency": "Ram mustaddactualdomain crossing+publication/consumeracceptedcalendar; zeroCDC onlyifsource-proven sameclock",
+        "prelease_max_old_queue_beats_per_stack": 2048,
+        "prelease_max_return_beats_per_stack": 1024,
+        "prelease_total_landing_bound_beats": 3072,
+        "prelease_landing_byte_demand_ifallbuffered": 98304,
+        "prelease_cost": "charge actual draineservice/consumerreservation separately; no overlapcredit",
+        "area_no_doublecount": "backend additional.0443039744mm2 plusmandatoryW/C14FF+1152muxbits.0004689648mm2; excludes CDC/newproducerready/lease/drainobservability/readfence/consumer/control/routefit",
+        "conservative_envelope_scope": "Ram-proposed analytical uppercandidate underexclusivelease+completedprelease drain; refresh recurrence and actualprovider replay mustvalidate beforefreeze orRTLadmission"
+      },
+      "model_validation": {
+        "actual_supplied_column_events_delayed_commit_cases": 9,
+        "early_read_data_stayed_old": true,
+        "visible_event_never_before_burst_end": true,
+        "stalled_visible_event_held": true,
+        "all9_data_rows_exact": true,
+        "consumer_stall_cycles3": "test-only stall duration, notmodelservicebound",
+        "trace": [
+          {
+            "sector": 0,
+            "column_ps": 0,
+            "due_ps": 7274,
+            "visible_ps": 7500,
+            "completion_count": 1,
+            "row_publication": false
+          },
+          {
+            "sector": 1,
+            "column_ps": 10000,
+            "due_ps": 17274,
+            "visible_ps": 17500,
+            "completion_count": 2,
+            "row_publication": false
+          },
+          {
+            "sector": 2,
+            "column_ps": 20000,
+            "due_ps": 27274,
+            "visible_ps": 27500,
+            "completion_count": 3,
+            "row_publication": false
+          },
+          {
+            "sector": 3,
+            "column_ps": 30000,
+            "due_ps": 37274,
+            "visible_ps": 37500,
+            "completion_count": 4,
+            "row_publication": false
+          },
+          {
+            "sector": 4,
+            "column_ps": 40000,
+            "due_ps": 47274,
+            "visible_ps": 47500,
+            "completion_count": 5,
+            "row_publication": false
+          },
+          {
+            "sector": 5,
+            "column_ps": 50000,
+            "due_ps": 57274,
+            "visible_ps": 57500,
+            "completion_count": 6,
+            "row_publication": false
+          },
+          {
+            "sector": 6,
+            "column_ps": 60000,
+            "due_ps": 67274,
+            "visible_ps": 67500,
+            "completion_count": 7,
+            "row_publication": false
+          },
+          {
+            "sector": 7,
+            "column_ps": 70000,
+            "due_ps": 77274,
+            "visible_ps": 77500,
+            "completion_count": 8,
+            "row_publication": false
+          },
+          {
+            "sector": 8,
+            "column_ps": 80000,
+            "due_ps": 87274,
+            "visible_ps": 87500,
+            "completion_count": 9,
+            "row_publication": true
+          }
+        ]
+      },
+      "full_consumer_binding": "acced7668 fourlanes16960bitbeat,17x256macros/lane,all1masks; no265groupport; finalaccepted/storedresultdone calendar separatelyrequired",
+      "scope": "model-only sourcebinding+burst-provider deterministic test; noactualRTL/provider/persistence qualification",
+      "RTL_changed": false,
+      "hardware_jobs_launched": 0,
+      "launch_allowed": false,
+      "adopt": false
+    },
+    "CKV_cost_composition": "2952 fast cycles cover nine serialized writes, sampling, turnover and publish only; add prelease drain, CDC, consumer acceptance and final credit return. Conditional timing envelope still needs refresh/provider validation.",
+    "Engram_actual_header_demand_and_candidate_ports": {
+      "demand": {
+        "TP4_BF16_delivery_bytes_if_four_copies": 98304,
+        "TP4_raw_row_delivery_bytes_if_four_copies": 50688,
+        "bytes_per_stored_row": 264,
+        "decoded_BF16_rows_bytes_per_token": 24576,
+        "full_table_backing_bytes": 202758032400,
+        "keys_and_value_BF16_per_layer_bytes": 51200,
+        "lookups_per_layer": 24,
+        "lookups_per_token": 48,
+        "projection_MACs_per_layer": 157286400,
+        "projection_and_constants_bytes": 315043840,
+        "reference_int64_ids_bytes_per_token": 384,
+        "separate_checkpoint_region_reads": 96,
+        "stored_table_read_bytes_per_token": 12672,
+        "table_read_commands_with_fused_codes_and_scales": 48,
+        "total_checkpoint_engram_bytes": 203073076240,
+        "working_buffers_double_buffer_four_reference_copies_bytes": 196608,
+        "working_buffers_double_buffer_one_shared_copy_bytes": 49152
+      },
+      "mandatory_gaps": [
+        "Current gather RTL latches scale onbeat0 and reuses it; actual header+golden requires8distinct scales perrow. Existing scaled-row exactness does not qualify checkpoint decoder.",
+        "Physical table home, banking to dies, mapping/multiplier ROM, memory read latency and SS/FF port throughput remain unqualified.",
+        "Legacy ROM plan codes_and_scale_257B omits7scale bytes perrow; padded264B total equals actual8scale bytes but byte meaning differs.",
+        "Small per-token working set is an access demand, not full immutable backing capacity.",
+        "TP4 reference image replication is not proof that four complete tables are required.",
+        "Historical rack slack and model on-critical-path verdict need replay after actual codec/home and boundary binding."
+      ],
+      "port_budget": {
+        "SS_FF_port_closure": null,
+        "corrected_264bit_row_stream": {
+          "beat_bits": 264,
+          "beats_per_row": 8,
+          "codes_per_beat": 32,
+          "cycles_both_layers_serial": 384,
+          "cycles_both_layers_with_independent_ports": 192,
+          "cycles_per_layer": 192,
+          "decode_buffer_write_bits": 512,
+          "qualification": "required corrected candidate; no RTL implementation or timing credit",
+          "scale_byte_from_matching_32_column_block": true,
+          "scale_bytes_per_beat": 1,
+          "serialization_at_1p2GHz_ns": 320.0
+        },
+        "mandatory_decode_scale_bytes": 8,
+        "packed_256bit_stream": {
+          "bytes_per_cycle": 32,
+          "packed_stream_cycles": 396,
+          "row_aligned_cycles": 432,
+          "serialization_at_1p2GHz_ns": 330.0
+        },
+        "physical_port_count": null,
+        "quarter_slack_ns": 892.5,
+        "random_row_latency": null,
+        "required_bytes_per_cycle_1p2GHz_for_both_layers_quarter_slack": 11.831932773109244,
+        "required_memory_bandwidth_Bps_at_user_token_rate": "12672 * tokens_per_second",
+        "slack_reference_us": 3.57
+      }
+    },
+    "Engram_cost_composition": "Immutable table backing, projection/constants, working buffers, raw lookup traffic and TP delivery are distinct. Neither proposed ROM nor HBM home receives fit or latency credit until actual address/bank/codec/port/route contracts are bound.",
+    "complete_product_feasibility": false
+  },
+  "unresolved": [
+    "Avicenna sourceboundnonexpert census then actualTP4consumer/codec/segment proof",
+    "Godel actualtemplateword/basepatch classA gate",
+    "CurrentqPPfullmap/pin/clock/site footprint +descriptor realization/area/port contract",
+    "ActualdenseHC andownerhub physicalplacement/completebankallocator",
+    "Root/leaf clock+PG/CDC/NoC/collective/SU/CKV staging+SSFF +fullstageproviders"
+  ],
+  "connected_stage_cycles": null,
+  "full_token_cycles": null,
+  "full_token_rate": null,
+  "physical_admission": false,
+  "engine_RTL_build_ready": false,
+  "adopt": false,
+  "jobs_launched": 0,
+  "source_pins": {
+    "residency": {
+      "commit": "0fb58ac09c4415b4f143c97fed1fbfa4a5486aa9",
+      "path": "results/quality/w16_w17_integer_residency_20261001/candidate.json.gz",
+      "sha256": "eff58ce55fb268530aea3fdc981ef53e8009248baee276fc42af5ac335141c98"
+    },
+    "descriptor": {
+      "commit": "59d0630e62502eca15ef1151085aaf63c92c8e4e",
+      "path": "results/quality/w16_w17_descriptor_price_20261001/price.json",
+      "sha256": "a994f26b73e906a7b65ae37460ed11657f02c200fd3d8dd6965b83d2b7fabc19"
+    },
+    "fullmap": {
+      "commit": "4d40ecadbbfb73c51c187fddc9ae2d3b6be28eb6",
+      "path": "results/uarch/w10_baseline_wake/fullmap_r2/readiness.json",
+      "sha256": "6b0797d0e43ddd961b5bad7a3db5dd9aab55eeb18306332f8f2b42904352952c"
+    },
+    "historical_fullgoal": {
+      "commit": "4d40ecadbbfb73c51c187fddc9ae2d3b6be28eb6",
+      "path": "results/uarch/w10_baseline_wake/fullgoal_bound.json",
+      "sha256": "22ec42a393a34fb639d9ea8766b1da3b5682dfca761405ce5d0fb2c29c72be58"
+    },
+    "clock_slot": {
+      "commit": "0cdd92fd35f142c8f0fa170426113a5b2a64e153",
+      "path": "results/uarch/w10_clock_tree_site_budget_r1/receipt.json",
+      "sha256": "5a9a7b679cb7f518d37e299fc66afecf7e11395f04376dc36b90536951942f21"
+    },
+    "spatial_clock": {
+      "commit": "38695f435d25f4eade8ea7b050cefecd1f301fa7",
+      "path": "results/uarch/w10_spatial_clock_preflight_r1/preflight.json",
+      "sha256": "370d8fb14dd1501a2efa55483e119e0cb335788a85d7045863abd676f0cade3a"
+    },
+    "rootstop": {
+      "commit": "bf097e43e1b01902c21af0e71b6e0b1ae337961e",
+      "path": "results/quality/w10_clock_provider_join_r1/join.json",
+      "sha256": "4c3dc4c9b150768fdb0ead62143bd32aa8a069423f9f5d642e5389c55ac90c23"
+    },
+    "ckv_write_failure": {
+      "commit": "d4391b2e0",
+      "path": "results/quality/parent_ckv_writepath_review_20261001/receipt.json",
+      "sha256": "5d23a25e90aa2d962477e39d3b07a3138cb639399f4ee17c3f619279cbbfaa2f"
+    },
+    "ckv_lease": {
+      "commit": "2723dbc74",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_publication_lease_model.json",
+      "sha256": "c7404b58e0dfe2eb37f092a297b4c0be5719b7ab37651585f2c38398f4cc7848"
+    },
+    "engram_contract": {
+      "commit": "a9d1fad2835d96e4c0585a150b6a9d484b9791cc",
+      "path": "results/quality/w16_dsrom_engram_contract_20261001/summary.json",
+      "sha256": "d74410e0003f98aa670836adebf6aa3a7072942af7995ec74e5c7518ad398aa1"
+    }
+  }
+}

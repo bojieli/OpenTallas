@@ -1,0 +1,204 @@
+{
+  "adoption": false,
+  "area_exclusions": [
+    "Arithmetic logic, register stages, pin access, halos, routing, clock/PG, hub/service, spine and PHY regions"
+  ],
+  "at": "2026-10-02T08:24:51.732549+00:00",
+  "channel_capacity": null,
+  "claim_boundary": "Concrete macro inventory, capacity and conditional ideal fill lower bounds only. Not a unified-model price, selected storage policy, route/fit, connected local-KV proof or measured token rate.",
+  "clock_policy": {
+    "hold_uncertainty_ns": 0.025,
+    "setup_uncertainty_ns": 0.06,
+    "target_ns": 0.833333
+  },
+  "heavy_jobs_launched": 0,
+  "macro_area_lower_bound_mm2_per_die": 129.67316324351998,
+  "macro_area_lower_bound_mm2_per_tile": 0.08442263232,
+  "macro_count_per_die": {
+    "KV_SRAM": 3072,
+    "ROM": 15360
+  },
+  "macro_count_per_tile": {
+    "KV_SRAM": 2,
+    "ROM": 10
+  },
+  "macros": {
+    "ot_rom_4096x266_m8": {
+      "clk_to_q_ps": {
+        "ff": 487.5,
+        "ss": 739.2,
+        "tt": 585.8
+      },
+      "height_um": 62.91,
+      "min_period_ps": {
+        "ff": 464.7,
+        "ss": 707.1,
+        "tt": 559.0
+      },
+      "width_um": 121.824
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "clk_to_q_ps": {
+        "ff": 286.1,
+        "ss": 455.3,
+        "tt": 351.8
+      },
+      "height_um": 41.04,
+      "min_period_ps": {
+        "ff": 272.9,
+        "ss": 435.2,
+        "tt": 335.7
+      },
+      "width_um": 94.824
+    }
+  },
+  "mandatory_model_inputs": [
+    "Select persistent KV storage home/lifetimes across 36 layers and prove layer-switch publication/read visibility.",
+    "Bind actual finite fill lanes/ports/bandwidth, masks, destinations, arbitration, buffers, codec and acknowledgement/CDC semantics.",
+    "Reconcile whether existing model HBM/KV terms already charge the transfer before composing any refill latency.",
+    "Bind track capacity, mux/demux/fanout, real slot dimensions and SS macro capture budget; complete SS/FF context before build."
+  ],
+  "measured_service_latency": null,
+  "physical_build_ready": false,
+  "rows": [
+    {
+      "actual_tile_fill_payload_bits_per_lane": 1048,
+      "adoption": false,
+      "all_layer_capacity_lower_bound_fits": true,
+      "conditional_one_window_reload_bytes_per_token_die": 18432,
+      "context": 1,
+      "cycle_reference_scope": "Original TP4 SU64 context-zero host-serviced layer cycles only. Using 4668 sizes a demanding service target; it does not predict an 8K-context layer or grant overlap.",
+      "groups": 6144,
+      "ideal_64B_fill_beats_per_layer": 8,
+      "ideal_data_bytes_per_cycle_at_that_lane_count": 64,
+      "ideal_fill_lanes_to_match_observed_layer_reference": 1,
+      "ideal_one_lane_fill_cycles_per_layer": 8,
+      "ideal_routed_payload_bits_per_cycle_at_that_lane_count": 1048,
+      "kv_heads_per_die": 2,
+      "latency_scope": "Conditional refill lower bound if the selected design retains one local layer window and reloads it each layer hop. It is not observed runtime latency, not a priced G0 calendar, and not assumed absent from existing model terms.",
+      "layers": 36,
+      "local_capacity_words": 128,
+      "local_macro_capacity_bytes_per_die": 12582912,
+      "local_words_per_tile": 0,
+      "new_position_bytes_per_layer_die": 512,
+      "observed_layer_cycle_reference": 4668,
+      "one_window_fits": true,
+      "padded_current_window_bytes": 0,
+      "physical_build_ready": false,
+      "tiles_per_die": 1536,
+      "tp": 4,
+      "useful_all_layer_bytes_per_die": 18432,
+      "useful_window_bytes_per_layer_die": 512,
+      "warm_update_bytes_per_token_die": 18432
+    },
+    {
+      "actual_tile_fill_payload_bits_per_lane": 1048,
+      "adoption": false,
+      "all_layer_capacity_lower_bound_fits": false,
+      "conditional_one_window_reload_bytes_per_token_die": 150994944,
+      "context": 8192,
+      "cycle_reference_scope": "Original TP4 SU64 context-zero host-serviced layer cycles only. Using 4668 sizes a demanding service target; it does not predict an 8K-context layer or grant overlap.",
+      "groups": 6144,
+      "ideal_64B_fill_beats_per_layer": 65536,
+      "ideal_data_bytes_per_cycle_at_that_lane_count": 960,
+      "ideal_fill_lanes_to_match_observed_layer_reference": 15,
+      "ideal_one_lane_fill_cycles_per_layer": 65536,
+      "ideal_routed_payload_bits_per_cycle_at_that_lane_count": 15720,
+      "kv_heads_per_die": 2,
+      "latency_scope": "Conditional refill lower bound if the selected design retains one local layer window and reloads it each layer hop. It is not observed runtime latency, not a priced G0 calendar, and not assumed absent from existing model terms.",
+      "layers": 36,
+      "local_capacity_words": 128,
+      "local_macro_capacity_bytes_per_die": 12582912,
+      "local_words_per_tile": 44,
+      "new_position_bytes_per_layer_die": 512,
+      "observed_layer_cycle_reference": 4668,
+      "one_window_fits": true,
+      "padded_current_window_bytes": 4325376,
+      "physical_build_ready": false,
+      "tiles_per_die": 1536,
+      "tp": 4,
+      "useful_all_layer_bytes_per_die": 150994944,
+      "useful_window_bytes_per_layer_die": 4194304,
+      "warm_update_bytes_per_token_die": 18432
+    },
+    {
+      "actual_tile_fill_payload_bits_per_lane": 1048,
+      "adoption": false,
+      "all_layer_capacity_lower_bound_fits": false,
+      "conditional_one_window_reload_bytes_per_token_die": 301989888,
+      "context": 16384,
+      "cycle_reference_scope": "Original TP4 SU64 context-zero host-serviced layer cycles only. Using 4668 sizes a demanding service target; it does not predict an 8K-context layer or grant overlap.",
+      "groups": 6144,
+      "ideal_64B_fill_beats_per_layer": 131072,
+      "ideal_data_bytes_per_cycle_at_that_lane_count": 1856,
+      "ideal_fill_lanes_to_match_observed_layer_reference": 29,
+      "ideal_one_lane_fill_cycles_per_layer": 131072,
+      "ideal_routed_payload_bits_per_cycle_at_that_lane_count": 30392,
+      "kv_heads_per_die": 2,
+      "latency_scope": "Conditional refill lower bound if the selected design retains one local layer window and reloads it each layer hop. It is not observed runtime latency, not a priced G0 calendar, and not assumed absent from existing model terms.",
+      "layers": 36,
+      "local_capacity_words": 128,
+      "local_macro_capacity_bytes_per_die": 12582912,
+      "local_words_per_tile": 88,
+      "new_position_bytes_per_layer_die": 512,
+      "observed_layer_cycle_reference": 4668,
+      "one_window_fits": true,
+      "padded_current_window_bytes": 8650752,
+      "physical_build_ready": false,
+      "tiles_per_die": 1536,
+      "tp": 4,
+      "useful_all_layer_bytes_per_die": 301989888,
+      "useful_window_bytes_per_layer_die": 8388608,
+      "warm_update_bytes_per_token_die": 18432
+    },
+    {
+      "actual_tile_fill_payload_bits_per_lane": 1048,
+      "adoption": false,
+      "all_layer_capacity_lower_bound_fits": false,
+      "conditional_one_window_reload_bytes_per_token_die": 603979776,
+      "context": 32768,
+      "cycle_reference_scope": "Original TP4 SU64 context-zero host-serviced layer cycles only. Using 4668 sizes a demanding service target; it does not predict an 8K-context layer or grant overlap.",
+      "groups": 6144,
+      "ideal_64B_fill_beats_per_layer": 262144,
+      "ideal_data_bytes_per_cycle_at_that_lane_count": 3648,
+      "ideal_fill_lanes_to_match_observed_layer_reference": 57,
+      "ideal_one_lane_fill_cycles_per_layer": 262144,
+      "ideal_routed_payload_bits_per_cycle_at_that_lane_count": 59736,
+      "kv_heads_per_die": 2,
+      "latency_scope": "Conditional refill lower bound if the selected design retains one local layer window and reloads it each layer hop. It is not observed runtime latency, not a priced G0 calendar, and not assumed absent from existing model terms.",
+      "layers": 36,
+      "local_capacity_words": 128,
+      "local_macro_capacity_bytes_per_die": 12582912,
+      "local_words_per_tile": 172,
+      "new_position_bytes_per_layer_die": 512,
+      "observed_layer_cycle_reference": 4668,
+      "one_window_fits": false,
+      "padded_current_window_bytes": 16908288,
+      "physical_build_ready": false,
+      "tiles_per_die": 1536,
+      "tp": 4,
+      "useful_all_layer_bytes_per_die": 603979776,
+      "useful_window_bytes_per_layer_die": 16777216,
+      "warm_update_bytes_per_token_die": 18432
+    }
+  ],
+  "schema": "opentallas.qwen-rom-physical-dimensions.v1",
+  "selected_runtime_point": {
+    "CODE_BANKS": 5,
+    "G": 6144,
+    "MEM_EXTRA": 1,
+    "SMIN": 7,
+    "SU": 64,
+    "TP": 4
+  },
+  "slot_fit": null,
+  "source_sha256": {
+    "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "tools/qwen_rom_floorplan_candidate_w12.py": "7427e249214992ab4d535f36a5618b8d010019c969819a73f5d426efd391fe96",
+    "tools/qwen_rom_wire_budget_w12.py": "0d911209509fe06658ad17426b0e0d29bc3231d010aef528056d5e191fa6d566",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "status": "blocked",
+  "track_demand": null
+}

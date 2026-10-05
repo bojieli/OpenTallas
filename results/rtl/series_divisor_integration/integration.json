@@ -1,0 +1,22 @@
+{
+  "scope": "Commit the previously uncommitted prior-session divisor-width and step-parameter work after current-source validation.",
+  "default_steps": 10,
+  "default_divisor_bits_before": 9,
+  "default_divisor_bits_after": 6,
+  "sources": [
+    {
+      "source": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "before_sha256": "acbe6172b6286934597d121a59e389fcd7e3d58286c1ff123d4b91847efe3ac6",
+      "integrated_sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
+      "before_snapshot": "results/rtl/series_divisor_integration/before_ot_a3_fp32_exp_pos_cr_rne.sv"
+    },
+    {
+      "source": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "before_sha256": "a5585383611c23090022ca8faff2c02e86d24528d3b91ee54eb269fed0faf412",
+      "integrated_sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+      "before_snapshot": "results/rtl/series_divisor_integration/before_ot_a3_fp32_transcendental_cr_rne.sv"
+    }
+  ],
+  "physical_claim": "None added by this integration; engine route acceptance remains pending.",
+  "validation": "Eight series-length differential tests pass. Positive Verilator corpus: 2201 exact exponential arguments and four refusal/overflow checks pass. Existing exact-source exp/sigmoid corpus: 4200 cases, 6637132 checks, reset/output stalls."
+}

@@ -1,0 +1,61 @@
+{
+  "actual_production_policy_qualified": false,
+  "authoritative_model": "results/uarch/qwen_rom_parent_context_service_20261002/model-r4.json",
+  "authoritative_revision": "model-r4.json; r1..r3 retained intermediate screens lack the final operand/replica/shared-return join and are not submission authority.",
+  "baseline": {
+    "PHY": "Four source PHY footprint40.00784006016mm2 is charged only if absent from named baseline; no new PHY bandwidth or replicas claimed.",
+    "complete_named_Maxwell_receipt": false,
+    "complete_slot_fit": false,
+    "existing_KV": "Replace useful KV read byte charge once. Same mutable HBM homes and current windows; no full-refill surcharge.",
+    "existing_owner": "Current4owners/32PC request+return arrays perstack included once. Proposedadditional52fullowners price exact state/macro delta; full original384service macros remain once.",
+    "existing_tile_capture": "All508bits/tile and source BD/XVM/MEM_EXTRA remain in current tile/parent source budget. Increment0;379root hold is a new proposed FF bank.",
+    "global_distribution": "Total required83600instruction and65536x buffers priced; root/array placement and named baseline credits pending. These cell counts do not automatically enlarge747.652allocated array footprint.",
+    "known_new_service_cell_mm2": 15.061739829440002,
+    "no_baseline_refund_or_doublecharge_claim": true,
+    "parent_interface_cell_reservation_mm2": 0.0384992919,
+    "remaining_if_all_new_debits_and_PHY_outside_baseline_mm2": 6.730039986500074
+  },
+  "build_admitted": false,
+  "claim": "Finite source-sized candidate and explicit3k deficit only. No actual sustained PHY bandwidth or complete slot proof.",
+  "default_enabled": false,
+  "direct_peer_delivery": "Addressed contracts prepared for parent relay. No callable peer-messaging transport is exposed; not claimed delivered.",
+  "known_transport_lower_bounds": {
+    "compound_source_12_and_14_not_II1": true,
+    "compute_reference_s": 0.00010703666666666666,
+    "no_compute_overlap_reference_s": 0.002464028666666667,
+    "owned_data_plus_grant_s": 0.002356992,
+    "owner_s": 0.001178496,
+    "perfect_compute_overlap_transport_s": 0.002356992,
+    "scope": "Conditional optimistic source-port capacities. Neither actualHBMBW nor sustainable workload prediction.",
+    "shared_column_s": 0.001178496,
+    "shared_ingress_s": 0.001253502,
+    "single_fill_s": 0.00196224,
+    "three_k_admitted": false
+  },
+  "live_jobs": [],
+  "model_sha256": "5666f8fb189e02ce1e638a26a62993a766fb1da90c7dad8edc2f13d53496483d",
+  "next_necessary_output": "Actual producer/state/accepted-demand journal joined to finite command/owner/return/grant/global-fill/window calendar and named baseline slots. Preserve all original numerical and physical failures.",
+  "parent": "28d01b35ac5c82595e5c8a96200cd1f6ecb4269f",
+  "rejected_test_command": "peer-context-tests-r1.log ran0unittest tests; excluded from validation count, then14pytest tests ran.",
+  "selected_policy": "Conditional die-local persistent HBM homes, current tail/Vforward, two54row stage windows; actual production selection not qualified.",
+  "source_status": "Software predicates/leases/finite39stage route only; all unit-test provider data are fixtures.",
+  "tests": {
+    "KV": 54,
+    "peer_pytest": 14,
+    "persistent": 15,
+    "total": 83
+  },
+  "three_k": {
+    "actual_PHY_service_calendar": null,
+    "actual_parallel_PHY_BW": null,
+    "explicit_deficit_factor": 7.070976,
+    "independent_ports_or_PHYs_selected": false,
+    "necessary_transport_period_s": 0.002356992,
+    "necessary_transport_time_over_budget_s": 0.0020236586666666665,
+    "qualification": "Finite protocol fixtures and priced slot demands do not supply the missing actual producer/PHY/window service journal; explicit deficit does not depend on proving perfect overlap.",
+    "required_minima_predecessor": "results/uarch/qwen_rom_kv_rate_risk_20261002/model_r3.json#/three_k_requirement",
+    "target_token_period_s": 0.0003333333333333333,
+    "verdict": "FAIL_3K_EVEN_AT_PERFECT_COMPUTE_OVERLAP_AND_OPTIMISTIC_PORT_CEILINGS"
+  },
+  "verdict": "FAIL_3K_AND_PHYSICAL_SOURCE_ADMISSION"
+}

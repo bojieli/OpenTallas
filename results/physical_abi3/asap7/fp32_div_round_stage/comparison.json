@@ -1,0 +1,44 @@
+{
+  "scope": "ASAP7 TT standalone synthesis at 1 ns. Matched 2 ns routes pending; no clock closure claim.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/fp32_div_normalized_compare/prelayout_baseline_1ns.json",
+      "sha256": "62e7cba9c30bd4ac6965ac61b9d1e967e0c1cee678b8254b0f55a60500b8a004",
+      "area_um2": 1121.627,
+      "setup_wns_ns": -1.290138112612177
+    },
+    {
+      "record": "results/physical_abi3/asap7/fp32_div_round_stage/prelayout_1ns.json",
+      "sha256": "9e0f31b14f345960a67f7efa53218af67ec6483cd1226f309a6dcda468e57bb7",
+      "area_um2": 1163.456,
+      "setup_wns_ns": -1.2228604844302062
+    }
+  ],
+  "change": "Capture final RNE midpoint before multiply; one additional cycle outside bisection loop.",
+  "divider_equivalence": {
+    "cases": 673,
+    "failures": 0,
+    "baseline_pipe_cycles": 35335,
+    "round_stage_cycles": 36001,
+    "reference_cycles": 21982
+  },
+  "limitations": "Routed and complete engine/target timing qualification remain pending. No containing block changes its divider selection.",
+  "sinkhorn_equivalence": {
+    "cases": 35,
+    "failures": 0,
+    "baseline_pipe_cycles": 1073995,
+    "round_stage_cycles": 1092715,
+    "reference_cycles": 641128,
+    "simulator": "Verilator 5.050",
+    "bench": "rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv",
+    "bench_sha256": "888d3b8dfb1dee312483fc1dd4b2c710ca857753966cb6547ec28d58941b87d4"
+  },
+  "source_hashes": {
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c26aaf34b19e36dfb3f52f5b92a7b3f0757cee57c7facbc35c124fb7a121afcb",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv": "bd866bb68c951ac5a36c2a88a22eabe43f54a51703b0d07ce474492ad1cea5da",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv": "a935cd5b6a82d1be73ff396ec86d9c60bfc58d31dd0012fd7c4b8bcaaa63524e",
+    "rtl/proto/ot_fp32_add_positive_rne_pipe.sv": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e"
+  }
+}

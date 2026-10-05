@@ -1,0 +1,153 @@
+[
+  {
+    "copy": "0_ot_chip_v41x_die.sv",
+    "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+    "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "1_ot_chip_v41x_tile.sv",
+    "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+    "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "2_ot_hdc_core_v41x.sv",
+    "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+    "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "3_ot_hdc_core_v41x.sv",
+    "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+    "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "4_ot_chip_v41x_die.sv",
+    "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+    "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "5_ot_chip_v41x_tile.sv",
+    "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+    "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "6_ot_v41_rom_adapt.sv",
+    "path": "rtl/v41die/ot_v41_rom_adapt.sv",
+    "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "7_ot_v41_spine_w17w10.sv",
+    "path": "rtl/v41die/ot_v41_spine_w17w10.sv",
+    "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "8_ot_hdc_v41x_su_adapt.sv",
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+    "sha256": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "9_ot_hdc_v41x_xu_adapt.sv",
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "10_ot_hdc_v41x_he_adapt.sv",
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+    "sha256": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "11_ot_hdc_v41x_att_adapt.sv",
+    "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+    "sha256": "be2cd15b4977825dec71fe890a36f5eabe0345bdcf1ff2718af669f16ebab27a",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "12_ot_hdc_v41x_idx_pool_adapt.sv",
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+    "sha256": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "13_ot_hdc_v41_qe.sv",
+    "path": "rtl/hdc/v41/ot_hdc_v41_qe.sv",
+    "sha256": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "14_ot_chip_v41x_coll_dma.sv",
+    "path": "rtl/chip/ot_chip_v41x_coll_dma.sv",
+    "sha256": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "15_ot_rom_pkg_ctrl_x.sv",
+    "path": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
+    "sha256": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "16_ot_chip_v41x_ckv_die_service.sv",
+    "path": "rtl/chip/ot_chip_v41x_ckv_die_service.sv",
+    "sha256": "9c6bbc1289f33473c5395511b419bd0bba89b70910f7bc31840bf931b198ac25",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "17_w17_current_fastpp_die_rt.py",
+    "path": "tools/w17_current_fastpp_die_rt.py",
+    "sha256": "0673907bef97ea383144e7aadb10b4c79b7807cf4453867aa074a7d965c27d70",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "18_w17_current_fastpp_l20_sources.txt",
+    "path": "tools/w17_current_fastpp_l20_sources.txt",
+    "sha256": "662e50f60f2a3048870448de7d68da428ab058b8337302045bd854ba731aabb9",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "19_dsrom_parallel_owner_binding.py",
+    "path": "tools/dsrom_parallel_owner_binding.py",
+    "sha256": "8705c822cf8a32af796a0ee67c5c0d2ae66c1fdf715cc7af59c01e42cf69f5bf",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "20_phase_shard_bindings.jsonl.gz",
+    "path": "results/uarch/dsrom_parallel_owner_binding_20261002/r1/phase_shard_bindings.jsonl.gz",
+    "sha256": "e22b2080c32cf14d2fcbda03057497fedcbf177927aee4163f636c2c9bcec979",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "21_native_shard_choices.jsonl.gz",
+    "path": "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz",
+    "sha256": "a723482a46ab7843a83399f666c9c3571c499891d02a449c6d8d89eb356eb2b3",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "copy": "22_cell_LEF.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/cell_LEF.json.gz",
+    "sha256": "007ab8c4d064f668c503257c26444ee7751fab732926f49d6517d76534d61207",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb"
+  },
+  {
+    "commit": "6675dc3c5b7235e6df8ce0b61f8b05091f00b2bb",
+    "copy": "23_Epicurus_CKV_model_r3.json",
+    "scope": "Peer CKV model receipt; installed binary unproven; no qualification transfer",
+    "sha256": "d346b0d0c8c7a2783f461ff574e82df67ab87a4bca3afc6c00146b1f9e3e72f8",
+    "source": "results/uarch/dsrom_ckv_receive_credit_model_20261003/model_r3.json"
+  },
+  {
+    "commit": "6675dc3c5b7235e6df8ce0b61f8b05091f00b2bb",
+    "copy": "24_Epicurus_CKV_origins.json",
+    "sha256": "8e16084471432977b7bd32b315a589fdcc5c0c039e8c6d2d3720057adff96410",
+    "source": "results/uarch/dsrom_ckv_receive_credit_model_20261003/origins.json"
+  }
+]

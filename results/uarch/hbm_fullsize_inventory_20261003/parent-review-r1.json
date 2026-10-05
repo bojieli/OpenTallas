@@ -1,0 +1,30 @@
+{
+  "artifact_pins_verified": 7,
+  "cold_model_byte_identical": true,
+  "figure_checks": "PASS_WITH_EXISTING_UNBUILT_DOCUMENT_FIGURE_NOTICE",
+  "hardware_adopted": false,
+  "integration_base": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+  "merged_tree_tests": {
+    "command": "python3 -m pytest -q tests/test_hbm_fullsize_inventory_r1.py",
+    "passed": 18
+  },
+  "model_sha256": "774c50e28e39d06c9c7a3e80b69c6442a262af69640d5167126b6ef708cf465b",
+  "owner_assignments": {
+    "Ampere": "Bounded current W2/W6 protection-version reconciliation",
+    "Archimedes": "Full macro/clock/reset/PG context",
+    "Dewey": "Native accepted demand and finite service intervals",
+    "Popper": "Actual caller/assembler/component interface and once-only area join"
+  },
+  "owner_commit": "c8dafdfe0da8a537f9cea2d833a2a834308833a6",
+  "remaining_current_implementation_join": [
+    "Historical 51-bit fence must not substitute current W6 71 raw/144 protected per SM. Reconcile source versions and area exactly once.",
+    "DS staging source 139264 useful/163840 physical bytes differs from 131072 summary.",
+    "Retained PHY LEN5/BEAT4 differs from selected LEN6/BEAT5.",
+    "Gateway clock sink census omits retained matrix macro loads."
+  ],
+  "review_invocation_correction": "Initial owner-tree CLI --verify invocation was refused because the tool has no such option. Subsequent import compose()/encoded() equality and independent source/artifact checksum verification passed on owner and merged trees; no records changed.",
+  "schema": "opentallas.hbm.fullsize-inventory.parent-review.v1",
+  "scope": "Constructor-free source inventory and disjoint reservation accounting only; no payload reads, constructor execution, numeric replay, RTL elaboration or P&R.",
+  "source_pins_verified": 32,
+  "terminal_ready": false
+}

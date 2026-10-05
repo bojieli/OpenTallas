@@ -1,0 +1,2 @@
+FAIL_PRESERVED static intake assertion: refill == (staged-1)-start+1
+Observed start=12300 staged=136669 refill=124368. Prior model predicts staged=136668: observed +1 cycle. Original assertion failed before creating evidence directory. Subsequent comparison preserves mismatch; no source or timing knob modified.

@@ -1,0 +1,212 @@
+{
+  "schema": "opentallas.qwen-complete-lowering-progress.v1",
+  "baseline_functional_source": "defc45332c52a173d47f882595ddd78c4ce22fde",
+  "source_sha256": {
+    "tools/qwen_hbm_complete_isa.py": "0d596af81f3d2f686c035d4a1404d5e10a9d9e9ebbf9245971e113d425c901d3",
+    "tests/test_qwen_hbm_complete_isa.py": "50cfb32f2ff03f239df337865c0c0fea5d5aa3e4a0219e85c1676a32e06f67ed",
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "artifact_sha256": "6fe28294926c924e821f317cf022f0496e7a9589cbde1ffa8f2e37fae15fb014",
+  "artifact_regeneration": "python3 tools/qwen_hbm_complete_isa.py --out /home/ubuntu/qwen-ordinary-GPU-lowering-replay.json",
+  "artifact_payload_policy": "Expanded graph demand rows and recipes reproducible, scratch only; no weight images",
+  "recipes": {
+    "FADD": {
+      "instructions": 1,
+      "opcodes": {
+        "FADD": 1
+      },
+      "peak_live_value_registers": 3,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 2048,
+      "RF_write_bits_per_warp": 1024,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "FMUL": {
+      "instructions": 1,
+      "opcodes": {
+        "FMUL": 1
+      },
+      "peak_live_value_registers": 3,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 2048,
+      "RF_write_bits_per_warp": 1024,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "EXP": {
+      "instructions": 34,
+      "opcodes": {
+        "FCMPGT": 2,
+        "ISUB": 2,
+        "XOR": 6,
+        "AND": 2,
+        "FMUL": 9,
+        "FADD": 10,
+        "F2I": 1,
+        "SHL": 1,
+        "IADD": 1
+      },
+      "peak_live_value_registers": 5,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 68608,
+      "RF_write_bits_per_warp": 34816,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "RECIP": {
+      "instructions": 20,
+      "opcodes": {
+        "UGT": 1,
+        "ULT": 1,
+        "AND": 2,
+        "ISUB": 2,
+        "XOR": 5,
+        "FMUL": 6,
+        "FADD": 3
+      },
+      "peak_live_value_registers": 5,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 40960,
+      "RF_write_bits_per_warp": 20480,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "RSQRT": {
+      "instructions": 18,
+      "opcodes": {
+        "FMUL": 10,
+        "SHR": 1,
+        "ISUB": 1,
+        "XOR": 3,
+        "FADD": 3
+      },
+      "peak_live_value_registers": 4,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 36864,
+      "RF_write_bits_per_warp": 18432,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "BF16": {
+      "instructions": 5,
+      "opcodes": {
+        "SHR": 1,
+        "AND": 2,
+        "IADD": 2
+      },
+      "peak_live_value_registers": 3,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 10240,
+      "RF_write_bits_per_warp": 5120,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "SILU_GATE": {
+      "instructions": 58,
+      "opcodes": {
+        "XOR": 12,
+        "FCMPGT": 2,
+        "ISUB": 4,
+        "AND": 4,
+        "FMUL": 17,
+        "FADD": 14,
+        "F2I": 1,
+        "SHL": 1,
+        "IADD": 1,
+        "UGT": 1,
+        "ULT": 1
+      },
+      "peak_live_value_registers": 7,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 117760,
+      "RF_write_bits_per_warp": 59392,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    },
+    "NORMALIZE": {
+      "instructions": 21,
+      "opcodes": {
+        "UGT": 1,
+        "ULT": 1,
+        "AND": 2,
+        "ISUB": 2,
+        "XOR": 5,
+        "FMUL": 7,
+        "FADD": 3
+      },
+      "peak_live_value_registers": 6,
+      "address_loop_regs": 8,
+      "RF_operand_bits_per_warp": 43008,
+      "RF_write_bits_per_warp": 21504,
+      "serial_cycles": null,
+      "hardware_qualified": false
+    }
+  },
+  "elementwise_instances": 506,
+  "matrix_demand_instances": 290,
+  "model_risk": {
+    "organization": "Existing TP2 row-major128B stripe, balance contiguous output rows across32SM; corrected Boyle candidate SMquad ownership",
+    "qkv_code_bytes": 12582912,
+    "qkv_lines_by_stack": [
+      24576,
+      24576,
+      24576,
+      24576
+    ],
+    "qkv_local_line_requests": [
+      6144,
+      6144,
+      6144,
+      6144
+    ],
+    "qkv_cross_quad_line_requests": [
+      18432,
+      18432,
+      18432,
+      18432
+    ],
+    "cross_quad_fraction": 0.75,
+    "scope": "Conditional demand under declared candidate ownership; NOT proven actual placement or service. Existing stripe spans all4stacks per matrix row, not quadrant-local. No locality benefit claimed."
+  },
+  "validation": {
+    "focused_tests_passed": 23,
+    "new_ISA_tests_passed": 7,
+    "bit_exact": "Shipped golden comparisons for EXP/reciprocal/rsqrt/BF16/SiLU/normalization including saturation and RNE; seed mutant/unknown opcode/NaN wrapper negatives",
+    "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 -m pytest -q tests/test_qwen_hbm_complete_program.py tests/test_qwen_hbm_complete_executor.py tests/test_qwen_hbm_complete_checkpoint.py tests/test_qwen_hbm_complete_launch.py tests/test_qwen_hbm_complete_isa.py"
+  },
+  "canonical_candidate_cost_basis": "Ram communicated corrected Boyle9fffce2ef/d47d05754; INT/FCMP9serial inclRF2,SHFL7,ADD/MUL9,DIV21 with singleSMdivider/II1serializedlanes. No kernel timing assigned until exact variants/issue/writeback/calendar bind.",
+  "missing_macro_lowerings": [
+    "EMBED",
+    "RSTD",
+    "MATRIX",
+    "QKV_SPLIT",
+    "HEAD_NORM",
+    "ROPE",
+    "KV_WRITE",
+    "KV_FENCE",
+    "KV_READ",
+    "SCORES",
+    "EXP_SUM",
+    "PV",
+    "ALL_REDUCE",
+    "FINAL_NORM",
+    "ARGMAX",
+    "ARGMAX_REDUCE"
+  ],
+  "missing_physical_bindings": [
+    "Typed INT/compare area and contextual clock",
+    "Full operator chunk/tree reduction and register/address loops",
+    "Exact RF issue/writeback calendar",
+    "Shared bank/address maps and masks",
+    "Quad placement/locality",
+    "Loaded finite combined750Bpc controller/request-return/NoC/CDC/credits calendar"
+  ],
+  "actual_fullprogram_GPU_qualified": false,
+  "callback_timeline_bound": false,
+  "physical_build_ready": false,
+  "engine_RTL_build_ready": false,
+  "token_cycles": null,
+  "token_rate": null
+}

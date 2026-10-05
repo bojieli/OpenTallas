@@ -1,0 +1,134 @@
+{
+  "APIs": [
+    "InstalledQwenPC.step",
+    "InstalledQwenPC.fairness",
+    "CausalTransportOwners.accept",
+    "CausalTransportOwners.event",
+    "aggregate_r55"
+  ],
+  "DS193316_production_calls_closed_by_this_delta": 0,
+  "DSROM_work": false,
+  "Qwen1737_PC_and_DS2213_PC_physical_wait_upper": null,
+  "R55": {
+    "cold_restore_source_repaired": true,
+    "constructor_GO": false,
+    "fresh_storage_fit": null,
+    "historical_available_bytes": 827982553088,
+    "historical_floor_bytes": 827374189940,
+    "historical_margin_before_missing_aggregate_terms": 608363148,
+    "old_single_journal_floor_is_NOT_aggregate_proof": true,
+    "production_numerical_GO": false
+  },
+  "R55_source_commit": "a71c37d4f",
+  "TP96_literal64B_to_wide_rate_credit": false,
+  "agentic_headline_unchanged": true,
+  "artifact_hashes": {
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/PC.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/R55_handoff.json": "18f4a2c7eda495f0cc72c2b80e4d2afbf16d83bab54a74f1f4f8a38ccfa0fe60",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/R55_runner.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/R55_storage.py": "f21057181b997b9871aa2ffe3e8e595ef38d732394be6341104c5af1264becca",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/RF.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/owner_r14.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/provider_r14.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/shared.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/system.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs/wrapper.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/inputs_manifest.json": "99b550e26e68a71f981fcf8ee25170f37e7be3bab8aec5a9ab5d683db562d70f",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/model.json": "a15297e010ca1e16d36f217eb13b8a9124362cd6edbed0567018477606162b45",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/model_initial_unadopted.json": "a8711bf5c89e29c307516f7ad07864c9568e3d3c5f3cba74b7537a171217ecf5",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/preserved_failure_r1.json": "a220e9001e35068f62a207673e457af189ae0e5f5d4c245b0bb8b732a8b7ce68",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/replay_PASS.log": "682caee647ec2063b4f0c8471fc052c7b1f07ea99efda933e27c3f5f041f8889",
+    "results/uarch/h3_complete_native_calendar_20261002/installed_services_r2/tests_PASS.log": "4140ce769d51b5b86725fcef9d0b85eee52e919ff107fd4698a4c782f527af63"
+  },
+  "binding_contract": {
+    "ACK_evidence": "actual CausalGrantLedger parent+active child+binding SHA; every SRAM bank accepted/captured and commonACK held live",
+    "retirement": "backend_completion -> resolved local SRAM_ACK -> existing parent visibility_fence -> existing consumer -> existing parent reverse -> explicit sender+receiver CDC receipt",
+    "software_adapter_is_installed_hardware": false,
+    "source_identity": [
+      "generation",
+      "PC",
+      "sequence",
+      "rank",
+      "SM",
+      "lease",
+      "provider_reference",
+      "source_command_sha256",
+      "write"
+    ],
+    "wire_key": [
+      "physical_PC",
+      "client",
+      "client_tag32"
+    ]
+  },
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python -m pytest -o addopts='' -q tests/test_h3_complete_native_calendar_installed_r2.py tests/test_h3_complete_native_calendar_grants_r1.py tests/test_h4_hbm_production_owner.py tests/test_h4_hbm_selected_cache_rmw.py tests/test_ds_hbm_additive_endpoint_join_r54.py",
+    "PYTHONDONTWRITEBYTECODE=1 python tools/h3_complete_native_calendar_installed_r2.py --verify"
+  ],
+  "dependency_commits": [
+    "c5e6363f8ca913e0f3ac70a303b603e15126d147"
+  ],
+  "full_token_latency": null,
+  "hardware_qualified": false,
+  "minimal_owner_model": {
+    "accepted_beat_upper": 12288,
+    "adopted": false,
+    "dictionary_storage_unknown": true,
+    "metadata_upper_bits": 3981312,
+    "ports_area_routing_context_SS_FF_closed": false,
+    "record_bits": 324
+  },
+  "new_numerical_launch": false,
+  "next_exact_delta": [
+    {
+      "edge": "C0/SIMD/matrix/KV/L2 admission to actual128PC/6client request",
+      "need": "source DAG request persistence, unique full-owner wiretag mapping, installed owner gate and shared-bank ledger; current wrapper exposes external grant inputs",
+      "owner": "Sagan/Popper/calendar"
+    },
+    {
+      "edge": "backend write_done to held SRAM ACK and logical owner",
+      "need": "capture completion despite absence of write_done_ready; source counter alone does not validate exact tag/generation or prove local retirement",
+      "owner": "Popper/calendar"
+    },
+    {
+      "edge": "SRAM parent visibility/consumer/reverse and CDC",
+      "need": "actual journal-to-endpoint receipt bindings and finite consumer/reverse/backpressure bounds, both domain edge ordinals; positive control proves validator mechanics only",
+      "owner": "Kepler/Sagan/calendar"
+    },
+    {
+      "edge": "R14 allocation and write visibility priority",
+      "need": "actual emitted lease/contender finite exhaustion proof before bounded read/taglookup service; continuous synthetic priority stimulus does not prove actual program starvation",
+      "owner": "Sagan/calendar"
+    },
+    {
+      "edge": "R55 constructor resource admission",
+      "need": "separate producer and continuation journal event/index/dictionary/metadata positive budgets plus checkpoint atomic peak; retained producer+cold/restore+serialization RAM envelopes and fresh available resource check",
+      "owner": "Kepler/Peirce"
+    }
+  ],
+  "original_files_byte_identical": true,
+  "schema": "HBM_INSTALLED_ACK_RETIREMENT_FINITE_OWNER_R2_HANDOFF",
+  "software_ticks_to_ns": false,
+  "source_base": "75a3e0c0d6fb89bdd833a089af1a2b652968c88d",
+  "source_fairness": {
+    "Qwen_round_robin_other_eligible_accepted_grants_upper": 5,
+    "R14_alloc_priority_starvation_reachable_actual_program": null,
+    "R14_write_visibility_priority_starvation_reachable_actual_program": null,
+    "conditions": [
+      "finite backend ready acceptance gap",
+      "finite exhausted credit return bound"
+    ],
+    "elapsed_wait_upper": null
+  },
+  "source_native_numerical_execution": false,
+  "source_pins": {
+    "tests/test_h3_complete_native_calendar.py": "0aabf43fe6565e625db665584c99791b98ba644f8e97c90462c98772d2f86636",
+    "tests/test_h3_complete_native_calendar_installed_r2.py": "4f9b4e14eb0864973d38a39f88586ea1a08bd3fb235f9908fc91c43705d482ac",
+    "tools/h3_complete_native_calendar.py": "c0370e63dba0eadcc06c5522c28a956ddebfd10af9b8765a61fe0e4fe025b817",
+    "tools/h3_complete_native_calendar_grants_r1.py": "4bbd9ce96f4cf0afef069d6b0a94379d04a0e054e337477d125ed6cf999d6dbd",
+    "tools/h3_complete_native_calendar_installed_r2.py": "e50c7cdc88074965fdcb7131cbe26e92e445147c18b27e8af72ac1fbc74ced3a",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21"
+  },
+  "status": "SOURCE_MECHANICS_AND_CAUSAL_ADAPTER_TESTED_PRODUCTION_SERVICE_UNKNOWN",
+  "tests_passed": 71
+}

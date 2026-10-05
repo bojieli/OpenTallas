@@ -1,0 +1,68 @@
+[
+  {
+    "copy": "enrollment.json",
+    "git": "a9691644adb23e9b8ffa37ffca80c219db325f8e",
+    "path": "results/uarch/ds_mtp_tokx_enrollment_20261003/model.json",
+    "sha256": "a81ac570348d48a22e86d950e079d68b6f91c2c9bc591501349c22f2f05f74a1"
+  },
+  {
+    "copy": "select.sv",
+    "git": "a9691644adb23e9b8ffa37ffca80c219db325f8e",
+    "path": "results/uarch/ds_mtp_tokx_enrollment_20261003/inputs/rtl/hdc/v41/ot_hdc_select.sv",
+    "sha256": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e"
+  },
+  {
+    "copy": "xu_adapt.sv",
+    "git": "a9691644adb23e9b8ffa37ffca80c219db325f8e",
+    "path": "results/uarch/ds_mtp_tokx_enrollment_20261003/inputs/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+  },
+  {
+    "copy": "core.sv",
+    "git": "a9691644adb23e9b8ffa37ffca80c219db325f8e",
+    "path": "results/uarch/ds_mtp_tokx_enrollment_20261003/inputs/rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+    "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
+  },
+  {
+    "copy": "tile.sv",
+    "git": "a9691644adb23e9b8ffa37ffca80c219db325f8e",
+    "path": "results/uarch/ds_mtp_tokx_enrollment_20261003/inputs/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+    "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+  },
+  {
+    "copy": "program.py",
+    "git": "a9691644adb23e9b8ffa37ffca80c219db325f8e",
+    "path": "results/uarch/ds_mtp_tokx_enrollment_20261003/inputs/tools/hdc_program_v41.py",
+    "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+  },
+  {
+    "copy": "die.sv",
+    "git": "69c556aaeab4f9c47defd114bc3a72ae66333cb2",
+    "path": "results/uarch/ds_mtp_serial_spine_context_20261003/inputs/die.sv",
+    "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+  },
+  {
+    "copy": "cell_prices.json",
+    "git": "69c556aaeab4f9c47defd114bc3a72ae66333cb2",
+    "path": "results/uarch/ds_mtp_serial_spine_context_20261003/inputs/cell_prices.json",
+    "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+  },
+  {
+    "copy": "shared_fifo.sv",
+    "git": "69c556aaeab4f9c47defd114bc3a72ae66333cb2",
+    "path": "results/uarch/ds_mtp_serial_spine_context_20261003/inputs/shared_fifo.sv",
+    "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+  },
+  {
+    "copy": "split_parent_model.json",
+    "git": "69c556aaeab4f9c47defd114bc3a72ae66333cb2",
+    "path": "results/uarch/ds_mtp_serial_spine_context_20261003/inputs/split_parent_model.json",
+    "sha256": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10"
+  },
+  {
+    "copy": "prior_r1_reply.json",
+    "git": "69c556aaeab4f9c47defd114bc3a72ae66333cb2",
+    "path": "results/uarch/ds_mtp_serial_spine_context_20261003/model.json",
+    "sha256": "7d0be5a7020c4f3e06bc8db6333c2506ed7aec83cb55ab61b89bdb9980224df6"
+  }
+]

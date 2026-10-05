@@ -1,0 +1,99 @@
+{
+  "model": {
+    "candidate": "DSROM_BASELINE_LINK_RT_CLOCK1",
+    "default_enabled": false,
+    "baseline_source_sha256": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+    "baseline_ss_setup_ps": -417.3,
+    "baseline_ff_hold_ps": 4.2,
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "macs_per_cycle": 0,
+    "memory_bytes_per_port_edge": 64,
+    "replay_write_ports": 1,
+    "replay_read_ports": 1,
+    "fifo_write_ports": 1,
+    "fifo_read_ports": 1,
+    "forward_bits_per_edge": 555,
+    "reverse_bits_per_edge": 53,
+    "replicas": {
+      "launch_head": 1,
+      "aligned_crc_flags": 2,
+      "status_counters": 9,
+      "status_counter_8bit_segments": 36
+    },
+    "added_ff_bits": 526,
+    "added_ff_body_um2_proxy": 153.38160000000002,
+    "added_ff_50pct_reservation_um2_proxy": 306.76320000000004,
+    "added_comb_area_um2": null,
+    "actual_slot_fit": null,
+    "added_packet_edges": 1,
+    "added_ack_generation_edges": 0,
+    "added_ack_credit_roundtrip_edges": 1,
+    "diagnostic_observation_delay_edges": 0,
+    "baseline_credit_loop_edges": 322,
+    "repaired_credit_loop_edges": 323,
+    "credits": 512,
+    "sequence_bits": 10,
+    "ideal_credit_bound_flits_per_edge": 1,
+    "bytes_per_edge_bound": 64,
+    "selected_stage_hops": 81,
+    "added_single_user_stage_chain_us": 0.0675,
+    "baseline_hop_cycles": 909,
+    "candidate_hop_cycles_lower_bound": 911,
+    "hop_two_endpoint_added_edges": 2,
+    "added_single_user_two_endpoint_chain_us": 0.135,
+    "token_return_8_traversals_added_us": 0.006666666666666667,
+    "token_latency_not_measured": true,
+    "error_replay_latency_not_measured": true,
+    "routing_tracks_needed": 608,
+    "channel_tracks_available": null,
+    "routing_fit": false,
+    "ss_ff_qualified": false,
+    "physical_admitted": false,
+    "limits": "FF price is a source proxy; comb/CTS/PG/routes/loaded SSFF must be measured. No PHY or cut-through gain."
+  },
+  "cases": [
+    {
+      "case": "wrap_credit",
+      "summary": "LINKRT_SUMMARY case=wrap_credit result=PASS n=1500 sent=1500 rcvd=1500 mism=0 extra=0 stalled=0 fault=0 fault_code=0 cycles=2149 lat_first=15 lat_min=15 lat_max=15 lat_avg=15.00 rate=1.0000 credit_stalls=0 st_flits_tx=1500 st_flits_rx_ok=1500 st_crc_err=0 st_naks=0 st_replays=0 st_timeouts=0 st_retx_flits=0 st_max_replay_occ=x ch=8 dyn=0 chsel=8 credits=32 seqw=8 efwd=0 erev=0 gap=0 bpm=2 seed=81",
+      "defines": {
+        "CH": 8,
+        "CRED": 32,
+        "SEQW": 8
+      }
+    },
+    {
+      "case": "replay_backpressure",
+      "summary": "LINKRT_SUMMARY case=replay_backpressure result=PASS n=1000 sent=1000 rcvd=1000 mism=0 extra=0 stalled=0 fault=0 fault_code=0 cycles=7525 lat_first=15 lat_min=15 lat_max=476 lat_avg=202.41 rate=0.1453 credit_stalls=5394 st_flits_tx=1189 st_flits_rx_ok=1000 st_crc_err=98 st_naks=32 st_replays=32 st_timeouts=0 st_retx_flits=189 st_max_replay_occ=x ch=8 dyn=0 chsel=8 credits=32 seqw=8 efwd=37 erev=29 gap=10 bpm=1 seed=81",
+      "defines": {
+        "CH": 8,
+        "CRED": 32,
+        "SEQW": 8,
+        "EFWD": 37,
+        "EREV": 29
+      }
+    },
+    {
+      "case": "board_rate",
+      "summary": "LINKRT_SUMMARY case=board_rate result=PASS n=1500 sent=1500 rcvd=1500 mism=0 extra=0 stalled=0 fault=0 fault_code=0 cycles=2889 lat_first=163 lat_min=163 lat_max=163 lat_avg=163.00 rate=1.0000 credit_stalls=0 st_flits_tx=1500 st_flits_rx_ok=1500 st_crc_err=0 st_naks=0 st_replays=0 st_timeouts=0 st_retx_flits=0 st_max_replay_occ=x ch=156 dyn=0 chsel=156 credits=512 seqw=10 efwd=0 erev=0 gap=0 bpm=2 seed=81",
+      "defines": {
+        "CH": 156,
+        "CRED": 512,
+        "SEQW": 10
+      }
+    },
+    {
+      "case": "full_baseline_hop",
+      "summary": "HOP_SUMMARY case=baseline_clock1 result=PASS bytes=40976 flits=641 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=641 rcvd=641 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=642 first_flit=181 last_flit=821 leg1_first_flit=163 leg1_last_flit=803 out_span=640 in_span=640 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=x max_replay_occ2=x seed=81"
+    }
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/ot_dsrom_link_rt_clock.sv": "a9dca04dc3ebe66b987e5c7906f9e55fafaebe7eb8faf8e0a9f1e6c77feabd45",
+    "rtl/dsrom_sys/ot_dsrom_link_rt_clock_core.sv": "c43d27f59b9050218b460eb135a5269ba06ce7148b79d03ea6c286bc19995cb6",
+    "rtl/dsrom_sys/ot_dsrom_link_rt.sv": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+    "rtl/dsrom_sys/ot_dsrom_link_chan.sv": "48707d46a11d11a38669e8bb77fa6fdeb129357e30f4c587f0cc5e1d308ef835",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+  },
+  "physical_qualified": false
+}

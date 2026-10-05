@@ -1,0 +1,59 @@
+{
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "plan_sha256": "f37c5d7e968ddcc90a2cb6d1bff4b0e7c7dcdf6a078c54784c2b529aa0daa175",
+  "tool": {
+    "executable": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+    "pins": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_config.h": "70022b780e3a096bb00de054014abce44651bf4d588c60b6994c82451c3742f6",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/verilator-config-version.cmake": "197f2759741183e3dd3d6af0397f83163c1fe6749cea08e87c0716f705eff1f6"
+    },
+    "metadata_version": "5.050 2026-07-01",
+    "version_command": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "--version"
+    ],
+    "version_executed": false,
+    "environment": {
+      "VERILATOR_ROOT": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator"
+    },
+    "options": "direct compiler binary, lint-only, exact V41_ATT_CUT and full wrapper params; no bbox, stubs, ancestor pruning, timing relaxation or warning class globally hidden"
+  },
+  "preparation_tools": {
+    "tools/prepare_observer_lint_gate.py": "6236a87f7ae5b79afa99442c0f15560b741497812ffc2c01532b25828a7b1dad",
+    "tools/run_observer_capped_lint.py": "4da28987e9d5f22b0ff1504eae93e2dcc732fb5e18b8562d5391f6d1060a81d9",
+    "tools/verify_observer_lint_caps.py": "ebde99fb5926f75f4e0f6b917eea62e8d2b705a2e2e47f41cc788a2927036f21"
+  },
+  "caps": {
+    "memory_bytes": 4294967296,
+    "cpu_count": 2,
+    "mode_wall_seconds": 60,
+    "mutant_wall_seconds": 30,
+    "version_wall_seconds": 5,
+    "log_bytes": 16777216,
+    "max_children": 1,
+    "serial": true,
+    "total_compiler_wall_budget_seconds": 245
+  },
+  "original_GO_commit": "4fed19018",
+  "local_GO_cherry_pick": "04e3a1de3",
+  "owner_commit": "63e4c2bab5f8b4177aa5219a57448b0f5f4af16e",
+  "scratch": "/tmp/opentallas-observer-lint-execution-4fed19018-r1",
+  "runner_unchanged": true,
+  "gate_invocations": 1,
+  "runner_exit_code": 1,
+  "runner_argv": [
+    "python",
+    "tools/run_observer_capped_lint.py",
+    "--repo",
+    ".",
+    "--plan",
+    "results/rtl/observer_lint_runner_4e383_20261002/plan.json",
+    "--go",
+    "results/rtl/parent_observer_lint_GO_20261002/GO.json",
+    "--scratch",
+    "/tmp/opentallas-observer-lint-execution-4fed19018-r1",
+    "--execute"
+  ]
+}

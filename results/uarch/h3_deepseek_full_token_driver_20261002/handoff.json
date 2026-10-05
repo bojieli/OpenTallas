@@ -1,0 +1,35 @@
+{
+  "ROM_task": "d660 coordinate API targets ROM TP4; it is not substituted for HBM32SM homes. Separate uncommitted ROM dispatch preparation paused on user full-native execution priority.",
+  "actual_addressed_scratch_qualified": false,
+  "actual_full_model_checkpoint_execution": false,
+  "arithmetic": "only committed streaming kernels and generic source primitive VM; no reference Executor/golden callback; per-buffer scratch owner now includes distinct output versions",
+  "base_commit": "6e3ce3620fe7a6d8e66661415110566f589ce926",
+  "calendar_or_rate_admitted": false,
+  "command": "python tools/h3_deepseek_full_token_driver.py --provider-module ACTUAL_KEPLER_PROVIDER.py --provider-manifest PINNED_EXISTING_IMAGE_MANIFEST.json --out FRESH_EVIDENCE_DIRECTORY",
+  "dependency": "Kepler must supply concrete DS full-model payload views, mapped noalias AW27 scratch and backing/return/consume/grant events. Generic hbm_provider_microvm_r21 sector provider exists; no committed full-DS image/view binder found in inspected main tools. Do not substitute synthetic values or legacy high-level Executor handlers. Reuse available images/checkpoint, no new download/repack asked.",
+  "full_source_preflight": {
+    "PCs": 2213,
+    "families": 30,
+    "homes": 286114,
+    "model": "preflight_r2/model.json",
+    "record": "preflight_r2/record.json"
+  },
+  "hardware_builds": 0,
+  "interface": "Kepler_provider_interface.json",
+  "model_command": "python tools/h3_deepseek_full_token_driver.py --model-only --out FRESH_EVIDENCE_DIRECTORY",
+  "native_build_policy": "No build launched; no guessed wall or FSIZE cap. Future jobs retain memory/disk/headroom guards and existing incremental objects. No PVE2/PVE3 new jobs.",
+  "old_preflight": "preflight preserved before collective output-version owner refinement; latest source pin is preflight_r2",
+  "payload_reads": 0,
+  "physical_visibility_qualified": false,
+  "provider_entrypoint": "create_provider(manifest,native,dispatch,homes)",
+  "schema": "H3_DS_FULL_NATIVE_TOKEN_DRIVER_HANDOFF_V1",
+  "source_inverse": "previous completed bounded compiler/kernels/artifacts unchanged",
+  "status": "DRIVER_IMPLEMENTED_FULL_SOURCE_PREFLIGHT_PASS_ACTUAL_PROVIDER_JOIN_PENDING",
+  "tests": {
+    "log": "tests_final.log",
+    "passed": 15,
+    "scope": "new lifecycle/identity/workspace/publication controls only, NOT checkpoint or addressed provider qualification"
+  },
+  "tests_command": "python -m pytest -q tests/test_h3_deepseek_full_token_driver.py",
+  "tool": "tools/h3_deepseek_full_token_driver.py"
+}

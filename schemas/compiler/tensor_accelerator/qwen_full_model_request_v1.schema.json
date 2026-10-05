@@ -1,0 +1,41 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "expected_generations": {
+      "items": {"const": 0},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "last_row_index": {"const": 0},
+    "phase": {"const": "prefill"},
+    "position_end": {"const": 1},
+    "position_start": {"const": 0},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_request.v1"},
+    "span_tokens": {"const": 1},
+    "token_id": {"const": 0},
+    "transaction_id": {"const": 5861229642535750732}
+  },
+  "required": [
+    "expected_generations",
+    "graph_id",
+    "last_row_index",
+    "phase",
+    "position_end",
+    "position_start",
+    "request_id",
+    "schema",
+    "span_tokens",
+    "token_id",
+    "transaction_id"
+  ],
+  "title": "Qwen complete-model one-token physical request v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

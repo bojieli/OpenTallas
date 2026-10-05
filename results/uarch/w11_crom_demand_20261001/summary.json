@@ -1,0 +1,169 @@
+{
+  "RTL_address_liveness_slot_sources": {
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": {
+      "commit": "4080bb5fd",
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": {
+      "commit": "4080bb5fd",
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+    }
+  },
+  "admission": false,
+  "authoritative_demand_file": "demand_v2.json.gz",
+  "authoritative_demand_sha256": "bb597c07e000b2e58f16b949f2c4515ec49cfaa943c70c20133e0361366ec62d",
+  "norm5120": {
+    "SU1024_emit_bursts": 5,
+    "equivalent_values_per_fast_cycle": 768,
+    "intra_command_reuse": 1,
+    "one_port_fast_cycles": 5120,
+    "peak_values_per_serial_cycle": 1024,
+    "response_bits_per_burst": 65536,
+    "service_ns": 4266.666666666667,
+    "unique_words_per_command": 5120,
+    "useful_FP32_bits_per_burst": 32768
+  },
+  "physical_gate": {
+    "CDC": null,
+    "bank_mux_and_route": null,
+    "broadcast_ports_and_capture_buffers": null,
+    "phase_calendar": null,
+    "replicas_and_copies": null
+  },
+  "pricing_rules": [
+    "729 bound operand descriptors are not729reads; each lane coefficient use is enumerated",
+    "Dedup requires explicit capture/broadcast buffer andfanout; current service implementation NULL",
+    "Per-command prefetch assumes a full command coefficient buffer; no cross-command reuse credit",
+    "All commands serialized sum is CROM service demand, not additive token slowdown; subtract overlapped existing compute only with phase calendar",
+    "2capture/select cycle candidate pipeline and CDC/backpressure/route latency excluded; actual composed token unknown"
+  ],
+  "rank_summaries": [
+    {
+      "bound_operands": 729,
+      "bound_service_cycles": 508800,
+      "commands": 491,
+      "peak_same_bank_unique_values_per_emit": 1024,
+      "peak_unique_values_per_emit": 1024,
+      "per_command_unique_prefetch_cycles": 549760,
+      "per_emit_dedup_service_cycles": 549760,
+      "phase_service_words": {
+        "L1.engram.q_times_k": 20480,
+        "L14.engram.q_times_k": 20480,
+        "attn.attn_sink": 640,
+        "attn.compressor.norm.weight": 2048,
+        "attn.indexer.k_norm.weight": 512,
+        "attn.kv_norm.weight": 20480,
+        "attn.q_norm.weight": 51200,
+        "attn_norm.weight": 204800,
+        "ffn.gate.bias": 15360,
+        "ffn_norm.weight": 204800,
+        "hc_attn_base": 960,
+        "hc_attn_scale": 960,
+        "hc_ffn_base": 960,
+        "hc_ffn_scale": 960,
+        "norm.weight": 5120
+      },
+      "rank": 0,
+      "service_ns_at_1p2GHz": 458133.3333333334,
+      "total_coefficient_lane_uses": 549760,
+      "unbound_generated_service_cycles": 40960
+    },
+    {
+      "bound_operands": 729,
+      "bound_service_cycles": 508800,
+      "commands": 491,
+      "peak_same_bank_unique_values_per_emit": 1024,
+      "peak_unique_values_per_emit": 1024,
+      "per_command_unique_prefetch_cycles": 549760,
+      "per_emit_dedup_service_cycles": 549760,
+      "phase_service_words": {
+        "L1.engram.q_times_k": 20480,
+        "L14.engram.q_times_k": 20480,
+        "attn.attn_sink": 640,
+        "attn.compressor.norm.weight": 2048,
+        "attn.indexer.k_norm.weight": 512,
+        "attn.kv_norm.weight": 20480,
+        "attn.q_norm.weight": 51200,
+        "attn_norm.weight": 204800,
+        "ffn.gate.bias": 15360,
+        "ffn_norm.weight": 204800,
+        "hc_attn_base": 960,
+        "hc_attn_scale": 960,
+        "hc_ffn_base": 960,
+        "hc_ffn_scale": 960,
+        "norm.weight": 5120
+      },
+      "rank": 1,
+      "service_ns_at_1p2GHz": 458133.3333333334,
+      "total_coefficient_lane_uses": 549760,
+      "unbound_generated_service_cycles": 40960
+    },
+    {
+      "bound_operands": 729,
+      "bound_service_cycles": 508800,
+      "commands": 491,
+      "peak_same_bank_unique_values_per_emit": 1024,
+      "peak_unique_values_per_emit": 1024,
+      "per_command_unique_prefetch_cycles": 549760,
+      "per_emit_dedup_service_cycles": 549760,
+      "phase_service_words": {
+        "L1.engram.q_times_k": 20480,
+        "L14.engram.q_times_k": 20480,
+        "attn.attn_sink": 640,
+        "attn.compressor.norm.weight": 2048,
+        "attn.indexer.k_norm.weight": 512,
+        "attn.kv_norm.weight": 20480,
+        "attn.q_norm.weight": 51200,
+        "attn_norm.weight": 204800,
+        "ffn.gate.bias": 15360,
+        "ffn_norm.weight": 204800,
+        "hc_attn_base": 960,
+        "hc_attn_scale": 960,
+        "hc_ffn_base": 960,
+        "hc_ffn_scale": 960,
+        "norm.weight": 5120
+      },
+      "rank": 2,
+      "service_ns_at_1p2GHz": 458133.3333333334,
+      "total_coefficient_lane_uses": 549760,
+      "unbound_generated_service_cycles": 40960
+    },
+    {
+      "bound_operands": 729,
+      "bound_service_cycles": 508800,
+      "commands": 491,
+      "peak_same_bank_unique_values_per_emit": 1024,
+      "peak_unique_values_per_emit": 1024,
+      "per_command_unique_prefetch_cycles": 549760,
+      "per_emit_dedup_service_cycles": 549760,
+      "phase_service_words": {
+        "L1.engram.q_times_k": 20480,
+        "L14.engram.q_times_k": 20480,
+        "attn.attn_sink": 640,
+        "attn.compressor.norm.weight": 2048,
+        "attn.indexer.k_norm.weight": 512,
+        "attn.kv_norm.weight": 20480,
+        "attn.q_norm.weight": 51200,
+        "attn_norm.weight": 204800,
+        "ffn.gate.bias": 15360,
+        "ffn_norm.weight": 204800,
+        "hc_attn_base": 960,
+        "hc_attn_scale": 960,
+        "hc_ffn_base": 960,
+        "hc_ffn_scale": 960,
+        "norm.weight": 5120
+      },
+      "rank": 3,
+      "service_ns_at_1p2GHz": 458133.3333333334,
+      "total_coefficient_lane_uses": 549760,
+      "unbound_generated_service_cycles": 40960
+    }
+  ],
+  "scope": "Static source-bound coefficient demand at command execution, not dynamic token timing. Predicated commands tabulated even if skipped. Generated Engram coefficients use symbolic command-local addresses, not physical binding. RoPE held-cache excluded.",
+  "source_program": {
+    "commit": "4080bb5fd",
+    "path": "results/rtl/w17_connected_token_preparation_20261001/full40_crom_bound_templates_v2.json",
+    "sha256": "ebe79d6480b4ac737be97da4296d9f4807ad319964966143c0975c74d0761463"
+  },
+  "tests": "4 focused demand testsPASS; all4rank totals/bindingcount/histogram readback assertionsPASS"
+}

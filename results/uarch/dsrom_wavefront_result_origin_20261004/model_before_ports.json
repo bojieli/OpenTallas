@@ -1,0 +1,31 @@
+{
+  "scope": "additive old registered RESULT origin ports and caller accepted-ledger lookup provider only",
+  "base": "1ae59d057",
+  "actual_caller_source": "7efccb952 intaken as1ae59d057; no caller edit",
+  "controller_adapter_source_sha256": "0387d71f595a32c3c357524c8077dc7d1abf9ebe119ebd3e6b0e2cd6828d64a6",
+  "source_signals": [
+    "res_v",
+    "res_u",
+    "res_p",
+    "red_n == RESULT_PARTS"
+  ],
+  "new_state_bits": 0,
+  "added_pipeline_cycles": 0,
+  "new_memory_ports": 0,
+  "new_MACs": 0,
+  "added_boundary_bits": 33,
+  "replicas": "one observation bundle per existing package controller; no extra instance",
+  "fanout_cost": "one extra destination per res_u/res_p bit; WAVE&&SOURCE&&res_v valid, actual reduction compare final. Loaded delay/area/route unknown ESTIMATE; no adoption.",
+  "ledger": "actual source owner lookup supplies retained accepted ID47 including OLD epoch; no new ledger/epoch/visibility",
+  "SOURCE_WAVE_defaults": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "routing_tracks_capacity": null,
+  "area": null,
+  "SS_FF": null,
+  "adopt": false,
+  "MODEL_ONLY": {
+    "tau": 4.159,
+    "composed_rate": 8036,
+    "measured_system_result": false
+  }
+}

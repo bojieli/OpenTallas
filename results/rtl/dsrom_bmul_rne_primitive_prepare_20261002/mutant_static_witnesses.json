@@ -1,0 +1,182 @@
+{
+  "negative_zero": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 5,
+    "first_encoder": {
+      "biased": -23,
+      "expected": 0,
+      "modeled_mutant": 2147483648,
+      "sig24": "800000",
+      "sign": 1,
+      "vector": 405
+    },
+    "first_product": {
+      "a": "8080",
+      "b": "3380",
+      "expected": [
+        0,
+        0
+      ],
+      "modeled_mutant": [
+        2147483648,
+        0
+      ],
+      "vector": 4
+    },
+    "product_mismatches": 14
+  },
+  "old_range": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 0,
+    "first_encoder": null,
+    "first_product": {
+      "a": "0080",
+      "b": "3b80",
+      "expected": [
+        32768,
+        0
+      ],
+      "modeled_mutant": [
+        0,
+        1
+      ],
+      "vector": 0
+    },
+    "product_mismatches": 340
+  },
+  "refusal_no_fault": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 0,
+    "first_encoder": null,
+    "first_product": {
+      "a": "0000",
+      "b": "7f80",
+      "expected": [
+        0,
+        1
+      ],
+      "modeled_mutant": [
+        0,
+        0
+      ],
+      "vector": 8
+    },
+    "product_mismatches": 38
+  },
+  "shift_offbyone": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 408,
+    "first_encoder": {
+      "biased": 0,
+      "expected": 4194304,
+      "modeled_mutant": 2097152,
+      "sig24": "800000",
+      "sign": 0,
+      "vector": 0
+    },
+    "first_product": {
+      "a": "0080",
+      "b": "3b80",
+      "expected": [
+        32768,
+        0
+      ],
+      "modeled_mutant": [
+        16384,
+        0
+      ],
+      "vector": 0
+    },
+    "product_mismatches": 437
+  },
+  "tie_away": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 48,
+    "first_encoder": {
+      "biased": 0,
+      "expected": 4194304,
+      "modeled_mutant": 4194305,
+      "sig24": "800001",
+      "sign": 0,
+      "vector": 2
+    },
+    "first_product": {
+      "a": "3380",
+      "b": "0080",
+      "expected": [
+        0,
+        0
+      ],
+      "modeled_mutant": [
+        1,
+        0
+      ],
+      "vector": 1
+    },
+    "product_mismatches": 15
+  },
+  "truncation": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 196,
+    "first_encoder": {
+      "biased": 0,
+      "expected": 4194306,
+      "modeled_mutant": 4194305,
+      "sig24": "800003",
+      "sign": 0,
+      "vector": 6
+    },
+    "first_product": {
+      "a": "0080",
+      "b": "3381",
+      "expected": [
+        1,
+        0
+      ],
+      "modeled_mutant": [
+        0,
+        0
+      ],
+      "vector": 5
+    },
+    "product_mismatches": 84
+  },
+  "underflow_fault": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 0,
+    "first_encoder": null,
+    "first_product": {
+      "a": "0080",
+      "b": "3b80",
+      "expected": [
+        32768,
+        0
+      ],
+      "modeled_mutant": [
+        32768,
+        1
+      ],
+      "vector": 0
+    },
+    "product_mismatches": 478
+  },
+  "zero_nonfinite_bypass": {
+    "classification": "STATIC_MUTANT_MODEL_WITNESS_NOT_RTL_DIFF",
+    "encoder_mismatches": 0,
+    "first_encoder": null,
+    "first_product": {
+      "a": "0000",
+      "b": "7f80",
+      "expected": [
+        0,
+        1
+      ],
+      "modeled_mutant": [
+        0,
+        0
+      ],
+      "vector": 8
+    },
+    "product_mismatches": 3
+  }
+}

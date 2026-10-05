@@ -1,0 +1,5589 @@
+{
+ "schema": "opentallas.rtl.dshbm_baseline_su_chains.v1",
+ "generated_utc": "2026-10-04T12:03:50Z",
+ "source_commit": "",
+ "config": {
+  "N": 1024,
+  "M": 256,
+  "BCAST": 0,
+  "RET": 0,
+  "MLAT": 5,
+  "ALAT": 4,
+  "build_s": 277.9,
+  "fp": "dpi_beh",
+  "fp_note": "as dpi, and the keep-prefix integer adders (rtl/hdc/ot_hdc_prefix.sv) are the behavioural `+` (rtl/test/sim_hdc_prefix_beh.sv, combinational, same function); equivalence: su-equiv at N 64."
+ },
+ "status": "pass",
+ "skipped": [],
+ "chains": [
+  {
+   "chain": "L20.attn.hc_mix",
+   "layer": "L20",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "attn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "1a9254e352ebb39b1f417c2f2425ab3d93fed6dd36b49af0e4e611e38e5fed47",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.hc_pre_norm",
+   "layer": "L20",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "attn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "31dc1272ac676fc02135bfa0829d72aa7fb81017f485208b5ab3c1eac5991d82",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.hc_post",
+   "layer": "L20",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "attn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "e8bc2881869f88486406bba0b7993708eded6ba8d6c00cf9ccf00806e843e5ac",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.hc_mix",
+   "layer": "L20",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "ffn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "ffn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "29538186f3b01ec2bd150b912e2fafd105533cfd0dc506c3662cab0984162725",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.hc_pre_norm",
+   "layer": "L20",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "ffn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "a735402733f9b482e74b0d64dbbadfedf841adbac604688937ed7e2e79fec2d8",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.hc_post",
+   "layer": "L20",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "ffn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "13cd2a1619d5f98f496d73bf0a256d50190a5616793d04fc4fb5933e3b37c12a",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.q_norm",
+   "layer": "L20",
+   "fn": "q_norm",
+   "nodes": [
+    {
+     "node": "attn.q_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "op": 2,
+     "event": "write"
+    }
+   ],
+   "ops": 3,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 259,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.q_norm out",
+     "kind": "golden",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "9a0241bf800e2abfb25a24469ffa651913a0a1e9eae464e7ab8f8cbc9a8030b1",
+   "cycles_end": 259,
+   "first_emit_to_last_write": 239,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": 109,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 115,
+     "last_emit": 115,
+     "last_write": 217,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 218,
+     "last_emit": 219,
+     "last_write": 249,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.kv_norm_rope",
+   "layer": "L20",
+   "fn": "kv_norm_rope",
+   "nodes": [
+    {
+     "node": "attn.kv_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.kv_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_norm.scale",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_rope_qdq:rope",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 280,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.kv_norm out",
+     "kind": "golden",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv RoPE tail (pre FP8 QDQ)",
+     "kind": "golden",
+     "n": 64,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "8f055aef27f5cd8c10606c6c3dffd2eaba4d0801c9236a43c6511d3fe5202208",
+   "cycles_end": 280,
+   "first_emit_to_last_write": 260,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": 100,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 106,
+     "last_emit": 106,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 209,
+     "last_emit": 209,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 240,
+     "last_emit": 240,
+     "last_write": 270,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.q_rope",
+   "layer": "L20",
+   "fn": "q_rope",
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.q_rope",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 51,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "q RoPE tails, 16 heads",
+     "kind": "golden",
+     "n": 1024,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "d4719b498a19bead3b9400409ff24b416ab65dabdee8d84df055f193deaa549a",
+   "cycles_end": 51,
+   "first_emit_to_last_write": 31,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.cmp.norm_row",
+   "layer": "L20",
+   "fn": "cmp_norm_row",
+   "nodes": [
+    {
+     "node": "attn.cmp.norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.cmp.norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.cmp.norm.scale",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.cmp.row_qdq:rope",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 280,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.cmp.norm out",
+     "kind": "golden",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "compressed row RoPE tail (pre FP4 QDQ)",
+     "kind": "golden",
+     "n": 64,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "950bad6188dafe157d0d9b75bee29aa6fe51dc9136055a56255065ddd8c38c4a",
+   "cycles_end": 280,
+   "first_emit_to_last_write": 260,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": 100,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 106,
+     "last_emit": 106,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 209,
+     "last_emit": 209,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 240,
+     "last_emit": 240,
+     "last_write": 270,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.cmp.k_norm_rope",
+   "layer": "L20",
+   "fn": "cmp_k_norm_rope",
+   "nodes": [
+    {
+     "node": "attn.cmp.k_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.cmp.k_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.cmp.k_norm.scale",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.cmp.k_rope_qdq:rope",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 272,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.cmp.k_norm out",
+     "kind": "golden",
+     "n": 128,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "index key RoPE tail (pre FP4 QDQ)",
+     "kind": "golden",
+     "n": 64,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "e6905570fc9449dd8e0b1be1f33c153743567b9e553f9810bc70c75a4f15aea6",
+   "cycles_end": 272,
+   "first_emit_to_last_write": 252,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": 92,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 98,
+     "last_emit": 98,
+     "last_write": 200,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 201,
+     "last_emit": 201,
+     "last_write": 231,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 232,
+     "last_emit": 232,
+     "last_write": 262,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.idx.q",
+   "layer": "L20",
+   "fn": "idx_q",
+   "heads": 32,
+   "nodes": [
+    {
+     "node": "attn.idx.q:rope",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 52,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "index q RoPE tails, 32 heads (pre FP4 QDQ)",
+     "kind": "golden",
+     "n": 2048,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "913832ba6394281e751a2e4364d169b718553a7cb97bbd6bf2c0950ccc8a1e9f",
+   "cycles_end": 52,
+   "first_emit_to_last_write": 32,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 32,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.attn.softmax_T640",
+   "layer": "L20",
+   "fn": "attend",
+   "T": 640,
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.max",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.exp",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.den",
+     "op": 1,
+     "event": "result"
+    },
+    {
+     "node": "attn.sink",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.normalize",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 560,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scaled scores",
+     "kind": "golden",
+     "n": 10240,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's P.V input)",
+     "kind": "golden",
+     "n": 10240,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row sum",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "denominator (row sum + exp(sink - max))",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o (inverse RoPE): wo_a's input",
+     "kind": "golden",
+     "n": 8192,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "663d37af75d61abef53b14628d47553d1df3792bdfeda46859fbfc0746d5aff5",
+   "cycles_end": 560,
+   "first_emit_to_last_write": 540,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 26,
+     "last_write": 56,
+     "last_result": 119,
+     "vectors": 16,
+     "nout": 16,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 125,
+     "last_emit": 172,
+     "last_write": 273,
+     "last_result": 336,
+     "vectors": 48,
+     "nout": 16,
+     "nin": 640,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 342,
+     "last_emit": 342,
+     "last_write": 443,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 475,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth_model": 44
+    },
+    {
+     "first_emit": 520,
+     "last_emit": 520,
+     "last_write": 550,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.router_act",
+   "layer": "L20",
+   "fn": "router_act",
+   "rows": 96,
+   "nodes": [
+    {
+     "node": "ffn.softplus_sqrt",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 362,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "sqrt(softplus) of the die's 96 router rows",
+     "kind": "golden",
+     "n": 96,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "b5d50c06c601c3c0cbab5f28a1008a6aac2a452c5cd24971ef8e0c7c1ed45570",
+   "cycles_end": 362,
+   "first_emit_to_last_write": 342,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 106,
+     "last_write": 352,
+     "last_result": null,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth_model": 246
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.route",
+   "layer": "L20",
+   "fn": "route",
+   "nodes": [
+    {
+     "node": "ffn.bias",
+     "op": 0,
+     "event": "write"
+    },
+    {
+     "node": "ffn.weights",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 176,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scores + bias (the select's input)",
+     "kind": "golden",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route weights",
+     "kind": "golden",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "5e53933da01a1824fb5b74da522d9598ee59dd1b6cc7aaa57570296867d8ec06",
+   "cycles_end": 176,
+   "first_emit_to_last_write": 156,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 16,
+     "last_emit": 16,
+     "last_write": 48,
+     "last_result": 83,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 32
+    },
+    {
+     "first_emit": 89,
+     "last_emit": 89,
+     "last_write": 119,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 120,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 46
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.swiglu",
+   "layer": "L20",
+   "fn": "swiglu",
+   "rows": 576,
+   "experts": 6,
+   "nodes": [
+    {
+     "node": "ffn.swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 162,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "routed x6 swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 3456,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "1ae5e68616c34dd29125c6e2be9f3c35e2fbb6e14138a47141bb4d245262bbec",
+   "cycles_end": 162,
+   "first_emit_to_last_write": 142,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 28,
+     "last_write": 152,
+     "last_result": null,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L20.ffn.shared_swiglu",
+   "layer": "L20",
+   "fn": "shared_swiglu",
+   "rows": 576,
+   "nodes": [
+    {
+     "node": "ffn.shared_swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 147,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "shared swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 576,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "c58e503ece267a7aae1967016a8cff831a5c505b59443cbbc7f67b87ea1bbe0a",
+   "cycles_end": 147,
+   "first_emit_to_last_write": 127,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 13,
+     "last_write": 137,
+     "last_result": null,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.hc_mix",
+   "layer": "L0",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "attn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "1fbf9a4efe8986600113794e44f6ddad09f2c1b67add27b62d0427392604b18c",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.hc_pre_norm",
+   "layer": "L0",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "attn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "4713f658434c3e98a7266e9883915998a0e58fc609409dfe25b35f310653b73e",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.hc_post",
+   "layer": "L0",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "attn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "b15bd04e5d58237986da8ee99629c50284e626d1a5b0b8aaf12cf8851446a7de",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.hc_mix",
+   "layer": "L0",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "ffn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "ffn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "2f8acda18cdf16e01d586344fb4c14ff42ee9f92aa81331f164268d37a9b14f8",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.hc_pre_norm",
+   "layer": "L0",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "ffn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "247e6a29db3d81df4c992af2cc9a18724b582280456059433aab77beb038b181",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.hc_post",
+   "layer": "L0",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "ffn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "0ef55c6bc96ccfced2c848f08909944cac111c2f502ab7c167d33819d01b99e8",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.q_norm",
+   "layer": "L0",
+   "fn": "q_norm",
+   "nodes": [
+    {
+     "node": "attn.q_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "op": 2,
+     "event": "write"
+    }
+   ],
+   "ops": 3,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 259,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.q_norm out",
+     "kind": "golden",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "3d7f4942c96e15a12367ac9de0efb60fb1b7b9881dd6deff15301c6b4ff57aa0",
+   "cycles_end": 259,
+   "first_emit_to_last_write": 239,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": 109,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 115,
+     "last_emit": 115,
+     "last_write": 217,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 218,
+     "last_emit": 219,
+     "last_write": 249,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.kv_norm_rope",
+   "layer": "L0",
+   "fn": "kv_norm_rope",
+   "nodes": [
+    {
+     "node": "attn.kv_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.kv_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_norm.scale",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_rope_qdq:rope",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 280,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.kv_norm out",
+     "kind": "golden",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv RoPE tail (pre FP8 QDQ)",
+     "kind": "golden",
+     "n": 64,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "e9322526635b5fbb3bcd2fa2731cb8ebcc8b6b3f8f82a9458722c797c0bc16c5",
+   "cycles_end": 280,
+   "first_emit_to_last_write": 260,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": 100,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 106,
+     "last_emit": 106,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 209,
+     "last_emit": 209,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 240,
+     "last_emit": 240,
+     "last_write": 270,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.q_rope",
+   "layer": "L0",
+   "fn": "q_rope",
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.q_rope",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 51,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "q RoPE tails, 16 heads",
+     "kind": "golden",
+     "n": 1024,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "57c6b7662f23ba894a44abd72b3bc267c8ba40f16bd327f3ed5f291fb2200f5f",
+   "cycles_end": 51,
+   "first_emit_to_last_write": 31,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.attn.softmax_T128",
+   "layer": "L0",
+   "fn": "attend",
+   "T": 128,
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.max",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.exp",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.den",
+     "op": 1,
+     "event": "result"
+    },
+    {
+     "node": "attn.sink",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.normalize",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 482,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scaled scores",
+     "kind": "golden",
+     "n": 2048,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's P.V input)",
+     "kind": "golden",
+     "n": 2048,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row sum",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "denominator (row sum + exp(sink - max))",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o (inverse RoPE): wo_a's input",
+     "kind": "golden",
+     "n": 8192,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "4f6b7bb5d40b1acf2dd2e339cd2aaf839fba2b699150d3129b5588d32d345457",
+   "cycles_end": 482,
+   "first_emit_to_last_write": 462,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": 93,
+     "vectors": 2,
+     "nout": 16,
+     "nin": 128,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 99,
+     "last_emit": 106,
+     "last_write": 207,
+     "last_result": 258,
+     "vectors": 8,
+     "nout": 16,
+     "nin": 128,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 264,
+     "last_emit": 264,
+     "last_write": 365,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 366,
+     "last_emit": 397,
+     "last_write": 441,
+     "last_result": null,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth_model": 44
+    },
+    {
+     "first_emit": 442,
+     "last_emit": 442,
+     "last_write": 472,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.router_act",
+   "layer": "L0",
+   "fn": "router_act",
+   "rows": 96,
+   "nodes": [
+    {
+     "node": "ffn.softplus_sqrt",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 362,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "sqrt(softplus) of the die's 96 router rows",
+     "kind": "golden",
+     "n": 96,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "f189004c440e981d270ae521892a0ac285a3a8a390c017ba35c4a29380d8a197",
+   "cycles_end": 362,
+   "first_emit_to_last_write": 342,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 106,
+     "last_write": 352,
+     "last_result": null,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth_model": 246
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.route",
+   "layer": "L0",
+   "fn": "route",
+   "nodes": [
+    {
+     "node": "ffn.bias",
+     "op": 0,
+     "event": "write"
+    },
+    {
+     "node": "ffn.weights",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 176,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scores + bias (the select's input)",
+     "kind": "golden",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route weights",
+     "kind": "golden",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "ca42e7df1488878798ad927bec914b10ce0a9d8401142634316265ff0640720d",
+   "cycles_end": 176,
+   "first_emit_to_last_write": 156,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 16,
+     "last_emit": 16,
+     "last_write": 48,
+     "last_result": 83,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 32
+    },
+    {
+     "first_emit": 89,
+     "last_emit": 89,
+     "last_write": 119,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 120,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 46
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.swiglu",
+   "layer": "L0",
+   "fn": "swiglu",
+   "rows": 576,
+   "experts": 6,
+   "nodes": [
+    {
+     "node": "ffn.swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 162,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "routed x6 swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 3456,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "67bab8b6d0ea287a11fbb660f9797cce4d279a8f659e8490a18e21d30d4777a8",
+   "cycles_end": 162,
+   "first_emit_to_last_write": 142,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 28,
+     "last_write": 152,
+     "last_result": null,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L0.ffn.shared_swiglu",
+   "layer": "L0",
+   "fn": "shared_swiglu",
+   "rows": 576,
+   "nodes": [
+    {
+     "node": "ffn.shared_swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 147,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "shared swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 576,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "828f56575f08cf83ebb893cc087492e25f42315924c8813495c0198577a0176b",
+   "cycles_end": 147,
+   "first_emit_to_last_write": 127,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 13,
+     "last_write": 137,
+     "last_result": null,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.hc_mix",
+   "layer": "L3",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "attn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "7fe2151fde1cf57ecc3c0085b3f7b930799f393be998f4ee5e0cd63d901827f3",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.hc_pre_norm",
+   "layer": "L3",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "attn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "98d068e07725d2d45e0b33b47eb242c166ad7ef39d3410ded629a8374e1f6caa",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.hc_post",
+   "layer": "L3",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "attn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "3c06312a904bff973aa32c495b41b7570f4626fd6d6ef03b121719a44e6221f0",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.hc_mix",
+   "layer": "L3",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "ffn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "ffn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "d81ec392dc14e3ef6356d1cc25def322cd3e9ada1ba94c7e6ae5d85c5edaa272",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.hc_pre_norm",
+   "layer": "L3",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "ffn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "fbf3cb604722e5017c6caa817639f5349ad44861e65b4ffb11325dc0a71eb28a",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.hc_post",
+   "layer": "L3",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "ffn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "39b7f16e367f74c98ea7228ac0683330d458680a69467ed417f1a015c722f179",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.q_norm",
+   "layer": "L3",
+   "fn": "q_norm",
+   "nodes": [
+    {
+     "node": "attn.q_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "op": 2,
+     "event": "write"
+    }
+   ],
+   "ops": 3,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 259,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.q_norm out",
+     "kind": "golden",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "d38f737d45656960a7fc72b62bf6e77906d6610b62a4f97ab617094bddf8556a",
+   "cycles_end": 259,
+   "first_emit_to_last_write": 239,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": 109,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 115,
+     "last_emit": 115,
+     "last_write": 217,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 218,
+     "last_emit": 219,
+     "last_write": 249,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.kv_norm_rope",
+   "layer": "L3",
+   "fn": "kv_norm_rope",
+   "nodes": [
+    {
+     "node": "attn.kv_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.kv_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_norm.scale",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_rope_qdq:rope",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 280,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.kv_norm out",
+     "kind": "golden",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv RoPE tail (pre FP8 QDQ)",
+     "kind": "golden",
+     "n": 64,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "82bef6743ec5df1f2b7bd0a3c5551619f3a7e8dbd168719f9943359f5c637034",
+   "cycles_end": 280,
+   "first_emit_to_last_write": 260,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": 100,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 106,
+     "last_emit": 106,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 209,
+     "last_emit": 209,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 240,
+     "last_emit": 240,
+     "last_write": 270,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.q_rope",
+   "layer": "L3",
+   "fn": "q_rope",
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.q_rope",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 51,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "q RoPE tails, 16 heads",
+     "kind": "golden",
+     "n": 1024,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "a489b4e1b12b8fc32b3f3ff295ed8864eb09e1330117a815b521bcecdec6e6b0",
+   "cycles_end": 51,
+   "first_emit_to_last_write": 31,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.attn.softmax_T640",
+   "layer": "L3",
+   "fn": "attend",
+   "T": 640,
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.max",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.exp",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.den",
+     "op": 1,
+     "event": "result"
+    },
+    {
+     "node": "attn.sink",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.normalize",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 560,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scaled scores",
+     "kind": "golden",
+     "n": 10240,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's P.V input)",
+     "kind": "golden",
+     "n": 10240,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row sum",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "denominator (row sum + exp(sink - max))",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o (inverse RoPE): wo_a's input",
+     "kind": "golden",
+     "n": 8192,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "61272d45c5e4da3852c06d956bfc101450db39325b585fcfaaef9136f6ca4e51",
+   "cycles_end": 560,
+   "first_emit_to_last_write": 540,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 26,
+     "last_write": 56,
+     "last_result": 119,
+     "vectors": 16,
+     "nout": 16,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 125,
+     "last_emit": 172,
+     "last_write": 273,
+     "last_result": 336,
+     "vectors": 48,
+     "nout": 16,
+     "nin": 640,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 342,
+     "last_emit": 342,
+     "last_write": 443,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 475,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth_model": 44
+    },
+    {
+     "first_emit": 520,
+     "last_emit": 520,
+     "last_write": 550,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.router_act",
+   "layer": "L3",
+   "fn": "router_act",
+   "rows": 96,
+   "nodes": [
+    {
+     "node": "ffn.softplus_sqrt",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 362,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "sqrt(softplus) of the die's 96 router rows",
+     "kind": "golden",
+     "n": 96,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "655a030cefc699a5144f74d32ac5dbb6c38159691a7c0a86e291753a6eafbca7",
+   "cycles_end": 362,
+   "first_emit_to_last_write": 342,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 106,
+     "last_write": 352,
+     "last_result": null,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth_model": 246
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.route",
+   "layer": "L3",
+   "fn": "route",
+   "nodes": [
+    {
+     "node": "ffn.bias",
+     "op": 0,
+     "event": "write"
+    },
+    {
+     "node": "ffn.weights",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 176,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scores + bias (the select's input)",
+     "kind": "golden",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route weights",
+     "kind": "golden",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "3a9b9074fa16c6d76e59f710cf8efac592e342dd9ef7d05b0aea92464f2517ed",
+   "cycles_end": 176,
+   "first_emit_to_last_write": 156,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 16,
+     "last_emit": 16,
+     "last_write": 48,
+     "last_result": 83,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 32
+    },
+    {
+     "first_emit": 89,
+     "last_emit": 89,
+     "last_write": 119,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 120,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 46
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.swiglu",
+   "layer": "L3",
+   "fn": "swiglu",
+   "rows": 576,
+   "experts": 6,
+   "nodes": [
+    {
+     "node": "ffn.swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 162,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "routed x6 swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 3456,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "45c74f3e030974edeace2b799d51f8994ec934410ea857eb597b92a9840e4944",
+   "cycles_end": 162,
+   "first_emit_to_last_write": 142,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 28,
+     "last_write": 152,
+     "last_result": null,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L3.ffn.shared_swiglu",
+   "layer": "L3",
+   "fn": "shared_swiglu",
+   "rows": 576,
+   "nodes": [
+    {
+     "node": "ffn.shared_swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 147,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "shared swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 576,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "f230720c7ef99543f18db4383a10deda37c148e0606c0a67f9045129c1e3921d",
+   "cycles_end": 147,
+   "first_emit_to_last_write": 127,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 13,
+     "last_write": 137,
+     "last_result": null,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.hc_mix",
+   "layer": "L24",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "attn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "attn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "39609e42178a7e8a5c6f6f7737487c49bbdc3fb1585be4f007337d4fc362fe3e",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.hc_pre_norm",
+   "layer": "L24",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "attn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "attn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "attn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "b8f3b504d30306520b78336d73d496b9ce4575819115a08fd288831cf956ed65",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.hc_post",
+   "layer": "L24",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "attn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "0f2dc844eb4b6a70be353d45e93db8cffdbd6c8539b2817c952ae54506800b68",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.hc_mix",
+   "layer": "L24",
+   "fn": "hc_mix",
+   "nodes": [
+    {
+     "node": "ffn.hc.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "ffn.hc.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.pre_post",
+     "op": 4,
+     "event": "write"
+    },
+    {
+     "node": "ffn.hc.sinkhorn:front",
+     "op": 6,
+     "event": "write"
+    }
+   ],
+   "ops": 7,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 561,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "hc rstd",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "pre",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "post",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "comb (before softmax)",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 4,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(comb - max): the Sinkhorn unit's input",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "9a3b378186d018439067cd7769d9a3473cb29223dd1e6f642f76177a1aee2b85",
+   "cycles_end": 561,
+   "first_emit_to_last_write": 541,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": 143,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 149,
+     "last_emit": 149,
+     "last_write": 251,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 252,
+     "last_emit": 252,
+     "last_write": 376,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 253,
+     "last_emit": 253,
+     "last_write": 377,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth_model": 124
+    },
+    {
+     "first_emit": 348,
+     "last_emit": 348,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 379,
+     "last_emit": 379,
+     "last_write": 409,
+     "last_result": 444,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 450,
+     "last_emit": 450,
+     "last_write": 551,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth_model": 101
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.hc_pre_norm",
+   "layer": "L24",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "ffn.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "ffn.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "ffn.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "06e34ca9d9b0701f1ac6c1074f3a167e270b3a8dab88c0d53d770d4af808b9b5",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.hc_post",
+   "layer": "L24",
+   "fn": "hc_post",
+   "nodes": [
+    {
+     "node": "ffn.hc_post",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 246,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "h (hc_post)",
+     "kind": "golden",
+     "n": 20480,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "936d8cb7072341f5d1d3bde4eacf981d90c79d54db39f42a7499076caaa3c2b4",
+   "cycles_end": 246,
+   "first_emit_to_last_write": 226,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 30,
+     "last_write": 60,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 61,
+     "last_write": 91,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 92,
+     "last_write": 122,
+     "last_result": null,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 104,
+     "last_emit": 123,
+     "last_write": 153,
+     "last_result": 236,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.q_norm",
+   "layer": "L24",
+   "fn": "q_norm",
+   "nodes": [
+    {
+     "node": "attn.q_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.q_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.q_norm.scale",
+     "op": 2,
+     "event": "write"
+    }
+   ],
+   "ops": 3,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 259,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.q_norm out",
+     "kind": "golden",
+     "n": 1280,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "3cefc6a11092a7c70e907dbcbcc4464c8d2ad9c97eccf63b2c73d0dc03e6f1a1",
+   "cycles_end": 259,
+   "first_emit_to_last_write": 239,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": 109,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 115,
+     "last_emit": 115,
+     "last_write": 217,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 218,
+     "last_emit": 219,
+     "last_write": 249,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.kv_norm_rope",
+   "layer": "L24",
+   "fn": "kv_norm_rope",
+   "nodes": [
+    {
+     "node": "attn.kv_norm.sumsq",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.kv_norm.rsqrt",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_norm.scale",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.kv_rope_qdq:rope",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 280,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "attn.kv_norm out",
+     "kind": "golden",
+     "n": 512,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "kv RoPE tail (pre FP8 QDQ)",
+     "kind": "golden",
+     "n": 64,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "4fd26d1faa57d93bfca6870516fc2122114b797cfe9f96b1d670e9d051621dfa",
+   "cycles_end": 280,
+   "first_emit_to_last_write": 260,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": 100,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 106,
+     "last_emit": 106,
+     "last_write": 208,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 209,
+     "last_emit": 209,
+     "last_write": 239,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 240,
+     "last_emit": 240,
+     "last_write": 270,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.q_rope",
+   "layer": "L24",
+   "fn": "q_rope",
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.q_rope",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 51,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "q RoPE tails, 16 heads",
+     "kind": "golden",
+     "n": 1024,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "bd61499c42da65237e5033b421c71c37fde5bad9b40dc338e1848fbb09ede2d3",
+   "cycles_end": 51,
+   "first_emit_to_last_write": 31,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.idx.q",
+   "layer": "L24",
+   "fn": "idx_q",
+   "heads": 32,
+   "nodes": [
+    {
+     "node": "attn.idx.q:rope",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 52,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "index q RoPE tails, 32 heads (pre FP4 QDQ)",
+     "kind": "golden",
+     "n": 2048,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "1cca69dc83e4b08db8698392aebc8711a3b28edd654d134ac1a47039a37ae23b",
+   "cycles_end": 52,
+   "first_emit_to_last_write": 32,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 12,
+     "last_write": 42,
+     "last_result": null,
+     "vectors": 2,
+     "nout": 32,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.attn.softmax_T640",
+   "layer": "L24",
+   "fn": "attend",
+   "T": 640,
+   "heads": 16,
+   "nodes": [
+    {
+     "node": "attn.max",
+     "op": 0,
+     "event": "result"
+    },
+    {
+     "node": "attn.exp",
+     "op": 1,
+     "event": "write"
+    },
+    {
+     "node": "attn.den",
+     "op": 1,
+     "event": "result"
+    },
+    {
+     "node": "attn.sink",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "attn.normalize",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 560,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scaled scores",
+     "kind": "golden",
+     "n": 10240,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row max",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "exp(s - max) (P before BF16, the tile's P.V input)",
+     "kind": "golden",
+     "n": 10240,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "row sum",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "denominator (row sum + exp(sink - max))",
+     "kind": "golden",
+     "n": 16,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "o (inverse RoPE): wo_a's input",
+     "kind": "golden",
+     "n": 8192,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "5aa7432b7dce3e1803a824851fbccbd1ba2d864758761234c72c5ea2192ef83d",
+   "cycles_end": 560,
+   "first_emit_to_last_write": 540,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 26,
+     "last_write": 56,
+     "last_result": 119,
+     "vectors": 16,
+     "nout": 16,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 125,
+     "last_emit": 172,
+     "last_write": 273,
+     "last_result": 336,
+     "vectors": 48,
+     "nout": 16,
+     "nin": 640,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 342,
+     "last_emit": 342,
+     "last_write": 443,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth_model": 101
+    },
+    {
+     "first_emit": 444,
+     "last_emit": 475,
+     "last_write": 519,
+     "last_result": null,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth_model": 44
+    },
+    {
+     "first_emit": 520,
+     "last_emit": 520,
+     "last_write": 550,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.router_act",
+   "layer": "L24",
+   "fn": "router_act",
+   "rows": 96,
+   "nodes": [
+    {
+     "node": "ffn.softplus_sqrt",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 362,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "sqrt(softplus) of the die's 96 router rows",
+     "kind": "golden",
+     "n": 96,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "7b37c9343752128c3ce6166404ddadf4f378011907c9000193339b8fb68534fe",
+   "cycles_end": 362,
+   "first_emit_to_last_write": 342,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 106,
+     "last_write": 352,
+     "last_result": null,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth_model": 246
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.route",
+   "layer": "L24",
+   "fn": "route",
+   "nodes": [
+    {
+     "node": "ffn.bias",
+     "op": 0,
+     "event": "write"
+    },
+    {
+     "node": "ffn.weights",
+     "op": 3,
+     "event": "write"
+    }
+   ],
+   "ops": 4,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 176,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "scores + bias (the select's input)",
+     "kind": "golden",
+     "n": 384,
+     "bit_exact": true,
+     "mismatches": 0
+    },
+    {
+     "label": "route weights",
+     "kind": "golden",
+     "n": 6,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "5b33d7bfba436e26953b5214e7098e997b746433dbaea74d9dff5b7633dd34c8",
+   "cycles_end": 176,
+   "first_emit_to_last_write": 156,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 11,
+     "last_write": 41,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 16,
+     "last_emit": 16,
+     "last_write": 48,
+     "last_result": 83,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 32
+    },
+    {
+     "first_emit": 89,
+     "last_emit": 89,
+     "last_write": 119,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 120,
+     "last_emit": 120,
+     "last_write": 166,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 46
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.swiglu",
+   "layer": "L24",
+   "fn": "swiglu",
+   "rows": 576,
+   "experts": 6,
+   "nodes": [
+    {
+     "node": "ffn.swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 162,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "routed x6 swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 3456,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "9dcb8fe2b710bc3918dd50a9ee98e8f39e81f08ed9bf4060ef1ee49e27938a0b",
+   "cycles_end": 162,
+   "first_emit_to_last_write": 142,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 28,
+     "last_write": 152,
+     "last_result": null,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "L24.ffn.shared_swiglu",
+   "layer": "L24",
+   "fn": "shared_swiglu",
+   "rows": 576,
+   "nodes": [
+    {
+     "node": "ffn.shared_swiglu",
+     "op": 0,
+     "event": "write"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 147,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "shared swiglu (x route weight), BF16",
+     "kind": "golden",
+     "n": 576,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "af14f8c0f8ad629f0fe726b440d950bebef88a0c9365a2c268c81f0485847098",
+   "cycles_end": 147,
+   "first_emit_to_last_write": 127,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 13,
+     "last_write": 137,
+     "last_result": null,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth_model": 124
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "head.hc_pre_norm",
+   "layer": "head",
+   "fn": "hc_pre_norm",
+   "nodes": [
+    {
+     "node": "head.hc_pre",
+     "op": 2,
+     "event": "write"
+    },
+    {
+     "node": "head.norm.sumsq",
+     "op": 2,
+     "event": "result"
+    },
+    {
+     "node": "head.norm.rsqrt",
+     "op": 3,
+     "event": "write"
+    },
+    {
+     "node": "head.norm.scale",
+     "op": 4,
+     "event": "write"
+    }
+   ],
+   "ops": 5,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 335,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "x (normed)",
+     "kind": "golden",
+     "n": 5120,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "ed10f6f2360d702f82a69b0d2584920fea69d3c63e99be224efc0770d6fe1218",
+   "cycles_end": 335,
+   "first_emit_to_last_write": 315,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 15,
+     "last_write": 45,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 42,
+     "last_emit": 46,
+     "last_write": 76,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 73,
+     "last_emit": 77,
+     "last_write": 107,
+     "last_result": 182,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 30
+    },
+    {
+     "first_emit": 188,
+     "last_emit": 188,
+     "last_write": 290,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 102
+    },
+    {
+     "first_emit": 291,
+     "last_emit": 295,
+     "last_write": 325,
+     "last_result": null,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  },
+  {
+   "chain": "head.argmax",
+   "layer": "head",
+   "fn": "argmax",
+   "logits": 32320,
+   "nodes": [
+    {
+     "node": "head.argmax",
+     "op": 0,
+     "event": "result"
+    }
+   ],
+   "ops": 1,
+   "unit_reference": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 165,
+    "pass_": true
+   },
+   "checks": [
+    {
+     "label": "die max logit",
+     "kind": "golden",
+     "n": 1,
+     "bit_exact": true,
+     "mismatches": 0
+    }
+   ],
+   "vm_out_sha256": "49beeedff03d21174e8a00c24ee02c9197b72949dcb350e03c3e02ad6187f079",
+   "cycles_end": 165,
+   "first_emit_to_last_write": 145,
+   "per_op": [
+    {
+     "first_emit": 11,
+     "last_emit": 42,
+     "last_write": 72,
+     "last_result": 155,
+     "vectors": 32,
+     "nout": 1,
+     "nin": 32320,
+     "depth_model": 30
+    }
+   ],
+   "exact": true
+  }
+ ],
+ "source_sha256": {
+  "tools/dshbm_baseline_measure.py": "e0c365d758649bfaa5fa04311f06a8f1c90c8246f6b97a5e942130fdd689e800",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.sv": "10e824a48481aed1cefda70a785dae6fb574ad2f88e7ea01041da55bcbfd2545",
+  "rtl/test/sim_hdc_v41x_fastfp_wrap.sv": "c75679080901259e29aa150a804927d6f5e0934ebf2dcc2cf7be09644f2f8459",
+  "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp": "0454f0c8bbbb5dead3229ce5e571f89de9b65d3b824542cb45454b1b0a78101e",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv": "6ec0843db11721a81d6049047f04e9d8552157d32b8d0344dcaaef7b34386cc9",
+  "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp": "c00bcabe9e0cfdbb1f01ea410819996c85acdfc1daf1edd8c50e85c8a486f974",
+  "rtl/test/sim_hdc_fp32_lat_tops.sv": "4f8fbce86ce9adb2b90aee5fd08640026d4bcce5546908eddb7813d2000dc23e",
+  "rtl/test/sim_hdc_prefix_beh.sv": "75c1a57d38d81da07b7ff70a37d6660c563ccfa6fa921edc53b21b68635b50b5",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/test/tb_hdc_v41x_vec.sv": "64328c3538d07f6df0980f11b512220fe10c3b6c0164f6a6ff8b85a10b3701e3"
+ },
+ "cases_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+ "cases": "su_cases.pkl",
+ "snapshots_sha256": "c53723dcafd755fa3dc0cde401adee3bafb2e6bf1c7c60059cf00313dbc9b4be"
+}

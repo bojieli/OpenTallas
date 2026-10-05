@@ -1,0 +1,420 @@
+{
+  "schema": "dsrom_s81_native_hbm_capacity.v1",
+  "inputs": [
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r0/hbm_s0.hex",
+      "sha256": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0/hbm_s0.hex",
+      "sha256": "1a7badb3629f1708b192bd08c3c8848ace05eaae74a9c24fa92e97c5db954b2b",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r0/ckv_s0.hex",
+      "sha256": "c1395df7c32abc44ac37113220bdcc39545bf653674e90e76b84cd92ac845b3d",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 0,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r0/hbm_s1.hex",
+      "sha256": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0/hbm_s1.hex",
+      "sha256": "fd5b5b430af63487ae8d8421a87d4cc00d39d71be1a332703db7d88dc87d4fe6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r0/ckv_s1.hex",
+      "sha256": "e733028b5d80cc16ebc06768b11ca83be9e4ea70c441fc3ff7f3080728dff992",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 0,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r0/hbm_s2.hex",
+      "sha256": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0/hbm_s2.hex",
+      "sha256": "fdef6ae496cf25e889f291021221cfdf015172a3ca63cbccbe7d5ab757134bc0",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r0/ckv_s2.hex",
+      "sha256": "29c7480feea2986a4544068ad0b753ec9906d009b346eb7eacc543cf659bdd8f",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 0,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r0/hbm_s3.hex",
+      "sha256": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r0/hbm_s3.hex",
+      "sha256": "ba70f1df69c0811851002a0ad548d0b34a6ef530b9f32441870426eaf4e92bd5",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 0,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r0/ckv_s3.hex",
+      "sha256": "0a33ceffee92526882420dd6754c4addf0b0440decbc92df5c26f97147156ef4",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 0,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r1/hbm_s0.hex",
+      "sha256": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r1/hbm_s0.hex",
+      "sha256": "1a7badb3629f1708b192bd08c3c8848ace05eaae74a9c24fa92e97c5db954b2b",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r1/ckv_s0.hex",
+      "sha256": "cd55c53c66cacd44f4d7844806720c951c114bf0289beb05cdb2815dba86d620",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 1,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r1/hbm_s1.hex",
+      "sha256": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r1/hbm_s1.hex",
+      "sha256": "fd5b5b430af63487ae8d8421a87d4cc00d39d71be1a332703db7d88dc87d4fe6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r1/ckv_s1.hex",
+      "sha256": "c40dc58fbfc93a8ac3e97acba1908e5b9972655fc0a0816b630405d284232b22",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 1,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r1/hbm_s2.hex",
+      "sha256": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r1/hbm_s2.hex",
+      "sha256": "fdef6ae496cf25e889f291021221cfdf015172a3ca63cbccbe7d5ab757134bc0",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r1/ckv_s2.hex",
+      "sha256": "600ad228f8f84272331379ae786c7a9286d44fc2b418f1186681008097003cd4",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 1,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r1/hbm_s3.hex",
+      "sha256": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r1/hbm_s3.hex",
+      "sha256": "ba70f1df69c0811851002a0ad548d0b34a6ef530b9f32441870426eaf4e92bd5",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 1,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r1/ckv_s3.hex",
+      "sha256": "faec0d6496d9620408d740185ab52cedb222b2c2d346b565cdf19999d95331e3",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 1,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r2/hbm_s0.hex",
+      "sha256": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r2/hbm_s0.hex",
+      "sha256": "1a7badb3629f1708b192bd08c3c8848ace05eaae74a9c24fa92e97c5db954b2b",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r2/ckv_s0.hex",
+      "sha256": "db2bc67eb2232430f6747beaf58bef9f1d600289dbebde90a137243269eb033d",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 2,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r2/hbm_s1.hex",
+      "sha256": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r2/hbm_s1.hex",
+      "sha256": "fd5b5b430af63487ae8d8421a87d4cc00d39d71be1a332703db7d88dc87d4fe6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r2/ckv_s1.hex",
+      "sha256": "3d5ce4eb18849f0ea875d250b689de3a2f4a79b88faab88414d37984efb845cf",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 2,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r2/hbm_s2.hex",
+      "sha256": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r2/hbm_s2.hex",
+      "sha256": "fdef6ae496cf25e889f291021221cfdf015172a3ca63cbccbe7d5ab757134bc0",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r2/ckv_s2.hex",
+      "sha256": "7d961c74610f6fee8d9dcf7d3c3e8a44dae136239db48b4f66440913ff551c6f",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 2,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r2/hbm_s3.hex",
+      "sha256": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r2/hbm_s3.hex",
+      "sha256": "ba70f1df69c0811851002a0ad548d0b34a6ef530b9f32441870426eaf4e92bd5",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 2,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r2/ckv_s3.hex",
+      "sha256": "ef248b64dddf36c6b5a4990066a641569730506e3dd6933ebcff4ec81967b993",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 2,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r3/hbm_s0.hex",
+      "sha256": "c42b32a7022dd7384f80e3b9a620a60741c343cdb56b665e38730c936e16dffa",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r3/hbm_s0.hex",
+      "sha256": "1a7badb3629f1708b192bd08c3c8848ace05eaae74a9c24fa92e97c5db954b2b",
+      "sectors": 2161,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r3/ckv_s0.hex",
+      "sha256": "7d454245499a6870d3d152d17803e2d7cb0eed4057deb9ae94cf832e4ff475f7",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 3,
+      "stack": 0
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r3/hbm_s1.hex",
+      "sha256": "a577df9a81d26c0d1f4aed636e7c9c32d8c20e7c5c480261e0da4787cc4481f6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r3/hbm_s1.hex",
+      "sha256": "fd5b5b430af63487ae8d8421a87d4cc00d39d71be1a332703db7d88dc87d4fe6",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r3/ckv_s1.hex",
+      "sha256": "6bd2284fc268f0db033ce5bac7b83aee3e0f0e32ccdb45fc803943ede962ae27",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 3,
+      "stack": 1
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r3/hbm_s2.hex",
+      "sha256": "1813ae620b9b02c6adf7c80d82549e4583d1ca72d5d3a27790d6de93270b5a83",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r3/hbm_s2.hex",
+      "sha256": "fdef6ae496cf25e889f291021221cfdf015172a3ca63cbccbe7d5ab757134bc0",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r3/ckv_s2.hex",
+      "sha256": "fb5d8a8b2bb976e41a4bbf3dbbf4acd510f4d9d4382ebe9e5e17cf9bddfb342f",
+      "sectors": 589824,
+      "max_sector": 4784127,
+      "rank": 3,
+      "stack": 2
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r3/hbm_s3.hex",
+      "sha256": "0a129443421911907f7ac1fcf51b7b4392f9bf25f686538ffc7fff754764cea9",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20_r3/hbm_s3.hex",
+      "sha256": "ba70f1df69c0811851002a0ad548d0b34a6ef530b9f32441870426eaf4e92bd5",
+      "sectors": 2,
+      "max_sector": 2621439,
+      "rank": 3,
+      "stack": 3
+    },
+    {
+      "path": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20/r3/ckv_s3.hex",
+      "sha256": "3cf17024c2eaf3c5c83eb0d794b9f6a742341c46a06f22021958c54fa25f10eb",
+      "sectors": 589815,
+      "max_sector": 4784118,
+      "rank": 3,
+      "stack": 3
+    }
+  ],
+  "current_native_write": {
+    "gid": 1048575,
+    "rank": 3,
+    "stack": 3,
+    "local": 65535,
+    "base": 4194304,
+    "first_sector": 4784119,
+    "last_sector": 4784127,
+    "bound": "selected 1M context; native nw_gid=nw_addr>>9, complete nine-sector write"
+  },
+  "max_history_sector": 4784127,
+  "mem_words": 4784128,
+  "backing_bytes_per_four_stack_rank": 612368384,
+  "backing_GiB_per_rank": 0.5703125,
+  "backing_GiB_TP4": 2.28125,
+  "launch_peak_GiB": 4,
+  "peak_basis": {
+    "single_rank_runtime_backing_GiB": 0.5703125,
+    "two_compiler_process_allowance_GiB": 2,
+    "link_framework_allowance_GiB": 0.5,
+    "streamed_init_metadata_allowance_GiB": 0.25,
+    "rounding_reserve_GiB": 0.68
+  },
+  "scope": "same existing 4-stack WINDOW/CKV backend, indexer B inactive; no IK16M inference",
+  "source_pins": {
+    "rtl/dsrom_sys/c8/ot_chip_v41x_ckv_die_service_c8.sv": "8a2bc1568c1e94691e8fd89f4613085a0a98c7f736760211ad2fcba17b2127d8",
+    "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv": "673cd79bb136b37684a128d13da23a05c6073f1f629d2f94f2ee275f698ae78a"
+  },
+  "generated_payload_bytes": 0,
+  "zero_fill_substitute": false,
+  "physical_or_bandwidth_credit": false
+}

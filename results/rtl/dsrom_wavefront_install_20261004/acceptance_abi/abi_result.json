@@ -1,0 +1,37 @@
+{
+  "scope": "extracted actual controller ABI only; no stage/system behavior qualification",
+  "controller_sha256": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+  "runs": [
+    {
+      "wave": 0,
+      "returncode": 0,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-tnull",
+        "-s",
+        "wf_abi",
+        "-Pwf_abi.PKG_WAVE=0",
+        "results/rtl/dsrom_wavefront_install_20261004/acceptance_abi/controller_abi.sv",
+        "results/rtl/dsrom_wavefront_install_20261004/acceptance_abi/ot_rom_pkg_ctrl_wf_s81.sv"
+      ]
+    },
+    {
+      "wave": 1,
+      "returncode": 0,
+      "command": [
+        "iverilog",
+        "-g2012",
+        "-tnull",
+        "-s",
+        "wf_abi",
+        "-Pwf_abi.PKG_WAVE=1",
+        "results/rtl/dsrom_wavefront_install_20261004/acceptance_abi/controller_abi.sv",
+        "results/rtl/dsrom_wavefront_install_20261004/acceptance_abi/ot_rom_pkg_ctrl_wf_s81.sv"
+      ]
+    }
+  ],
+  "PASS": true,
+  "measured_system_result": false,
+  "SS_FF_claim": false
+}

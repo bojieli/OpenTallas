@@ -1,0 +1,226 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "draft",
+ "verdict": "ADOPT",
+ "exact": true,
+ "ss_ff": {
+  "closes": true,
+  "new_hardware": false,
+  "basis": "no new RTL: every element is the as-built unit of the baseline draft record (W17 ROM field phases, SU chains, actquant, select K3, attention engine, TP4 collectives, ot_dsrom_link_rt stage-hop endpoint); the placement adds replica dies and link instances of the same endpoint. The endpoint's own 1.2 GHz closure is the hop agent's mandatory closure task (as for every stage hop of the baseline)."
+ },
+ "info": {
+  "draft_blocks_total_us": 83.992,
+  "draft_blocks_source": "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json (DP1-EP5 placement; tools/dsrom_1m_draft_blocks.py recovery)"
+ },
+ "placement": {
+  "name": "DP1-EP5",
+  "record": "results/rtl/dsrom_recovery_20261004/draft/placement.json",
+  "sha256": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
+  "rule": "each DSpark block's non-expert matrices (wq_a, wkv, wq_b, wo_a, wo_b, gate, shared w1/w3/w2) on ONE primary TP4 group for all three blocks (the S81 L0 rank slices and pairs; block st's words at base st x 1,024 of each pair), so block st+1 starts on the dies that hold block st's output (no stage hop); each block's 128 routed experts replicated on 5 expert TP4 groups (the S81 L0 rank slices and the L0 stage-0 die's pairs of expert e), replica r computing block row r's 3 experts and their sum in id order; every row of every released matrix placed once per replica",
+  "dies": {
+   "primary": 4,
+   "expert_replicas": 60,
+   "total": 64,
+   "baseline_draft_dies": 12,
+   "added_vs_baseline_draft": 52,
+   "die_mm2": 839.239,
+   "die_mm2_source": "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json die.decision_priced_mm2",
+   "added_silicon_mm2": 43640.4
+  },
+  "capacity": {
+   "pair_words": 8192,
+   "die_words": 19800064,
+   "words_per_rank_die": {
+    "draft.primary": 2307072,
+    "draft.mtp0.rep0": 9175040
+   },
+   "fill": {
+    "draft.primary": 0.1165,
+    "draft.mtp0.rep0": 0.4634
+   },
+   "primary_max_words_in_a_pair": 2936
+  },
+  "links": {
+   "per_primary_rank_die": "15 replica links (one to rank r of each expert group, light-FEC board + UCIe class, the stage-hop endpoint ot_dsrom_link_rt); the baseline needed 2 stage links a block group",
+   "note": "a star of 15 board links per primary die: port count beyond the S81 die's stage links is an added link-endpoint area not yet priced in the die floorplan"
+  }
+ },
+ "dies_added": 52,
+ "silicon_added_mm2": 43640.4,
+ "blocks_old_new_us": {
+  "old": 115.1153,
+  "new": 83.992,
+  "block_us_old": [
+   38.3718,
+   38.3718,
+   38.3718
+  ],
+  "block_us_new": [
+   29.9251,
+   27.0334,
+   27.0334
+  ]
+ },
+ "per_node_old_new_us": {
+  "mtp.0": {
+   "hop_in": [
+    2.8917,
+    2.8917
+   ],
+   "experts_gu": [
+    5.96083,
+    1.19083
+   ],
+   "down": [
+    5.10667,
+    0.91583
+   ],
+   "added_hops_on_path": 0.5142,
+   "block": [
+    38.3718,
+    29.9251
+   ]
+  },
+  "mtp.1": {
+   "hop_in": [
+    2.8917,
+    0.0
+   ],
+   "experts_gu": [
+    5.96083,
+    1.19083
+   ],
+   "down": [
+    5.10667,
+    0.91583
+   ],
+   "added_hops_on_path": 0.5142,
+   "block": [
+    38.3718,
+    27.0334
+   ]
+  },
+  "mtp.2": {
+   "hop_in": [
+    2.8917,
+    0.0
+   ],
+   "experts_gu": [
+    5.96083,
+    1.19083
+   ],
+   "down": [
+    5.10667,
+    0.91583
+   ],
+   "added_hops_on_path": 0.5142,
+   "block": [
+    38.3718,
+    27.0334
+   ]
+  }
+ },
+ "new_measurements": {
+  "rlinks": "results/rtl/dsrom_recovery_20261004/draft/rlinks.json",
+  "hops": {
+   "x_row": {
+    "payload_B": 10240,
+    "us": 0.3567,
+    "exact": true
+   },
+   "ids": {
+    "payload_B": 64,
+    "us": 0.2242,
+    "exact": true
+   },
+   "weights": {
+    "payload_B": 64,
+    "us": 0.2242,
+    "exact": true
+   },
+   "ret_row": {
+    "payload_B": 5120,
+    "us": 0.29,
+    "exact": true
+   }
+  }
+ },
+ "not_taken": {
+  "field": "PQ field successor (claude/dsrom-recovery-field-20261004 @ 0fc1db5da) not yet ADOPTED (SS/FF screens running): this record is placement-only on the as-built field",
+  "router": "ot_hdc_select_tree is adopted at K6/384; the draft's K3/128 select would be a new parameterisation needing its own screen (draft select 0.575 us a block on the path)",
+  "hop": "hop lever REJECTED; hop_closed.json not yet adopted",
+  "replicas15": "one replica per (row, expert): ~1.2 us a block more for +120 dies -- not taken"
+ },
+ "default": "opt-in: applied only in the recovery baseline; the as-built draft_blocks.json is unchanged",
+ "note": "composed (recovery baseline with router lever, main a6a8f7fe1 + this record): draft 485.843 -> 454.72 us, MTP step 1,579.10 -> 1,547.97 us, MTP 2,462.1 -> 2,511.6 tok/s (+2.01%); AR 1,402.3 tok/s unchanged (draft only)",
+ "physical_cost": {
+  "area_um2_per_element": {
+   "serdes_endpoint": 562680.0,
+   "note": "per replica link endpoint at the S81 footprint (ot_pdie_serdes) + one hub FIFO slot + channel waypoints; the endpoint logic (ot_dsrom_link_rt) is the hop lever's"
+  },
+  "area_mm2_per_die": 9.28,
+  "area_mm2_per_die_basis": "primary draft die: 15 extra SerDes + hub FIFO slots + waypoints (placed footprint 428.27 -> 437.55 mm2); expert-replica dies: 0 (one link, inside the S81 set)",
+  "area_mm2_total": 43677.5,
+  "area_total_basis": "52 added layer-class dies x 839.239 mm2 + 4 primary dies x the extra endpoints",
+  "dies_added": 52,
+  "ss_wns_ps": null,
+  "ff_hold_wns_ps": null,
+  "slack_basis": "no new RTL (as-built units); the link endpoint closure is the hop lever (hop.json REJECT: ot_dsrom_link_ct SS -500.4 ps; hop_closed pending)",
+  "grt_overflow": 0,
+  "worst_window_use_cap": 1.0,
+  "congestion_basis": "S81 full-die method in context: primary draft die = layer die + select tree + 15 SerDes (11 a side incl. the S81 four, 1 SW corner), 1,024-bit buses through hub FIFO slots and channel waypoints, GRT k16 i50 at hub 0.044 (rd) and 0.088 (rd88) -- rd_b_k16_i50, rd88_b_k16_i50",
+  "grt_cases": {
+   "rd_b_k16_i50": {
+    "overflow": 0,
+    "worst": 1.0,
+    "over_1": 0,
+    "baseline_subtracted": true,
+    "worst_where": [
+     1.0,
+     "M9",
+     32303,
+     12345,
+     "frame_95"
+    ],
+    "grt_s": 124,
+    "case": "rd_b_k16_i50"
+   },
+   "rd88_b_k16_i50": {
+    "overflow": 0,
+    "worst": 1.0,
+    "over_1": 0,
+    "baseline_subtracted": true,
+    "worst_where": [
+     1.0,
+     "M9",
+     32303,
+     12345,
+     "frame_95"
+    ],
+    "grt_s": 123,
+    "case": "rd88_b_k16_i50"
+   }
+  },
+  "real": {
+   "legality": {
+    "instances": 24520,
+    "outside": 0,
+    "overlaps": 0
+   },
+   "track_assert": "PASS",
+   "pins_checked": 6063282,
+   "pin_access": "FAIL",
+   "pin_access_examples": [
+    "[ERROR DRT-0073] No access point for e1/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e100/xs_q1[151] (ot_v41_rom_elem_q_qp_w10).",
+    "[ERROR DRT-0073] No access point for e1003/xs_q1[151] (ot_v41_rom_elem_q_qp_w10)."
+   ],
+   "case": "rd_a_real"
+  },
+  "ir_note": "no IR case: SerDes/UCIe sit on their own supplies (no core-grid load); the 15 hub FIFO slots add 0.12 W in the VCH",
+  "edge_fit": "the S81 edge column holds at most UCIe + 10 SerDes in 26 mm: 15 extra need 7 + 7 in the columns and 1 in a corner",
+  "s81_rerun_needed": true,
+  "s81_rerun_why": "15 extra link endpoints and their 1,024-bit buses on the 4 primary draft dies (a die variant: the S81 edge column holds at most UCIe + 10 SerDes); in-context GRT here passes at the S81 SerDes footprint; the sign-off rerun with the hop_closed endpoint is SCHEDULED (Codex item 10)",
+  "source": "tools/dsrom_recovery_physcost.py levers"
+ }
+}

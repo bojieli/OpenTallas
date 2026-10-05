@@ -1,0 +1,120 @@
+{
+  "status": "G0_BLOCKED_WITH_IMPLEMENTED_FUNCTIONAL_TRANSPORT_CANDIDATE",
+  "base": "5cb27e9464d756630ad9636116d94e0025324826",
+  "calendar_source_commit": "28c3f9f24",
+  "calendar_raw_returncode": 0,
+  "tests": {
+    "adapter_and_source_join": 15,
+    "identity_ABI": 5,
+    "all_pass": true,
+    "qualification": "functional fixtures, not a new numerical token/position"
+  },
+  "additive_only": true,
+  "pinned_original_sha256": {
+    "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+    "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv": "2cb3c6d81e343bce86474b64eea27c6b48dbc897f1d988e9212cd1d7d1d1b764",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv": "5de049782df95ea81bf79458839e12e987fe2316c19237483788e3d578011025",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv": "ad6648ee9d866953e8a996b702a18d249505b95bfe307d0dc3d2a4ec8083f404",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+    "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/qwen_hbm_controller_calendar_r2.py": "2111028214842c439fec168d2df04c9913b261c0e68428a53715065ccdf46d86",
+    "tools/qwen_hbm_controller_events_r1.py": "1026020c7a59c97e00075994b8e2cd5a42d4357e7f9c8a44faa7fa589d5d8985",
+    "tools/qwen_hbm_endpoint_preflight_r14.py": "baf2efd689f1649700244c59b24f35cf20016360caadb4708fd6e7b510c94825",
+    "tools/qwen_kv_bank_prototype.py": "1d327fdf38c7ddb3907f53cb69c67d0e8a64fe639d8630b6ae6c612038e79a9a",
+    "tools/qwen_o4_kv_slice_map_w12.py": "ef3b5c470dd19e29779ee8215dfc07a52fbc5ee6ebe9b2ffc591d0f93107b7e7",
+    "tools/qwen_rom_kv_residence_gate.py": "5ea3c09caa7f235dbdeb957067c1ded6668be08136357d729968ff2d45918790",
+    "tools/qwen_rom_kv_transport_candidate.py": "5413c3a82357e91083d1befb0f20ed24f6f963da2f3086f67bf11182b17d6a06",
+    "tools/qwen_rom_rt_token_w12.py": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "all_originals_byte_identical": true,
+  "docs_changed": false,
+  "RTL_PnR_launched": false,
+  "identity_source_sha256": {
+    "tools/qwen_rom_kv_identity_binding.py": "ea1ba23b6abdc707b5a017c0fd54ff1e9757b96c8de2e63f092f50b5e825c361",
+    "tests/test_qwen_rom_kv_identity_binding.py": "c67a41519da8bbfa5af5a2f077df55c4f4b4059b55a587024142a0e456494312"
+  },
+  "exact_summary": {
+    "read_bytes_charged_once": 150994944,
+    "read_layers": 36,
+    "writer_stack_calendars": 144,
+    "delivery_cycles": 387403068,
+    "write_cycles": 827319,
+    "conditional_cold_serial_token_cycles": 387537154,
+    "conditional_cold_serial_seconds": 0.32294762833333335,
+    "headline_rate_adopted": false,
+    "selected_production_refill_policy": false,
+    "slower_than_legacy_32B_row_hit_diagnostic": true
+  },
+  "bound": "Legal conservative calendar under disclosed guards. No measured r14 stall bound, selected prefetch overlap, actual8K ROM state, runtime or physical transfer credit.",
+  "disposition": "Do not adopt this conservative serial schedule as a performance lever. Preserve it as a finite correctness/resource reference; current G0 cannot pass.",
+  "next_binding": {
+    "Euclid": [
+      "Bind actual producer PC/owner and raw FP8 result into identity() and Delivery; no host stage KV reset may qualify persistent state.",
+      "Join Homes.tile raw code/mask tuples to actual registered tile fill and macro visibility;54 addressed rows at8K, not historical44.",
+      "Require full reader drain and ACK/credit retirement before overwriting one active layer; no second numerical position requested."
+    ],
+    "Maxwell": [
+      "Replace existing KV bound once with a selected production release/prefetch trace; current cold serial calendar does not require a refill policy.",
+      "Keep read150994944B/rank separate from actual RMW/write traffic; zero overlap is this conditional case only.",
+      "Finish service/control/CAM/mux/quarantine area, fill demux routing-layer capacity and source-matched slot placement; no architecture admission from macro sums."
+    ],
+    "Kepler": [
+      "Expose allocated physical tag receipt; retain owner until validated per-beat reverse credit and grant release.",
+      "Fix r14 early tag free and unconditional read credit grant; bind exact request455/return467/reverse404 interfaces and two package endpoints.",
+      "The candidate32sector/16burst credit inventory needs1024 worst-case assembly slots/stack; the serial reference exercises one sector at a time and cannot claim burst speed."
+    ]
+  },
+  "replay": [
+    "python -m unittest discover -s tests -p 'test_qwen_rom_persistent_kv*.py' -v",
+    "python -m unittest discover -s tests -p test_qwen_rom_kv_identity_binding.py -v",
+    "python tools/qwen_rom_persistent_kv_g0.py --full-calendar --progress-dir /tmp/qwen_kv_replay_layers --result /tmp/qwen_kv_replay.json"
+  ],
+  "artifacts_sha256": {
+    "qwen_rom_persistent_kv_g0_failed_r4.txt": "9d8cf66d7315c9592bd8cd71f1f2d7a8e2fcc0dcd3c7a28593424bd691c16cce",
+    "functional_pass_r5.log": "af5fe07cd4cae6595c67ea211c113730c98eeda1a4af1221fddcc7a1ede7c370",
+    "functional_failure_r1.json": "8c60eb79ed44bd7ad18543449bd1bca1a55f30041093b0149613bf446833a4fa",
+    "functional_failure_r1.log": "e8fb3c700696879b7ab67b4a7155a7ba116da92c305832277d32f6522572ae40",
+    "source_join_failure_r3.log": "dc16b094dd1ee78da31f08977b48b612c4406047ed14b0a25d81f0a57c06d843",
+    "handoff_r2.json": "a0dc0f9bc48f689767325ad10d865e41ef4903aea0c3e08d61baa80f046deb20",
+    "functional_failure_r4.log": "374045f54cd59ddb8593d87f663672007586acebdb6ad650047571935768c469",
+    "source_join_failure_r3.json": "d764cd1e49f06b3c5294a13fb45b6c0022dce4468f3e103e9b393788a6333c69",
+    "contract_r7.json": "f1a20411f87cd6fd5fb3068e15387f26f2073bccb06772f5fa29d9571dadb913",
+    "functional_pass_r3.log": "7aa891e014fcf721421c310945f8a498fdba09bdd1b895dd3568ada582fabe43",
+    "identity_binding_pass_r1.log": "a75abf88cae7355f840f7f759e6fcb38cd74b7818f9a5f2e83954776ae801cfd",
+    "calendar_invalid_r7.json": "141f8bb5741dc9edf2190d33ad24d6d65734635499ad42de00766fc23c8b2ef3",
+    "calendar_termination_receipts_r3_r7.json": "eefe53ddb9bfa1e4e5828db79b7d539b74388c1c1e378f607263300ea750814e",
+    "calendar_invalid_r7.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contract_r6.json": "fc3662400a632a94efa1a703abd4737c2c47569e380bef01750954b6b34593ca",
+    "calendar_invalid_r3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contract_r2.json": "a918538c5d9640b43ac29c27a253f2c2e59bf6d3a19674cc7e9c285bd8ae3f2e",
+    "test_qwen_rom_persistent_kv_g0_failed_r1.txt": "8a4ddfeecab5c0718fd85809826477af8fbb529034b134ee8a09394575d425ae",
+    "contract_r8.json": "0936e783448fd4ee9c7998c55ebc6d4d34ad1fcd1b989017afb5678b75797c17",
+    "contract_r5.json": "6289163e75ba0790decd8346d9f2b106390151da59337dea30a082da24e9c710",
+    "functional_pass_r7.log": "6055d5859a87d1ce53d6f67f3ed6095cc7cad1fdcce1ba585cd0916b5f82e580",
+    "calendar_invalid_r3.json": "cf4d125ea4c63b215d0731dc362fe09d2e574d715576c104fb6d83184c1715b7",
+    "source_join_failed_r4.txt": "e5c23d20470ef2c64717f17dc20e0a0412950d14f3593c245796aa116ff66c2c",
+    "functional_pass_r2.log": "87db5957bd2f50f75d41a9a7f95ffd2dece6b00f83a5a212a76ee2e449d58559",
+    "functional_failure_r4.json": "1afc16980f3e1245e26f0c659cde64fd1ff2b24e5cca003e56d6e4940a64c83f",
+    "identity_binding_pass_r2.log": "c0c89efab1f188753cf881c59089abf1255836969fba4e552706eeba98bd037d",
+    "full_calendar_r8.json": "c1618fe0c66f91549eb1b37675276d15fdf29a108d6e60b91b6890f4bc3abc92",
+    "qwen_rom_persistent_kv_g0_failed_r1.txt": "435664b017a180e2b87a489a851bcc0cffdbeb5d588e7114ddb6df8494e568c9",
+    "full_calendar_r8.log": "307893818bb40ef29f50e93cf51baf0528accd93714fb7661d8a949392b9aad9",
+    "source_join_failed_r3.txt": "09363598e060ec6c103b30452b5ba39f0180169deb72a859d741cfa09650df28",
+    "functional_pass_r8.log": "a188b8034da54a78d5e079f9104363e0ff856f9e25460f39a43493afc0cee6f4",
+    "functional_pass_r6.log": "48c8351d19efe5e16cebd43c764073bdbbd18c30c5f81998a4819308f5e49266"
+  }
+}

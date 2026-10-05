@@ -1,0 +1,534 @@
+{
+  "claim_boundary": "functional cycle-level RTL simulation of the SELECT unit alone against tools/hdc_golden_v41.py topk_lowest_index; clock rate is not claimed here -- see results/physical_abi3/asap7/hdc/v41/.",
+  "configurations": [
+    {
+      "K": 6,
+      "elements": 59108,
+      "expected_outputs": 24079,
+      "index_width": 9,
+      "latency_cycles": 14,
+      "name": "router_top6",
+      "order": "ascending index",
+      "pass": true,
+      "random_segments": 3000,
+      "real_segments": {
+        "router": 1920
+      },
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 102916,
+          "elements": 59108,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 14,
+          "latency_max": 14,
+          "latency_min": 14,
+          "outputs": 24079,
+          "pass": true,
+          "seed": 1,
+          "segments": 4920,
+          "simulator": "verilator",
+          "stall_cycles": 43746
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 122234,
+          "elements": 59108,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 14,
+          "latency_max": 14,
+          "latency_min": 14,
+          "outputs": 24079,
+          "pass": true,
+          "seed": 7,
+          "segments": 4920,
+          "simulator": "verilator",
+          "stall_cycles": 17994
+        },
+        "icarus_bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 122234,
+          "elements": 59108,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 14,
+          "latency_max": 14,
+          "latency_min": 14,
+          "outputs": 24079,
+          "pass": true,
+          "seed": 7,
+          "segments": 4920,
+          "simulator": "icarus",
+          "stall_cycles": 17994
+        }
+      },
+      "value_width": 32,
+      "vectors_sha256": "a69824124d6f1e3d29f34652b79fb2015f08ba86ad58b36ffd38fce040017a50"
+    },
+    {
+      "K": 6,
+      "elements": 60936,
+      "expected_outputs": 24208,
+      "index_width": 9,
+      "latency_cycles": 8,
+      "name": "router_top6_rank_order",
+      "order": "rank",
+      "pass": true,
+      "random_segments": 3000,
+      "real_segments": {
+        "router": 1920
+      },
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 80026,
+          "elements": 60936,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 8,
+          "latency_max": 8,
+          "latency_min": 8,
+          "outputs": 24208,
+          "pass": true,
+          "seed": 1,
+          "segments": 4920,
+          "simulator": "verilator",
+          "stall_cycles": 19030
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 109434,
+          "elements": 60936,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 8,
+          "latency_max": 8,
+          "latency_min": 8,
+          "outputs": 24208,
+          "pass": true,
+          "seed": 7,
+          "segments": 4920,
+          "simulator": "verilator",
+          "stall_cycles": 7360
+        }
+      },
+      "value_width": 32,
+      "vectors_sha256": "49fcb524d2f8f1142bbf70fe655aef5f00ac5c791b610fff54e7f4bf7f1b97d3"
+    },
+    {
+      "K": 16,
+      "elements": 64180,
+      "expected_outputs": 28539,
+      "index_width": 16,
+      "latency_cycles": 34,
+      "name": "index_topk_reduced",
+      "order": "ascending index",
+      "pass": true,
+      "random_segments": 2000,
+      "real_segments": {
+        "index": 381
+      },
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 124035,
+          "elements": 64180,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 34,
+          "latency_max": 34,
+          "latency_min": 34,
+          "outputs": 28539,
+          "pass": true,
+          "seed": 1,
+          "segments": 2381,
+          "simulator": "verilator",
+          "stall_cycles": 59719
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 147257,
+          "elements": 64180,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 34,
+          "latency_max": 34,
+          "latency_min": 34,
+          "outputs": 28539,
+          "pass": true,
+          "seed": 7,
+          "segments": 2381,
+          "simulator": "verilator",
+          "stall_cycles": 28863
+        }
+      },
+      "value_width": 16,
+      "vectors_sha256": "f49d055cc23189bce25dcef878165a630f21ad762be6a11b13df68e43918a4ac"
+    },
+    {
+      "K": 64,
+      "elements": 66499,
+      "expected_outputs": 28793,
+      "index_width": 12,
+      "latency_cycles": 130,
+      "name": "candidate_blocks_reduced",
+      "order": "ascending index",
+      "pass": true,
+      "random_segments": 600,
+      "real_segments": {
+        "candidate": 48
+      },
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 130479,
+          "elements": 66499,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 130,
+          "latency_max": 130,
+          "latency_min": 130,
+          "outputs": 28793,
+          "pass": true,
+          "seed": 1,
+          "segments": 648,
+          "simulator": "verilator",
+          "stall_cycles": 63508
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 157142,
+          "elements": 66499,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 130,
+          "latency_max": 130,
+          "latency_min": 130,
+          "outputs": 28793,
+          "pass": true,
+          "seed": 7,
+          "segments": 648,
+          "simulator": "verilator",
+          "stall_cycles": 30381
+        }
+      },
+      "value_width": 16,
+      "vectors_sha256": "01b5f7cacbc4e6aadf04ac0dd5968d7483087e52bd2f8b4cbcd28a9073a82753"
+    },
+    {
+      "K": 512,
+      "elements": 110032,
+      "expected_outputs": 54494,
+      "index_width": 16,
+      "latency_cycles": 1026,
+      "name": "index_topk_shipped",
+      "order": "ascending index",
+      "pass": true,
+      "random_segments": 120,
+      "real_segments": {
+        "index": 381,
+        "index_all": 381
+      },
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 1362935,
+          "elements": 110032,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 1026,
+          "latency_max": 1026,
+          "latency_min": 1026,
+          "outputs": 54494,
+          "pass": true,
+          "seed": 1,
+          "segments": 882,
+          "simulator": "verilator",
+          "stall_cycles": 1249799
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 1410504,
+          "elements": 110032,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 1026,
+          "latency_max": 1026,
+          "latency_min": 1026,
+          "outputs": 54494,
+          "pass": true,
+          "seed": 7,
+          "segments": 882,
+          "simulator": "verilator",
+          "stall_cycles": 751239
+        }
+      },
+      "value_width": 16,
+      "vectors_sha256": "4379a9606e4eda333787da5cd2c6218bb8be8d759f8ae4a98315d785d2d117a2"
+    },
+    {
+      "K": 512,
+      "elements": 58391,
+      "expected_outputs": 28752,
+      "index_width": 16,
+      "latency_cycles": 514,
+      "name": "index_topk_shipped_rank_order",
+      "order": "rank",
+      "pass": true,
+      "random_segments": 60,
+      "real_segments": {
+        "index": 381
+      },
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 466832,
+          "elements": 58391,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 514,
+          "latency_max": 514,
+          "latency_min": 514,
+          "outputs": 28752,
+          "pass": true,
+          "seed": 1,
+          "segments": 441,
+          "simulator": "verilator",
+          "stall_cycles": 405847
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 514150,
+          "elements": 58391,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 514,
+          "latency_max": 514,
+          "latency_min": 514,
+          "outputs": 28752,
+          "pass": true,
+          "seed": 7,
+          "segments": 441,
+          "simulator": "verilator",
+          "stall_cycles": 234073
+        }
+      },
+      "value_width": 16,
+      "vectors_sha256": "cb6ef4ab96e175ff9b1ebc11dc24eae40df66ddc8fadc13eb7a6d770813e6bab"
+    },
+    {
+      "K": 1,
+      "elements": 4069,
+      "expected_outputs": 813,
+      "index_width": 8,
+      "latency_cycles": 4,
+      "name": "k1_edge",
+      "order": "ascending index",
+      "pass": true,
+      "random_segments": 1000,
+      "real_segments": {},
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 6258,
+          "elements": 4069,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 4,
+          "latency_max": 4,
+          "latency_min": 4,
+          "outputs": 813,
+          "pass": true,
+          "seed": 1,
+          "segments": 1000,
+          "simulator": "verilator",
+          "stall_cycles": 2158
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 7971,
+          "elements": 4069,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 4,
+          "latency_max": 4,
+          "latency_min": 4,
+          "outputs": 813,
+          "pass": true,
+          "seed": 7,
+          "segments": 1000,
+          "simulator": "verilator",
+          "stall_cycles": 1254
+        }
+      },
+      "value_width": 16,
+      "vectors_sha256": "ae2a2120b0f2ebef8c54ed6a65b4d27788725d4adbca48444519da3348bedcff"
+    },
+    {
+      "K": 7,
+      "elements": 21109,
+      "expected_outputs": 7190,
+      "index_width": 10,
+      "latency_cycles": 9,
+      "name": "k7_odd_rank_order",
+      "order": "rank",
+      "pass": true,
+      "random_segments": 1500,
+      "real_segments": {},
+      "runs": {
+        "back_to_back": {
+          "bubble_percent": 0,
+          "cycles": 30061,
+          "elements": 21109,
+          "errors": 0,
+          "gap_percent": 0,
+          "latency_expected": 9,
+          "latency_max": 9,
+          "latency_min": 9,
+          "outputs": 7190,
+          "pass": true,
+          "seed": 1,
+          "segments": 1500,
+          "simulator": "verilator",
+          "stall_cycles": 8886
+        },
+        "bubbles_and_gaps": {
+          "bubble_percent": 30,
+          "cycles": 40400,
+          "elements": 21109,
+          "errors": 0,
+          "gap_percent": 20,
+          "latency_expected": 9,
+          "latency_max": 9,
+          "latency_min": 9,
+          "outputs": 7190,
+          "pass": true,
+          "seed": 7,
+          "segments": 1500,
+          "simulator": "verilator",
+          "stall_cycles": 4329
+        }
+      },
+      "value_width": 32,
+      "vectors_sha256": "53c9588c955d2e56c188e57a67bde06fcae8fa1131c86ca094323926ecebda19"
+    }
+  ],
+  "input_sha256": {
+    "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+    "rtl/test/hdc_select_harness.cpp": "294744ae5a91a6337e797207332988829d1dd1ca053770961f1e3faeea57bc59",
+    "rtl/test/tb_hdc_select.sv": "782429f81f66d1501c6f9d2db5d48ca5c876dc7bdc99d1fea4a520c796f24915",
+    "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788",
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
+    "tools/rtl_hdc_v41_select_campaign.py": "fb314c8a1ba8f3be1f204f9498f98f1c042b8c09006ca8ceb9e79226cb08cbd9"
+  },
+  "latency_definition": "clock edges from the edge that accepts a segment's last element to the edge that registers its first output: K + 2 (+ K for ascending-index order)",
+  "real_data": {
+    "candidate_block_size": 8,
+    "candidate_topk_blocks": 64,
+    "golden_selection_checks": {
+      "candidate": 48,
+      "index": 381,
+      "router": 1920
+    },
+    "index_topk": 16,
+    "positions": 48,
+    "router_topk": 6,
+    "tokens": [
+      0,
+      3563,
+      3745,
+      418,
+      170,
+      16,
+      3564,
+      3582,
+      3118,
+      3583,
+      2357,
+      276,
+      3270,
+      44,
+      790,
+      223,
+      2498,
+      1741,
+      858,
+      2588,
+      983,
+      1289,
+      2967,
+      2084,
+      3275,
+      422,
+      2318,
+      1997,
+      2659,
+      655,
+      258,
+      3471,
+      866,
+      1713,
+      1009,
+      2799,
+      477,
+      346,
+      3319,
+      3847,
+      952,
+      3768,
+      2266,
+      2686,
+      3554,
+      1480,
+      415,
+      1165,
+      2678
+    ]
+  },
+  "schema": "opentallas.hdc-v41-select-campaign.v1",
+  "semantics": "k largest values, ties to the lower index, -0 == +0; NaN outside the contract",
+  "status": "pass",
+  "verilator_lint": {
+    "configurations": {
+      "candidate_blocks_reduced": {
+        "messages": [],
+        "returncode": 0
+      },
+      "index_topk_reduced": {
+        "messages": [],
+        "returncode": 0
+      },
+      "index_topk_shipped": {
+        "messages": [],
+        "returncode": 0
+      },
+      "index_topk_shipped_rank_order": {
+        "messages": [],
+        "returncode": 0
+      },
+      "k1_edge": {
+        "messages": [],
+        "returncode": 0
+      },
+      "k7_odd_rank_order": {
+        "messages": [],
+        "returncode": 0
+      },
+      "router_top6": {
+        "messages": [],
+        "returncode": 0
+      },
+      "router_top6_rank_order": {
+        "messages": [],
+        "returncode": 0
+      }
+    },
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED"
+    ]
+  }
+}

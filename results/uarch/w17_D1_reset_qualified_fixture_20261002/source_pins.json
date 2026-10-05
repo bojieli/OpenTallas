@@ -1,0 +1,28 @@
+{
+  "evidence": {
+    "original_bench": {
+      "path": "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/tb_D1_scope_core.sv",
+      "SHA256": "7eb722d71722fc48d10bacdc0964020e8e101533f94108dfa1fcd86b3b4aeac9"
+    },
+    "compiler_log": {
+      "path": "results/uarch/w17_D1_native_r2_terminal_incremental_model_20261002/compile.log",
+      "SHA256": "7ad1d0d90f42e37b3f7c9dba675c43bd03f1feedf00467f86b4a15787a13833f"
+    },
+    "attribution_receipt": {
+      "path": "results/uarch/w17_D1_actual_union_contributors_20261002_r1/receipt.json",
+      "SHA256": "9172c42aaf86efdd8c907946267ec06cb5904f239cabe437aa5a2d7544d6b410"
+    }
+  },
+  "protected_sources": {
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/w17_runtime/chip/ot_chip_v41x_die.sv": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/tb_D1_scope_core.sv": "7eb722d71722fc48d10bacdc0964020e8e101533f94108dfa1fcd86b3b4aeac9",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/ot_v41_rt_die_D1_scope.sv": "be35b5ccf0d258677b11bc9cd6b0ee2869b5023b21651a3b39099413bdb4487d",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/runtime/runtime.log": "7e34b92b5fffe5da1088f3f516c661da6cb2324938078b50a407bc7c92e9975e",
+    "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/runtime/receipt.json": "a2f3120ea37e232078ce378550e6028b632edde0220ae1273a86f2dd81011098"
+  },
+  "compiler_SHA256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+}

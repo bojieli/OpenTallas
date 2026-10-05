@@ -1,0 +1,373 @@
+{
+  "actual_commands": 491,
+  "all_four_rank_demand_metadata_equal": true,
+  "checkpoint_payload_reads": 0,
+  "current_full_rank_banks_per_home": 45,
+  "current_full_rank_words": 549760,
+  "decoded_rank": 0,
+  "distinct_stage_copies_sum": 549760,
+  "emit_deduplicated_coefficient_uses": 549760,
+  "generator_sha256": "907552daf319154e424b9028fd1076c2127c2ac2ec91cc8c4c67fbc736096c9e",
+  "hardware_admission": false,
+  "maximum_stage_words": 33648,
+  "pins": {
+    "ISA": {
+      "commit": "d2c28c279",
+      "path": "tools/hdc_isa_v41.py",
+      "sha256": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+    },
+    "batches": {
+      "commit": "7ed62357d",
+      "path": "tools/w11_dsrom_crom_demand.py",
+      "sha256": "0981e356fa03e03860ae06248abccd9a518962cc6f90f558c3f90acfb0e37e51"
+    },
+    "demand": {
+      "commit": "f4bce8fa0",
+      "path": "results/uarch/w11_crom_demand_20261001/demand_v2.json.gz",
+      "sha256": "bb597c07e000b2e58f16b949f2c4515ec49cfaa943c70c20133e0361366ec62d"
+    },
+    "program": {
+      "commit": "4080bb5fd",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/full40_crom_bound_templates_v2.rank0.templates.bin.gz",
+      "sha256": "366e43da425ace7b3bc6d12e886f73fc92e2762bfcc934c6d4475b78b142b36c"
+    }
+  },
+  "required_next": [
+    "regular maximum-stage-sized geometry with explicit selected-port bandwidth",
+    "complete source value map including invalid L1 hole",
+    "exact new bank-wave and fill-mask catalog for all491 commands",
+    "all source consumer deadlines, service, physical fit and contextual closure"
+  ],
+  "schema": "parent_CROM_stage_read_footprint",
+  "scope": "Decoded rank0 operand address footprint with proposed frozen generated spans; actual generated bases remain unencoded. Dense storage capacity only. Does not repack values, preserve read-port bandwidth, compile new bank-wave/fill catalog, place macros, or prove service timing. No bank-count adoption.",
+  "stages": [
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 0,
+      "local_dense_address_map_sha256": "01c085f26722f321f259883f4cdc6779ffa5ab4da08afa040976ddd8eefe933a"
+    },
+    {
+      "commands": 13,
+      "dense_storage_only_minimum4096x3_banks": 3,
+      "distinct_logical64_words": 33008,
+      "invalid_L1_source_words": 20480,
+      "layer": 1,
+      "local_dense_address_map_sha256": "6b8a6fab6fc7ad52eee172e6a12855affd244d6a99c3a8c4fd42ab4de138f670"
+    },
+    {
+      "commands": 14,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 13168,
+      "invalid_L1_source_words": 0,
+      "layer": 2,
+      "local_dense_address_map_sha256": "e29112fb8f9938fe092e02ee25bfa38b4570e1e2da09b08720e29b361736db29"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 3,
+      "local_dense_address_map_sha256": "700397211462d9067715af8853baffc24f9cec6f8fd77f22352ac6d380f4e125"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 4,
+      "local_dense_address_map_sha256": "8a0c4318a9436cb448a5cd4030fd3ae6c1897a43c82e1bb2dfe2de39640cac42"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 5,
+      "local_dense_address_map_sha256": "7e75f37f6d0cf3351ca63136f2738f941c79a53e5f7b895bbd8a22ea1cc775d0"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 6,
+      "local_dense_address_map_sha256": "011becc323e655fadc873e2d38c0111c97a87703ddf2aab8ad1fd15715d11fc4"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 7,
+      "local_dense_address_map_sha256": "73da5db000410e7f6bf6b6d6443789134515498028cac0334400a9b56e08d14b"
+    },
+    {
+      "commands": 14,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 13168,
+      "invalid_L1_source_words": 0,
+      "layer": 8,
+      "local_dense_address_map_sha256": "bc7b58b90e74bca6153b4c076cde262642c21e6033a2ad7acb4beee80bc2a679"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 9,
+      "local_dense_address_map_sha256": "91e3c84c0927062e328dcfaf0381be72048835ced7f23af0499adca0db382862"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 10,
+      "local_dense_address_map_sha256": "ee70c2c19a345c9da755bc9c296cd6b6867ff86a051de23fe22f29b90c04df5b"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 11,
+      "local_dense_address_map_sha256": "9c5611b64a63757f2bb77318f45c648b817d984367810dab125f3f378f6bfab5"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 12,
+      "local_dense_address_map_sha256": "6fa73ca6af14ee6c5e3b90fcf2da96bba7847cd2692460dd70afdb4d0798948a"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 13,
+      "local_dense_address_map_sha256": "ed2cc4faae2923c0d4861af1648a1ca76bdb49405dc586b84ab6f2bf6de58ea0"
+    },
+    {
+      "commands": 15,
+      "dense_storage_only_minimum4096x3_banks": 3,
+      "distinct_logical64_words": 33648,
+      "invalid_L1_source_words": 0,
+      "layer": 14,
+      "local_dense_address_map_sha256": "0266d899fe7ce432bd666bdaa42d1020ae482bcca7bf9c2b9fd1a3017e104fbd"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 15,
+      "local_dense_address_map_sha256": "7c037e70179ba579be4fd6da6b9fee56f17c2502dfd41d01015e72c05d34db15"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 16,
+      "local_dense_address_map_sha256": "97fac2272a9b5150e50b89a1dbc3b5283c916b640bc2c2dd44f15ead0899a8b2"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 17,
+      "local_dense_address_map_sha256": "fcae17ff8420b57935c51478a1194855b2dd0fc412d6ce7c25feb0ae49b7e305"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 18,
+      "local_dense_address_map_sha256": "615e21e4978b8fe2174f5aab7c649142f56750d6f4d6c51edecfcca966010862"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 19,
+      "local_dense_address_map_sha256": "5703f34c90d1c5b0277e722f2e63a65cf42dce3faafa9d769b44fe0f192df78e"
+    },
+    {
+      "commands": 14,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 13168,
+      "invalid_L1_source_words": 0,
+      "layer": 20,
+      "local_dense_address_map_sha256": "c886882ff28721ebaa2d47cf29d53f27d4e50f089113a3ac564478ee6c3cd437"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 21,
+      "local_dense_address_map_sha256": "36dde9c609a8bb76ee6f9e99240a079459f1a67ef7ebdb7578f944a52498537d"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 22,
+      "local_dense_address_map_sha256": "bb7865de3ee2c2053c871a13217a7a22b329eb56db65a7f16539be263f823d63"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 23,
+      "local_dense_address_map_sha256": "b9d80e9f1f2bf6e8aa112a67510e9f49750a63222e6295dff78ea100c05ea80c"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 24,
+      "local_dense_address_map_sha256": "1c64d0455ba39e69181dcbb7f61589706e091f84e9b389965e2af2d39596f8b0"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 25,
+      "local_dense_address_map_sha256": "5e2d530f3d72c519b5b74bcbcc7ede8f827f82bb55ca6392bd6d88af0c0aa1f7"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 26,
+      "local_dense_address_map_sha256": "a0d757faa0ac7ac8712432ad4993cd10bab3bd7344aa9df4bef2db1b74cee540"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 27,
+      "local_dense_address_map_sha256": "1b56ff6b6df0b0c8ee24178b017b4cc1bdc0b5f0814a9ee321aa61f8e2c951b9"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 28,
+      "local_dense_address_map_sha256": "1b5b99c49a24015ad7160deaf98f16b153d828cd34a3a9841da239f49b647ac8"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 29,
+      "local_dense_address_map_sha256": "15ec7a8ebc2d8106eea3eaf1fdf7491961af9c15f9139c7a125c62b0132cebef"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 30,
+      "local_dense_address_map_sha256": "1635521058ee7d0cca13916bac39693258ca8e73aaa41b0e8018be2037cdac63"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 31,
+      "local_dense_address_map_sha256": "0e8bbda6f445b29f24edebf83f987e549c95d4bce38289f69b0d57c7d0400e99"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 32,
+      "local_dense_address_map_sha256": "a4bcb622277716bf04388a60b29e2ec7da3ed668b462b5efe9552f67ce4793f6"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 33,
+      "local_dense_address_map_sha256": "292487277d9f5cddae2cca936b43855c9abb88890cfce5bd0f41d0965ac3b8b7"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 34,
+      "local_dense_address_map_sha256": "2ae8afe823df1426dd3da545da686141bdd62ff8bf731c07f69a8163061c0b32"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 35,
+      "local_dense_address_map_sha256": "13aa594a978583d620f36f9aaa9b7b00c38aa9836136ff2220bffc4f51a40e4d"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 36,
+      "local_dense_address_map_sha256": "d4c87cf53840f8fdd6513eab2783729e2ee45978db26ebed8a89a418652d381e"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 37,
+      "local_dense_address_map_sha256": "781d634fa18d740d5245322486d77d756ddb6b9fde85dcd04a72616e85fb9f90"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 38,
+      "local_dense_address_map_sha256": "080db0df593855bea436563d3ed30b765f9d18f888ec3d5425cc1bacf2b7af44"
+    },
+    {
+      "commands": 12,
+      "dense_storage_only_minimum4096x3_banks": 2,
+      "distinct_logical64_words": 12528,
+      "invalid_L1_source_words": 0,
+      "layer": 39,
+      "local_dense_address_map_sha256": "66271bf65375b44b6a7c20413ef9fc3a67f24ea830c4702c2b22502e5f5019d6"
+    },
+    {
+      "commands": 1,
+      "dense_storage_only_minimum4096x3_banks": 1,
+      "distinct_logical64_words": 5120,
+      "invalid_L1_source_words": 0,
+      "layer": "head",
+      "local_dense_address_map_sha256": "b7743819b54f0ca154779f461cf874015bcb8254f4b9282ae318a3b5c3a3b43c"
+    }
+  ]
+}

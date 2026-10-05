@@ -1,0 +1,84 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_dynamic_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "expected_generations": {
+      "items": {"minimum": 0, "type": "integer"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "expected_lengths": {
+      "items": {"maximum": 7999, "minimum": 0, "type": "integer"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "generated_token_index": {
+      "oneOf": [
+        {"minimum": 0, "type": "integer"},
+        {"type": "null"}
+      ]
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "input_role": {"enum": ["generated", "prompt"]},
+    "last_row_index": {"const": 0},
+    "output_role": {"enum": ["generated_token", "prefill_intermediate"]},
+    "phase": {"enum": ["decode", "prefill"]},
+    "position_end": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "position_start": {"maximum": 7999, "minimum": 0, "type": "integer"},
+    "previous_report_id": {
+      "oneOf": [
+        {"$ref": "#/$defs/sha256"},
+        {"type": "null"}
+      ]
+    },
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "request_version": {
+      "const": "tensor-accelerator-qwen-dynamic-request-0.1.0"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_full_model_dynamic_request.v1"
+    },
+    "session_id": {"$ref": "#/$defs/sha256"},
+    "span_tokens": {"const": 1},
+    "step_index": {"maximum": 7999, "minimum": 0, "type": "integer"},
+    "token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+    "transaction_id": {
+      "maximum": 18446744073709551615,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "build_id",
+    "command_program_sha256",
+    "expected_generations",
+    "expected_lengths",
+    "generated_token_index",
+    "graph_id",
+    "input_role",
+    "last_row_index",
+    "output_role",
+    "phase",
+    "position_end",
+    "position_start",
+    "previous_report_id",
+    "request_id",
+    "request_version",
+    "schema",
+    "session_id",
+    "span_tokens",
+    "step_index",
+    "token_id",
+    "transaction_id"
+  ],
+  "title": "Qwen dynamic one-token request v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL_MODEL_LEDGER_ASSERTION",
+  "cause": "Initial asserted714 raw bits, while enumerated fields sum614; arithmetic assertion stopped generation before producing model",
+  "correction": "Keep exact enumerated fields; correct asserted total to614. No state removed or runtime executed."
+}

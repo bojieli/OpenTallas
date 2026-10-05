@@ -1,0 +1,22 @@
+{
+  "pid": 157133,
+  "host": "ot-epyc2",
+  "source_commit": "d826bbd3b",
+  "source_sha256": "3a85b829a8f486dee10d1e70d12ffafe17c18fb96003b323df9a26195b9f5540",
+  "script": "/srv/opentallas-scratch/jobs/euclid-hbm-fmax-svc-r2/route.sh",
+  "output": "/srv/opentallas-scratch/jobs/euclid-hbm-fmax-svc-r2",
+  "reservation_GiB": 16,
+  "threads": 16,
+  "extra_variant": 2,
+  "constraints": {
+    "period_ns": 0.833,
+    "SS_setup_uncertainty_ns": 0.06,
+    "FF_hold_uncertainty_ns": 0.025,
+    "input_min_ns": 0,
+    "io_fraction": 0.2,
+    "hold_margin_ns": 0,
+    "input_max_ns": 0.1666
+  },
+  "no_running_resource_caps": true,
+  "prior_failure": "/srv/opentallas-scratch/jobs/euclid-hbm-fmax-svc-r1/exit"
+}

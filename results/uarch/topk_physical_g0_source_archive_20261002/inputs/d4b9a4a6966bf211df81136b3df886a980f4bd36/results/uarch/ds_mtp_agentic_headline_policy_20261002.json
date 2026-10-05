@@ -1,0 +1,62 @@
+{
+  "aggregation_rule": "Compute request rates from committed tokens / complete decode elapsed time, then their median. Do not equate median acceptance divided by pooled iteration latency to measured median rate.",
+  "hardware_admitted": false,
+  "headline_acceptance_value": null,
+  "headline_qualified_rate": null,
+  "headline_statistic": "median per-request committed decoding tokens per second",
+  "headline_workload": "third-party agentic requests",
+  "historical_record_sha256": "617e21a924b10afab7f26b65809489830bac2ef40ab2fadfd4922d8c3e5ffbfb",
+  "historical_sensitivity_record": "results/uarch/ds_mtp_headline_budget_20261002/model.json",
+  "local_chat_tau_2_457711_role": "sensitivity only; not representative headline assumption",
+  "local_pooled_tau_3_648676_role": "local corroboration/sensitivity; not third-party agentic median",
+  "reference_budget_sensitivity_only": {
+    "meaning": "hypothetical acceptance at published window value; NOT a measured agentic prediction",
+    "tau": 3.78,
+    "total_iteration_limit_us_for_3000": 1260.0
+  },
+  "required_provenance": [
+    "checkpoint and deployment arithmetic",
+    "agentic dataset and request sampling",
+    "context/output lengths",
+    "temperature and sampling",
+    "draft length and adaptive verification mode",
+    "bonus-token convention",
+    "per-request committed tokens, verification iterations, and decoding elapsed time"
+  ],
+  "schema": "opentallas.ds-mtp-agentic-headline-policy.v1",
+  "status": "AGENTIC_MEDIAN_SOURCE_PENDING",
+  "supersedes_headline_interpretation_of": "tools/uarch_model.py TAU_SWEEP HEADLINE arena-hard label; retained historical scenario, not agentic headline",
+  "target_committed_tokens_per_second": 3000,
+  "third_party_sources": [
+    {
+      "block_positions": 6,
+      "figure": 4,
+      "model": "DeepSeek-V4-Flash",
+      "reported_verification_windows": [
+        5.24,
+        3.78,
+        2.91
+      ],
+      "url": "https://www.lmsys.org/blog/2026-07-06-dspark-sglang/",
+      "usable_as_measured_V41_agentic_median": false,
+      "workloads": [
+        "gsm8k",
+        "arena-hard",
+        "poetry"
+      ]
+    },
+    {
+      "acceptance_kind": "simulated",
+      "median_kind": "median of three performance runs",
+      "model": "DeepSeek-V4.1-Flash",
+      "reported_acceptance": 5.4,
+      "url": "https://staging.lmsys.org/blog/2026-09-28-deepseek-v41-optimization",
+      "usable_as_measured_agentic_acceptance_median": false
+    },
+    {
+      "finding": "workload-dependent acceptance; agentic traces warned lower; no numeric agentic median verified",
+      "url": "https://github.com/sgl-project/sglang/blob/main/docs/cookbook/autoregressive/DeepSeek/DeepSeek-V4_1.mdx"
+    }
+  ],
+  "timing_rule": "Complete iteration includes draft, causal verification, accepted commit, rejected rollback, and uncovered control/transport. Unknown costs remain unknown."
+}

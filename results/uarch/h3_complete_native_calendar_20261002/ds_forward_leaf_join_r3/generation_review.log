@@ -1,0 +1,25 @@
+{"PCs": 2213, "families": 30, "status": "PARTIAL_KNOWN_SERVICE_COST_WITH_EXPLICIT_SHARED_UNKNOWNS", "known_service_software_ticks": 589388306802, "unknown_shared_template_calls": 189476, "hardware_full_native_claim": false}
+PASS_DS_FULL_KNOWN_SERVICE_COMPOSITION
+	Command being timed: "python3 tools/h3_complete_native_calendar.py --ds-full-program-cost results/uarch/h3_complete_native_calendar_20261002/bounded_provider_milestone/ds/forward_dispatch_milestone.json.gz --ds-full-native-source results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz --ds-native-source-commit 91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6 --ds-forward-leaves --c0-source-commit 54a0a36642332eb76fc114e606d59a0c8cbee719 --ds-shared-bridge results/uarch/h4_c0_ordered_movement_20261002/source_order_bridge.json.gz --ds-shared-bridge-source tools/h4_c0_ordered_movement.py --ds-shared-bridge-commit a100243c45f7f4b5254e253d5ad776bb3a982046 --out results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review"
+	User time (seconds): 85.21
+	System time (seconds): 3.62
+	Percent of CPU this job got: 101%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:27.86
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5880924
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 2831440
+	Voluntary context switches: 399
+	Involuntary context switches: 3168
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 34840
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

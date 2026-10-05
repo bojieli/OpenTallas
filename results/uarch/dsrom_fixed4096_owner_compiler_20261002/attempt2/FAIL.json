@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL_COMPILER_FP4_TAIL_REJECTED",
+  "cause": "K2304 is9golden256chunks; current source permits final singleton with padded FP4 sibling. Compiler incorrectly forbade that existing layout.",
+  "tool_sha256": "c90bab0be48ec683feb0d7b3d1645eecf5a240b3818f7b36162a809d5559acd6",
+  "source_profile_unchanged": true,
+  "RTL_runs": 0
+}

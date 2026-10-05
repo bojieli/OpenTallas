@@ -1,0 +1,24 @@
+a_chat LMSYS ('Arena-Hard', 3.78)
+b_reasoning LMSYS ('GSM8K', 5.24)
+c_coding greedy n 24 median 4.891 [4.647, 5.032] pooled 4.71 by gamma [1.962, 2.827, 3.674, 4.301, 4.891]
+c_coding t1 n 24 median 4.801 [4.334, 5.072] pooled 4.622 by gamma [1.957, 2.844, 3.584, 4.222, 4.801]
+d_longdoc greedy n 17 median 2.833 [2.627, 3.467] pooled 2.89 by gamma [1.75, 2.313, 2.6, 2.69, 2.833]
+d_longdoc t1 n 17 median 2.785 [2.616, 3.231] pooled 2.697 by gamma [1.75, 2.245, 2.558, 2.731, 2.785]
+e_multilingual greedy n 24 median 2.721 [2.469, 3.265] pooled 2.638 by gamma [1.738, 2.229, 2.476, 2.622, 2.721]
+e_multilingual t1 n 24 median 2.768 [2.358, 2.851] pooled 2.529 by gamma [1.742, 2.226, 2.445, 2.64, 2.768]
+f_agentic greedy n 72 median 3.925 [3.842, 4.136] pooled 4.001 by gamma [1.895, 2.636, 3.272, 3.682, 3.925]
+f_agentic t1 n 72 median 3.793 [3.608, 4.08] pooled 3.877 by gamma [1.901, 2.614, 3.223, 3.527, 3.793]
+g_assistant_fc greedy n 72 median 5.419 [5.322, 5.509] pooled 5.21 by gamma [1.992, 2.941, 3.848, 4.681, 5.419]
+g_assistant_fc t1 n 72 median 5.433 [5.28, 5.524] pooled 5.133 by gamma [1.982, 2.922, 3.826, 4.684, 5.433]
+h_creative LMSYS ('Poetry', 2.91)
+equal (default) {'greedy': (3.698, {'hbm_w19_dspark': 4912.9, 'rom_draft_assumed': 4650.5, 'rom_draft_proxy': 4563.3}), 't1': (3.678, {'hbm_w19_dspark': 4885.6, 'rom_draft_assumed': 4624.7, 'rom_draft_proxy': 4537.9})}
+chat-heavy {'greedy': (3.733, {'hbm_w19_dspark': 4958.9, 'rom_draft_assumed': 4694.1, 'rom_draft_proxy': 4606.0}), 't1': (3.721, {'hbm_w19_dspark': 4943.0, 'rom_draft_assumed': 4679.0, 'rom_draft_proxy': 4591.3})}
+assistant-heavy {'greedy': (4.281, {'hbm_w19_dspark': 5686.9, 'rom_draft_assumed': 5383.1, 'rom_draft_proxy': 5282.2}), 't1': (4.269, {'hbm_w19_dspark': 5670.9, 'rom_draft_assumed': 5368.0, 'rom_draft_proxy': 5267.3})}
+agent-heavy {'greedy': (3.792, {'hbm_w19_dspark': 5037.7, 'rom_draft_assumed': 4768.6, 'rom_draft_proxy': 4679.2}), 't1': (3.726, {'hbm_w19_dspark': 4950.2, 'rom_draft_assumed': 4685.8, 'rom_draft_proxy': 4597.9})}
+reasoning/coding-heavy {'greedy': (4.062, {'hbm_w19_dspark': 5396.9, 'rom_draft_assumed': 5108.7, 'rom_draft_proxy': 5012.9}), 't1': (4.035, {'hbm_w19_dspark': 5361.1, 'rom_draft_assumed': 5074.8, 'rom_draft_proxy': 4979.6})}
+3-class equal {'greedy': (4.262, {'hbm_w19_dspark': 5662.3, 'rom_draft_assumed': 5359.9, 'rom_draft_proxy': 5259.4}), 't1': (4.212, {'hbm_w19_dspark': 5595.6, 'rom_draft_assumed': 5296.8, 'rom_draft_proxy': 5197.4})}
+3-class chat-heavy {'greedy': (4.13, {'hbm_w19_dspark': 5487.3, 'rom_draft_assumed': 5194.2, 'rom_draft_proxy': 5096.8}), 't1': (4.095, {'hbm_w19_dspark': 5440.2, 'rom_draft_assumed': 5149.6, 'rom_draft_proxy': 5053.0})}
+3-class agent-heavy {'greedy': (4.173, {'hbm_w19_dspark': 5543.3, 'rom_draft_assumed': 5247.2, 'rom_draft_proxy': 5148.8}), 't1': (4.099, {'hbm_w19_dspark': 5445.2, 'rom_draft_assumed': 5154.4, 'rom_draft_proxy': 5057.7})}
+3-class assistant-heavy {'greedy': (4.502, {'hbm_w19_dspark': 5981.5, 'rom_draft_assumed': 5662.1, 'rom_draft_proxy': 5555.9}), 't1': (4.463, {'hbm_w19_dspark': 5928.7, 'rom_draft_assumed': 5612.1, 'rom_draft_proxy': 5506.8})}
+measured-only equal (c-g) {'greedy': (3.665, {'hbm_w19_dspark': 4868.9, 'rom_draft_assumed': 4608.9, 'rom_draft_proxy': 4522.4}), 't1': (3.633, {'hbm_w19_dspark': 4826.2, 'rom_draft_assumed': 4568.5, 'rom_draft_proxy': 4482.8})}
+envelope {'greedy': ((2.721, 'e_multilingual'), (5.419, 'g_assistant_fc')), 't1': ((2.768, 'e_multilingual'), (5.433, 'g_assistant_fc'))}

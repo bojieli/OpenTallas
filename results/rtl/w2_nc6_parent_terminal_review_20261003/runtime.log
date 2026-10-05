@@ -1,0 +1,23 @@
+CASE_PASS heldrequest_read_KV5 cycle=15
+CASE_PASS heldwrite_ready cycle=28
+CASE_PASS full16_oldcredit_no_bypass_outoforder cycle=171
+CASE_PASS held_backend_read_and_finite_query cycle=200
+CASE_PASS stop_cancels_only_unaccepted_holder cycle=207
+CASE_PASS sameedge_issue_return_refused cycle=214
+CASE_PASS duplicate_write_ack cycle=223
+CASE_PASS duplicate_live_request cycle=230
+CASE_PASS validcode_wrongtag cycle=238
+CASE_PASS wronggeneration cycle=246
+CASE_PASS wrongdirection cycle=254
+CASE_PASS invalidclient cycle=262
+CASE_PASS duplicate_retired_return cycle=276
+CASE_PASS rearm_live_debt_refused cycle=283
+CASE_PASS unfenced_wrap_refused cycle=288
+CASE_PASS fenced_generation15_to0 cycle=308
+CASE_PASS reset_stale_old_generation cycle=311
+CASE_PASS badquery_blocks_simultaneous_release cycle=320
+COMPONENT_PASS cases=18 cycles=320 NC6 MAX16 period_ps1000
+- /home/ubuntu/w2-nc6-526c76068-source-r1/rtl/test/w2_nc6_completion_20261003/tb.sv:128: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 321ns; walltime 0.002 s; speed 155.109 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

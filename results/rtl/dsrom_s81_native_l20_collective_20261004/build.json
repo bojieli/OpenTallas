@@ -1,0 +1,84 @@
+{
+  "scope": "Minimum native L20 non-TOPK archive and provider compile only; no runtime, numerical, token, route or SSFF qualification",
+  "source_commit": "0cd2cf587a6b9dc03a578d697be9c9036a82fe01",
+  "rtl_build_source_commit": "8671e99de788f2caf5b0e6de4db26d4c73b9d826",
+  "source_pins": {
+    "rtl/test/dsrom_s81_native_collectives/DsromL20Collective.sv": "b62f68befa1f47e36126a4bb34b9fb04da3603b46325b430e33a8397503e088b",
+    "rtl/chip/ot_w15_coll_dma.sv": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+    "rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv": "17d54993725fd514dbdc6821d680c0b81219c922bc8edc3f5f9fff56ac604ab7",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/tb_v41_stage_collective_px.sv": "1ef5ea0c7e6df525eeca7c1f585605037ac5860c0315aaa61d9972c7eefc6bae"
+  },
+  "provider_pins": {
+    "s81_minimum_l20_collective.cpp": "056226cc8c80babc336aea11b34ca39c9f9b1b038cdfaf054463e206e566872e",
+    "s81_minimum_l20_collective.hpp": "d1cdcd092d6a8f0ce1d45818c39e47dd5708a5ed979584977f058c56de70abc1",
+    "s81_minimum_l20_collective_factory.hpp": "fc383fdb13ee116822d2be1d2da01293ab3e789526961baf053f4b4d92f162cc"
+  },
+  "model_before_build": {
+    "scope": "existing TP4 W15 native DMA/kernel/link geometry, no added arithmetic or clocks",
+    "stream_edge_ps": 833,
+    "ranks": 4,
+    "lanes_per_rank": 16,
+    "fifo_depth": 1024,
+    "pairwise": 1,
+    "add_lat": 3,
+    "accept_pop_fix": 1,
+    "headreg": false,
+    "input_raw_staging_bytes": 81920,
+    "reduce_native_output_seats_bytes": 81920,
+    "gather_native_output_seats_bytes": 1024,
+    "boundary_bits_per_rank": {
+      "read": 512,
+      "write": 2048
+    },
+    "new_rtl_state_bits": 0,
+    "rate_area_SSFF_credit": null
+  },
+  "native_build_stages": [
+    {
+      "name": "frontend",
+      "exit": 0,
+      "wall_seconds": 21.31327835598495
+    },
+    {
+      "name": "archive",
+      "exit": 0,
+      "wall_seconds": 28.272916596994037
+    }
+  ],
+  "initial_provider_compile": {
+    "exit": 1,
+    "reason": "Werror in installed Verilator header unused-parameter/sign-compare warnings; preserved original log and terminal",
+    "terminal": "/home/ubuntu/otjobs/erdos-l20-8671e99de/build/terminal.json"
+  },
+  "final_provider_stages": [
+    {
+      "name": "provider",
+      "exit": 0,
+      "wall_seconds": 1.3854568490060046
+    },
+    {
+      "name": "factory",
+      "exit": 0,
+      "wall_seconds": 0.7442828430212103
+    }
+  ],
+  "artifacts": {
+    "/home/ubuntu/otjobs/erdos-l20-8671e99de/build/obj/VDsromL20Collective.h": {
+      "bytes": 40901,
+      "sha256": "b5b13d18bcf5fe64405dbe384f33f2cdb0f2c3b57d6cc9cd7466c21cbc7971f0"
+    },
+    "/home/ubuntu/otjobs/erdos-l20-8671e99de/build/obj/VDsromL20Collective__ALL.a": {
+      "bytes": 13410478,
+      "sha256": "0c05d41b2f36412869b47bfa28b8bd1a225f26a29ddf61051db4bbd5bbc89f25"
+    },
+    "/home/ubuntu/otjobs/erdos-l20-0cd2cf587/provider/s81_minimum_l20_collective.o": {
+      "bytes": 229528,
+      "sha256": "c27309de603a22636e220e2aa5101689dd05d5b4a36c2454092c27ce9d7efec3"
+    }
+  },
+  "local_artifact_root": "/tmp/dsrom-s81-native-l20-collective-20261004",
+  "result": "PASS_ARCHIVE_PROVIDER_ONLY"
+}

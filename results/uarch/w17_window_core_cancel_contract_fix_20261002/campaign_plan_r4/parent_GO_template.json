@@ -1,0 +1,37 @@
+{
+  "status": "PENDING_NOT_AUTHORIZATION",
+  "requested_status": "PARENT_ACTUAL_CORE_SU_QE_RESOURCE_PHASE_SINGLE_GO",
+  "plan_sha256": "bd1d2a41f14d0538e5e42d2d562f38e6afdcefe7b4a9699785f633c6ad682f8e",
+  "runner_sha256": "5cd70ed1087383a0864689b24e5a7c1d891cb83cccc5f4a00cfed96a4a0dce25",
+  "source_digest": "f7b17b4fb82c802240f290f8517645b9f424bc3def332dbccf2374495ca509c0",
+  "jobs_digest": "7cf2314bb1424736f0cf122f283bc6c605679abf1508d38e5cca7e46f1dc40fe",
+  "caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 2400,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 2250,
+    "phase_compile_seconds": 450,
+    "frontend_phase_seconds": 300,
+    "runtime_shared_seconds": 26,
+    "positive_case_seconds": 0.9,
+    "negative_case_seconds": 1,
+    "supervision_reserve_seconds": 124,
+    "whole_seconds": 2400,
+    "aggregate_output_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "compile_workers_max": 2,
+    "automatic_retries": 0,
+    "phase_count": 5
+  }
+}

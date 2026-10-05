@@ -1,0 +1,51 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "Matched current-source M6/N53/K344, two-column resident passes; same four-entry external ordered queue and response delay12",
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_readcredits1_objectqueue4_object_latency12_depth344_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2_auto_schedule.json",
+      "sha256": "20e6a9c594293ff01450c76282f133f61eac4629aaac4a4283c516a0cd859407",
+      "read_credits": 1,
+      "external_queue": 4,
+      "response_delay": 12,
+      "median_successful_phase_cycles": 109884.0,
+      "weight_bytes": 73564,
+      "activation_fills": 8256,
+      "peak_outstanding": 1,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_readcredits4_objectqueue4_object_latency12_depth344_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols2_auto_schedule.json",
+      "sha256": "7f5ab41ee81597d20d8d725992ad4a141198f5ac7dbd9391b44da46f315bc4c0",
+      "read_credits": 4,
+      "external_queue": 4,
+      "response_delay": 12,
+      "median_successful_phase_cycles": 80903.5,
+      "weight_bytes": 73564,
+      "activation_fills": 8256,
+      "peak_outstanding": 4,
+      "outputs": 2234,
+      "writes": 295
+    }
+  ],
+  "cycle_reduction_percent": 26.373721378908666,
+  "directed_workload": {
+    "reads": 64,
+    "delay": 32,
+    "credits": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "cycles": [
+      2281,
+      1181,
+      661,
+      461
+    ]
+  },
+  "tests_passed": 31,
+  "physical": "running: results/physical_abi3/asap7/bf16_weight_transport/pnr_credits4_slew10_cts12_1ns.json"
+}

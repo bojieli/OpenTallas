@@ -1,0 +1,203 @@
+{
+  "schema": "opentallas.qcnam.bounded_checkpoint_retirement.v1",
+  "utc": "2026-10-01T11:33:30.315441+00:00",
+  "state": "COMPLETE",
+  "owner_clearance_sha256": "4da9b3b49a6eae503dba166767bcde103da4e19ba1d757a3c7df0fd2b263e313",
+  "manifest_sha256": "25f123b29aab6dfa9bcdab0c520e7f330d0d729b6b4c580166f26202b662b893",
+  "verdict_sha256": "f72b847c5ee38b616d40b16a3ced0da7399cba58fafc6c53e519818fcf979531",
+  "main_commit": "d73c719453ba2213f1123913e416bde415843a2b",
+  "released_exactly": [
+    {
+      "path": "/tmp/claude-1000/qcnam/runs/core/work",
+      "files": [
+        {
+          "name": "checkpoint.pt",
+          "bytes": 4437996481,
+          "allocated_bytes": 4438016000
+        },
+        {
+          "name": "h_a2_0.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887565312
+        },
+        {
+          "name": "h_a2_1.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887569408
+        },
+        {
+          "name": "h_a_0.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887561216
+        },
+        {
+          "name": "h_a_1.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887569408
+        },
+        {
+          "name": "h_b_0.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887565312
+        },
+        {
+          "name": "h_b_1.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887589888
+        },
+        {
+          "name": "h_b_nam_0.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887569408
+        },
+        {
+          "name": "h_b_nam_1.bin",
+          "bytes": 2887557120,
+          "allocated_bytes": 2887569408
+        }
+      ],
+      "logical_bytes": 27538453441,
+      "allocated_bytes": 27538575360
+    },
+    {
+      "path": "/tmp/claude-1000/qcnam/runs/mmlu1000/work",
+      "files": [
+        {
+          "name": "checkpoint.pt",
+          "bytes": 3701349153,
+          "allocated_bytes": 3701358592
+        },
+        {
+          "name": "h_a2_0.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976410624
+        },
+        {
+          "name": "h_a2_1.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976418816
+        },
+        {
+          "name": "h_a_0.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976402432
+        },
+        {
+          "name": "h_a_1.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976418816
+        },
+        {
+          "name": "h_b_0.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976410624
+        },
+        {
+          "name": "h_b_1.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976418816
+        },
+        {
+          "name": "h_b_nam_0.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976410624
+        },
+        {
+          "name": "h_b_nam_1.bin",
+          "bytes": 4976394240,
+          "allocated_bytes": 4976418816
+        }
+      ],
+      "logical_bytes": 43512503073,
+      "allocated_bytes": 43512668160
+    },
+    {
+      "path": "/tmp/claude-1000/qcnam/runs/long/work",
+      "files": [
+        {
+          "name": "checkpoint.pt",
+          "bytes": 2086835961,
+          "allocated_bytes": 2086842368
+        },
+        {
+          "name": "h_a2_0.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_a2_1.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_a_0.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_a_1.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_b_0.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_b_1.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_b_nam_0.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        },
+        {
+          "name": "h_b_nam_1.bin",
+          "bytes": 1426063360,
+          "allocated_bytes": 1426067456
+        }
+      ],
+      "logical_bytes": 13495342841,
+      "allocated_bytes": 13495382016
+    }
+  ],
+  "process_scan": {
+    "examined_live_processes": 727,
+    "exited_during_scan": 0,
+    "consumers": [],
+    "unreadable_live_processes": [],
+    "excluded_only_checker_and_invocation_ancestors": true
+  },
+  "protected_paths_before": {
+    "/tmp/claude-1000/qcnam/runs/core/run.json": true,
+    "/tmp/claude-1000/qcnam/runs/core/raw.json": true,
+    "/tmp/claude-1000/qcnam/runs/core/status": true,
+    "/tmp/claude-1000/qcnam/runs/core/log.txt": true,
+    "/tmp/claude-1000/qcnam/runs/mmlu1000/run.json": true,
+    "/tmp/claude-1000/qcnam/runs/mmlu1000/raw.json": true,
+    "/tmp/claude-1000/qcnam/runs/mmlu1000/status": true,
+    "/tmp/claude-1000/qcnam/runs/mmlu1000/log.txt": true,
+    "/tmp/claude-1000/qcnam/runs/long/run.json": true,
+    "/tmp/claude-1000/qcnam/runs/long/raw.json": true,
+    "/tmp/claude-1000/qcnam/runs/long/status": true,
+    "/tmp/claude-1000/qcnam/runs/long/log.txt": true,
+    "/tmp/claude-1000/qcnam/runs/gen/gen.json": true,
+    "/tmp/claude-1000/qcnam/runs/gen/status": true,
+    "/tmp/claude-1000/qcnam/runs/gen/log.txt": true,
+    "/tmp/claude-1000/wt/qcnam-run": true,
+    "/tmp/claude-1000/wt/qcnam": false,
+    "/tmp/opentallas-qcnam-w16-recovery": true,
+    "/tmp/claude-1000/qcnam/finalization-exclusive": true,
+    "/tmp/claude-1000/qcnam/retirement-control": true,
+    "/tmp/claude-1000/qcnam/readiness-watch-72b3718d1": true
+  },
+  "free_bytes_before": 243545817088,
+  "deletion_performed": true,
+  "removed_directory_count": 3,
+  "removed_allocated_bytes": 84546625536,
+  "free_bytes_after": 328092405760,
+  "terminal_evidence_hashes_unchanged": true
+}

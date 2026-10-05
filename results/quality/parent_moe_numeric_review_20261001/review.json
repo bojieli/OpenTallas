@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.parent-moe-numeric-review.v1",
+  "source_commit": "480434052b4440ab1ca91215f078a4bd2e94a277",
+  "verdict": "PASS_AT_SYNTHETIC_CPU_COMPONENT_SCOPE",
+  "focused_tests": 11,
+  "fixtures": 8,
+  "rank_cases": 768,
+  "opcode_boundaries": 20736,
+  "source_pins_verified": {
+    "tools/w19_moe_opcode_proof.py": "0eaf757259048c8b81dca1efe6eeea2ba149c34c3424c27572280aeaf5473d48",
+    "tests/test_w19_moe_opcode_proof.py": "3d91cb607b981b24de256869419623302943936ae40741b7c41f14e5dd1f8b31",
+    "tools/w19_gpu_elementwise_calendar.py": "0c358614f49421fbb4abca8ed3dfd3fe27a742f47aa37f55eb9cfb3595e86e11",
+    "tools/w19_norm_opcode_proof.py": "541c89829a632d325678ea5e4667f5fdbbb8bf2105de57a5e46aedbdb9194a1c",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "calendar_sha256": "5139c782dd4392e5901309c789d8a581af811407aa058b7dff0af81d1a8f881f",
+  "row_distribution": {
+    "53_rows": 64,
+    "54_rows": 32
+  },
+  "fixture_and_trace_artifact_sha256": {
+    "fixture_0.npz": "e6ff522269186025b2b8741dbcc1235561958ba193e9f0b24c0a436ac3ec5ef3",
+    "fixture_1.npz": "f8415379842fdc6804e0456326766052a7bd3fee91d99a7e279cb145d5cc991b",
+    "fixture_2.npz": "4fe4fbad0f525e3f1fcc3c390075765e68edc18c5ed02ba75784a340515e3ff7",
+    "fixture_3.npz": "cb327bff3bb1b104810c53919a75125945936e01d9f9aa5cf47a2f2d0fd6ca32",
+    "fixture_4.npz": "839837c376ecd32e15e20a62d56cf4d807c5843f97171f9e15ce78325c7bc2a6",
+    "fixture_5.npz": "5fc55bc8fa95dba3a67ac7c7950e859145c88c7701defea622b418479d48a346",
+    "fixture_6.npz": "9f2c95142eddd8da6cf4e77ec88da3f7a6baec6de2c19cc27e5c4b36b34003fd",
+    "fixture_7.npz": "23098e92bfca7272b1c11102b6c859f070baefe7c963b6dc98e8221bec2fc34c",
+    "opcodes_0.json.gz": "deb0954ba1c14f5448cacc172f7daa48bdde00d37730b7acaa5e66fcbaa7a1ff",
+    "opcodes_1.json.gz": "1489da4cc538ad7f94a7c46fa8252eec67665882c24b671737e1fd3bf1d5492b",
+    "opcodes_2.json.gz": "7eb602656f3ea20235d04010dd2cd819fa5f19b3d0b84be61ed0b842510803b4",
+    "opcodes_3.json.gz": "36925e6e6f51ff15f92ec9a2b6e439031bfa4ad4328fa3e6425d6a29cef296d6",
+    "opcodes_4.json.gz": "2d6da9ae7fa018c978f7895409f21ea9aefd5aa21dab22ff95916ba260c8f619",
+    "opcodes_5.json.gz": "f7de70229511e0e8e34e3d560ce654a082f8dc6838ad41c6285328563fa139f5",
+    "opcodes_6.json.gz": "0b50eeb081b7b17e3cadaa9dae784671d6846b82ce9fafe7a91310de0bd8f359",
+    "opcodes_7.json.gz": "72fe86ab3e520f9214f6d10270ff9dd5e45190c551969302c0a73fc62a41dd2a"
+  },
+  "case_values_and_artifacts_identical": true,
+  "negative_controls": {
+    "seeded_BF16": {
+      "early_BF16_different_words": 2514,
+      "reordered_slots_different_words": 0
+    },
+    "order_cancellation": {
+      "early_BF16_different_words": 0,
+      "reordered_slots_different_words": 5120
+    },
+    "BF16_even_tie": {
+      "early_BF16_different_words": 0,
+      "reordered_slots_different_words": 0
+    },
+    "BF16_odd_tie": {
+      "early_BF16_different_words": 0,
+      "reordered_slots_different_words": 0
+    },
+    "no_early_BF16": {
+      "early_BF16_different_words": 5120,
+      "reordered_slots_different_words": 0
+    },
+    "canonical_zero": {
+      "early_BF16_different_words": 0,
+      "reordered_slots_different_words": 0
+    },
+    "shared_slot_only": {
+      "early_BF16_different_words": 0,
+      "reordered_slots_different_words": 0
+    },
+    "gradual_BF16_underflow": {
+      "early_BF16_different_words": 0,
+      "reordered_slots_different_words": 0
+    }
+  },
+  "scope": "Synthetic finite BF16 producer slots, seven golden-ordered FP32 adds then BF16, all TP96 rank ownership slices; not deployed activations or token trajectory.",
+  "full_token_qualified": false,
+  "RTL_qualified": false,
+  "adopted": false
+}

@@ -1,0 +1,40 @@
+{
+  "verdict": "FINITE_LOCAL_CONTRACT_COMPOSED_WITH_PEIRCE_EXTERNAL_PROVIDER_UNQUALIFIED",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+  },
+  "selected_candidate_sha256": {
+    "rtl/test/w17_window_epoch9_candidate/ot_chip_v41x_window_kv_prefetch.sv": "9d8b57e2c6d69af99386d4109af9591521717d266b0d646bc33b34884b046055",
+    "rtl/test/w17_window_epoch9_candidate/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd"
+  },
+  "generator": "tools/w17_window_qdq8_cancel_contract_model.py",
+  "generator_sha256": "113a59317656312a401b321a91c20a23ca76a13af0400298a7f49ae44b655465",
+  "model_sha256": "b0dc02b89158d4ccb0b32730b558624cde83a57380372f97a0597a380e1f74ba",
+  "interfaces_sha256": "c98fa39529b2f86e3d0f2301681d9b50a44326f9d7457cdedda1ebe0fb93d5d5",
+  "tests": "9 PASS including85finite cuts; ACKasvisible/missingWS/controltoken/staleowner/heldreturn/poison/readcredit/no-ready negatives.",
+  "source_model_only": true,
+  "no_RTL": true,
+  "no_compile": true,
+  "local_adapter_bits": 19,
+  "provider_mapping": "Peirce owned; exact providerhardware ledger/sourcepins not transferred from recovery compile/preparation bytecounts. No provider certification inferred.",
+  "coordination": {
+    "owner": "Peirce",
+    "agent": "01a0f95d-badc-74d3-bde3-f3eb28f089b8",
+    "adapter_commit": "2f208e1b8732daa57de0eb073697368464d4c0a8",
+    "adapter_path": "results/uarch/w17_window_recovery_output_phase_preparation_20261002/producer_cancel_adapter_model.json",
+    "adapter_sha256": "697e94ba1efc868fea561a2f687484ea3c1ef57d776186551bdfa4c475516ce4",
+    "adapter_composition": "Localcancelack is frozen admission +16terminaloutputs + sourceidle + metadata EMPTY; it does not remove acceptedWCWScredits. Restart also needs ownerretire, deliveryfence, causalvisibility and provenance.",
+    "request_message": "01a0fa42-d0fd-7a12-a209-1ae80ff598e5",
+    "pending": "Concrete fence key/ports, cancellation and visible/discard provider event binding. Do not implement before composed review."
+  },
+  "next_gate": "Peirce reconcile actual selectedowner provider sizes/sourcepins and causal delivery/visibility mapping with this composed localcontract; parent review same-edge cuts. Then optin newnamespace cancellation fixture preparation before explicit compileGO."
+}

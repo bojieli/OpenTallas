@@ -1,0 +1,24 @@
+{
+  "schema": "PARENT_DS_SELECTED_CLOCK_CREDIT_REVIEW_R1",
+  "owner_commit": "c9d19ed59",
+  "checks": {
+    "focused_tests_passed": 76,
+    "selected_clock_artifact_hashes_verified": 19,
+    "cold_model_byte_equal": true
+  },
+  "construction_selected": "Arch separate core-clock bank; previous Maxwell annex remains unselected and charged zero",
+  "selector_core_clock_buffers": 70406,
+  "transport_clock_buffers_separate": 48007,
+  "new_raw_relay_and_depth_padding_buffers": 68614,
+  "raw_clock_extra_reservation_mm2": 0.01413347292,
+  "publication_policy": "source debt retained through actual causal VM visibility and positive returned credit; downstream lease not assumed",
+  "remaining": [
+    "actual sink-to-site wire assignments and loaded SS/FF",
+    "clock pin escapes reset/PG vias and parent phases",
+    "finite read capacities and register CDC calendar",
+    "accepted consumer deadline and lossless identity mapping"
+  ],
+  "physical_fit": false,
+  "contextual_PR_admitted": false,
+  "headline_qualified": false
+}

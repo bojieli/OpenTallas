@@ -1,0 +1,69 @@
+{
+  "scope": "Prefix boundary count for admitted sparse KV masks; same one-cycle response and initiation interval; range refusal takes priority over malformed/empty masks. Physical results pending.",
+  "tests": 12,
+  "slots": [
+    1,
+    3,
+    8,
+    64,
+    65,
+    128
+  ],
+  "simulators": [
+    "Icarus",
+    "Verilator 5.050"
+  ],
+  "cases_per_simulator": 2618,
+  "sources": {
+    "rtl/abi3/ot_a3_attention_kv_index.sv": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d",
+    "results/rtl/kv_index_prefix_count/before.sv": "b819f251012bb9f1e325969b24940c809b97a500f6d460a3cef32ceea4e6aff9",
+    "tests/test_kv_index_prefix_count.py": "65127675df042b27d8fa229f0df0c0d1e5bd856c29c2665a53a1abf7417512d4"
+  },
+  "baseline_critical_path": "Retained 4 ns routed path indices[1138] -> popcount arithmetic -> lane_valid[5]. The 4 ns pass is not a 1 ns qualification.",
+  "physical_runs": [
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_prefix_count_cts12_1ns.json",
+    "results/physical_abi3/asap7/a3_attention_kv_index/pnr_popcount_baseline_cts12_1ns.json"
+  ],
+  "containing_operator": {
+    "status": "pass",
+    "transactions": 9,
+    "reference": "sparse_attention_bf16_codes",
+    "source_manifest": "results/rtl/kv_index_prefix_count/attention_source_manifest.json",
+    "source_manifest_sha256": "3e9a70b47a651c37b6c7a888e5f13f1fe302e06718ba2755afc45d45e1b5fff2",
+    "compile_command": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--binary",
+      "--timing",
+      "-j",
+      "4",
+      "-Wno-fatal",
+      "--top-module",
+      "tb_a3_attention_sparse",
+      "--Mdir",
+      "build/kv_index_prefix_attention_obj",
+      "-y",
+      "rtl/abi3",
+      "-y",
+      "rtl/lib",
+      "-y",
+      "rtl/proto",
+      "-y",
+      "rtl",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "rtl/abi3/ot_a3_format_pkg.sv",
+      "rtl/test/tb_a3_attention_sparse.sv"
+    ],
+    "run_command": [
+      "build/kv_index_prefix_attention_obj/Vtb_a3_attention_sparse"
+    ],
+    "run_cwd": "build/kv_index_prefix_attention_vectors",
+    "vector_command": [
+      "python3",
+      "tools/build_a3_attention_sparse_vectors.py",
+      "--out",
+      "build/kv_index_prefix_attention_vectors"
+    ],
+    "note": "Broad source inventory includes unelaborated modules and pre-existing workspace edits; functional composition evidence does not establish physical hierarchy coverage."
+  }
+}

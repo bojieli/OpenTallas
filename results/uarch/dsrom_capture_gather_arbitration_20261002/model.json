@@ -1,0 +1,112 @@
+{
+  "VM": "exclusive addressed VM512 fullblock lease; assembly/masks/commit/visibility provider unbound; never deliveryACK alias",
+  "arbitration": "next source row only; source-static row bit7 selects shard after row0..575 bounds; no arrival-order retirement or epoch alias",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "complete_source_cell_inventory": false,
+  "consumer_enrolled_endpoint": null,
+  "consumer_required_first_last_edges": null,
+  "contextual_PR_admitted": false,
+  "credit_capacity_C": null,
+  "credit_return_latency": null,
+  "formatter": "unchanged row+pos*ops+obase and fmt/pw62/pw63/rsplit; use supplied BF16; reject sourceerror/VM19alias",
+  "geometry_commit": "4cc368a46ca8894b102bb34ccd674168571cd282",
+  "geometry_fit": false,
+  "global_ordered_gather_home": {
+    "actual_instance_pins": null,
+    "bbox_DBU": [
+      10974880,
+      19618000,
+      11605600,
+      21819040
+    ],
+    "retained_service_region": "HUB_GATHER",
+    "shard": 0
+  },
+  "gross_arbiter_minimum_state": {
+    "active_fault_delivery_visible_flags": 4,
+    "cell_body_um2": 190.3419,
+    "cells": {
+      "BUFx4_ASAP7_75t_R": 434,
+      "DFFASRHQNx1_ASAP7_75t_R": 189,
+      "INVx1_ASAP7_75t_R": 378,
+      "NAND2x1_ASAP7_75t_R": 567,
+      "TIEHIx1_ASAP7_75t_R": 189
+    },
+    "compare_counter_mux_fanout_routes_extra": null,
+    "conditional_extra_charge_if_all_new": true,
+    "containment_or_replacement_in_prior1483_control_bits": null,
+    "lease169": 169,
+    "nextrow16": 16,
+    "reserve50pct_mm2": 0.00038068380000000004,
+    "total": 189
+  },
+  "implemented_CDC": null,
+  "local_controller_homes": [
+    {
+      "banks": 64,
+      "bbox_DBU": [
+        11188476,
+        15567120,
+        11294586,
+        15991290
+      ],
+      "instance_ports": null,
+      "seats": 320,
+      "shard": 0
+    },
+    {
+      "banks": 64,
+      "bbox_DBU": [
+        11188476,
+        15567120,
+        11294586,
+        15991290
+      ],
+      "instance_ports": null,
+      "seats": 256,
+      "shard": 1
+    }
+  ],
+  "local_controller_replacement_or_added_state": null,
+  "new_jobs": [],
+  "ordered_owner_runs": [
+    {
+      "first_row": 0,
+      "last_row": 127,
+      "shard": 0
+    },
+    {
+      "first_row": 128,
+      "last_row": 255,
+      "shard": 1
+    },
+    {
+      "first_row": 256,
+      "last_row": 383,
+      "shard": 0
+    },
+    {
+      "first_row": 384,
+      "last_row": 511,
+      "shard": 1
+    },
+    {
+      "first_row": 512,
+      "last_row": 575,
+      "shard": 0
+    }
+  ],
+  "positive_source_credit_return_required": true,
+  "provider_successful_envelope_requires_repriced240reply_or_sourceexact_packet_identity_adapter": true,
+  "refused_sink": "hold ordered expectedrow and sink debt; no release or sourcecredit from sameedge consumption",
+  "registered_pipeline_state": null,
+  "release": "all576 ordered healthy rows causally visible AND source fenced AND fresh accepted packetdelivery ACK AND route debts empty; CDC/SU acceptance separate",
+  "remote_provider_candidate": "fff6dc9c0b609955b2db2ac8565eb6ab0baadaf2",
+  "reply_bits": 240,
+  "reply_gather_sink_state_bits": "240*C plus occupancy/address state (C unselected)",
+  "request_bits": 187,
+  "reserve": "reserve gather sinkseat and positive request/reply/credit-route capacity BEFORE local read; no field-ready",
+  "route_shard_separate": true,
+  "schema": "DS_CAPTURE_ORDERED_GATHER_PROPOSAL_1",
+  "single169bit_logical_phase_lease": true
+}

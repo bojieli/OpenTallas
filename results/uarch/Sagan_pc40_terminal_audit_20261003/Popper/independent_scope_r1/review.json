@@ -1,0 +1,696 @@
+{
+  "ACK_ID_qualified": false,
+  "accepted_cold_fixture_actors": 7,
+  "binary_retained_external": "/home/ubuntu/hbm-c0-pc40-connected-8c3dfbf79-r2/gate.vvp",
+  "compile_RC": 0,
+  "compiled_sources_exact": 9,
+  "events": 95,
+  "fulltoken_qualified": false,
+  "independent_literal_vector_check": {
+    "FMAX_bit_mismatches": [],
+    "FMIN_bit_mismatches": [],
+    "actual_simulator_data_dump_independently_recompared": false,
+    "exact_simulated_lane_values": "source-pinned bench fatal checks plus runtimeRC0; no raw lane dump exists",
+    "includes_signed_zero_and_subnormal": true,
+    "rule": "finite F32 NEG sign XOR, max(negative,-87), min(result,+88); equal chooses second source word",
+    "words_per_vector": 128
+  },
+  "negative_actor_event_groups": [
+    {
+      "accepted": {
+        "cycle": 62,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000002",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      "cases": [
+        "NONFINITE_REFUSAL"
+      ],
+      "events": [
+        {
+          "cycle": 62,
+          "enteringWorkspaceLive": "0",
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000002",
+          "phase": "accepted",
+          "scope": "cold_exclusive_actor"
+        },
+        {
+          "a": "38",
+          "b": "38",
+          "cycle": 63,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 66,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 67,
+          "identity": "0100000001c413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 68,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 69,
+          "identity": "0100000001c413",
+          "phase": "common_ACK"
+        }
+      ]
+    },
+    {
+      "accepted": {
+        "cycle": 77,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000003",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      "cases": [
+        "STALE_ACK"
+      ],
+      "events": [
+        {
+          "cycle": 77,
+          "enteringWorkspaceLive": "0",
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000003",
+          "phase": "accepted",
+          "scope": "cold_exclusive_actor"
+        }
+      ]
+    },
+    {
+      "accepted": {
+        "cycle": 90,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000004",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      "cases": [
+        "RUNTIME_RESET"
+      ],
+      "events": [
+        {
+          "cycle": 90,
+          "enteringWorkspaceLive": "0",
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000004",
+          "phase": "accepted",
+          "scope": "cold_exclusive_actor"
+        },
+        {
+          "a": "38",
+          "b": "38",
+          "cycle": 91,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 94,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 95,
+          "identity": "01000000020413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 96,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 97,
+          "identity": "01000000020413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 98,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 104,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 105,
+          "identity": "01000000020413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 106,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 107,
+          "identity": "01000000020413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 108,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 112,
+          "phase": "mirrored_write",
+          "slot": "19"
+        },
+        {
+          "cycle": 113,
+          "identity": "01000000020413",
+          "phase": "common_ACK"
+        }
+      ]
+    },
+    {
+      "accepted": {
+        "cycle": 127,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000005",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      "cases": [
+        "WRONG_REVERSE"
+      ],
+      "events": [
+        {
+          "cycle": 127,
+          "enteringWorkspaceLive": "0",
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000005",
+          "phase": "accepted",
+          "scope": "cold_exclusive_actor"
+        },
+        {
+          "a": "38",
+          "b": "38",
+          "cycle": 128,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 131,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 132,
+          "identity": "01000000022413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 133,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 134,
+          "identity": "01000000022413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 135,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 141,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 142,
+          "identity": "01000000022413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 143,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 144,
+          "identity": "01000000022413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 145,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 149,
+          "phase": "mirrored_write",
+          "slot": "19"
+        },
+        {
+          "cycle": 150,
+          "identity": "01000000022413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 152,
+          "identity": "01000000022413",
+          "phase": "visible"
+        },
+        {
+          "a": "19",
+          "b": "19",
+          "cycle": 153,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 156,
+          "identity": "01000000022413",
+          "phase": "FMIN_result_accept"
+        },
+        {
+          "cycle": 157,
+          "identity": "01000000022413",
+          "phase": "W6_consumer"
+        }
+      ]
+    },
+    {
+      "accepted": {
+        "cycle": 171,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000006",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      "cases": [
+        "WRONG_DRAIN"
+      ],
+      "events": [
+        {
+          "cycle": 171,
+          "enteringWorkspaceLive": "0",
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000006",
+          "phase": "accepted",
+          "scope": "cold_exclusive_actor"
+        },
+        {
+          "a": "38",
+          "b": "38",
+          "cycle": 172,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 175,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 176,
+          "identity": "01000000024413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 177,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 178,
+          "identity": "01000000024413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 179,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 185,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 186,
+          "identity": "01000000024413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 187,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 188,
+          "identity": "01000000024413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 189,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 193,
+          "phase": "mirrored_write",
+          "slot": "19"
+        },
+        {
+          "cycle": 194,
+          "identity": "01000000024413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 196,
+          "identity": "01000000024413",
+          "phase": "visible"
+        },
+        {
+          "a": "19",
+          "b": "19",
+          "cycle": 197,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 200,
+          "identity": "01000000024413",
+          "phase": "FMIN_result_accept"
+        },
+        {
+          "cycle": 201,
+          "identity": "01000000024413",
+          "phase": "W6_consumer"
+        }
+      ]
+    },
+    {
+      "accepted": {
+        "cycle": 222,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000007",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      "cases": [
+        "MISSING_ALLCOPY"
+      ],
+      "events": [
+        {
+          "cycle": 222,
+          "enteringWorkspaceLive": "0",
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000007",
+          "phase": "accepted",
+          "scope": "cold_exclusive_actor"
+        },
+        {
+          "a": "38",
+          "b": "38",
+          "cycle": 223,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 226,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 227,
+          "identity": "01000000026413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 228,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 229,
+          "identity": "01000000026413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 230,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 236,
+          "phase": "mirrored_write",
+          "slot": "17"
+        },
+        {
+          "cycle": 237,
+          "identity": "01000000026413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 238,
+          "phase": "mirrored_write",
+          "slot": "18"
+        },
+        {
+          "cycle": 239,
+          "identity": "01000000026413",
+          "phase": "common_ACK"
+        },
+        {
+          "a": "17",
+          "b": "18",
+          "cycle": 240,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 244,
+          "phase": "mirrored_write",
+          "slot": "19"
+        },
+        {
+          "cycle": 245,
+          "identity": "01000000026413",
+          "phase": "common_ACK"
+        },
+        {
+          "cycle": 247,
+          "identity": "01000000026413",
+          "phase": "visible"
+        },
+        {
+          "a": "19",
+          "b": "19",
+          "cycle": 248,
+          "phase": "RF_read"
+        },
+        {
+          "cycle": 251,
+          "identity": "01000000026413",
+          "phase": "FMIN_result_accept"
+        },
+        {
+          "cycle": 252,
+          "identity": "01000000026413",
+          "phase": "W6_consumer"
+        },
+        {
+          "cycle": 267,
+          "nativeGen": "0000000100000012",
+          "nativeTag": "0000000100000007",
+          "phase": "retire"
+        }
+      ]
+    }
+  ],
+  "negative_controls": [
+    "NONFINITE_REFUSAL",
+    "STALE_ACK",
+    "RUNTIME_RESET",
+    "WRONG_REVERSE",
+    "WRONG_DRAIN",
+    "MISSING_ALLCOPY"
+  ],
+  "no_gate_or_numerical_execution": true,
+  "output_pins": {
+    "compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "gate.vvp": {
+      "bytes": 53640885,
+      "sha256": "1090c71f113e5dd27898a652abb3b21fbd8d69b695a9a841281fe0fbda7be5c0"
+    },
+    "runtime.log": {
+      "bytes": 5826,
+      "sha256": "4c65750b2e975948b65054ef4f65f991fe9c3cf508bbab05613ffd1cad232fd8"
+    },
+    "terminal.json": {
+      "bytes": 13209,
+      "sha256": "9ece74d2060bd022de8dd99ed6278885cb5d1ba857c8d0dd4c67b8f816ab19e1"
+    }
+  },
+  "positive_actor": {
+    "accepted_to_retire_cycles": 50,
+    "bare_ACK_handshakes": 5,
+    "conditional_priced_bound_cycles": 117,
+    "event_sequence": [
+      {
+        "cycle": 7,
+        "enteringWorkspaceLive": "0",
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000001",
+        "phase": "accepted",
+        "scope": "cold_exclusive_actor"
+      },
+      {
+        "a": "38",
+        "b": "38",
+        "cycle": 8,
+        "phase": "RF_read"
+      },
+      {
+        "cycle": 11,
+        "phase": "mirrored_write",
+        "slot": "17"
+      },
+      {
+        "cycle": 12,
+        "identity": "0100000001a413",
+        "phase": "common_ACK"
+      },
+      {
+        "cycle": 13,
+        "phase": "mirrored_write",
+        "slot": "18"
+      },
+      {
+        "cycle": 14,
+        "identity": "0100000001a413",
+        "phase": "common_ACK"
+      },
+      {
+        "a": "17",
+        "b": "18",
+        "cycle": 15,
+        "phase": "RF_read"
+      },
+      {
+        "cycle": 21,
+        "phase": "mirrored_write",
+        "slot": "17"
+      },
+      {
+        "cycle": 22,
+        "identity": "0100000001a413",
+        "phase": "common_ACK"
+      },
+      {
+        "cycle": 23,
+        "phase": "mirrored_write",
+        "slot": "18"
+      },
+      {
+        "cycle": 24,
+        "identity": "0100000001a413",
+        "phase": "common_ACK"
+      },
+      {
+        "a": "17",
+        "b": "18",
+        "cycle": 25,
+        "phase": "RF_read"
+      },
+      {
+        "cycle": 29,
+        "phase": "mirrored_write",
+        "slot": "19"
+      },
+      {
+        "cycle": 30,
+        "identity": "0100000001a413",
+        "phase": "common_ACK"
+      },
+      {
+        "cycle": 35,
+        "identity": "0100000001a413",
+        "phase": "visible"
+      },
+      {
+        "a": "19",
+        "b": "19",
+        "cycle": 36,
+        "phase": "RF_read"
+      },
+      {
+        "cycle": 41,
+        "identity": "0100000001a413",
+        "phase": "FMIN_result_accept"
+      },
+      {
+        "cycle": 42,
+        "identity": "0100000001a413",
+        "phase": "W6_consumer"
+      },
+      {
+        "cycle": 57,
+        "nativeGen": "0000000100000012",
+        "nativeTag": "0000000100000001",
+        "phase": "retire"
+      }
+    ],
+    "logical_RF_writes": 5,
+    "measured_hardware_rate_qualified": false,
+    "mirrored_write_bytes": 5120,
+    "native64_tag_generation_retained": true,
+    "paired_RF_reads": 4,
+    "single_controller_identity": "0100000001a413"
+  },
+  "production_payload_qualified": false,
+  "qualified_scope": "Directed finite PC40 literal RF/FMAX/ACK/W6/FMIN software simulation with cold exclusive solewriter and retained-debt negative controls",
+  "runtime_RC": 0,
+  "source_commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+  "source_pins": {
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_visibility_fence_w6.sv": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_connected_bridge_r2.sv": "26fe690f9f6855959309c5a840ee927ab6930183f9c0acc271de7ac6cd6b43d7",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv": "ea947bdc66e55a5019af8ddbf1aca96254b2a6a0238021e071142ae53ab04840",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_connected_source.sv": "2a1b7208df9760c9d6abb51228267b9da444a4ace2f86076bb013b2bc8680f22",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv": "132026114e0ca96ebe272769b1480915cff46c2768d8b88d8e9142b78bd55553",
+    "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3/rtl/test/hbm_c0_connected_20261003/r2/tb.sv": "9fa712bc28619e4579fb0d2faeda596aa540cbb8d267226154fc101366633205"
+  },
+  "status": "PASS_INDEPENDENT_SCOPED_TERMINAL_SOURCE_EVENT_LITERAL_AUDIT",
+  "strict_limits": [
+    "Gate payload is frozen literal fixture data; not actual released-checkpoint payload",
+    "Physical ACK is bare/untyped. Printed identity is controller state, not returned ACK_ID",
+    "Native64 tag/generation and owner46 are synthetic opaque fixture namespace, not production program provenance",
+    "Reverse/drain authorities and allcopy witness are fixture-held; no full global production queues or actual installed CDC qualification",
+    "Cold POR between mutants clears independent fixtures; not permission to release accepted runtime production debt",
+    "RF service logic uses bench behavioral SRAM arrays, not placed/hardened macro or PnR verification",
+    "No raw simulator lane dump: independent bit check validates literal expected vectors; runtime exactness relies on source-pinned lane fatal checks",
+    "W2/HBM command movement, production workspace entering leases and calendar adoption not closed",
+    "No trained fulltoken/physical/SSFF/protected upset/rate qualification"
+  ],
+  "terminal_launcher_and_runtime_absent": true
+}

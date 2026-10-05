@@ -1,0 +1,347 @@
+{
+ "does_not_establish": [
+  "any numeric result: this bench drives both blocks with the constant BF16 code 1.0 and reads only admission, traffic and cycles.  Bit-exactness is rung G1a's and is established there on real checkpoint bytes",
+  "that a widened predicate would be correct: it measures the shape of the predicate that exists, not the shape of the one that should",
+  "anything about the compiler's config-digest pin, which results/rtl/abi3_g1f_reduced_end_to_end.json measures as G1f's FIRST blocker and which no RTL change touches"
+ ],
+ "establishes": [
+  "ot_a3_vector_rms_norm admits 2 of 38 swept row widths -- [128, 4096] -- and the admission set is exact_set_membership: no upper bound, no lower bound and no interval over the swept values reproduces it",
+  "2 of 2 admitted widths are refused at the very next swept value both below and above them, so no capacity threshold can explain the admissions",
+  "ot_a3_qwen_gqa admits 10 of 21 swept context lengths and the admission set IS an interval [8, 32]: the one geometry field with a runtime port is bounds-checked at both ends",
+  "its operand traffic is affine in that field (reads = 4096 + 8192 x context, worst residual 0), while its result row is [4096] words at every admitted context -- the head geometry has no port, so it cannot be asked for and cannot be refused"
+ ],
+ "execution": {
+  "case_count": 63,
+  "compile_seconds": 3.6,
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "marker": "MARKER: ABI3 G1F GEOMETRY PREDICATE SWEEP cases=63 cycles=3270124",
+  "run_seconds": 7.72,
+  "second_simulator": {
+   "available": true,
+   "elaborated": false,
+   "refusal_tail": "1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:247: syntax error\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:249: error: invalid module item.\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:250: syntax error\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:252: error: invalid module item.\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:253: syntax error\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:255: error: invalid module item.\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:256: syntax error\n/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/ps_cf/wt3/rtl/abi3/ot_a3_qwen_gqa.sv:258: error: invalid module item.\n",
+   "returncode": 62,
+   "simulator": "icarus",
+   "simulator_banner": "Icarus Verilog version 11.0 (stable) ()",
+   "what_it_means": "when this is false the sweep below stands on ONE simulator, and no cross-simulator agreement is claimed for it anywhere"
+  },
+  "simulated_cycles": 3270124,
+  "simulator": "verilator_cpp_executable",
+  "simulator_banner": "Verilator 5.050 2026-07-01 rev v5.050",
+  "simulator_version": "5.050",
+  "sources": {
+   "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+   "rtl/abi3/ot_a3_format_pkg.sv": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+   "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+   "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "b1c0e01c663a353a25ea7056718b21b30636bedac4a84dc0cc1216dcbb03218e",
+   "rtl/abi3/ot_a3_qwen_gqa.sv": "9fad7a0839e5e4efba94b4e40ebf5f2ce1244424504a62ba8ee7698fc9c24422",
+   "rtl/abi3/ot_a3_shared_divider.sv": "66fb93cf7e1e98fcda129253ce362da1b5cbbbea0412f9593730e0f6ae7716d1",
+   "rtl/abi3/ot_a3_vector_rms_norm.sv": "7c1d174a678d2cd3bc6301b049fffb11d56862224fbf140105ed2aee0bed6769",
+   "rtl/ot_fp32_rne_pkg.sv": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c",
+   "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
+   "rtl/test/tb_a3_g1f_geometry_predicate.sv": "4a20c972db8e4dcef6d0954c1b9b97c486d21f78e88a77ab190cdf4a5be7b04e"
+  },
+  "vehicle": "rtl/test/tb_a3_g1f_geometry_predicate.sv",
+  "vehicle_sha256": "4a20c972db8e4dcef6d0954c1b9b97c486d21f78e88a77ab190cdf4a5be7b04e"
+ },
+ "gate": "G1f (supporting measurement; no gate field turns on it)",
+ "generated_by": "tools/build_abi3_g1f_geometry_predicate.py",
+ "generated_by_sha256": "5c721202d6fe00380c42ca1373d638be54692b3fabf8143d326fbef615e28c1e",
+ "git": {
+  "commit": "2474da7b25e6b689045c362eedb068f177ee631e",
+  "dirty_paths": [],
+  "scope": "the tree this measurement RAN in.  A dirty tree makes the measurement inadmissible however sound it is, so the field is recorded rather than assumed",
+  "worktree_dirty": false
+ },
+ "informs": {
+  "artifact": "results/rtl/abi3_g1f_reduced_end_to_end.json",
+  "field": "records[].geometry_port_decision",
+  "question": "is the geometry port a design change worth making, or should the reduced configuration be chosen to fit the geometry the engines have?"
+ },
+ "measured": {
+  "gqa_context_length": {
+   "block": "rtl/abi3/ot_a3_qwen_gqa.sv",
+   "operand_words_read_vs_context": {
+    "affine": true,
+    "fit_from": "the first two admitted points; every other point is a test",
+    "intercept": 4096,
+    "points": 10,
+    "slope": 8192,
+    "slope_is_integral": true,
+    "worst_residual": 0
+   },
+   "port": "cfg_context_length",
+   "predicate": {
+    "admitted": [
+     8,
+     9,
+     12,
+     16,
+     17,
+     18,
+     19,
+     24,
+     31,
+     32
+    ],
+    "consistent_with_interval": [
+     8,
+     32
+    ],
+    "consistent_with_lower_bound": null,
+    "consistent_with_upper_bound": null,
+    "each_admitted_value_bracketed": {
+     "12": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 16,
+      "next_lower_admitted": true,
+      "next_lower_swept": 9
+     },
+     "16": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 17,
+      "next_lower_admitted": true,
+      "next_lower_swept": 12
+     },
+     "17": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 18,
+      "next_lower_admitted": true,
+      "next_lower_swept": 16
+     },
+     "18": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 19,
+      "next_lower_admitted": true,
+      "next_lower_swept": 17
+     },
+     "19": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 24,
+      "next_lower_admitted": true,
+      "next_lower_swept": 18
+     },
+     "24": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 31,
+      "next_lower_admitted": true,
+      "next_lower_swept": 19
+     },
+     "31": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 32,
+      "next_lower_admitted": true,
+      "next_lower_swept": 24
+     },
+     "32": {
+      "next_higher_admitted": false,
+      "next_higher_swept": 33,
+      "next_lower_admitted": true,
+      "next_lower_swept": 31
+     },
+     "8": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 9,
+      "next_lower_admitted": false,
+      "next_lower_swept": 7
+     },
+     "9": {
+      "next_higher_admitted": true,
+      "next_higher_swept": 12,
+      "next_lower_admitted": true,
+      "next_lower_swept": 8
+     }
+    },
+    "how_the_shape_was_decided": "each candidate shape is reconstructed from the swept values and compared with the observed admission set; a shape survives only if it reproduces that set exactly.  'exact_set_membership' is the residual, and it is only reached when no bound and no interval over the swept values reproduces the admissions",
+    "refused": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     33,
+     48,
+     64,
+     128
+    ],
+    "shape": "interval",
+    "swept_count": 21,
+    "swept_values": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     12,
+     16,
+     17,
+     18,
+     19,
+     24,
+     31,
+     32,
+     33,
+     48,
+     64,
+     128
+    ]
+   },
+   "refusal_codes": [
+    "ERR_OPERAND_NONFINITE_or_ERR_CONFIG"
+   ],
+   "result_row_moved_with_anything_the_block_can_be_told": false,
+   "result_words_written_at_every_admitted_context": [
+    4096
+   ]
+  },
+  "rms_norm_row_width": {
+   "block": "rtl/abi3/ot_a3_vector_rms_norm.sv",
+   "multi_row_cases": [
+    {
+     "admitted": true,
+     "cols": 128,
+     "error_name": "ERR_NONE",
+     "results": 4096,
+     "rows": 32
+    },
+    {
+     "admitted": false,
+     "cols": 16,
+     "error_name": "ERR_SHAPE",
+     "results": 0,
+     "rows": 8
+    },
+    {
+     "admitted": true,
+     "cols": 128,
+     "error_name": "ERR_NONE",
+     "results": 256,
+     "rows": 2
+    },
+    {
+     "admitted": false,
+     "cols": 4096,
+     "error_name": "ERR_SHAPE",
+     "results": 0,
+     "rows": 2
+    }
+   ],
+   "port": "cfg_cols",
+   "predicate": {
+    "admitted": [
+     128,
+     4096
+    ],
+    "consistent_with_interval": null,
+    "consistent_with_lower_bound": null,
+    "consistent_with_upper_bound": null,
+    "each_admitted_value_bracketed": {
+     "128": {
+      "next_higher_admitted": false,
+      "next_higher_swept": 129,
+      "next_lower_admitted": false,
+      "next_lower_swept": 127
+     },
+     "4096": {
+      "next_higher_admitted": false,
+      "next_higher_swept": 4097,
+      "next_lower_admitted": false,
+      "next_lower_swept": 4095
+     }
+    },
+    "how_the_shape_was_decided": "each candidate shape is reconstructed from the swept values and compared with the observed admission set; a shape survives only if it reproduces that set exactly.  'exact_set_membership' is the residual, and it is only reached when no bound and no interval over the swept values reproduces the admissions",
+    "refused": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     8,
+     16,
+     32,
+     48,
+     64,
+     80,
+     96,
+     112,
+     120,
+     126,
+     127,
+     129,
+     130,
+     136,
+     144,
+     160,
+     192,
+     256,
+     320,
+     512,
+     640,
+     1024,
+     1280,
+     2048,
+     2560,
+     3072,
+     4064,
+     4095,
+     4097,
+     6144,
+     8192
+    ],
+    "shape": "exact_set_membership",
+    "swept_count": 38,
+    "swept_values": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     8,
+     16,
+     32,
+     48,
+     64,
+     80,
+     96,
+     112,
+     120,
+     126,
+     127,
+     128,
+     129,
+     130,
+     136,
+     144,
+     160,
+     192,
+     256,
+     320,
+     512,
+     640,
+     1024,
+     1280,
+     2048,
+     2560,
+     3072,
+     4064,
+     4095,
+     4096,
+     4097,
+     6144,
+     8192
+    ]
+   },
+   "refusal_codes": [
+    "ERR_SHAPE"
+   ],
+   "row_count_independent": false
+  }
+ },
+ "schema": "opentallas.rtl.abi3_g1f_geometry_predicate.v1"
+}

@@ -1,0 +1,22 @@
+{
+  "status": "ACTUAL_DUAL_CONSTRUCTOR_PASS_NUMERICAL_ENTRY_READY",
+  "preflight_source_commit": "2fdc39f07e35e5b3ccd35b2d0b5697161d9d5b3a",
+  "preflight_status": "PASS_ACTUAL_PRODUCER_AND_COLD_ADDITIVE_CONSTRUCTORS",
+  "preflight_expected_outputs": 1664,
+  "preflight_executed_PCs": 0,
+  "actual_restore_executed": false,
+  "runtime_scope": "fresh PC0..9 actualproducer capture+seal -> distinct cold constructor+validated actual restore -> PC10; stop10 only",
+  "numerical_authorization": "parent explicit GO after actual dual-constructor PASS, fresh fit still required",
+  "original_source_files_byteidentical": true,
+  "tests_PASS": 7,
+  "hardware_qualified": false,
+  "next_argv": [
+    "python",
+    "tools/ds_hbm_checkpoint_execution_r58.py",
+    "--plan",
+    "results/uarch/ds_hbm_checkpoint_execution_r58_20261003/runtime_plan.json",
+    "--out",
+    "/tmp/kepler-ds-r58-PC0-10-checkpoint-runtime-20261003",
+    "--actual-pc10"
+  ]
+}

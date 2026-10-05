@@ -1,0 +1,165 @@
+{
+  "base_source_commit": "41eef76fa",
+  "bounded_module_join": {
+    "original_file_import_refused": true,
+    "required": "new relative module path+commit+SHA in actual admission source_sha256; byte/provider ABI tests rerun against relocated module",
+    "status": "WAITING_POPPER_ADDITIVE_RELOCATION"
+  },
+  "calendar_handoff": {
+    "Popper_source_untouched": true,
+    "additional_costs": "checkpoint conversion is offline; runtime addressed transport and verification observer reads counted separately; all physical costs remain unqualified",
+    "provider_data": "r17 provider_ref/base/codec and <=128 byte ranges, <=4096B payload, one serialized reader with validated copy/ACK then release"
+  },
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_snapshot": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+  "commands": {
+    "execute": [
+      "/usr/bin/python3",
+      "tools/qwen_trained_native_run.py",
+      "--images",
+      "<immutable-image-root>",
+      "--out",
+      "<fresh-runtime-output>",
+      "--admission",
+      "<exact-parent-GO.json>",
+      "--go-commit",
+      "<parent-GO-commit>",
+      "--bounded-module",
+      "<Popper-relocated-bounded-module.py>",
+      "--token",
+      "9707"
+    ],
+    "produce": [
+      "/usr/bin/python3",
+      "tools/qwen_trained_byte_provider.py",
+      "--snapshot",
+      "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+      "--out",
+      "<immutable-image-root>",
+      "--admission",
+      "<exact-parent-GO.json>",
+      "--go-commit",
+      "<parent-GO-commit>"
+    ]
+  },
+  "execution_root": "/home/ubuntu/OpenTallas-qwen-trained-byte-provider",
+  "fresh_GO_fields": [
+    "schema",
+    "admitted",
+    "source_commit",
+    "source_sha256",
+    "unit",
+    "admission_record_path",
+    "cpus",
+    "memory_bytes",
+    "fresh_host_headroom_bytes",
+    "aggregate_output_bytes",
+    "disk_headroom_bytes",
+    "wall_limit_s",
+    "FSIZE",
+    "RLIMIT_AS"
+  ],
+  "inventory": {
+    "checkpoint_transfer_bytes": 16381550382,
+    "images_bytes": 9428966912,
+    "producer_page_rows": 128,
+    "quantizer_repetition": "Both column-sharded ranks quantize source full rows identically; CPUcost explicit, no shard-local quantization",
+    "small_output_capture_bytes": 1213952
+  },
+  "missing_checkpoint_files": [
+    "config.json",
+    "model-00001-of-00005.safetensors",
+    "model-00002-of-00005.safetensors",
+    "model-00003-of-00005.safetensors",
+    "model-00004-of-00005.safetensors",
+    "model-00005-of-00005.safetensors",
+    "model.safetensors.index.json"
+  ],
+  "model_commit": "18ff7ccc5",
+  "native_artifact_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+  "policy": {
+    "FSIZE": "unlimited",
+    "PVE2_PVE3_launch": false,
+    "RLIMIT_AS": "unlimited",
+    "aggregate": "fresh inventory plus actual receipt footprint and fleet disk reserve",
+    "local_D1_reserved_GiB": 96,
+    "memory": "fresh measured fleet reservation; includes shard pagecache, producer Torch scratch and native word backing; no pilot cap",
+    "wall_limit": null
+  },
+  "provider_binding_pin": {
+    "commit": "570536f48",
+    "path": "results/uarch/qwen_hbm_provider_bindings_r17_20261002/Qwen_provider_binding.json.gz",
+    "sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1"
+  },
+  "readiness": "BLOCKED_CHECKPOINT_DATA_AND_FRESH_FLEET_ADMISSION",
+  "required_checkpoint_files": [
+    {
+      "path": "config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+      "size_bytes": 728
+    },
+    {
+      "path": "model-00001-of-00005.safetensors",
+      "sha256": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+      "size_bytes": 3996250744
+    },
+    {
+      "path": "model-00002-of-00005.safetensors",
+      "sha256": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+      "size_bytes": 3993160032
+    },
+    {
+      "path": "model-00003-of-00005.safetensors",
+      "sha256": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+      "size_bytes": 3959604768
+    },
+    {
+      "path": "model-00004-of-00005.safetensors",
+      "sha256": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+      "size_bytes": 3187841392
+    },
+    {
+      "path": "model-00005-of-00005.safetensors",
+      "sha256": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff",
+      "size_bytes": 1244659840
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+      "size_bytes": 32878
+    }
+  ],
+  "schema": "opentallas.Qwen.trained-native.prepared.v1",
+  "scope": {
+    "TP": 2,
+    "actual_RTL": false,
+    "fixture_weights": false,
+    "full_config": true,
+    "layers": 36,
+    "no_oracle_values_into_DUT": true,
+    "physical_credit": false,
+    "postexecution_reference_only": true,
+    "rate_credit": false,
+    "tokens": 1
+  },
+  "source_coverage": {
+    "PCs": 1737,
+    "all_refs_bound": true,
+    "classes": 21,
+    "external_refs": 732,
+    "matrix_descriptors": 290
+  },
+  "source_sha256": {
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "tests/test_qwen_trained_byte_provider.py": "b6b5662d541fecf3461dc402a53d5e63796c68bea926121efd32e3dab9b01689",
+    "tools/h3_qwen_complete_native.py": "39510ee998e14e536772b61baa8b2188e7b0dde2063f484db5133238c1157324",
+    "tools/model_qwen_trained_byte_provider.py": "20be672eb77db7b37e877411a2db63a376cde01c0d4c500d41d333ccc0c76038",
+    "tools/prepare_qwen_trained_native.py": "9de0153315e6ffe4914218f390febd9444df4b5063846f2d5afcf9001f0ff60c",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8",
+    "tools/qwen_trained_byte_provider.py": "48c3453cfd84edaeb9a609fb9915834ac475ffe25023609fe9b754f28e7849ff",
+    "tools/qwen_trained_native_run.py": "807f2bfb643e313872ec0431d999a74f6a70755e502d7b9562daf3ed40a84711"
+  }
+}

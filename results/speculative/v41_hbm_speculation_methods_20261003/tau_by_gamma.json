@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.v41-dspark-tau-by-gamma.v1",
+ "drafts": "/tmp/claude-review-20261003/mtp/work/drafts.json",
+ "drafts_sha256": "d96061a0d815dc7b7403e8cabcd03f685925db6d0202ad0f751cc2c82160963a",
+ "definition": "tau(gamma) = committed tokens per verify cycle (bonus included), exact greedy replay (analyze.walk) with acceptance truncated at gamma",
+ "sets": {
+  "agentic_all5_pilot_n30": {
+   "1": {
+    "tau": 1.9382,
+    "cycles": 1262
+   },
+   "2": {
+    "tau": 2.7736,
+    "cycles": 888
+   },
+   "3": {
+    "tau": 3.469,
+    "cycles": 710
+   },
+   "4": {
+    "tau": 4.1126,
+    "cycles": 604
+   },
+   "5": {
+    "tau": 4.5554,
+    "cycles": 551
+   }
+  },
+  "agentic_multiturn_pilot": {
+   "1": {
+    "tau": 1.9042,
+    "cycles": 741
+   },
+   "2": {
+    "tau": 2.6629,
+    "cycles": 534
+   },
+   "3": {
+    "tau": 3.225,
+    "cycles": 440
+   },
+   "4": {
+    "tau": 3.7487,
+    "cycles": 382
+   },
+   "5": {
+    "tau": 4.0222,
+    "cycles": 360
+   }
+  }
+ }
+}

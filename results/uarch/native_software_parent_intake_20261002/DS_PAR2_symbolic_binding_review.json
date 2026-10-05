@@ -1,0 +1,62 @@
+{
+  "schema": "parent-PAR2-symbolic-review-v1",
+  "owner_commit": "124e870c5",
+  "mode_prerequisite": "1d8380224",
+  "focused_tests_passed": 58,
+  "all_artifact_hashes": "PASS",
+  "independent_full_model_readback": {
+    "all40_all384_PASS": true,
+    "phase_count": 46509,
+    "native_call_count": 1149,
+    "native_choice_count": 276909,
+    "source_totals": {
+      "physical_weight_words": 2268504064,
+      "output_rows": 38136192,
+      "ECC_local_bits": 9437184000,
+      "ECC_remote_bits": 8178892800,
+      "phases": 46509,
+      "both_shards_active": 46410
+    },
+    "max_remote_final_rows_per_single_position_phase": 4096,
+    "conservative_full_phase_capture_bits_at108_per_packet": 442368,
+    "capture_bound_requires_positions_multiplier_and_original_consumer_delivery_fence": true,
+    "capture_is_not_qualified_FIFO_or_SSFF_area": true,
+    "encoded_totals_are_allocated_template_words_NOT_runtime_read_traffic": true,
+    "expert_return_order": "Actual six selected IDs retain original producer/output order; PAR2 is row-sharding, not independent whole-expert stage ownership.",
+    "complexity": "One46509phase and276909choice compressed-record scan; no enumeration of full-model weight payload or repacking."
+  },
+  "local_mirror": {
+    "ECC_read_port_capacity_and_capture_or_adapter_SSFF_price_UNBOUND": true,
+    "TP4_total_mirror_pairs": 23896,
+    "all58_stage_mirror_pairs": 5974,
+    "already_charged_padding_macros_used_per_stage": 412,
+    "conditional_cross_shard_parity_data_reads_after_local_copy": 0,
+    "extra_macro_instance_count": 0,
+    "extra_redundant_useful_parity_data_bits_per_rank": 17616076800,
+    "extra_reserved_provider_capacity_bits_per_stage": 432013312,
+    "immutable_provider_copy_provenance_and_physical_ROM_init_NOT_QUALIFIED": true,
+    "local_parity_word_endpoint_boundaries_checked": 8448,
+    "new_mirrors_per_stage": 103,
+    "original58x103completeparitypairs_preserved": true,
+    "original_padding_shard0": 337,
+    "original_padding_shard1": 384,
+    "precompute_qualification": "Actual local protected256+10-word read/decoder/coalescer calendar before corresponding mainword compute; local address removes transport dependency, not the read/qualification latency.",
+    "prospective_694p883_macro_body_screen_unchanged_but_new_adapters_UNPRICED": true,
+    "remaining_padding_shard1": 281,
+    "same_candidate_NP2048_R64_NBF362_and_all_original_matrices_unchanged": true,
+    "status": "LEGAL_SYMBOLIC_STORAGE_OPTION_NOT_SELECTED_OR_PHYSICAL_PROVIDER_QUALIFIED"
+  },
+  "build_admitted": false,
+  "physical_fit_qualified": false,
+  "single_token_no_loss_proven": false,
+  "review_attempts": [
+    {
+      "exit_code": 4,
+      "reason": "mode prerequisite test absent before intake; dependency subsequently integrated and 58tests pass"
+    },
+    {
+      "exit_code": 1,
+      "reason": "parent review used coverage key instead of readback; corrected without changing evidence"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "status": "incomplete_record_recovered_artifacts",
+  "reason": "Driver handle 72335 terminated exit 120; destination JSON zero bytes after filesystem exhaustion. No valid canonical result; no pass claim.",
+  "artifacts": {
+    "6_finish.rpt": "9b4ec8860cc7d6bbdaeeac76133c841325f31c3d2e00be50e36c86e368df000f",
+    "metadata.json": "ce72226cfe361a82be65ab655a75e8bd89895b5b9ccca4da91d26e66ca9cdc53",
+    "5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "6_final.v": "6900b7ddb827fbbd7a6eae67ccae7818fa3143ccf33955968762a7666b7c048a",
+    "1_2_yosys.v": "5100e41b37f78e8f290f562fb424c069cb3c853c0eefe5801cd5149476a22590",
+    "config.mk": "ca9d22568a637e9be4cd190616377ecea2f165b4f0019d03919125b7cb412d56",
+    "constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+  },
+  "observed_finish_setup_slack_ns": -1.67567,
+  "scope": "Recovered final report for WIDTH168 DIVISOR_BITS6 STEP10; report units ps. Full authoritative acceptance record unavailable.",
+  "next_action": "Use recovered path for diagnosis; regenerate a complete record through the fixed atomic writer before qualification."
+}

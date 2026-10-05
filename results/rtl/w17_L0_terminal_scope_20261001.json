@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.w17.L0_terminal_scope.v1",
+  "original_receipt": "/home/ubuntu/w17-fulltoken-unchanged-20261001-r1/analysis.json",
+  "original_verdict": "FAIL_OR_INCOMPLETE",
+  "scope": "L0_ONLY_TP4_CONNECTED_LAYER",
+  "qualified_verdict": "L0_FAIL_OR_INCOMPLETE",
+  "done_ranks": [],
+  "vm": {
+    "r0": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    },
+    "r1": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    },
+    "r2": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    },
+    "r3": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    }
+  },
+  "coverage": {
+    "layers": [
+      0
+    ],
+    "program_words_per_rank": 113,
+    "weight_entries_per_rank": 28,
+    "vocabulary_head": false
+  },
+  "true_full_token_qualified": false,
+  "current_integrated_sources_qualified": false,
+  "scope_overlay_commit": "f7a9b3492",
+  "parent_scope_receipt_commit": "94603701f",
+  "required_followon": "qualified current-source L0 + indexedL20, then connected all40layers+finalnorm/vocabularyhead with complete golden token/state gates",
+  "adopt": false
+}

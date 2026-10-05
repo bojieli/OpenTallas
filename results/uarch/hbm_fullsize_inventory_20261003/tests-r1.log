@@ -1,0 +1,23 @@
+test_DS_staging_padding_and_summary_negative (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_PHY_interface_mismatch_preserved (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_RF_area_is_contained_not_added (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_area_containment_recharge_refused (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_area_duplicate_charge_refused (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_capture_contracts_are_not_substituted (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_clock_subset_not_full_census (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_cold_model_exact (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_current_bridge_envelope_and_unknown_debit (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_current_protection_macro_alternative_not_adopted (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_duplicate_inventory_refused (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_negative_area_credit_refused (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_no_software_or_physical_admission_transfer (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_protection_scope_and_bits (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_required_fullsize_replicas (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_retained_xstore_staging_and_scale (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_source_drift_refused_before_composition (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+test_unified_baseline_source_is_only_read (test_hbm_fullsize_inventory_r1.InventoryTests) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 3.751s
+
+OK

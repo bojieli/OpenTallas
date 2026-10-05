@@ -1,0 +1,40 @@
+{
+  "checkpoint_reads": 0,
+  "conditional_rowhit_alternating_bankgroup_service": {
+    "CWL_plus_burst_visibility_PS": 7274,
+    "not_a_universal_hardware_minimum": true,
+    "pending_all32_PC_per_stack": 128,
+    "pending_per_PC_at_sustained_schedule": 4,
+    "quantized_interval_PS": 2000,
+    "source_CLK_PS": 1000,
+    "source_tCCD_S_PS": 1024
+  },
+  "first_column_wave": {
+    "chosen_pending_depth_per_stack": 4,
+    "possible_due_columns_same_cycle": 32,
+    "pseudo_channels": 32,
+    "unreserved_payloads_if_original_parallel_dispatch_preserved": 28
+  },
+  "hardware_admitted": false,
+  "new_jobs": 0,
+  "proposal": "1b0924aa8 depth4 pending writes per stack, NPC32",
+  "required_resolution": [
+    "preserve all PC identity/payload until actual backing visibility; no silent overwrite/drop",
+    "either price per-PC pending storage and ports or explicit global admission/backpressure with lost service and full-token latency",
+    "source-bound refresh turnaround ordering and read-after-write wait/forwarding",
+    "derive actual implemented clock/time representation rather than claiming software due_ps64 is hardwarequalified"
+  ],
+  "schema": "parent_Qwen_HBM_pending_WR_service_capacity_audit",
+  "source_pin": {
+    "commit": "4535be1001d69bc43669e0fdf0401896be4034a6",
+    "path": "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+    "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+  },
+  "source_semantics": {
+    "column_dispatch_loop": "for each p independently when h_tcol[p] <= now",
+    "existing_write_visibility": "immediate backing store at column, correction needs delayed CWL+burst and ownership",
+    "queued_beats_and_column_timing": "per pseudo-channel",
+    "stack_global_column_limit_in_current_model": false
+  },
+  "verdict": "FAIL_PRESERVE_SOURCE_PARALLEL_WR_SERVICE_WITH_CHOSEN_STACK_QUEUE_UNLESS_ADDED_BACKPRESSURE"
+}

@@ -1,0 +1,12 @@
+{
+  "final_authority": "model-r4.json",
+  "records": {
+    "model-r1.json": "FAIL: retained initial allocator, inherited heterogeneous burst writes; not source LEN1-qualified.",
+    "model-r2.json": "FAIL: source LEN1 allocated; perPC4write slot and64combined pending enforcement absent. Running snapshot superseded during additive development; implementation selfhash is not replay qualification.",
+    "model-r3.json": "FAIL: exact LEN1 and pending/write slots; mandatory lower-bound declaration omitted allocator3edges, execution snapshot superseded; no replay qualification.",
+    "focused-tests-r1.log": "85 tests PASS on initial allocator snapshot; inherited80 tests unchanged. Final allocator5 tested separately in allocator-tests-r3.log.",
+    "functional-failure-r1.json": "Preserved first missing-import failure; no overwrite."
+  },
+  "no_originals_modified": true,
+  "no_numerical_jobs_changed": true
+}

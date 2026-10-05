@@ -1,0 +1,15 @@
+Running as unit: w17-recovery-probe-20261002-r1.service
+Traceback (most recent call last):
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 298, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 295, in main
+    return worker(args) if args.worker else launch(args)
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 209, in worker
+    out=Path(args.out);receipt=caps_receipt(args.unit);write(out/'caps_before_compile.json',receipt)
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 173, in caps_receipt
+    if sorted(map(int,got.get(k,'').split()))!=v:raise ValueError('CPU cap')
+ValueError: invalid literal for int() with base 10: '30-31'
+Finished with result: exit-code
+Main processes terminated with: code=exited/status=1
+Service runtime: 214ms
+CPU time consumed: 215ms

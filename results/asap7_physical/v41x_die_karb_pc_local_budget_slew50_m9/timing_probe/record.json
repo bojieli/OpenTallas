@@ -1,0 +1,159 @@
+{
+  "clock_period_ps": 920,
+  "corner": "ASAP7 TT predictive",
+  "groups": {
+    "b_addr_to_state": {
+      "arrival_ps": 256.7243,
+      "endpoint": "u_local.g_pc[0].g_pipe.addr_q[7]$_DFFE_PN0P_",
+      "slack_ps": 780.0615,
+      "startpoint": "b_addr[7] (input port clocked by core_clk)"
+    },
+    "b_v_to_b_rdy": {
+      "arrival_ps": 496.1917,
+      "endpoint": "b_rdy (output port clocked by core_clk)",
+      "slack_ps": 239.8084,
+      "startpoint": "b_v (input port clocked by core_clk)"
+    },
+    "b_v_to_state": {
+      "arrival_ps": 726.2186,
+      "endpoint": "u_local.g_pc[0].g_pipe.addr_q[7]$_DFFE_PN0P_",
+      "slack_ps": 310.5671,
+      "startpoint": "b_v (input port clocked by core_clk)"
+    },
+    "b_wdata_to_state": {
+      "arrival_ps": 296.5936,
+      "endpoint": "u_local.g_pc[0].g_pipe.wdata_q[254]$_DFFE_PN0P_",
+      "slack_ps": 743.445,
+      "startpoint": "b_wdata[254] (input port clocked by core_clk)"
+    },
+    "b_we_to_b_rdy": {
+      "arrival_ps": 500.4623,
+      "endpoint": "b_rdy (output port clocked by core_clk)",
+      "slack_ps": 235.5377,
+      "startpoint": "b_we (input port clocked by core_clk)"
+    },
+    "h_rdy_to_b_rdy": {
+      "arrival_ps": 535.9952,
+      "endpoint": "b_rdy (output port clocked by core_clk)",
+      "slack_ps": 200.0048,
+      "startpoint": "h_rdy (input port clocked by core_clk)"
+    },
+    "h_rdy_to_k_rdy": {
+      "arrival_ps": 526.48,
+      "endpoint": "k_rdy (output port clocked by core_clk)",
+      "slack_ps": 209.5201,
+      "startpoint": "h_rdy (input port clocked by core_clk)"
+    },
+    "h_rdy_to_state": {
+      "arrival_ps": 732.2802,
+      "endpoint": "u_local.b_grants[28]$_DFF_PN0_",
+      "slack_ps": 301.3553,
+      "startpoint": "h_rdy (input port clocked by core_clk)"
+    },
+    "h_wr_done_to_b_wr_done": {
+      "arrival_ps": 377.8311,
+      "endpoint": "b_wr_done (output port clocked by core_clk)",
+      "slack_ps": 358.1689,
+      "startpoint": "h_wr_done (input port clocked by core_clk)"
+    },
+    "h_wr_done_to_k_wr_done": {
+      "arrival_ps": 379.6332,
+      "endpoint": "k_wr_done (output port clocked by core_clk)",
+      "slack_ps": 356.3668,
+      "startpoint": "h_wr_done (input port clocked by core_clk)"
+    },
+    "h_wr_done_to_state": {
+      "arrival_ps": 592.3749,
+      "endpoint": "u_local.kw_out[0][6]$_DFF_PN0_",
+      "slack_ps": 448.9248,
+      "startpoint": "h_wr_done (input port clocked by core_clk)"
+    },
+    "k_addr_to_state": {
+      "arrival_ps": 408.6968,
+      "endpoint": "u_local.g_pc[0].g_pipe.addr_q[7]$_DFFE_PN0P_",
+      "slack_ps": 639.907,
+      "startpoint": "k_addr[7] (input port clocked by core_clk)"
+    },
+    "k_v_to_k_rdy": {
+      "arrival_ps": 365.8961,
+      "endpoint": "k_rdy (output port clocked by core_clk)",
+      "slack_ps": 370.1039,
+      "startpoint": "k_v (input port clocked by core_clk)"
+    },
+    "k_v_to_state": {
+      "arrival_ps": 749.6613,
+      "endpoint": "u_local.g_pc[0].g_pipe.addr_q[7]$_DFFE_PN0P_",
+      "slack_ps": 287.1245,
+      "startpoint": "k_v (input port clocked by core_clk)"
+    },
+    "k_wdata_to_state": {
+      "arrival_ps": 382.8384,
+      "endpoint": "u_local.g_pc[0].g_pipe.wdata_q[87]$_DFFE_PN0P_",
+      "slack_ps": 650.4085,
+      "startpoint": "k_wdata[87] (input port clocked by core_clk)"
+    },
+    "k_we_to_k_rdy": {
+      "arrival_ps": 357.2553,
+      "endpoint": "k_rdy (output port clocked by core_clk)",
+      "slack_ps": 378.7447,
+      "startpoint": "k_we (input port clocked by core_clk)"
+    },
+    "state_to_b_rdy": {
+      "arrival_ps": 601.8199,
+      "endpoint": "b_rdy (output port clocked by core_clk)",
+      "slack_ps": 134.1802,
+      "startpoint": "u_local.g_pc[0].g_pipe.v_q$_DFFE_PN0P_"
+    },
+    "state_to_h_addr": {
+      "arrival_ps": 270.3868,
+      "endpoint": "h_addr[1] (output port clocked by core_clk)",
+      "slack_ps": 465.6132,
+      "startpoint": "u_local.g_pc[0].g_pipe.addr_q[1]$_DFFE_PN0P_"
+    },
+    "state_to_h_v": {
+      "arrival_ps": 301.9373,
+      "endpoint": "h_v (output port clocked by core_clk)",
+      "slack_ps": 434.0627,
+      "startpoint": "u_local.g_pc[0].g_pipe.v_q$_DFFE_PN0P_"
+    },
+    "state_to_h_wdata": {
+      "arrival_ps": 313.6624,
+      "endpoint": "h_wdata[238] (output port clocked by core_clk)",
+      "slack_ps": 422.3377,
+      "startpoint": "u_local.g_pc[0].g_pipe.wdata_q[238]$_DFFE_PN0P_"
+    },
+    "state_to_h_wstrb": {
+      "arrival_ps": 337.9172,
+      "endpoint": "h_wstrb[27] (output port clocked by core_clk)",
+      "slack_ps": 398.0828,
+      "startpoint": "u_local.g_pc[0].g_pipe.wstrb_q[27]$_DFFE_PN0P_"
+    },
+    "state_to_k_grants": {
+      "arrival_ps": 339.1678,
+      "endpoint": "k_grants[0] (output port clocked by core_clk)",
+      "slack_ps": 396.8323,
+      "startpoint": "u_local.k_grants[0]$_DFFE_PN0P_"
+    },
+    "state_to_k_rdy": {
+      "arrival_ps": 596.0986,
+      "endpoint": "k_rdy (output port clocked by core_clk)",
+      "slack_ps": 139.9015,
+      "startpoint": "u_local.g_pc[0].g_pipe.v_q$_DFFE_PN0P_"
+    }
+  },
+  "io_delay_ps": 184,
+  "limits": [
+    "The SPEF captures the local routed slice only; group response and cross-PC trunks are outside it.",
+    "A complete characterized sequential Liberty model and powered four-PC route remain open."
+  ],
+  "probe_log_sha256": "3b94034f6d75cccc55d873d9a3bdea9e6a69e946938b51caf400b5cf4f84dbbf",
+  "probe_tcl_sha256": "18bf4f4e0b250a1b0f57d14d965064b8eb60eade6f677e90c74c3cc61ceb9db0",
+  "request_trunk_budget_ps": 398.0828,
+  "schema": 1,
+  "scope": "routed one-PC request-only slice; extracted STA paths, not a sequential Liberty macro view",
+  "source_physical_commit": "073a7603c7355ef11570b0c10a4dfbb62fd7865f",
+  "source_physical_record": "results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/physical.json",
+  "source_routed_odb_sha256": "f5fb468a772ea0c0180184494f2ad3b72013d7a0f16b6060ae5d79a6e51d5945",
+  "source_routed_spef_sha256": "9c2ac6a0c9aaea35503cee84510339d37bee8841627314708e077f1ae5b912a3",
+  "status": "pass"
+}

@@ -1,0 +1,17 @@
+{
+  "ELF_checks_passed": 28,
+  "PCH_hash_checks_passed": 2,
+  "VM_PCH_phases_passed": 2,
+  "VM_metadata_tool_hashes_matched": 7,
+  "VM_sysroot": "PASS_EXACT_LOCAL_CAPTURE_TRANSPORT_AND_BOTH_PCH_ACCEPTANCE",
+  "VM_transport_bytes": 5964768592,
+  "VM_transport_files": 31854,
+  "actual_preterminal_and_terminal_hash_agreement_objects": 28,
+  "budget_checks": "18hVM48 and32hlocal24 exceed max-body scenario+50%+30min",
+  "build_wall_limits": "Removed by user; no VMlaunch, parentlocal24untilcompletion",
+  "census_checks": "3829 total/28 done/3801 pending",
+  "guard_tests_passed": 26,
+  "native_48_launches": 0,
+  "worker_compiler_invocations": 0,
+  "worker_runtime_invocations": 0
+}

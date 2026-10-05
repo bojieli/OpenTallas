@@ -1,0 +1,16 @@
+rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
+rtl/hdc/ot_hdc_prefix.sv
+rtl/hdc/ot_hdc_sfu.sv
+rtl/hdc/v41/ot_hdc_fdiv.sv
+rtl/hdc/v41/ot_hdc_fsqrt.sv
+rtl/proto/ot_fp32_add_rne_pipe.sv
+rtl/proto/ot_fp32_mul_rne_pipe.sv
+rtl/abi3/ot_a3_format_pkg.sv
+rtl/gpu_sys/ot_gpu_simt_lane.sv
+rtl/experimental/qwen_native_fp32_20261003/ot_qwen_native_fp32_lanes.sv
+rtl/gpu/native/ot_gpu_native_conversion.sv
+rtl/hbm_accel/epilogue/ot_hbm_accel_native_bits.sv
+rtl/hbm_accel/native_movement/ot_hbm_native_movement.sv
+rtl/gpu/native/ot_gpu_native_conversion_i8.sv
+rtl/gpu/native/ot_gpu_native_shape_authority.sv
+rtl/gpu/native/ot_gpu_native_primitive_controller_authority.sv

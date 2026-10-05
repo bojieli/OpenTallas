@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.w10-attention-parent-intake.v1",
+  "conditional_audit_sha256": "d04f5568934e8523907399516f5db0eb067520c88dcda03ae07c1321bd684454",
+  "conditional_model_and_audit_replay": "byte-identical",
+  "conditional_source_pins_verified": 10,
+  "conditional_tests_passed": 7,
+  "conditional_pin_instances": 1152,
+  "generated_PG_EOLcut_and_SSFF": "MISSING; physical admission false",
+  "bankmap_terminal_sha256": "88c92359053557f86a83d0936996465108039a8103b7ed3eadb94a17a0abdf1a",
+  "bankmap_archive_files_verified": 4,
+  "bankmap_historical_source_pins_verified": 6,
+  "bankmap_verdict": "FAIL_model_mismatch",
+  "bankmap_process_RC": 0,
+  "bankmap_scope": "historical4b4b analyticalproductvehicle, not current8wake/617rowqualification",
+  "attention_model_sha256": "c881f50c04a6428120521dbde5212396e1284dcfc8321a0c0cf4570e0287663d",
+  "attention_current_source_reproduction": "exactJSONequality",
+  "attention_tests_passed": 5,
+  "attention_source_bindings": 40,
+  "hardware_adopted": false,
+  "full_token_rate": null,
+  "physical_qualified": false
+}

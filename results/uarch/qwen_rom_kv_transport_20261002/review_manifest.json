@@ -1,0 +1,27 @@
+{
+  "candidate": "candidate_r1.json",
+  "candidate_status": "BLOCKED_MODEL_PROVIDER_JOIN",
+  "diagnostic": "../../rtl/qwen_rom_finite_window_20261002/r2.json",
+  "diagnostic_status": "PASS",
+  "diagnostic_scope": "Existing subsystem read-only transport/window fixture, not actual r14 or tile macro join.",
+  "original_diagnostic_fail_preserved": "../../rtl/qwen_rom_finite_window_20261002/r1.json",
+  "failure_reason": "Bench end-of-test checked before final transport response drained; original bench hash archived. No hardware changed.",
+  "active_VM_ready_command": "timeout 240s python3 tools/qwen_rom_kv_finite_window_gate.py --main-root <committed-current-source-root> --workdir <new-empty-build-path> --result <new-result-path>",
+  "requirements": [
+    "iverilog",
+    "vvp",
+    "Python3",
+    "git source reference matching all seven runtime pins"
+  ],
+  "caps": {
+    "memory_MiB_per_process": 2048,
+    "cpu_seconds_per_process": 60,
+    "wall_seconds_per_process": 60,
+    "process_count_sequential": 4,
+    "total_wall_cap_seconds": 240
+  },
+  "measured_local_elapsed_seconds_r2": 0.108,
+  "no_second_position": true,
+  "live_job_handle": null,
+  "engine_or_PnR_admitted": false
+}

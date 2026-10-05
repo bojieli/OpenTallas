@@ -1,0 +1,171 @@
+{
+  "Dewey": {
+    "automatic_delta": false,
+    "cost_key": [
+      "b92c8fc5b2062f0c5be2d718c861268959d38c85d8ea92d5d11a34d3ed246151",
+      "model",
+      "rank",
+      "SM",
+      "generation",
+      "PC",
+      "sequence",
+      "component",
+      "existing_provider_interval_id"
+    ],
+    "existing_RF_I64_RMW_C0_charges_retained_once": true,
+    "new_demands_to_reconcile": [
+      "bank-fenced four-word line service",
+      "GU sixteen-column arbitration",
+      "DS source512bit result write per row, two physical macro writes",
+      "DS source frame read and NC scalar writes with visible/consumer/reverse phases",
+      "whole-SM source-to-service request/return pipeline proposal"
+    ],
+    "unmeasured_backend_delay_must_not_be_zero": true,
+    "whole_token_ns": null
+  },
+  "PVE2_or_PVE3_jobs_started": false,
+  "Sagan": {
+    "required_attestation": "Actual top-level module instances and all request/return/ACK connections for each of32SMs per die; C0/V1 sole host producer; GU/KV/DS source writers cannot bypass bank fence. Relative source names above are not an installed inventory."
+  },
+  "admission": "FAIL_PHYSICAL_SOURCE_BINDING",
+  "entrypoint": "tools/h4_hbm_atomic_source_g0.py",
+  "executable_contracts": [
+    "DrainGate",
+    "BankFence",
+    "JoinedGateway",
+    "DSResultFrame"
+  ],
+  "implementation_allowed": false,
+  "model_receipt_sha256": "b92c8fc5b2062f0c5be2d718c861268959d38c85d8ea92d5d11a34d3ed246151",
+  "models": {
+    "DeepSeek": {
+      "L2_controller_capacity_um2": 32768,
+      "L2_controller_footprint_um2_per_slice": 31013.42,
+      "L2_endpoint_demand_tracks": 5336,
+      "L2_endpoint_signal_capacity_tracks": 7200,
+      "area_and_constructive_cut_screen_pass": true,
+      "full_reserved_die_mm2": 471.8800554201599,
+      "new_SRAM_macros_per_die": 256,
+      "new_macros_inside_selected_service_slots": true,
+      "source_pipeline_hops": 6
+    },
+    "Qwen": {
+      "L2_controller_capacity_um2": 32768,
+      "L2_controller_footprint_um2_per_slice": 31013.42,
+      "L2_endpoint_demand_tracks": 5336,
+      "L2_endpoint_signal_capacity_tracks": 7200,
+      "area_and_constructive_cut_screen_pass": true,
+      "full_reserved_die_mm2": 457.48399132671994,
+      "new_SRAM_macros_per_die": 0,
+      "new_macros_inside_selected_service_slots": true,
+      "source_pipeline_hops": 8
+    }
+  },
+  "native_job_affected": false,
+  "port_contract": {
+    "DS_matrix": {
+      "RMAX": 4096,
+      "default_v41_NC": 8,
+      "has_result_ready": false,
+      "sources": [
+        "rtl/gpu/ot_gpu_sm_v.sv",
+        "rtl/gpu/ot_gpu_sm_bd.sv",
+        "rtl/gpu/ot_gpu_sm.sv"
+      ],
+      "start_guard": "Reserve all4096 actual512bit SRAM records before start; retain full-generation frame while any source row, destination visible_ACK or reverse grant remains.",
+      "write_pins": {
+        "fault": 1,
+        "rdata": 256,
+        "rrow": 12,
+        "rv": 1
+      }
+    },
+    "Qwen_GU": {
+      "commit_pins": {
+        "commit_epoch": 16,
+        "commit_id": 4,
+        "commit_row": 18,
+        "commit_v": 1
+      },
+      "owner_rule": "Acquire bank fence before l2_ready; commit after matched masked SRAM write edge; retain full-generation mapping until every GU credit/commit drains.",
+      "source": "rtl/gpu/ot_gpu_qwen_gu64_l2.sv",
+      "write_pins": {
+        "l2_data": 32,
+        "l2_epoch": 16,
+        "l2_id": 4,
+        "l2_ready": 1,
+        "l2_row": 18,
+        "l2_v": 1
+      }
+    },
+    "RF": {
+      "drain_sinks": [
+        "host_rsp_ready",
+        "host_ack_ready",
+        "simd_done_ready"
+      ],
+      "relative_RF_instance": "g_enabled.u_rf",
+      "request_ports": {
+        "host_a": 9,
+        "host_b": 9,
+        "host_dst": 9,
+        "host_rd_valid": 1,
+        "host_wdata": 4096,
+        "host_wr_valid": 1,
+        "simd_valid": 1
+      },
+      "return_ports": {
+        "host_ack_valid": 1,
+        "host_rd_ready": 1,
+        "host_rsp_a": 4096,
+        "host_rsp_b": 4096,
+        "host_rsp_valid": 1,
+        "host_wr_ready": 1,
+        "simd_done": 1
+      },
+      "source": "rtl/gpu/ot_gpu_full_sm_service.sv"
+    },
+    "generic_L2": {
+      "SRAM_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "banks_per_slice": 8,
+      "line_words": 4,
+      "new_source_required": true,
+      "owner_classes": [
+        "C0",
+        "GU",
+        "DS_ROW",
+        "KV"
+      ],
+      "same_bank_all_ranges_serialize": true,
+      "source_installed": false,
+      "word_pins": {
+        "r_addr_in": 10,
+        "r_ce_in": 1,
+        "rd_out": 256,
+        "w_addr_in": 10,
+        "w_ce_in": 1,
+        "w_mask_in": 256,
+        "wd_in": 256
+      }
+    },
+    "shared": {
+      "drain_sink": "scratch_done_ready",
+      "relative_instance": "g_enabled.u_scratch",
+      "request_ports": {
+        "scratch_addr": 10,
+        "scratch_valid": 1,
+        "scratch_wdata": 512,
+        "scratch_write": 1
+      },
+      "return_ports": {
+        "scratch_done": 1,
+        "scratch_rdata": 512,
+        "scratch_ready": 1
+      },
+      "source": "rtl/gpu/ot_gpu_full_sm_service.sv"
+    }
+  },
+  "schema": "opentallas.HBM.atomic-source-handoff.v1",
+  "source_main": "568e3d07250fb56f3796988db90ee44ad0e9a7c8",
+  "tests_passed": 47
+}

@@ -1,0 +1,460 @@
+{
+  "scope": "reduced-geometry 36-layer plus head two-token software execution",
+  "config": {
+    "hidden_size": 8,
+    "head_dim": 4,
+    "num_attention_heads": 2,
+    "num_key_value_heads": 2,
+    "intermediate_size": 16,
+    "vocab_size": 16,
+    "num_hidden_layers": 36,
+    "rms_norm_eps": 1e-06,
+    "rope_theta": 1000000
+  },
+  "tokens": [
+    8,
+    11
+  ],
+  "instructions_per_token": 1737,
+  "coverage": {
+    "schema": "opentallas.qwen-complete-lowering-coverage.v1",
+    "layers": 36,
+    "instruction_count": 1737,
+    "matrix_descriptors": 290,
+    "opcodes": {
+      "ALL_REDUCE": {
+        "instances": 72,
+        "semantic_lowering": "TP rank-order FP32 reduction then shared BF16 row scale",
+        "organization": "TP collective provider",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "ARGMAX": {
+        "instances": 2,
+        "semantic_lowering": "global row index; exact ties choose lowest vocabulary ID",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "ARGMAX_REDUCE": {
+        "instances": 1,
+        "semantic_lowering": "TP ordered winner selection with global IDs",
+        "organization": "TP collective provider",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "EMBED": {
+        "instances": 1,
+        "semantic_lowering": "checkpoint INT8 row decode + BF16 row scale",
+        "organization": "finite GPU memory/fence provider",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "EXP_SUM": {
+        "instances": 72,
+        "semantic_lowering": "max, contract exp, chunk8 denominator; unnormalized BF16 weights",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "FINAL_NORM": {
+        "instances": 1,
+        "semantic_lowering": "chunk8 RMSNorm and final checkpoint gamma",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "HEAD_NORM": {
+        "instances": 144,
+        "semantic_lowering": "per-head chunk8 RMSNorm + checkpoint Q/K gamma",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "KV_FENCE": {
+        "instances": 72,
+        "semantic_lowering": "matching provider commit publication; never write acceptance",
+        "organization": "finite GPU memory/fence provider",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "KV_READ": {
+        "instances": 72,
+        "semantic_lowering": "published persistent K/V read, including previous tokens",
+        "organization": "finite GPU memory/fence provider",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "KV_WRITE": {
+        "instances": 72,
+        "semantic_lowering": "actual produced K/V encoded into persistent provider memory",
+        "organization": "finite GPU memory/fence provider",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "MATRIX": {
+        "instances": 290,
+        "semantic_lowering": "INT8 x BF16 sequential contiguous chunks + exact pairwise tree",
+        "organization": "Tensor-Core-style ordinaryGPU matrix",
+        "issue_ports": "32SM/die,128matrixlanes/SM; circulatingIL8",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "NORMALIZE": {
+        "instances": 72,
+        "semantic_lowering": "separate produced reciprocal denominator multiply",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "PV": {
+        "instances": 72,
+        "semantic_lowering": "cache V x unnormalized probabilities, interleaved context tree",
+        "organization": "Tensor-Core-style ordinaryGPU matrix",
+        "issue_ports": "32SM/die,128matrixlanes/SM; circulatingIL8",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "QKV_SPLIT": {
+        "instances": 72,
+        "semantic_lowering": "addressed view of die-local Q/K/V; no arrival-order gather",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "RESIDUAL": {
+        "instances": 72,
+        "semantic_lowering": "FP32 add to actually produced preceding residual",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "ROPE": {
+        "instances": 144,
+        "semantic_lowering": "checkpoint-angle table and rounded FP32 rotate/multiply/add",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "ROW_SCALE": {
+        "instances": 146,
+        "semantic_lowering": "FP32 multiply by checkpoint BF16 row scale",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "RSTD": {
+        "instances": 72,
+        "semantic_lowering": "chunk8 sum-of-squares tree + three-step reciprocal-square-root",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "SCALAR_MUL": {
+        "instances": 144,
+        "semantic_lowering": "separate FP32 multiply by produced norm scalar",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "SCORES": {
+        "instances": 72,
+        "semantic_lowering": "BF16 query x cache, golden interleaved head-dimension tree",
+        "organization": "Tensor-Core-style ordinaryGPU matrix",
+        "issue_ports": "32SM/die,128matrixlanes/SM; circulatingIL8",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      },
+      "SILU_GATE": {
+        "instances": 72,
+        "semantic_lowering": "contract exp/reciprocal SiLU, rounded multiply by up",
+        "organization": "ordinary GPU SIMT/RF/shared instructions",
+        "issue_ports": "SIMT128lanes/SM,RF2R1W,shared32banks1R1W",
+        "resource_cycles": {
+          "matrix_issue": null,
+          "SIMT_issue": null,
+          "RF": null,
+          "shared": null,
+          "DRAM": null,
+          "NoC": null,
+          "CDC": null,
+          "credits_fences": null
+        },
+        "functional_provider": "qwen_hbm_complete_executor.SoftwareGPUProvider",
+        "RTL_provider": null,
+        "software_is_DUT": false,
+        "complete_timing_admission": false
+      }
+    },
+    "all_semantics_lowered": true,
+    "unknown_costs_fail_closed": true,
+    "full_shape_software_execution_qualified": false,
+    "actual_fulltoken_RTL": false,
+    "token_cycles": null,
+    "token_rate": null
+  },
+  "persistent_publications": 144,
+  "fixture_weights": true,
+  "golden_intermediate_injection": false,
+  "actual_RTL_executed": false,
+  "fullshape_checkpoint_executed": false,
+  "token_cycles": null,
+  "token_rate": null
+}

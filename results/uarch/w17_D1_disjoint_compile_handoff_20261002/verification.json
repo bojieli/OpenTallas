@@ -1,0 +1,12 @@
+{
+  "actual_make_already_queued": "local overwrites remote object: unsafe overlap negative control",
+  "actual_make_before_visit": "remote object skipped by local",
+  "dispatch_freeze_actual_make_control": "Active recipe completed while make stopped; later recipe started only after resume",
+  "no_live_job_stops": true,
+  "no_new_production_compilers": true,
+  "result": "30 PASS",
+  "retained_objects_ELF_SHA_checks": 62,
+  "scope": "Scheduling/model only; no native binary/runtime/numerical/fulltoken/causal-service/hardware qualification",
+  "source_bound_partition_replay": "PASS",
+  "test_command": "pytest -q tests/test_w17_D1_compile_ownership_handoff.py"
+}

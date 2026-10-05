@@ -1,0 +1,106 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {"$ref": "#/$defs/artifact"},
+      "maxItems": 31,
+      "minItems": 31,
+      "type": "array"
+    },
+    "build_class": {"const": "independently_reconstructed_physical_deployment"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "capacity_certificate_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {"$ref": "#/$defs/claim_boundary"},
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {"const": 2},
+        "minor": {"const": 5}
+      },
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "compiler_version": {"const": "tensor-accelerator-qwen-full-model-physical-0.1.0"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "independent_check_id": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_deployment.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "artifacts",
+    "build_class",
+    "build_id",
+    "capability_id",
+    "capacity_certificate_id",
+    "claim_boundary",
+    "command_abi",
+    "compiler_version",
+    "graph_id",
+    "independent_check_id",
+    "kernel_ir_id",
+    "physical_plan_id",
+    "schema",
+    "source_lock_id"
+  ],
+  "title": "Qwen complete-model physical deployment manifest v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "role": {
+          "enum": [
+            "capability",
+            "capacity_certificate",
+            "command_program",
+            "execution_request",
+            "hbm_shard",
+            "independent_check",
+            "physical_plan",
+            "source_capability",
+            "source_checkpoint_lock",
+            "source_model_graph",
+            "source_semantic_check",
+            "source_semantic_coverage",
+            "source_semantic_kernel_ir",
+            "source_lock",
+            "tensor_kernel_ir"
+          ]
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "role", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "complete_checkpoint_payload_deployment": {"const": true},
+        "complete_command_template": {"const": true},
+        "complete_graph_physical_lowering": {"const": true},
+        "full_model_execution": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "complete_checkpoint_payload_deployment",
+        "complete_command_template",
+        "complete_graph_physical_lowering",
+        "full_model_execution",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "path": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "type": "string"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "status": "FAIL_ANALYSIS_EXCERPT_RANGE_ONLY",
+  "exception": "IndexError list index out of range in archive_git",
+  "source_path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+  "requested_lines": [
+    98,
+    153
+  ],
+  "actual_source_lines": 149,
+  "resolution": "Preserve written excerpt, which contains all available requested source through EOF; finish diagnosis in new files with bounded generated excerpt endpoints.",
+  "HDL_rerun": false
+}

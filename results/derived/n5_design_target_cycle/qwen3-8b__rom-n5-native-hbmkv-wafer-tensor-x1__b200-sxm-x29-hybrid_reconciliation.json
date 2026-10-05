@@ -1,0 +1,186 @@
+{
+  "anchor": {
+    "batch_size": 1,
+    "context_tokens": 8192,
+    "hbm_design": "Qwen3-8B/b200_sxm-x29-hybrid",
+    "model": "Qwen3-8B",
+    "rom_design": "Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x1"
+  },
+  "combination_rule": "analytical step = max(memory_time, compute_time) / efficiencies.stage_balance x token_slots + link_latency + layer_fixed_latency, where memory_time = weight + kv for a shared memory path and max(weight, kv) for separate arrays.  The five component times do NOT sum to the step; the derived machines collapse each design point to one logical device, so token_slots and stage_balance are both inert on the cycle side.",
+  "headline": {
+    "analytical_ratio": 2.9787648811712577,
+    "analytical_ratio_with_link_removed_from_both": 8.592419025257753,
+    "cycle_ratio": 2.2063171806167405,
+    "cycle_ratio_with_analytical_link_added_to_both": 1.865250871939557,
+    "note": "Four numbers because the link term is expressible in one model and not the other, and it is 77% of the analytical ROM step and 34% of the analytical GPU step.  Compare cycle_ratio against analytical_ratio_with_link_removed_from_both -- those two are the like-for-like pair -- and read the other two as the effect of the term the cycle model cannot express."
+  },
+  "runs": {
+    "hbm": {
+      "capability_digest": "21763ca1ab0e7a1d2fcc163b77184d83f15523557c84312427a9bb412046d953",
+      "capability_technology_view": "n5_design_target",
+      "cost_table": "/home/ubuntu/OpenTallas/configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_hbm_v1.json",
+      "cost_table_sha256": "c5fa208631ea516c788fe7824715feb9a3febd1d36ef546dc3b7c5297d6934b8",
+      "deployment_digest": "6fa3952d7a185cc379a77b54ade1d91958c9a941c54c214c57d11cb2de7ac6ee",
+      "provenance_class": "assumed",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 129,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 256,
+        "PHASE": 1,
+        "POSITION_END": 129,
+        "POSITION_START": 128,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      }
+    },
+    "rom": {
+      "capability_digest": "84f5e3412b1bae0c864f976081d5df2c4aeed7deaa384cf04dd87e24d12f6c05",
+      "capability_technology_view": "n5_design_target",
+      "cost_table": "/home/ubuntu/OpenTallas/configs/hardware/n5_design_target/abi3_cost_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_rom_v1.json",
+      "cost_table_sha256": "9499e340663ace37c8a2b32c4125f781aa8defa1a6f43c6f7215ab2e14a524b3",
+      "deployment_digest": "15b2857eb4fa64645a75a9b20e9bab58271c8ab64199a35d68d4f0e2877e4875",
+      "provenance_class": "assumed",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 129,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 256,
+        "PHASE": 1,
+        "POSITION_END": 129,
+        "POSITION_START": 128,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      }
+    }
+  },
+  "schema": "opentallas.derived_cycle_machine.reconciliation.v1",
+  "targets": {
+    "hbm": {
+      "analytical": {
+        "binding_constraint": "weight_read",
+        "component_times_s": {
+          "compute": 1.6871402029118772e-06,
+          "kv_read": 2.3143812413793104e-05,
+          "layer_fixed_latency": 6.818801530875491e-06,
+          "link_latency": 0.00018110184,
+          "weight_read": 0.00028997722237547894
+        },
+        "per_user_tokens_s": 1866.2534448824474,
+        "step_time_s": 0.0005358329024078445
+      },
+      "binding_regime": {
+        "analytical_over_all_five_terms": "weight_read",
+        "analytical_over_expressible_terms": "weight_read",
+        "cycle": "weight_read",
+        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
+        "same_regime": true
+      },
+      "cycle": {
+        "binding_constraint": "weight_read",
+        "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
+        "clock_frequency_hz": 1000000000.0,
+        "per_user_tokens_s": 1996.6695551819564,
+        "step_time_s": 0.000500834,
+        "total_cycles": 500834
+      },
+      "step_ratio_cycle_over_analytical": 0.9346831778142557,
+      "terms": {
+        "compute": {
+          "analytical_s": 1.6871402029118772e-06,
+          "cycle_s": 0.00014056,
+          "cycle_tensor_only_s": 5.7764e-05,
+          "note": "The tensor engine alone is the analytical term's counterpart; the analytical operation count has NO attention arithmetic and no other engine family.  cycle_s is every family, cycle_tensor_only_s is the comparable one.",
+          "ratio_cycle_over_analytical": 83.31257814697557
+        },
+        "kv_read": {
+          "analytical_s": 2.3143812413793104e-05,
+          "cycle_s": 5.171980565823809e-05,
+          "note": "The deployment moves 17661708732 read + 1223320580 written bytes through HBM, against the analytical kv_transfer_bytes_per_step 1208107008.",
+          "ratio_cycle_over_analytical": 2.234714174723195
+        },
+        "layer_fixed_latency": {
+          "analytical_s": 6.818801530875491e-06,
+          "cycle_s": null,
+          "note": "NOT SEPARATELY REPORTED.  engine.<family>.fixed_latency_cycles is charged per engine instruction after the unit is freed, so it reaches the step only through WAIT dependencies and the model attributes no counter to it.  The machine carries 36 cycles per instruction against 2104 instructions retired.",
+          "ratio_cycle_over_analytical": null
+        },
+        "link_latency": {
+          "analytical_s": 0.00018110184,
+          "cycle_s": 0.0,
+          "note": "STRUCTURALLY ZERO.  build_fabric returns None for TopologyClass.SINGLE_CHIP, so no cost-table value can put a single-chip run in this regime.  The derived machines are the design points collapsed to one logical device, which is the transformation that removes the fabric.",
+          "ratio_cycle_over_analytical": 0.0
+        },
+        "weight_read": {
+          "analytical_s": 0.00028997722237547894,
+          "cycle_s": 0.00033922258658314124,
+          "note": "weights and KV share the HBM pool, so its 390.942 us of occupancy is split by the architectural byte count: 16386630404 weight bytes of 18885029312 total.",
+          "ratio_cycle_over_analytical": 1.1698249393667777
+        }
+      }
+    },
+    "rom": {
+      "analytical": {
+        "binding_constraint": "link_latency",
+        "component_times_s": {
+          "compute": 1.132964092342111e-06,
+          "kv_read": 3.121723534883721e-05,
+          "layer_fixed_latency": 6.818801530875491e-06,
+          "link_latency": 0.00013860006498798622,
+          "weight_read": 3.446538879609746e-05
+        },
+        "per_user_tokens_s": 5559.130220980714,
+        "step_time_s": 0.00017988425531495917
+      },
+      "binding_regime": {
+        "analytical_over_all_five_terms": "link_latency",
+        "analytical_over_expressible_terms": "weight_read",
+        "cycle": "kv_read",
+        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.",
+        "same_regime": false
+      },
+      "cycle": {
+        "binding_constraint": "kv_read",
+        "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
+        "clock_frequency_hz": 1000000000.0,
+        "per_user_tokens_s": 4405.286343612335,
+        "step_time_s": 0.000227,
+        "total_cycles": 227000
+      },
+      "step_ratio_cycle_over_analytical": 1.2619225601626218,
+      "terms": {
+        "compute": {
+          "analytical_s": 1.132964092342111e-06,
+          "cycle_s": 4.2194e-05,
+          "cycle_tensor_only_s": 3.614e-06,
+          "note": "The tensor engine alone is the analytical term's counterpart; the analytical operation count has NO attention arithmetic and no other engine family.  cycle_s is every family, cycle_tensor_only_s is the comparable one.",
+          "ratio_cycle_over_analytical": 37.242133519672976
+        },
+        "kv_read": {
+          "analytical_s": 3.121723534883721e-05,
+          "cycle_s": 9.672086337209303e-05,
+          "note": "The deployment moves 2508914688 read + 1222713344 written bytes through HBM, against the analytical kv_transfer_bytes_per_step 1208107008.",
+          "ratio_cycle_over_analytical": 3.0983161158022186
+        },
+        "layer_fixed_latency": {
+          "analytical_s": 6.818801530875491e-06,
+          "cycle_s": null,
+          "note": "NOT SEPARATELY REPORTED.  engine.<family>.fixed_latency_cycles is charged per engine instruction after the unit is freed, so it reaches the step only through WAIT dependencies and the model attributes no counter to it.  The machine carries 36 cycles per instruction against 2104 instructions retired.",
+          "ratio_cycle_over_analytical": null
+        },
+        "link_latency": {
+          "analytical_s": 0.00013860006498798622,
+          "cycle_s": 0.0,
+          "note": "STRUCTURALLY ZERO.  build_fabric returns None for TopologyClass.SINGLE_CHIP, so no cost-table value can put a single-chip run in this regime.  The derived machines are the design points collapsed to one logical device, which is the transformation that removes the fabric.",
+          "ratio_cycle_over_analytical": 0.0
+        },
+        "weight_read": {
+          "analytical_s": 3.446538879609746e-05,
+          "cycle_s": 3.45055e-05,
+          "note": "weights are in ROM and KV in HBM: two physically separate unit pools, so their occupancies are read off directly and overlap exactly as the analytical overlap_rule says.",
+          "ratio_cycle_over_analytical": 1.0011638111538461
+        }
+      }
+    }
+  }
+}

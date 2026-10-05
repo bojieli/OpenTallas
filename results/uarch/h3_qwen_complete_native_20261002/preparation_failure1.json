@@ -1,0 +1,1 @@
+{"verdict":"FAIL_SOFTWARE_REPLAY","command":"python -m pytest -q tests/test_h3_qwen_complete_native.py","passed":17,"failed":3,"cause":"SCORES scale constant rendered as f32(np.float64(0.5)); expression validator correctly rejected non-movement call","remedy":"Render a Python float constant at compile time","hardware_or_timing_credit":false}

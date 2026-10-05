@@ -1,0 +1,56 @@
+RF/commonACK actual endpoint responder implementation
+Instantiate ot_gpu_qwen_rf_ack_drain ENABLE1 per actual SM RF port and one
+32-SM ot_gpu_qwen_rf_ack_drain_join ENABLE1 per rank. No additional provider,
+W6 machine or RF SRAM is instantiated. Helper source_files(root) supplies package,
+leaf and join in order; port_bindings() gives actual W4/W6 handshake tap names.
+
+Actual source connections:
+ W4 write accept: actual provider.wr_valid&&wr_ready; owner55={wr_owner,wr_addr}.
+ ACK raw: ack_valid and {ack_owner,ack_slot}; consumed only actual ack_valid&&ack_ready.
+ Paired read accept: actual rd_valid&&rd_ready, retained rd_a/rd_b association.
+ Response raw/consumed: rsp_valid, rsp_valid&&rsp_ready. Actual serialized W4
+ read_pending/heldresponse means this accepted paired read is the response owner.
+ W6 req accept and retained parent55 binding. Monitor actual host/SIMD ACK,
+ consumer, child,parent,reverseCDC accepted handshakes and actual final RETIRE.
+ KV identity64/key20/related+binding_valid come from actual retained native issuer
+ classification; classify nonKV too. NEVER default KV_related false or bind current
+ control/address to a prior accepted receipt. All ports' issuing host/internalSIMD
+ arbiter must apply the emitted wr_permit/rd_permit/w6_permit to BOTH valid and ready.
+ rf_ack_allow/rf_rsp_allow gate actual destination ready, not raw return observation.
+ Existing reverse/consumer/retire handshakes remain permitted to retire old debt.
+ Source faults: actual W4 identity fault/W6 fault; do not feed root CURRENT fault
+ back into leaf raw response validity. Preserve raw observations for detection.
+
+Join output maps cohort4 (RF/commonACK): endpoint_req_valid[4]/ready[4], identity64,
+key20; endpoint_rsp_valid[4]/ready[4], identity64/key20/quiet. It accumulates32matching
+accepted leaf requests/responses. No timeout, no phaseIDLE, no constant allff.
+Root drain_hold comes from ACTUAL retained all-cohort release ownership:
+ df414 consumer_drain.drain_retained (raw333), or existing Dewey
+ kv.reader_services.release_live. Do NOT derive hold from !idle or request-valid,
+which disappears immediately after acceptance. Existing hold is reused, zero new
+parent scoreboard. Root leaf_hold fans to all32 leaves, even during fault/reset.
+Leaf request identity/key remains held through ALLcohort release, not leaf ACK only.
+
+Separate W6 LOCAL physicalRF empty tap prevents a circular wait:
+ w6_local_RF_empty requires actual W4 read/write receipts and held returns empty,
+ plus matched W6 ACK seen / same source parent55. This tap EXCLUDES the W6 row,
+which legitimately remains live until its local drain+retire. Boot no-owner case
+requires ACTUAL W6 drain_req_has_owner=0 and reset_scope=1 with no accepted owner;
+never a synthetic clean flag. Source these from actual W6 retained outputs.
+Global KV cohort response separately waits actual matching W6 consumer/child/
+parent/reverseCDC and FINAL W6 retire, protecting sourceRF/consumer lifetime.
+Other W6 local allcopy bits still need their actual owned endpoint bindings; this
+single physicalRF tap MUST NOT be expanded into all9 constant drain flags.
+
+Model generated before RTL: leaf479raw/576protectedFF; root151raw/216protectedFF;
+64SM leaves/tworank joins =>37296new protectedFF. Existing RF/W4/W6 storage reused
+once; no SRAM/payload/FP arithmetic. Full50pct gross 0.1999043712mm2 ASSUMED (model
+is authoritative). Same streaming edge, positive leaf/root capture and release
+edges; actual W4/W6 wait/clock routes/fulltoken UNKNOWN, no SSFF/admission claim.
+
+13focused source/model/port testsPASS; enabled leaf/join Verilator5.050 lintRC0,
+no errors/UNOPTFLAT/latches, existingpackageTIMESCALEMOD only. No connected runtime
+or provider simulation launched, no fixture/handler/shared/state duplication.
+Euclid owns actual enclosing pin wiring, Russell ONE connected gate. Cold POR
+only after coordinated external discard. Warm reset preserves observed identities,
+sticky fault and drain hold; no softclear/retry/rearm helper is provided.

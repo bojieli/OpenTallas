@@ -1,0 +1,21 @@
+{
+  "model": "model-r4.json",
+  "sha256": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
+  "verdict": "FAIL_FINITE_PERIOD_AND_PHYSICAL_PRODUCTION_BINDINGS",
+  "full_token_s": 0.0003610713,
+  "budget_s": 0.0003333333333333333,
+  "deficit_s": 2.7737966666666698e-05,
+  "model_only": true,
+  "hardware": false,
+  "production": false,
+  "necessary_integer_configuration": "8return groups/stack,4column paths/stack,7global64Bfill; necessary screens, not sufficient proof.",
+  "measured_unknowns": [
+    "Ampere namedlegalchannel/PHY/clock-slot allocation",
+    "Actual sustainedPHY+source64pending/cache/revalidation/strictrefresh service",
+    "Euclid actual producer/demand/policy/visibility/drain events",
+    "Protected matched4-stack atomic accept/epoch and request-arbiter SSFF/CDC/route receipt"
+  ],
+  "known_source_native_deadlines_retained": true,
+  "existing_numerical_position_reused": true,
+  "new_numerical_runs": 0
+}

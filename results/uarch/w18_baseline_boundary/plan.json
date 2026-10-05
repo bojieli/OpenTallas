@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.w18.baseline.boundary.plan.v1",
+  "verdict": "MODEL_PLAN_ONLY_NOT_BUILD_QUALIFIED",
+  "adopted": false,
+  "scope": "necessary baseline 1.2GHz closure; no DLV or KSREG reroute",
+  "source_commit": "b046de7f0278bae6a28f2bd346303bbc25cc4bac",
+  "source_sha256": {
+    "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+    "rtl/chip/ot_chip_v41x_karb_pregion.sv": "41b99296a692978f1ab8e69a1485dd2fd3bcac75026b69f136ed980959813023",
+    "rtl/chip/ot_chip_v41x_karb_proot.sv": "d1251c4ba195c2067cb3f791882a1280c6d95459d9f120d1b87493182be0b4fa",
+    "tools/w18_baseline_boundary_plan.py": "6fc106b9b0a4aa735ad49838c168d0d8cd0e1eb66b0b5803918a122bad8a7392"
+  },
+  "timing": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "reported_macro_clkq_ps": 585,
+    "reported_postmacro_logic_ps": 524,
+    "report_source": "parent steering; exact endpoint report must be pinned before build",
+    "unsplit_data_ps": 1109,
+    "ideal_budget_before_setup_skew_ps": 773,
+    "split_stage1_margin_before_setup_skew_wire_ps": 188,
+    "split_stage2_margin_before_clkq_setup_skew_ps": 249,
+    "interpretation": "split is plausible only; these margins exclude register timing and new routed wire"
+  },
+  "ports": {
+    "pseudochannels_per_die": 32,
+    "regions_per_die": 8,
+    "response_bits_per_pc_per_cycle": 277,
+    "response_bytes_per_pc_per_cycle": 32,
+    "response_total_bits_per_cycle": 8864,
+    "request_bits_per_cycle": 345,
+    "external_bandwidth_delta": 0,
+    "compute_macs_per_cycle": 0,
+    "response_mux": "capture at each real macro response edge before existing queue/select cone",
+    "dispatch_mux": "conditional registered selected-credit decision and matching payload; reserve credit atomically"
+  },
+  "hardware": {
+    "response_register_bits_per_die": 8864,
+    "response_register_area_um2": 2584.7424,
+    "response_placement_um2_at_50pct": 5169.4848,
+    "optional_dispatch_register_bits": 345,
+    "optional_dispatch_area_um2": 100.602,
+    "local_tracks_per_pc_lower_bound": 277,
+    "track_capacity": null,
+    "slot_fit": null,
+    "missing": "actual macro edge slots, local routing capacity, buffer/hold/clock cost and power"
+  },
+  "latency": [
+    {
+      "response_boundary_cycles": 1,
+      "dispatch_pipeline_cycles": 0,
+      "extra_cycles_per_critical_request": 1,
+      "requests_on_token_path": 56,
+      "incremental_token_us": 0.04666666666666667,
+      "baseline_lat8_token_us": 360.9587063239965,
+      "conditional_token_us": 361.0053729906632,
+      "conditional_ar_tokens_s": 2770.041874212945,
+      "rate_delta_pct": -0.012926862079665202,
+      "region_roundtrip_cycles": [
+        22,
+        18,
+        16,
+        12,
+        12,
+        16,
+        18,
+        22
+      ]
+    },
+    {
+      "response_boundary_cycles": 1,
+      "dispatch_pipeline_cycles": 1,
+      "extra_cycles_per_critical_request": 2,
+      "requests_on_token_path": 56,
+      "incremental_token_us": 0.09333333333333334,
+      "baseline_lat8_token_us": 360.9587063239965,
+      "conditional_token_us": 361.05203965732983,
+      "conditional_ar_tokens_s": 2769.6838410027763,
+      "rate_delta_pct": -0.025850382516012793,
+      "region_roundtrip_cycles": [
+        23,
+        19,
+        17,
+        13,
+        13,
+        17,
+        19,
+        23
+      ]
+    }
+  ],
+  "exact_contract": [
+    "carry valid/tag/beat/data together; unchanged per-tag ordering and golden arithmetic",
+    "reserve response capacity before accepting a beat; no lost credit under stalls",
+    "reset flushes new valid state; no phantom response or credit",
+    "dispatch credit decremented once at reservation, including same-cycle return",
+    "full legal shape baseline transaction equality; measure the priced added cycles"
+  ],
+  "gates": [
+    "pin actual 585ps/524ps endpoint evidence and actual macro corner abstract",
+    "derive full-goal routing capacity and macro edge slot fit before any RTL",
+    "W10 full-goal element structure and exactness first",
+    "off-by-default companion; exact reset/stall/drain/credit and negative gates",
+    "one qualified context at unchanged SS/FF, including boundary and recovery/removal",
+    "actual final q/column LEFs and ETMs before die rebase; actual-element IR"
+  ],
+  "other_designs": {
+    "qwen_rom": "unchanged",
+    "qwen_hbm": "unchanged",
+    "v41_hbm": "shared arbiter applicability requires its own token graph"
+  }
+}

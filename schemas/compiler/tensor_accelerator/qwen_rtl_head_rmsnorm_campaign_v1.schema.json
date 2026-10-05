@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_head_rmsnorm_campaign_v1.schema.json",
+  "title": "Qwen Q/K per-head RMSNorm RTL campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "arithmetic_evidence",
+    "campaign_id",
+    "cases",
+    "claim_boundary",
+    "command_program_sha256",
+    "program_correlation",
+    "schema",
+    "simulators",
+    "source_sha256",
+    "status",
+    "tools",
+    "vector_set_id"
+  ],
+  "properties": {
+    "arithmetic_evidence": {
+      "const": {
+        "exact_scalar_all_rows": true,
+        "kv_projection_campaign_id": "584e0f388d6295a3abc5d6d6f96e5f32500b493bf81d6a7b09d51b112a735894",
+        "q_projection_campaign_id": "af8c787f6c6995527ca0b75ab813b06f9ed05f9c18066ccf3e05ea1fa4d69603",
+        "qkv_qualification_report_id": "42be4b6e14ca271c583e0b8f4bb0bc9a5e854e4e5aa918b0e90acc6217d763ae",
+        "status": "pass"
+      }
+    },
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "cases": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {"$ref": "#/$defs/iverilog_case"},
+        {"$ref": "#/$defs/verilator_case"}
+      ],
+      "items": false
+    },
+    "claim_boundary": {
+      "const": {
+        "activity_derived_power_or_timing": false,
+        "architectural_simulator_output_correlated": true,
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "complete_k_head_rmsnorm_graph_operation": true,
+        "complete_layer_execution": false,
+        "complete_q_head_rmsnorm_graph_operation": true,
+        "complete_qkv_preparation": false,
+        "dual_simulator_complete_operations": true,
+        "exact_scalar_all_rows": true,
+        "preloaded_q_and_k_projection_outputs": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "ta_rtl_6_closed": false
+      }
+    },
+    "command_program_sha256": {
+      "const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"
+    },
+    "program_correlation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_count", "command_end", "command_start", "dma_hbm_bytes",
+        "dma_hbm_request_count", "dma_sram_write_count",
+        "early_terminal_fail_stop_cases", "element_count",
+        "graph_operation_ids", "input_read_count",
+        "normalized_saturation_count", "operations",
+        "output_saturation_count", "output_write_count",
+        "reciprocal_square_root_count", "reduction_add_count", "row_count",
+        "weight_read_count"
+      ],
+      "properties": {
+        "command_count": {"const": 4},
+        "command_end": {"const": 3078},
+        "command_start": {"const": 3075},
+        "dma_hbm_bytes": {"const": 512},
+        "dma_hbm_request_count": {"const": 8},
+        "dma_sram_write_count": {"const": 32},
+        "early_terminal_fail_stop_cases": {"const": 1},
+        "element_count": {"const": 5120},
+        "graph_operation_ids": {"const": ["node.0005", "node.0006"]},
+        "input_read_count": {"const": 5120},
+        "normalized_saturation_count": {"const": 0},
+        "operations": {
+          "const": [
+            {
+              "inverse_rms_payload_sha256": "12a8e58463d481658ffee21140fd06ecc6ff799fcd27b2cab650aa7508f89aa9",
+              "mean_square_payload_sha256": "e10c17ec2a238ecebbad32e5c85a6822babfec8ac7650eb7bba2a67fc0003cb2",
+              "operation_id": "node.0005",
+              "output_payload_sha256": "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+              "projection": "q",
+              "row_count": 32
+            },
+            {
+              "inverse_rms_payload_sha256": "b088f0e2a9c0cb618be3df9e9752be637198b2eb8e1a457fa7862a12691f1d71",
+              "mean_square_payload_sha256": "b1d45efa4ea83b59c1638bf041adc2e30dfb98c8b4ea2d156c247213ff05f065",
+              "operation_id": "node.0006",
+              "output_payload_sha256": "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+              "projection": "k",
+              "row_count": 8
+            }
+          ]
+        },
+        "output_saturation_count": {"const": 0},
+        "output_write_count": {"const": 5120},
+        "reciprocal_square_root_count": {"const": 40},
+        "reduction_add_count": {"const": 5080},
+        "row_count": {"const": 40},
+        "weight_read_count": {"const": 5120}
+      }
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_head_rmsnorm_campaign.v1"
+    },
+    "simulators": {"const": ["iverilog", "verilator"]},
+    "source_sha256": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 20
+    },
+    "status": {"enum": ["fail", "pass"]},
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["iverilog", "verilator"],
+      "properties": {
+        "iverilog": {"type": "string", "minLength": 1},
+        "verilator": {"type": "string", "minLength": 1}
+      }
+    },
+    "vector_set_id": {
+      "const": "9d6ff4c9ad10e03592d02ec3edebaf6bc341285fac8c69bc09b7daa7891ee791"
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cycles", "read_stalls", "request_stalls", "write_stalls"],
+      "properties": {
+        "cycles": {"type": "integer", "minimum": 1},
+        "read_stalls": {"type": "integer", "minimum": 1},
+        "request_stalls": {"type": "integer", "minimum": 1},
+        "write_stalls": {"type": "integer", "minimum": 1}
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command", "compile_log", "compile_returncode", "log_sha256", "name",
+        "observation", "run_log", "run_returncode", "status"
+      ],
+      "properties": {
+        "command": {"type": "string", "minLength": 1},
+        "compile_log": {"type": "string"},
+        "compile_returncode": {"type": "integer"},
+        "log_sha256": {"$ref": "#/$defs/sha256"},
+        "name": {"type": "string"},
+        "observation": {
+          "oneOf": [
+            {"$ref": "#/$defs/observation"},
+            {"type": "null"}
+          ]
+        },
+        "run_log": {"type": "string"},
+        "run_returncode": {"type": ["integer", "null"]},
+        "status": {"enum": ["fail", "pass"]}
+      }
+    },
+    "iverilog_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "head_rmsnorm_iverilog"}}}
+      ]
+    },
+    "verilator_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "head_rmsnorm_verilator"}}}
+      ]
+    }
+  }
+}

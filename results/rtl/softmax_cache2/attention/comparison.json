@@ -1,0 +1,119 @@
+{
+  "scope": "Fresh matched current-source complete attention; nine reference transactions, finite memory views and counters checked. Active RTL cycles only, not measured clock or model throughput.",
+  "baseline_cycles": 2388699,
+  "candidate_cycles": 2374287,
+  "saved_cycles": 14412,
+  "cycle_reduction_percent": 0.6033409818482781,
+  "rows": [
+    {
+      "name": "one_block",
+      "baseline": {
+        "cycles": 31438,
+        "exp_wait_cycles": 17296
+      },
+      "candidate": {
+        "cycles": 31438,
+        "exp_wait_cycles": 17296
+      },
+      "saved_cycles": 0
+    },
+    {
+      "name": "full_block",
+      "baseline": {
+        "cycles": 375558,
+        "exp_wait_cycles": 360256
+      },
+      "candidate": {
+        "cycles": 369794,
+        "exp_wait_cycles": 354492
+      },
+      "saved_cycles": 5764
+    },
+    {
+      "name": "two_blocks",
+      "baseline": {
+        "cycles": 417319,
+        "exp_wait_cycles": 394844
+      },
+      "candidate": {
+        "cycles": 408671,
+        "exp_wait_cycles": 386196
+      },
+      "saved_cycles": 8648
+    },
+    {
+      "name": "three_blocks",
+      "baseline": {
+        "cycles": 393123,
+        "exp_wait_cycles": 377550
+      },
+      "candidate": {
+        "cycles": 393123,
+        "exp_wait_cycles": 377550
+      },
+      "saved_cycles": 0
+    },
+    {
+      "name": "multi_row",
+      "baseline": {
+        "cycles": 112648,
+        "exp_wait_cycles": 69180
+      },
+      "candidate": {
+        "cycles": 112648,
+        "exp_wait_cycles": 69180
+      },
+      "saved_cycles": 0
+    },
+    {
+      "name": "multi_row_blocks",
+      "baseline": {
+        "cycles": 832103,
+        "exp_wait_cycles": 786804
+      },
+      "candidate": {
+        "cycles": 832103,
+        "exp_wait_cycles": 786804
+      },
+      "saved_cycles": 0
+    },
+    {
+      "name": "wide_head",
+      "baseline": {
+        "cycles": 191750,
+        "exp_wait_cycles": 181568
+      },
+      "candidate": {
+        "cycles": 191750,
+        "exp_wait_cycles": 181568
+      },
+      "saved_cycles": 0
+    },
+    {
+      "name": "duplicates",
+      "baseline": {
+        "cycles": 20341,
+        "exp_wait_cycles": 5768
+      },
+      "candidate": {
+        "cycles": 20341,
+        "exp_wait_cycles": 5768
+      },
+      "saved_cycles": 0
+    },
+    {
+      "name": "single_valid",
+      "baseline": {
+        "cycles": 14419,
+        "exp_wait_cycles": 0
+      },
+      "candidate": {
+        "cycles": 14419,
+        "exp_wait_cycles": 0
+      },
+      "saved_cycles": 0
+    }
+  ],
+  "source_sha256": "04a10dd0059fd4eebe43365bf80a29f02e2e81feb5a31c60258e0d2c5c0fbe04",
+  "decision": "Containing-engine benefit confirmed; candidate remains isolated pending timing/area selection. Prelayout slack regression prevents clock-win claim."
+}

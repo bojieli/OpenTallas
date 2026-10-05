@@ -1,0 +1,30 @@
+{
+  "status": "pass",
+  "scope": "Matched loaded M6/N53/K160 strided weight and output campaigns; cycles include faults and recovery, not inference latency",
+  "source_manifests_match": true,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth160_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "fdc0c616b3bbed9e89b0399644da00178e1582667b66d143a7de8643e5beb078",
+      "pass_first": false,
+      "campaign_cycles": 708336,
+      "first_weight_fills": 6720,
+      "first_weight_bytes": 207336,
+      "first_activation_fills": 2496
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth160_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      "sha256": "f3a25301d58352e64d0ce5203d2ba9dd25afb36c59e796c6208ff2e5ce231a16",
+      "pass_first": true,
+      "campaign_cycles": 203111,
+      "first_weight_fills": 1120,
+      "first_weight_bytes": 34556,
+      "first_activation_fills": 2880
+    }
+  ],
+  "outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "cycle_reduction_percent": 71.32561383298321,
+  "weight_traffic_reduction_percent": 83.33333333333334,
+  "activation_fill_increase_percent": 15.384615384615374
+}

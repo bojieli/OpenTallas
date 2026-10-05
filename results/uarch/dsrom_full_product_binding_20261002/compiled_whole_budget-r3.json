@@ -1,0 +1,3766 @@
+{
+  "RTL_PR": false,
+  "TP": 4,
+  "allocator_first_failure": {
+    "error": "rawprovider['hc_attn_fn', 'hc_ffn_fn']: 8exclusive completepairs",
+    "expert": "providers",
+    "layer": 29,
+    "stage": 57,
+    "whole_group_unallocated": true
+  },
+  "allocator_observed_failure_count": 4145,
+  "candidate": "DS4096-TP4-S58-PAIR1",
+  "conditional_S58_original_FAIL_preserved": true,
+  "configuration_provider": {
+    "CW": 25,
+    "PHW": 10,
+    "PP_parity_banks_per_depthchunk": 2,
+    "alternate_prospective_shared_owner_provider": {
+      "FF_storage_area_at50pct_mm2": 3815.9442247679995,
+      "ROM_body_extra_vs_one_per_pair_mm2": 58.77563129855999,
+      "ROM_body_mm2": 68.57156984832,
+      "ROM_mapping_scope": "Prospective source-equivalent depth mapping; one48-bit word/read/cycle/pair. Actual mask ROM mapping/decoder/clock/halo/SSFF not implemented. Width24bits unused; no assumed multiport packing.",
+      "ROM_plus_word_mux_screen_mm2": 69.19074349056,
+      "bytes": 629145600,
+      "cfg_bits": 5033164800,
+      "cfg_clock_sinks": 28672,
+      "cfg_read_bits_per_cycle": 196608,
+      "cfg_read_bytes_per_cycle": 24576,
+      "existing_ROM4096x72_count": 28672,
+      "pairs": 4096,
+      "payload_bitcell_area_mm2": 29.353417113599996,
+      "word_mux_NAND2_construction": 3538944,
+      "word_mux_cell_proxy_mm2": 0.30958682111999997,
+      "word_mux_placement_at50pct_mm2": 0.6191736422399999
+    },
+    "baseline_overlap_credit": 0,
+    "bundles": 820,
+    "compiled_pairs": 4096,
+    "config_SECDED_required_bits": 9,
+    "declared_bits_all_compiled_pairs": 5033164800,
+    "depthchunks_per_parity": 4,
+    "excluded_positive_costs": [
+      "mask-ROM collar and48bit lane decode",
+      "depthchunk+PP bank mux/control/capture",
+      "PHW10 dispatch key decoder and fanout",
+      "ECC encoder/decode/BIST fault propagation",
+      "halo/pin/corridor/PDN/CTS/hold exclusions"
+    ],
+    "full_macro_or_cfg_timing_admission": false,
+    "gross_macro_bits": 7362314240,
+    "macro_body_mm2": 51.701753088,
+    "pairs_per_bundle": 5,
+    "physical4096x274_macros": 6560,
+    "physical_address_recipe": {
+      "bits": "[48*lane,48*(lane+1))",
+      "bundle": "pair//5",
+      "depthchunk": "(logical_index>>1)//4096",
+      "lane": "pair%5",
+      "logical_index": "phase*25+cfg_word",
+      "parity": "logical_index&1",
+      "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+      "row": "(logical_index>>1)%4096"
+    },
+    "proposal_only": true,
+    "same_depth_and_master": true,
+    "selected_budget_provider": "Archimedes source-equivalent4096x72 per-pair depth mapping plus local mux; Maxwell five-pair packing remains separate unadopted proposal",
+    "source_loader_cycle_model": {
+      "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+      "additional_cycles_per_actual_cfg_event": 2,
+      "cfg_words_per_phase": 25,
+      "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+      "cycle_credit_qualified": false,
+      "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+      "required_proof": [
+        "two-cycle macro read valid matches broadcast cfg_word index",
+        "each independent48bit output lane matches original per-pair cm contents",
+        "per-pair enable/gating and held data during backpressure",
+        "240payload+9SECDED exact bit map and decoder latency",
+        "final cfg word visible before matrix issue and consumer busy fence"
+      ]
+    },
+    "useful_bits_per_bundle_word": 240,
+    "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+    "words_per_pair": 25600
+  },
+  "critical_path_latency": {
+    "actual_cfg_delta_formula": "sum_over_nonoverlapped_actualcfg_events(2cycles + ECCdecodecycles + source_lease/drain/CDC stalls), 1.2GHz modelonly; storage phasecount is not token eventcount",
+    "no_actual_whole_token_cycles": true,
+    "old_390_061_us_not_current_calibration": true,
+    "old_conditional_field_reuse_and_head_delta_us": 22.864,
+    "old_conditional_hop_delta_us": 6.238,
+    "reference41_candidate58_added_stage_boundaries": 17,
+    "source_cfg_after_last_GO_busy": "retain source consumer drain; no ideal overlap between q/BF phases or shared ports"
+  },
+  "exact_once_area_ledger_mm2": {
+    "RNE_BF724_upper_proxy": 12.987328389120002,
+    "WAKE_full_compiled_upper_proxy": 1.63214534656,
+    "actual_fixed_service_rectangles": [
+      {
+        "area_mm2": 2.3381710387199997,
+        "bbox_DBU": [
+          1000000,
+          16000000,
+          3125440,
+          17100088
+        ],
+        "name": "BANKED_COLLECTOR_MACROS_AND_CLEAR20909TRACK_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 7.483249152000001,
+        "bbox_DBU": [
+          1000000,
+          17100088,
+          3125440,
+          20620888
+        ],
+        "name": "ACTUAL_POOLED_INDEXER_AND4RING_READERS",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.3075936768,
+        "bbox_DBU": [
+          1000000,
+          20620888,
+          3125440,
+          20765608
+        ],
+        "name": "X_SEL_TOPK_STORE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.08263710720000002,
+        "bbox_DBU": [
+          1000000,
+          20765608,
+          3125440,
+          20804488
+        ],
+        "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 45.6762053376,
+        "bbox_DBU": [
+          3125440,
+          16000000,
+          10974880,
+          21819040
+        ],
+        "name": "ATTENTION64TILES_STATIONARY_STAGE_PVMERGE_WINDOW_RAW_QE_SERVICE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 18.270788198400005,
+        "bbox_DBU": [
+          1000000,
+          21819040,
+          10974880,
+          23650720
+        ],
+        "name": "index_HBM_all128responses_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 14.931198374400003,
+        "bbox_DBU": [
+          1000000,
+          23650720,
+          10974880,
+          25147600
+        ],
+        "name": "index_quarter_join_to_batch_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 7.260914649600001,
+        "bbox_DBU": [
+          1000000,
+          25147600,
+          10974880,
+          25875520
+        ],
+        "name": "mergedKV_to_stage_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.10772870400000001,
+        "bbox_DBU": [
+          1000000,
+          25875520,
+          10974880,
+          25886320
+        ],
+        "name": "directproducer_registered_boundary_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 1.389602304,
+        "bbox_DBU": [
+          10974880,
+          16000000,
+          11605600,
+          18203200
+        ],
+        "name": "HUB_COLLECTIVE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.892342656,
+        "bbox_DBU": [
+          10974880,
+          18203200,
+          11605600,
+          19618000
+        ],
+        "name": "HUB_VM",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 1.3882399488000001,
+        "bbox_DBU": [
+          10974880,
+          19618000,
+          11605600,
+          21819040
+        ],
+        "name": "HUB_GATHER",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 12.80542597632,
+        "bbox_DBU": [
+          11605600,
+          16000000,
+          13806208,
+          21819040
+        ],
+        "name": "HUB_SU_VECTOR",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 18.3132171648,
+        "bbox_DBU": [
+          13806208,
+          16000000,
+          16953328,
+          21819040
+        ],
+        "name": "HUB_HC",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      }
+    ],
+    "already_inside_inherited_named_service_proxy_do_not_add_again": 90.44685198583997,
+    "composed_priced_field_terms": 458.81144120512,
+    "config_prospective_body_plus_local_mux": 69.19074349056,
+    "conservative_no_containment_credit_die_total": 924.2886185238459,
+    "conservative_no_containment_credit_reticle_margin": -66.28861852384591,
+    "counterfactual_unknown_native_residual_disjoint_total": 506.0194543837759,
+    "declared_return_FF50_proxy": 52.897587425279994,
+    "earlier_unidentified_native_residual_proxy_47_208": {
+      "excluded_from_named_component_sum_until_containment_reconciled": "No provider identity proves disjointness from new cfg/ECC/raw/dispatch/control terms; conservative counterfactual adding it is recorded separately.",
+      "mm2": 47.208013178655904,
+      "not_silently_removed": true
+    },
+    "fit_verdict": "NOT_QUALIFIED_mix_of_source_macro_body_and_conservative_frame_return_RNE_WAKE_proxies_not_minimum_or_impossibility",
+    "full_compiled_q_BF_catalog_frames": 322.1036365536,
+    "inherited_service_routes_clockPG_debit": 418.26916414007,
+    "remaining_against_corrected_inherited_field_allowance": -19.08060534519,
+    "reticle": 858,
+    "service_clock_PG_actual_shapes_bound": false,
+    "unpriced_nonzero_terms": [
+      "qFP4 separateECC provider/decoder",
+      "actualHE/CROM/shared dispatch provider",
+      "cfgmux/capture/PHW fanout decode area and routes",
+      "currentRNEWAKE dualcompute outline growth",
+      "service macro halo/pins/clockPG/hold costs not proven by inherited debit"
+    ]
+  },
+  "full_token_or_physical_admission": false,
+  "input_receipts": [
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/model.json",
+      "sha256": "6807c0b79746ee82835fc7917c57e79d2979acce20901e51b86f83e6359ca859"
+    },
+    {
+      "commit": "c1037db16959ba8973e8a68052cfb7e62b93cdad",
+      "path": "results/uarch/dsrom_cfg_phase_capacity_20261002/model.json",
+      "sha256": "f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50"
+    },
+    {
+      "commit": "c1b460ae0665909cd41b393ea037ebf58ce9f057",
+      "path": "results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json",
+      "sha256": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606"
+    },
+    {
+      "commit": "c9b4730bd57e523857a91f7dc9f61eea7f4f68d5",
+      "path": "results/uarch/dsrom_service_hub_arch_handoff_20261002/inventory_service_join.json",
+      "sha256": "848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342"
+    },
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093"
+    }
+  ],
+  "new_count_selected": false,
+  "per_stage_config_requirements": [
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 0
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 1
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 854,
+      "required_PHW": 10,
+      "stage": 2
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 309,
+      "required_PHW": 9,
+      "stage": 3
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 870,
+      "required_PHW": 10,
+      "stage": 4
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 297,
+      "required_PHW": 9,
+      "stage": 5
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 6
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 7
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 8
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 9
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 10
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 11
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 12
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 13
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 14
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 15
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 870,
+      "required_PHW": 10,
+      "stage": 16
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 297,
+      "required_PHW": 9,
+      "stage": 17
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 18
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 19
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 20
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 21
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 22
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 23
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 24
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 25
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 26
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 27
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 853,
+      "required_PHW": 10,
+      "stage": 28
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 315,
+      "required_PHW": 9,
+      "stage": 29
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 30
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 31
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 32
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 33
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 34
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 35
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 36
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 37
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 38
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 39
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 872,
+      "required_PHW": 10,
+      "stage": 40
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 294,
+      "required_PHW": 9,
+      "stage": 41
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 42
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 43
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 44
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 45
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 46
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 47
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 870,
+      "required_PHW": 10,
+      "stage": 48
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 294,
+      "required_PHW": 9,
+      "stage": 49
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 50
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 51
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 52
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 53
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 874,
+      "required_PHW": 10,
+      "stage": 54
+    },
+    {
+      "active_only_cfg_bits_from_owner": 2073600000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 9,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 2516582400,
+        "depthchunks_per_parity": 2,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 3681157120,
+        "macro_body_mm2": 25.850876544,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 3280,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 12800
+      },
+      "phase_count": 288,
+      "required_PHW": 9,
+      "stage": 55
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 870,
+      "required_PHW": 10,
+      "stage": 56
+    },
+    {
+      "active_only_cfg_bits_from_owner": 4147200000,
+      "full_compiled_cfg": {
+        "CW": 25,
+        "PHW": 10,
+        "PP_parity_banks_per_depthchunk": 2,
+        "baseline_overlap_credit": 0,
+        "bundles": 820,
+        "compiled_pairs": 4096,
+        "config_SECDED_required_bits": 9,
+        "declared_bits_all_compiled_pairs": 5033164800,
+        "depthchunks_per_parity": 4,
+        "excluded_positive_costs": [
+          "mask-ROM collar and48bit lane decode",
+          "depthchunk+PP bank mux/control/capture",
+          "PHW10 dispatch key decoder and fanout",
+          "ECC encoder/decode/BIST fault propagation",
+          "halo/pin/corridor/PDN/CTS/hold exclusions"
+        ],
+        "full_macro_or_cfg_timing_admission": false,
+        "gross_macro_bits": 7362314240,
+        "macro_body_mm2": 51.701753088,
+        "pairs_per_bundle": 5,
+        "physical4096x274_macros": 6560,
+        "physical_address_recipe": {
+          "bits": "[48*lane,48*(lane+1))",
+          "bundle": "pair//5",
+          "depthchunk": "(logical_index>>1)//4096",
+          "lane": "pair%5",
+          "logical_index": "phase*25+cfg_word",
+          "parity": "logical_index&1",
+          "physical_leaf": "bundle*(2*depthchunks)+2*depthchunk+parity",
+          "row": "(logical_index>>1)%4096"
+        },
+        "proposal_only": true,
+        "same_depth_and_master": true,
+        "source_loader_cycle_model": {
+          "PP_macro2cycle_plus_consumer_register_last_accept_cycles": 28,
+          "additional_cycles_per_actual_cfg_event": 2,
+          "cfg_words_per_phase": 25,
+          "conditions": "noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event",
+          "cycle_credit_qualified": false,
+          "existing_combinational_cm_last_accept_after_cfg_go_cycles": 26,
+          "required_proof": [
+            "two-cycle macro read valid matches broadcast cfg_word index",
+            "each independent48bit output lane matches original per-pair cm contents",
+            "per-pair enable/gating and held data during backpressure",
+            "240payload+9SECDED exact bit map and decoder latency",
+            "final cfg word visible before matrix issue and consumer busy fence"
+          ]
+        },
+        "useful_bits_per_bundle_word": 240,
+        "why_no_old_cfg_subtraction": "Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.",
+        "words_per_pair": 25600
+      },
+      "phase_count": 878,
+      "required_PHW": 10,
+      "stage": 57
+    }
+  ],
+  "physical_array": {
+    "NBF": 724,
+    "active3375_not_physical_declaration": true,
+    "catalog_full_compiled_frame_mm2": 322.1036365536,
+    "compiled_NP": 4096,
+    "dualcompute_abstract_bound": false,
+    "main4096_macros_per_die": 16384,
+    "physical_BF_frames": 724,
+    "physical_q_frames": 3372,
+    "source_BF_predicate": "pair=floor(i*NP/NBF),i0..NBF-1"
+  },
+  "reticle_mm": [
+    26,
+    33
+  ],
+  "return": {
+    "NBF": 724,
+    "R": 128,
+    "active_mask_changes_declarations": false,
+    "compiled_NP": 4096,
+    "conservative_FF_50pct_um2": 52897587.42528,
+    "declared_lower_bits": 69771008,
+    "physical_PP4096_banks": 16384,
+    "return_nodes": 8064,
+    "root_public_bits_per_cycle": 8832,
+    "scope": "declared storage lower bound plus conservative FF50 proxy; occupancy/control/mux/adder/CTS/hold costs extra",
+    "source_noqueue_tree_cycles": 36,
+    "tree_levels": 6
+  },
+  "same_template_maxPHW_proposal": true,
+  "schema": "opentallas.dsrom.one-S58-compiled-whole-budget.v1",
+  "source_PHW6_verdict": "FAIL_REQUIRED_SOURCE_PARAMETER_PLUMBING_AND_CONTEXT_MODEL",
+  "stage_count": 58
+}

@@ -1,0 +1,19 @@
+test_build_failure_stops_without_retry (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_cap_mismatch_refuses_before_any_child (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_exact_caps_and_unchanged_compile_options (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_exact_numerical_phase_counts_order_and_case (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_explicit_numerical_failures_preserved_without_DIFF (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_full_prepared_commit_files_and_package_bound (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_legacy_PASS_alone_cannot_qualify (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_missing_PASS_never_qualifies (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_new_GO_and_each_authoritative_pin_required (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_prep_package_and_prior_files_unchanged (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_q_sim_failure_preserved_BF_continues_only_planned (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_q_then_BF_no_retry_and_summed_budgets (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_tool_preflight_rejects_version_and_options_changes (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+test_whole_and_phase_kill_even_receipt_write_fails (test_dsrom_actual_element_numerical_runner.RunnerTests) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 29.466s
+
+OK

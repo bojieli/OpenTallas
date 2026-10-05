@@ -1,0 +1,44 @@
+{
+  "scope": "Matched four-credit containing transport intermediate mapped synthesis; no routed timing, final area, energy or integrated closure claim. Source bindings must be revalidated against completed physical manifests.",
+  "records": [
+    {
+      "name": "before",
+      "mapped_area_um2": 5973.58638,
+      "flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 134,
+        "DFFHQNx1_ASAP7_75t_R": 6570
+      },
+      "artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/before/synth_stat.txt": "a15281c4a0a9f8e1d8b870ec13697c5714d6abb12b55101807a94299815bdd1f",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/before/synth_check.txt": "001b48521318c11794a98e485e569032b85a02d9dfba800d3ea1e1945f30a6c1",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/before/config.mk": "bd6fbb7f13a4976c596d54ef91f4f02a9e4e9cd8c35c3f660048e11962c04cc3",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/before/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+      },
+      "source_bindings": {
+        "rtl/abi3/ot_a3_weight_layout_cursor.sv": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+        "rtl/abi3/ot_a3_bf16_weight_transport.sv": "c527b7b7ea14babaeababa3a448b65640717253abbe64c18ec86ac21c74e0b10",
+        "results/rtl/before_gather_coalescing/gather.sv": "cbe79cc217d9c52055195bf92f3f793cc9b5ba3885e82044e6b80ba1bd168cdb"
+      }
+    },
+    {
+      "name": "after",
+      "mapped_area_um2": 6036.849,
+      "flops": {
+        "DFFASRHQNx1_ASAP7_75t_R": 134,
+        "DFFHQNx1_ASAP7_75t_R": 6577
+      },
+      "artifacts": {
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/after/synth_stat.txt": "176b70e6e8af642faefb2ef53e2f6ab132ddd553e0fb311018d06f37190c98f0",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/after/synth_check.txt": "001b48521318c11794a98e485e569032b85a02d9dfba800d3ea1e1945f30a6c1",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/after/config.mk": "bd6fbb7f13a4976c596d54ef91f4f02a9e4e9cd8c35c3f660048e11962c04cc3",
+        "results/physical_abi3/asap7/optimization_synthesis_checkpoint/coalescing/after/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+      },
+      "source_bindings": {
+        "rtl/abi3/ot_a3_weight_layout_cursor.sv": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b",
+        "rtl/abi3/ot_a3_bf16_weight_transport.sv": "c527b7b7ea14babaeababa3a448b65640717253abbe64c18ec86ac21c74e0b10",
+        "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0f500dfa3844f89e59de972ef00809e734124754f7c5626838a723eddbcbfac3"
+      }
+    }
+  ],
+  "mapped_area_change_percent": 1.0590391763950713
+}

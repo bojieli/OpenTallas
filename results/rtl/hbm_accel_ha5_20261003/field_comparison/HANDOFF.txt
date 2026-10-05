@@ -1,0 +1,61 @@
+HA5 submitted-column receipt + actual field comparison implementation.
+Base0c499dc46 (Sagan96 column-source already parent), one intake commit.
+
+Own tools/hbm_accel_program_engine.py receipts now retain input_token explicitly.
+For status2/nonRESULT token is the actual submitted operand, so actualSWAPIN/OUT
+columns1..5 do not alias CPLtoken0. completion_token preserves the actual rawCPL
+result independently. Status0/head/Markov token remains the actual returned token,
+and run() result behavior is unchanged. No CP/clock/arithmetic mutation.
+
+New tools/hbm_accel_program_compare.py is concrete actual runtime source:
+--stage baseline -> uses existing canonicalf86 + Sagan SectorReadbackPins M32B;
+validates immutable native source/IMEM + actual cold input bytes, uses original
+D.expand and guarded CP20 driver to execute actualVLAYER0 column0, reads complete
+both-die X/PRE/CTRreserved/SELattention/NSEL/MH after authoritativeSWAPOUT, plus
+actualworking fields includingCTR. Captures raw bitfiles/receipts/actualSM edges.
+--stage candidate requires baseline actual matching field-terminal evidence and
+SAMEcheckpoint/memory/layout/prompt/noise/context/topology. Installs admitted
+candidate native words using same built backend, runs SAME source-bound command,
+compares full bitfiles and whole SWAPIN/EMBED/LAYER/SWAPOUT clock time. No CPU
+oracle, expectedoutput injection, source model constructor, inference or build.
+Mismatch or slower layer is recorded REJECTED once, no tuning/retry/fallback.
+Fields exact is a reduced source-layer subgate, NOT released1M/fulltoken adoption.
+
+Before ANYprocess boot/load/tick, original corrected04 terminal must be rc0,
+COMPLETED_SOURCE_NATIVE_TOKEN, expected source SHA, fault-free/drained final
+actualsnapshot, and actualowner PIDgone. Check runs via SSH ON predecessor's
+owning fleet host, not against an unrelated local PID namespace. Missing/failed
+terminal keepsHOLD. No kill, reset, assumed lease release, timeout or job caps.
+Long runs need parent resource admission on their selected host; no runtime here.
+
+CLI after actual source release only:
+python3 -m tools.hbm_accel_program_compare --enable --stage baseline
+ --baseline-source ORIGINAL_SOURCE_JSON --candidate-result SAVED_CANDIDATE_RESULT
+ --config ORIGINAL_CONFIG --backend-build EXISTING_F86_BUILD
+ --callback-source PINNED_GUARDED_SOURCE_ROOT --predecessor-host ot-epyc1tb
+ --predecessor-root /srv/opentallas-scratch/sagan/ds20-source-token-04bcd772d-r2
+ --out NEW_BASELINE_OUTPUT
+Then sameoptions --stage candidate --candidate-source ACTUAL_CANDIDATE_SOURCE_JSON
+ --baseline-out ACTUAL_BASELINE_OUTPUT --out NEW_CANDIDATE_OUTPUT.
+
+Optional --phase-markers is ONLY for Sagan's H-capable successor after original
+terminal. Existing f86 has M, noH. Admission requires source_probes build flag,
+actualphase entries + image_artifacts/candidate_artifacts all4loadedIMEM SHA pins;
+uses actual ColumnSource routerIDs0x7C80/weights0x7CC0, descriptor-owned original
+BD288 nine-sector payloads and actualactivation/UR/workingCTR, neverSEL-as-router.
+StablePC/can_issue readback is NOT acceptedissue/retire or slot6overlap evidence.
+No H successor build launched here; Sagan remains its sole owner.
+
+Concrete H source-join prerequisite relayed to Sagan: current96 attach looks for
+lastreceiptSWAPIN, but actualVLAYER0 inserts EMBED beforeLAYER. H source-context
+selector must retain the authoritative samejob/gen enteringSWAPIN across its
+optionalEMBED. Never treat EMBEDtoken ascolumn/fabricateenteringreceipt. M-only
+baseline/fieldcomparison does not attach this observer and is unaffected.
+
+Four focused controls PASS: sixactualsubmittedcolumns0..5 distinct fromCPLzero;
+missing/failedoriginalterminalHOLD; rawfieldbitmismatch/slowermeasurementREJECT;
+changedmemorysource refused. No compilerfixture/width/union/PC/numeric gate repeat.
+OriginalSagan2602451 remainslive. No new build/numericalruntime/GPU/CPUoracle.
+SS60/FF25, route, real1M/head21946, actualslot6/Pselectors and composedgain pending.
+Defaultoff/unadopted. Model impact:0newASICports/state/area; existingsource fields
+andmemory traffic measured in wholecontext afterrelease, not assumedfree overlap.

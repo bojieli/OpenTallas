@@ -1,0 +1,236 @@
+{
+ "schema": "opentallas.dsrom-1m.select.v1",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+  "rtl/test/tb_hdc_v41x_sel.sv": "4956bd6294cfab4c2b9e93d2f388ede28dc19016ea0de70af4c12f6527281cef",
+  "rtl/test/hdc_v41x_sel_harness.cpp": "32e0872cc0b1beee5b41dfc9b7f05e174fa0a3b02f7baf07447dafc287452f69",
+  "tools/rtl_hdc_v41x_sel_campaign.py": "be281d187bbe5ca761a40b45709f35597fb166c1a631a184a402e6852ceb81fb",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/dsrom_1m_measure.py": "0c80b0fb075db8caf3492a29ba2784e98319a3605a1750305d0b829ccd16294c"
+ },
+ "golden_shards": {
+  "L24": {
+   "npz": "c7c2809d84a259425632856d9a942858c0da49a944788e69d49be098a88b9592",
+   "json": "2e3a53643e78616ab11f5d4114792c826f8784ae5b9ca5b54ebccd7e2f59a20d"
+  }
+ },
+ "layers": {
+  "L24_full": {
+   "layer": 24,
+   "full_stream": true,
+   "scores": 1048576,
+   "streamed_per_rank": [
+    262144,
+    262144,
+    262144,
+    262144
+   ],
+   "local": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 4,
+      "beats": 65536,
+      "elements": 1048576,
+      "outputs": 2048,
+      "out_beats": 134,
+      "errors": 0,
+      "tail_min": 8263,
+      "tail_max": 8263,
+      "ovf_segments": 4,
+      "stall_cycles": 0,
+      "cycles": 49562,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 8263,
+        "first": 27,
+        "last": 4122,
+        "ovf": 1,
+        "replays": 2,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         256,
+         256,
+         256,
+         256
+        ],
+        "n2": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "n3": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "family": "L24_full_rank0",
+        "n": 262144
+       },
+       {
+        "seg": 1,
+        "tail": 8263,
+        "first": 12411,
+        "last": 16506,
+        "ovf": 1,
+        "replays": 2,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         256,
+         256,
+         256,
+         256
+        ],
+        "n2": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "n3": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "family": "L24_full_rank1",
+        "n": 262144
+       },
+       {
+        "seg": 2,
+        "tail": 8263,
+        "first": 24795,
+        "last": 28890,
+        "ovf": 1,
+        "replays": 2,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         256,
+         256,
+         256,
+         256
+        ],
+        "n2": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "n3": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "family": "L24_full_rank2",
+        "n": 262144
+       },
+       {
+        "seg": 3,
+        "tail": 8263,
+        "first": 37179,
+        "last": 41274,
+        "ovf": 1,
+        "replays": 2,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         256,
+         256,
+         256,
+         256
+        ],
+        "n2": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "n3": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "family": "L24_full_rank3",
+        "n": 262144
+       }
+      ],
+      "pass": true
+     }
+    ],
+    "elements": 1048576,
+    "beats": 65536
+   },
+   "final": {
+    "pass_": true,
+    "runs": [
+     {
+      "bubble_pct": 0,
+      "out_ready_low_pct": 0,
+      "seed": 1,
+      "segments": 1,
+      "beats": 128,
+      "elements": 2048,
+      "outputs": 512,
+      "out_beats": 34,
+      "errors": 0,
+      "tail_min": 146,
+      "tail_max": 146,
+      "ovf_segments": 0,
+      "stall_cycles": 0,
+      "cycles": 229,
+      "per_segment": [
+       {
+        "seg": 0,
+        "tail": 146,
+        "first": 27,
+        "last": 58,
+        "ovf": 0,
+        "replays": 0,
+        "stall": 0,
+        "k": 512,
+        "nhead": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n2": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "n3": [
+         32,
+         32,
+         32,
+         32
+        ],
+        "family": "L24_full_final",
+        "n": 2048
+       }
+      ],
+      "pass": true
+     }
+    ]
+   },
+   "global_selection_equals_golden_layer": true,
+   "golden_selection_sha256": "4345216b6fe44788ef09f06c2df678a3728548f0db919275b263888d5393cdac"
+  }
+ },
+ "status": "pass"
+}

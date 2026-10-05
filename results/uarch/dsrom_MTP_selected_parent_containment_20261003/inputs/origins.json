@@ -1,0 +1,76 @@
+[
+  {
+    "commit": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "copy": "arch_reply.json",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/model.json",
+    "sha256": "8217890f47e61a16376c8587e13ef978a984310ac754bcc4b329fbaa71a95f6b"
+  },
+  {
+    "commit": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "copy": "arch_handoff.json",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/handoff.json",
+    "sha256": "8ca82f40968c0a4342fb54410a49eb7ca827cf4dce52a72d4ae65a6955cc53e6"
+  },
+  {
+    "commit": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "copy": "cell_prices.json",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/inputs/cell_prices.json",
+    "sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d"
+  },
+  {
+    "commit": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "copy": "die.sv",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/inputs/die.sv",
+    "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+  },
+  {
+    "commit": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "copy": "tile.sv",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/inputs/tile.sv",
+    "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+  },
+  {
+    "commit": "686c552854d62db3ce051483e8a73ee8180484bf",
+    "copy": "core.sv",
+    "path": "results/uarch/ds_mtp_serial_spine_context_r2_20261003/inputs/core.sv",
+    "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
+  },
+  {
+    "commit": "06f7c9590e9a0a7737fdca782f2264fab5f1abba",
+    "copy": "prospective_field_parent.json",
+    "path": "results/uarch/dsrom_field_parent_component_20261003/model.json",
+    "sha256": "9abf77f17e63977f54465e97b0f3fa6ee5f1c8ca1f6f6031ae6e1b0df0e8a192"
+  },
+  {
+    "copy": "services.json",
+    "encoding": "gzip",
+    "sha256": "239d49564e9dc0aa3e98ca95c80cb5ca8d3a8963816ab7caf235614bd6f01975",
+    "source_path": "results/uarch/dsrom_capture_home_20261002/inputs/services.json.gz",
+    "source_sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488"
+  },
+  {
+    "copy": "tracks.txt",
+    "encoding": "gzip",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+    "source_path": "results/uarch/dsrom_capture_home_20261002/inputs/tracks.txt.gz",
+    "source_sha256": "aba7bc9014c0e24fccffbb6930df9a2b4acd9fb0b20ce7107fc0e7aacb4c46ac"
+  },
+  {
+    "copy": "tech.lef.gz",
+    "decoded_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "encoding": "gzip",
+    "sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243",
+    "source_path": "results/uarch/dsrom_capture_home_20261002/inputs/tech.lef.gz",
+    "source_sha256": "8a7e971c8d0048fe693cdda4c22f30584370fb3d17ff2e59cd173c705d1d2243"
+  },
+  {
+    "copy": "setRC.tcl",
+    "sha256": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+    "source_path": "results/uarch/dsrom_I66_capture_timing_20261002/inputs/setRC.tcl"
+  },
+  {
+    "copy": "RC_screen.json",
+    "producer": "tools/dsrom_I66_capture_timing.py:RC",
+    "sha256": "d5028f25dfb271289b1740218aa99b046c104fd49d8b018dceabcab2b643a90c"
+  }
+]

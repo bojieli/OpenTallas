@@ -1,0 +1,56 @@
+[
+  {
+    "copy": "0_ot_v41_vm_bank4_macro_pipe.sv",
+    "git": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+    "sha256": "a149e8877eae9919cd4539f14206eae431ac71e0c3a49ba1e0d8c16eda99a121",
+    "source": "rtl/chip/ot_v41_vm_bank4_macro_pipe.sv"
+  },
+  {
+    "copy": "1_ot_sram_1r1w_512x128_m4_r2c2.json",
+    "git": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+    "sha256": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3",
+    "source": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json"
+  },
+  {
+    "copy": "2_ot_sram_1r1w_512x128_m4_r2c2.v",
+    "git": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+    "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "source": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
+  },
+  {
+    "copy": "3_ot_sram_1r1w_512x128_m4_r2c2.lef",
+    "git": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+    "sha256": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+    "source": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef"
+  },
+  {
+    "copy": "4_dsrom_split_vm_order_model.py",
+    "git": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+    "sha256": "d3011a9d2343cc85aeef2c93035e82fe1ec524baac6c466d5fa9d754d95c00b5",
+    "source": "tools/dsrom_split_vm_order_model.py"
+  },
+  {
+    "copy": "5_model.json",
+    "git": "1f4422d75e08f35fe97e53d408d5e2140e6e72ce",
+    "sha256": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10",
+    "source": "results/uarch/dsrom_split_domain_parent_20261003/model.json"
+  },
+  {
+    "copy": "hbm_owner-handoff-r1.json",
+    "git": "c8dafdfe0da8a537f9cea2d833a2a834308833a6",
+    "sha256": "5316e7154268384808fa8ba11ef8f31c2013837f7ca2ee61193ba8333ed34cac",
+    "source": "results/uarch/hbm_fullsize_inventory_20261003/owner-handoff-r1.json"
+  },
+  {
+    "copy": "hbm_model-r1.json",
+    "git": "c8dafdfe0da8a537f9cea2d833a2a834308833a6",
+    "sha256": "774c50e28e39d06c9c7a3e80b69c6442a262af69640d5167126b6ef708cf465b",
+    "source": "results/uarch/hbm_fullsize_inventory_20261003/model-r1.json"
+  },
+  {
+    "copy": "maxwell_existing_fences.json",
+    "git": "5f5e4a310fb708d858fd37ad2104edbd9ba005fe",
+    "sha256": "5e73dfd08ddf3f88fef1eb2a7cd14077255dd0ea7ddfd53ff415284e2d8fe45e",
+    "source": "results/uarch/dsrom_capture_existing_fences_20261003/model.json"
+  }
+]

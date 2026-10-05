@@ -1,0 +1,123 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/numeric_profile_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arithmetic_order": {
+      "additionalProperties": false,
+      "properties": {
+        "branch_reduction": { "const": "balanced_(p0_plus_p1)_plus_(p2_plus_p3)" },
+        "field_affine": { "const": "separate_binary32_multiply_then_add" },
+        "nonlinear": { "const": "correctly_rounded_binary32_sigmoid_and_exp" },
+        "projection": { "const": "increasing_k_exact_product_single_rne_product_add" },
+        "rms_reduction": { "const": "balanced_14_level_binary32_rne" },
+        "sinkhorn": { "const": "stable_softmax_column_then_19_row_column_pairs" }
+      },
+      "required": ["branch_reduction", "field_affine", "nonlinear", "projection", "rms_reduction", "sinkhorn"],
+      "type": "object"
+    },
+    "constants": {
+      "additionalProperties": false,
+      "properties": {
+        "hc_epsilon_binary32": { "const": 897988541 },
+        "norm_epsilon_binary32": { "const": 897988541 }
+      },
+      "required": ["hc_epsilon_binary32", "norm_epsilon_binary32"],
+      "type": "object"
+    },
+    "dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "combination_destinations": { "const": 4 },
+        "combination_sources": { "const": 4 },
+        "flattened_width": { "const": 16384 },
+        "hc_multiplier": { "const": 4 },
+        "hidden_size": { "const": 4096 },
+        "mix_fields": { "const": 24 },
+        "post_fields": { "const": 4 },
+        "pre_fields": { "const": 4 },
+        "sinkhorn_iterations": { "const": 20 }
+      },
+      "required": [
+        "combination_destinations",
+        "combination_sources",
+        "flattened_width",
+        "hc_multiplier",
+        "hidden_size",
+        "mix_fields",
+        "post_fields",
+        "pre_fields",
+        "sinkhorn_iterations"
+      ],
+      "type": "object"
+    },
+    "encodings": {
+      "additionalProperties": false,
+      "properties": {
+        "branch_and_residual": { "const": "BF16" },
+        "byte_order": { "const": "little" },
+        "coefficients_and_parameters": { "const": "F32" },
+        "input": { "const": "BF16" }
+      },
+      "required": ["branch_and_residual", "byte_order", "coefficients_and_parameters", "input"],
+      "type": "object"
+    },
+    "exception_policy": {
+      "additionalProperties": false,
+      "properties": {
+        "command_commit": { "const": "atomic_across_all_batch_times_sequence_tokens" },
+        "finite_branch_saturation": { "const": "final_bf16_conversion_only_and_counted" },
+        "nonfinite_or_boundary_overflow": { "const": "poison_without_partial_commit" },
+        "subnormals": { "const": "preserved_no_ftz_or_daz" }
+      },
+      "required": ["command_commit", "finite_branch_saturation", "nonfinite_or_boundary_overflow", "subnormals"],
+      "type": "object"
+    },
+    "profile_id": { "const": "opentallas.deepseek_v4_hc_pre_numeric.v1" },
+    "runtime_axes": {
+      "additionalProperties": false,
+      "properties": {
+        "batch": { "const": "positive_dynamic" },
+        "sequence": { "const": "positive_dynamic" },
+        "token_count": { "const": "batch_times_sequence" }
+      },
+      "required": ["batch", "sequence", "token_count"],
+      "type": "object"
+    },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_numeric_profile.v1" },
+    "source_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "backend_bit_equivalence": { "const": "not_claimed" },
+        "kernel_source_sha256": { "const": "59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2" },
+        "model_source_sha256": { "const": "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f" }
+      },
+      "required": ["backend_bit_equivalence", "kernel_source_sha256", "model_source_sha256"],
+      "type": "object"
+    },
+    "specification": {
+      "additionalProperties": false,
+      "properties": {
+        "document": { "const": "SPEC-NUM" },
+        "requirement": { "const": "NUM-6.10" },
+        "version": { "const": "1.1" }
+      },
+      "required": ["document", "requirement", "version"],
+      "type": "object"
+    }
+  },
+  "required": [
+    "arithmetic_order",
+    "constants",
+    "dimensions",
+    "encodings",
+    "exception_policy",
+    "profile_id",
+    "runtime_axes",
+    "schema",
+    "source_boundary",
+    "specification"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE numeric profile v1",
+  "type": "object"
+}

@@ -1,0 +1,17 @@
+{
+  "campaigns_checked": 8,
+  "incomplete": [],
+  "incomplete_list_count": 0,
+  "not_a_claim": [
+    "this is a PARSE, not an elaboration: a module reached only through a generate construct the regex does not read would be missed, and a complete list here is not proof the campaign elaborates",
+    "file ORDER is not checked; Verilator wants a package before its user",
+    "the UNION of a campaign's source tuples is checked, not each tuple: the bench files usually live in a second tuple and are concatenated at invocation, so a per-tuple check reports false gaps"
+  ],
+  "producer": {
+    "git": {
+      "commit": "75bb8b16488518007e154d7108b961c2cc6ea080"
+    },
+    "tool": "tools/audit_rtl_campaign_source_lists.py"
+  },
+  "schema": "opentallas.derived.rtl_campaign_source_lists.v1"
+}

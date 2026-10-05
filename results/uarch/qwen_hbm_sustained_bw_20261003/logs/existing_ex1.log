@@ -1,0 +1,13 @@
+LAYER 0 stream_ps=1243136
+LAYER 1 stream_ps=1104896
+LAYER 2 stream_ps=1169408
+LAYER 3 stream_ps=1245184
+LAYER 4 stream_ps=1104896
+LAYER 5 stream_ps=1168384
+LAYER 6 stream_ps=1144832
+LAYER 7 stream_ps=1104896
+SUMMARY model=1 pcrdy=0 worst_stream_ps=1245184 mean_stream_ps=1160704 worst_Bps=842105263158 mean_Bps=903396559330 got=262144 bad=0 verdict=PASS
+- rtl/test/model_ready_hbm_r14/tb_hbm_stream_existing_models.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 0.330 s; speed 114.491 us/s
+- Verilator: cpu 0.223 s on 1 threads; allocated 14 MB

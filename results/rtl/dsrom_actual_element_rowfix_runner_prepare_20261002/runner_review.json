@@ -1,0 +1,157 @@
+{
+  "GO_path": "results/rtl/dsrom_actual_element_rowfix_prepare_20261002/parent_GO.json",
+  "artifact_pins": {
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/parent_GO_template_NOT_AUTHORIZATION.json": "d4845f2f0478db23151147b81195773a13592aea8697373c7806a5c4fbbf9373",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner.diff": "52ec10616bbf7c932a571c7a918f0ba0ea1343eeb6c467c2b7cb8585e4c8c70c",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_plan.json": "1cf7fe3e290d211d9f02bf22b8817ecbdf540e9c88746b91f54092fdc944c626",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_readonly_preflight.json": "ccd4169eb43dfe04bf2c9649e895c37b8b434ab54e9694eb3a9c63379da91eb4",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_tests_r1.log": "19a73d6a9a358272b35e0d56ac1f05f196d0ad88793acb21744d3376228bcd68",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_tests_r1_failure.json": "fcccfccb3ae43dfce792eb632e137b9c4f8ddcf11428cc1852c5b3a4d03e3dc5",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_tests_r1_source.py.txt": "b6f79a3bd6dce4dec93f4a29d9e047a34505f4efb6363ae6f1a89d9286998126",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_tests_r2.log": "27b271d07978bc6fc26c7f28b5e1612106e572f122cb87dfeb13517c2bfe1164",
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/verilator_preflight_prepare.json": "4338d0086648d98059fb2f0081a52fc37f9fa9bb66e41fa3b86f01aaa5abb834"
+  },
+  "bench_sha256": "7e12b88d719b2915eba25c07f802cde6fbdf15c572ba2b5675558756e0269f59",
+  "cases": {
+    "bfcolumn": {
+      "BF16": 1,
+      "XF": 8
+    },
+    "q": {
+      "BF16": 0,
+      "XF": 4
+    }
+  },
+  "changes_from_r2": [
+    "Dedicated rowfix paths and namespace generator; use reviewed unchanged rowfix sourceplan compile argv",
+    "New GO pins full prepared SHA, model, bench, complete canonical42-file manifest, runner, runner plan, and sourceplan",
+    "Verify committed prepared bytes and re-generated package before launch",
+    "Verify actual Verilator resolved path, wrapper/binary hashes, environment, exact version, and options before launch and before building",
+    "Same r2 encompassing cgroup properties; child requires exactly2 affinity CPUs and kernel4GiB/swap0 caps with writable cgroup.kill",
+    "Independent whole660s timer and SIGTERM whole-kill handler; all timeout kills protected by finally; post-command expiry guard",
+    "Preparation/preflight errors handled by existing failure receipt path; all q/BF assertions and source expectations unchanged"
+  ],
+  "execution_claims": {
+    "HDL_compiled": false,
+    "adopted": false,
+    "arithmetic_qualified": false,
+    "simulated": false,
+    "systemd_launched": false,
+    "timing_qualified": false
+  },
+  "model_sha256": "43daaeb259c1f3fc43782ec46a360570f41a6541777f15d6355070a09858a04b",
+  "next_action": "Parent reviews this added-only commit and commits a fresh GO from template, filling prepared_commit with this runner review commit full SHA. No previous GO authorizes these sources.",
+  "package_sha256": "274d3b520a8e4cab938742af43587db569721029ccc58c28bc33715572a62dc8",
+  "prepared_sources_commit": "c6db3c1853b4e48a0cc5b0746334def4dff0e8ce",
+  "preserved_files_verified": 61,
+  "runner_plan_sha256": "1cf7fe3e290d211d9f02bf22b8817ecbdf540e9c88746b91f54092fdc944c626",
+  "runner_sha256": "b9e8c83a9db1294b509563f5f328689d33b0e676ab9bb58cfeadf4b1df12694d",
+  "source_pins": {
+    "rtl/common/ot_prefix.sv": {
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "bytes": 2051,
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "bytes": 1209,
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "bytes": 1161,
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "bytes": 6753,
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "bytes": 4653,
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "bytes": 5704,
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "rtl/v41rom/ot_v41_bterm.sv": {
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "bytes": 10621,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "rtl/v41rom/ot_v41_chain.sv": {
+      "bytes": 4723,
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "rtl/v41rom/ot_v41_chain2.sv": {
+      "bytes": 5120,
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "bytes": 57081,
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "rtl/v41rom/ot_v41_segtree.sv": {
+      "bytes": 6931,
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "rtl/v41rom/ot_v41_segtree2.sv": {
+      "bytes": 8798,
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    }
+  },
+  "sourceplan_sha256": "af8e25e20e7e5db6c3853b963eb720bc1b2c5cd2e2cdcd540c9de81f6200c90a",
+  "status": "RUNNER_PREPARED_NOT_EXECUTED",
+  "tests": {
+    "earlier_failure_preserved": "runner_tests_r1_failure.json",
+    "log": "runner_tests_r2.log",
+    "method": "Pure Python gate/source checks and local temporary fake-cgroup files with mocked child commands/timers/signals. No actual HDL or cgroup mutation.",
+    "pass_count": 9
+  },
+  "unchanged_full_goal_geometry": {
+    "BP": 0,
+    "CG": 1,
+    "CUT": 379,
+    "DRAIN": 127,
+    "EARLY": 1,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "LAT": 8,
+    "LV": 5,
+    "MTP": 1,
+    "NB": 2,
+    "NCH": 16,
+    "NCHB": 8,
+    "NSEG": 8,
+    "PHW": 6,
+    "PP": 1
+  }
+}

@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.dsrom-s81-window-bind.bind.v1",
+ "die": "rtl/dsrom_sys/s81_capture_parent/ot_chip_v41x_die_owner_safe_c8.sv",
+ "die_sha256": "5b1184b81b23ae5078afb0ea3680665a06ba92a0d5b58feb7f9a97f3c9799ecd",
+ "patched_sha256": "8fa3a61ee35914c558436fd55177d470765f81158b628c9ca73e41f84f58a6c6",
+ "new_rtl": {
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv": "c6b3d0a41e2b838824f2f662e19d8e26af3294d97a001e512031401cc4e888a1",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv": "6dff79412d7472f4c168d2eb1c57031555975c09e83cef0e9a0e95c1e9061b47",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv": "df6c3c7983c33cfb0c741049c8aae373c56939bc64f9e13a88880026dc59e5d7"
+ },
+ "installer": "tools/dsrom_s81_window_la.py install_die()",
+ "lint": {
+  "la0_kg0": {
+   "returncode": 1,
+   "errors": [
+    "%Error: /home/ubuntu/wt-s81-window-bind/rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv:406:14: Cannot find include file: 'ot_hdc_isa_v41_profiles.svh'",
+    "%Error: Exiting due to 1 error(s)"
+   ],
+   "wall_s": 1.4
+  },
+  "la1_kg0": {
+   "returncode": 1,
+   "errors": [
+    "%Error: /home/ubuntu/wt-s81-window-bind/rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv:406:14: Cannot find include file: 'ot_hdc_isa_v41_profiles.svh'",
+    "%Error: Exiting due to 1 error(s)"
+   ],
+   "wall_s": 1.4
+  },
+  "la1_kg1": {
+   "returncode": 1,
+   "errors": [
+    "%Error: /home/ubuntu/wt-s81-window-bind/rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv:406:14: Cannot find include file: 'ot_hdc_isa_v41_profiles.svh'",
+    "%Error: Exiting due to 1 error(s)"
+   ],
+   "wall_s": 1.8
+  }
+ },
+ "status": "fail"
+}

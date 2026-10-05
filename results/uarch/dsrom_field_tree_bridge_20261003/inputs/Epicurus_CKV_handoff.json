@@ -1,0 +1,35 @@
+{
+  "owner": "Epicurus",
+  "to": [
+    "Hubble",
+    "Maxwell",
+    "parent"
+  ],
+  "status": "SOURCE_BOUND_MODEL_RECEIVE_OWNERSHIP_GAP_NO_RTL_ADMISSION",
+  "frozen_main_commit": "47454d4951de3dd21d0e030f329e2f737cd90151",
+  "worktree": "/tmp/opentallas-H3-scalar-contract-model-20261002",
+  "model": "results/uarch/dsrom_ckv_receive_credit_model_20261003/model_r3.json",
+  "source_manifest": "results/uarch/dsrom_ckv_receive_credit_model_20261003/origins.json",
+  "gate_plan": "model.json.gate_plan",
+  "launch_allowed": false,
+  "coordination": {
+    "Hubble": [
+      "Provide current frozen CKV source inventory, compile defines and binary/link map; original versus count-clear service binding",
+      "Provide actual generation/selection, RX valid/ready/accept/rank/gid/payload hash, packed accept and staging write address/mask/row hash, QK/PV/engine/output retirement trace",
+      "Confirm any active CKV simulation handle before a future launch; none started by Epicurus"
+    ],
+    "Maxwell": [
+      "Bind selected512 immutable row seats to actual field boundary homes and consumer phase lease",
+      "Provide peer forward/reverse queue and CDC/reset drain authority plus nine owner-write visible completions, not request acceptance",
+      "Price control E+1548 bits/source plus actual interface/check/CDC state and physical routes; determine no-wrap generation width and finite caller stall/deadline"
+    ]
+  },
+  "scope": "same full K512 service/staging; no larger FIFO; no architecture/timing/fulltoken claim; historical failures remain failures",
+  "source_equations": "results/uarch/dsrom_ckv_receive_credit_model_20261003/source_equations_r2.json",
+  "tests": "python3 tests/test_model_dsrom_ckv_receive_credit.py -v (11 PASS)",
+  "source_inventory": "tools/w17_current_fastpp_l20_sources.txt at frozen main; actual installed binary still unproven",
+  "authoritative_model": "model_r3.json",
+  "ready1_control_calendar": "193 static source-model edges per512 selected replay, excludes caller/window/stalls/engine drain; NOT measuredRTL",
+  "review_commit": "6675dc3c5b7235e6df8ce0b61f8b05091f00b2bb",
+  "ACK_state": "pending; no agent-send tool available; queue handoff only"
+}

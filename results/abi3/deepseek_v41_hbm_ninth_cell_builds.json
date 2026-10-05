@@ -1,0 +1,41 @@
+{
+ "1_the_event_board_is_a_parameter_not_a_ceiling": {
+  "cost": "three flip-flops a level: 6,144 for a board of 4,096",
+  "result": "the 2,442-level refusal is gone",
+  "the_abi_allows_far_more": "signal_event_id is a SIXTEEN-BIT instruction field; 2,048 is ot_a3_pkg.sv's A3_EVENT_COUNT, which its own comment labels an 'implementation bound (capability field, not ABI)'",
+  "the_change": "ot_a3_microsequencer gained an EVENTS parameter defaulting to A3_EVENT_COUNT and forwards it to ot_a3_event_scoreboard, which was already parameterised.  The DEFAULT elaboration is byte-identical, so no bound vector and no shipped capability record moves; a comparator capability -- nobody's certificate input -- declares the wider depth.",
+  "what_it_bounds": "ABI 3.0 events are SINGLE-ASSIGNMENT levels -- section 12.14 lets at most one instruction name a given event ID in its signal field, and nothing lowers a level before the transaction ends -- so the board bounds the number of distinct completion levels a program's TEXT may name, not the number it holds at once.  An allocator that recycles an ID was built and refused: 'event 0 is signalled more than once'."
+ },
+ "2_behind_it_is_a_capacity_wall_node_count_cannot_divide": {
+  "measured_per_node_hbm_demand_at_262144_positions": {
+   "128_nodes": 1052073676800,
+   "16_nodes": 1064342999040,
+   "64_nodes": 1052316487680,
+   "8_nodes": 1082139955200,
+   "declared_per_node": 103079215104
+  },
+  "reading": "the demand barely moves with node count -- 1,082 GB at eight nodes and 1,052 GB at one hundred and twenty-eight -- so it is NODE-LOCAL and does not shard.  Adding nodes cannot close a 10x gap.",
+  "the_lever_is_context_length": "the same lever DeepSeek-V4-Pro's array uses.  Measured: 8,192 positions refuses on a 64 MB vector_stream SRAM region, 2,048 on 16 MB, 1,024 on 8 MB, and 512 BUILDS.",
+  "what_it_is": "quadratic-in-context activations.  The graph declares main.layer{20,24,28,32,36}.attention.indexer.score.scores and pool_read.admission at [262144, 262144] -- 68.7 G elements each, 128 GiB in bf16 and 64 GiB in u8."
+ },
+ "answer": "yes, and two things had to be measured rather than assumed.",
+ "not_a_claim": [
+  "a token is not claimed here; the graded run was launched and this record is the BUILD and the admission",
+  "512 positions is a declared maximum context, not a shortened model: the weights and the graph structure are the shipped release's, and the workload is 32 prompt tokens plus four new",
+  "the 4,096-entry scoreboard is not yet routed on ASAP7, so its frequency and area cost are stated as flip-flop count and not as a measurement"
+ ],
+ "question": "the ninth cell -- DeepSeek-V4.1-Flash on the shared HBM/SRAM machine -- was refused 'program signals 2442 distinct events, capability admits 2048', named a HARDWARE BOUND.  Can it be built?",
+ "schema": "opentallas.result.v41_hbm_ninth_cell_builds.v1",
+ "the_build": {
+  "admission": "admitted=True instructions=4759 work=163723/163723",
+  "context_tokens": 512,
+  "declared_retired_work": 163723,
+  "descriptor_count": 11896,
+  "errors": [],
+  "event_board": 4096,
+  "event_count": 2442,
+  "instruction_count": 4759,
+  "nodes": 8,
+  "proved_retired_work": 163723
+ }
+}

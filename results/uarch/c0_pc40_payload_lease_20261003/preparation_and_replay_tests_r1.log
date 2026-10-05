@@ -1,0 +1,25 @@
+test_finite_sign_and_clamp_rules (test_c0_pc40_payload_replay_r1.BitReplayTests) ... ok
+test_nonfinite_rejected_not_silently_maximized (test_c0_pc40_payload_replay_r1.BitReplayTests) ... ok
+test_wrong_constant (test_c0_pc40_payload_replay_r1.BitReplayTests) ... ok
+test_wrong_gate_sign (test_c0_pc40_payload_replay_r1.BitReplayTests) ... ok
+test_wrong_result (test_c0_pc40_payload_replay_r1.BitReplayTests) ... ok
+test_actual_caller_up_home_and_finite_NoC_debit (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_changed_captured_payload_rejected (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_default_off (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_early_ACK_rejected (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_frame_packing_banks (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_input_alias_not_released_after_capture (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_reuse_requires_output_ACK_consumer_reverse (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_single_write_no_alias_before_ACK (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_source_ACK_lane_must_be_idle_before_accept (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_source_RF_common_ACK_and_widths (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_source_packet_width_tamper (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_stale_reverse_sequence (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_wrong_RF_response_order (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_wrong_lease_and_width (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+test_wrong_owner_ACK (test_c0_pc40_workspace_lease_r1.PortLeaseTests) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 2.746s
+
+OK

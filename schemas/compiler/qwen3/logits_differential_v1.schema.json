@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/logits_differential_v1.schema.json",
+  "title": "OpenTallas Qwen3 full-logits differential v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "argmax_match",
+    "atol",
+    "element_count",
+    "maximum_absolute_error",
+    "mean_absolute_error",
+    "passed",
+    "reference_sha256",
+    "report_id",
+    "schema",
+    "service_sha256"
+  ],
+  "properties": {
+    "argmax_match": {
+      "type": "boolean"
+    },
+    "atol": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "element_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "maximum_absolute_error": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "mean_absolute_error": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "reference_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.qwen3.logits_differential.v1"
+    },
+    "service_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "inputs": [
+    {
+      "archive": "inputs/0.json.gz",
+      "bytes": 3452043,
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_current_catalog.json.gz",
+      "sha256": "32549052a636a2cb0ca0205186a8d540723f97d30ab4e1c5fc76f8e2eb9d4e4c"
+    },
+    {
+      "archive": "inputs/1.json.gz",
+      "bytes": 6123860,
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/full_program_costs.json.gz",
+      "sha256": "b22b329c20d184ec335448dbd7385f1439752f3ee81b7e2a0868fd8a2e4b2eaf"
+    },
+    {
+      "archive": "inputs/2.json",
+      "bytes": 15013,
+      "path": "results/uarch/ds_hbm_source_inputs_views_r34_20261002/prepared_join.json",
+      "sha256": "1f1d705ff736f486f9ea88331da7e86ac72740bfb014c607d4acb275b1e5a311"
+    },
+    {
+      "archive": "inputs/3.json",
+      "bytes": 49482,
+      "path": "results/uarch/h3_complete_native_calendar_20261002/portable_input_closure_r1/r34_portable_r4/summary.json",
+      "sha256": "2d7bd6a79995dec78f8e9753a8f9ff30cf7abc4e22be73f10f7d1a837f671d15"
+    },
+    {
+      "archive": "inputs/4.json.gz",
+      "bytes": 249918,
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_source_overlay.json.gz",
+      "sha256": "c1f50827fc95911911396101b718944ace12b2ab69420436ecdc5f25a64f848e"
+    },
+    {
+      "archive": "inputs/5.json.gz",
+      "bytes": 3783521,
+      "path": "results/uarch/h3_complete_native_calendar_20261002/bounded_provider_milestone/Qwen_tiled.json.gz",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    }
+  ],
+  "origin_commit": "6549b5c8806bb0aafd988856aa55034c43794e48"
+}

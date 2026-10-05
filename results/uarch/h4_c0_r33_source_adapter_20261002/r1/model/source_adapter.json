@@ -1,0 +1,58 @@
+{
+  "Dewey_once_reprice_schema": "H4_R33_DEWEY_ONCE_REPRICE_V1",
+  "PCs": 2213,
+  "Qwen": {
+    "PCs": 1737,
+    "families": 21,
+    "source_unchanged": true
+  },
+  "RTL_allowed": false,
+  "actual128lane_batch_count_delta": {
+    "LOAD": -15360
+  },
+  "actual_scalar_count_delta": {
+    "LOAD": -1966080
+  },
+  "calendar_admitted": false,
+  "changed_window_PCs": 40,
+  "families": 30,
+  "full_movement_qualified": false,
+  "hardware_qualified": false,
+  "initial_payloads_supplied": false,
+  "inputs": {
+    "dispatch": "df2a4fbbdd0204772d1c0d479bb43b22c209d933ac3745433a8c1bbe7efcb210",
+    "native": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00"
+  },
+  "owner_API": "tools/h4_c0_v1_owner_lock_addressed.py; no original owner/observer changes",
+  "r33_pin": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+  "required_reprice_fields": {
+    "C0_control_recharged": false,
+    "RF_highword_RMW_recharged": false,
+    "actual_scalar_count_delta": {
+      "LOAD": -1966080
+    },
+    "catalog_sha256": "cb40b52b8c77bdcf9d59295a2c7eca3a2bf908b08ab15dc2037fb1e0d3464e3c",
+    "dispatch_sha256": "df2a4fbbdd0204772d1c0d479bb43b22c209d933ac3745433a8c1bbe7efcb210",
+    "native_sha256": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00",
+    "reprice_count": 1
+  },
+  "schema": "H4_C0_R33_SOURCE_ADAPTER_V1",
+  "source_RoPE_views": 264,
+  "source_byte_span_scope": "Source span only; original conservative128-input service reservations retained until Dewey reprice; no free bandwidth/latency credit",
+  "source_catalog_sha256": "cb40b52b8c77bdcf9d59295a2c7eca3a2bf908b08ab15dc2037fb1e0d3464e3c",
+  "source_window_LOAD64B_span_delta": -122880,
+  "source_window_LOAD_byte_delta": -7864320,
+  "status": "SOURCE_JOIN_ACCEPTED_CALENDAR_AND_FULL_MOVEMENT_HELD",
+  "typed_initial_homes": 3840,
+  "window": {
+    "drop_rows": 0,
+    "input_shape": [
+      127,
+      512
+    ],
+    "output_shape": [
+      128,
+      512
+    ]
+  }
+}

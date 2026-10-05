@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.dsrom-s81-window-bind.bind.v1",
+ "die": "rtl/dsrom_sys/s81_capture_parent/ot_chip_v41x_die_owner_safe_c8.sv",
+ "die_sha256": "5b1184b81b23ae5078afb0ea3680665a06ba92a0d5b58feb7f9a97f3c9799ecd",
+ "patched_sha256": "8fa3a61ee35914c558436fd55177d470765f81158b628c9ca73e41f84f58a6c6",
+ "new_rtl": {
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv": "cf171ef4f5d1e0214caef83f528fa499e0f990ab4136787ba80485f0bfdc0f51",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv": "acb0239e7efe013a8b7de891abcf200963a83d8d997fa4cf950a521fb94d378f",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv": "9aae6031f31cff1292171d7dee225aac783d6d16025cb2563b0b1c5dd2d977ac"
+ },
+ "installer": "tools/dsrom_s81_window_la.py install_die()",
+ "full_shape": 0,
+ "lint": {
+  "la0_kg0": {
+   "returncode": 0,
+   "errors": [],
+   "wall_s": 555.4
+  },
+  "la1_kg0": {
+   "returncode": 0,
+   "errors": [],
+   "wall_s": 1039.1
+  },
+  "la1_kg1": {
+   "returncode": 0,
+   "errors": [],
+   "wall_s": 844.2
+  }
+ },
+ "status": "pass"
+}

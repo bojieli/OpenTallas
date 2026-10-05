@@ -1,0 +1,6 @@
+{
+  "cause": "First selector-bank generator reused rows variable after raw-bank construction: TypeError unsupported operand list-int while serializing unused-site count",
+  "terminal": "exit1 before current joined model was emitted",
+  "repair": "Use distinct clock_site_rows; final local and cold19tests PASS",
+  "scope": "generator variable binding error; not timing or physical limit"
+}

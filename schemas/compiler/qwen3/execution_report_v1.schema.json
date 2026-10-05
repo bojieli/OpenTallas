@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/execution_report_v1.schema.json",
+  "title": "OpenTallas Qwen3 artifact service execution report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["attention_backend", "build_id", "counter_reconciliation", "counters", "device", "final_context_tokens", "initial_context_tokens", "layer_boundaries", "logits", "report_id", "schema", "span_tokens"],
+  "properties": {
+    "attention_backend": {"enum": ["eager", "sdpa"]},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "counter_reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exact", "expected", "status"],
+      "properties": {
+        "exact": {"const": true},
+        "expected": {"type": "object"},
+        "status": {"const": "pass"}
+      }
+    },
+    "counters": {"type": "object"},
+    "device": {"minLength": 1, "type": "string"},
+    "final_context_tokens": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "initial_context_tokens": {"maximum": 7999, "minimum": 0, "type": "integer"},
+    "layer_boundaries": {"items": {"$ref": "#/$defs/boundary"}, "maxItems": 36, "type": "array"},
+    "logits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argmax_token_id", "dtype", "sha256", "shape"],
+      "properties": {
+        "argmax_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "dtype": {"const": "bfloat16"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"prefixItems": [{"const": 1}, {"const": 1}, {"const": 151936}], "maxItems": 3, "minItems": 3, "type": "array"}
+      }
+    },
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.execution_report.v1"},
+    "span_tokens": {"maximum": 8000, "minimum": 1, "type": "integer"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer", "sha256", "shape"],
+      "properties": {
+        "layer": {"maximum": 36, "minimum": 1, "type": "integer"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 3, "type": "array"}
+      }
+    }
+  }
+}

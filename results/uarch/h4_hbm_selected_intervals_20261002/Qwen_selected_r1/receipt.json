@@ -1,0 +1,69 @@
+{
+  "L2_slices_per_die": 4,
+  "PCs": 1737,
+  "RF_ports": "serialized 2R1W, two write mirrors",
+  "SMs_per_die": 32,
+  "admission": "FAIL_FINITE_OPERATOR_INTERVAL_COMPOSITION",
+  "automatic_ns_delta": false,
+  "complete_token_latency": null,
+  "contextual_engine_build_allowed": false,
+  "corrected_group_calls": 0,
+  "downstream_PR_checks": [
+    "placed cones",
+    "installed CTS",
+    "actual PG/vias",
+    "SS setup/FF hold"
+  ],
+  "existing_endpoint_installed_is_not_a_prebuild_requirement": true,
+  "families": {
+    "ALL_REDUCE": 72,
+    "ARGMAX": 2,
+    "ARGMAX_REDUCE": 1,
+    "EMBED": 1,
+    "EXP_SUM": 72,
+    "FINAL_NORM": 1,
+    "HEAD_NORM": 144,
+    "KV_FENCE": 72,
+    "KV_READ": 72,
+    "KV_WRITE": 72,
+    "MATRIX": 290,
+    "NORMALIZE": 72,
+    "PV": 72,
+    "QKV_SPLIT": 72,
+    "RESIDUAL": 72,
+    "ROPE": 144,
+    "ROW_SCALE": 146,
+    "RSTD": 72,
+    "SCALAR_MUL": 144,
+    "SCORES": 72,
+    "SILU_GATE": 72
+  },
+  "implementation_todos": [
+    "selected gateway RTL",
+    "generic L2 bank fence RTL",
+    "matrix/GU/KV writers through same ownership fence"
+  ],
+  "leaf_edge_bounds": {
+    "L2_read128": 12,
+    "L2_write128": 8,
+    "L2_write_scalar32": 2,
+    "RF_read_pair": 3,
+    "RF_write_mirrors": 2,
+    "shared_read64": 3,
+    "shared_write64": 2
+  },
+  "model": "Qwen",
+  "physical_L2_banks_per_slice": 8,
+  "pre_engine_build_missing": [
+    "selected-call ordered operand/lease/event spans",
+    "positive backend/consumer/reverse bounds and interval reconciliation",
+    "constructive source clock/PG/via allocation"
+  ],
+  "schema": "opentallas.HBM.endpoint-build-prerequisites.v1",
+  "selected_calls": 1737,
+  "shared_bytes_per_SM": 65536,
+  "shared_port_bytes": 64,
+  "source_dispatch_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+  "source_native_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+  "source_preparation_allowed": true
+}

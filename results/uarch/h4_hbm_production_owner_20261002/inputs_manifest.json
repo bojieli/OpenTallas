@@ -1,0 +1,65 @@
+{
+  "inputs": [
+    {
+      "archive": "inputs/homes.json.gz",
+      "bytes": 4177637,
+      "origin": "/home/ubuntu/OpenTallas/results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz",
+      "sha256": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424"
+    },
+    {
+      "archive": "inputs/receipt.json",
+      "bytes": 236918,
+      "origin": "/tmp/kepler-ds-r38-PC0-96rank-execution-20261002/receipt.json",
+      "sha256": "2fdf8ddf6d03a121f220844876a51311f27c4bd8779fa44b52357823768f1bdc"
+    },
+    {
+      "archive": "inputs/parent_review.json",
+      "bytes": 896,
+      "origin": "/tmp/DS-actual96-PC0-parent-journal-review-20261002.json",
+      "sha256": "9ee809d76b001b525957257eac2e7962d094fd6a3ddf8a272c3476eaf3156a3a"
+    },
+    {
+      "archive": "inputs/constructor.json.gz",
+      "bytes": 1602525,
+      "origin": "/home/ubuntu/OpenTallas-hbm-atomic-source-g0/results/uarch/h4_hbm_gateway_constructive_20261002/constructor_r10/model.json.gz",
+      "sha256": "f62cc27b88d740e2ad3133d14a9008e55a5012b33d065d866b5aa379d437f74b"
+    },
+    {
+      "archive": "inputs/group_execution.json.gz",
+      "bytes": 178326,
+      "origin": "/home/ubuntu/OpenTallas-h3-native-calendar/results/uarch/h3_complete_native_calendar_20261002/provider_shared_driver_join_r2/execution.json.gz",
+      "sha256": "b01dc2e00fc198b95b0db598600478acaa9038d06968a9f88d6a1aa1f854c855"
+    },
+    {
+      "archive": "inputs/group_handoff.md",
+      "bytes": 6300,
+      "origin": "/home/ubuntu/OpenTallas-h3-native-calendar/results/uarch/h3_complete_native_calendar_20261002/provider_shared_driver_join_r2/HANDOFF.md",
+      "sha256": "4bfa471aef724cde379215d9c8d2e12043980a4f9579b861b78aa1aa15807070"
+    },
+    {
+      "archive": "inputs/provider_source.py",
+      "bytes": 27845,
+      "origin": "/home/ubuntu/OpenTallas/tools/h3_ds_checkpoint_provider_r30.py",
+      "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+    },
+    {
+      "archive": "inputs/group_overlay.json.gz",
+      "bytes": 394712,
+      "origin": "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/2.json.gz",
+      "sha256": "d2abdda1c8ab9bd70b53d96eba9a94172d5662910521854bde89b41df8ddb1f2"
+    },
+    {
+      "archive": "inputs/RF_source.sv",
+      "bytes": 2365,
+      "origin": "rtl/gpu/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "archive": "inputs/group_control_fixture.py",
+      "bytes": 7888,
+      "origin": "/tmp/opentallas-C0-operand-windows-20261002/tools/test_h4_c0_ds_tiled_continuation.py",
+      "sha256": "c8f1c22313f9c1530c417cab41642d14d41a5323d009e315f705474d23f8f825"
+    }
+  ],
+  "schema": "HBM_PRODUCTION_OWNER_INPUTS_V1"
+}

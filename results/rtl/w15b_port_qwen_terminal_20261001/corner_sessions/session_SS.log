@@ -1,0 +1,50 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+SIGNOFF corner.name=SS
+unannotated 665990
+SIGNOFF power.total.internal_w=0.1650625765323639
+SIGNOFF power.total.switching_w=0.08490458875894547
+SIGNOFF power.total.leakage_w=0.0003799192199949175
+SIGNOFF power.total.total_w=0.2503470778465271
+SIGNOFF power.sequential.internal_w=0.056416019797325134
+SIGNOFF power.sequential.switching_w=0.006783314980566502
+SIGNOFF power.sequential.leakage_w=0.00012145045911893249
+SIGNOFF power.sequential.total_w=0.06332078576087952
+SIGNOFF power.combinational.internal_w=0.0816313698887825
+SIGNOFF power.combinational.switching_w=0.06277702748775482
+SIGNOFF power.combinational.leakage_w=0.0002297883474966511
+SIGNOFF power.combinational.total_w=0.14463819563388824
+SIGNOFF power.clock.internal_w=0.02706880308687687
+SIGNOFF power.clock.switching_w=0.015344489365816116
+SIGNOFF power.clock.leakage_w=2.8706863304250874e-5
+SIGNOFF power.clock.total_w=0.04244200140237808
+SIGNOFF power.macro.internal_w=0.0
+SIGNOFF power.macro.switching_w=0.0
+SIGNOFF power.macro.leakage_w=0.0
+SIGNOFF power.macro.total_w=0.0
+SIGNOFF power.pad.internal_w=0.0
+SIGNOFF power.pad.switching_w=0.0
+SIGNOFF power.pad.leakage_w=0.0
+SIGNOFF power.pad.total_w=0.0
+SIGNOFF hier.__other__.internal_w=0.1651191377505674
+SIGNOFF hier.__other__.switching_w=0.0849074506762454
+SIGNOFF hier.__other__.leakage_w=0.00037998639776117265
+SIGNOFF hier.__other__.total_w=0.25040657500962094
+SIGNOFF hier.__other__.instances=569426
+SIGNOFF timing.setup_wns_s=-3.856825969705824e-11
+SIGNOFF timing.hold_wns_s=2.7505941968541947e-11
+SIGNOFF timing.setup_tns_s=-1.3485961680714809e-8
+SIGNOFF timing.hold_tns_s=0.0
+core_clk period_min = 0.87 fmax = 1147.36

@@ -1,0 +1,1407 @@
+{
+  "top": "ot_gpu_qwen_native_aperture_cluster",
+  "default_enabled": false,
+  "inventory": {
+    "actual_collectors": 64,
+    "actual_RF_routes": 1,
+    "private_RF_banks": 64
+  },
+  "pins": {
+    "clk": {
+      "direction": "input",
+      "bits": 1,
+      "leaf_bits": 1,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "clk"
+    },
+    "por_n": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "por_n"
+    },
+    "warm_reset": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "warm_reset"
+    },
+    "issuer_held_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "issuer_held_valid"
+    },
+    "issuer_held_fault": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "issuer_held_fault"
+    },
+    "issuer_held_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "issuer_held_tuple"
+    },
+    "issuer_held_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "issuer_held_owner"
+    },
+    "profile_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_valid"
+    },
+    "profile_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_tuple"
+    },
+    "profile_PC": {
+      "direction": "input",
+      "bits": 704,
+      "leaf_bits": 11,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_PC"
+    },
+    "profile_sequence": {
+      "direction": "input",
+      "bits": 4096,
+      "leaf_bits": 64,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_sequence"
+    },
+    "profile_shape": {
+      "direction": "input",
+      "bits": 16384,
+      "leaf_bits": 256,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_shape"
+    },
+    "profile_present": {
+      "direction": "input",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_present"
+    },
+    "profile_double": {
+      "direction": "input",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_double"
+    },
+    "profile_result_double": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "profile_result_double"
+    },
+    "cursor_load_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_valid"
+    },
+    "cursor_load_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_ready"
+    },
+    "cursor_load_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_tuple"
+    },
+    "cursor_load_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_owner"
+    },
+    "cursor_load_sequence": {
+      "direction": "input",
+      "bits": 4096,
+      "leaf_bits": 64,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_sequence"
+    },
+    "cursor_load_descriptor": {
+      "direction": "input",
+      "bits": 512,
+      "leaf_bits": 8,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_descriptor"
+    },
+    "cursor_load_operands": {
+      "direction": "input",
+      "bits": 192,
+      "leaf_bits": 3,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_operands"
+    },
+    "cursor_load_types": {
+      "direction": "input",
+      "bits": 512,
+      "leaf_bits": 8,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_types"
+    },
+    "cursor_load_signed_i8": {
+      "direction": "input",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_signed_i8"
+    },
+    "cursor_load_counts": {
+      "direction": "input",
+      "bits": 2048,
+      "leaf_bits": 32,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_counts"
+    },
+    "cursor_load_vector_mask": {
+      "direction": "input",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_vector_mask"
+    },
+    "cursor_load_template": {
+      "direction": "input",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_template"
+    },
+    "cursor_load_step": {
+      "direction": "input",
+      "bits": 384,
+      "leaf_bits": 6,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_step"
+    },
+    "cursor_load_substep": {
+      "direction": "input",
+      "bits": 128,
+      "leaf_bits": 2,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_substep"
+    },
+    "cursor_load_scalars": {
+      "direction": "input",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_scalars"
+    },
+    "cursor_load_tail": {
+      "direction": "input",
+      "bits": 512,
+      "leaf_bits": 8,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "cursor_load_tail"
+    },
+    "source_cursor_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_cursor_valid"
+    },
+    "source_cursor_advance_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_cursor_advance_valid"
+    },
+    "source_cursor_advance_ready": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_cursor_advance_ready"
+    },
+    "source_descriptor": {
+      "direction": "output",
+      "bits": 512,
+      "leaf_bits": 8,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_descriptor"
+    },
+    "source_types": {
+      "direction": "output",
+      "bits": 512,
+      "leaf_bits": 8,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_types"
+    },
+    "source_tail": {
+      "direction": "output",
+      "bits": 512,
+      "leaf_bits": 8,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_tail"
+    },
+    "source_operands": {
+      "direction": "output",
+      "bits": 192,
+      "leaf_bits": 3,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_operands"
+    },
+    "source_signed_i8_mask": {
+      "direction": "output",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_signed_i8_mask"
+    },
+    "source_vector_mask": {
+      "direction": "output",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_vector_mask"
+    },
+    "source_template": {
+      "direction": "output",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_template"
+    },
+    "source_scalars": {
+      "direction": "output",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_scalars"
+    },
+    "source_counts": {
+      "direction": "output",
+      "bits": 2048,
+      "leaf_bits": 32,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_counts"
+    },
+    "source_ordered_step": {
+      "direction": "output",
+      "bits": 384,
+      "leaf_bits": 6,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_ordered_step"
+    },
+    "source_substep": {
+      "direction": "output",
+      "bits": 128,
+      "leaf_bits": 2,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_substep"
+    },
+    "frame_accept": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "frame_accept"
+    },
+    "frame_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "frame_tuple"
+    },
+    "frame_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "frame_owner"
+    },
+    "terminal_accept": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "terminal_accept"
+    },
+    "terminal_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "terminal_tuple"
+    },
+    "terminal_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "terminal_owner"
+    },
+    "terminal_sequence": {
+      "direction": "input",
+      "bits": 4096,
+      "leaf_bits": 64,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "terminal_sequence"
+    },
+    "begin_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "begin_valid"
+    },
+    "begin_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "begin_ready"
+    },
+    "capture_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_valid"
+    },
+    "capture_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_ready"
+    },
+    "capture_aperture": {
+      "direction": "input",
+      "bits": 192,
+      "leaf_bits": 3,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_aperture"
+    },
+    "capture_bank": {
+      "direction": "input",
+      "bits": 384,
+      "leaf_bits": 6,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_bank"
+    },
+    "capture_slots": {
+      "direction": "input",
+      "bits": 1152,
+      "leaf_bits": 18,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_slots"
+    },
+    "capture_version": {
+      "direction": "input",
+      "bits": 704,
+      "leaf_bits": 11,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_version"
+    },
+    "capture_workspace": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "capture_workspace"
+    },
+    "query_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_valid"
+    },
+    "query_retained": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_retained"
+    },
+    "query_write": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_write"
+    },
+    "query_workspace": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_workspace"
+    },
+    "bank_fault": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "bank_fault"
+    },
+    "query_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 15296,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_tuple"
+    },
+    "query_slot": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_slot"
+    },
+    "query_owner": {
+      "direction": "input",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_owner"
+    },
+    "query_version": {
+      "direction": "input",
+      "bits": 704,
+      "leaf_bits": 704,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_version"
+    },
+    "query_first": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_first"
+    },
+    "query_end": {
+      "direction": "input",
+      "bits": 640,
+      "leaf_bits": 640,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "query_end"
+    },
+    "lease_tuple": {
+      "direction": "output",
+      "bits": 76480,
+      "leaf_bits": 1195,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_tuple"
+    },
+    "lease_version": {
+      "direction": "output",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_version"
+    },
+    "lease_slots": {
+      "direction": "output",
+      "bits": 5760,
+      "leaf_bits": 90,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_slots"
+    },
+    "lease_owner": {
+      "direction": "output",
+      "bits": 14720,
+      "leaf_bits": 230,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_owner"
+    },
+    "lease_bank": {
+      "direction": "output",
+      "bits": 1920,
+      "leaf_bits": 30,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_bank"
+    },
+    "lease_workspace": {
+      "direction": "output",
+      "bits": 320,
+      "leaf_bits": 5,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_workspace"
+    },
+    "lease_write": {
+      "direction": "output",
+      "bits": 320,
+      "leaf_bits": 5,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_write"
+    },
+    "lease_double": {
+      "direction": "output",
+      "bits": 320,
+      "leaf_bits": 5,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "lease_double"
+    },
+    "bank_scope_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "bank_scope_valid"
+    },
+    "bank_scope_writable": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "bank_scope_writable"
+    },
+    "bank_scope_workspace": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "bank_scope_workspace"
+    },
+    "bank_scope_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 15296,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "bank_scope_tuple"
+    },
+    "bank_scope_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 3520,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "bank_scope_owner"
+    },
+    "ack_accept": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "ack_accept"
+    },
+    "ack_slot": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "ack_slot"
+    },
+    "ack_owner": {
+      "direction": "input",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_aperture",
+      "leaf": "ack_owner"
+    },
+    "visibility_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "visibility_valid"
+    },
+    "visibility_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "visibility_tuple"
+    },
+    "visibility_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "visibility_owner"
+    },
+    "visibility_sequence": {
+      "direction": "input",
+      "bits": 4096,
+      "leaf_bits": 64,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "visibility_sequence"
+    },
+    "reverse_accept": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "reverse_accept"
+    },
+    "reverse_tuple": {
+      "direction": "input",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "reverse_tuple"
+    },
+    "reverse_owner": {
+      "direction": "input",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "reverse_owner"
+    },
+    "reverse_sequence": {
+      "direction": "input",
+      "bits": 4096,
+      "leaf_bits": 64,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "reverse_sequence"
+    },
+    "read_route_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "read_route_valid"
+    },
+    "write_route_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "write_route_valid"
+    },
+    "read_bank": {
+      "direction": "output",
+      "bits": 384,
+      "leaf_bits": 6,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "read_bank"
+    },
+    "write_bank": {
+      "direction": "output",
+      "bits": 384,
+      "leaf_bits": 6,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "write_bank"
+    },
+    "read_slot": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 9,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "read_slot"
+    },
+    "write_slot": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 9,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "write_slot"
+    },
+    "read_owner": {
+      "direction": "output",
+      "bits": 2944,
+      "leaf_bits": 46,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "read_owner"
+    },
+    "write_owner": {
+      "direction": "output",
+      "bits": 2944,
+      "leaf_bits": 46,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "write_owner"
+    },
+    "authority_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_valid"
+    },
+    "authority_tuple": {
+      "direction": "output",
+      "bits": 15296,
+      "leaf_bits": 239,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_tuple"
+    },
+    "authority_owner": {
+      "direction": "output",
+      "bits": 3520,
+      "leaf_bits": 55,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_owner"
+    },
+    "authority_PC": {
+      "direction": "output",
+      "bits": 704,
+      "leaf_bits": 11,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_PC"
+    },
+    "authority_sequence": {
+      "direction": "output",
+      "bits": 4096,
+      "leaf_bits": 64,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_sequence"
+    },
+    "authority_shape_sha": {
+      "direction": "output",
+      "bits": 16384,
+      "leaf_bits": 256,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_shape_sha"
+    },
+    "authority_source_slots": {
+      "direction": "output",
+      "bits": 4608,
+      "leaf_bits": 72,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_source_slots"
+    },
+    "authority_source_owners": {
+      "direction": "output",
+      "bits": 11776,
+      "leaf_bits": 184,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_source_owners"
+    },
+    "authority_result_slots": {
+      "direction": "output",
+      "bits": 1152,
+      "leaf_bits": 18,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_result_slots"
+    },
+    "authority_result_owner": {
+      "direction": "output",
+      "bits": 2944,
+      "leaf_bits": 46,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_result_owner"
+    },
+    "authority_source_banks": {
+      "direction": "output",
+      "bits": 1536,
+      "leaf_bits": 24,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_source_banks"
+    },
+    "authority_result_bank": {
+      "direction": "output",
+      "bits": 384,
+      "leaf_bits": 6,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "authority_result_bank"
+    },
+    "source_owner_held": {
+      "direction": "output",
+      "bits": 256,
+      "leaf_bits": 4,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "source_owner_held"
+    },
+    "result_owner_held": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "result_owner_held"
+    },
+    "output_visible": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "output_visible"
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "fault"
+    },
+    "context_live": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_aperture",
+      "leaf": "context_live"
+    },
+    "rfroute_bank_port_owned": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_port_owned"
+    },
+    "rfroute_actor_busy": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_busy"
+    },
+    "rfroute_actor_fault": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_fault"
+    },
+    "rfroute_actor_rd_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_rd_valid"
+    },
+    "rfroute_actor_wr_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_wr_valid"
+    },
+    "rfroute_actor_a": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_a"
+    },
+    "rfroute_actor_b": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_b"
+    },
+    "rfroute_actor_dst": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_dst"
+    },
+    "rfroute_actor_wdata": {
+      "direction": "input",
+      "bits": 262144,
+      "leaf_bits": 262144,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_wdata"
+    },
+    "rfroute_actor_wowner": {
+      "direction": "input",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_wowner"
+    },
+    "rfroute_actor_rsp_ready": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_rsp_ready"
+    },
+    "rfroute_actor_ack_ready": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_ack_ready"
+    },
+    "rfroute_actor_rd_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_rd_ready"
+    },
+    "rfroute_actor_wr_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_wr_ready"
+    },
+    "rfroute_actor_rsp_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_rsp_valid"
+    },
+    "rfroute_actor_ack_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_ack_valid"
+    },
+    "rfroute_actor_rsp_a": {
+      "direction": "output",
+      "bits": 262144,
+      "leaf_bits": 262144,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_rsp_a"
+    },
+    "rfroute_actor_rsp_b": {
+      "direction": "output",
+      "bits": 262144,
+      "leaf_bits": 262144,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_rsp_b"
+    },
+    "rfroute_actor_ack_slot": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_ack_slot"
+    },
+    "rfroute_actor_ack_owner": {
+      "direction": "output",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_ack_owner"
+    },
+    "rfroute_actor_routes_drained": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "actor_routes_drained"
+    },
+    "rfroute_bank_routes_drained": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_routes_drained"
+    },
+    "rfroute_route_fault": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "route_fault"
+    },
+    "rfroute_bank_pending_read": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_pending_read"
+    },
+    "rfroute_bank_pending_write": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_pending_write"
+    },
+    "rfroute_bank_saved_read_slot": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_saved_read_slot"
+    },
+    "rfroute_bank_saved_read_owner": {
+      "direction": "output",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_saved_read_owner"
+    },
+    "rfroute_bank_rd_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_rd_valid"
+    },
+    "rfroute_bank_wr_valid": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_wr_valid"
+    },
+    "rfroute_bank_rsp_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_rsp_ready"
+    },
+    "rfroute_bank_ack_ready": {
+      "direction": "output",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_ack_ready"
+    },
+    "rfroute_bank_a": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_a"
+    },
+    "rfroute_bank_b": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_b"
+    },
+    "rfroute_bank_dst": {
+      "direction": "output",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_dst"
+    },
+    "rfroute_bank_wdata": {
+      "direction": "output",
+      "bits": 262144,
+      "leaf_bits": 262144,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_wdata"
+    },
+    "rfroute_bank_wowner": {
+      "direction": "output",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_wowner"
+    },
+    "rfroute_bank_root_tuple": {
+      "direction": "output",
+      "bits": 15296,
+      "leaf_bits": 15296,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_root_tuple"
+    },
+    "rfroute_bank_root_owner": {
+      "direction": "output",
+      "bits": 3520,
+      "leaf_bits": 3520,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_root_owner"
+    },
+    "rfroute_bank_rd_ready": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_rd_ready"
+    },
+    "rfroute_bank_wr_ready": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_wr_ready"
+    },
+    "rfroute_bank_rsp_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_rsp_valid"
+    },
+    "rfroute_bank_ack_valid": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 64,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_ack_valid"
+    },
+    "rfroute_bank_rsp_a": {
+      "direction": "input",
+      "bits": 262144,
+      "leaf_bits": 262144,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_rsp_a"
+    },
+    "rfroute_bank_rsp_b": {
+      "direction": "input",
+      "bits": 262144,
+      "leaf_bits": 262144,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_rsp_b"
+    },
+    "rfroute_bank_ack_slot": {
+      "direction": "input",
+      "bits": 576,
+      "leaf_bits": 576,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_ack_slot"
+    },
+    "rfroute_bank_ack_owner": {
+      "direction": "input",
+      "bits": 2944,
+      "leaf_bits": 2944,
+      "count": 1,
+      "block": "native_rf_route",
+      "leaf": "bank_ack_owner"
+    },
+    "query_empty": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "source_bank_physical_observation",
+      "leaf": "query_empty",
+      "host_writable": false
+    },
+    "controller_read_operand": {
+      "direction": "input",
+      "bits": 128,
+      "leaf_bits": 2,
+      "count": 64,
+      "block": "native_controller_observation",
+      "leaf": "read_operand",
+      "host_writable": false
+    },
+    "controller_read_page": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_controller_observation",
+      "leaf": "read_page",
+      "host_writable": false
+    },
+    "controller_write_page": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_controller_observation",
+      "leaf": "write_page",
+      "host_writable": false
+    },
+    "controller_private_RF_quiescent": {
+      "direction": "input",
+      "bits": 64,
+      "leaf_bits": 1,
+      "count": 64,
+      "block": "native_controller_observation",
+      "leaf": "private_RF_quiescent",
+      "host_writable": false
+    }
+  },
+  "source_sha256": {
+    "rtl/experimental/canonical_qwen_native_apertures_20261003/ot_gpu_qwen_native_aperture_collector.sv": "45c812a1267369b2f67695e948c613f762c86b15bab93b318863b236ce8542a7",
+    "rtl/model/qwen_native_rf_route_20261003/ot_gpu_qwen_native_rf_route_r2.sv": "a3f022dfd728653f0949f32f4c97fa6d0a0622abebe67ddcb05d46c54331aab5",
+    "rtl/model/qwen_native_aperture_cluster_20261003/ot_gpu_qwen_native_aperture_cluster.sv": "e33fcf22b92748a0a6580cb48c4e155a6a6813c9e4788340aea2ee1fd4343433"
+  },
+  "full_build_ready": false,
+  "physical_bindings_required": [
+    "independent Pauli profile outputs from heldsource keys",
+    "actual Pauli busy/fault/protectedoperand/page/RF requests",
+    "existing guardedRF/W4 real ready/response/ACK ports",
+    "native bank_port_owned and private_RF_quiescent from TC/privateRF reservation, never tied1",
+    "existing issuer hold/frame and actual sourcebank Q/B views/ACKs",
+    "actual visibility and matched terminal/reverse; not ACKcount callbacks"
+  ],
+  "scope": "actual installed collector/router hierarchy, enclosing source assembly pending physical profile/controller bindings; no fake input defaults or host grants"
+}

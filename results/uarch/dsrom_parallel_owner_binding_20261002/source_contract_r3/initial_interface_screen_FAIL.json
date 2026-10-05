@@ -1,0 +1,10 @@
+{
+  "no_RTL_measurement_or_performance_claim": true,
+  "numerical_allocation_and_source_plan_identity_unchanged": true,
+  "original_records_preserved": true,
+  "prior_model_sha256": "a360b22fa5689bb9038af96b556594f2ea038128ad905548d4c5346aa7dfe5b6",
+  "prior_source_full_bus_bits": 1616,
+  "reason": "549xs +1067xb is1616data-only; cfg_go/PHW10/np/go/go_bf add16. Initial33bit phase/op header omitted16-bit streamed beat identity.",
+  "source_correct_full_bus_bits": 1632,
+  "verdict": "FAIL_SOURCE_WIDTH_AND_EXPLICIT_BEAT_IDENTITY_IN_INITIAL_INTERFACE_SCREEN"
+}

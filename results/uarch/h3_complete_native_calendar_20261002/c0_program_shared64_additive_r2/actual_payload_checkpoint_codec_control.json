@@ -1,0 +1,31 @@
+{
+  "actual_provider_images": true,
+  "actual_sector_records": 2,
+  "additional_free_disk_required_bytes": 862,
+  "atomic_peak_bytes": 862,
+  "checkpoint_bytes": 862,
+  "complete_runtime_resume_qualified": false,
+  "content_sha256": "232aa198ce403542591f0d6f51f34dfe606b6204fa2b7d29ed5d9d11661108d2",
+  "existing_checkpoint_bytes": 0,
+  "expected_payload_input": false,
+  "hardware_qualified": false,
+  "restore": {
+    "actual_sector_records": 2,
+    "complete_runtime_resume_qualified": false,
+    "content_sha256": "232aa198ce403542591f0d6f51f34dfe606b6204fa2b7d29ed5d9d11661108d2",
+    "hardware_qualified": false,
+    "owner_state": {
+      "leases": [
+        "actual.control.next_reader"
+      ],
+      "published_versions": [
+        "actual.control.PC9"
+      ],
+      "scope": "complete codec control ONLY; no PC9 production bytes"
+    }
+  },
+  "runtime_exclusive_boundary_required": true,
+  "schema": "H4_ACTUAL_PROVIDER_CHECKPOINT_WRITE_RECEIPT_V1",
+  "scope": "all actual sectors of one complete codec control; no actual production resume",
+  "uninitialized_byte_masks_retained": true
+}

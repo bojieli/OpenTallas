@@ -1,0 +1,115 @@
+{
+ "schema": "opentallas.w18b.takeover_diagnosis.v1",
+ "source_commit": "41f7f88615decf1b3ba160d37c93c20953097689",
+ "policy": {
+  "clock_ns": 0.833,
+  "setup_uncertainty_ns": 0.06,
+  "hold_uncertainty_ns": 0.025,
+  "setup_corner": "SS",
+  "hold_corner": "FF",
+  "relaxed": false
+ },
+ "equivalence": {
+  "original_verdict": "FAIL",
+  "transactions_pass": 54,
+  "kv_prefetch_pass": 5,
+  "hash_requests": 131072,
+  "hash_payload_errors": 0,
+  "hash_ingress_stalls": 0,
+  "legacy_multi_count": 25364,
+  "diagnosis": "Legacy bench wrongly requires one-hot pipelined PHY outputs despite unequal region HOPS; new bench retains local one-hot and adds pipelined exactly-once sector coverage."
+ },
+ "clock_tree": {
+  "status": "prior balanced-clock lever rejected; no further tuning",
+  "evidence": "results/physical_abi3/asap7/chip/v41x_karb_local/pregionh_aw30_w18e8p5_1p2_h160cqbc/clock_balance.json",
+  "evidence_sha256": "6a2c8027a56ba18ff33a1ff0737d68851791207d4650b11fc68b844e490e6730",
+  "ss_macro_skew_ps": 79.7,
+  "ff_macro_skew_ps": 83.0,
+  "odb_byte_identical": true
+ },
+ "pslice_ksr": {
+  "signoff": false,
+  "ss_r2r_ps": 13.05,
+  "ss_overall_ps": -192.2,
+  "ff_hold_ps": 24.61,
+  "evidence": "pslice_ksr_corner_sta.json",
+  "evidence_sha256": "95037f87923782d0ff82de2fdda8a3ecf19b28c250ca62b1e17344ce7e441b28"
+ },
+ "routes": {
+  "karb21": "existing live global route; final SS/FF pending",
+  "karb22": "terminal PnR rc1: PSM-0069 unconnected macro VDD at final report; extracted SS/FF FAIL; rejected, no tuning"
+ },
+ "rebase": {
+  "model_pin": "dc7804df7414d4af7a574100eaacaaf90586a414",
+  "legacy_pid": 2305657,
+  "legacy_stopped": true,
+  "reason": "legacy script fetches into main; owner prohibits changing main",
+  "safe_waiter_pid": 3029028,
+  "prepared_script": "/home/ubuntu/w18work/jobs/rebase_chain_pinned.sh",
+  "prepared_script_sha256": "d702c71eb0354f1c285197d789b914095a955cfd598473a91143f6401faa2a1f",
+  "blockers": [
+   "W10 p12q q-pair LEF missing",
+   "W10 c2 BF16 column-pair LEF missing",
+   "verify source pins and SS/FF abstracts before rebase",
+   "launch physical jobs from clean pinned stream sources"
+  ]
+ },
+ "adoption": false,
+ "rtl_modified": false,
+ "docs_modified": false,
+ "observed_at_utc": "2026-10-01T07:36:05.129869+00:00",
+ "route_log_snapshots": {
+  "karb21/proot": {
+   "path": "/home/ubuntu/w18work/karb21/proot/orfs/logs/asap7/opentallas_ot_chip_v41x_karb_proot_asap7_w2a_karb_proot_aw30_w18e8p5_1p2_dlv/base/5_1_grt.tmp.log",
+   "sha256": "6da366fbe77a6136458f8ebfad844822716b9a3f44fe4419fdb908e9df30ad78",
+   "tail": [
+    "    1130* |      12 |     160 |       14 |      5 |    14 |    +0.0% | -559.806 |  -367876.1 |  -338749.5 |   3963 | k_rsp_data[229]",
+    "    1134* |      12 |     155 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367901.4 |  -337732.9 |   3963 | k_rsp_data[229]",
+    "    1140* |      12 |     159 |       13 |      5 |    14 |    +0.0% | -566.069 |  -367873.8 |  -339647.0 |   3963 | k_rsp_data[229]",
+    "    1150* |      12 |     168 |       14 |      5 |    14 |    +0.0% | -561.506 |  -367856.3 |  -338748.9 |   3963 | k_rsp_data[229]",
+    "    1150* |      12 |     158 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367862.5 |  -337720.7 |   3963 | k_rsp_data[229]",
+    "    1160* |      12 |     165 |       13 |      5 |    15 |    +0.0% | -558.395 |  -367773.4 |  -338086.0 |   3963 | k_rsp_data[45]",
+    "    1170* |      12 |     170 |       20 |      5 |    16 |    +0.0% | -562.593 |  -367779.8 |  -338754.9 |   3963 | k_rsp_data[120]",
+    "    1180* |      13 |     178 |       20 |      6 |    16 |    +0.0% | -555.770 |  -367729.1 |  -337772.0 |   3963 | k_rsp_data[191]",
+    "    1181* |      12 |     159 |       13 |      4 |    14 |    +0.0% | -554.826 |  -367808.3 |  -337697.1 |   3963 | k_rsp_data[229]",
+    "    1190* |      12 |     165 |       13 |      4 |    16 |    +0.0% | -554.946 |  -367761.3 |  -336809.3 |   3963 | k_rsp_data[229]"
+   ],
+   "final": false
+  },
+  "karb22/pregionh": {
+   "path": "/home/ubuntu/w18work/karb22/pregionh/orfs/logs/asap7/opentallas_ot_chip_v41x_karb_pregion_asap7_w2a_karb_pregionh_aw30_w18e8p5_1p2_h160ksr/base/5_2_route.tmp.log",
+   "sha256": "b5cc629dddfeca581ced5f6bf83ac5b4aa295b9e3800135b6d6c9469c74eba07",
+   "tail": [
+    "     M9         0",
+    "-----------------",
+    "       582664",
+    "",
+    "",
+    "[INFO DRT-0267] cpu time = 01:37:52, elapsed time = 00:15:31, memory = 10521.70 (MB), peak = 11276.36 (MB)",
+    "",
+    "[INFO DRT-0180] Post processing.",
+    "[INFO DRT-0501] Runtime: 997.63s",
+    "Took 998 seconds: detailed_route -output_drc /work/reports/asap7/opentallas_ot_chip_v41x_karb_pregion_asap7_w2a_karb_pregionh_aw30_w18e8p5_1p2_h160ksr/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_ot_chip_v41x_karb_pregion_asap7_w2a_karb_pregionh_aw30_w18e8p5_1p2_h160ksr/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5"
+   ],
+   "final": false
+  }
+ },
+ "pregionh_ksr": {
+  "signoff": false,
+  "adoption": false,
+  "ss_r2r_ps": -127.03,
+  "ss_overall_ps": -673.65,
+  "ff_hold_overall_ps": -245.94,
+  "ff_r2r_ps": 20.1,
+  "physical_failure": "PSM-0069 macro VDD connectivity",
+  "evidence": "pregionh_ksr_corner_sta.json",
+  "clock_balance": {
+   "ss_worst_skew_ps": 100.1,
+   "ff_worst_skew_ps": 100.3,
+   "tolerance_ps": 100.0,
+   "balanced": false,
+   "evidence": "pregionh_ksr_clock_balance.json"
+  }
+ },
+ "functional_gate": "parallel_hash_reconciliation.json: PASS, source-identical transaction/KV results reused; original final FAILs preserved"
+}

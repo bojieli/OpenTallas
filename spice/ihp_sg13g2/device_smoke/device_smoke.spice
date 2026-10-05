@@ -1,0 +1,30 @@
+OpenTallas IHP SG13G2 official low-voltage MOS smoke deck
+
+* Use the public PDK's official TT low-voltage MOS corner. The subcircuits
+* below instantiate the official sg13_lv_nmos and sg13_lv_pmos wrappers.
+.lib cornerMOSlv.lib mos_tt
+.param temp=27
+
+VDD vdd 0 1.2
+VIN in 0 pulse(0 1.2 1n 20p 20p 1.5n 3n)
+XP out in vdd vdd sg13_lv_pmos l=0.45u w=1.0u ng=1 m=1
+XN out in 0 0 sg13_lv_nmos l=0.45u w=1.0u ng=1 m=1
+CLOAD out 0 10f
+
+.control
+set noaskquit
+save all
+
+dc VIN 0 1.2 0.01
+meas dc dc_out_low FIND v(out) AT=0
+meas dc dc_out_high FIND v(out) AT=1.2
+
+tran 1p 7n
+meas tran tran_out_low AVG v(out) FROM=1.5n TO=2.3n
+meas tran tran_out_high AVG v(out) FROM=3.0n TO=3.8n
+meas tran tphl TRIG v(in) VAL=0.6 RISE=1 TARG v(out) VAL=0.6 FALL=1
+meas tran tplh TRIG v(in) VAL=0.6 FALL=1 TARG v(out) VAL=0.6 RISE=1
+quit
+.endc
+
+.end

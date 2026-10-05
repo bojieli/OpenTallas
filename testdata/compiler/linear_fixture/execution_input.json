@@ -1,0 +1,20 @@
+{
+  "model_id": "fixture.linear_bias.v1",
+  "schema": "opentallas.execution_request.v1",
+  "tensors": [
+    {
+      "dtype": "i8",
+      "id": "hidden",
+      "shape": [
+        1,
+        4
+      ],
+      "values": [
+        3,
+        -2,
+        1,
+        4
+      ]
+    }
+  ]
+}

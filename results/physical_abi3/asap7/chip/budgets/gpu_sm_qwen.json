@@ -1,0 +1,106 @@
+{
+ "name": "gpu_sm_qwen",
+ "arch": "hbm_gpu_qwen",
+ "period_ps": 833.0,
+ "uncertainty_ps": 60.0,
+ "method": "W13: registered-boundary budget (tc_col registers every input and output); the SM glue owns the rest of each cycle; outputs 450 ps (clock-to-out incl. insertion), inputs 300 ps; 1.2 GHz (0.833 ns) at SS per AGENTS.md e7479589",
+ "blocks": {
+  "ot_gpu_tc_col": {
+   "instance": "g_col[*].g_sub[*].u_tc",
+   "ports": {
+    "v": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "first": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "last": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "tag": {
+     "direction": "input",
+     "width": 16,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "w": {
+     "direction": "input",
+     "width": 512,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "x": {
+     "direction": "input",
+     "width": 512,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "ov": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "y": {
+     "direction": "output",
+     "width": 32,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "otag": {
+     "direction": "output",
+     "width": 16,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "fault": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1,
+     "status": "static",
+     "internal_budget_ps": null,
+     "external_ps": null
+    }
+   }
+  }
+ },
+ "memories": {},
+ "violations": [],
+ "wire_model": null,
+ "tile_io_fraction": null,
+ "tile_netlist": null
+}

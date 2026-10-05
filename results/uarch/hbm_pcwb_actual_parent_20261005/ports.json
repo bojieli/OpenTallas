@@ -1,0 +1,92 @@
+{
+  "top": "ot_hbm_accel_pcwb_service_stack",
+  "scope": "DS writeback only; no Qwen r14 replacement",
+  "default_ENABLE": 0,
+  "default_CMD_MATCH_CUT": 0,
+  "clocks": {
+    "service_input": "service_clk",
+    "service_period_ps": 1024,
+    "core_input": "core_clk",
+    "core_period_ps": 833.333,
+    "service_source": "Explicit uniform clock input; donor DS functional master uses hclk #512. Physical PLL/distribution is not installed/qualified.",
+    "prohibited": "Do not use Qwen fractional ~clk & tick or average1024. No live P0 edit.",
+    "source_model": "tools/hbm_accel_service_context_model.py already prices 1024/833 domains",
+    "logic_route_target_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "whole_service_1p2GHz_closed": false
+  },
+  "resources": {
+    "NCH": 16,
+    "NPC": 32,
+    "read_CRED": 64,
+    "posted_write_budget_per_PC": 8,
+    "PHY_command_fifo_per_PC": 72
+  },
+  "CA_module": {
+    "path": "rtl/hbm_accel/integration/ot_hbm_pcwb_ca_slots.sv",
+    "source_clock": "service_clk",
+    "reset": "por_n",
+    "pins": [
+      "run_enable",
+      "row_req[31:0]",
+      "row_op[95:0]",
+      "row_bank[159:0]",
+      "row_row[607:0]",
+      "ca_ready[15:0]",
+      "row_grant[31:0]",
+      "ca_valid[15:0]",
+      "ca_pc_lsb[15:0]",
+      "ca_op[47:0]",
+      "ca_bank[79:0]",
+      "ca_row[303:0]",
+      "fault"
+    ]
+  },
+  "Rawls_module": {
+    "path": "rtl/hbm_accel/integration/ot_hbm_pcwb_prepaid_column.sv",
+    "replication": "32 one-PC instances; PC parameter is0..31",
+    "ENABLE_default": 0,
+    "pins": {
+      "clock": "service_clk,por_n",
+      "held_context": "Actual descriptor/provider owner: operation64=producer, phase32=transport, generation32=irs_serial. Physical rank7/stack2 from actualDS routing frame. Require realowner-valid; if absent refuse row/descriptor admission. No zero/default/local generation.",
+      "posted_ingress": "wr_v/wr_r,bank[4:0],row[18:0],col[4:0],data[255:0],generation[31:0] latched actualprovider irs_serial, actualwriter to adapter; retained lease before controller WQpush",
+      "controller_queue": "wq_v/wq_r,bank5,row19,col5,data256; wq_v only reserved ingress handshake. No fake writer ready.",
+      "controller_issue": "col_v,col_we,col_bank5,col_row19,col_col5,col_data256; nonbackpressured. Validate oldest retained WRITE on WRissue.",
+      "PHY_output": "phy_col_v/phy_col_r,phy_we,bank5,row19,col5,data256 plus full issued receipt tuple forWRITE. FIFOenqueue on actualcol_v; pop only actualPHYaccept. Store write_slot3 WITH the PHY FIFO command at WRissue; do not reconstruct slot from address on return.",
+      "PHY_visibility": "visible_v/visible_r + operation64/phase32/sector34/generation32/slot3/pc5/bank5/row19/col5; accept only full match live+issued+actualPHYaccepted, once",
+      "writer_receipt": "wr_visible_v/wr_visible_r + same tuple; free lease only writerreceipt accepted, not WRissue/PHYqueuepop",
+      "status": "queued/inflight/visible-notreturned counts,all_writes_drained,fault; coldPOR only"
+    },
+    "physical_sector_definition": "sector34={row19,bank[4:2],col5,bank[1:0],pc5}; exact PC-localDS stream physical address. NOT canonical provider pc_of/hash or logical source aperture.",
+    "read_reservation": "64 outstanding credits borrowed from actual readlanding64; no post-pop PHY gating. Parent returns actual CDC rd_freed only. Queue72 covers maximum64RD+8WR.",
+    "write_reservation": "8 includes controllerqueued+PHYqueued+PHYinflight+visible-notreturned. No second8 WRissue credit pool.",
+    "cold_generation": "generation caller-supplied; operation/phase held. All pending retained until positive realmatchedreceipt. No warmreset/clear.",
+    "out_of_order_visibility": "fullreceipt matching; FIFO WRissue binding remains originalWQ order; perwrite completed state retained until writeracceptance",
+    "owner": "Euclid; inseparable queued/issue binding in parent. Rawls only source-list helper as agreed.",
+    "pending_state_encoding": {
+      "bits": 3,
+      "states": [
+        "FREE",
+        "QUEUED",
+        "CONTROLLER_ISSUED",
+        "PHY_ACCEPTED",
+        "VISIBLE_NOT_RETURNED"
+      ],
+      "note": "These are a3bit state enum in the458raw budget, not3independentflags. Visibility must match PHY_ACCEPTED, not controllerissue."
+    }
+  },
+  "Euclid_parent_hooks": {
+    "DS_writer": "ot_hbm_accel_dskv_wb: row_kind2,row_slot6,row_r2,row_data4352,die7,pos20,sh_v/sh_slot3/sh_data4352 on service_clk. Forward wq_pc/bank/row/col/data to corresponding Rawls ingress. u_wb.wq_r=selectedadapter.wr_r, never1.",
+    "controllers": "32 CMD1 .ENABLE1 .WB_EN1 .WA_LATE1 .DIGEST_CUT1 .CMD_MATCH_CUT selectedparam .WQ8 .CRED64 .PCp .REF_MODE1 .REF_PHASE((p*118)/32%118)",
+    "descriptors": "actual perPC desc_v/r,row19,n11,go,next_posted,notice pins; do not invent go or staticrows",
+    "queuecredit": "controller.wq_r goes Rawls wq_r; READcred_ret=actuallanding.rd_freed; not PHYarrival orWRissue",
+    "read_return": "actualPHY rd_valid/data256 perPC to landing64x256 CDC(service->core); actualconsumer valid/ready pops. Full/overflow fault never discardedPASS.",
+    "visibility": "sum Rawls wr_visible_v&&wr_visible_r once perPC peredge -> DS_writer.ack_n6. ACK means actualPHY/backingvisibility, never cmd.wr_ack.",
+    "fence": "DSwriter.fence_ok && all32adapter.all_writes_drained && all32controller.wq_empty; readback descriptor acceptance gated this, not diagnosticforce.",
+    "physical_master": "realexternaluniformservice_clk1024/core_clk833.333 withcoldPOR, independent of currentfractionalQwenlive. No clockgeneratorwritten/qualified here.",
+    "owner_admission": "Require actual provider/frame owner_v before accepting row/descriptor; hold operation/phase/generation/rank/stack unchanged across queued+issued+notvisible debt. Missing generation keeps readiness0. Current bare DSrow writer lacks generation; enclosing provider must supply it, no automaticcounter.",
+    "CA_enable": "CA run_enable means actual service-domain armed, not descriptor go: refresh must continue while stream idle. Same service_clk and coldPOR as allCMD1 phase flops.",
+    "same_edge": "Compute newaccepted/issue/visible/consumer debt from one next-state; a finalmatchedreceipt may release capacity for nextphase only after registeredfence. Never simultaneousWRissue impliesvisible."
+  }
+}

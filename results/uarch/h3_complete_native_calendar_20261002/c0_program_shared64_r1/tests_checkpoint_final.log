@@ -1,0 +1,41 @@
+..........................E...............................................E................E........
+======================================================================
+ERROR: test_actual_provider_checkpoint_preserves_payload_masks_identity_and_atomic_disk (test_h3_complete_native_calendar.FiniteCalendarTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tests/test_h3_complete_native_calendar.py", line 245, in test_actual_provider_checkpoint_preserves_payload_masks_identity_and_atomic_disk
+    p.load('DeepSeek',95,0,b'abc')
+AttributeError: 'SectorProvider' object has no attribute 'load'
+
+======================================================================
+ERROR: test_program_constrained_owner_census_and_span_descriptor_repeats (test_h3_complete_native_calendar.FiniteCalendarTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tests/test_h3_complete_native_calendar.py", line 84, in test_program_constrained_owner_census_and_span_descriptor_repeats
+    b=ROOT/c.OUT/'c0_program_shared64_r1';a=c.read_json(b/'program_owner_admission.json.gz')
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tools/h3_complete_native_calendar.py", line 51, in read_json
+    with gzip.open(path, 'rt') as f:
+  File "/usr/lib/python3.10/gzip.py", line 58, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/usr/lib/python3.10/gzip.py", line 174, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/OpenTallas-h3-native-calendar/results/uarch/h3_complete_native_calendar_20261002/c0_program_shared64_r1/program_owner_admission.json.gz'
+
+======================================================================
+ERROR: test_sagan_collective_aliases_and_specialist_lease_gaps_are_not_zero (test_h3_complete_native_calendar.FiniteCalendarTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tests/test_h3_complete_native_calendar.py", line 229, in test_sagan_collective_aliases_and_specialist_lease_gaps_are_not_zero
+    b=ROOT/c.OUT/'c0_program_shared64_r1';x=c.read_json(b/'DS_fullgraph_continuation_obligations.json.gz')
+  File "/home/ubuntu/OpenTallas-h3-native-calendar/tools/h3_complete_native_calendar.py", line 51, in read_json
+    with gzip.open(path, 'rt') as f:
+  File "/usr/lib/python3.10/gzip.py", line 58, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/usr/lib/python3.10/gzip.py", line 174, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/OpenTallas-h3-native-calendar/results/uarch/h3_complete_native_calendar_20261002/c0_program_shared64_r1/DS_fullgraph_continuation_obligations.json.gz'
+
+----------------------------------------------------------------------
+Ran 100 tests in 30.570s
+
+FAILED (errors=3)

@@ -1,0 +1,9 @@
+{
+  "verdict": "FAIL_CLOSED_COMPONENT_SCOPE_PRESERVED",
+  "test": "test_actual_fresh_subprocess_restore_and_native_continuation",
+  "reason": "scope outside complete native program",
+  "diagnosis": "Small native fixture omitted explicit prefix_stop; original V3 scope transition correctly refused. Fixture now declares stop2 with3-PC fixture in both source/cold constructors. Production 2213PC scope/stop10 unchanged.",
+  "tests_passed": 32,
+  "tests_failed": 1,
+  "numerical_production_run": false
+}

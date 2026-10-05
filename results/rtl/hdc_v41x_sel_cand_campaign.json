@@ -1,0 +1,1913 @@
+{
+ "schema": "opentallas-rtl-campaign-v1",
+ "block": "sel (layer-20 candidate-block select)",
+ "rtl": {
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": "a91af5415f5872e6d7c2b8abf90c33008f538e7e669a217f9f75bbc74fe1739d"
+ },
+ "bench": {
+  "rtl/test/tb_hdc_v41x_sel_cand.sv": "b920dc3a4c8f4288fbf0a813200218a99aa67c2569a71157aa855eabdd187852",
+  "rtl/test/hdc_v41x_sel_cand_harness.cpp": "af002f6e30d578847294bcc5de971de059b4354b314fb5f4faee56f8bfb94a08"
+ },
+ "tools": {
+  "tools/hdc_golden_v41.py": "e6e95d8cf6ee1835bf7a1229f605d3d2b6756fd0234fdec0c4da2b3d12326a8e",
+  "tools/rtl_hdc_v41x_sel_campaign.py": "be281d187bbe5ca761a40b45709f35597fb166c1a631a184a402e6852ceb81fb",
+  "tools/rtl_hdc_v41x_sel_cand_campaign.py": "4e1c948abeafc7903880ca8dd28a1ceb79a3e13e32bba448ab3427f127abbb34"
+ },
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "real_vehicle": {
+  "positions": 400,
+  "cand_src": 20,
+  "candidate_topk_blocks": 64,
+  "candidate_block_size": 8
+ },
+ "status": "pass",
+ "spec": {
+  "exact_golden_equality": {
+   "measured": true,
+   "met": true
+  },
+  "ingest_scores_per_cycle": {
+   "spec": 64,
+   "measured_min": 63.939,
+   "stall_cycles": 0,
+   "met": true
+  },
+  "done_within_20us_at_1m": {
+   "spec_us": 20.0,
+   "measured_max_us": 11.96,
+   "measured_max_cycles": 12367,
+   "clock_hz": 1034000000.0,
+   "met": true
+  },
+  "worst_case_1m_ascending_us": 11.959
+ },
+ "shipped": [
+  {
+   "family": "normal",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1343,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2125,
+   "total_us": 2.055,
+   "first": 27,
+   "last": 808,
+   "nhead": [
+    678,
+    682,
+    681,
+    675
+   ],
+   "n2": [
+    623,
+    629,
+    634,
+    626
+   ],
+   "n3": [
+    615,
+    619,
+    627,
+    619
+   ]
+  },
+  {
+   "family": "normal",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1346,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2128,
+   "total_us": 2.058,
+   "first": 2177,
+   "last": 2958,
+   "nhead": [
+    680,
+    678,
+    668,
+    686
+   ],
+   "n2": [
+    627,
+    624,
+    616,
+    638
+   ],
+   "n3": [
+    617,
+    615,
+    606,
+    628
+   ]
+  },
+  {
+   "family": "uniform",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1479,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2261,
+   "total_us": 2.187,
+   "first": 4330,
+   "last": 5111,
+   "nhead": [
+    727,
+    721,
+    715,
+    718
+   ],
+   "n2": [
+    695,
+    700,
+    682,
+    692
+   ],
+   "n3": [
+    694,
+    699,
+    682,
+    690
+   ]
+  },
+  {
+   "family": "uniform",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1459,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2241,
+   "total_us": 2.167,
+   "first": 6616,
+   "last": 7397,
+   "nhead": [
+    717,
+    713,
+    721,
+    714
+   ],
+   "n2": [
+    687,
+    679,
+    690,
+    683
+   ],
+   "n3": [
+    687,
+    678,
+    689,
+    682
+   ]
+  },
+  {
+   "family": "recency",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1646,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2428,
+   "total_us": 2.348,
+   "first": 8882,
+   "last": 9663,
+   "nhead": [
+    535,
+    733,
+    778,
+    782
+   ],
+   "n2": [
+    313,
+    696,
+    778,
+    782
+   ],
+   "n3": [
+    247,
+    621,
+    767,
+    782
+   ]
+  },
+  {
+   "family": "recency",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1644,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2426,
+   "total_us": 2.346,
+   "first": 11335,
+   "last": 12116,
+   "nhead": [
+    540,
+    724,
+    780,
+    782
+   ],
+   "n2": [
+    317,
+    679,
+    780,
+    782
+   ],
+   "n3": [
+    257,
+    608,
+    771,
+    782
+   ]
+  },
+  {
+   "family": "real_resampled",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 950,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 1732,
+   "total_us": 1.675,
+   "first": 13786,
+   "last": 14567,
+   "nhead": [
+    625,
+    635,
+    627,
+    623
+   ],
+   "n2": [
+    534,
+    538,
+    535,
+    526
+   ],
+   "n3": [
+    330,
+    318,
+    311,
+    319
+   ]
+  },
+  {
+   "family": "real_resampled",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 950,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 1732,
+   "total_us": 1.675,
+   "first": 15543,
+   "last": 16324,
+   "nhead": [
+    634,
+    627,
+    625,
+    624
+   ],
+   "n2": [
+    547,
+    540,
+    534,
+    523
+   ],
+   "n3": [
+    323,
+    312,
+    301,
+    297
+   ]
+  },
+  {
+   "family": "real_tiled",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1336,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2118,
+   "total_us": 2.048,
+   "first": 17300,
+   "last": 18081,
+   "nhead": [
+    645,
+    654,
+    610,
+    608
+   ],
+   "n2": [
+    616,
+    639,
+    554,
+    505
+   ],
+   "n3": [
+    575,
+    617,
+    506,
+    493
+   ]
+  },
+  {
+   "family": "real_tiled",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1260,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2042,
+   "total_us": 1.975,
+   "first": 19443,
+   "last": 20224,
+   "nhead": [
+    658,
+    627,
+    618,
+    637
+   ],
+   "n2": [
+    604,
+    551,
+    513,
+    560
+   ],
+   "n3": [
+    574,
+    523,
+    495,
+    534
+   ]
+  },
+  {
+   "family": "normal",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 27,
+   "last": 4122,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "normal",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 12418,
+   "last": 16513,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "uniform",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 24809,
+   "last": 28904,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "uniform",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 37200,
+   "last": 41295,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "recency",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 49591,
+   "last": 53686,
+   "nhead": [
+    486,
+    827,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "recency",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 61982,
+   "last": 66077,
+   "nhead": [
+    492,
+    842,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "real_resampled",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8271,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12367,
+   "total_us": 11.96,
+   "first": 74373,
+   "last": 78468,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "real_resampled",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 86765,
+   "last": 90860,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "real_tiled",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 99156,
+   "last": 103251,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "real_tiled",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 111547,
+   "last": 115642,
+   "nhead": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "family": "ascending",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1646,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2428,
+   "total_us": 2.348,
+   "first": 27,
+   "last": 808,
+   "nhead": [
+    419,
+    533,
+    781,
+    782
+   ],
+   "n2": [
+    156,
+    354,
+    781,
+    782
+   ],
+   "n3": [
+    0,
+    0,
+    630,
+    782
+   ]
+  },
+  {
+   "family": "descending",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1642,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2424,
+   "total_us": 2.344,
+   "first": 2480,
+   "last": 3261,
+   "nhead": [
+    781,
+    619,
+    441,
+    357
+   ],
+   "n2": [
+    781,
+    619,
+    245,
+    49
+   ],
+   "n3": [
+    781,
+    619,
+    0,
+    1
+   ]
+  },
+  {
+   "family": "all_equal",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1646,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2428,
+   "total_us": 2.348,
+   "first": 4929,
+   "last": 5710,
+   "nhead": [
+    781,
+    782,
+    781,
+    782
+   ],
+   "n2": [
+    781,
+    782,
+    781,
+    782
+   ],
+   "n3": [
+    781,
+    782,
+    781,
+    782
+   ]
+  },
+  {
+   "family": "masked",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 871,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 1653,
+   "total_us": 1.599,
+   "first": 7382,
+   "last": 8163,
+   "nhead": [
+    626,
+    623,
+    618,
+    625
+   ],
+   "n2": [
+    521,
+    522,
+    506,
+    525
+   ],
+   "n3": [
+    263,
+    264,
+    257,
+    245
+   ]
+  },
+  {
+   "family": "masked_few",
+   "n": 50000,
+   "blocks": 6250,
+   "k": 2048,
+   "tail": 1646,
+   "stall": 0,
+   "ovf": 0,
+   "total_cycles": 2428,
+   "total_us": 2.348,
+   "first": 9060,
+   "last": 9841,
+   "nhead": [
+    781,
+    782,
+    781,
+    782
+   ],
+   "n2": [
+    781,
+    782,
+    781,
+    782
+   ],
+   "n3": [
+    781,
+    782,
+    781,
+    782
+   ]
+  },
+  {
+   "family": "ascending",
+   "n": 262144,
+   "blocks": 32768,
+   "k": 2048,
+   "tail": 8270,
+   "stall": 0,
+   "ovf": 1,
+   "total_cycles": 12366,
+   "total_us": 11.959,
+   "first": 11513,
+   "last": 15608,
+   "nhead": [
+    476,
+    533,
+    1024,
+    1024
+   ],
+   "n2": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "n3": [
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "configs": [
+  {
+   "name": "shipped_200k",
+   "Q": 4,
+   "SL": 16,
+   "IW": 20,
+   "K": 2048,
+   "AW": 10,
+   "vectors_sha256": "216b41648aff069dea8e9804abc1fac996997519668d74cafe6283fb1eeb957c",
+   "segments": 10,
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 10,
+     "beats": 31260,
+     "elements": 500000,
+     "outputs": 20480,
+     "out_beats": 10248,
+     "errors": 0,
+     "tail_min": 950,
+     "tail_max": 1646,
+     "ovf_segments": 0,
+     "stall_cycles": 0,
+     "cycles": 21509,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 1343,
+       "first": 27,
+       "last": 808,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        678,
+        682,
+        681,
+        675
+       ],
+       "n2": [
+        623,
+        629,
+        634,
+        626
+       ],
+       "n3": [
+        615,
+        619,
+        627,
+        619
+       ],
+       "family": "normal",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2125,
+       "total_us": 2.055
+      },
+      {
+       "seg": 1,
+       "tail": 1346,
+       "first": 2177,
+       "last": 2958,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        680,
+        678,
+        668,
+        686
+       ],
+       "n2": [
+        627,
+        624,
+        616,
+        638
+       ],
+       "n3": [
+        617,
+        615,
+        606,
+        628
+       ],
+       "family": "normal",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2128,
+       "total_us": 2.058
+      },
+      {
+       "seg": 2,
+       "tail": 1479,
+       "first": 4330,
+       "last": 5111,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        727,
+        721,
+        715,
+        718
+       ],
+       "n2": [
+        695,
+        700,
+        682,
+        692
+       ],
+       "n3": [
+        694,
+        699,
+        682,
+        690
+       ],
+       "family": "uniform",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2261,
+       "total_us": 2.187
+      },
+      {
+       "seg": 3,
+       "tail": 1459,
+       "first": 6616,
+       "last": 7397,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        717,
+        713,
+        721,
+        714
+       ],
+       "n2": [
+        687,
+        679,
+        690,
+        683
+       ],
+       "n3": [
+        687,
+        678,
+        689,
+        682
+       ],
+       "family": "uniform",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2241,
+       "total_us": 2.167
+      },
+      {
+       "seg": 4,
+       "tail": 1646,
+       "first": 8882,
+       "last": 9663,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        535,
+        733,
+        778,
+        782
+       ],
+       "n2": [
+        313,
+        696,
+        778,
+        782
+       ],
+       "n3": [
+        247,
+        621,
+        767,
+        782
+       ],
+       "family": "recency",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2428,
+       "total_us": 2.348
+      },
+      {
+       "seg": 5,
+       "tail": 1644,
+       "first": 11335,
+       "last": 12116,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        540,
+        724,
+        780,
+        782
+       ],
+       "n2": [
+        317,
+        679,
+        780,
+        782
+       ],
+       "n3": [
+        257,
+        608,
+        771,
+        782
+       ],
+       "family": "recency",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2426,
+       "total_us": 2.346
+      },
+      {
+       "seg": 6,
+       "tail": 950,
+       "first": 13786,
+       "last": 14567,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        625,
+        635,
+        627,
+        623
+       ],
+       "n2": [
+        534,
+        538,
+        535,
+        526
+       ],
+       "n3": [
+        330,
+        318,
+        311,
+        319
+       ],
+       "family": "real_resampled",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 1732,
+       "total_us": 1.675
+      },
+      {
+       "seg": 7,
+       "tail": 950,
+       "first": 15543,
+       "last": 16324,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        634,
+        627,
+        625,
+        624
+       ],
+       "n2": [
+        547,
+        540,
+        534,
+        523
+       ],
+       "n3": [
+        323,
+        312,
+        301,
+        297
+       ],
+       "family": "real_resampled",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 1732,
+       "total_us": 1.675
+      },
+      {
+       "seg": 8,
+       "tail": 1336,
+       "first": 17300,
+       "last": 18081,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        645,
+        654,
+        610,
+        608
+       ],
+       "n2": [
+        616,
+        639,
+        554,
+        505
+       ],
+       "n3": [
+        575,
+        617,
+        506,
+        493
+       ],
+       "family": "real_tiled",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2118,
+       "total_us": 2.048
+      },
+      {
+       "seg": 9,
+       "tail": 1260,
+       "first": 19443,
+       "last": 20224,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        658,
+        627,
+        618,
+        637
+       ],
+       "n2": [
+        604,
+        551,
+        513,
+        560
+       ],
+       "n3": [
+        574,
+        523,
+        495,
+        534
+       ],
+       "family": "real_tiled",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2042,
+       "total_us": 1.975
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "shipped_1m",
+   "Q": 4,
+   "SL": 16,
+   "IW": 20,
+   "K": 2048,
+   "AW": 10,
+   "vectors_sha256": "10aa26c58bbf4b56318ad6ac04436c4ced3fd51dd9287469cc5935d51eec9fdb",
+   "segments": 10,
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 10,
+     "beats": 163840,
+     "elements": 2621440,
+     "outputs": 20480,
+     "out_beats": 10248,
+     "errors": 0,
+     "tail_min": 8270,
+     "tail_max": 8271,
+     "ovf_segments": 10,
+     "stall_cycles": 0,
+     "cycles": 123937,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 8270,
+       "first": 27,
+       "last": 4122,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "normal",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 1,
+       "tail": 8270,
+       "first": 12418,
+       "last": 16513,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "normal",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 2,
+       "tail": 8270,
+       "first": 24809,
+       "last": 28904,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "uniform",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 3,
+       "tail": 8270,
+       "first": 37200,
+       "last": 41295,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "uniform",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 4,
+       "tail": 8270,
+       "first": 49591,
+       "last": 53686,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        486,
+        827,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "recency",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 5,
+       "tail": 8270,
+       "first": 61982,
+       "last": 66077,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        492,
+        842,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "recency",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 6,
+       "tail": 8271,
+       "first": 74373,
+       "last": 78468,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "real_resampled",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12367,
+       "total_us": 11.96
+      },
+      {
+       "seg": 7,
+       "tail": 8270,
+       "first": 86765,
+       "last": 90860,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "real_resampled",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 8,
+       "tail": 8270,
+       "first": 99156,
+       "last": 103251,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "real_tiled",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      },
+      {
+       "seg": 9,
+       "tail": 8270,
+       "first": 111547,
+       "last": 115642,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        1024,
+        1024,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "real_tiled",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "worst_cases",
+   "Q": 4,
+   "SL": 16,
+   "IW": 20,
+   "K": 2048,
+   "AW": 10,
+   "vectors_sha256": "1a503c5f8fdcbcec98ce7e5b69c36d5336c46a5982ace10163c02fd6bd9ae9af",
+   "segments": 6,
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 6,
+     "beats": 32014,
+     "elements": 512144,
+     "outputs": 10893,
+     "out_beats": 6156,
+     "errors": 0,
+     "tail_min": 871,
+     "tail_max": 8270,
+     "ovf_segments": 1,
+     "stall_cycles": 0,
+     "cycles": 23903,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 1646,
+       "first": 27,
+       "last": 808,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        419,
+        533,
+        781,
+        782
+       ],
+       "n2": [
+        156,
+        354,
+        781,
+        782
+       ],
+       "n3": [
+        0,
+        0,
+        630,
+        782
+       ],
+       "family": "ascending",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2428,
+       "total_us": 2.348
+      },
+      {
+       "seg": 1,
+       "tail": 1642,
+       "first": 2480,
+       "last": 3261,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        781,
+        619,
+        441,
+        357
+       ],
+       "n2": [
+        781,
+        619,
+        245,
+        49
+       ],
+       "n3": [
+        781,
+        619,
+        0,
+        1
+       ],
+       "family": "descending",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2424,
+       "total_us": 2.344
+      },
+      {
+       "seg": 2,
+       "tail": 1646,
+       "first": 4929,
+       "last": 5710,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        781,
+        782,
+        781,
+        782
+       ],
+       "n2": [
+        781,
+        782,
+        781,
+        782
+       ],
+       "n3": [
+        781,
+        782,
+        781,
+        782
+       ],
+       "family": "all_equal",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2428,
+       "total_us": 2.348
+      },
+      {
+       "seg": 3,
+       "tail": 871,
+       "first": 7382,
+       "last": 8163,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        626,
+        623,
+        618,
+        625
+       ],
+       "n2": [
+        521,
+        522,
+        506,
+        525
+       ],
+       "n3": [
+        263,
+        264,
+        257,
+        245
+       ],
+       "family": "masked",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 1653,
+       "total_us": 1.599
+      },
+      {
+       "seg": 4,
+       "tail": 1646,
+       "first": 9060,
+       "last": 9841,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        781,
+        782,
+        781,
+        782
+       ],
+       "n2": [
+        781,
+        782,
+        781,
+        782
+       ],
+       "n3": [
+        781,
+        782,
+        781,
+        782
+       ],
+       "family": "masked_few",
+       "n": 50000,
+       "blocks": 6250,
+       "total_cycles": 2428,
+       "total_us": 2.348
+      },
+      {
+       "seg": 5,
+       "tail": 8270,
+       "first": 11513,
+       "last": 15608,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 2048,
+       "nhead": [
+        476,
+        533,
+        1024,
+        1024
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "ascending",
+       "n": 262144,
+       "blocks": 32768,
+       "total_cycles": 12366,
+       "total_us": 11.959
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "coverage_k64_aw6",
+   "Q": 4,
+   "SL": 16,
+   "IW": 16,
+   "K": 64,
+   "AW": 6,
+   "vectors_sha256": "a7698fbab56a79b24873cc09ed0e2b8d5ea83b29adeb2fe4a0790d7c0fd15132",
+   "segments": 500,
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 500,
+     "beats": 94090,
+     "elements": 1495723,
+     "outputs": 24934,
+     "out_beats": 14342,
+     "errors": 0,
+     "tail_min": 84,
+     "tail_max": 653,
+     "ovf_segments": 308,
+     "stall_cycles": 0,
+     "cycles": 156459,
+     "pass": true
+    },
+    {
+     "bubble_pct": 15,
+     "out_ready_low_pct": 40,
+     "seed": 3,
+     "segments": 500,
+     "beats": 94090,
+     "elements": 1495723,
+     "outputs": 24934,
+     "out_beats": 14342,
+     "errors": 0,
+     "tail_min": 84,
+     "tail_max": 750,
+     "ovf_segments": 294,
+     "stall_cycles": 0,
+     "cycles": 174498,
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "real_reduced_k64",
+   "Q": 4,
+   "SL": 16,
+   "IW": 16,
+   "K": 64,
+   "AW": 6,
+   "vectors_sha256": "997c9b923226a67556bb51523a9711737d42c3d496d107561596103957ecf547",
+   "segments": 400,
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 400,
+     "beats": 5544,
+     "elements": 80200,
+     "outputs": 10200,
+     "out_beats": 5544,
+     "errors": 0,
+     "tail_min": 82,
+     "tail_max": 96,
+     "ovf_segments": 0,
+     "stall_cycles": 0,
+     "cycles": 47098,
+     "pass": true
+    },
+    {
+     "bubble_pct": 15,
+     "out_ready_low_pct": 40,
+     "seed": 3,
+     "segments": 400,
+     "beats": 5544,
+     "elements": 80200,
+     "outputs": 10200,
+     "out_beats": 5544,
+     "errors": 0,
+     "tail_min": 82,
+     "tail_max": 103,
+     "ovf_segments": 0,
+     "stall_cycles": 0,
+     "cycles": 48289,
+     "pass": true
+    }
+   ],
+   "pass": true
+  }
+ ],
+ "quick": false,
+ "currency": {
+  "state": "stale",
+  "stale_since": "43ea7573",
+  "reason": "tools/hdc_golden_v41.py changed at 43ea7573 (R-ARITH chunk8 mode) after this record; its pinned digest (from 0dc7a5b9) was never on main. Not a quick gate: the recorded configuration (400 real positions) runs >40 min at load ~160. A 160-position re-run at HEAD 5aa6e609 passed with identical spec results (exact golden equality, 0 stall cycles, tail max 147/149 for sel), but was not committed because it is a smaller vehicle than this record; a 400-position re-run at HEAD is what clears this marker.",
+  "verdict_kept": "pass",
+  "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run"
+ }
+}

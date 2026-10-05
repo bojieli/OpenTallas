@@ -1,0 +1,12 @@
+{
+  "tests_pass": 5,
+  "test_command": "python3 -m unittest discover -s tests -p test_dsrom_noECC_physical_transition.py -v",
+  "generator_replay_byteidentical": true,
+  "model_sha256": "d799cb9841579b88f87f325a8e9899dfa822aa968bf5d3e3fd2920f499af6d94",
+  "retired_archive_sha256": "a299ea48aaad78ae54a4a879ca58ce30f6ef19e6f1688180ef7960f9f43f4a6c",
+  "no_ECC_jobs_live": true,
+  "owned_pve2_pve3_jobs": 0,
+  "RTL_PR_launched": false,
+  "original_source_edits": false,
+  "scope": "Raw macro-local geometry and source-reservation join; no whole element/die/capture timing qualification."
+}

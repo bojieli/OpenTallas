@@ -1,0 +1,17 @@
+test_all_groups_explicit_tail_visibility_and_retirement (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_bad_visible_payload_cannot_release_granted_bank (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_byte_exact_replay (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_connected_bank_busy_and_exact_sector (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_exact_counts_and_masks (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_exception_bits_are_opaque_and_tails_preserved (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_hard_manifest_and_input_pins (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_no_hardware_command_or_timing_inference (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_partial_write_refuses_zero_tail_and_early_ack (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_reserved_exclusion_and_full_tag (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_retained_owner_model_shares_exact_bank_table (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+test_source_directory_mutation_refused (test_h4_hbm_qwen_observed_kv_cache.ObservedKVTests) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 11.139s
+
+OK

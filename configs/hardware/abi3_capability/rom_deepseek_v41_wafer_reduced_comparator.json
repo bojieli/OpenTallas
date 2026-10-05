@@ -1,0 +1,198 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "engines": {
+    "attention": {
+      "lanes": 2048,
+      "queues": 2
+    },
+    "dma": {
+      "queues": 4
+    },
+    "link": {
+      "queues": 4
+    },
+    "reduction": {
+      "lanes": 2048,
+      "queues": 2
+    },
+    "route": {
+      "lanes": 512,
+      "queues": 2
+    },
+    "selection": {
+      "queues": 1
+    },
+    "state": {
+      "queues": 2
+    },
+    "tensor": {
+      "lanes": 8192,
+      "queues": 4
+    },
+    "vector": {
+      "lanes": 4096,
+      "queues": 4
+    }
+  },
+  "fabric": {
+    "node_class": 1
+  },
+  "features": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "limits": {
+    "max_candidate_positions": 16384,
+    "max_context_positions": 1048576,
+    "max_descriptors": 65536,
+    "max_event_id": 2047,
+    "max_events": 2048,
+    "max_expert_ids": 384,
+    "max_instructions": 8192,
+    "max_loop_depth": 4,
+    "max_loop_trip": 4096,
+    "max_nodes": 2,
+    "max_outstanding_per_queue": 32,
+    "max_retired_work": 67108864,
+    "max_sessions": 16,
+    "max_state_resources": 16,
+    "max_topk": 6,
+    "max_vocabulary": 129280
+  },
+  "link": {
+    "class_count": 4,
+    "reticle_columns": 8,
+    "reticle_rows": 6,
+    "tiles_per_reticle": 256
+  },
+  "memory": {
+    "hbm": {
+      "bytes": 1649267441664,
+      "resident_region_bytes": 202758032400
+    },
+    "rom": {
+      "banks": 24576,
+      "bytes": 412316860416
+    },
+    "sram": {
+      "banks": 4096,
+      "bytes": 8589934592
+    }
+  },
+  "numeric_contracts": [
+    "attention_kv_view_bf16_v1",
+    "bf16_add_rne_v1",
+    "bf16_bf16_fp32_sequential_rne_v1",
+    "bf16_byte_preserving_state_v1",
+    "bf16_payload_lookup_v1",
+    "candidate_mask_admission_plane_v1",
+    "candidate_mask_block_maximum_v1",
+    "candidate_mask_block_top_k_v1",
+    "candidate_mask_v1",
+    "candidate_mask_view_v1",
+    "compressed_kv_valid_view_bf16_v1",
+    "compressed_kv_write_bf16_v1",
+    "compression_compress_project_bf16_v1",
+    "compression_pool_compress_pool_f32_v1",
+    "compression_state_compress_state_update_f32_raw_window_transaction_v1",
+    "conversion_binary32_tensor_to_bf16_rne_v1",
+    "deepseek_rmsnorm_binary32_v1",
+    "deepseek_v4_compress_fp32_bf16_v1",
+    "deepseek_v4_hyper_connect_fp32_bf16_v1",
+    "deepseek_v4_router_fp32_sigmoid_v1",
+    "deepseek_v4_sparse_attention_fp32_softmax_v1",
+    "dispatch_reduce_expert_outputs_bf16_v1",
+    "dispatch_routed_experts_bf16_v1",
+    "engram_gate_fp32_v1",
+    "engram_gate_pinned_form_v1",
+    "exact_index_select_v1",
+    "exact_token_append_eos_v1",
+    "fp4_e2m1_s16_e4m3_to_fp8_quantize_v1",
+    "fp4_e2m1_s16_e4m3_to_fp8_reconstruct_v1",
+    "fp4_e2m1_s16_e4m3_to_fp8_v1",
+    "fp8_e4m3fn_fp8_e4m3fn_fp32_sequential_rne_v1",
+    "fp8_swiglu_bf16_clamped_silu_product_v1",
+    "fp8_swiglu_bf16_down_contraction_v1",
+    "fp8_swiglu_bf16_gate_contraction_v1",
+    "fp8_swiglu_bf16_quantize_v1",
+    "fp8_swiglu_bf16_up_contraction_v1",
+    "greedy_lowest_token_id_argmax_v1",
+    "grouped_output_project_bf16_block_scaled_contraction_v1",
+    "grouped_output_project_bf16_group_axis_v1",
+    "grouped_output_project_bf16_group_columns_v1",
+    "grouped_output_project_bf16_group_contraction_v1",
+    "grouped_output_project_bf16_group_join_v1",
+    "grouped_output_project_bf16_quantize_v1",
+    "hyper_connection_hc_collapse_bf16_v1",
+    "hyper_connection_hc_pre_bf16_branch_collapse_v1",
+    "hyper_connection_hc_pre_bf16_branch_weight_plane_v1",
+    "hyper_connection_hc_pre_bf16_residual_weight_plane_v1",
+    "hyper_connection_hc_pre_bf16_v1",
+    "index_key_write_bf16_v1",
+    "index_score_bf16_v1",
+    "indexing_window_indices_v1",
+    "kv_window_write_bf16_v1",
+    "lm_head_bf16_final_source_position_v1",
+    "lm_head_bf16_vocabulary_projection_v1",
+    "lookup_bf16_token_embedding_v1",
+    "lookup_compressed_token_ids_v1",
+    "lookup_engram_row_fp8_e4m3_reconstruct_v1",
+    "lookup_engram_row_fp8_e4m3_row_read_v1",
+    "lookup_engram_row_fp8_e4m3_row_scale_read_v1",
+    "matrix_bf16_linear_bf16_softmax_and_head_scale_v1",
+    "matrix_bf16_linear_bf16_v1",
+    "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1",
+    "matrix_dense_fp8_linear_bf16_quantize_v1",
+    "mxfp4_e2m1_fp8_e4m3fn_fp32_blocked_rne_v1",
+    "mxfp4_swiglu_bf16_clamped_silu_product_v1",
+    "mxfp4_swiglu_bf16_down_contraction_v1",
+    "mxfp4_swiglu_bf16_gate_contraction_v1",
+    "mxfp4_swiglu_bf16_quantize_v1",
+    "mxfp4_swiglu_bf16_routing_weight_product_v1",
+    "mxfp4_swiglu_bf16_up_contraction_v1",
+    "ngram_hash_u32_column_join_v1",
+    "ngram_hash_u32_order2_v1",
+    "ngram_hash_u32_order3_v1",
+    "ngram_hash_u32_order4_v1",
+    "ngram_hash_u32_v1",
+    "normalization_head_rms_norm_bf16_v1",
+    "quantization_fp4_qdq_bf16_quantize_v1",
+    "quantization_fp4_qdq_bf16_reconstruct_v1",
+    "quantization_fp8_qdq_bf16_quantize_v1",
+    "quantization_fp8_qdq_bf16_reconstruct_v1",
+    "rope_apply_bf16_coefficient_rows_v1",
+    "rope_apply_bf16_rotate_v1",
+    "rope_inverse_bf16_rotate_v1",
+    "routing_normalize_routed_weight_codes_route_scale_v1",
+    "routing_normalize_routed_weight_codes_selected_sum_normalize_v1",
+    "routing_normalize_routed_weight_codes_unbiased_score_gather_v1",
+    "routing_router_score_bf16_v1",
+    "sampling_deepseek_v41_sample_binary32_greedy_argmax_v1",
+    "sampling_deepseek_v41_sample_binary32_temperature_v1",
+    "sampling_deepseek_v41_sample_binary32_token_append_v1",
+    "selection_biased_topk_route_indices_v1",
+    "selection_index_topk_indices_masked_topk_v1",
+    "selection_index_topk_indices_window_then_compressed_v1",
+    "selection_shared_index_view_v1",
+    "selection_shared_index_view_window_then_compressed_v1",
+    "sparse_attention_bf16_v1",
+    "sqrt_softplus_router_binary32_v1",
+    "structural_hc_expand_bf16_v1",
+    "vector_hc_post_bf16_v1"
+  ],
+  "schema": "opentallas.abi3.capability.v1",
+  "technology_view": "wafer_logical_device_declared_v1",
+  "topology_class": 2
+}

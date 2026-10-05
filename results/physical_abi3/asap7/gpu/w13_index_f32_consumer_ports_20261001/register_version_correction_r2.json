@@ -1,0 +1,258 @@
+{
+  "schema": "w13.register-version-correction.v1",
+  "historical_verdict": "FAIL_MODEL_VALIDATOR_STALE_REGISTER_VERSION",
+  "historical_source_git": "e1d6e4c4f",
+  "historical_tool_sha256": "e251a80f12ad3fcd4a3bd8b6e799e702e92e720b478c4394e4d81de0bd31cb06",
+  "historical_receipt_pin": "33b08907d:results/physical_abi3/asap7/gpu/w13_index_f32_consumer_ports_20261001/phase_calendar_intake_r1.json",
+  "counterexample_scope": "synthetic protocol counterexample; not actual hardware/provider",
+  "events": [
+    {
+      "id": "A",
+      "op": "IADD",
+      "dependencies": [],
+      "sm": 0,
+      "partition": 0,
+      "warp_slot": 0,
+      "RF_read_tick": 0,
+      "issue_tick": 8,
+      "writeback_tick": 36,
+      "RF_register_reads": [
+        0,
+        1
+      ],
+      "RF_register_writes": [
+        2
+      ],
+      "RF_write_copy_count": 2,
+      "phase_entry_RF_visible_ticks": {
+        "0": 0,
+        "1": 0
+      },
+      "operand_register_bindings": [
+        {
+          "operand_index": 0,
+          "register": 0,
+          "producer_event": "phase_input:0",
+          "result_id": "input.0"
+        },
+        {
+          "operand_index": 1,
+          "register": 1,
+          "producer_event": "phase_input:1",
+          "result_id": "input.1"
+        }
+      ],
+      "result_register_bindings": [
+        {
+          "register": 2,
+          "result_id": "A.result"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "op": "IADD",
+      "dependencies": [],
+      "sm": 0,
+      "partition": 0,
+      "warp_slot": 0,
+      "RF_read_tick": 40,
+      "issue_tick": 48,
+      "writeback_tick": 76,
+      "RF_register_reads": [
+        0,
+        1
+      ],
+      "RF_register_writes": [
+        2
+      ],
+      "RF_write_copy_count": 2,
+      "phase_entry_RF_visible_ticks": {
+        "0": 0,
+        "1": 0
+      },
+      "operand_register_bindings": [
+        {
+          "operand_index": 0,
+          "register": 0,
+          "producer_event": "phase_input:0",
+          "result_id": "input.0"
+        },
+        {
+          "operand_index": 1,
+          "register": 1,
+          "producer_event": "phase_input:1",
+          "result_id": "input.1"
+        }
+      ],
+      "result_register_bindings": [
+        {
+          "register": 2,
+          "result_id": "B.result"
+        }
+      ]
+    },
+    {
+      "id": "consumer_A",
+      "op": "IADD",
+      "dependencies": [
+        "A"
+      ],
+      "sm": 0,
+      "partition": 0,
+      "warp_slot": 0,
+      "RF_read_tick": 80,
+      "issue_tick": 88,
+      "writeback_tick": 116,
+      "RF_register_reads": [
+        2,
+        0
+      ],
+      "RF_register_writes": [
+        3
+      ],
+      "RF_write_copy_count": 2,
+      "phase_entry_RF_visible_ticks": {
+        "0": 0,
+        "1": 0
+      },
+      "operand_register_bindings": [
+        {
+          "operand_index": 0,
+          "register": 2,
+          "producer_event": "A",
+          "result_id": "A.result"
+        },
+        {
+          "operand_index": 1,
+          "register": 0,
+          "producer_event": "phase_input:0",
+          "result_id": "input.0"
+        }
+      ],
+      "result_register_bindings": [
+        {
+          "register": 3,
+          "result_id": "consumer_A.result"
+        }
+      ]
+    }
+  ],
+  "leases": [
+    {
+      "raw_decode_consumer_done": 40,
+      "packer_scratch_consumer_done": 40,
+      "decoded_store_visible": 40,
+      "old_generation_return_drained": 40,
+      "score_scratch_first_store": 40,
+      "payload_WR_visible": 0,
+      "descriptor_WR_visible": 3,
+      "reverse_CDC_ack": 6,
+      "read_lease_acquired": 9,
+      "consumer_done": 40,
+      "credit_return": 43,
+      "physical_provider_source_pin": {
+        "synthetic_test_only": true
+      }
+    }
+  ],
+  "source_events": {
+    "A": {
+      "op": "IADD",
+      "dependencies": [],
+      "operand_register_bindings": [
+        {
+          "operand_index": 0,
+          "register": 0,
+          "producer_event": "phase_input:0",
+          "result_id": "input.0"
+        },
+        {
+          "operand_index": 1,
+          "register": 1,
+          "producer_event": "phase_input:1",
+          "result_id": "input.1"
+        }
+      ],
+      "result_register_bindings": [
+        {
+          "register": 2,
+          "result_id": "A.result"
+        }
+      ]
+    },
+    "B": {
+      "op": "IADD",
+      "dependencies": [],
+      "operand_register_bindings": [
+        {
+          "operand_index": 0,
+          "register": 0,
+          "producer_event": "phase_input:0",
+          "result_id": "input.0"
+        },
+        {
+          "operand_index": 1,
+          "register": 1,
+          "producer_event": "phase_input:1",
+          "result_id": "input.1"
+        }
+      ],
+      "result_register_bindings": [
+        {
+          "register": 2,
+          "result_id": "B.result"
+        }
+      ]
+    },
+    "consumer_A": {
+      "op": "IADD",
+      "dependencies": [
+        "A"
+      ],
+      "operand_register_bindings": [
+        {
+          "operand_index": 0,
+          "register": 2,
+          "producer_event": "A",
+          "result_id": "A.result"
+        },
+        {
+          "operand_index": 1,
+          "register": 0,
+          "producer_event": "phase_input:0",
+          "result_id": "input.0"
+        }
+      ],
+      "result_register_bindings": [
+        {
+          "register": 3,
+          "result_id": "consumer_A.result"
+        }
+      ]
+    }
+  },
+  "historical_audit": {
+    "issues": [],
+    "candidate_event_constraints_pass": true,
+    "physical_admission": false,
+    "hardware_launch": false,
+    "rate_credit": 0,
+    "scope": "event validation only; exact arithmetic/branch replay, source provider and contextual SSFF additionally required"
+  },
+  "corrected_audit": {
+    "issues": [
+      "register_overwrite_before_last_consumer:A",
+      "stale_register_version:consumer_A"
+    ],
+    "candidate_event_constraints_pass": false,
+    "physical_admission": false,
+    "hardware_launch": false,
+    "rate_credit": 0,
+    "scope": "event validation only; exact arithmetic/branch replay, source provider and contextual SSFF additionally required"
+  },
+  "corrected_source_git": "2913186a3f5965915731f5c6b141914d63f79b48",
+  "corrected_tool_sha256": "f5ab4fe493209bdc6827d16b4ceb6f3c436cdd4fcf499301d39094fc4ddae4cd",
+  "focused_tests_passed": 10,
+  "hardware_launch": false
+}

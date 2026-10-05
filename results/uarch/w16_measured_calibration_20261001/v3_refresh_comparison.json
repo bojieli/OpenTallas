@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.w16.v3.refresh_comparison.v1",
+  "v2_sha256": "0cb05dcdc4438a96a70860f716831736995e1c1e5ba5fdf1e593e614cf7c4f5e",
+  "v2_preserved_byte_identical": true,
+  "v3_sha256": "5bfb5579499974a6ec068e8829b1d3a3f51c174d40c0212c2edba95023fc990e",
+  "old_model_sha256": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+  "new_model_sha256": "fdc40260ded435fe29340b83a44da01926ecfbeeca30f1a05c8914b8955da27e",
+  "actual_input_pins_identical_except_model": true,
+  "all_other_fields_identical": true,
+  "changed_fields": [
+    "base_commit",
+    "pins.tools/uarch_model.py",
+    "historical_source_bindings.W10_baseline.tools/uarch_model.py.current_sha256/matches_current"
+  ],
+  "interpretation": "Original W10 baseline source pin remains historical; v3 reports its generator drift instead of rebinding old evidence. All calculations, measured inputs, refusal boundaries and headline/adoption flags unchanged.",
+  "base_changes": [
+    {
+      "field": "base_commit",
+      "prior": "8e5eae77e739f5c0c11a983d35c6d5084112df82",
+      "current": "dea357ad873fdedf1206cc9b42e9aac0754839e4"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_CORNER ss
+OT_WS -7.228232457023864e-10
+OT_TNS -1.0751427907962352e-6
+Startpoint: u_sp.sm_tag[0]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_sp.sw[11]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  47.32   47.32 ^ wire48231/Y (BUFx12f_ASAP7_75t_R)
+  80.71  128.03 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.87  167.90 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.66  205.55 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.12  243.67 ^ clkbuf_2_3_1_clk/Y (BUFx24_ASAP7_75t_R)
+  39.66  283.33 ^ clkbuf_3_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  46.51  329.84 ^ clkbuf_4_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  43.84  373.68 ^ clkbuf_6_51_0_clk/Y (BUFx24_ASAP7_75t_R)
+  44.69  418.37 ^ clkbuf_8_207__f_clk/Y (BUFx24_ASAP7_75t_R)
+  44.75  463.12 ^ clkbuf_leaf_1288_clk/Y (BUFx24_ASAP7_75t_R)
+   1.50  464.62 ^ u_sp.sm_tag[0]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ 101.03  565.64 ^ u_sp.sm_tag[0]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)
+  46.61  612.25 ^ place43790/Y (BUFx6f_ASAP7_75t_R)
+  30.24  642.50 ^ rebuffer48238/Y (BUFx6f_ASAP7_75t_R)
+  12.44  654.94 v _198816_/Y (NAND2x1_ASAP7_75t_R)
+  53.23  708.17 v _198817_/Y (OA211x2_ASAP7_75t_R)
+  44.39  752.56 v _198818_/Y (AO21x1_ASAP7_75t_R)
+  55.48  808.04 ^ _198819_/Y (XOR2x2_ASAP7_75t_R)
+  27.07  835.10 v _198830_/Y (AOI211x1_ASAP7_75t_R)
+  49.86  884.96 v _198833_/Y (OR3x1_ASAP7_75t_R)
+  87.18  972.14 v _198935_/Y (OR5x1_ASAP7_75t_R)
+  43.22 1015.36 v _198976_/Y (AND2x4_ASAP7_75t_R)
+  32.05 1047.40 v place34563/Y (BUFx4f_ASAP7_75t_R)
+  32.18 1079.59 v _199013_/Y (AO21x1_ASAP7_75t_R)
+  74.15 1153.74 v _199019_/Y (AO32x2_ASAP7_75t_R)
+  59.93 1213.66 v _199033_/Y (MAJx2_ASAP7_75t_R)
+  49.72 1263.38 v _199131_/Y (XOR2x2_ASAP7_75t_R)
+  36.50 1299.89 v rebuffer52690/Y (BUFx6f_ASAP7_75t_R)
+  43.81 1343.70 v place31512/Y (BUFx12f_ASAP7_75t_R)
+  57.46 1401.16 v place31511/Y (BUFx12f_ASAP7_75t_R)
+  44.76 1445.92 v place31504/Y (BUFx12f_ASAP7_75t_R)
+  83.21 1529.12 v _303665_/Y (OA211x2_ASAP7_75t_R)
+  66.59 1595.72 v _303666_/Y (OR3x1_ASAP7_75t_R)
+  49.52 1645.24 v _303678_/Y (AND3x2_ASAP7_75t_R)
+  76.59 1721.83 v _303679_/Y (OR3x2_ASAP7_75t_R)
+  64.73 1786.56 v _303680_/Y (AND3x4_ASAP7_75t_R)
+  36.73 1823.28 v place31055/Y (BUFx6f_ASAP7_75t_R)
+  52.34 1875.63 v _303681_/Y (OR3x1_ASAP7_75t_R)
+  25.62 1901.25 ^ _303920_/Y (NAND2x1_ASAP7_75t_R)
+  32.92 1934.16 ^ _303922_/Y (OA21x2_ASAP7_75t_R)
+   0.04 1934.21 ^ u_sp.sw[11]$_DFFE_PP_/D (DFFHQNx2_ASAP7_75t_R)
+        1934.21   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  45.93  879.27 ^ wire48231/Y (BUFx12f_ASAP7_75t_R)
+  78.01  957.27 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.62  995.89 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.06 1032.95 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.60 1070.55 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  38.35 1108.91 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  43.57 1152.48 ^ clkbuf_4_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  44.21 1196.69 ^ clkbuf_6_30_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.14 1237.83 ^ clkbuf_8_122__f_clk/Y (BUFx24_ASAP7_75t_R)
+  42.86 1280.70 ^ clkbuf_leaf_692_clk/Y (BUFx24_ASAP7_75t_R)
+   1.10 1281.80 ^ u_sp.sw[11]$_DFFE_PP_/CLK (DFFHQNx2_ASAP7_75t_R)
+ -60.00 1221.80   clock uncertainty
+   4.09 1225.89   clock reconvergence pessimism
+ -14.51 1211.38   library setup time
+        1211.38   data required time
+---------------------------------------------------------
+        1211.38   data required time
+        -1934.21   data arrival time
+---------------------------------------------------------
+        -722.82   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 6609
+OT_WS_REG_D -722.823242
+OT_WS_OUT 1e9
+OT_WS_R2R -722.823242
+OT_WS_I2R INF

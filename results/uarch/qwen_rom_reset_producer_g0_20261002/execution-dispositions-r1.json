@@ -1,0 +1,43 @@
+{
+  "no_timing_failure_relabeling": true,
+  "outcomes": [
+    {
+      "artifact": "tile_census_replay.log",
+      "cause": "SystemYosys cannot parse wildcard primitive instantiation; successful fixedsource replay uses pinnedYosys0.68.",
+      "status": "FAIL_SYSTEM_YOSYS_PARSER"
+    },
+    {
+      "artifact": "die_census.log",
+      "cause": "Source needs ICG blackbox port declaration for hierarchy; r2 binds existing cell ports without timing/area credit.",
+      "status": "FAIL_UNBOUND_ICG"
+    },
+    {
+      "artifact": "tile_xml.log through tile_xml_r5.log",
+      "cause": "SystemVerilator top/timescale handling and5.050 XML option removed; r6 XML pass is supplementary; authoritative proc census uses0.68.",
+      "status": "FAIL_ELABORATOR_COMPATIBILITY"
+    },
+    {
+      "artifact": "model-r1-incomplete-port-error.json",
+      "cause": "Unconnected output port length; corrected alias fallback and unit fixture retained.",
+      "status": "FAIL_MODEL_CENSUS"
+    },
+    {
+      "artifact": "model-r1-incomplete-memory-error.json",
+      "cause": "Explicit memory clock-enabled classification missing; added clocks only for enabled ports.",
+      "status": "FAIL_MODEL_CENSUS"
+    },
+    {
+      "artifact": "tests-r1.log",
+      "cause": "Test read still-empty output while model build was progressing; later tests use completed pinned model.",
+      "status": "FAIL_TEST_BEFORE_MODEL_COMPLETION"
+    },
+    {
+      "artifact": "uarch-regression-r1.log",
+      "cause": "Existing suite is pytest; actual pytest-r1.log passes20 with1skip.",
+      "status": "NO_TESTS_COLLECTED_UNUNITTEST_FORMAT"
+    }
+  ],
+  "preserved": true,
+  "schema": "opentallas.qwen-reset-census-execution-history.v1",
+  "source_proc_cell_census_is_not_map": true
+}

@@ -1,0 +1,596 @@
+{
+  "schema": "opentallas.hbm-opt-integrated.v1",
+  "owner": "Rawls",
+  "source_scope": "Combined minimum-component config/runner only; peer RTL, shared model/scoreboard and die floorplan remain owner-written.",
+  "profiles": {
+    "default_off": [],
+    "candidate_on": [
+      "pipelined_issue",
+      "format_masked_activation",
+      "partial_wave_packing",
+      "expert_workgroup",
+      "fused_su",
+      "su_physical",
+      "index_path",
+      "endpoint_sm",
+      "attention"
+    ],
+    "admitted_closed": [
+      "pipelined_issue",
+      "format_masked_activation",
+      "partial_wave_packing",
+      "expert_workgroup",
+      "fused_su",
+      "su_physical",
+      "index_path",
+      "endpoint_sm",
+      "attention"
+    ]
+  },
+  "levers": {
+    "pipelined_issue": {
+      "owner": "Euclid",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv"
+      ],
+      "hooks": [
+        "start/start_ready",
+        "op_xb",
+        "producing-column G1 selection",
+        "disjoint x ring and dependent-op drain",
+        "ENABLE=1/PQ_ENABLE=1; both default 0",
+        "Euclid owns production XMAP forwarding from Pauli leaf; s1_xa<=xa absolute once",
+        "Existing stress sequence nonzero-ring-base and wrap case required"
+      ],
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606"
+        },
+        "parameters": {
+          "ENABLE": 1,
+          "PQ_ENABLE": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+            "sha256": "2d57e20013e7db7822c7b2388fb3c2c07bfe98e5363d87d3adf9c44559af815c",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_PQ_PACK_XMAP_L20_P1",
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Actual simultaneous PQ+PACK+XMAP P1 L20; 86 original FP32 rows, finite behavioural provider component; no full-token or SS/FF admission."
+      },
+      "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound."
+    },
+    "format_masked_activation": {
+      "owner": "Pauli",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv",
+        "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
+      ],
+      "hooks": [
+        "Pauli exported standalone rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv::ot_hbm_accel_smpq_xmap_leaf, final absolute x_addr/b_addr, no xb input/add",
+        "Euclid production top forwards XMAP; default 0, explicit candidate 1",
+        "tools/hbm_accel_activation_layout.py::pack_fragment(original,fmt,active,nc=8)",
+        "tools/hbm_accel_activation_layout.py::beat_groups(fmt,active,nc=8)",
+        "P6 FP4/FP8/BF16 beats 8/4/3; P1 FP4 groups [0,4]",
+        "Exclude Pauli legacy/prototype issuer and sm_pq_xmap top from selected production closure"
+      ],
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv": "7f271a0f817c4b057dfc27d85b75821813da9851a73ae27a5ed70ad4d8bfaabb",
+          "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": "c88ee4f14b0464ab32eab8a5de9e8919aa25081a49d9ce7638f9ca4ca2197a54"
+        },
+        "parameters": {
+          "XMAP": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/summary.json",
+            "sha256": "d322bfb3e71ef5e8555b6a4a96be1596caf7982c359f246528cfbb6eeb3de48b",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_PQ_XMAP_8_POSITIVES_EXPECTED_NEGATIVE",
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Cached DS minimum SM component sequences; 1ns simulation only. Not full token or loaded SS/FF clock admission.",
+        "reuse_executable": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/work/build_xmap1/Vtb_hbm_accel_sm_pq_xmap_seq",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound.",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "target_eligibility": {
+        "ds_1m": "Actual production PQ/XMAP joint gate PASS: four P1/four P6 retained sequences and expected negative.",
+        "qwen_8k": {
+          "enabled": false,
+          "verdict": "INAPPLICABLE_TO_SELECTED_ME_SPINE",
+          "source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json",
+          "record_sha256": "b02a8d80887371c73234d1ae2d1cf48f10b9469067766623412c832778ccd497",
+          "reason": "Selected ME activation interface is already format-exclusive FP32. It reads enabled addressed 32-bit words directly from VM, not the DS multi-format 3152-bit column fragment. No inactive FP4/FP8/BF16 plane is transported to remove."
+        }
+      }
+    },
+    "partial_wave_packing": {
+      "owner": "Erdos",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv"
+      ],
+      "hooks": [
+        "PACK_W2=0 hardware default; candidate1 after literal paired receipt and negatives",
+        "8bits same posted queue tuple, capture at h_pop",
+        "Erdos caller request/result joins, original operation identity restored",
+        "XMAP forwarded by caller, actual paired gate XMAP0; combined XMAP1 remains unmeasured"
+      ],
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv": "07e87f99a40303729051e483a4fe08d5d912d67b00ebfd4d44cf840c009dcad1",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv": "0eafaa6fccde0e5add1c40926f50482d87a4fe292882df124ba6bbe5b4473416",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv": "f9e7c02771419210282e63c1de8a8d1fc5c9882428ff0df674268c3f20765644"
+        },
+        "parameters": {
+          "PACK_W2": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
+            "sha256": "2d57e20013e7db7822c7b2388fb3c2c07bfe98e5363d87d3adf9c44559af815c",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_PQ_PACK_XMAP_L20_P1",
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Actual simultaneous PQ+PACK+XMAP P1 L20; 86 original FP32 rows, finite behavioural provider component; no full-token or SS/FF admission.",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Exact PQ+PACK and literal negatives consumed; PQ+PACK+XMAP interaction and physical admission remain unmeasured.",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
+    },
+    "expert_workgroup": {
+      "owner": "Hubble",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv",
+        "tools/dshbm_expert_workgroup_interleave.py",
+        "tools/dshbm_expert_interleave_descriptor.py",
+        "tools/dshbm_expert_workgroup_descriptor.py",
+        "tools/dshbm_expert_interleave_native.py"
+      ],
+      "hooks": [
+        "Fetch s_valid/s_ready/s_data[1024] -> gearbox in_valid/in_ready/in_data.",
+        "Native gearbox out_valid/out_ready/out_data[1088] -> reserved SM response using the original accepted request tag; coupled benchmark has behavioural bookkeeping, not an installed provider.",
+        "tools/dshbm_expert_interleave_descriptor.py::compile_descriptors_a8(ids, *, layer, die, input_job, interleave8=False)",
+        "w2_stream returns complete W2 bytes, literal cfg_lut and counts TOGETHER: 10,10,0,0,29,29,29,29 for released die2/stack0.",
+        "expert_w2_service_inputs binds existing w2.hex/cfg_lines.hex/cfg_lut.hex by actual measured hashes; no activation synthesis.",
+        "Mandatory 8/8/1 W2 dispatch byte service passed; arithmetic/installed provider remains unqualified."
+      ],
+      "binding": null,
+      "missing": "OFF: 81f77 complete W2 byte service passed; exact postweighted BF16 SwiGLU/unbiased router input, actual connected SM/provider and numerical gate missing.",
+      "source_candidates": {
+        "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "647285ec7bdcd6edcc4ce13a9e6807733b1e7a27b660250019513ecf8b13d6dc"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "4972eb2f66858181c1ad33a6b701e7e555c6aab5e923c9cb9da2c7993071491a"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "080350f39cef5c0de39431d1368b06aadcbf1e1d40bb73366bbdf86380ec149b"
+        },
+        "tools/dshbm_expert_workgroup_interleave.py": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "b84356315a935796bb48afe4ebc26e82a0c4ef7aa7fa2238df1b8fbdf8f6402e"
+        },
+        "tools/dshbm_expert_interleave_descriptor.py": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "d736dfcaba6f4a390e31ae4ac8368fde382779b094559cb141ebf8a986aa3c8e"
+        },
+        "tools/dshbm_expert_workgroup_descriptor.py": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "366f7f56e29053e7ddc487451d27b6eb1bb0538ebfd444275f8e952b5046c97c"
+        },
+        "tools/dshbm_expert_interleave_native.py": {
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "98c03b4ff9b8cb11df2e9fca66acc1de7158d82d2b419a0c1c704eed354323bb"
+        }
+      },
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json",
+      "service_binding": {
+        "receipt": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/record.json",
+        "receipt_sha256": "84cf006e27b10436665760f4ee9c1ea050cdfdb027776e09f144db64d5641ab4",
+        "source_commit": "81f77dcbe808db885e24d786bea083babead3485",
+        "counts": [
+          10,
+          10,
+          0,
+          0,
+          29,
+          29,
+          29,
+          29
+        ],
+        "transport_lines_per_expert": 136,
+        "source_callable": "tools/dshbm_expert_workgroup_interleave.py::w2_stream",
+        "integration_callable": "tools/hbm_opt_integrated_20261005.py::expert_w2_service_inputs",
+        "cli": "w2-service --layer {3,20} --service-dir EXISTING_OWNER_SERVICE_DIR",
+        "scope": "PASS_SERVICE_BYTES_ONLY: L20/L3 die2 stack0, 9408 sectors per case; no arithmetic or installed-provider qualification",
+        "arithmetic_qualified": false,
+        "rate_credit": false,
+        "corrupted_sector_controls": {
+          "L20": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L20/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          },
+          "L3": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L3/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          }
+        }
+      }
+    },
+    "fused_su": {
+      "owner": "Einstein",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv",
+        "rtl/hbm_accel/su/ot_hbm_accel_su_fused_mreq.sv"
+      ],
+      "hooks": [
+        "compile_saved/load_cases",
+        "finite source/destination ownership",
+        "original scheduled 690-bit native retained operations"
+      ],
+      "binding": null,
+      "missing": "Component exactness exists; selected whole-command finite VM issuer/readback join is required before integrated enable."
+    },
+    "su_physical": {
+      "owner": "Nash",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected_flat.sv",
+        "rtl/hdc/ot_hdc_prefix.sv"
+      ],
+      "hooks": [
+        "actual routed selected source/instance",
+        "SS setup 60ps / FF hold 25ps",
+        "Replacement files use original module names; exclude originals and siblings.",
+        "Same sqrt DEPTH31 II1 / KR_DEPTH40 MLAT6 ALAT5; zero added latency."
+      ],
+      "binding": null,
+      "missing": "Nash12:03 actual KR r2 SS full -114.181664ps/r2r -1.654232ps, FF +2.673556ps: REJECTED. WHOLE_SU_1p2_SSFF_CLOSED=false; no duplicate route or extrapolated-frequency credit.",
+      "source_replacements": {
+        "rtl/hdc/v41/ot_hdc_fsqrt.sv": "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_f12.sv": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected_flat.sv"
+      }
+    },
+    "index_path": {
+      "owner": "Sagan",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_query.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv",
+        "rtl/hdc/v41/ot_hdc_actquant.sv",
+        "rtl/hdc/ot_hdc_delay.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/ot_hdc_fpu.sv",
+        "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv"
+      ],
+      "hooks": [
+        "Actual19-source native VM/scorer/selector/candidate closure",
+        "start && start_ready; hold job32/gen4/position20/rank7 through all real consumer drain",
+        "vm_read_v/r, addr32/tag8/words6 +frame identity; vm_rsp_v/r, data1024/tag8 +same frame identity",
+        "k_v/k_r/k_last; 64slots, key544/ID20/lv/ref/keep per slot; TP96 IDs8*(96*localblock+rank)+offset",
+        "candidate_v/r, Q4*W16 score16+ID20; explicitly accepted third consumer, never final selected gather payload",
+        "out_v/out_r/out_last per4quarters, each16 lanes score16/ID20/ninf; actual local selection only",
+        "cand_out_v/r/last per4quarters, each2 lanes BF16 score16/globalblock17; actual selected maxima/IDs",
+        "candidate_drained input; active release additionally requires both accepted last paths and no candidate/topk busy/fault",
+        "4x256x592 topk +4x1024x68 candidate external synchronous1R1W interfaces; protected installed realization unbound",
+        "Sagan ot_hbm_accel_index_order_adapter sourceclosure via index_order_source_files; N2/n16 exact component only",
+        "Actual separate W15 score/ID words require checked sourceformatter; formatter remains unbound, not reinterpreted",
+        "Exclusive gather/writer drain +512ID sink reservation retained until matched publication and positive reverse"
+      ],
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv": "1ca1dff79e7ee4375e8a422d8c5b916b86644a3a3231810653636556db29b279",
+          "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv": "ea09f3560651e7f0946f07ff4edb5d2a6b78c4c30c151c2fe104d553670b0946",
+          "rtl/hbm_accel/index/ot_hbm_accel_index_query.sv": "26658b44b789ee8c2b084fca4b693f4832f7c0a1b7f4912f360e7337f3170f18",
+          "rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv": "9530709f29fb62b2542659dcc92d6c17e6f2efefd6efcbfaf7705be1d7c5d33f",
+          "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
+          "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",
+          "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+          "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+          "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+          "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+          "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": "a91af5415f5872e6d7c2b8abf90c33008f538e7e669a217f9f75bbc74fe1739d",
+          "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+          "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+          "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+          "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+          "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+          "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+          "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        "parameters": {
+          "ENABLE": 1,
+          "SOURCE_VM_ENABLE": 1,
+          "NS": 16,
+          "NK": 4
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_index_path_20261005/connected_29a9_r1/result.json",
+            "sha256": "e0bec4a199c344140587133a85d436adbf3d41fea31e3a3a47864c70cd0ea1c4",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_HBM_NATIVE_CONNECTED_INDEX",
+            "source_record": "results/rtl/hbm_index_path_20261005/connected_29a9_r1/source.json",
+            "source_record_sha256": "b2e60c613b78b43c7d0c310aa655a1b60fb7a00cd9a6034cc339563b1c52099f",
+            "source_record_hash_path": [
+              "artifact_hashes",
+              "source.json"
+            ],
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Connected full-geometry index COMPONENT on retained L20 rank0. Component VM/1R1W stores implement source byte and synchronous timing contracts; not installed production ownership/CDC/protected SRAM or all96-rank closure.",
+        "open": [
+          "Canonical TP96 final ordered gather; no419-cycle credit or host-sorted DUT traffic",
+          "Global candidate gather/mask feedback/full released token",
+          "Current BCAST7/RET8 SU producer joined to actual VM; retained source operand calibration was b4/r5",
+          "Source selected protected SRAM/read receiver and physical slot/fanout/SS60 FF25 in context"
+        ],
+        "reuse_executable": "ot-epyc2:/srv/opentallas-scratch2/jobs/sagan-hbm-index-connected-29a9e9710-r1/run/obj/Vtb_hbm_index_connected",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Exact local index component enrolled; real downstream adapter/global ordered gather/production VM and physical context remain unbound.",
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/index_endpoint_source_join.json",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "global_ordered_gather_qualified": false,
+      "constant_ready_or_drained_ties_allowed": false,
+      "ordered_adapter_source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json"
+    },
+    "endpoint_sm": {
+      "owner": "Goodall",
+      "default_enabled": false,
+      "source_paths": [
+        "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv"
+      ],
+      "hooks": [
+        "real finite input delivery",
+        "result destination reservation/publication",
+        "selected loaded macro context"
+      ],
+      "binding": null,
+      "missing": "Selected endpoint/SM closure and receiving parent binding required."
+    },
+    "attention": {
+      "owner": "Noether",
+      "default_enabled": false,
+      "source_paths": [],
+      "hooks": [
+        "actual selected 4xm4 export",
+        "capacity/controller schedule",
+        "source-pinned loaded SS/FF context"
+      ],
+      "binding": null,
+      "missing": "Await selected export and minimum-component executable mapping; no ideal provider."
+    }
+  },
+  "workloads": {
+    "ds_1m": {
+      "context_tokens": 1048576,
+      "tau_default": 4.159,
+      "binding": null
+    },
+    "qwen_8k": {
+      "context_tokens": 8192,
+      "binding": null,
+      "forced_off_levers": [
+        "format_masked_activation"
+      ]
+    }
+  },
+  "host_policy": {
+    "make_jobs": 16,
+    "NUM_CORES": 16,
+    "TMPDIR": "<unique job directory>/tmp",
+    "arbitrary_timeout": null,
+    "new_heavy_hosts": {
+      "ot-epyc1tb": {
+        "job_root": "/srv/opentallas/jobs-overflow",
+        "admit": "/srv/opentallas-scratch/admit.sh"
+      },
+      "ot-epyc2": {
+        "job_root": "/srv/opentallas-scratch2/jobs",
+        "admit": "/srv/opentallas-scratch/admit.sh"
+      }
+    },
+    "selection": "Kepler/Rawls refresh both CPU busy/load, available RAM and selected NVMe disk immediately before the one ready launch; balanced selection, no memory-only dispatch."
+  },
+  "clock_policy": {
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "candidate_clock_is_not_headline_clock": true
+  },
+  "excluded": [
+    "head/argmax opt5 rejected",
+    "4096-bit activation port opt3B not selected"
+  ],
+  "reuse_candidates": [
+    {
+      "path": "/srv/opentallas/jobs/ampere-qwen-hbm-final-tp4-20261005/build/qwen_hbmacc_rt",
+      "host": "ot-epyc1tb",
+      "record": "results/rtl/qwen_hbm_final_tp4_20261005/terminal/build_identity.json",
+      "role": "Completed Qwen final TP4 baseline, compatible unchanged templates only. Does not contain DS PQ/XMAP switches.",
+      "source_identity": "results/rtl/qwen_hbm_final_tp4_20261005/source_identity.json"
+    }
+  ],
+  "index_order_adapter": {
+    "owner": "Sagan",
+    "combined_top_owner": "Rawls",
+    "selector_owner": "Confucius",
+    "source_paths": [
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+      "rtl/chip/ot_coll_topk_merge.sv"
+    ],
+    "source_candidates": {
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+        "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+      },
+      "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": {
+        "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+        "sha256": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007"
+      },
+      "rtl/chip/ot_coll_topk_merge.sv": {
+        "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+        "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+      }
+    },
+    "component_binding": {
+      "source_sha256": {
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007",
+        "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+      },
+      "parameters": {
+        "ENABLE": 1,
+        "N": 2,
+        "NPER": 16
+      },
+      "exact_receipts": [
+        {
+          "path": "results/rtl/hbm_index_path_20261005/ordered_adapter_8d816_r1/result.json",
+          "sha256": "716bbb17c3f7b9ca1e59927229d28b66cf832891ea8685b6c936ed8ba0913a06",
+          "pass_path": [
+            "verdict"
+          ],
+          "pass_value": "PASS_ORDER_ADAPTER_WITH_UNCHANGED_W15_COMPONENT_ONLY",
+          "source_pins_path": [
+            "source_sha256"
+          ]
+        }
+      ],
+      "physical": null
+    },
+    "default_enabled": false,
+    "formatter": null,
+    "formatter_owner": "Sagan",
+    "formatter_delegated_direct": true,
+    "enclosing_holds": [
+      "Sagan actual checked sourceformatter for separate existing W15 score and ID words; no rawlayout reinterpretation",
+      "Existing VM/gather owner: exclusive393216-byte extent and all source writers drained, matched checked read responses",
+      "Real merger_load_permit and command owner; ordered_loaded only after6144 accepted score/ID loadwords",
+      "Actual pre-reserved512-ID/2048-byte result sink, matched frame release after merger_done AND publication AND positive reverse",
+      "Globalcandidate mask feedback and masked localtop producer; component raw/unmasked top does not qualify fullindex",
+      "Live-owner reset/rearm and complete mutable-control protection; loaded SS60/FF25 and Claude slot/link correction"
+    ],
+    "planning": {
+      "existing_model_edges": 448512,
+      "additional_explicit_output_load_edges": 6144,
+      "serial_floor_edges_at_priced_checked_service": 454656,
+      "conditional_us_at_1p2": 378.88,
+      "model_delta_writer": "Maxwell",
+      "no_rate_credit": true
+    },
+    "source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json",
+    "formatter_source_claim": {
+      "owner": "Sagan",
+      "path": "rtl/hbm_accel/index/ot_hbm_accel_index_w15_source_formatter.sv",
+      "implementation_commit": null,
+      "sha256": null,
+      "physical_gather_binding": null,
+      "existing_TOPK_mode_installs_gathered_VM_copy": false,
+      "normal_gather_address_source": "ot_w15_coll_dma.gather_addr = dst_r + n_r*o_rank + wr_k/N",
+      "selected_normal_gather_command": null,
+      "selected_held_VM_extent": null,
+      "proposed_source_reads": 12288,
+      "pair_ready_adapter_model_reads": 6144,
+      "proposed_additional_read_service_edges": 55296,
+      "extra_assembly_and_publication_edges": null,
+      "model_delta_owner": "Maxwell",
+      "default_enabled": false
+    }
+  }
+}

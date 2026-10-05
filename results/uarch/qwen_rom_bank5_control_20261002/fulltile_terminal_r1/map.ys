@@ -1,0 +1,8 @@
+read_json /tmp/qwen-fulltile-source-map-smin6-r1-20261002/source_proc.json
+synth -top ot_qwen_rom_fulltile_tp4_context_top -noabc
+dfflibmap -liberty /tmp/qwen-fulltile-source-map-smin6-r1-20261002/ss_merged.lib
+abc -liberty /tmp/qwen-fulltile-source-map-smin6-r1-20261002/ss_merged.lib -D 773.333333
+clean
+stat -liberty /tmp/qwen-fulltile-source-map-smin6-r1-20261002/ss_merged.lib
+write_verilog -noattr /tmp/qwen-fulltile-source-map-smin6-r1-20261002/mapped.v
+write_json /tmp/qwen-fulltile-source-map-smin6-r1-20261002/mapped.json

@@ -1,0 +1,76 @@
+{
+  "active_artifacts": [
+    "compiled_whole_budget-r4.json",
+    "actual_allocator_resident_audit-r2.json",
+    "demand-r6.json.gz",
+    "H3_actual32SM_provider_prerequisites-r2.json",
+    "bounded_target_claim_inputs-r1.json"
+  ],
+  "budget_byteidentical_replay": true,
+  "demand_byteidentical_replay": true,
+  "frozen_input_hash_checks": [
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/model.json",
+      "sha256": "6807c0b79746ee82835fc7917c57e79d2979acce20901e51b86f83e6359ca859"
+    },
+    {
+      "commit": "c1037db16959ba8973e8a68052cfb7e62b93cdad",
+      "path": "results/uarch/dsrom_cfg_phase_capacity_20261002/model.json",
+      "sha256": "f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50"
+    },
+    {
+      "commit": "c1b460ae0665909cd41b393ea037ebf58ce9f057",
+      "path": "results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json",
+      "sha256": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606"
+    },
+    {
+      "commit": "c9b4730bd57e523857a91f7dc9f61eea7f4f68d5",
+      "path": "results/uarch/dsrom_service_hub_arch_handoff_20261002/inventory_service_join.json",
+      "sha256": "848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342"
+    },
+    {
+      "commit": "63f9fe2d6a7c9ada57c8cbfb0cf365b3ef349c24",
+      "path": "results/uarch/dsrom_current4096_field_receipts_20261002/receipt-r4.json",
+      "sha256": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223"
+    },
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093"
+    },
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/model.json",
+      "sha256": "6807c0b79746ee82835fc7917c57e79d2979acce20901e51b86f83e6359ca859"
+    },
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/assignments.jsonl.gz",
+      "sha256": "f6592bef8cfb56b7171986a12caea7a588070bf69a23eaed0b4c0e8893689ee4"
+    },
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/compiler_source.py",
+      "sha256": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b"
+    },
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/provider_assignment.jsonl.gz",
+      "sha256": "0e158a6b192a6276e375c82d0a47410dc2d36a1ac9227438b587592233b5ec29"
+    }
+  ],
+  "functional_program_sha256": "e923be14667cdaa6b7f0a5bc1589f16193556293b3a195b635267863bc0eb033",
+  "no_jobs": true,
+  "no_physical_or_fulltoken_admission": true,
+  "originals_byteidentical": [
+    "tools/uarch_model.py",
+    "rtl/v41die/ot_v41_field_w17w10.sv",
+    "rtl/v41die/ot_v41_pair_w17w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv"
+  ],
+  "previous_drafts_historical": true,
+  "schema": "opentallas.dsrom.whole-budget-source-review.v1",
+  "tests_log": "tests-whole-budget-r9.log",
+  "tests_passed": 75
+}

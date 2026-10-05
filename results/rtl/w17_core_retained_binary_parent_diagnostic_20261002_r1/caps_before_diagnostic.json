@@ -1,0 +1,15 @@
+{
+  "systemd": {
+    "RuntimeMaxUSec": "1min",
+    "OOMPolicy": "stop",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/w17-recovery-runtime-diag-parent-20261002-r1.service",
+    "MemoryMax": "34359738368",
+    "MemorySwapMax": "0",
+    "LimitFSIZE": "1073741824",
+    "LimitCORE": "0",
+    "CPUAffinity": "30-31",
+    "KillMode": "control-group",
+    "KillSignal": "9"
+  },
+  "kernel_cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/w17-recovery-runtime-diag-parent-20261002-r1.service"
+}

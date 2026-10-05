@@ -1,0 +1,23 @@
+{
+  "status": "READY_TARGETED_SOURCE_RUNNER_REVIEW_NO_EXECUTION",
+  "first_runner": "tools/w17_window_core_cancel_acceptance_edge_first_run.py",
+  "first_plan": "results/uarch/w17_window_core_cancel_acceptance_edge_targeted_20261002/first_plan_r2/plan.json",
+  "first_template": "results/uarch/w17_window_core_cancel_acceptance_edge_targeted_20261002/first_plan_r2/parent_GO_template.json",
+  "first_plan_SHA": "ad84baf929b1240289d6b953aac9c8f817caa37982cedf6e463984a07ad4b17e",
+  "first_runner_SHA": "93c34c77f78d55e45b1203cf16c673a454a829bc077c2215fb190d2e3cf5ddd0",
+  "remaining_runner": "tools/w17_window_core_cancel_acceptance_edge_remaining_run.py",
+  "remaining_plan": "results/uarch/w17_window_core_cancel_acceptance_edge_targeted_20261002/remaining_plan_r2/plan.json",
+  "remaining_template": "results/uarch/w17_window_core_cancel_acceptance_edge_targeted_20261002/remaining_plan_r2/parent_GO_template.json",
+  "remaining_plan_SHA": "379dae76d3d4aab890c2b0242c63955ac3bd8477ff79ebbec5de860548237d7c",
+  "remaining_runner_SHA": "3d73a4ea4f9325c76fea0dc5df895ca8eb78066435bd0880f384e4d967a82b1c",
+  "remaining_GO_dependency_pending": true,
+  "no_automatic_chain": true,
+  "tests": 27,
+  "new_targeted_controls": 9,
+  "prior_scope_preserved": true,
+  "no_compile_no_runtime_no_service": true,
+  "first_plan_r1_remaining_plan_r1": "Superseded pure preparation. r2 clarifies no automatic next service and enforces exact first mutation in dependency; no execution.",
+  "full27_newbench": false,
+  "physical_provider": false,
+  "main_publication": "Parent-reviewed validated added-path intake; no direct main mutation."
+}

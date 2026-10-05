@@ -1,0 +1,174 @@
+{
+  "schema": "opentallas.w19.full96_prerequisites.v1",
+  "status": "not_admitted",
+  "source_commit": "4c7f32e4118d371386592a8e0c639da1a6b5927a",
+  "model_source_sha256": "de920936c66d58c7e37ef2748efe934584fc7a6f76f7a668efd0a1ee11d042ab",
+  "candidate_model": {
+    "schema": "opentallas.uarch.gpu_payload_transport.v1",
+    "enabled_default": false,
+    "scope": "V4.1 HBM candidate only; Qwen/ROM ports unchanged",
+    "payloads": 24,
+    "layout": "136-B records in golden SM issue order; final line padding only",
+    "compute": {
+      "macs_per_cycle": 0,
+      "intensity_macs_per_byte": 0,
+      "arithmetic": "none"
+    },
+    "ports_Bpc": {
+      "fetch_read": 128,
+      "reservoir_write": 128,
+      "reservoir_read": 136,
+      "sm_response_write": 136
+    },
+    "boundaries_bits_pc": {
+      "fetch": 1024,
+      "sm": 1088,
+      "request_tag": 42
+    },
+    "replicas_per_die": 32,
+    "tag_depth": 16,
+    "reservoir_bytes": 512,
+    "sector_window": 16,
+    "assembly": "five 32-B sectors per 136-B record; four 8-B phases; per-sector duplicate/epoch validation",
+    "mux_bit_equivalents": 37696,
+    "storage_bits": 4504,
+    "fanout": "SM-local ready/valid; no new die-wide broadcast",
+    "demux": "one local SM response",
+    "footprint_mm2_per_sm": 0.018729,
+    "footprint_mm2_die": 0.5993,
+    "area_basis": "ASSUMED 0.2 um2 bit mux + DFFHQNx1 0.2916 um2 + 512 um2 control, 50% utilisation",
+    "slot_fit": "reserve this footprint inside existing W13 SM slot; measured contextual fit pending",
+    "routing": {
+      "tracks": 2420,
+      "channel_capacity_tracks": 3200,
+      "fits": true,
+      "basis": "ASSUMED 64 um local channel, four existing signal layers, 80 nm pitch; no hub layer change"
+    },
+    "physical_lines": 26,
+    "transferred_bytes": 3328,
+    "padded_fixture_bytes": 6144,
+    "service_cycles_no_stalls": 27,
+    "ideal_128B_payload_cycles": 24,
+    "extra_service_cycles": 3,
+    "steady_payloads_pc": 0.9411764705882353,
+    "first_payload_after_two_line_landings_cycles": 1,
+    "composed_path": {
+      "layers": 40,
+      "expert_ops_per_layer": 18,
+      "added_supply_cycles_upper_bound": 2160,
+      "added_supply_us_upper_bound": 1.8,
+      "basis": "serial sum for all routed w1/w3/w2 busiest-SM slices; overlap may hide service; excludes HBM wait"
+    },
+    "adoption": "OFF: exact, in-context SS/FF and measured token gain gates required; no token-rate restatement"
+  },
+  "smallest_covered_gap": "Host load-time swizzle only: 167B bounded software buffer, addressed32B sectors; no new hardware/router. Four loader-connected output replays passed.",
+  "model_shape": {
+    "ranks": 96,
+    "sm_per_rank": 32,
+    "total_sms": 3072,
+    "stacks_per_rank": 4,
+    "total_stacks": 384,
+    "staging_kib_per_sm": 128,
+    "aggregate_staging_bytes": 402653184,
+    "modeled_bytes_in_flight_total": 172800000.0,
+    "bulk_copy": {
+      "in_flight_B_die": 1800000.0,
+      "in_flight_B_sm": 56250.0,
+      "outstanding_sectors_sm": 879,
+      "descriptor_bytes": 4096,
+      "outstanding_descriptors_sm": 14,
+      "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+      "measured": [
+        {
+          "outstanding_lines": 7,
+          "B_per_cycle": 1.6,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 16,
+          "B_per_cycle": 3.7,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 64,
+          "B_per_cycle": 14.9,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 256,
+          "B_per_cycle": 59.5,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 440,
+          "B_per_cycle": 101.0,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 512,
+          "B_per_cycle": 102.5,
+          "share_B_per_cycle": 102.4
+        }
+      ],
+      "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+      "outstanding_lines_sm": 512,
+      "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
+    },
+    "barrier": {
+      "arrive_cycles": 32,
+      "release_cycles": 31,
+      "round_trip_cycles": 63,
+      "max_leaf_um": 3248.2,
+      "max_trunk_um": 11033.7,
+      "levels": 2,
+      "source": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+      "x_broadcast_tail_cycles": 16,
+      "measured_round_trip_cycles": 62,
+      "boundary_cycles": 78,
+      "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
+    }
+  },
+  "clock_caveat": {
+    "model_clock_hz": 1033900000.0,
+    "floorplan_clock_hz": 1033900000.0,
+    "streaming_target_hz": 1200000000.0,
+    "serial_target_hz": 900000000.0,
+    "headline": "Existing model/floorplan clock basis is not target SS closure; no target clock, latency, or rate is adopted by this gate."
+  },
+  "floorplan": {
+    "path": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+    "sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "abstract": "pending: harden die 1400 x 1640 um",
+    "claim_boundary": "placement legality, fit and priced distances only; no route, timing or power claim",
+    "prerequisites": [
+      "32 actual SM macro abstracts/rank including512B reservoir and16-tag queue, per-context SS/FF and slot fit",
+      "Four stacks/rank, L2/shared memory and local HBM ports placed with wire/fanout/channel capacity; real routing-layer check",
+      "Dedicated attention/index/SU/SFU and collective/link boundaries sized in the same token schedule",
+      "Golden reductions, fused chains and streaming/serial clock crossings qualified in context"
+    ]
+  },
+  "host_resource_admission": {
+    "full96_peak_rss": "unmeasured: cannot infer from bounded gate or multiply W17 ROM four-rank jobs as certification",
+    "full96_build_disk": "unmeasured: source/binary/profile source-bound estimate required before launch",
+    "requires": [
+      "Measure single-SM and one complete32-SM/rank compile+run RSS/disk/CPU under exact full geometry",
+      "Derive rank-by-rank or streamed96-rank peak live-memory allocation from those profiles; reserve headroom and inspect all live jobs",
+      "Preserve clean source/binary/image/driver hashes, child statuses, archive identities and golden reference for every rank"
+    ],
+    "w17_reference_only": {
+      "memory_gib": 100,
+      "disk_gib": 30,
+      "max_load": 28,
+      "scope": "W17 historical serial four-rank ROM build admission defaults; explicitly NOT a full96 HBM resource guarantee"
+    },
+    "agidock114": "Only bounded loader/fetch/SM fits here until a full-rank profile proves headroom"
+  },
+  "production_runtime": [
+    "Whole checkpoint to every rank/SM operation issue-order records and physical expert-ID mapping; host loader begins after logical packing",
+    "Router top6 finite scoreboard/descriptor schedule: ascending expert IDs and exact routed weights; each dependent w1/w3/w2 launched at its true producer boundary",
+    "Multi-SM operation offsets/strides and bounded shared HBM contention across weights/KV/index; existing single-operation fetch proof is insufficient",
+    "Full AR/MTP token on all96 ranks with state/logit/golden checks, measured single-user cycles and secondary batching without hurting single-user latency"
+  ],
+  "retained_proof": "Historical sector60 gate reused; padded54 gate not rerun. Loader four-case replays do not establish router/runtime.",
+  "prior_preflight_note": "Earlier sparse W19 preflights had no materialized optional HBM floorplan and used analytical barrier fallback. This receipt materializes and source-binds the existing floorplan; no historical verdict is overwritten."
+}

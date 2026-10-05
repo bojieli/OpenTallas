@@ -1,0 +1,84 @@
+{
+  "a_known_reason_not_to_read_this_as_the_final_answer": "THIS RUN USED A STALE IR. build/ir-v3/deepseek-v4.1-flash-reduced-v1/kernel_ir.v3.json was built 2026-09-18 00:51; the frontend fix that gives the candidate-admission plane a STATE-role result -- without which it is an all-zero activation buffer and ROUTE.INDEX_TOPK selects nothing on every pool-reading layer -- landed 2026-09-22 09:54 in f75491ce. A frontend fix does not reach a built IR. The IR is rebuilding and the run will be repeated.",
+  "answer": "IT DEPLOYS AND EXECUTES; IT DOES NOT MATCH. The deployment is admitted -- 10,040 descriptors, 4,081 instructions, work 47,605/47,605 -- and the accelerator produced all 16 tokens in 2,387.9 s. The token sequence disagrees with the reproducible reference at index 0: 1242 against 3424.",
+  "not_a_claim": [
+    "that the divergence is caused by the stale IR: that is a reason to re-run, not a diagnosis",
+    "that this is RTL: run_accelerator_tokens.py executes runtime.sim, not the Verilator device",
+    "that 2,387.9 s is a performance figure -- it is host wall time for a functional simulation"
+  ],
+  "producer": {
+    "git": {
+      "commit": "0c5d04438809eb57fe22ef2d4bf1f6c58c9c295b"
+    },
+    "tool": "tools/run_accelerator_tokens.py"
+  },
+  "question": "can the reduced DeepSeek V4.1 graph be deployed and executed end to end on HBM, and does its token match the reference?",
+  "schema": "opentallas.result.v41_reduced_deploys_and_executes.v1",
+  "the_divergence": {
+    "accelerator_token_id": 1242,
+    "accelerator_tokens": [
+      1242,
+      1265,
+      1963,
+      2430,
+      2944,
+      2727,
+      413,
+      1486,
+      1110,
+      1620,
+      362,
+      583,
+      3838,
+      2332,
+      349,
+      2768
+    ],
+    "agreement": false,
+    "compared_tokens": 16,
+    "first_divergence_index": 0,
+    "oracle_token_id": 3424,
+    "reference_tokens": [
+      3424,
+      252,
+      3269,
+      2155,
+      690,
+      2493,
+      3477,
+      2834,
+      478,
+      136,
+      3558,
+      2528,
+      2839,
+      3683,
+      2580,
+      269
+    ],
+    "terminal_acceptance": "failed on oracle_token_identity"
+  },
+  "what_had_to_be_fixed_to_get_here": [
+    {
+      "correcting": "results/abi3/reduced_deepseek_capability_gap.json reports 38 missing, measured against hbm_sram_cluster_32.json -- which is not the V4.1 comparator and was never the right base",
+      "fix": "a comparator capability built on hbm_sram_cluster_n_comparator_8_e4096.json, which already declared 107 of the 108 this graph needs; ONE name was added, engram_gate_fp32_v1",
+      "gate": "numeric contracts",
+      "was": "the planner refused: capability does not implement ['conversion_binary32_tensor_to_bf16_rne_v1', 'engram_gate_pinned_form_v1', 'lookup_engram_row_fp8_e4m3_row_scale_read_v1']"
+    },
+    {
+      "fix": "run_deepseek_v41_reduced_reference_oracle.py now records tokenizer_sha256 = sha256(snapshot/tokenizer.json), the convention every full-model oracle already follows",
+      "gate": "tokenizer binding",
+      "was": "run_accelerator_tokens.py: 'the workload/reference pair does not bind a valid tokenizer SHA-256'"
+    },
+    {
+      "fix": "the producer takes --expert-numeric-path and branches on it but never recorded it, so the runner read None and refused golds that WERE produced on the requested path; it is now recorded",
+      "gate": "expert numeric path binding",
+      "was": "'reference ran through the None expert numeric path, not fp8'"
+    },
+    {
+      "fix": "the comparator base carries feature 13 and 4,096 events",
+      "gate": "capability features and limits",
+      "was": "required feature bit 13; 1,746 distinct events against 1,024 admitted"
+    }
+  ]
+}

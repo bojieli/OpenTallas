@@ -1,0 +1,19 @@
+{
+  "scope": "Differential state controller at SLOTS3 and routed default SLOTS16; seven isolated candidates in Icarus and Verilator.",
+  "test_count": 28,
+  "status": "pass",
+  "sources": {
+    "results/rtl/state_apply_pipeline/candidate.sv": "6b522c33ff70fcc582e3ca73981b16b8086a9e6f0f5e2dcb2620e54ccee0e184",
+    "results/rtl/state_apply_overlap/candidate.sv": "46daa3f8d9bb1c47dc4bf7e2e05bfd14b7840b2415afd09c6a21b8816d5a6903",
+    "results/rtl/state_apply_counter/candidate.sv": "9c45bbe2cc6b50c773b7b9139fe7bec0ead276b0cf37694215032c560f14ae40",
+    "results/rtl/state_slot_admission/candidate.sv": "b899a3a3afa89066042e372f229b17ecf85c50ff16e8926b4808638041df5958",
+    "results/rtl/state_remaining_capacity/candidate.sv": "aebdadd9616986e5806646fa4500c91539c55174aee7a190007d135e00bf151d",
+    "results/rtl/state_slot_payload_reset/candidate.sv": "a07c5efd2751594b0aff0efd9aa1d3b359a4a1da1439eccf28e3b8acc3ea5458",
+    "results/rtl/state_capacity_shared/candidate.sv": "480ee4aee4349dcd06da5bf81249ebf53cbe30c17e0a64c1da2985eb2ab84434",
+    "tests/test_state_apply_pipeline.py": "78b354397a48f4708c121f5448e689fcdaf80df9e9feb9f044d11efbbe6629b5",
+    "results/rtl/state_apply_pipeline/before.sv": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263"
+  },
+  "checks": "At SLOTS16 allocate thirteen low entries using READ, then stage/retire entries 13-15. Each test also runs 90 transactions, 21 cancellations, 120 refusal comparisons, 18 repeated-commit/post-retirement scenarios, all commit-counter carry depths and wraparound. No cycle change relative to previously recorded candidate schedules.",
+  "limitations": "Directed deterministic differential corpus, not exhaustive formal equivalence or timing qualification."
+}

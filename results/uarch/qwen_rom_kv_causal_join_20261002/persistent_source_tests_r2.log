@@ -1,0 +1,20 @@
+test_existing_persistent_memory_raw_bytes (test_qwen_rom_persistent_kv_g0.ActualProviderTests) ... ok
+test_absent_actual_backing_refused (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_byte_cost_charged_once (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_finite_write_and_exact_masked_delivery (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_owner_and_extent_nonalias (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_rmw_preserves_unwritten_bytes (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_single_writer_per_rank (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_source_calendar_is_finite (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_stale_duplicate_ack_and_early_publication (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_window_visibility_and_drain (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_burst_credits_cover_source_destination_fanout (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+test_existing_actual_compiler_and_state_provider_join (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+test_fill_destinations_follow_emitted_split_issue_order (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+test_idle_refresh_does_not_accumulate_false_debt (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+test_stack_command_calendar_includes_idle_refresh_and_rmw (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.481s
+
+OK

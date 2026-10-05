@@ -1,0 +1,14 @@
+test_delivery_difference_needs_declaration_and_must_differ (test_qwen_rom_calibrated_calendar.IdentityTests) ... ok
+test_twenty_fields_match_the_policy_review (test_qwen_rom_calibrated_calendar.IdentityTests) ... ok
+test_workload_field_cannot_vary_or_be_declared (test_qwen_rom_calibrated_calendar.IdentityTests) ... ok
+test_inputs_pinned_and_measured_composition (test_qwen_rom_calibrated_calendar.InputTests) ... ok
+test_source_anchors_apply_once_and_missing_anchor_refuses (test_qwen_rom_calibrated_calendar.InputTests) ... ok
+test_every_record_carries_identity_and_pins (test_qwen_rom_calibrated_calendar.RecordTests) ... ok
+test_statuses_and_headline_consistency (test_qwen_rom_calibrated_calendar.RecordTests) ... ok
+test_one_layer_secded_calendar_stays_within_credit17_capacity (test_qwen_rom_calibrated_calendar.ServiceTests) ... ok
+test_strict_refab_issues_at_due_edge_not_at_arrival (test_qwen_rom_calibrated_calendar.ServiceTests) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 6.360s
+
+OK

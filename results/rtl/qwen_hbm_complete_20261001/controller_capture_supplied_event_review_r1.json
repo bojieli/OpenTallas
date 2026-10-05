@@ -1,0 +1,78 @@
+{
+  "actual_provider_credit": false,
+  "additional_storage_delta": {
+    "ACK_entry_fields": {
+      "PC": 5,
+      "data": 256,
+      "die": 1,
+      "instruction": 11,
+      "position": 21,
+      "producer_epoch": 64,
+      "sector": 34,
+      "simulation_visible_ps": 64,
+      "stack": 2,
+      "tag": 16,
+      "transport_epoch": 32,
+      "valid": 1
+    },
+    "ACK_pointer_bits": 56,
+    "additional_pointer_bits": 2112,
+    "extra_ACK_capture_entries": 24,
+    "extra_ACK_capture_proxy_bits": 12168,
+    "pending_state_bits": 2560,
+    "per_PC_pointer_bits": 2304,
+    "previous_pool_pointer_bits": 192,
+    "scope": "Conservative delta beyondr4 target160storage andheldproducer6656bits; no fieldsharing. Simtimestamp proxy not provedhardwarewidth.",
+    "storage_only_area_mm2": 0.009853747200000002,
+    "total_additional_proxy_bits": 16896
+  },
+  "geometry": {
+    "ACK_capture_stack": 4,
+    "PCs_stack": 32,
+    "RMW_locks_die": 4,
+    "dies": 2,
+    "pending_PC": 5,
+    "scoreboard_updates_die_serial_cycle": 1,
+    "stacks_die": 4
+  },
+  "hardware_build_ready": false,
+  "passed": 4,
+  "remaining_admission": [
+    "actual operand/result/payload publication and eligibility callbacks",
+    "RMW READ scheduling/arithmetic bytes andgolden rounding notperformed",
+    "ACK assembler/noC/ready/perPCarbitration mux area and routing",
+    "hardware clocks/timers widths/hold SSFFfit",
+    "common36 readerleases/full36layer retire andbothdie drain binding",
+    "queue depth includes retainedRSP/readycredit,5PC canstall; nofreebandwidth"
+  ],
+  "schema": "Qwen_per_PC_controller_capture_supplied_event_review_r1",
+  "scope": "Bounded supplied-event control model, not realRTLcontroller/RMW data execution; no checkpoint rerun.",
+  "seconds": 0.05,
+  "source_commit": "7474c2f6c06c010acc39d81a280a44b25f6b3d1e",
+  "source_pins": {
+    "tests/test_qwen_hbm_complete_controller_capture.py": {
+      "commit": "7474c2f6c06c010acc39d81a280a44b25f6b3d1e",
+      "sha256": "bbf01bc2023c544ca539b524d6b8db06e0718a59111e97e52614ae9550fc7eea"
+    },
+    "tools/qwen_hbm_complete_controller_capture.py": {
+      "commit": "7474c2f6c06c010acc39d81a280a44b25f6b3d1e",
+      "sha256": "ecdc8a5bd4e25a400c9a6d7fa295b0c44f81b13c7108edd5a5c70218fab1e023"
+    }
+  },
+  "storage_prerequisite": {
+    "commit": "4ef6920bf",
+    "path": "results/rtl/qwen_hbm_complete_20261001/controller_source_prerequisites_r4.json"
+  },
+  "test_command": "python3 -m pytest -q tests/test_qwen_hbm_complete_controller_capture.py",
+  "test_returncode": 0,
+  "total_token_cycles": null,
+  "whole_program_admission": false,
+  "witnesses": [
+    "32PC simultaneous columns;32pending and4heldACKs; fifth capture stalls without completion loss",
+    "sixth samePC request stalls while otherPC can column",
+    "producer64 highhalf/transport32/tag mutations rejected",
+    "partialRMW readimport and27serialcycles merge required",
+    "lock/pending survives consumer retirement until reversecredit",
+    "late capture timestamp governs actual CDC/store retirement ordering"
+  ]
+}

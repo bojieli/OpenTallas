@@ -1,0 +1,33 @@
+{
+  "P_and_R": false,
+  "SRAM_HBM_link_protection_policy_changed": false,
+  "Sagan_C0_shared_bridge_separate": true,
+  "host_journal": {
+    "capacity_bytes": 8589934592,
+    "full_program_capacity_proven": false,
+    "physical_buffer_credit": 0,
+    "reservation_model": "128KiB fixed plus 8*(compressed_event_bytes+64); admission guard before accepting new owner; fail closed if exhausted",
+    "shared_database": true
+  },
+  "native_AW": 27,
+  "new_RTL": false,
+  "new_build": false,
+  "old_r25_MemoryError_failure_preserved": true,
+  "per_rank": {
+    "RF_physical_mirror_bytes": 16777216,
+    "scratch_base": 67108864,
+    "scratch_bytes": 33554432,
+    "shared_source_reservation_bytes": 262144,
+    "state_extent_base": 33554432,
+    "state_extent_bytes": 33554432,
+    "state_max_reserved_bytes": 18882048,
+    "state_min_reserved_bytes": 18874368
+  },
+  "physical_area_or_rate_admission": false,
+  "physical_system_AW34_translation_bound": false,
+  "service_tick_costs": "inherited positive R21 provisional software calendar; no measured clock or bandwidth",
+  "state_MACs_per_cycle": 0,
+  "state_capacity_bytes_96_ranks": 3221225472,
+  "status": "SOFTWARE_FRAGMENT_TRANSPORT_ONLY",
+  "weight_ROM_ECC_dependency": false
+}

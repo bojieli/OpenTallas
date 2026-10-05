@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.local/schemas/compiler/deepseek_v4_tokenizer_validation_v1.schema.json",
+  "title": "OpenTallas DeepSeek V4 tokenizer validation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "probes",
+    "runtime",
+    "schema",
+    "source",
+    "status",
+    "validation_id"
+  ],
+  "properties": {
+    "schema": {
+      "const": "opentallas.deepseek_v4_tokenizer_validation.v1"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "remote_code_policy",
+        "repository",
+        "revision",
+        "tokenizer_config_sha256",
+        "tokenizer_config_size_bytes",
+        "tokenizer_sha256",
+        "tokenizer_size_bytes"
+      ],
+      "properties": {
+        "repository": {"const": "deepseek-ai/DeepSeek-V4-Flash-0731"},
+        "revision": {"const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"},
+        "remote_code_policy": {"const": "disabled"},
+        "tokenizer_sha256": {
+          "const": "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf"
+        },
+        "tokenizer_size_bytes": {"const": 6367146},
+        "tokenizer_config_sha256": {
+          "const": "6ac8c8dc065ed118161d02dd532749ae3f52c243deac27872134fae2f50d8547"
+        },
+        "tokenizer_config_size_bytes": {"const": 801}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation", "version"],
+      "properties": {
+        "implementation": {"const": "tokenizers"},
+        "version": {"const": "0.22.2"}
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "add_bos_token",
+        "add_eos_token",
+        "base_vocab_size",
+        "bos_token_id",
+        "eos_token_id",
+        "model_max_length",
+        "pad_token_id",
+        "protocol_token_ids",
+        "total_vocab_size"
+      ],
+      "properties": {
+        "add_bos_token": {"const": false},
+        "add_eos_token": {"const": false},
+        "base_vocab_size": {"const": 128000},
+        "bos_token_id": {"const": 0},
+        "eos_token_id": {"const": 1},
+        "model_max_length": {"const": 1048576},
+        "pad_token_id": {"const": 1},
+        "total_vocab_size": {"const": 129280},
+        "protocol_token_ids": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "assistant",
+            "authority_task",
+            "begin_of_sentence",
+            "domain_task",
+            "dsml",
+            "end_of_sentence",
+            "latest_reminder",
+            "query_task",
+            "read_url_task",
+            "search_action_task",
+            "thinking_end",
+            "thinking_start",
+            "title_task",
+            "user"
+          ],
+          "properties": {
+            "assistant": {"const": 128804},
+            "authority_task": {"const": 128831},
+            "begin_of_sentence": {"const": 0},
+            "domain_task": {"const": 128832},
+            "dsml": {"const": 128825},
+            "end_of_sentence": {"const": 1},
+            "latest_reminder": {"const": 128828},
+            "query_task": {"const": 128830},
+            "read_url_task": {"const": 128845},
+            "search_action_task": {"const": 128829},
+            "thinking_end": {"const": 128822},
+            "thinking_start": {"const": 128821},
+            "title_task": {"const": 128836},
+            "user": {"const": 128803}
+          }
+        }
+      }
+    },
+    "probes": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text_sha256",
+          "token_count",
+          "token_ids_sha256"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^probe-[0-4]$"},
+          "text_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "token_count": {"type": "integer", "minimum": 0},
+          "token_ids_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "status": {"const": "verified_official_local_tokenizer"},
+    "validation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

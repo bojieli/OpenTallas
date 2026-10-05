@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.parent.connected-QE-first-failure-review.v1",
+  "GO_commit": "41a5a84ce12379f5758b10608926e233a4934d4a",
+  "run_path": "/tmp/window-qdq8-connected-single-run-20261002-r1",
+  "outcome": "FAIL_DESCRIPTOR_ADMISSION_AT_CYCLE3_BEFORE_ACTUAL_QE",
+  "source_head": "9d42d5da8a4f5cf36d4e04668c6894eb9d9f37b4",
+  "compile_seconds": 31.051113803870976,
+  "compile_status": 0,
+  "runtime_status": 1,
+  "aggregate_memory_peak_bytes": 1159483392,
+  "OOM_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+  "protected_live_jobs_unchanged": true,
+  "startup_static_counterexample": {
+    "state": {
+      "desc_count": 0,
+      "life_done_count": 0,
+      "source_done_count": 0,
+      "acks": 0,
+      "NOPS": 6
+    },
+    "first_descriptor_branch": false,
+    "continuation_branch": true,
+    "cause": "Continuation accepts empty initial 0/0/0 completion counts. It must require an actual prior admitted descriptor; first descriptor still requires32WR acknowledgements."
+  },
+  "parent_review_error": "Missed startup zero-state continuation condition; model/tests did not establish fixture protocol. Actual failed assertion preserved and overrides static preparation confidence.",
+  "repair_scope": "Additive fixture/control repair plus independent startup negative. Do not alter engine/arithmetic/model expected calendar or relax admission assertion. Fresh source review and GO required.",
+  "retain1_reached": false,
+  "actual_QE_arithmetic_exercised": false,
+  "file_sha256": {
+    "record.json": "9b6c19f5eba8fa9b4ec87ce20f19be0bea8e35facc8208adbb95f1e7d6194dc0",
+    "service_receipt.json": "f11ebfda346820e85ac70ac57d7961bad1d208943448e4f2bf9b1e7b7797a92b",
+    "caps_before_compile.json": "49c67731907c35ee99b81474f438bc99e8da08a4005fed21488e32e4c7ad4b72",
+    "retain0_compile.log": "3978cc159b894463f951dcdd5ad44bc42ca6ac28aef6246b481941d28f03a158",
+    "retain0_runtime.log": "4b095d73abaab2b4c02b795c7ed1b8c8e52163b0c315501e28e3d14bb1c83228"
+  },
+  "hardware_admission": false,
+  "full_token_credit": false
+}

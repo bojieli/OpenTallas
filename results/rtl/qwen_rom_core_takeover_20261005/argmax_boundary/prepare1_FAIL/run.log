@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/qwen-rom-argmax-component-20261005/src/tools/qwen_rom_core_takeover_component.py", line 5, in <module>
+    import qwen_rom_core_dec_emit_w12 as E
+  File "/srv/opentallas-scratch/codex/qwen-rom-argmax-component-20261005/src/tools/qwen_rom_core_dec_emit_w12.py", line 34, in <module>
+    import qwen_rom_rt_core_emit_w12 as E
+  File "/srv/opentallas-scratch/codex/qwen-rom-argmax-component-20261005/src/tools/qwen_rom_rt_core_emit_w12.py", line 26, in <module>
+    from qwen_rom_arithmetic_contract_w12 import DEFAULTS as ARITH_DEFAULTS
+ModuleNotFoundError: No module named 'qwen_rom_arithmetic_contract_w12'

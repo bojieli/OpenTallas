@@ -1,0 +1,48 @@
+{
+  "artifacts_sha256": {
+    "results/uarch/hbm_tc_geometry_prerequisite_20261001/model.json": "54355da679837972cd7f7a8976f6ef5bdad0848fc2ab5db529113d45aa597768",
+    "results/uarch/hbm_tc_geometry_prerequisite_20261001/platform_source.json": "e221a9ae6ea68d4b3d61ac04c7694f4fe4b2ded8b5484457076008dbad578e68",
+    "tools/hbm_tc_geometry_prerequisite.py": "bcc52746edd497ba138e9e4968f70b5d4bf9da20b71657729b65402b7e9ee88d",
+    "tools/test_hbm_tc_geometry_prerequisite.py": "21f74e2f8ecbb9ec34d92e32cd2275596cd975d8f8a8490305f6e7023ff4fb1d"
+  },
+  "base_git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "failure_unchanged": {
+    "DRC": 0,
+    "FF_hold_wns_ps": -0.9053036098549683,
+    "SS_setup_violation_count": 1170,
+    "SS_setup_wns_ps": -102.65510663742816,
+    "cell_area_um2": 37566.1,
+    "complete_LEF_ETMs": true,
+    "core_area_um2": 46586,
+    "die_area_um2": 48400,
+    "engineering_verdict": "FAIL",
+    "fault_budget_excess_ps": 64.7,
+    "hold_uncertainty_ps": 25,
+    "output_over_budget": [
+      "fault",
+      "ov"
+    ],
+    "ov_budget_excess_ps": 24.3,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60
+  },
+  "geometry_reproduction": "PASS byte-identical",
+  "git_diff_check": "PASS",
+  "interpretation": "PASS verifies model arithmetic, source pins, conservation and geometry reservations only. Neither conditional track bounds nor slot/die cost bounds are physical qualification.",
+  "model_only": true,
+  "new_geometry_tests_PASS": 8,
+  "no_RTL_PnR_checkpoint_payloads_live_jobs_or_AGIdock_access": true,
+  "no_admission": true,
+  "no_hardware_build": true,
+  "no_original_edits": true,
+  "parent_git": "d8fe3fd2140ff953a47bf9277360f3689e8c61ee",
+  "platform_provenance": "Tech and cell LEF fetched from pinned public ORFS reference, exact SHA matches image lock. Track script reference independently SHA-pinned, image bytes still an explicit confirmation gate. Source texts retained for offline reproduction.",
+  "prior_failure_reproduction": "PASS byte-identical standalone and immutable-evidence guard",
+  "prior_failure_tests_PASS": 4,
+  "prior_nested_delta_reproduction": "PASS source/event summary guard",
+  "prior_nested_dot_tests_PASS": 7,
+  "reproduction_command": "python3 tools/hbm_tc_geometry_prerequisite.py --check results/uarch/hbm_tc_geometry_prerequisite_20261001/model.json",
+  "schema": "opentallas.hbm-tc-geometry-validation.v1",
+  "test_command": "python3 -m unittest discover -s tools -p 'test_hbm_tc*.py' -v",
+  "tests_PASS": 19
+}

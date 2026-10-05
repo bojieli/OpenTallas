@@ -1,0 +1,20 @@
+[
+  "/srv/opentallas-scratch/admit.sh",
+  "1",
+  "--",
+  "env",
+  "OPENBLAS_NUM_THREADS=1",
+  "OMP_NUM_THREADS=1",
+  "NUM_CORES=16",
+  "nice",
+  "-n",
+  "19",
+  "python3",
+  "/srv/opentallas/repos/noether-expert-transport-6580e0088/tools/dsrom_expert_transport_measure.py",
+  "--payload-bytes",
+  "9216,20480",
+  "--work",
+  "/srv/opentallas-scratch/codex/noether-expert-transport-6580e0088-r1/work",
+  "--out",
+  "/srv/opentallas-scratch/codex/noether-expert-transport-6580e0088-r1/measurement.json"
+]

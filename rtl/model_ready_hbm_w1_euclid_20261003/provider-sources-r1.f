@@ -1,0 +1,6 @@
+rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv
+rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv
+rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv
+rtl/model_ready_hbm_w1_euclid_20261003/ot_hbm_causal_command_provider.sv
+physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v

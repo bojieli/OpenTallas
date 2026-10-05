@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""W19 bounded expert-fetch/HBM/SM arithmetic composition gate; no production adapter.
+
+The bench transports each SM weight payload as two physical 128-B lines. This
+intentionally padded transport is a correctness fixture, never a bandwidth fit.
+Uses full K and the busiest SM's actual TP-96 row slice from a pinned ISA dump.
+"""
+from __future__ import annotations
+import argparse
+import ast
+import datetime
+import hashlib
+import json
+import pickle
+import re
+import subprocess
+import tempfile
+import threading
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+import w19_sm_real_ops as W
+import rtl_gpu_sm_exact as S
+import rtl_v41_fullshape_layer_campaign as LC
+import uarch_model as U
+
+ROOT = Path(__file__).resolve().parents[1]
+BENCH = 'rtl/test/tb_w19_fetch_sm.sv'
+SOURCES = [s for s in S.SMV_SRC if s != 'rtl/test/tb_gpu_sm_v.sv'] + [
+    'rtl/hdc/ot_hdc_prefix.sv', 'rtl/gpu/ot_gpu_expert_fetch.sv', 'rtl/hdc/kv/ot_hdc_hbm_model.sv', BENCH]
+
+
+def digest(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--dump', type=Path, default=ROOT / 'results/rtl/w19_sm_operands/ar_L0_oreduce.pkl')
+    ap.add_argument('--work', type=Path, required=True)
+    ap.add_argument('--record', type=Path, required=True)
+    ap.add_argument('--sm-source-commit', help='W13 immutable SM simulation source snapshot; exports without editing RTL')
+    ap.add_argument('--jobs', type=int, default=4, help='Independent operand simulations; source builds are serialized')
+    ap.add_argument('--limit', type=int, default=0, help='Debug subset, recorded explicitly')
+    args = ap.parse_args()
+    if args.record.exists():
+        raise SystemExit('Use a fresh record path; previous verdicts are immutable')
+    if subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT).strip():
+        raise SystemExit('Run from a clean committed worktree')
+    args.work.mkdir(parents=True, exist_ok=True)
+    # Existing unified-model element, before any RTL build. No engine added.
+    model = U.hbm_gpu_design('v41')
+    preflight = dict(model_source_sha256=digest(ROOT / 'tools/uarch_model.py'),
+        element=model['element'], sm_count=model['sm_count'], bulk_copy=model['bulk_copy'],
+        scope='Existing model-sized SM, one rank/SM slice per case; bench-only transport adapter',
+        physical_line_bytes=128, sm_payload_bytes=136, fixture_bytes_per_payload=256,
+        performance_adoption=False, token_cycle_count_available=False,
+        production_transport_and_SSFF='W13 dependency; not established by this gate')
+    (args.work / 'model_preflight.json').write_text(json.dumps(preflight, indent=2) + '\n')
+    sources = SOURCES
+    sm_snapshot = None
+    source_hashes = {p: digest(ROOT / p) for p in SOURCES}
+    if args.sm_source_commit:
+        pin = subprocess.check_output(['git', 'rev-parse', args.sm_source_commit + '^{commit}'], cwd=ROOT, text=True).strip()
+        source_list = subprocess.check_output(['git', 'show', pin + ':tools/rtl_gpu_sm_exact.py'], cwd=ROOT, text=True)
+        node = next(n for n in ast.parse(source_list).body if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == 'SMV_SRC' for t in n.targets))
+        paths = [p for p in ast.literal_eval(node.value) if p != 'rtl/test/tb_gpu_sm_v.sv']
+        snapshot = args.work / 'sm_snapshot'
+        hashes, exported = {}, []
+        for path in paths:
+            data = subprocess.check_output(['git', 'show', pin + ':' + path], cwd=ROOT)
+            dst = snapshot / path
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(data)
+            hashes[path] = hashlib.sha256(data).hexdigest()
+            exported.append(str(dst.resolve()))
+        local = ['rtl/gpu/ot_gpu_expert_fetch.sv', 'rtl/hdc/kv/ot_hdc_hbm_model.sv', BENCH]
+        sources = exported + [str(ROOT / p) for p in local]
+        source_hashes = {p: digest(ROOT / p) for p in local}
+        proof_path = 'results/rtl/ot_hdc_prefix_vec_equiv.json'
+        if 'rtl/sim/ot_hdc_prefix_vec.sv' in paths:
+            proof_bytes = subprocess.check_output(['git', 'show', pin + ':' + proof_path], cwd=ROOT)
+            proof = json.loads(proof_bytes)
+            if proof.get('status') != 'pass':
+                raise SystemExit('W13 prefix simulation view lacks passing equivalence evidence')
+            for path, expected in proof['source_sha256'].items():
+                actual = hashlib.sha256(subprocess.check_output(['git', 'show', pin + ':' + path], cwd=ROOT)).hexdigest()
+                if actual != expected:
+                    raise SystemExit('W13 prefix equivalence source pin mismatch: ' + path)
+            prefix_equivalence = dict(path=proof_path, sha256=hashlib.sha256(proof_bytes).hexdigest(),
+                tested_widths=proof['widths'], claim='Existing W13 proof at its recorded widths only')
+        else:
+            prefix_equivalence = None
+        sm_snapshot = dict(commit=pin, source_sha256=hashes, prefix_equivalence=prefix_equivalence,
+            compile_list_sha256=hashlib.sha256(source_list.encode()).hexdigest(),
+            claim='Unmodified W13 simulation snapshot; not in-context SS/FF qualification')
+    W.V.set_arith('chunk8')
+    dump = pickle.loads(args.dump.read_bytes())
+    selected = [(key, e) for key, e in dump.items() if '.experts.' in str(e['w'])]
+    if args.limit:
+        selected = selected[:args.limit]
+    if not selected:
+        raise SystemExit('No routed expert operands')
+    ck = LC.Checkpoint()
+    m, _ = LC.build_model(ck, engram=False)
+    cache, build_lock = {}, threading.Lock()
+    # Lazy checkpoint decoding is not thread safe; materialize every selected
+    # matrix before launching independent fixture simulations.
+    for _, entry in selected:
+        m.w[entry['w']]
+    def one(job):
+        key, entry, stall, corrupt = job
+        expert = int(re.search(r'\.experts\.(\d+)\.', entry['w'])[1])
+        def runner(params, directory):
+            cfg = (directory / 'cfg.hex').read_text().splitlines()
+            cfg[6] = f'{expert:08x}'
+            (directory / 'cfg.hex').write_text('\n'.join(cfg) + '\n')
+            cfg[7] = f'{stall | (corrupt << 1):08x}'
+            (directory / 'cfg.hex').write_text('\n'.join(cfg) + '\n')
+            k = tuple(sorted(params.items()))
+            with build_lock:
+                if k not in cache:
+                    cache[k] = S.compile_tb(sources, 'tb_w19_fetch_sm', params,
+                        tempfile.mkdtemp(prefix='build_', dir=args.work))
+            result, meta = S.run_sim(cache[k], directory, 0)
+            meta['fixture_sha256'] = {p: digest(directory / p) for p in ('cfg.hex', 'lines.hex', 'x.hex')}
+            meta['first_byte_cycles'] = meta.get('first_sector', 0) - meta.get('first_req', 0)
+            return result, meta
+        try:
+            result = W.case(m, key, [entry], str(args.work), sim_runner=runner)
+        except (subprocess.CalledProcessError, ValueError, OSError) as error:
+            print(key, 'FAIL', str(error), flush=True)
+            return dict(op=key, expert_id=expert, stall=stall,
+                corrupt_exponent=bool(corrupt), gate_pass=False, error=str(error))
+        result.update(expert_id=expert, stall=stall, corrupt_exponent=bool(corrupt))
+        if corrupt:
+            passed = (not result['exact'] and result['accumulator_mismatches'] > 0
+                and result['rtl'].get('fault') == 0 and not result['rtl'].get('timeout'))
+        else:
+            passed = (result['exact'] and result['rtl'].get('fetched') == 2*result['rtl']['lines']
+                and (not stall or result['rtl'].get('fetch_stalls', 0) > 0))
+        result['gate_pass'] = bool(passed)
+        print(key, expert, stall, corrupt, 'PASS' if passed else 'FAIL', result['rtl'], flush=True)
+        return result
+    jobs = [(key, entry, stall, corrupt) for key, entry in selected
+        for stall, corrupt in ((0, 0), (1, 0), (1, 1))]
+    with ThreadPoolExecutor(max_workers=args.jobs) as pool:
+        cases = list(pool.map(one, jobs))
+    record = dict(schema='opentallas.rtl.w19_fetch_sm.v1', status='pass' if all(c['gate_pass'] for c in cases) else 'fail',
+        generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        simulator=subprocess.check_output(['iverilog', '-V'], text=True, stderr=subprocess.DEVNULL).splitlines()[0],
+        source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+        claim_boundary='RTL simulation: real routed-expert SM rows at full K, HBM model -> expert fetch -> bench '
+            'payload/tag adapter -> unmodified ot_gpu_sm_v bulk copy, SRAM and arithmetic. Exact accumulator '
+            'and rounded outputs checked against golden and ISA dump. Exponent corruption is required to fail '
+            'numerically. No router, multi-SM/rank runtime, complete token, production transport or SS/FF claim.',
+        model_preflight=preflight, debug_limit=args.limit, jobs=args.jobs, hbm_clk_ps=833, dump_sha256=digest(args.dump),
+        checkpoint_index_sha256=digest(ck.snap / 'model.safetensors.index.json'),
+        sm_snapshot=sm_snapshot,
+        source_sha256=dict(source_hashes, **{p: digest(ROOT / p) for p in ['tools/rtl_w19_fetch_sm.py',
+            'tools/w19_sm_real_ops.py', 'tools/rtl_gpu_sm_exact.py', 'tools/hdc_golden_v41.py', 'tools/hdc_golden.py', 'tools/rtl_v41_fullshape_layer_campaign.py']}),
+        cases=cases, dependency='W13 SS/FF SM qualification remains pending; no duplicate hardening launched',
+        model_update='Diagnostic per-op cycles only; padded fixture cycles are excluded from token repricing')
+    args.record.write_text(json.dumps(record, indent=2) + '\n')
+    return 0 if record['status'] == 'pass' else 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

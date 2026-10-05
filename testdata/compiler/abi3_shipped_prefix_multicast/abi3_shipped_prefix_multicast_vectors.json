@@ -1,0 +1,187 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "base_vector_set": {
+    "image_sha256": {
+      "p3_case.hex": "d818e3a37b180ae9711d41c9a72bccfd6b8c08eaae58c5d5ca0dbc9c3d3d838c",
+      "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+      "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
+      "p3_issue.hex": "529ba11d6bfaaae9d2bffc7ba1b56ac6d5ae9f6dc9ad174cc550884f7e66a7d1",
+      "p3_meta.hex": "d19f9c6c4fab9917eb7fac4ee14bf12c511c5f43d2c1492bf43f8b617f1eb8c6",
+      "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
+    },
+    "input_deployment_vectors": {
+      "images": {
+        "a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+        "a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+        "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
+      },
+      "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+      "sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638"
+    },
+    "path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+    "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
+    "sha256": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d"
+  },
+  "capability_fault_count": 4,
+  "case_count": 4,
+  "case_stride": 80,
+  "claim": "the source-current, already-checked four-case shipped RTL prefix identity is extended only by the qualified exact DeepSeek ROM PC-13 LINK.MULTICAST; it completes one 256-participant, 64-KiB broadcast with CRC replay and then fails closed at PC-15 VECTOR.MHC",
+  "does_not_establish": [
+    "execution beyond the exact bounded shipped-program prefixes",
+    "prefill, a whole model transaction, token selection, EOS, or decoded-token correctness",
+    "architectural TPOT, physical timing, area, power, HBM timing, or SRAM timing",
+    "simulator wall time as model performance"
+  ],
+  "exact_multicast": {
+    "communication_descriptor_id": 368,
+    "counter_descriptor_id": 367,
+    "family": 144,
+    "local_object_descriptor_id": 365,
+    "next_unsupported": {
+      "descriptor_id": 381,
+      "family": 48,
+      "opcode": "VECTOR.MHC",
+      "pc": 15,
+      "sub": 9,
+      "trap_class": 4
+    },
+    "payload_function": "0x9e3779b9 XOR (index * 0x045d9f3b) XOR concat(index[13:0], index[13:0], index[3:0])",
+    "payload_source": "deterministic_nonzero_live_scratch_object_365",
+    "payload_words": 16384,
+    "pc": 13,
+    "remote_object_descriptor_id": 366,
+    "sub": 3,
+    "topology_descriptor_id": 0
+  },
+  "expected_cases": [
+    {
+      "fault": 32,
+      "fetched": 33,
+      "index": 0,
+      "issued": 11,
+      "launches": 10,
+      "multicast_launches": 0,
+      "name": "qwen3-8b-rom-single-chip/decode",
+      "responses": 11,
+      "retired": 32,
+      "trap": 4,
+      "views": 33,
+      "words": 24832
+    },
+    {
+      "fault": 32,
+      "fetched": 33,
+      "index": 1,
+      "issued": 11,
+      "launches": 10,
+      "multicast_launches": 0,
+      "name": "qwen3-8b-hbm-single-chip/decode",
+      "responses": 11,
+      "retired": 32,
+      "trap": 4,
+      "views": 33,
+      "words": 24832
+    },
+    {
+      "fault": 15,
+      "fetched": 16,
+      "index": 2,
+      "issued": 6,
+      "launches": 5,
+      "multicast_launches": 1,
+      "name": "deepseek-v4-flash-rom-wafer/decode",
+      "responses": 6,
+      "retired": 15,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    },
+    {
+      "fault": 14,
+      "fetched": 15,
+      "index": 3,
+      "issued": 5,
+      "launches": 4,
+      "multicast_launches": 0,
+      "name": "deepseek-v4-flash-hbm-cluster/decode",
+      "responses": 5,
+      "retired": 14,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    }
+  ],
+  "image_sha256": {
+    "p3_case.hex": "bfce6caf6ba612ad0b7739f5036df3a152ae8b4166fc67013ffdcd0ee32906cb",
+    "p3_issue.hex": "62ad8a4e1d088a1c68f6554840a51bd3186e05dcc19e0e03fc781a55aebcc4bb",
+    "p3_meta.hex": "58a0131d2874613171dfadb9054d406ca4713f26bfe87aa8e8b86ac3c60748df",
+    "p3_multicast_communication.hex": "e287e85c3a8a194f5d129781e66471570039916ec5699ba8014160a84c36de85",
+    "p3_multicast_counter.hex": "8c935d68a2ce282595ac021b704a61a318f4b6442cd9c35c10df72b2e1db42f3",
+    "p3_multicast_local_object.hex": "6d0294ee77a9cc47fb59c04e9f27fc896a156ad5e3dc9213c05b49cd9df4f5b9",
+    "p3_multicast_remote_object.hex": "7f7e7adfff8c2dfd4ccbde061e1406f7a872faf9cfd3741fbd886d5f29ce7e17",
+    "p3_multicast_source.hex": "ead5d17dc074a54efbc058c1e6b2ebba995678d36527bdb4e7ce0262bf8f3308",
+    "p3_multicast_topology.hex": "856babd63bb69ab43b75920b473c42ce00d8e6b31439d8d18689db63f806d577"
+  },
+  "issue_count": 33,
+  "issue_stride": 4,
+  "multicast_launch_count": 1,
+  "multicast_qualification": {
+    "adapter_source": "rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+    "adapter_source_sha256": "baf8bd310fdc7a25b4dfa9d464932f87a4a9c8f4c7e7074102488aeb5922b8bb",
+    "campaign": "results/rtl/a3_wafer_multicast_campaign.json",
+    "campaign_sha256": "1329dc7dc18bce0a9e2bf87f56e937e041aeb6f8ef29759f81a778e7803e46cc",
+    "exact_case": {
+      "admitted": true,
+      "index": 0,
+      "inject_crc": true,
+      "label": "exact_pc13_multicast_crc_replay",
+      "refusal_reason": 0
+    },
+    "geometry": {
+      "bytes_per_message": 65536,
+      "messages": 255,
+      "participants": 256,
+      "payload_bytes": 16711680,
+      "payload_flits": 4177920,
+      "remote_writes_including_root": 4194304,
+      "rounds": 8,
+      "words_per_message": 16384
+    },
+    "source": {
+      "bundle": "build/abi3/deepseek-v4-flash-rom",
+      "capability_sha256": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+      "communication_descriptor_id": 368,
+      "communication_prefix_hex": "5441334406000100c0000000000000006d0100006e010000ffffffffffffffff",
+      "counter_descriptor_id": 367,
+      "deployment_json_sha256": "f28bab876a8b673c11a7efc2933f97db1b8bcb9cfae1be08a081374209ec9ed2",
+      "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+      "descriptors_bin_sha256": "e324895066074c7da80422cc6a9388c392038d0ce721b6ad7124a4e1af38f40d",
+      "local_object_descriptor_id": 365,
+      "pc": 13,
+      "program_bin_sha256": "5d94950fce838bd6aa50c7b29e9e85ac67498a3efa5d858b1c1bead22c2a2ec8",
+      "raw_record_sha256": {
+        "communication": "fb23e1284c751135323210d1c5b44aee55da7b73411ab20209afa3e17b53866f",
+        "counter": "5c05c5725e57dbcb261bdf5c8943c05d9d66d425fc575e9f10525a477039afb3",
+        "local": "88f48030a471540b66792a53425ecd547ed17b371a7827de6e569d65e468f965",
+        "remote": "460645a925b1ca5b416df323d4a974ddb5c49ed24a0556f31640a683a37c4795",
+        "topology": "6af9839425ad9991a22b3e0d5d9c4952bc91d00099bbf075fb394a1405055b21"
+      },
+      "remote_object_descriptor_id": 366,
+      "topology_descriptor_id": 0
+    },
+    "vector_manifest": "testdata/rtl/a3_wafer_multicast/index.json",
+    "vector_manifest_sha256": "4fb21637e32724659c13a09f543558452329138c52c9fc0a1153e7bfd332b7ce"
+  },
+  "promotion_blocker": "the integrated programs stop at declared unsupported instructions before a complete model transaction or architectural token commit; this bounded witness cannot be promoted to generated-token, EOS, or TPOT evidence",
+  "promotion_status": "source_current_bounded_prefix_only",
+  "real_launch_count": 29,
+  "required_marker": "PASS: ABI3 shipped-prefix multicast integration cases=4 launches=29 words=91136 capability_faults=4 multicasts=1",
+  "resolved_view_count": 100,
+  "result_word_count": 91136,
+  "schema": "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1",
+  "state_compat": 0,
+  "status": "source_current_rtl_integration_only"
+}

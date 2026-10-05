@@ -1,0 +1,88 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/connected_layer_deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {"$ref": "#/$defs/artifact"},
+      "maxItems": 18,
+      "minItems": 18,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "items": {"minLength": 1, "type": "string"},
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    },
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {"major": {"const": 2}, "minor": {"const": 4}},
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "compiler_version": {"const": "tensor-accelerator-production-connected-layer-0.1.0"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "independent_check_id": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_bundle_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.connected_layer_deployment.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "capability_id",
+    "claim_boundary",
+    "command_abi",
+    "compiler_version",
+    "graph_id",
+    "independent_check_id",
+    "kernel_ir_id",
+    "physical_plan_id",
+    "qualification_bundle_id",
+    "schema",
+    "source_lock_id"
+  ],
+  "title": "Connected Qwen layer deployment manifest v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "role": {
+          "enum": [
+            "capability",
+            "command_disassembly",
+            "command_program",
+            "execution_expectations",
+            "execution_request",
+            "hbm_image",
+            "independent_check",
+            "physical_plan",
+            "source_attention_execution",
+            "source_attention_qualification",
+            "source_checkpoint_lock",
+            "source_downstream_execution",
+            "source_downstream_qualification",
+            "source_lock",
+            "source_model_graph",
+            "source_qkv_execution",
+            "source_qkv_qualification",
+            "tensor_kernel_ir"
+          ]
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "role", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

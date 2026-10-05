@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-10-03T01:01:28.444388+00:00",
+  "focused_command": "python3 tests/test_pve1_source_constraint_successor.py -v",
+  "focused_tests": 9,
+  "focused_status": "PASS",
+  "offline_source_verification": "All12 files read from exact original fb5df1ac git objects and hashes matched; preparation only",
+  "preparation_command": "python3 tools/pve1_source_constraint_successor.py --plan results/rtl/pve1_new_source_constraint_successor_20261003/plan.json --sdc results/rtl/pve1_new_source_constraint_successor_20261003/new_source_constraint.sdc --source-root /tmp/pve1-new-constraint-offline-source-20261003 --prepare-dir /tmp/pve1-new-source-contract-review-bundle-20261003 --enable-new-source-constraints",
+  "preparation_status": "PREPARED_FOR_REVIEW_ONLY",
+  "discovery_attempt": {
+    "command": "python3 -m unittest discover -s tests -p test_pve1_source_constraint_successor.py -v",
+    "status": "ERROR",
+    "cause": "Unrelated tests/abi3 package import requires runtime.abi3 excluded by sparse checkout; all9 target cases passed; direct focused command PASS"
+  },
+  "git_diff_check": "PASS",
+  "simulation_or_PnR_performed": false,
+  "historical_failure_unchanged": true,
+  "new_constraint_qualification": "NOT_RUN",
+  "next_action": "Review plan.json; observe existing retention watcher until exact producer exit0 and stable terminal3_3ODB receipt; then prepare admitted ODB driver/new lease. Do not launch existing synthesis CLI as ODB resume."
+}

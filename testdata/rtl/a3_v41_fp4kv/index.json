@@ -1,0 +1,927 @@
+{
+  "cases": [
+    {
+      "code_base": 0,
+      "count": 2032,
+      "dequantized_elements": 2032,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 2032,
+        "4": 508,
+        "8": 254
+      },
+      "expected_output_words": 508,
+      "expected_saturations": 126,
+      "group_field": 16,
+      "name": "exhaustive_low",
+      "note": "all 16 E2M1 codes against finite E4M3FN scales 0x00..0x7e",
+      "out_base": 0,
+      "pass_base": 0,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 0,
+      "scales_used": 127
+    },
+    {
+      "code_base": 256,
+      "count": 2032,
+      "dequantized_elements": 2032,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 2032,
+        "4": 508,
+        "8": 254
+      },
+      "expected_output_words": 508,
+      "expected_saturations": 126,
+      "group_field": 16,
+      "name": "exhaustive_high",
+      "note": "all 16 E2M1 codes against finite E4M3FN scales 0x80..0xfe",
+      "out_base": 520,
+      "pass_base": 8,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 32,
+      "scales_used": 127
+    },
+    {
+      "code_base": 512,
+      "count": 512,
+      "dequantized_elements": 512,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "v41_latent_group16",
+      "note": "the V4.1 main-latent shape: 512 elements, one E4M3 scale per 16",
+      "out_base": 1040,
+      "pass_base": 16,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 64,
+      "scales_used": 32
+    },
+    {
+      "code_base": 576,
+      "count": 512,
+      "dequantized_elements": 512,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 0,
+      "name": "v41_latent_group_from_default",
+      "note": "identical request with the group taken from the parameter default",
+      "out_base": 1176,
+      "pass_base": 24,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 72,
+      "scales_used": 32
+    },
+    {
+      "code_base": 640,
+      "count": 512,
+      "dequantized_elements": 512,
+      "effective_group": 8,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 8,
+      "name": "group_8",
+      "note": "same extent with a 8-element scale group",
+      "out_base": 1312,
+      "pass_base": 32,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 80,
+      "scales_used": 64
+    },
+    {
+      "code_base": 704,
+      "count": 512,
+      "dequantized_elements": 512,
+      "effective_group": 32,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 32,
+      "name": "group_32",
+      "note": "same extent with a 32-element scale group",
+      "out_base": 1448,
+      "pass_base": 40,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 96,
+      "scales_used": 16
+    },
+    {
+      "code_base": 768,
+      "count": 512,
+      "dequantized_elements": 512,
+      "effective_group": 64,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 64,
+      "name": "group_64",
+      "note": "same extent with a 64-element scale group",
+      "out_base": 1584,
+      "pass_base": 48,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 104,
+      "scales_used": 8
+    },
+    {
+      "code_base": 832,
+      "count": 512,
+      "dequantized_elements": 512,
+      "effective_group": 512,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 512,
+      "name": "group_512",
+      "note": "same extent with a 512-element scale group",
+      "out_base": 1720,
+      "pass_base": 56,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 112,
+      "scales_used": 1
+    },
+    {
+      "code_base": 896,
+      "count": 48,
+      "dequantized_elements": 48,
+      "effective_group": 12,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 48,
+        "4": 12,
+        "8": 0
+      },
+      "expected_output_words": 12,
+      "expected_saturations": 0,
+      "group_field": 12,
+      "name": "group_12_not_power_of_two",
+      "note": "group 12 is not a power of two: legal wherever 12 % LANES == 0 and refused elsewhere",
+      "out_base": 1856,
+      "pass_base": 64,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 120,
+      "scales_used": 4
+    },
+    {
+      "code_base": 904,
+      "count": 80,
+      "dequantized_elements": 80,
+      "effective_group": 20,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 80,
+        "4": 20,
+        "8": 0
+      },
+      "expected_output_words": 20,
+      "expected_saturations": 0,
+      "group_field": 20,
+      "name": "group_20_not_power_of_two",
+      "note": "group 20 is not a power of two: legal wherever 20 % LANES == 0 and refused elsewhere",
+      "out_base": 1880,
+      "pass_base": 72,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 128,
+      "scales_used": 4
+    },
+    {
+      "code_base": 920,
+      "count": 8,
+      "dequantized_elements": 8,
+      "effective_group": 8,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 8,
+        "4": 2,
+        "8": 1
+      },
+      "expected_output_words": 2,
+      "expected_saturations": 0,
+      "group_field": 8,
+      "name": "extent_8",
+      "note": "extent 8, the smallest and largest admitted here",
+      "out_base": 1912,
+      "pass_base": 80,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 136,
+      "scales_used": 1
+    },
+    {
+      "code_base": 928,
+      "count": 64,
+      "dequantized_elements": 64,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 64,
+        "4": 16,
+        "8": 8
+      },
+      "expected_output_words": 16,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "extent_64",
+      "note": "extent 64, the smallest and largest admitted here",
+      "out_base": 1928,
+      "pass_base": 88,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 144,
+      "scales_used": 4
+    },
+    {
+      "code_base": 936,
+      "count": 2048,
+      "dequantized_elements": 2048,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 2048,
+        "4": 512,
+        "8": 256
+      },
+      "expected_output_words": 512,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "extent_2048",
+      "note": "extent 2048, the smallest and largest admitted here",
+      "out_base": 1952,
+      "pass_base": 96,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 152,
+      "scales_used": 128
+    },
+    {
+      "code_base": 1192,
+      "count": 32,
+      "dequantized_elements": 32,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 32,
+        "4": 8,
+        "8": 4
+      },
+      "expected_output_words": 8,
+      "expected_saturations": 20,
+      "group_field": 16,
+      "name": "saturating_scales",
+      "note": "scale 448 drives products past the finite FP8 range: saturation",
+      "out_base": 2472,
+      "pass_base": 104,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 184,
+      "scales_used": 2
+    },
+    {
+      "code_base": 1200,
+      "count": 32,
+      "dequantized_elements": 32,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 32,
+        "4": 8,
+        "8": 4
+      },
+      "expected_output_words": 8,
+      "expected_saturations": 10,
+      "group_field": 16,
+      "name": "negative_scales",
+      "note": "a signed scale: the result sign is the XOR of both operand signs",
+      "out_base": 2488,
+      "pass_base": 112,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 192,
+      "scales_used": 2
+    },
+    {
+      "code_base": 1208,
+      "count": 16,
+      "dequantized_elements": 16,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 16,
+        "4": 4,
+        "8": 2
+      },
+      "expected_output_words": 4,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "zero_scale",
+      "note": "a zero scale yields canonical positive zero for every element",
+      "out_base": 2504,
+      "pass_base": 120,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 200,
+      "scales_used": 1
+    },
+    {
+      "code_base": 1216,
+      "count": 64,
+      "dequantized_elements": 64,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 64,
+        "4": 16,
+        "8": 8
+      },
+      "expected_output_words": 16,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "subnormal_scales",
+      "note": "subnormal E4M3FN scales exercise the ties-to-even underflow edge",
+      "out_base": 2520,
+      "pass_base": 128,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 208,
+      "scales_used": 4
+    },
+    {
+      "code_base": 1224,
+      "count": 16,
+      "dequantized_elements": 16,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 16,
+        "4": 4,
+        "8": 2
+      },
+      "expected_output_words": 4,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "smallest_scales_tie_to_zero",
+      "note": "products at exactly half the smallest FP8 subnormal: tie to even",
+      "out_base": 2544,
+      "pass_base": 136,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 216,
+      "scales_used": 1
+    },
+    {
+      "code_base": 1232,
+      "count": 512,
+      "dequantized_elements": 448,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 512,
+        "4": 128,
+        "8": 64
+      },
+      "expected_output_words": 128,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "passthrough_trailing_64",
+      "note": "the IR's third DEQUANTIZE operand: 64 trailing FP8 elements copied verbatim, as the vendor's partial QDQ leaves unquantized channels",
+      "out_base": 2560,
+      "pass_base": 144,
+      "passthrough": 64,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 224,
+      "scales_used": 28
+    },
+    {
+      "code_base": 1288,
+      "count": 64,
+      "dequantized_elements": 0,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 64,
+        "4": 16,
+        "8": 8
+      },
+      "expected_output_words": 16,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "passthrough_only",
+      "note": "a pure passthrough needs no scale operand at all",
+      "out_base": 2696,
+      "pass_base": 160,
+      "passthrough": 64,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 232,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1288,
+      "count": 32,
+      "dequantized_elements": 0,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 32,
+        "4": 8,
+        "8": 4
+      },
+      "expected_output_words": 8,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "passthrough_keeps_nan_bytes",
+      "note": "a passthrough element is a byte copy, NaN payload included: the block must not interpret operand three",
+      "out_base": 2720,
+      "pass_base": 176,
+      "passthrough": 32,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 240,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1288,
+      "count": 64,
+      "dequantized_elements": 64,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 1,
+        "4": 1,
+        "8": 1
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "poison_scale_inside_extent",
+      "note": "a NaN scale inside the extent refuses with an untouched destination",
+      "out_base": 2736,
+      "pass_base": 184,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": true,
+      "scale_base": 248,
+      "scales_used": 4
+    },
+    {
+      "code_base": 1296,
+      "count": 64,
+      "dequantized_elements": 64,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 1,
+        "4": 1,
+        "8": 1
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "poison_scale_negative_nan",
+      "note": "the second E4M3FN NaN encoding poisons its group as well",
+      "out_base": 2752,
+      "pass_base": 192,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": true,
+      "scale_base": 256,
+      "scales_used": 4
+    },
+    {
+      "code_base": 1304,
+      "count": 32,
+      "dequantized_elements": 32,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_issue_beats": {
+        "1": 32,
+        "4": 8,
+        "8": 4
+      },
+      "expected_output_words": 8,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "nan_scale_outside_extent_is_ignored",
+      "note": "the scale operand's last word carries NaN bytes beyond the two groups this extent uses; they must not refuse the request",
+      "out_base": 2768,
+      "pass_base": 200,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 264,
+      "scales_used": 2
+    },
+    {
+      "code_base": 1312,
+      "count": 0,
+      "dequantized_elements": 0,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "refuse_zero_extent",
+      "note": "an empty request is a shape error, not a silent no-op",
+      "out_base": 2784,
+      "pass_base": 208,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 272,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1312,
+      "count": 2056,
+      "dequantized_elements": 2056,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "refuse_over_capacity",
+      "note": "past MAX_ELEMENTS: a capacity bound, not a model dimension",
+      "out_base": 2800,
+      "pass_base": 216,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 280,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1320,
+      "count": 24,
+      "dequantized_elements": 24,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "refuse_partial_group",
+      "note": "24 elements is not a whole number of 16-element groups; the scan accumulator witnesses it without a divider",
+      "out_base": 2816,
+      "pass_base": 224,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 288,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1328,
+      "count": 16,
+      "dequantized_elements": 16,
+      "effective_group": 32,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 32,
+      "name": "refuse_group_larger_than_extent",
+      "note": "a group wider than the extent has no complete scale",
+      "out_base": 2832,
+      "pass_base": 232,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 296,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1336,
+      "count": 18,
+      "dequantized_elements": 18,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "refuse_unaligned_extent",
+      "note": "an extent that is not a whole number of result words",
+      "out_base": 2848,
+      "pass_base": 240,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 304,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1344,
+      "count": 32,
+      "dequantized_elements": 30,
+      "effective_group": 16,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 16,
+      "name": "refuse_unaligned_passthrough",
+      "note": "a passthrough region that is not a whole number of port beats",
+      "out_base": 2864,
+      "pass_base": 248,
+      "passthrough": 2,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 312,
+      "scales_used": 0
+    },
+    {
+      "code_base": 1352,
+      "count": 32,
+      "dequantized_elements": 32,
+      "effective_group": 2064,
+      "expected_error": {
+        "1": 7,
+        "4": 7,
+        "8": 7
+      },
+      "expected_issue_beats": {
+        "1": 0,
+        "4": 0,
+        "8": 0
+      },
+      "expected_output_words": 0,
+      "expected_saturations": 0,
+      "group_field": 2064,
+      "name": "refuse_zero_group_field_is_impossible",
+      "note": "a group field past the extent bound is refused, never truncated",
+      "out_base": 2880,
+      "pass_base": 256,
+      "passthrough": 0,
+      "poisoned_scale_in_extent": false,
+      "scale_base": 320,
+      "scales_used": 0
+    }
+  ],
+  "claim_boundary": {
+    "establishes_e2m1_e4m3_to_fp8_bit_exactness": true,
+    "establishes_frequency_or_area": false,
+    "establishes_token_correctness_or_tpot": false,
+    "establishes_vendor_forward_quantizer_scale_rule": false,
+    "executes_the_shipped_engine_array_or_a_descriptor": false,
+    "implements_dequantize_operand_slot_three_passthrough": true,
+    "reads_the_pinned_vendor_model_py": false
+  },
+  "contract": "fp4_e2m1_s16_e4m3_to_fp8_v1",
+  "coverage": {
+    "distinct_scale_groups_admitted": [
+      8,
+      12,
+      16,
+      20,
+      32,
+      64,
+      512
+    ],
+    "e2m1_codes_covered": 16,
+    "element_checks_per_lane_count": {
+      "1": 10184,
+      "4": 10184,
+      "8": 10056
+    },
+    "exhaustive_pair_elements": 4064,
+    "extents_admitted": [
+      8,
+      16,
+      32,
+      48,
+      64,
+      80,
+      512,
+      2032,
+      2048
+    ],
+    "extents_requested": [
+      0,
+      8,
+      16,
+      18,
+      24,
+      32,
+      48,
+      64,
+      80,
+      512,
+      2032,
+      2048,
+      2056
+    ],
+    "finite_e4m3fn_scale_codes_covered": 254,
+    "output_word_checks_per_lane_count": {
+      "1": 2546,
+      "4": 2546,
+      "8": 2514
+    }
+  },
+  "expected_pass": {
+    "cases": 31,
+    "element_checks": 30424,
+    "lane_counts": 3,
+    "word_checks": 7606
+  },
+  "memory": {
+    "code_words": 1356,
+    "expected_words": 2546,
+    "out_words": 2896,
+    "pass_words": 257,
+    "scale_words": 321,
+    "sentinel": 3735928559
+  },
+  "reference": "runtime/reference/fp4_kv.py",
+  "rtl_parameters": {
+    "MAX_ELEMENTS": 2048,
+    "SCALE_GROUP_DEFAULT": 16,
+    "lane_counts_instantiated": [
+      1,
+      4,
+      8
+    ]
+  },
+  "schema": "opentallas.rtl.a3_v41_fp4kv_vectors.v1",
+  "source": "SRC-DSV41-FLASH-MODEL"
+}

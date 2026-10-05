@@ -1,0 +1,72 @@
+{
+  "schema": "w11.controller-CTS-handoff.v1",
+  "observed_UTC": "2026-10-01T20:14:17.339056+00:00",
+  "source_commit": "b819b7d2963875b1a8f99f1506b6307044b3caf0",
+  "source_worktree": "/tmp/claude-1000/wt/w11-controller-tie-route",
+  "source_files_match_commit": {
+    "tools/run_abi3_physical.py": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43",
+    "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv": "7ae782292122ad0dbfc3d45574e53039517540a05cbe900678dafff76f090eb1",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "44f91e6c2c065a6782ce646701ea2172e253e416fed27d0a378311a5c5f6ca6b",
+    "physical/abi3/v41x_karb_repair_buffer_cap.tcl": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976"
+  },
+  "launch_manifest_path": "/home/ubuntu/w11ctl_tie_b819b7d2/receipt/launch.json",
+  "launch_sha256": "e1efbe0e2c9b09c8351328a27765a62ad0a3a53181fa1cfb7902d6e5633842b1",
+  "driver_pid": 1327895,
+  "previous_CTS_pid": 1857363,
+  "previous_PID_absence_classification": "normal CTS stage completion with saved ODB and transition to same-run global_route.tcl",
+  "current_stage": "5_1 global route, DRT pin-access substep",
+  "current_OpenROAD_pid": 2069324,
+  "current_parent_pid": 2069323,
+  "current_ps": "    PID    PPID                  STARTED     ELAPSED     TIME %CPU   RSS COMMAND\n1327895 1327771 Thu Oct  1 14:56:42 2026    05:17:34 00:00:03  0.0 63516 /usr/bin/python3 /tmp/claude-1000/wt/w11-controller-tie-route/tools/run_abi3_physical.py --view asap7 --top ot_v41_attn_eng_ctl_phys --source rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_attn.sv --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0 --false-path-from rst_n --slew-margin-percent 40 --hold-margin-ns 0.01 --routing-layers M2 M5 --max-transition-ns 0.32 --purpose characterization --core-utilization 40 --place-density 0.6 --orfs-var ADDER_MAP_FILE= --preserve-w11-controller-endpoints --pnr-stop-after finish --stages pnr --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --keep-workdir /home/ubuntu/w11ctl_tie_b819b7d2/work --output /home/ubuntu/w11ctl_tie_b819b7d2/receipt/physical.json --param BREG=1 --param D=512 --param NSTAGE=2 --param PHYS=1 --param REPL=2\n2069323 2069316 Thu Oct  1 20:06:03 2026       08:13 00:00:00  0.0 11588 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/5_1_grt.json\n2069324 2069323 Thu Oct  1 20:06:03 2026       08:13 00:31:48  387 7083616 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/5_1_grt.json\n",
+  "CTS_log_sha256": "39f11e979eccce3d8a0adc56d96943c84671722d66aa35b28ce94dc3b7cdaa2d",
+  "CTS_metrics_sha256": "ea0c511df7d45d5201eec5ad4ee34d66e8f2471cb3107ffd0af4880eaad66a16",
+  "CTS_stage_completed": true,
+  "CTS_odb": {
+    "path": "/home/ubuntu/w11ctl_tie_b819b7d2/work/orfs/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_1_cts.odb",
+    "bytes": 616912367,
+    "sha256": "432045b58420ed3d098a94fd08dd2fe8cac3f473646d56b61637f8a2fb6cb3f9"
+  },
+  "globalroute_log_snapshot_sha256": "c175eacab7f1c2e8401aa3ca44d3993ebbaa8ba012e4a2577c80d04bfc22e22c",
+  "globalroute_log_snapshot_bytes": 5949,
+  "endpoint_guard": {
+    "expected_sequential": 338023,
+    "threshold": 270418,
+    "observed_sequential": 337084,
+    "normalized_netlist_sha256": "ae3882757b935cd02ceed40fae7e76d9dc287afc9a7bed6ae8596c18626a6e72",
+    "verdict": "passed",
+    "check": "liberty-classified sequential cells after host synthesis",
+    "constant_only_proof_commit": "71ba8ca929ccea0101d52d15591d57c325de0a2f",
+    "original_mapped_sha256": "30d002634273c1ab0be146f0dfdcc9e3d8c8e19641aaccd6fbae33ecbc3fc0ff"
+  },
+  "physical_receipt_exists": false,
+  "physical_terminal_returncode": null,
+  "SS_FF_verdict": null,
+  "CTS_metrics_native_units": {
+    "cts__timing__setup__tns": -80800400.0,
+    "cts__timing__hold__tns": -110905,
+    "cts__timing__setup__ws": -774.4,
+    "cts__timing__hold__ws": -1133.46
+  },
+  "CTS_metrics_scope": "Intermediate stage raw metrics only, not final contextual SS/FF. Negative setup/hold values retained.",
+  "fixed_constraints": {
+    "ORFS_threads": 4,
+    "core_utilization": 40,
+    "hold": [
+      "WC/SS",
+      "BC/FF"
+    ],
+    "hold_uncertainty_ns": 0.025,
+    "period_ns": 0.833,
+    "place_density": 0.6,
+    "routing_layers": [
+      "M2",
+      "M5"
+    ],
+    "setup": "WC/SS",
+    "setup_uncertainty_ns": 0.06
+  },
+  "failed_terminal_preserved": "80534d1b3f4724ab4fbeac0e62d8b0cf21bd94e6",
+  "restarts": 0,
+  "new_jobs": 0,
+  "adoption": false
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.w11-hub-calibration.v1",
+  "adoption": false,
+  "scope": "Historical reduced SUN16/SUM8 token at position 7, BCAST25/RET17; not full-shape or interleaving qualification.",
+  "definition": "Each SU issue minus preceding issue charged to current tag, including waits; not per-region busy time.",
+  "input_sha256": {
+    "results/rtl/w11_controller_recovery_20261001/u2517.json": "76b73b5e2bc97a25d51a45457ec26a47f7f58360f284def4bf3425fdb2c08c55",
+    "results/rtl/w11_controller_recovery_20261001/u2517.issues.json": "1ceae6149ffa6a9a6e5b8edd1bb5262e6fdb07a540dd639c6b31693de586c110",
+    "results/rtl/w11_checkpoint_recovery_20261001/f2517.fail.json": "b1f3c43fb0308e0e7ccee3fc3264446b0435532188b2634976834173f6154abb",
+    "results/rtl/w11_checkpoint_recovery_20261001/f2517.issues.json": "47db3a5c1fc6fb4928c984722c4dcebf8680b8599c0c7c9dd623b16d8d6a30a7"
+  },
+  "configurations": {
+    "unfused": {
+      "cycles": 398676,
+      "global_su_busy_cycles": 256096,
+      "issue_attributed_intervals": {
+        "attn": 23120,
+        "attn_norm": 17280,
+        "compressor": 3115,
+        "embed": 12,
+        "engram": 3968,
+        "experts": 1440,
+        "ffn_norm": 17280,
+        "gather": 900,
+        "hc_attn": 19560,
+        "hc_ffn": 17940,
+        "hc_post": 18580,
+        "head": 702,
+        "index_key": 1588,
+        "indexer": 4737,
+        "moe_sum": 5440,
+        "out": 79160,
+        "router": 19600,
+        "shared": 3284,
+        "softmax": 26330
+      },
+      "issue_attributed_intervals_total": 264036,
+      "per_region_su_busy_cycles": null,
+      "overall_status": "fail"
+    },
+    "fused": {
+      "cycles": 376638,
+      "global_su_busy_cycles": 233937,
+      "issue_attributed_intervals": {
+        "attn": 23120,
+        "attn_norm": 14360,
+        "compressor": 3115,
+        "embed": 12,
+        "engram": 3970,
+        "experts": 1440,
+        "ffn_norm": 14360,
+        "gather": 900,
+        "hc_attn": 16748,
+        "hc_ffn": 13640,
+        "hc_post": 11540,
+        "head": 545,
+        "index_key": 1588,
+        "indexer": 4737,
+        "moe_sum": 3480,
+        "out": 79160,
+        "router": 19600,
+        "shared": 3440,
+        "softmax": 26330
+      },
+      "issue_attributed_intervals_total": 242085,
+      "per_region_su_busy_cycles": null,
+      "overall_status": "fail"
+    }
+  },
+  "saved_cycles": 22038,
+  "fraction_of_unfused": 0.055277970080968006,
+  "blocked_gates": [
+    "strict overall lint",
+    "KR SS/FF closure in context",
+    "main-current full-shape exactness",
+    "composed model adoption gate"
+  ]
+}

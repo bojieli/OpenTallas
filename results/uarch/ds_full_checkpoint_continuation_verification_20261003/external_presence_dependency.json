@@ -1,0 +1,2357 @@
+{
+  "absence_model_gap_counts": {
+    "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND": 6,
+    "EXPLICIT_AUXILIARY_FILE_UNAVAILABLE": 119
+  },
+  "absence_model_sha256": "6a648f4f769d2d936483f4595b48bc15bb09e80e98fd1ebf581b1ee5de437415",
+  "checked_payload_paths": {
+    "/tmp/ds-continuation-independent-replay-20261003/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_cos.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": true,
+      "references": [
+        {
+          "PC": 5,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 7,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 8,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 63,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 65,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 66,
+          "family": "attend",
+          "operand": "rope_cos"
+        }
+      ]
+    },
+    "/tmp/ds-continuation-independent-replay-20261003/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_sin.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": true,
+      "references": [
+        {
+          "PC": 5,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 7,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 8,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 63,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 65,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 66,
+          "family": "attend",
+          "operand": "rope_sin"
+        }
+      ]
+    },
+    "/tmp/ds-continuation-independent-replay-20261003/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_cos.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": true,
+      "references": [
+        {
+          "PC": 118,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 120,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 121,
+          "family": "compressor",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 124,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 129,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 179,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 181,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 182,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 232,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 234,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 235,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 285,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 287,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 288,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 338,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 340,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 341,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 391,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 393,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 394,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 446,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 448,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 449,
+          "family": "compressor",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 452,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 457,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 507,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 509,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 510,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 560,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 562,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 563,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 613,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 615,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 616,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 666,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 668,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 669,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 719,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 721,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 722,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 779,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 781,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 782,
+          "family": "compressor",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 785,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 790,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 840,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 842,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 843,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 893,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 895,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 896,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 946,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 948,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 949,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 999,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1001,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1002,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1052,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1054,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1055,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1107,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1109,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1110,
+          "family": "compressor",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1113,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1121,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1171,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1173,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1174,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1224,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1226,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1227,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1277,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1279,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1280,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1331,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1333,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1336,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1342,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1392,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1394,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1395,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1445,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1447,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1448,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1498,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1500,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1501,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1552,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1554,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1557,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1563,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1613,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1615,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1616,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1666,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1668,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1669,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1719,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1721,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1722,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1773,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1775,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1778,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1784,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1834,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1836,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1837,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1887,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1889,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1890,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1940,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1942,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1943,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1994,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1996,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 1999,
+          "family": "index_q",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2005,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2055,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2057,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2058,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2108,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2110,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2111,
+          "family": "attend",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2161,
+          "family": "q_norm_kv_row",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2163,
+          "family": "q_rope",
+          "operand": "rope_cos"
+        },
+        {
+          "PC": 2164,
+          "family": "attend",
+          "operand": "rope_cos"
+        }
+      ]
+    },
+    "/tmp/ds-continuation-independent-replay-20261003/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_sin.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": true,
+      "references": [
+        {
+          "PC": 118,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 120,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 121,
+          "family": "compressor",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 124,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 129,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 179,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 181,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 182,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 232,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 234,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 235,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 285,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 287,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 288,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 338,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 340,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 341,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 391,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 393,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 394,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 446,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 448,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 449,
+          "family": "compressor",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 452,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 457,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 507,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 509,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 510,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 560,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 562,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 563,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 613,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 615,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 616,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 666,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 668,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 669,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 719,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 721,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 722,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 779,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 781,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 782,
+          "family": "compressor",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 785,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 790,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 840,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 842,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 843,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 893,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 895,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 896,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 946,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 948,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 949,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 999,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1001,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1002,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1052,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1054,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1055,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1107,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1109,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1110,
+          "family": "compressor",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1113,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1121,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1171,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1173,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1174,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1224,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1226,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1227,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1277,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1279,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1280,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1331,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1333,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1336,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1342,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1392,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1394,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1395,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1445,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1447,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1448,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1498,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1500,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1501,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1552,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1554,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1557,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1563,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1613,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1615,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1616,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1666,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1668,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1669,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1719,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1721,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1722,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1773,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1775,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1778,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1784,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1834,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1836,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1837,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1887,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1889,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1890,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1940,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1942,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1943,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1994,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1996,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 1999,
+          "family": "index_q",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2005,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2055,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2057,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2058,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2108,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2110,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2111,
+          "family": "attend",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2161,
+          "family": "q_norm_kv_row",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2163,
+          "family": "q_rope",
+          "operand": "rope_sin"
+        },
+        {
+          "PC": 2164,
+          "family": "attend",
+          "operand": "rope_sin"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-hbm-r35-entering-state/open_L14.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 782,
+          "family": "compressor",
+          "operand": "open_group"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-hbm-r35-entering-state/open_L2.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 121,
+          "family": "compressor",
+          "operand": "open_group"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-hbm-r35-entering-state/open_L8.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 449,
+          "family": "compressor",
+          "operand": "open_group"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/E4M3_decode_1.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "E4M3_decode"
+        },
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "E4M3_decode"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/attn_scale_0.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 8,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 66,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 129,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 182,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 235,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 288,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 341,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 394,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 457,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 510,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 563,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 616,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 669,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 722,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 790,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 843,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 896,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 949,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1002,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1055,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1121,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1174,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1227,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1280,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1342,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1395,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1448,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1501,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1563,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1616,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1669,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1722,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1784,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1837,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1890,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 1943,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 2005,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 2058,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 2111,
+          "family": "attend",
+          "operand": "attn_scale"
+        },
+        {
+          "PC": 2164,
+          "family": "attend",
+          "operand": "attn_scale"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/engram_scale_2.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 57,
+          "family": "engram_mix",
+          "operand": "engram_scale"
+        },
+        {
+          "PC": 771,
+          "family": "engram_mix",
+          "operand": "engram_scale"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_cos_3.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 121,
+          "family": "compressor",
+          "operand": "index_rope_cos"
+        },
+        {
+          "PC": 449,
+          "family": "compressor",
+          "operand": "index_rope_cos"
+        },
+        {
+          "PC": 782,
+          "family": "compressor",
+          "operand": "index_rope_cos"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_cos_6.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1110,
+          "family": "compressor",
+          "operand": "index_rope_cos"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_sin_4.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 121,
+          "family": "compressor",
+          "operand": "index_rope_sin"
+        },
+        {
+          "PC": 449,
+          "family": "compressor",
+          "operand": "index_rope_sin"
+        },
+        {
+          "PC": 782,
+          "family": "compressor",
+          "operand": "index_rope_sin"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_sin_7.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1110,
+          "family": "compressor",
+          "operand": "index_rope_sin"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_w_scale_5.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 124,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 452,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 785,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 1113,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 1336,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 1557,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 1778,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        },
+        {
+          "PC": 1999,
+          "family": "index_q",
+          "operand": "index_w_scale"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L00_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 20,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 78,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_multipliers.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "multipliers"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_offsets.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "offsets"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_primes.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "primes"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_raw_recent_tokens.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "raw_recent_tokens"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_codes.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "selected_codes"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_exp.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "selected_exp"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_row_ids.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "selected_row_ids"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L01_token_map.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 53,
+          "family": "engram_fetch",
+          "operand": "token_map"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L02_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 141,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L03_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 194,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L04_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 247,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L05_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 300,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L06_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 353,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L07_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 406,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L08_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 469,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L09_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 522,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L10_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 575,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L11_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 628,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L12_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 681,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L13_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 734,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 802,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_multipliers.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "multipliers"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_offsets.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "offsets"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_primes.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "primes"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_raw_recent_tokens.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "raw_recent_tokens"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_codes.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "selected_codes"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_exp.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "selected_exp"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_row_ids.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "selected_row_ids"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L14_token_map.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 767,
+          "family": "engram_fetch",
+          "operand": "token_map"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L15_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 855,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L16_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 908,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L17_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 961,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L18_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1014,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L19_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1067,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L20_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1133,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L21_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1186,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L22_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1239,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L23_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1292,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L24_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1354,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L25_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1407,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L26_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1460,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L27_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1513,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L28_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1575,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L29_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1628,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L30_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1681,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L31_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1734,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L32_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1796,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L33_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1849,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L34_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1902,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L35_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 1955,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L36_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 2017,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L37_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 2070,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L38_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 2123,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    },
+    "/tmp/kepler-ds-r35-checkpoint-payloads/L39_expert_descriptor_table.npy": {
+      "exists_at_audit": true,
+      "inside_checkout": false,
+      "references": [
+        {
+          "PC": 2176,
+          "family": "expert_fetch",
+          "operand": "expert_descriptor_table"
+        }
+      ]
+    }
+  },
+  "external_references": 119,
+  "external_unique_paths": 67,
+  "first_external_PC": 8,
+  "frozen_model_modified": false,
+  "numerical_execution": false,
+  "payload_bytes_read": 0,
+  "status": "EXTERNAL_PRESENCE_REQUIRED_FOR_FROZEN_BINDING_CLASSIFICATION"
+}

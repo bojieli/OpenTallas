@@ -1,0 +1,92 @@
+{
+  "schema": "opentallas.w17.L0_cycle_prediction_parent_audit.v1",
+  "recorded_utc": "2026-10-02T05:10:05.151776+00:00",
+  "verdict": "EXACT_L0_TOTAL_PREDICTION_MISSING",
+  "source_snapshot_sha256": {
+    "/home/ubuntu/OpenTallas/results/arch/v41_replay.json": "c2c656c071d66e96dd2ce1563b553ac0879c951ec6047da8b7c60b243a926c4c",
+    "/home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+    "/home/ubuntu/OpenTallas/results/contracts/v41_l0_dependency_schedule.json": "dddfba1bab1f0e58393666e1abb3d224d3e97589f9a2330eca78db0ca86d5e6a",
+    "/home/ubuntu/OpenTallas/results/rtl/w17_connected_token_preparation_20261001/L0_PC24_actual_HBM_service_binding.json": "68374138ec907bbb6a98bf1877801fda11014993ed1996dcb6318fb53be1cd85"
+  },
+  "runtime_source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "runtime_program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+  "model_clock_hz": 1033900000.0,
+  "legacy_model_first_layer_compute_cycles": {
+    "C": 361951,
+    "B": 18247,
+    "B_red_parallel": 6393
+  },
+  "legacy_model_scope": "200K shape replay; neither live exact TP4 program nor service/clock/engine bindings; B_red_parallel hypothetical, not adopted",
+  "runtime_SU_lanes": 256,
+  "runtime_max_cycles": 400000,
+  "runtime_max_scope": "safety cap, not prediction",
+  "expected_total_cycles": null,
+  "actual_attention_path_cycles": null,
+  "null_dependency_nodes": [
+    "upstream_qkv",
+    "packed_write_commit",
+    "qk_refill",
+    "q_preload",
+    "qk_numeric_and_replay",
+    "scale_max",
+    "exp_sum",
+    "pv_refill",
+    "p_preload",
+    "pv_numeric_and_replay",
+    "denominator",
+    "divide",
+    "result_commit"
+  ],
+  "conditional_window_only": {
+    "scalar_tool": "tools/w17_L0_window_service_expectation.py",
+    "tool_sha256": "00960b3f28c7e2a168f4251ecfc8d10d68da397152d6a54574c63c7889d6ef35",
+    "result_sha256": "e375cd6ccc78d739f12f358176f57abc8a453554efcda9e728b61f12959b10fe",
+    "elapsed_min": 123964,
+    "elapsed_max": 125727,
+    "end_cycle_min": 136671,
+    "end_cycle_max": 138146,
+    "conditions": [
+      "empty request and response queues at start",
+      "no concurrent RoPE/index/CKV requester",
+      "cold initially closed bank state; refresh deadlines reset-origin",
+      "functional pinned ready/valid transport",
+      "no source faults"
+    ],
+    "limits": "Previous write/RoPE bank state is not reconstructed; these starts form sensitivity examples, not a proof of actual start or deadline.",
+    "verdict": "Sensitivity replay, not formal cycle equivalence, actual request observation, or guaranteed live deadline",
+    "bound_scope": "Min/max over listed deterministic cold-state scenarios ONLY; not an exhaustive start/bank-state bound or measured live counter proof."
+  },
+  "watchdog_risk": {
+    "live_pc_watchdog": 100000,
+    "all_cases_exceed_watchdog": true,
+    "meaning": "A terminal PC24 watchdog can precede healthy cold-refill completion; do not classify that terminal as proved deadlock without causal state/producer evidence. No watchdog or runtime changed.",
+    "initialization": "After priming, 64 ticks and token start, lastpc initialized ~0 and last_move=cyc. First loop sample updates last_move; every subsequent change by ANY rank resets it.",
+    "trigger": "cyc-last_move > WD; WD=RT_WATCHDOG=100000; triggers on the100001st cycle since latest ANY-rank PC change, not row/sector progress.",
+    "last_move_observation": "CYC12200 allPC22; CYC12400 allPC24. If unchanged thereafter, last_move is in[12201,12400], so trigger in[112202,112401]. Precise intra-checkpoint transition is not exported.",
+    "terminal_classification": "Prints WATCHDOG with core state/idles/waited/CDMA words, breaks loop, dumps all4 VM arrays, prints TIMEOUT, returns1 if any rank notDONE. Does NOT set a DUT fault bit or prove circular wait; timeout must remain failed/incomplete, not exact/PASS.",
+    "live_environment": {
+      "RT_WATCHDOG": "100000",
+      "RT_SKIP": "0"
+    }
+  },
+  "live_process_observation": "    PID     ELAPSED STAT COMMAND\n1968071    09:49:32 Sl   /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/v41_die_rt /home/ubuntu/w17-current-L0-fastpp-20261001-r3/images /home/ubuntu/w17-current-L0-fastpp-20261001-r4/L0_output 400000\n",
+  "live_progress_observation": [
+    "CYC 109800 wall 34798.2 s pc 24 24 24 24",
+    "CYC 110000 wall 34859.8 s pc 24 24 24 24",
+    "CYC 110200 wall 34919.1 s pc 24 24 24 24",
+    "CYC 110400 wall 34979.5 s pc 24 24 24 24",
+    "CYC 110600 wall 35040.4 s pc 24 24 24 24",
+    "CYC 110800 wall 35119.2 s pc 24 24 24 24",
+    "CYC 111000 wall 35187.6 s pc 24 24 24 24",
+    "CYC 111200 wall 35249.0 s pc 24 24 24 24"
+  ],
+  "claims": {
+    "full_layer_prediction": false,
+    "live_service_movement": false,
+    "deadlock_proven": false,
+    "exactness": false,
+    "physical": false,
+    "adoption": false
+  },
+  "required_next": "Exact emitted-instruction replay with runtime engine parameters, clock counters, scalar service state/admission, collectives and write visibility; per-PC expected issue/retire comparison. Preserve watchdog terminal as incomplete if fired; no restart of live PID."
+}

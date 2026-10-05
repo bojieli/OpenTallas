@@ -1,0 +1,76 @@
+{
+  "Dewey_join": {
+    "avoid": "Do not add baseline historical whole-array8B doublebuffers or allocate native successor HBM arena; source pages are already r17-owned",
+    "consume": "operations[].calendar_export, tile_kernel_ABI, provider_binding.version_homes and external_providers",
+    "costs": "All missing measured costs remain explicit positive provisional parameters; unit service calendar is software reservation, never clock/cycle or hardware latency evidence",
+    "count_scope": "Exact FP32 word/command and primitive invocation counts; exact executed page/sector/mirror/NoC payload counters; conservative fullshape serialized physical service budgets explicitly marked upper bounds",
+    "exact_primitive_counts": "physical_primitives.native_primitive_commands + ordered kernel_ABI read/write/shape/bitwidth steps",
+    "finite_schedule": "serialized worker rank0 SM0, sole issue lease; finite2R1W mirrored RF ports, one outstanding tile/sector service, one of4 available sector credits; capture ACK and reverse release before reuse",
+    "packed_storage": "Publication bitmap and producer/reader identities, done bits and status checked in actual37504-byte extent; corrupted backing blocks read; one staged token payload<=1024B reuses idle shared tile region",
+    "schema": "opentallas.H3.native-bounded-tiles.v1"
+  },
+  "Peirce_join": {
+    "adapter": "code/op/dst/src/shape/attrs/outputs and typed visible LOAD leases",
+    "commit": "76d564c9a",
+    "domains": "128 elements per primitive tile, RF32; larger DS recipes require compiler outer tiling/provider calendar; adapter rejects oversize shapes rather than materializing unbounded arrays",
+    "policy": "All35 current Peirce primitive opcodes supported and tested; IOTA supported; DIV is pinned integer restoring implementation, not rational div_contract; LDEXP faults and packet publication suppression agree",
+    "snapshot": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Peirce_native_76d564c9a.py.source",
+    "source_sha256": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf"
+  },
+  "arithmetic": "Exact contiguous matrix split K, interleaved attention split K, all zero leaves, left/right source tree, seq8 norm/denominator, separate FP32 rounds, source bit seeds and BF16 NaN/zero integer wrap; Qwen mean FMUL39800000 notDIV",
+  "baseline_evidence": "Original h3_qwen_complete_native_20261002 artifacts unchanged; original source8fab955601787476da770a202c2721eb0c412d1c / parent intake2f40fccb2. New code has separate tiled manifest; original baseline source pin must be replayed at original source commit.",
+  "bounds": {
+    "KV_staged_writer_payload_bytes_max": 1024,
+    "KV_state_bytes_per_rank": 37504,
+    "RF_mirror_physical_bytes": 32768,
+    "shared_capacity_bytes": 65536,
+    "shared_reserved_bytes": 17408,
+    "source_spill_base_fullshape": 4714740864,
+    "source_spill_bytes_per_rank": 33554432,
+    "temporary_HBM_bytes": 0,
+    "working_RF_logical_bytes": 16384,
+    "working_RF_vectors": 32
+  },
+  "coverage": {
+    "Qwen_PCs": 1737,
+    "Qwen_classes": 21,
+    "Qwen_versions": 2027,
+    "actual_r17_controls": 144,
+    "actual_r17_version_homes": 31232
+  },
+  "default_enabled": false,
+  "entrypoints": {
+    "CLI_compile": "python tools/h3_qwen_complete_native.py --tiled",
+    "CLI_execute": "python tools/h3_qwen_complete_native.py --tiled --exercise",
+    "CLI_verify": "python tools/h3_qwen_complete_native.py --tiled --verify",
+    "Qwen_adapter": "NativePrimitiveVM.run_qwen(serialized_leaf_microcode,env,reserved)",
+    "calendar": "materialize_tile_calendar(native,{C_NATIVE,C_RF_READ,C_RF_ACK,C_SHARED_BEAT,C_HBM_SECTOR,C_NoC,C_CDC,C_REVERSE_GRANT}: strictly positive provisional parameters)",
+    "compiler": "compile_tiled(program=None)",
+    "executor": "TiledMachine(native,weights=HBMByteTileProvider(backend)).run(token,position)",
+    "generic_VM": "NativePrimitiveVM(div=restoring_DIV_provider).run_ds(program,visible_provider_records)",
+    "packed_KV_state": "BoundKVStorage: bitmap at offset0,36 reader slots at36864,session header at37440 of each actual r17 KV_provider_state extent"
+  },
+  "explicit_rejections": [
+    "unknown opcode",
+    "missing or invisible provider lease",
+    "response identity mismatch",
+    "missing reverse grant ACK",
+    "RF32 overflow",
+    "primitive tile over128 elements",
+    "illegal shift/modulo/index",
+    "FP8 NaN backing/nonfinite encode",
+    "DIV without explicit exact primitive provider",
+    "faulted packet publication"
+  ],
+  "external_raw_provider": "HBMByteTileProvider requires actual ref/byte ranges/lease/backing-visible/reverse-grant ACK; upstream checkpoint full-row W8/BF16-scale and FP32 RoPE table producer must populate pinned r17 codecs",
+  "hardware_or_timing_credit": false,
+  "opt_in": true,
+  "remaining_limits": [
+    "Full trained-checkpoint execution is not the deterministic reduced fixture replay. Backend raw producer data must be supplied through implemented byte adapter.",
+    "Full DS2213-PC bounded outer compiler/calendar integration is Peirce/Dewey/parent composition; this milestone tests every primitive adapter against actual intaken DS VM, not full DS bounded execution.",
+    "Dewey existing baseline bind_recipe must select this opt-in bounded schema; companion serialized calendar is executable now, integration into its concurrency optimizer still requires schema intake."
+  ],
+  "schema": "opentallas.H3.Qwen.bounded-tile-handoff.v1",
+  "unsupported_Peirce_primitive_opcodes": [],
+  "unsupported_Qwen_operator_semantics": []
+}

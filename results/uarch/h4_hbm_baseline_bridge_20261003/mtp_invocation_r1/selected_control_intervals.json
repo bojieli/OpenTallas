@@ -1,0 +1,4435 @@
+{
+  "commit_rollback_service_ns": null,
+  "events": [
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [],
+      "end_ns_assumed": 1.0,
+      "eventID": "i0/draft/stage0/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage0/j0/r17",
+      "start_ns_assumed": 0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [],
+      "end_ns_assumed": 2.0,
+      "eventID": "i0/draft/stage0/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage0/j1/r17",
+      "start_ns_assumed": 1.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [],
+      "end_ns_assumed": 3.0,
+      "eventID": "i0/draft/stage0/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage0/j2/r17",
+      "start_ns_assumed": 2.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [],
+      "end_ns_assumed": 4.0,
+      "eventID": "i0/draft/stage0/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage0/j3/r17",
+      "start_ns_assumed": 3.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [],
+      "end_ns_assumed": 5.0,
+      "eventID": "i0/draft/stage0/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage0/j4/r17",
+      "start_ns_assumed": 4.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage0/j0/r17",
+        "i0/draft/stage0/j1/r17",
+        "i0/draft/stage0/j2/r17",
+        "i0/draft/stage0/j3/r17",
+        "i0/draft/stage0/j4/r17"
+      ],
+      "end_ns_assumed": 6.0,
+      "eventID": "i0/draft/stage1/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage1/j0/r17",
+      "start_ns_assumed": 5.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage0/j0/r17",
+        "i0/draft/stage0/j1/r17",
+        "i0/draft/stage0/j2/r17",
+        "i0/draft/stage0/j3/r17",
+        "i0/draft/stage0/j4/r17"
+      ],
+      "end_ns_assumed": 7.0,
+      "eventID": "i0/draft/stage1/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage1/j1/r17",
+      "start_ns_assumed": 6.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage0/j0/r17",
+        "i0/draft/stage0/j1/r17",
+        "i0/draft/stage0/j2/r17",
+        "i0/draft/stage0/j3/r17",
+        "i0/draft/stage0/j4/r17"
+      ],
+      "end_ns_assumed": 8.0,
+      "eventID": "i0/draft/stage1/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage1/j2/r17",
+      "start_ns_assumed": 7.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage0/j0/r17",
+        "i0/draft/stage0/j1/r17",
+        "i0/draft/stage0/j2/r17",
+        "i0/draft/stage0/j3/r17",
+        "i0/draft/stage0/j4/r17"
+      ],
+      "end_ns_assumed": 9.0,
+      "eventID": "i0/draft/stage1/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage1/j3/r17",
+      "start_ns_assumed": 8.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage0/j0/r17",
+        "i0/draft/stage0/j1/r17",
+        "i0/draft/stage0/j2/r17",
+        "i0/draft/stage0/j3/r17",
+        "i0/draft/stage0/j4/r17"
+      ],
+      "end_ns_assumed": 10.0,
+      "eventID": "i0/draft/stage1/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage1/j4/r17",
+      "start_ns_assumed": 9.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage1/j0/r17",
+        "i0/draft/stage1/j1/r17",
+        "i0/draft/stage1/j2/r17",
+        "i0/draft/stage1/j3/r17",
+        "i0/draft/stage1/j4/r17"
+      ],
+      "end_ns_assumed": 11.0,
+      "eventID": "i0/draft/stage2/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage2/j0/r17",
+      "start_ns_assumed": 10.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage1/j0/r17",
+        "i0/draft/stage1/j1/r17",
+        "i0/draft/stage1/j2/r17",
+        "i0/draft/stage1/j3/r17",
+        "i0/draft/stage1/j4/r17"
+      ],
+      "end_ns_assumed": 12.0,
+      "eventID": "i0/draft/stage2/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage2/j1/r17",
+      "start_ns_assumed": 11.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage1/j0/r17",
+        "i0/draft/stage1/j1/r17",
+        "i0/draft/stage1/j2/r17",
+        "i0/draft/stage1/j3/r17",
+        "i0/draft/stage1/j4/r17"
+      ],
+      "end_ns_assumed": 13.0,
+      "eventID": "i0/draft/stage2/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage2/j2/r17",
+      "start_ns_assumed": 12.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage1/j0/r17",
+        "i0/draft/stage1/j1/r17",
+        "i0/draft/stage1/j2/r17",
+        "i0/draft/stage1/j3/r17",
+        "i0/draft/stage1/j4/r17"
+      ],
+      "end_ns_assumed": 14.0,
+      "eventID": "i0/draft/stage2/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage2/j3/r17",
+      "start_ns_assumed": 13.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage1/j0/r17",
+        "i0/draft/stage1/j1/r17",
+        "i0/draft/stage1/j2/r17",
+        "i0/draft/stage1/j3/r17",
+        "i0/draft/stage1/j4/r17"
+      ],
+      "end_ns_assumed": 15.0,
+      "eventID": "i0/draft/stage2/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/draft/stage2/j4/r17",
+      "start_ns_assumed": 14.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/draft/stage2/j0/r17",
+        "i0/draft/stage2/j1/r17",
+        "i0/draft/stage2/j2/r17",
+        "i0/draft/stage2/j3/r17",
+        "i0/draft/stage2/j4/r17"
+      ],
+      "end_ns_assumed": 16.0,
+      "eventID": "i0/markov/sample/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/markov/sample/j0/r17",
+      "start_ns_assumed": 15.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j0/r17"
+      ],
+      "end_ns_assumed": 17.0,
+      "eventID": "i0/markov/sample/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/markov/sample/j1/r17",
+      "start_ns_assumed": 16.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j1/r17"
+      ],
+      "end_ns_assumed": 18.0,
+      "eventID": "i0/markov/sample/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/markov/sample/j2/r17",
+      "start_ns_assumed": 17.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j2/r17"
+      ],
+      "end_ns_assumed": 19.0,
+      "eventID": "i0/markov/sample/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/markov/sample/j3/r17",
+      "start_ns_assumed": 18.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j3/r17"
+      ],
+      "end_ns_assumed": 20.0,
+      "eventID": "i0/markov/sample/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/markov/sample/j4/r17",
+      "start_ns_assumed": 19.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j4/r17"
+      ],
+      "end_ns_assumed": 21.0,
+      "eventID": "i0/verify/layer0/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer0/j0/r17",
+      "start_ns_assumed": 20.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j4/r17"
+      ],
+      "end_ns_assumed": 22.0,
+      "eventID": "i0/verify/layer0/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer0/j1/r17",
+      "start_ns_assumed": 21.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j4/r17"
+      ],
+      "end_ns_assumed": 23.0,
+      "eventID": "i0/verify/layer0/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer0/j2/r17",
+      "start_ns_assumed": 22.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j4/r17"
+      ],
+      "end_ns_assumed": 24.0,
+      "eventID": "i0/verify/layer0/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer0/j3/r17",
+      "start_ns_assumed": 23.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j4/r17"
+      ],
+      "end_ns_assumed": 25.0,
+      "eventID": "i0/verify/layer0/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer0/j4/r17",
+      "start_ns_assumed": 24.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/markov/sample/j4/r17"
+      ],
+      "end_ns_assumed": 26.0,
+      "eventID": "i0/verify/layer0/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer0/j5/r17",
+      "start_ns_assumed": 25.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer0/j0/r17",
+        "i0/verify/layer0/j1/r17",
+        "i0/verify/layer0/j2/r17",
+        "i0/verify/layer0/j3/r17",
+        "i0/verify/layer0/j4/r17",
+        "i0/verify/layer0/j5/r17"
+      ],
+      "end_ns_assumed": 27.0,
+      "eventID": "i0/verify/layer1/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer1/j0/r17",
+      "start_ns_assumed": 26.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer0/j0/r17",
+        "i0/verify/layer0/j1/r17",
+        "i0/verify/layer0/j2/r17",
+        "i0/verify/layer0/j3/r17",
+        "i0/verify/layer0/j4/r17",
+        "i0/verify/layer0/j5/r17"
+      ],
+      "end_ns_assumed": 28.0,
+      "eventID": "i0/verify/layer1/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer1/j1/r17",
+      "start_ns_assumed": 27.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer0/j0/r17",
+        "i0/verify/layer0/j1/r17",
+        "i0/verify/layer0/j2/r17",
+        "i0/verify/layer0/j3/r17",
+        "i0/verify/layer0/j4/r17",
+        "i0/verify/layer0/j5/r17"
+      ],
+      "end_ns_assumed": 29.0,
+      "eventID": "i0/verify/layer1/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer1/j2/r17",
+      "start_ns_assumed": 28.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer0/j0/r17",
+        "i0/verify/layer0/j1/r17",
+        "i0/verify/layer0/j2/r17",
+        "i0/verify/layer0/j3/r17",
+        "i0/verify/layer0/j4/r17",
+        "i0/verify/layer0/j5/r17"
+      ],
+      "end_ns_assumed": 30.0,
+      "eventID": "i0/verify/layer1/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer1/j3/r17",
+      "start_ns_assumed": 29.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer0/j0/r17",
+        "i0/verify/layer0/j1/r17",
+        "i0/verify/layer0/j2/r17",
+        "i0/verify/layer0/j3/r17",
+        "i0/verify/layer0/j4/r17",
+        "i0/verify/layer0/j5/r17"
+      ],
+      "end_ns_assumed": 31.0,
+      "eventID": "i0/verify/layer1/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer1/j4/r17",
+      "start_ns_assumed": 30.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer0/j0/r17",
+        "i0/verify/layer0/j1/r17",
+        "i0/verify/layer0/j2/r17",
+        "i0/verify/layer0/j3/r17",
+        "i0/verify/layer0/j4/r17",
+        "i0/verify/layer0/j5/r17"
+      ],
+      "end_ns_assumed": 32.0,
+      "eventID": "i0/verify/layer1/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer1/j5/r17",
+      "start_ns_assumed": 31.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer1/j0/r17",
+        "i0/verify/layer1/j1/r17",
+        "i0/verify/layer1/j2/r17",
+        "i0/verify/layer1/j3/r17",
+        "i0/verify/layer1/j4/r17",
+        "i0/verify/layer1/j5/r17"
+      ],
+      "end_ns_assumed": 33.0,
+      "eventID": "i0/verify/layer2/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer2/j0/r17",
+      "start_ns_assumed": 32.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer1/j0/r17",
+        "i0/verify/layer1/j1/r17",
+        "i0/verify/layer1/j2/r17",
+        "i0/verify/layer1/j3/r17",
+        "i0/verify/layer1/j4/r17",
+        "i0/verify/layer1/j5/r17"
+      ],
+      "end_ns_assumed": 34.0,
+      "eventID": "i0/verify/layer2/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer2/j1/r17",
+      "start_ns_assumed": 33.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer1/j0/r17",
+        "i0/verify/layer1/j1/r17",
+        "i0/verify/layer1/j2/r17",
+        "i0/verify/layer1/j3/r17",
+        "i0/verify/layer1/j4/r17",
+        "i0/verify/layer1/j5/r17"
+      ],
+      "end_ns_assumed": 35.0,
+      "eventID": "i0/verify/layer2/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer2/j2/r17",
+      "start_ns_assumed": 34.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer1/j0/r17",
+        "i0/verify/layer1/j1/r17",
+        "i0/verify/layer1/j2/r17",
+        "i0/verify/layer1/j3/r17",
+        "i0/verify/layer1/j4/r17",
+        "i0/verify/layer1/j5/r17"
+      ],
+      "end_ns_assumed": 36.0,
+      "eventID": "i0/verify/layer2/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer2/j3/r17",
+      "start_ns_assumed": 35.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer1/j0/r17",
+        "i0/verify/layer1/j1/r17",
+        "i0/verify/layer1/j2/r17",
+        "i0/verify/layer1/j3/r17",
+        "i0/verify/layer1/j4/r17",
+        "i0/verify/layer1/j5/r17"
+      ],
+      "end_ns_assumed": 37.0,
+      "eventID": "i0/verify/layer2/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer2/j4/r17",
+      "start_ns_assumed": 36.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer1/j0/r17",
+        "i0/verify/layer1/j1/r17",
+        "i0/verify/layer1/j2/r17",
+        "i0/verify/layer1/j3/r17",
+        "i0/verify/layer1/j4/r17",
+        "i0/verify/layer1/j5/r17"
+      ],
+      "end_ns_assumed": 38.0,
+      "eventID": "i0/verify/layer2/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer2/j5/r17",
+      "start_ns_assumed": 37.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer2/j0/r17",
+        "i0/verify/layer2/j1/r17",
+        "i0/verify/layer2/j2/r17",
+        "i0/verify/layer2/j3/r17",
+        "i0/verify/layer2/j4/r17",
+        "i0/verify/layer2/j5/r17"
+      ],
+      "end_ns_assumed": 39.0,
+      "eventID": "i0/verify/layer3/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer3/j0/r17",
+      "start_ns_assumed": 38.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer2/j0/r17",
+        "i0/verify/layer2/j1/r17",
+        "i0/verify/layer2/j2/r17",
+        "i0/verify/layer2/j3/r17",
+        "i0/verify/layer2/j4/r17",
+        "i0/verify/layer2/j5/r17"
+      ],
+      "end_ns_assumed": 40.0,
+      "eventID": "i0/verify/layer3/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer3/j1/r17",
+      "start_ns_assumed": 39.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer2/j0/r17",
+        "i0/verify/layer2/j1/r17",
+        "i0/verify/layer2/j2/r17",
+        "i0/verify/layer2/j3/r17",
+        "i0/verify/layer2/j4/r17",
+        "i0/verify/layer2/j5/r17"
+      ],
+      "end_ns_assumed": 41.0,
+      "eventID": "i0/verify/layer3/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer3/j2/r17",
+      "start_ns_assumed": 40.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer2/j0/r17",
+        "i0/verify/layer2/j1/r17",
+        "i0/verify/layer2/j2/r17",
+        "i0/verify/layer2/j3/r17",
+        "i0/verify/layer2/j4/r17",
+        "i0/verify/layer2/j5/r17"
+      ],
+      "end_ns_assumed": 42.0,
+      "eventID": "i0/verify/layer3/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer3/j3/r17",
+      "start_ns_assumed": 41.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer2/j0/r17",
+        "i0/verify/layer2/j1/r17",
+        "i0/verify/layer2/j2/r17",
+        "i0/verify/layer2/j3/r17",
+        "i0/verify/layer2/j4/r17",
+        "i0/verify/layer2/j5/r17"
+      ],
+      "end_ns_assumed": 43.0,
+      "eventID": "i0/verify/layer3/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer3/j4/r17",
+      "start_ns_assumed": 42.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer2/j0/r17",
+        "i0/verify/layer2/j1/r17",
+        "i0/verify/layer2/j2/r17",
+        "i0/verify/layer2/j3/r17",
+        "i0/verify/layer2/j4/r17",
+        "i0/verify/layer2/j5/r17"
+      ],
+      "end_ns_assumed": 44.0,
+      "eventID": "i0/verify/layer3/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer3/j5/r17",
+      "start_ns_assumed": 43.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer3/j0/r17",
+        "i0/verify/layer3/j1/r17",
+        "i0/verify/layer3/j2/r17",
+        "i0/verify/layer3/j3/r17",
+        "i0/verify/layer3/j4/r17",
+        "i0/verify/layer3/j5/r17"
+      ],
+      "end_ns_assumed": 45.0,
+      "eventID": "i0/verify/layer4/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer4/j0/r17",
+      "start_ns_assumed": 44.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer3/j0/r17",
+        "i0/verify/layer3/j1/r17",
+        "i0/verify/layer3/j2/r17",
+        "i0/verify/layer3/j3/r17",
+        "i0/verify/layer3/j4/r17",
+        "i0/verify/layer3/j5/r17"
+      ],
+      "end_ns_assumed": 46.0,
+      "eventID": "i0/verify/layer4/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer4/j1/r17",
+      "start_ns_assumed": 45.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer3/j0/r17",
+        "i0/verify/layer3/j1/r17",
+        "i0/verify/layer3/j2/r17",
+        "i0/verify/layer3/j3/r17",
+        "i0/verify/layer3/j4/r17",
+        "i0/verify/layer3/j5/r17"
+      ],
+      "end_ns_assumed": 47.0,
+      "eventID": "i0/verify/layer4/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer4/j2/r17",
+      "start_ns_assumed": 46.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer3/j0/r17",
+        "i0/verify/layer3/j1/r17",
+        "i0/verify/layer3/j2/r17",
+        "i0/verify/layer3/j3/r17",
+        "i0/verify/layer3/j4/r17",
+        "i0/verify/layer3/j5/r17"
+      ],
+      "end_ns_assumed": 48.0,
+      "eventID": "i0/verify/layer4/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer4/j3/r17",
+      "start_ns_assumed": 47.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer3/j0/r17",
+        "i0/verify/layer3/j1/r17",
+        "i0/verify/layer3/j2/r17",
+        "i0/verify/layer3/j3/r17",
+        "i0/verify/layer3/j4/r17",
+        "i0/verify/layer3/j5/r17"
+      ],
+      "end_ns_assumed": 49.0,
+      "eventID": "i0/verify/layer4/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer4/j4/r17",
+      "start_ns_assumed": 48.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer3/j0/r17",
+        "i0/verify/layer3/j1/r17",
+        "i0/verify/layer3/j2/r17",
+        "i0/verify/layer3/j3/r17",
+        "i0/verify/layer3/j4/r17",
+        "i0/verify/layer3/j5/r17"
+      ],
+      "end_ns_assumed": 50.0,
+      "eventID": "i0/verify/layer4/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer4/j5/r17",
+      "start_ns_assumed": 49.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer4/j0/r17",
+        "i0/verify/layer4/j1/r17",
+        "i0/verify/layer4/j2/r17",
+        "i0/verify/layer4/j3/r17",
+        "i0/verify/layer4/j4/r17",
+        "i0/verify/layer4/j5/r17"
+      ],
+      "end_ns_assumed": 51.0,
+      "eventID": "i0/verify/layer5/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer5/j0/r17",
+      "start_ns_assumed": 50.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer4/j0/r17",
+        "i0/verify/layer4/j1/r17",
+        "i0/verify/layer4/j2/r17",
+        "i0/verify/layer4/j3/r17",
+        "i0/verify/layer4/j4/r17",
+        "i0/verify/layer4/j5/r17"
+      ],
+      "end_ns_assumed": 52.0,
+      "eventID": "i0/verify/layer5/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer5/j1/r17",
+      "start_ns_assumed": 51.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer4/j0/r17",
+        "i0/verify/layer4/j1/r17",
+        "i0/verify/layer4/j2/r17",
+        "i0/verify/layer4/j3/r17",
+        "i0/verify/layer4/j4/r17",
+        "i0/verify/layer4/j5/r17"
+      ],
+      "end_ns_assumed": 53.0,
+      "eventID": "i0/verify/layer5/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer5/j2/r17",
+      "start_ns_assumed": 52.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer4/j0/r17",
+        "i0/verify/layer4/j1/r17",
+        "i0/verify/layer4/j2/r17",
+        "i0/verify/layer4/j3/r17",
+        "i0/verify/layer4/j4/r17",
+        "i0/verify/layer4/j5/r17"
+      ],
+      "end_ns_assumed": 54.0,
+      "eventID": "i0/verify/layer5/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer5/j3/r17",
+      "start_ns_assumed": 53.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer4/j0/r17",
+        "i0/verify/layer4/j1/r17",
+        "i0/verify/layer4/j2/r17",
+        "i0/verify/layer4/j3/r17",
+        "i0/verify/layer4/j4/r17",
+        "i0/verify/layer4/j5/r17"
+      ],
+      "end_ns_assumed": 55.0,
+      "eventID": "i0/verify/layer5/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer5/j4/r17",
+      "start_ns_assumed": 54.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer4/j0/r17",
+        "i0/verify/layer4/j1/r17",
+        "i0/verify/layer4/j2/r17",
+        "i0/verify/layer4/j3/r17",
+        "i0/verify/layer4/j4/r17",
+        "i0/verify/layer4/j5/r17"
+      ],
+      "end_ns_assumed": 56.0,
+      "eventID": "i0/verify/layer5/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer5/j5/r17",
+      "start_ns_assumed": 55.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer5/j0/r17",
+        "i0/verify/layer5/j1/r17",
+        "i0/verify/layer5/j2/r17",
+        "i0/verify/layer5/j3/r17",
+        "i0/verify/layer5/j4/r17",
+        "i0/verify/layer5/j5/r17"
+      ],
+      "end_ns_assumed": 57.0,
+      "eventID": "i0/verify/layer6/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer6/j0/r17",
+      "start_ns_assumed": 56.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer5/j0/r17",
+        "i0/verify/layer5/j1/r17",
+        "i0/verify/layer5/j2/r17",
+        "i0/verify/layer5/j3/r17",
+        "i0/verify/layer5/j4/r17",
+        "i0/verify/layer5/j5/r17"
+      ],
+      "end_ns_assumed": 58.0,
+      "eventID": "i0/verify/layer6/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer6/j1/r17",
+      "start_ns_assumed": 57.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer5/j0/r17",
+        "i0/verify/layer5/j1/r17",
+        "i0/verify/layer5/j2/r17",
+        "i0/verify/layer5/j3/r17",
+        "i0/verify/layer5/j4/r17",
+        "i0/verify/layer5/j5/r17"
+      ],
+      "end_ns_assumed": 59.0,
+      "eventID": "i0/verify/layer6/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer6/j2/r17",
+      "start_ns_assumed": 58.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer5/j0/r17",
+        "i0/verify/layer5/j1/r17",
+        "i0/verify/layer5/j2/r17",
+        "i0/verify/layer5/j3/r17",
+        "i0/verify/layer5/j4/r17",
+        "i0/verify/layer5/j5/r17"
+      ],
+      "end_ns_assumed": 60.0,
+      "eventID": "i0/verify/layer6/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer6/j3/r17",
+      "start_ns_assumed": 59.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer5/j0/r17",
+        "i0/verify/layer5/j1/r17",
+        "i0/verify/layer5/j2/r17",
+        "i0/verify/layer5/j3/r17",
+        "i0/verify/layer5/j4/r17",
+        "i0/verify/layer5/j5/r17"
+      ],
+      "end_ns_assumed": 61.0,
+      "eventID": "i0/verify/layer6/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer6/j4/r17",
+      "start_ns_assumed": 60.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer5/j0/r17",
+        "i0/verify/layer5/j1/r17",
+        "i0/verify/layer5/j2/r17",
+        "i0/verify/layer5/j3/r17",
+        "i0/verify/layer5/j4/r17",
+        "i0/verify/layer5/j5/r17"
+      ],
+      "end_ns_assumed": 62.0,
+      "eventID": "i0/verify/layer6/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer6/j5/r17",
+      "start_ns_assumed": 61.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer6/j0/r17",
+        "i0/verify/layer6/j1/r17",
+        "i0/verify/layer6/j2/r17",
+        "i0/verify/layer6/j3/r17",
+        "i0/verify/layer6/j4/r17",
+        "i0/verify/layer6/j5/r17"
+      ],
+      "end_ns_assumed": 63.0,
+      "eventID": "i0/verify/layer7/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer7/j0/r17",
+      "start_ns_assumed": 62.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer6/j0/r17",
+        "i0/verify/layer6/j1/r17",
+        "i0/verify/layer6/j2/r17",
+        "i0/verify/layer6/j3/r17",
+        "i0/verify/layer6/j4/r17",
+        "i0/verify/layer6/j5/r17"
+      ],
+      "end_ns_assumed": 64.0,
+      "eventID": "i0/verify/layer7/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer7/j1/r17",
+      "start_ns_assumed": 63.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer6/j0/r17",
+        "i0/verify/layer6/j1/r17",
+        "i0/verify/layer6/j2/r17",
+        "i0/verify/layer6/j3/r17",
+        "i0/verify/layer6/j4/r17",
+        "i0/verify/layer6/j5/r17"
+      ],
+      "end_ns_assumed": 65.0,
+      "eventID": "i0/verify/layer7/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer7/j2/r17",
+      "start_ns_assumed": 64.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer6/j0/r17",
+        "i0/verify/layer6/j1/r17",
+        "i0/verify/layer6/j2/r17",
+        "i0/verify/layer6/j3/r17",
+        "i0/verify/layer6/j4/r17",
+        "i0/verify/layer6/j5/r17"
+      ],
+      "end_ns_assumed": 66.0,
+      "eventID": "i0/verify/layer7/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer7/j3/r17",
+      "start_ns_assumed": 65.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer6/j0/r17",
+        "i0/verify/layer6/j1/r17",
+        "i0/verify/layer6/j2/r17",
+        "i0/verify/layer6/j3/r17",
+        "i0/verify/layer6/j4/r17",
+        "i0/verify/layer6/j5/r17"
+      ],
+      "end_ns_assumed": 67.0,
+      "eventID": "i0/verify/layer7/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer7/j4/r17",
+      "start_ns_assumed": 66.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer6/j0/r17",
+        "i0/verify/layer6/j1/r17",
+        "i0/verify/layer6/j2/r17",
+        "i0/verify/layer6/j3/r17",
+        "i0/verify/layer6/j4/r17",
+        "i0/verify/layer6/j5/r17"
+      ],
+      "end_ns_assumed": 68.0,
+      "eventID": "i0/verify/layer7/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer7/j5/r17",
+      "start_ns_assumed": 67.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer7/j0/r17",
+        "i0/verify/layer7/j1/r17",
+        "i0/verify/layer7/j2/r17",
+        "i0/verify/layer7/j3/r17",
+        "i0/verify/layer7/j4/r17",
+        "i0/verify/layer7/j5/r17"
+      ],
+      "end_ns_assumed": 69.0,
+      "eventID": "i0/verify/layer8/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer8/j0/r17",
+      "start_ns_assumed": 68.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer7/j0/r17",
+        "i0/verify/layer7/j1/r17",
+        "i0/verify/layer7/j2/r17",
+        "i0/verify/layer7/j3/r17",
+        "i0/verify/layer7/j4/r17",
+        "i0/verify/layer7/j5/r17"
+      ],
+      "end_ns_assumed": 70.0,
+      "eventID": "i0/verify/layer8/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer8/j1/r17",
+      "start_ns_assumed": 69.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer7/j0/r17",
+        "i0/verify/layer7/j1/r17",
+        "i0/verify/layer7/j2/r17",
+        "i0/verify/layer7/j3/r17",
+        "i0/verify/layer7/j4/r17",
+        "i0/verify/layer7/j5/r17"
+      ],
+      "end_ns_assumed": 71.0,
+      "eventID": "i0/verify/layer8/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer8/j2/r17",
+      "start_ns_assumed": 70.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer7/j0/r17",
+        "i0/verify/layer7/j1/r17",
+        "i0/verify/layer7/j2/r17",
+        "i0/verify/layer7/j3/r17",
+        "i0/verify/layer7/j4/r17",
+        "i0/verify/layer7/j5/r17"
+      ],
+      "end_ns_assumed": 72.0,
+      "eventID": "i0/verify/layer8/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer8/j3/r17",
+      "start_ns_assumed": 71.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer7/j0/r17",
+        "i0/verify/layer7/j1/r17",
+        "i0/verify/layer7/j2/r17",
+        "i0/verify/layer7/j3/r17",
+        "i0/verify/layer7/j4/r17",
+        "i0/verify/layer7/j5/r17"
+      ],
+      "end_ns_assumed": 73.0,
+      "eventID": "i0/verify/layer8/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer8/j4/r17",
+      "start_ns_assumed": 72.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer7/j0/r17",
+        "i0/verify/layer7/j1/r17",
+        "i0/verify/layer7/j2/r17",
+        "i0/verify/layer7/j3/r17",
+        "i0/verify/layer7/j4/r17",
+        "i0/verify/layer7/j5/r17"
+      ],
+      "end_ns_assumed": 74.0,
+      "eventID": "i0/verify/layer8/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer8/j5/r17",
+      "start_ns_assumed": 73.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer8/j0/r17",
+        "i0/verify/layer8/j1/r17",
+        "i0/verify/layer8/j2/r17",
+        "i0/verify/layer8/j3/r17",
+        "i0/verify/layer8/j4/r17",
+        "i0/verify/layer8/j5/r17"
+      ],
+      "end_ns_assumed": 75.0,
+      "eventID": "i0/verify/layer9/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer9/j0/r17",
+      "start_ns_assumed": 74.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer8/j0/r17",
+        "i0/verify/layer8/j1/r17",
+        "i0/verify/layer8/j2/r17",
+        "i0/verify/layer8/j3/r17",
+        "i0/verify/layer8/j4/r17",
+        "i0/verify/layer8/j5/r17"
+      ],
+      "end_ns_assumed": 76.0,
+      "eventID": "i0/verify/layer9/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer9/j1/r17",
+      "start_ns_assumed": 75.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer8/j0/r17",
+        "i0/verify/layer8/j1/r17",
+        "i0/verify/layer8/j2/r17",
+        "i0/verify/layer8/j3/r17",
+        "i0/verify/layer8/j4/r17",
+        "i0/verify/layer8/j5/r17"
+      ],
+      "end_ns_assumed": 77.0,
+      "eventID": "i0/verify/layer9/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer9/j2/r17",
+      "start_ns_assumed": 76.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer8/j0/r17",
+        "i0/verify/layer8/j1/r17",
+        "i0/verify/layer8/j2/r17",
+        "i0/verify/layer8/j3/r17",
+        "i0/verify/layer8/j4/r17",
+        "i0/verify/layer8/j5/r17"
+      ],
+      "end_ns_assumed": 78.0,
+      "eventID": "i0/verify/layer9/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer9/j3/r17",
+      "start_ns_assumed": 77.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer8/j0/r17",
+        "i0/verify/layer8/j1/r17",
+        "i0/verify/layer8/j2/r17",
+        "i0/verify/layer8/j3/r17",
+        "i0/verify/layer8/j4/r17",
+        "i0/verify/layer8/j5/r17"
+      ],
+      "end_ns_assumed": 79.0,
+      "eventID": "i0/verify/layer9/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer9/j4/r17",
+      "start_ns_assumed": 78.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer8/j0/r17",
+        "i0/verify/layer8/j1/r17",
+        "i0/verify/layer8/j2/r17",
+        "i0/verify/layer8/j3/r17",
+        "i0/verify/layer8/j4/r17",
+        "i0/verify/layer8/j5/r17"
+      ],
+      "end_ns_assumed": 80.0,
+      "eventID": "i0/verify/layer9/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer9/j5/r17",
+      "start_ns_assumed": 79.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer9/j0/r17",
+        "i0/verify/layer9/j1/r17",
+        "i0/verify/layer9/j2/r17",
+        "i0/verify/layer9/j3/r17",
+        "i0/verify/layer9/j4/r17",
+        "i0/verify/layer9/j5/r17"
+      ],
+      "end_ns_assumed": 81.0,
+      "eventID": "i0/verify/layer10/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer10/j0/r17",
+      "start_ns_assumed": 80.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer9/j0/r17",
+        "i0/verify/layer9/j1/r17",
+        "i0/verify/layer9/j2/r17",
+        "i0/verify/layer9/j3/r17",
+        "i0/verify/layer9/j4/r17",
+        "i0/verify/layer9/j5/r17"
+      ],
+      "end_ns_assumed": 82.0,
+      "eventID": "i0/verify/layer10/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer10/j1/r17",
+      "start_ns_assumed": 81.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer9/j0/r17",
+        "i0/verify/layer9/j1/r17",
+        "i0/verify/layer9/j2/r17",
+        "i0/verify/layer9/j3/r17",
+        "i0/verify/layer9/j4/r17",
+        "i0/verify/layer9/j5/r17"
+      ],
+      "end_ns_assumed": 83.0,
+      "eventID": "i0/verify/layer10/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer10/j2/r17",
+      "start_ns_assumed": 82.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer9/j0/r17",
+        "i0/verify/layer9/j1/r17",
+        "i0/verify/layer9/j2/r17",
+        "i0/verify/layer9/j3/r17",
+        "i0/verify/layer9/j4/r17",
+        "i0/verify/layer9/j5/r17"
+      ],
+      "end_ns_assumed": 84.0,
+      "eventID": "i0/verify/layer10/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer10/j3/r17",
+      "start_ns_assumed": 83.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer9/j0/r17",
+        "i0/verify/layer9/j1/r17",
+        "i0/verify/layer9/j2/r17",
+        "i0/verify/layer9/j3/r17",
+        "i0/verify/layer9/j4/r17",
+        "i0/verify/layer9/j5/r17"
+      ],
+      "end_ns_assumed": 85.0,
+      "eventID": "i0/verify/layer10/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer10/j4/r17",
+      "start_ns_assumed": 84.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer9/j0/r17",
+        "i0/verify/layer9/j1/r17",
+        "i0/verify/layer9/j2/r17",
+        "i0/verify/layer9/j3/r17",
+        "i0/verify/layer9/j4/r17",
+        "i0/verify/layer9/j5/r17"
+      ],
+      "end_ns_assumed": 86.0,
+      "eventID": "i0/verify/layer10/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer10/j5/r17",
+      "start_ns_assumed": 85.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer10/j0/r17",
+        "i0/verify/layer10/j1/r17",
+        "i0/verify/layer10/j2/r17",
+        "i0/verify/layer10/j3/r17",
+        "i0/verify/layer10/j4/r17",
+        "i0/verify/layer10/j5/r17"
+      ],
+      "end_ns_assumed": 87.0,
+      "eventID": "i0/verify/layer11/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer11/j0/r17",
+      "start_ns_assumed": 86.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer10/j0/r17",
+        "i0/verify/layer10/j1/r17",
+        "i0/verify/layer10/j2/r17",
+        "i0/verify/layer10/j3/r17",
+        "i0/verify/layer10/j4/r17",
+        "i0/verify/layer10/j5/r17"
+      ],
+      "end_ns_assumed": 88.0,
+      "eventID": "i0/verify/layer11/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer11/j1/r17",
+      "start_ns_assumed": 87.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer10/j0/r17",
+        "i0/verify/layer10/j1/r17",
+        "i0/verify/layer10/j2/r17",
+        "i0/verify/layer10/j3/r17",
+        "i0/verify/layer10/j4/r17",
+        "i0/verify/layer10/j5/r17"
+      ],
+      "end_ns_assumed": 89.0,
+      "eventID": "i0/verify/layer11/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer11/j2/r17",
+      "start_ns_assumed": 88.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer10/j0/r17",
+        "i0/verify/layer10/j1/r17",
+        "i0/verify/layer10/j2/r17",
+        "i0/verify/layer10/j3/r17",
+        "i0/verify/layer10/j4/r17",
+        "i0/verify/layer10/j5/r17"
+      ],
+      "end_ns_assumed": 90.0,
+      "eventID": "i0/verify/layer11/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer11/j3/r17",
+      "start_ns_assumed": 89.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer10/j0/r17",
+        "i0/verify/layer10/j1/r17",
+        "i0/verify/layer10/j2/r17",
+        "i0/verify/layer10/j3/r17",
+        "i0/verify/layer10/j4/r17",
+        "i0/verify/layer10/j5/r17"
+      ],
+      "end_ns_assumed": 91.0,
+      "eventID": "i0/verify/layer11/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer11/j4/r17",
+      "start_ns_assumed": 90.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer10/j0/r17",
+        "i0/verify/layer10/j1/r17",
+        "i0/verify/layer10/j2/r17",
+        "i0/verify/layer10/j3/r17",
+        "i0/verify/layer10/j4/r17",
+        "i0/verify/layer10/j5/r17"
+      ],
+      "end_ns_assumed": 92.0,
+      "eventID": "i0/verify/layer11/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer11/j5/r17",
+      "start_ns_assumed": 91.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer11/j0/r17",
+        "i0/verify/layer11/j1/r17",
+        "i0/verify/layer11/j2/r17",
+        "i0/verify/layer11/j3/r17",
+        "i0/verify/layer11/j4/r17",
+        "i0/verify/layer11/j5/r17"
+      ],
+      "end_ns_assumed": 93.0,
+      "eventID": "i0/verify/layer12/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer12/j0/r17",
+      "start_ns_assumed": 92.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer11/j0/r17",
+        "i0/verify/layer11/j1/r17",
+        "i0/verify/layer11/j2/r17",
+        "i0/verify/layer11/j3/r17",
+        "i0/verify/layer11/j4/r17",
+        "i0/verify/layer11/j5/r17"
+      ],
+      "end_ns_assumed": 94.0,
+      "eventID": "i0/verify/layer12/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer12/j1/r17",
+      "start_ns_assumed": 93.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer11/j0/r17",
+        "i0/verify/layer11/j1/r17",
+        "i0/verify/layer11/j2/r17",
+        "i0/verify/layer11/j3/r17",
+        "i0/verify/layer11/j4/r17",
+        "i0/verify/layer11/j5/r17"
+      ],
+      "end_ns_assumed": 95.0,
+      "eventID": "i0/verify/layer12/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer12/j2/r17",
+      "start_ns_assumed": 94.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer11/j0/r17",
+        "i0/verify/layer11/j1/r17",
+        "i0/verify/layer11/j2/r17",
+        "i0/verify/layer11/j3/r17",
+        "i0/verify/layer11/j4/r17",
+        "i0/verify/layer11/j5/r17"
+      ],
+      "end_ns_assumed": 96.0,
+      "eventID": "i0/verify/layer12/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer12/j3/r17",
+      "start_ns_assumed": 95.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer11/j0/r17",
+        "i0/verify/layer11/j1/r17",
+        "i0/verify/layer11/j2/r17",
+        "i0/verify/layer11/j3/r17",
+        "i0/verify/layer11/j4/r17",
+        "i0/verify/layer11/j5/r17"
+      ],
+      "end_ns_assumed": 97.0,
+      "eventID": "i0/verify/layer12/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer12/j4/r17",
+      "start_ns_assumed": 96.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer11/j0/r17",
+        "i0/verify/layer11/j1/r17",
+        "i0/verify/layer11/j2/r17",
+        "i0/verify/layer11/j3/r17",
+        "i0/verify/layer11/j4/r17",
+        "i0/verify/layer11/j5/r17"
+      ],
+      "end_ns_assumed": 98.0,
+      "eventID": "i0/verify/layer12/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer12/j5/r17",
+      "start_ns_assumed": 97.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer12/j0/r17",
+        "i0/verify/layer12/j1/r17",
+        "i0/verify/layer12/j2/r17",
+        "i0/verify/layer12/j3/r17",
+        "i0/verify/layer12/j4/r17",
+        "i0/verify/layer12/j5/r17"
+      ],
+      "end_ns_assumed": 99.0,
+      "eventID": "i0/verify/layer13/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer13/j0/r17",
+      "start_ns_assumed": 98.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer12/j0/r17",
+        "i0/verify/layer12/j1/r17",
+        "i0/verify/layer12/j2/r17",
+        "i0/verify/layer12/j3/r17",
+        "i0/verify/layer12/j4/r17",
+        "i0/verify/layer12/j5/r17"
+      ],
+      "end_ns_assumed": 100.0,
+      "eventID": "i0/verify/layer13/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer13/j1/r17",
+      "start_ns_assumed": 99.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer12/j0/r17",
+        "i0/verify/layer12/j1/r17",
+        "i0/verify/layer12/j2/r17",
+        "i0/verify/layer12/j3/r17",
+        "i0/verify/layer12/j4/r17",
+        "i0/verify/layer12/j5/r17"
+      ],
+      "end_ns_assumed": 101.0,
+      "eventID": "i0/verify/layer13/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer13/j2/r17",
+      "start_ns_assumed": 100.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer12/j0/r17",
+        "i0/verify/layer12/j1/r17",
+        "i0/verify/layer12/j2/r17",
+        "i0/verify/layer12/j3/r17",
+        "i0/verify/layer12/j4/r17",
+        "i0/verify/layer12/j5/r17"
+      ],
+      "end_ns_assumed": 102.0,
+      "eventID": "i0/verify/layer13/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer13/j3/r17",
+      "start_ns_assumed": 101.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer12/j0/r17",
+        "i0/verify/layer12/j1/r17",
+        "i0/verify/layer12/j2/r17",
+        "i0/verify/layer12/j3/r17",
+        "i0/verify/layer12/j4/r17",
+        "i0/verify/layer12/j5/r17"
+      ],
+      "end_ns_assumed": 103.0,
+      "eventID": "i0/verify/layer13/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer13/j4/r17",
+      "start_ns_assumed": 102.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer12/j0/r17",
+        "i0/verify/layer12/j1/r17",
+        "i0/verify/layer12/j2/r17",
+        "i0/verify/layer12/j3/r17",
+        "i0/verify/layer12/j4/r17",
+        "i0/verify/layer12/j5/r17"
+      ],
+      "end_ns_assumed": 104.0,
+      "eventID": "i0/verify/layer13/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer13/j5/r17",
+      "start_ns_assumed": 103.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer13/j0/r17",
+        "i0/verify/layer13/j1/r17",
+        "i0/verify/layer13/j2/r17",
+        "i0/verify/layer13/j3/r17",
+        "i0/verify/layer13/j4/r17",
+        "i0/verify/layer13/j5/r17"
+      ],
+      "end_ns_assumed": 105.0,
+      "eventID": "i0/verify/layer14/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer14/j0/r17",
+      "start_ns_assumed": 104.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer13/j0/r17",
+        "i0/verify/layer13/j1/r17",
+        "i0/verify/layer13/j2/r17",
+        "i0/verify/layer13/j3/r17",
+        "i0/verify/layer13/j4/r17",
+        "i0/verify/layer13/j5/r17"
+      ],
+      "end_ns_assumed": 106.0,
+      "eventID": "i0/verify/layer14/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer14/j1/r17",
+      "start_ns_assumed": 105.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer13/j0/r17",
+        "i0/verify/layer13/j1/r17",
+        "i0/verify/layer13/j2/r17",
+        "i0/verify/layer13/j3/r17",
+        "i0/verify/layer13/j4/r17",
+        "i0/verify/layer13/j5/r17"
+      ],
+      "end_ns_assumed": 107.0,
+      "eventID": "i0/verify/layer14/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer14/j2/r17",
+      "start_ns_assumed": 106.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer13/j0/r17",
+        "i0/verify/layer13/j1/r17",
+        "i0/verify/layer13/j2/r17",
+        "i0/verify/layer13/j3/r17",
+        "i0/verify/layer13/j4/r17",
+        "i0/verify/layer13/j5/r17"
+      ],
+      "end_ns_assumed": 108.0,
+      "eventID": "i0/verify/layer14/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer14/j3/r17",
+      "start_ns_assumed": 107.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer13/j0/r17",
+        "i0/verify/layer13/j1/r17",
+        "i0/verify/layer13/j2/r17",
+        "i0/verify/layer13/j3/r17",
+        "i0/verify/layer13/j4/r17",
+        "i0/verify/layer13/j5/r17"
+      ],
+      "end_ns_assumed": 109.0,
+      "eventID": "i0/verify/layer14/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer14/j4/r17",
+      "start_ns_assumed": 108.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer13/j0/r17",
+        "i0/verify/layer13/j1/r17",
+        "i0/verify/layer13/j2/r17",
+        "i0/verify/layer13/j3/r17",
+        "i0/verify/layer13/j4/r17",
+        "i0/verify/layer13/j5/r17"
+      ],
+      "end_ns_assumed": 110.0,
+      "eventID": "i0/verify/layer14/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer14/j5/r17",
+      "start_ns_assumed": 109.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer14/j0/r17",
+        "i0/verify/layer14/j1/r17",
+        "i0/verify/layer14/j2/r17",
+        "i0/verify/layer14/j3/r17",
+        "i0/verify/layer14/j4/r17",
+        "i0/verify/layer14/j5/r17"
+      ],
+      "end_ns_assumed": 111.0,
+      "eventID": "i0/verify/layer15/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer15/j0/r17",
+      "start_ns_assumed": 110.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer14/j0/r17",
+        "i0/verify/layer14/j1/r17",
+        "i0/verify/layer14/j2/r17",
+        "i0/verify/layer14/j3/r17",
+        "i0/verify/layer14/j4/r17",
+        "i0/verify/layer14/j5/r17"
+      ],
+      "end_ns_assumed": 112.0,
+      "eventID": "i0/verify/layer15/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer15/j1/r17",
+      "start_ns_assumed": 111.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer14/j0/r17",
+        "i0/verify/layer14/j1/r17",
+        "i0/verify/layer14/j2/r17",
+        "i0/verify/layer14/j3/r17",
+        "i0/verify/layer14/j4/r17",
+        "i0/verify/layer14/j5/r17"
+      ],
+      "end_ns_assumed": 113.0,
+      "eventID": "i0/verify/layer15/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer15/j2/r17",
+      "start_ns_assumed": 112.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer14/j0/r17",
+        "i0/verify/layer14/j1/r17",
+        "i0/verify/layer14/j2/r17",
+        "i0/verify/layer14/j3/r17",
+        "i0/verify/layer14/j4/r17",
+        "i0/verify/layer14/j5/r17"
+      ],
+      "end_ns_assumed": 114.0,
+      "eventID": "i0/verify/layer15/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer15/j3/r17",
+      "start_ns_assumed": 113.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer14/j0/r17",
+        "i0/verify/layer14/j1/r17",
+        "i0/verify/layer14/j2/r17",
+        "i0/verify/layer14/j3/r17",
+        "i0/verify/layer14/j4/r17",
+        "i0/verify/layer14/j5/r17"
+      ],
+      "end_ns_assumed": 115.0,
+      "eventID": "i0/verify/layer15/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer15/j4/r17",
+      "start_ns_assumed": 114.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer14/j0/r17",
+        "i0/verify/layer14/j1/r17",
+        "i0/verify/layer14/j2/r17",
+        "i0/verify/layer14/j3/r17",
+        "i0/verify/layer14/j4/r17",
+        "i0/verify/layer14/j5/r17"
+      ],
+      "end_ns_assumed": 116.0,
+      "eventID": "i0/verify/layer15/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer15/j5/r17",
+      "start_ns_assumed": 115.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer15/j0/r17",
+        "i0/verify/layer15/j1/r17",
+        "i0/verify/layer15/j2/r17",
+        "i0/verify/layer15/j3/r17",
+        "i0/verify/layer15/j4/r17",
+        "i0/verify/layer15/j5/r17"
+      ],
+      "end_ns_assumed": 117.0,
+      "eventID": "i0/verify/layer16/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer16/j0/r17",
+      "start_ns_assumed": 116.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer15/j0/r17",
+        "i0/verify/layer15/j1/r17",
+        "i0/verify/layer15/j2/r17",
+        "i0/verify/layer15/j3/r17",
+        "i0/verify/layer15/j4/r17",
+        "i0/verify/layer15/j5/r17"
+      ],
+      "end_ns_assumed": 118.0,
+      "eventID": "i0/verify/layer16/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer16/j1/r17",
+      "start_ns_assumed": 117.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer15/j0/r17",
+        "i0/verify/layer15/j1/r17",
+        "i0/verify/layer15/j2/r17",
+        "i0/verify/layer15/j3/r17",
+        "i0/verify/layer15/j4/r17",
+        "i0/verify/layer15/j5/r17"
+      ],
+      "end_ns_assumed": 119.0,
+      "eventID": "i0/verify/layer16/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer16/j2/r17",
+      "start_ns_assumed": 118.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer15/j0/r17",
+        "i0/verify/layer15/j1/r17",
+        "i0/verify/layer15/j2/r17",
+        "i0/verify/layer15/j3/r17",
+        "i0/verify/layer15/j4/r17",
+        "i0/verify/layer15/j5/r17"
+      ],
+      "end_ns_assumed": 120.0,
+      "eventID": "i0/verify/layer16/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer16/j3/r17",
+      "start_ns_assumed": 119.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer15/j0/r17",
+        "i0/verify/layer15/j1/r17",
+        "i0/verify/layer15/j2/r17",
+        "i0/verify/layer15/j3/r17",
+        "i0/verify/layer15/j4/r17",
+        "i0/verify/layer15/j5/r17"
+      ],
+      "end_ns_assumed": 121.0,
+      "eventID": "i0/verify/layer16/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer16/j4/r17",
+      "start_ns_assumed": 120.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer15/j0/r17",
+        "i0/verify/layer15/j1/r17",
+        "i0/verify/layer15/j2/r17",
+        "i0/verify/layer15/j3/r17",
+        "i0/verify/layer15/j4/r17",
+        "i0/verify/layer15/j5/r17"
+      ],
+      "end_ns_assumed": 122.0,
+      "eventID": "i0/verify/layer16/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer16/j5/r17",
+      "start_ns_assumed": 121.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer16/j0/r17",
+        "i0/verify/layer16/j1/r17",
+        "i0/verify/layer16/j2/r17",
+        "i0/verify/layer16/j3/r17",
+        "i0/verify/layer16/j4/r17",
+        "i0/verify/layer16/j5/r17"
+      ],
+      "end_ns_assumed": 123.0,
+      "eventID": "i0/verify/layer17/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer17/j0/r17",
+      "start_ns_assumed": 122.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer16/j0/r17",
+        "i0/verify/layer16/j1/r17",
+        "i0/verify/layer16/j2/r17",
+        "i0/verify/layer16/j3/r17",
+        "i0/verify/layer16/j4/r17",
+        "i0/verify/layer16/j5/r17"
+      ],
+      "end_ns_assumed": 124.0,
+      "eventID": "i0/verify/layer17/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer17/j1/r17",
+      "start_ns_assumed": 123.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer16/j0/r17",
+        "i0/verify/layer16/j1/r17",
+        "i0/verify/layer16/j2/r17",
+        "i0/verify/layer16/j3/r17",
+        "i0/verify/layer16/j4/r17",
+        "i0/verify/layer16/j5/r17"
+      ],
+      "end_ns_assumed": 125.0,
+      "eventID": "i0/verify/layer17/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer17/j2/r17",
+      "start_ns_assumed": 124.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer16/j0/r17",
+        "i0/verify/layer16/j1/r17",
+        "i0/verify/layer16/j2/r17",
+        "i0/verify/layer16/j3/r17",
+        "i0/verify/layer16/j4/r17",
+        "i0/verify/layer16/j5/r17"
+      ],
+      "end_ns_assumed": 126.0,
+      "eventID": "i0/verify/layer17/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer17/j3/r17",
+      "start_ns_assumed": 125.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer16/j0/r17",
+        "i0/verify/layer16/j1/r17",
+        "i0/verify/layer16/j2/r17",
+        "i0/verify/layer16/j3/r17",
+        "i0/verify/layer16/j4/r17",
+        "i0/verify/layer16/j5/r17"
+      ],
+      "end_ns_assumed": 127.0,
+      "eventID": "i0/verify/layer17/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer17/j4/r17",
+      "start_ns_assumed": 126.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer16/j0/r17",
+        "i0/verify/layer16/j1/r17",
+        "i0/verify/layer16/j2/r17",
+        "i0/verify/layer16/j3/r17",
+        "i0/verify/layer16/j4/r17",
+        "i0/verify/layer16/j5/r17"
+      ],
+      "end_ns_assumed": 128.0,
+      "eventID": "i0/verify/layer17/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer17/j5/r17",
+      "start_ns_assumed": 127.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer17/j0/r17",
+        "i0/verify/layer17/j1/r17",
+        "i0/verify/layer17/j2/r17",
+        "i0/verify/layer17/j3/r17",
+        "i0/verify/layer17/j4/r17",
+        "i0/verify/layer17/j5/r17"
+      ],
+      "end_ns_assumed": 129.0,
+      "eventID": "i0/verify/layer18/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer18/j0/r17",
+      "start_ns_assumed": 128.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer17/j0/r17",
+        "i0/verify/layer17/j1/r17",
+        "i0/verify/layer17/j2/r17",
+        "i0/verify/layer17/j3/r17",
+        "i0/verify/layer17/j4/r17",
+        "i0/verify/layer17/j5/r17"
+      ],
+      "end_ns_assumed": 130.0,
+      "eventID": "i0/verify/layer18/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer18/j1/r17",
+      "start_ns_assumed": 129.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer17/j0/r17",
+        "i0/verify/layer17/j1/r17",
+        "i0/verify/layer17/j2/r17",
+        "i0/verify/layer17/j3/r17",
+        "i0/verify/layer17/j4/r17",
+        "i0/verify/layer17/j5/r17"
+      ],
+      "end_ns_assumed": 131.0,
+      "eventID": "i0/verify/layer18/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer18/j2/r17",
+      "start_ns_assumed": 130.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer17/j0/r17",
+        "i0/verify/layer17/j1/r17",
+        "i0/verify/layer17/j2/r17",
+        "i0/verify/layer17/j3/r17",
+        "i0/verify/layer17/j4/r17",
+        "i0/verify/layer17/j5/r17"
+      ],
+      "end_ns_assumed": 132.0,
+      "eventID": "i0/verify/layer18/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer18/j3/r17",
+      "start_ns_assumed": 131.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer17/j0/r17",
+        "i0/verify/layer17/j1/r17",
+        "i0/verify/layer17/j2/r17",
+        "i0/verify/layer17/j3/r17",
+        "i0/verify/layer17/j4/r17",
+        "i0/verify/layer17/j5/r17"
+      ],
+      "end_ns_assumed": 133.0,
+      "eventID": "i0/verify/layer18/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer18/j4/r17",
+      "start_ns_assumed": 132.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer17/j0/r17",
+        "i0/verify/layer17/j1/r17",
+        "i0/verify/layer17/j2/r17",
+        "i0/verify/layer17/j3/r17",
+        "i0/verify/layer17/j4/r17",
+        "i0/verify/layer17/j5/r17"
+      ],
+      "end_ns_assumed": 134.0,
+      "eventID": "i0/verify/layer18/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer18/j5/r17",
+      "start_ns_assumed": 133.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer18/j0/r17",
+        "i0/verify/layer18/j1/r17",
+        "i0/verify/layer18/j2/r17",
+        "i0/verify/layer18/j3/r17",
+        "i0/verify/layer18/j4/r17",
+        "i0/verify/layer18/j5/r17"
+      ],
+      "end_ns_assumed": 135.0,
+      "eventID": "i0/verify/layer19/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer19/j0/r17",
+      "start_ns_assumed": 134.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer18/j0/r17",
+        "i0/verify/layer18/j1/r17",
+        "i0/verify/layer18/j2/r17",
+        "i0/verify/layer18/j3/r17",
+        "i0/verify/layer18/j4/r17",
+        "i0/verify/layer18/j5/r17"
+      ],
+      "end_ns_assumed": 136.0,
+      "eventID": "i0/verify/layer19/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer19/j1/r17",
+      "start_ns_assumed": 135.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer18/j0/r17",
+        "i0/verify/layer18/j1/r17",
+        "i0/verify/layer18/j2/r17",
+        "i0/verify/layer18/j3/r17",
+        "i0/verify/layer18/j4/r17",
+        "i0/verify/layer18/j5/r17"
+      ],
+      "end_ns_assumed": 137.0,
+      "eventID": "i0/verify/layer19/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer19/j2/r17",
+      "start_ns_assumed": 136.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer18/j0/r17",
+        "i0/verify/layer18/j1/r17",
+        "i0/verify/layer18/j2/r17",
+        "i0/verify/layer18/j3/r17",
+        "i0/verify/layer18/j4/r17",
+        "i0/verify/layer18/j5/r17"
+      ],
+      "end_ns_assumed": 138.0,
+      "eventID": "i0/verify/layer19/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer19/j3/r17",
+      "start_ns_assumed": 137.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer18/j0/r17",
+        "i0/verify/layer18/j1/r17",
+        "i0/verify/layer18/j2/r17",
+        "i0/verify/layer18/j3/r17",
+        "i0/verify/layer18/j4/r17",
+        "i0/verify/layer18/j5/r17"
+      ],
+      "end_ns_assumed": 139.0,
+      "eventID": "i0/verify/layer19/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer19/j4/r17",
+      "start_ns_assumed": 138.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer18/j0/r17",
+        "i0/verify/layer18/j1/r17",
+        "i0/verify/layer18/j2/r17",
+        "i0/verify/layer18/j3/r17",
+        "i0/verify/layer18/j4/r17",
+        "i0/verify/layer18/j5/r17"
+      ],
+      "end_ns_assumed": 140.0,
+      "eventID": "i0/verify/layer19/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer19/j5/r17",
+      "start_ns_assumed": 139.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer19/j0/r17",
+        "i0/verify/layer19/j1/r17",
+        "i0/verify/layer19/j2/r17",
+        "i0/verify/layer19/j3/r17",
+        "i0/verify/layer19/j4/r17",
+        "i0/verify/layer19/j5/r17"
+      ],
+      "end_ns_assumed": 141.0,
+      "eventID": "i0/verify/layer20/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer20/j0/r17",
+      "start_ns_assumed": 140.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer19/j0/r17",
+        "i0/verify/layer19/j1/r17",
+        "i0/verify/layer19/j2/r17",
+        "i0/verify/layer19/j3/r17",
+        "i0/verify/layer19/j4/r17",
+        "i0/verify/layer19/j5/r17"
+      ],
+      "end_ns_assumed": 142.0,
+      "eventID": "i0/verify/layer20/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer20/j1/r17",
+      "start_ns_assumed": 141.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer19/j0/r17",
+        "i0/verify/layer19/j1/r17",
+        "i0/verify/layer19/j2/r17",
+        "i0/verify/layer19/j3/r17",
+        "i0/verify/layer19/j4/r17",
+        "i0/verify/layer19/j5/r17"
+      ],
+      "end_ns_assumed": 143.0,
+      "eventID": "i0/verify/layer20/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer20/j2/r17",
+      "start_ns_assumed": 142.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer19/j0/r17",
+        "i0/verify/layer19/j1/r17",
+        "i0/verify/layer19/j2/r17",
+        "i0/verify/layer19/j3/r17",
+        "i0/verify/layer19/j4/r17",
+        "i0/verify/layer19/j5/r17"
+      ],
+      "end_ns_assumed": 144.0,
+      "eventID": "i0/verify/layer20/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer20/j3/r17",
+      "start_ns_assumed": 143.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer19/j0/r17",
+        "i0/verify/layer19/j1/r17",
+        "i0/verify/layer19/j2/r17",
+        "i0/verify/layer19/j3/r17",
+        "i0/verify/layer19/j4/r17",
+        "i0/verify/layer19/j5/r17"
+      ],
+      "end_ns_assumed": 145.0,
+      "eventID": "i0/verify/layer20/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer20/j4/r17",
+      "start_ns_assumed": 144.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer19/j0/r17",
+        "i0/verify/layer19/j1/r17",
+        "i0/verify/layer19/j2/r17",
+        "i0/verify/layer19/j3/r17",
+        "i0/verify/layer19/j4/r17",
+        "i0/verify/layer19/j5/r17"
+      ],
+      "end_ns_assumed": 146.0,
+      "eventID": "i0/verify/layer20/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer20/j5/r17",
+      "start_ns_assumed": 145.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer20/j0/r17",
+        "i0/verify/layer20/j1/r17",
+        "i0/verify/layer20/j2/r17",
+        "i0/verify/layer20/j3/r17",
+        "i0/verify/layer20/j4/r17",
+        "i0/verify/layer20/j5/r17"
+      ],
+      "end_ns_assumed": 147.0,
+      "eventID": "i0/verify/layer21/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer21/j0/r17",
+      "start_ns_assumed": 146.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer20/j0/r17",
+        "i0/verify/layer20/j1/r17",
+        "i0/verify/layer20/j2/r17",
+        "i0/verify/layer20/j3/r17",
+        "i0/verify/layer20/j4/r17",
+        "i0/verify/layer20/j5/r17"
+      ],
+      "end_ns_assumed": 148.0,
+      "eventID": "i0/verify/layer21/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer21/j1/r17",
+      "start_ns_assumed": 147.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer20/j0/r17",
+        "i0/verify/layer20/j1/r17",
+        "i0/verify/layer20/j2/r17",
+        "i0/verify/layer20/j3/r17",
+        "i0/verify/layer20/j4/r17",
+        "i0/verify/layer20/j5/r17"
+      ],
+      "end_ns_assumed": 149.0,
+      "eventID": "i0/verify/layer21/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer21/j2/r17",
+      "start_ns_assumed": 148.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer20/j0/r17",
+        "i0/verify/layer20/j1/r17",
+        "i0/verify/layer20/j2/r17",
+        "i0/verify/layer20/j3/r17",
+        "i0/verify/layer20/j4/r17",
+        "i0/verify/layer20/j5/r17"
+      ],
+      "end_ns_assumed": 150.0,
+      "eventID": "i0/verify/layer21/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer21/j3/r17",
+      "start_ns_assumed": 149.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer20/j0/r17",
+        "i0/verify/layer20/j1/r17",
+        "i0/verify/layer20/j2/r17",
+        "i0/verify/layer20/j3/r17",
+        "i0/verify/layer20/j4/r17",
+        "i0/verify/layer20/j5/r17"
+      ],
+      "end_ns_assumed": 151.0,
+      "eventID": "i0/verify/layer21/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer21/j4/r17",
+      "start_ns_assumed": 150.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer20/j0/r17",
+        "i0/verify/layer20/j1/r17",
+        "i0/verify/layer20/j2/r17",
+        "i0/verify/layer20/j3/r17",
+        "i0/verify/layer20/j4/r17",
+        "i0/verify/layer20/j5/r17"
+      ],
+      "end_ns_assumed": 152.0,
+      "eventID": "i0/verify/layer21/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer21/j5/r17",
+      "start_ns_assumed": 151.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer21/j0/r17",
+        "i0/verify/layer21/j1/r17",
+        "i0/verify/layer21/j2/r17",
+        "i0/verify/layer21/j3/r17",
+        "i0/verify/layer21/j4/r17",
+        "i0/verify/layer21/j5/r17"
+      ],
+      "end_ns_assumed": 153.0,
+      "eventID": "i0/verify/layer22/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer22/j0/r17",
+      "start_ns_assumed": 152.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer21/j0/r17",
+        "i0/verify/layer21/j1/r17",
+        "i0/verify/layer21/j2/r17",
+        "i0/verify/layer21/j3/r17",
+        "i0/verify/layer21/j4/r17",
+        "i0/verify/layer21/j5/r17"
+      ],
+      "end_ns_assumed": 154.0,
+      "eventID": "i0/verify/layer22/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer22/j1/r17",
+      "start_ns_assumed": 153.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer21/j0/r17",
+        "i0/verify/layer21/j1/r17",
+        "i0/verify/layer21/j2/r17",
+        "i0/verify/layer21/j3/r17",
+        "i0/verify/layer21/j4/r17",
+        "i0/verify/layer21/j5/r17"
+      ],
+      "end_ns_assumed": 155.0,
+      "eventID": "i0/verify/layer22/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer22/j2/r17",
+      "start_ns_assumed": 154.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer21/j0/r17",
+        "i0/verify/layer21/j1/r17",
+        "i0/verify/layer21/j2/r17",
+        "i0/verify/layer21/j3/r17",
+        "i0/verify/layer21/j4/r17",
+        "i0/verify/layer21/j5/r17"
+      ],
+      "end_ns_assumed": 156.0,
+      "eventID": "i0/verify/layer22/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer22/j3/r17",
+      "start_ns_assumed": 155.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer21/j0/r17",
+        "i0/verify/layer21/j1/r17",
+        "i0/verify/layer21/j2/r17",
+        "i0/verify/layer21/j3/r17",
+        "i0/verify/layer21/j4/r17",
+        "i0/verify/layer21/j5/r17"
+      ],
+      "end_ns_assumed": 157.0,
+      "eventID": "i0/verify/layer22/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer22/j4/r17",
+      "start_ns_assumed": 156.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer21/j0/r17",
+        "i0/verify/layer21/j1/r17",
+        "i0/verify/layer21/j2/r17",
+        "i0/verify/layer21/j3/r17",
+        "i0/verify/layer21/j4/r17",
+        "i0/verify/layer21/j5/r17"
+      ],
+      "end_ns_assumed": 158.0,
+      "eventID": "i0/verify/layer22/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer22/j5/r17",
+      "start_ns_assumed": 157.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer22/j0/r17",
+        "i0/verify/layer22/j1/r17",
+        "i0/verify/layer22/j2/r17",
+        "i0/verify/layer22/j3/r17",
+        "i0/verify/layer22/j4/r17",
+        "i0/verify/layer22/j5/r17"
+      ],
+      "end_ns_assumed": 159.0,
+      "eventID": "i0/verify/layer23/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer23/j0/r17",
+      "start_ns_assumed": 158.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer22/j0/r17",
+        "i0/verify/layer22/j1/r17",
+        "i0/verify/layer22/j2/r17",
+        "i0/verify/layer22/j3/r17",
+        "i0/verify/layer22/j4/r17",
+        "i0/verify/layer22/j5/r17"
+      ],
+      "end_ns_assumed": 160.0,
+      "eventID": "i0/verify/layer23/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer23/j1/r17",
+      "start_ns_assumed": 159.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer22/j0/r17",
+        "i0/verify/layer22/j1/r17",
+        "i0/verify/layer22/j2/r17",
+        "i0/verify/layer22/j3/r17",
+        "i0/verify/layer22/j4/r17",
+        "i0/verify/layer22/j5/r17"
+      ],
+      "end_ns_assumed": 161.0,
+      "eventID": "i0/verify/layer23/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer23/j2/r17",
+      "start_ns_assumed": 160.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer22/j0/r17",
+        "i0/verify/layer22/j1/r17",
+        "i0/verify/layer22/j2/r17",
+        "i0/verify/layer22/j3/r17",
+        "i0/verify/layer22/j4/r17",
+        "i0/verify/layer22/j5/r17"
+      ],
+      "end_ns_assumed": 162.0,
+      "eventID": "i0/verify/layer23/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer23/j3/r17",
+      "start_ns_assumed": 161.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer22/j0/r17",
+        "i0/verify/layer22/j1/r17",
+        "i0/verify/layer22/j2/r17",
+        "i0/verify/layer22/j3/r17",
+        "i0/verify/layer22/j4/r17",
+        "i0/verify/layer22/j5/r17"
+      ],
+      "end_ns_assumed": 163.0,
+      "eventID": "i0/verify/layer23/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer23/j4/r17",
+      "start_ns_assumed": 162.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer22/j0/r17",
+        "i0/verify/layer22/j1/r17",
+        "i0/verify/layer22/j2/r17",
+        "i0/verify/layer22/j3/r17",
+        "i0/verify/layer22/j4/r17",
+        "i0/verify/layer22/j5/r17"
+      ],
+      "end_ns_assumed": 164.0,
+      "eventID": "i0/verify/layer23/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer23/j5/r17",
+      "start_ns_assumed": 163.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer23/j0/r17",
+        "i0/verify/layer23/j1/r17",
+        "i0/verify/layer23/j2/r17",
+        "i0/verify/layer23/j3/r17",
+        "i0/verify/layer23/j4/r17",
+        "i0/verify/layer23/j5/r17"
+      ],
+      "end_ns_assumed": 165.0,
+      "eventID": "i0/verify/layer24/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer24/j0/r17",
+      "start_ns_assumed": 164.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer23/j0/r17",
+        "i0/verify/layer23/j1/r17",
+        "i0/verify/layer23/j2/r17",
+        "i0/verify/layer23/j3/r17",
+        "i0/verify/layer23/j4/r17",
+        "i0/verify/layer23/j5/r17"
+      ],
+      "end_ns_assumed": 166.0,
+      "eventID": "i0/verify/layer24/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer24/j1/r17",
+      "start_ns_assumed": 165.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer23/j0/r17",
+        "i0/verify/layer23/j1/r17",
+        "i0/verify/layer23/j2/r17",
+        "i0/verify/layer23/j3/r17",
+        "i0/verify/layer23/j4/r17",
+        "i0/verify/layer23/j5/r17"
+      ],
+      "end_ns_assumed": 167.0,
+      "eventID": "i0/verify/layer24/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer24/j2/r17",
+      "start_ns_assumed": 166.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer23/j0/r17",
+        "i0/verify/layer23/j1/r17",
+        "i0/verify/layer23/j2/r17",
+        "i0/verify/layer23/j3/r17",
+        "i0/verify/layer23/j4/r17",
+        "i0/verify/layer23/j5/r17"
+      ],
+      "end_ns_assumed": 168.0,
+      "eventID": "i0/verify/layer24/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer24/j3/r17",
+      "start_ns_assumed": 167.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer23/j0/r17",
+        "i0/verify/layer23/j1/r17",
+        "i0/verify/layer23/j2/r17",
+        "i0/verify/layer23/j3/r17",
+        "i0/verify/layer23/j4/r17",
+        "i0/verify/layer23/j5/r17"
+      ],
+      "end_ns_assumed": 169.0,
+      "eventID": "i0/verify/layer24/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer24/j4/r17",
+      "start_ns_assumed": 168.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer23/j0/r17",
+        "i0/verify/layer23/j1/r17",
+        "i0/verify/layer23/j2/r17",
+        "i0/verify/layer23/j3/r17",
+        "i0/verify/layer23/j4/r17",
+        "i0/verify/layer23/j5/r17"
+      ],
+      "end_ns_assumed": 170.0,
+      "eventID": "i0/verify/layer24/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer24/j5/r17",
+      "start_ns_assumed": 169.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer24/j0/r17",
+        "i0/verify/layer24/j1/r17",
+        "i0/verify/layer24/j2/r17",
+        "i0/verify/layer24/j3/r17",
+        "i0/verify/layer24/j4/r17",
+        "i0/verify/layer24/j5/r17"
+      ],
+      "end_ns_assumed": 171.0,
+      "eventID": "i0/verify/layer25/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer25/j0/r17",
+      "start_ns_assumed": 170.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer24/j0/r17",
+        "i0/verify/layer24/j1/r17",
+        "i0/verify/layer24/j2/r17",
+        "i0/verify/layer24/j3/r17",
+        "i0/verify/layer24/j4/r17",
+        "i0/verify/layer24/j5/r17"
+      ],
+      "end_ns_assumed": 172.0,
+      "eventID": "i0/verify/layer25/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer25/j1/r17",
+      "start_ns_assumed": 171.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer24/j0/r17",
+        "i0/verify/layer24/j1/r17",
+        "i0/verify/layer24/j2/r17",
+        "i0/verify/layer24/j3/r17",
+        "i0/verify/layer24/j4/r17",
+        "i0/verify/layer24/j5/r17"
+      ],
+      "end_ns_assumed": 173.0,
+      "eventID": "i0/verify/layer25/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer25/j2/r17",
+      "start_ns_assumed": 172.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer24/j0/r17",
+        "i0/verify/layer24/j1/r17",
+        "i0/verify/layer24/j2/r17",
+        "i0/verify/layer24/j3/r17",
+        "i0/verify/layer24/j4/r17",
+        "i0/verify/layer24/j5/r17"
+      ],
+      "end_ns_assumed": 174.0,
+      "eventID": "i0/verify/layer25/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer25/j3/r17",
+      "start_ns_assumed": 173.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer24/j0/r17",
+        "i0/verify/layer24/j1/r17",
+        "i0/verify/layer24/j2/r17",
+        "i0/verify/layer24/j3/r17",
+        "i0/verify/layer24/j4/r17",
+        "i0/verify/layer24/j5/r17"
+      ],
+      "end_ns_assumed": 175.0,
+      "eventID": "i0/verify/layer25/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer25/j4/r17",
+      "start_ns_assumed": 174.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer24/j0/r17",
+        "i0/verify/layer24/j1/r17",
+        "i0/verify/layer24/j2/r17",
+        "i0/verify/layer24/j3/r17",
+        "i0/verify/layer24/j4/r17",
+        "i0/verify/layer24/j5/r17"
+      ],
+      "end_ns_assumed": 176.0,
+      "eventID": "i0/verify/layer25/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer25/j5/r17",
+      "start_ns_assumed": 175.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer25/j0/r17",
+        "i0/verify/layer25/j1/r17",
+        "i0/verify/layer25/j2/r17",
+        "i0/verify/layer25/j3/r17",
+        "i0/verify/layer25/j4/r17",
+        "i0/verify/layer25/j5/r17"
+      ],
+      "end_ns_assumed": 177.0,
+      "eventID": "i0/verify/layer26/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer26/j0/r17",
+      "start_ns_assumed": 176.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer25/j0/r17",
+        "i0/verify/layer25/j1/r17",
+        "i0/verify/layer25/j2/r17",
+        "i0/verify/layer25/j3/r17",
+        "i0/verify/layer25/j4/r17",
+        "i0/verify/layer25/j5/r17"
+      ],
+      "end_ns_assumed": 178.0,
+      "eventID": "i0/verify/layer26/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer26/j1/r17",
+      "start_ns_assumed": 177.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer25/j0/r17",
+        "i0/verify/layer25/j1/r17",
+        "i0/verify/layer25/j2/r17",
+        "i0/verify/layer25/j3/r17",
+        "i0/verify/layer25/j4/r17",
+        "i0/verify/layer25/j5/r17"
+      ],
+      "end_ns_assumed": 179.0,
+      "eventID": "i0/verify/layer26/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer26/j2/r17",
+      "start_ns_assumed": 178.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer25/j0/r17",
+        "i0/verify/layer25/j1/r17",
+        "i0/verify/layer25/j2/r17",
+        "i0/verify/layer25/j3/r17",
+        "i0/verify/layer25/j4/r17",
+        "i0/verify/layer25/j5/r17"
+      ],
+      "end_ns_assumed": 180.0,
+      "eventID": "i0/verify/layer26/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer26/j3/r17",
+      "start_ns_assumed": 179.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer25/j0/r17",
+        "i0/verify/layer25/j1/r17",
+        "i0/verify/layer25/j2/r17",
+        "i0/verify/layer25/j3/r17",
+        "i0/verify/layer25/j4/r17",
+        "i0/verify/layer25/j5/r17"
+      ],
+      "end_ns_assumed": 181.0,
+      "eventID": "i0/verify/layer26/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer26/j4/r17",
+      "start_ns_assumed": 180.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer25/j0/r17",
+        "i0/verify/layer25/j1/r17",
+        "i0/verify/layer25/j2/r17",
+        "i0/verify/layer25/j3/r17",
+        "i0/verify/layer25/j4/r17",
+        "i0/verify/layer25/j5/r17"
+      ],
+      "end_ns_assumed": 182.0,
+      "eventID": "i0/verify/layer26/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer26/j5/r17",
+      "start_ns_assumed": 181.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer26/j0/r17",
+        "i0/verify/layer26/j1/r17",
+        "i0/verify/layer26/j2/r17",
+        "i0/verify/layer26/j3/r17",
+        "i0/verify/layer26/j4/r17",
+        "i0/verify/layer26/j5/r17"
+      ],
+      "end_ns_assumed": 183.0,
+      "eventID": "i0/verify/layer27/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer27/j0/r17",
+      "start_ns_assumed": 182.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer26/j0/r17",
+        "i0/verify/layer26/j1/r17",
+        "i0/verify/layer26/j2/r17",
+        "i0/verify/layer26/j3/r17",
+        "i0/verify/layer26/j4/r17",
+        "i0/verify/layer26/j5/r17"
+      ],
+      "end_ns_assumed": 184.0,
+      "eventID": "i0/verify/layer27/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer27/j1/r17",
+      "start_ns_assumed": 183.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer26/j0/r17",
+        "i0/verify/layer26/j1/r17",
+        "i0/verify/layer26/j2/r17",
+        "i0/verify/layer26/j3/r17",
+        "i0/verify/layer26/j4/r17",
+        "i0/verify/layer26/j5/r17"
+      ],
+      "end_ns_assumed": 185.0,
+      "eventID": "i0/verify/layer27/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer27/j2/r17",
+      "start_ns_assumed": 184.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer26/j0/r17",
+        "i0/verify/layer26/j1/r17",
+        "i0/verify/layer26/j2/r17",
+        "i0/verify/layer26/j3/r17",
+        "i0/verify/layer26/j4/r17",
+        "i0/verify/layer26/j5/r17"
+      ],
+      "end_ns_assumed": 186.0,
+      "eventID": "i0/verify/layer27/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer27/j3/r17",
+      "start_ns_assumed": 185.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer26/j0/r17",
+        "i0/verify/layer26/j1/r17",
+        "i0/verify/layer26/j2/r17",
+        "i0/verify/layer26/j3/r17",
+        "i0/verify/layer26/j4/r17",
+        "i0/verify/layer26/j5/r17"
+      ],
+      "end_ns_assumed": 187.0,
+      "eventID": "i0/verify/layer27/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer27/j4/r17",
+      "start_ns_assumed": 186.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer26/j0/r17",
+        "i0/verify/layer26/j1/r17",
+        "i0/verify/layer26/j2/r17",
+        "i0/verify/layer26/j3/r17",
+        "i0/verify/layer26/j4/r17",
+        "i0/verify/layer26/j5/r17"
+      ],
+      "end_ns_assumed": 188.0,
+      "eventID": "i0/verify/layer27/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer27/j5/r17",
+      "start_ns_assumed": 187.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer27/j0/r17",
+        "i0/verify/layer27/j1/r17",
+        "i0/verify/layer27/j2/r17",
+        "i0/verify/layer27/j3/r17",
+        "i0/verify/layer27/j4/r17",
+        "i0/verify/layer27/j5/r17"
+      ],
+      "end_ns_assumed": 189.0,
+      "eventID": "i0/verify/layer28/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer28/j0/r17",
+      "start_ns_assumed": 188.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer27/j0/r17",
+        "i0/verify/layer27/j1/r17",
+        "i0/verify/layer27/j2/r17",
+        "i0/verify/layer27/j3/r17",
+        "i0/verify/layer27/j4/r17",
+        "i0/verify/layer27/j5/r17"
+      ],
+      "end_ns_assumed": 190.0,
+      "eventID": "i0/verify/layer28/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer28/j1/r17",
+      "start_ns_assumed": 189.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer27/j0/r17",
+        "i0/verify/layer27/j1/r17",
+        "i0/verify/layer27/j2/r17",
+        "i0/verify/layer27/j3/r17",
+        "i0/verify/layer27/j4/r17",
+        "i0/verify/layer27/j5/r17"
+      ],
+      "end_ns_assumed": 191.0,
+      "eventID": "i0/verify/layer28/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer28/j2/r17",
+      "start_ns_assumed": 190.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer27/j0/r17",
+        "i0/verify/layer27/j1/r17",
+        "i0/verify/layer27/j2/r17",
+        "i0/verify/layer27/j3/r17",
+        "i0/verify/layer27/j4/r17",
+        "i0/verify/layer27/j5/r17"
+      ],
+      "end_ns_assumed": 192.0,
+      "eventID": "i0/verify/layer28/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer28/j3/r17",
+      "start_ns_assumed": 191.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer27/j0/r17",
+        "i0/verify/layer27/j1/r17",
+        "i0/verify/layer27/j2/r17",
+        "i0/verify/layer27/j3/r17",
+        "i0/verify/layer27/j4/r17",
+        "i0/verify/layer27/j5/r17"
+      ],
+      "end_ns_assumed": 193.0,
+      "eventID": "i0/verify/layer28/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer28/j4/r17",
+      "start_ns_assumed": 192.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer27/j0/r17",
+        "i0/verify/layer27/j1/r17",
+        "i0/verify/layer27/j2/r17",
+        "i0/verify/layer27/j3/r17",
+        "i0/verify/layer27/j4/r17",
+        "i0/verify/layer27/j5/r17"
+      ],
+      "end_ns_assumed": 194.0,
+      "eventID": "i0/verify/layer28/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer28/j5/r17",
+      "start_ns_assumed": 193.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer28/j0/r17",
+        "i0/verify/layer28/j1/r17",
+        "i0/verify/layer28/j2/r17",
+        "i0/verify/layer28/j3/r17",
+        "i0/verify/layer28/j4/r17",
+        "i0/verify/layer28/j5/r17"
+      ],
+      "end_ns_assumed": 195.0,
+      "eventID": "i0/verify/layer29/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer29/j0/r17",
+      "start_ns_assumed": 194.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer28/j0/r17",
+        "i0/verify/layer28/j1/r17",
+        "i0/verify/layer28/j2/r17",
+        "i0/verify/layer28/j3/r17",
+        "i0/verify/layer28/j4/r17",
+        "i0/verify/layer28/j5/r17"
+      ],
+      "end_ns_assumed": 196.0,
+      "eventID": "i0/verify/layer29/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer29/j1/r17",
+      "start_ns_assumed": 195.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer28/j0/r17",
+        "i0/verify/layer28/j1/r17",
+        "i0/verify/layer28/j2/r17",
+        "i0/verify/layer28/j3/r17",
+        "i0/verify/layer28/j4/r17",
+        "i0/verify/layer28/j5/r17"
+      ],
+      "end_ns_assumed": 197.0,
+      "eventID": "i0/verify/layer29/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer29/j2/r17",
+      "start_ns_assumed": 196.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer28/j0/r17",
+        "i0/verify/layer28/j1/r17",
+        "i0/verify/layer28/j2/r17",
+        "i0/verify/layer28/j3/r17",
+        "i0/verify/layer28/j4/r17",
+        "i0/verify/layer28/j5/r17"
+      ],
+      "end_ns_assumed": 198.0,
+      "eventID": "i0/verify/layer29/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer29/j3/r17",
+      "start_ns_assumed": 197.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer28/j0/r17",
+        "i0/verify/layer28/j1/r17",
+        "i0/verify/layer28/j2/r17",
+        "i0/verify/layer28/j3/r17",
+        "i0/verify/layer28/j4/r17",
+        "i0/verify/layer28/j5/r17"
+      ],
+      "end_ns_assumed": 199.0,
+      "eventID": "i0/verify/layer29/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer29/j4/r17",
+      "start_ns_assumed": 198.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer28/j0/r17",
+        "i0/verify/layer28/j1/r17",
+        "i0/verify/layer28/j2/r17",
+        "i0/verify/layer28/j3/r17",
+        "i0/verify/layer28/j4/r17",
+        "i0/verify/layer28/j5/r17"
+      ],
+      "end_ns_assumed": 200.0,
+      "eventID": "i0/verify/layer29/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer29/j5/r17",
+      "start_ns_assumed": 199.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer29/j0/r17",
+        "i0/verify/layer29/j1/r17",
+        "i0/verify/layer29/j2/r17",
+        "i0/verify/layer29/j3/r17",
+        "i0/verify/layer29/j4/r17",
+        "i0/verify/layer29/j5/r17"
+      ],
+      "end_ns_assumed": 201.0,
+      "eventID": "i0/verify/layer30/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer30/j0/r17",
+      "start_ns_assumed": 200.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer29/j0/r17",
+        "i0/verify/layer29/j1/r17",
+        "i0/verify/layer29/j2/r17",
+        "i0/verify/layer29/j3/r17",
+        "i0/verify/layer29/j4/r17",
+        "i0/verify/layer29/j5/r17"
+      ],
+      "end_ns_assumed": 202.0,
+      "eventID": "i0/verify/layer30/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer30/j1/r17",
+      "start_ns_assumed": 201.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer29/j0/r17",
+        "i0/verify/layer29/j1/r17",
+        "i0/verify/layer29/j2/r17",
+        "i0/verify/layer29/j3/r17",
+        "i0/verify/layer29/j4/r17",
+        "i0/verify/layer29/j5/r17"
+      ],
+      "end_ns_assumed": 203.0,
+      "eventID": "i0/verify/layer30/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer30/j2/r17",
+      "start_ns_assumed": 202.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer29/j0/r17",
+        "i0/verify/layer29/j1/r17",
+        "i0/verify/layer29/j2/r17",
+        "i0/verify/layer29/j3/r17",
+        "i0/verify/layer29/j4/r17",
+        "i0/verify/layer29/j5/r17"
+      ],
+      "end_ns_assumed": 204.0,
+      "eventID": "i0/verify/layer30/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer30/j3/r17",
+      "start_ns_assumed": 203.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer29/j0/r17",
+        "i0/verify/layer29/j1/r17",
+        "i0/verify/layer29/j2/r17",
+        "i0/verify/layer29/j3/r17",
+        "i0/verify/layer29/j4/r17",
+        "i0/verify/layer29/j5/r17"
+      ],
+      "end_ns_assumed": 205.0,
+      "eventID": "i0/verify/layer30/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer30/j4/r17",
+      "start_ns_assumed": 204.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer29/j0/r17",
+        "i0/verify/layer29/j1/r17",
+        "i0/verify/layer29/j2/r17",
+        "i0/verify/layer29/j3/r17",
+        "i0/verify/layer29/j4/r17",
+        "i0/verify/layer29/j5/r17"
+      ],
+      "end_ns_assumed": 206.0,
+      "eventID": "i0/verify/layer30/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer30/j5/r17",
+      "start_ns_assumed": 205.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer30/j0/r17",
+        "i0/verify/layer30/j1/r17",
+        "i0/verify/layer30/j2/r17",
+        "i0/verify/layer30/j3/r17",
+        "i0/verify/layer30/j4/r17",
+        "i0/verify/layer30/j5/r17"
+      ],
+      "end_ns_assumed": 207.0,
+      "eventID": "i0/verify/layer31/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer31/j0/r17",
+      "start_ns_assumed": 206.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer30/j0/r17",
+        "i0/verify/layer30/j1/r17",
+        "i0/verify/layer30/j2/r17",
+        "i0/verify/layer30/j3/r17",
+        "i0/verify/layer30/j4/r17",
+        "i0/verify/layer30/j5/r17"
+      ],
+      "end_ns_assumed": 208.0,
+      "eventID": "i0/verify/layer31/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer31/j1/r17",
+      "start_ns_assumed": 207.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer30/j0/r17",
+        "i0/verify/layer30/j1/r17",
+        "i0/verify/layer30/j2/r17",
+        "i0/verify/layer30/j3/r17",
+        "i0/verify/layer30/j4/r17",
+        "i0/verify/layer30/j5/r17"
+      ],
+      "end_ns_assumed": 209.0,
+      "eventID": "i0/verify/layer31/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer31/j2/r17",
+      "start_ns_assumed": 208.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer30/j0/r17",
+        "i0/verify/layer30/j1/r17",
+        "i0/verify/layer30/j2/r17",
+        "i0/verify/layer30/j3/r17",
+        "i0/verify/layer30/j4/r17",
+        "i0/verify/layer30/j5/r17"
+      ],
+      "end_ns_assumed": 210.0,
+      "eventID": "i0/verify/layer31/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer31/j3/r17",
+      "start_ns_assumed": 209.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer30/j0/r17",
+        "i0/verify/layer30/j1/r17",
+        "i0/verify/layer30/j2/r17",
+        "i0/verify/layer30/j3/r17",
+        "i0/verify/layer30/j4/r17",
+        "i0/verify/layer30/j5/r17"
+      ],
+      "end_ns_assumed": 211.0,
+      "eventID": "i0/verify/layer31/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer31/j4/r17",
+      "start_ns_assumed": 210.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer30/j0/r17",
+        "i0/verify/layer30/j1/r17",
+        "i0/verify/layer30/j2/r17",
+        "i0/verify/layer30/j3/r17",
+        "i0/verify/layer30/j4/r17",
+        "i0/verify/layer30/j5/r17"
+      ],
+      "end_ns_assumed": 212.0,
+      "eventID": "i0/verify/layer31/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer31/j5/r17",
+      "start_ns_assumed": 211.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer31/j0/r17",
+        "i0/verify/layer31/j1/r17",
+        "i0/verify/layer31/j2/r17",
+        "i0/verify/layer31/j3/r17",
+        "i0/verify/layer31/j4/r17",
+        "i0/verify/layer31/j5/r17"
+      ],
+      "end_ns_assumed": 213.0,
+      "eventID": "i0/verify/layer32/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer32/j0/r17",
+      "start_ns_assumed": 212.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer31/j0/r17",
+        "i0/verify/layer31/j1/r17",
+        "i0/verify/layer31/j2/r17",
+        "i0/verify/layer31/j3/r17",
+        "i0/verify/layer31/j4/r17",
+        "i0/verify/layer31/j5/r17"
+      ],
+      "end_ns_assumed": 214.0,
+      "eventID": "i0/verify/layer32/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer32/j1/r17",
+      "start_ns_assumed": 213.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer31/j0/r17",
+        "i0/verify/layer31/j1/r17",
+        "i0/verify/layer31/j2/r17",
+        "i0/verify/layer31/j3/r17",
+        "i0/verify/layer31/j4/r17",
+        "i0/verify/layer31/j5/r17"
+      ],
+      "end_ns_assumed": 215.0,
+      "eventID": "i0/verify/layer32/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer32/j2/r17",
+      "start_ns_assumed": 214.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer31/j0/r17",
+        "i0/verify/layer31/j1/r17",
+        "i0/verify/layer31/j2/r17",
+        "i0/verify/layer31/j3/r17",
+        "i0/verify/layer31/j4/r17",
+        "i0/verify/layer31/j5/r17"
+      ],
+      "end_ns_assumed": 216.0,
+      "eventID": "i0/verify/layer32/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer32/j3/r17",
+      "start_ns_assumed": 215.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer31/j0/r17",
+        "i0/verify/layer31/j1/r17",
+        "i0/verify/layer31/j2/r17",
+        "i0/verify/layer31/j3/r17",
+        "i0/verify/layer31/j4/r17",
+        "i0/verify/layer31/j5/r17"
+      ],
+      "end_ns_assumed": 217.0,
+      "eventID": "i0/verify/layer32/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer32/j4/r17",
+      "start_ns_assumed": 216.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer31/j0/r17",
+        "i0/verify/layer31/j1/r17",
+        "i0/verify/layer31/j2/r17",
+        "i0/verify/layer31/j3/r17",
+        "i0/verify/layer31/j4/r17",
+        "i0/verify/layer31/j5/r17"
+      ],
+      "end_ns_assumed": 218.0,
+      "eventID": "i0/verify/layer32/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer32/j5/r17",
+      "start_ns_assumed": 217.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer32/j0/r17",
+        "i0/verify/layer32/j1/r17",
+        "i0/verify/layer32/j2/r17",
+        "i0/verify/layer32/j3/r17",
+        "i0/verify/layer32/j4/r17",
+        "i0/verify/layer32/j5/r17"
+      ],
+      "end_ns_assumed": 219.0,
+      "eventID": "i0/verify/layer33/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer33/j0/r17",
+      "start_ns_assumed": 218.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer32/j0/r17",
+        "i0/verify/layer32/j1/r17",
+        "i0/verify/layer32/j2/r17",
+        "i0/verify/layer32/j3/r17",
+        "i0/verify/layer32/j4/r17",
+        "i0/verify/layer32/j5/r17"
+      ],
+      "end_ns_assumed": 220.0,
+      "eventID": "i0/verify/layer33/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer33/j1/r17",
+      "start_ns_assumed": 219.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer32/j0/r17",
+        "i0/verify/layer32/j1/r17",
+        "i0/verify/layer32/j2/r17",
+        "i0/verify/layer32/j3/r17",
+        "i0/verify/layer32/j4/r17",
+        "i0/verify/layer32/j5/r17"
+      ],
+      "end_ns_assumed": 221.0,
+      "eventID": "i0/verify/layer33/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer33/j2/r17",
+      "start_ns_assumed": 220.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer32/j0/r17",
+        "i0/verify/layer32/j1/r17",
+        "i0/verify/layer32/j2/r17",
+        "i0/verify/layer32/j3/r17",
+        "i0/verify/layer32/j4/r17",
+        "i0/verify/layer32/j5/r17"
+      ],
+      "end_ns_assumed": 222.0,
+      "eventID": "i0/verify/layer33/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer33/j3/r17",
+      "start_ns_assumed": 221.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer32/j0/r17",
+        "i0/verify/layer32/j1/r17",
+        "i0/verify/layer32/j2/r17",
+        "i0/verify/layer32/j3/r17",
+        "i0/verify/layer32/j4/r17",
+        "i0/verify/layer32/j5/r17"
+      ],
+      "end_ns_assumed": 223.0,
+      "eventID": "i0/verify/layer33/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer33/j4/r17",
+      "start_ns_assumed": 222.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer32/j0/r17",
+        "i0/verify/layer32/j1/r17",
+        "i0/verify/layer32/j2/r17",
+        "i0/verify/layer32/j3/r17",
+        "i0/verify/layer32/j4/r17",
+        "i0/verify/layer32/j5/r17"
+      ],
+      "end_ns_assumed": 224.0,
+      "eventID": "i0/verify/layer33/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer33/j5/r17",
+      "start_ns_assumed": 223.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer33/j0/r17",
+        "i0/verify/layer33/j1/r17",
+        "i0/verify/layer33/j2/r17",
+        "i0/verify/layer33/j3/r17",
+        "i0/verify/layer33/j4/r17",
+        "i0/verify/layer33/j5/r17"
+      ],
+      "end_ns_assumed": 225.0,
+      "eventID": "i0/verify/layer34/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer34/j0/r17",
+      "start_ns_assumed": 224.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer33/j0/r17",
+        "i0/verify/layer33/j1/r17",
+        "i0/verify/layer33/j2/r17",
+        "i0/verify/layer33/j3/r17",
+        "i0/verify/layer33/j4/r17",
+        "i0/verify/layer33/j5/r17"
+      ],
+      "end_ns_assumed": 226.0,
+      "eventID": "i0/verify/layer34/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer34/j1/r17",
+      "start_ns_assumed": 225.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer33/j0/r17",
+        "i0/verify/layer33/j1/r17",
+        "i0/verify/layer33/j2/r17",
+        "i0/verify/layer33/j3/r17",
+        "i0/verify/layer33/j4/r17",
+        "i0/verify/layer33/j5/r17"
+      ],
+      "end_ns_assumed": 227.0,
+      "eventID": "i0/verify/layer34/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer34/j2/r17",
+      "start_ns_assumed": 226.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer33/j0/r17",
+        "i0/verify/layer33/j1/r17",
+        "i0/verify/layer33/j2/r17",
+        "i0/verify/layer33/j3/r17",
+        "i0/verify/layer33/j4/r17",
+        "i0/verify/layer33/j5/r17"
+      ],
+      "end_ns_assumed": 228.0,
+      "eventID": "i0/verify/layer34/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer34/j3/r17",
+      "start_ns_assumed": 227.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer33/j0/r17",
+        "i0/verify/layer33/j1/r17",
+        "i0/verify/layer33/j2/r17",
+        "i0/verify/layer33/j3/r17",
+        "i0/verify/layer33/j4/r17",
+        "i0/verify/layer33/j5/r17"
+      ],
+      "end_ns_assumed": 229.0,
+      "eventID": "i0/verify/layer34/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer34/j4/r17",
+      "start_ns_assumed": 228.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer33/j0/r17",
+        "i0/verify/layer33/j1/r17",
+        "i0/verify/layer33/j2/r17",
+        "i0/verify/layer33/j3/r17",
+        "i0/verify/layer33/j4/r17",
+        "i0/verify/layer33/j5/r17"
+      ],
+      "end_ns_assumed": 230.0,
+      "eventID": "i0/verify/layer34/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer34/j5/r17",
+      "start_ns_assumed": 229.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer34/j0/r17",
+        "i0/verify/layer34/j1/r17",
+        "i0/verify/layer34/j2/r17",
+        "i0/verify/layer34/j3/r17",
+        "i0/verify/layer34/j4/r17",
+        "i0/verify/layer34/j5/r17"
+      ],
+      "end_ns_assumed": 231.0,
+      "eventID": "i0/verify/layer35/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer35/j0/r17",
+      "start_ns_assumed": 230.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer34/j0/r17",
+        "i0/verify/layer34/j1/r17",
+        "i0/verify/layer34/j2/r17",
+        "i0/verify/layer34/j3/r17",
+        "i0/verify/layer34/j4/r17",
+        "i0/verify/layer34/j5/r17"
+      ],
+      "end_ns_assumed": 232.0,
+      "eventID": "i0/verify/layer35/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer35/j1/r17",
+      "start_ns_assumed": 231.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer34/j0/r17",
+        "i0/verify/layer34/j1/r17",
+        "i0/verify/layer34/j2/r17",
+        "i0/verify/layer34/j3/r17",
+        "i0/verify/layer34/j4/r17",
+        "i0/verify/layer34/j5/r17"
+      ],
+      "end_ns_assumed": 233.0,
+      "eventID": "i0/verify/layer35/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer35/j2/r17",
+      "start_ns_assumed": 232.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer34/j0/r17",
+        "i0/verify/layer34/j1/r17",
+        "i0/verify/layer34/j2/r17",
+        "i0/verify/layer34/j3/r17",
+        "i0/verify/layer34/j4/r17",
+        "i0/verify/layer34/j5/r17"
+      ],
+      "end_ns_assumed": 234.0,
+      "eventID": "i0/verify/layer35/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer35/j3/r17",
+      "start_ns_assumed": 233.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer34/j0/r17",
+        "i0/verify/layer34/j1/r17",
+        "i0/verify/layer34/j2/r17",
+        "i0/verify/layer34/j3/r17",
+        "i0/verify/layer34/j4/r17",
+        "i0/verify/layer34/j5/r17"
+      ],
+      "end_ns_assumed": 235.0,
+      "eventID": "i0/verify/layer35/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer35/j4/r17",
+      "start_ns_assumed": 234.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer34/j0/r17",
+        "i0/verify/layer34/j1/r17",
+        "i0/verify/layer34/j2/r17",
+        "i0/verify/layer34/j3/r17",
+        "i0/verify/layer34/j4/r17",
+        "i0/verify/layer34/j5/r17"
+      ],
+      "end_ns_assumed": 236.0,
+      "eventID": "i0/verify/layer35/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer35/j5/r17",
+      "start_ns_assumed": 235.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer35/j0/r17",
+        "i0/verify/layer35/j1/r17",
+        "i0/verify/layer35/j2/r17",
+        "i0/verify/layer35/j3/r17",
+        "i0/verify/layer35/j4/r17",
+        "i0/verify/layer35/j5/r17"
+      ],
+      "end_ns_assumed": 237.0,
+      "eventID": "i0/verify/layer36/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer36/j0/r17",
+      "start_ns_assumed": 236.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer35/j0/r17",
+        "i0/verify/layer35/j1/r17",
+        "i0/verify/layer35/j2/r17",
+        "i0/verify/layer35/j3/r17",
+        "i0/verify/layer35/j4/r17",
+        "i0/verify/layer35/j5/r17"
+      ],
+      "end_ns_assumed": 238.0,
+      "eventID": "i0/verify/layer36/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer36/j1/r17",
+      "start_ns_assumed": 237.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer35/j0/r17",
+        "i0/verify/layer35/j1/r17",
+        "i0/verify/layer35/j2/r17",
+        "i0/verify/layer35/j3/r17",
+        "i0/verify/layer35/j4/r17",
+        "i0/verify/layer35/j5/r17"
+      ],
+      "end_ns_assumed": 239.0,
+      "eventID": "i0/verify/layer36/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer36/j2/r17",
+      "start_ns_assumed": 238.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer35/j0/r17",
+        "i0/verify/layer35/j1/r17",
+        "i0/verify/layer35/j2/r17",
+        "i0/verify/layer35/j3/r17",
+        "i0/verify/layer35/j4/r17",
+        "i0/verify/layer35/j5/r17"
+      ],
+      "end_ns_assumed": 240.0,
+      "eventID": "i0/verify/layer36/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer36/j3/r17",
+      "start_ns_assumed": 239.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer35/j0/r17",
+        "i0/verify/layer35/j1/r17",
+        "i0/verify/layer35/j2/r17",
+        "i0/verify/layer35/j3/r17",
+        "i0/verify/layer35/j4/r17",
+        "i0/verify/layer35/j5/r17"
+      ],
+      "end_ns_assumed": 241.0,
+      "eventID": "i0/verify/layer36/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer36/j4/r17",
+      "start_ns_assumed": 240.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer35/j0/r17",
+        "i0/verify/layer35/j1/r17",
+        "i0/verify/layer35/j2/r17",
+        "i0/verify/layer35/j3/r17",
+        "i0/verify/layer35/j4/r17",
+        "i0/verify/layer35/j5/r17"
+      ],
+      "end_ns_assumed": 242.0,
+      "eventID": "i0/verify/layer36/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer36/j5/r17",
+      "start_ns_assumed": 241.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer36/j0/r17",
+        "i0/verify/layer36/j1/r17",
+        "i0/verify/layer36/j2/r17",
+        "i0/verify/layer36/j3/r17",
+        "i0/verify/layer36/j4/r17",
+        "i0/verify/layer36/j5/r17"
+      ],
+      "end_ns_assumed": 243.0,
+      "eventID": "i0/verify/layer37/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer37/j0/r17",
+      "start_ns_assumed": 242.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer36/j0/r17",
+        "i0/verify/layer36/j1/r17",
+        "i0/verify/layer36/j2/r17",
+        "i0/verify/layer36/j3/r17",
+        "i0/verify/layer36/j4/r17",
+        "i0/verify/layer36/j5/r17"
+      ],
+      "end_ns_assumed": 244.0,
+      "eventID": "i0/verify/layer37/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer37/j1/r17",
+      "start_ns_assumed": 243.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer36/j0/r17",
+        "i0/verify/layer36/j1/r17",
+        "i0/verify/layer36/j2/r17",
+        "i0/verify/layer36/j3/r17",
+        "i0/verify/layer36/j4/r17",
+        "i0/verify/layer36/j5/r17"
+      ],
+      "end_ns_assumed": 245.0,
+      "eventID": "i0/verify/layer37/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer37/j2/r17",
+      "start_ns_assumed": 244.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer36/j0/r17",
+        "i0/verify/layer36/j1/r17",
+        "i0/verify/layer36/j2/r17",
+        "i0/verify/layer36/j3/r17",
+        "i0/verify/layer36/j4/r17",
+        "i0/verify/layer36/j5/r17"
+      ],
+      "end_ns_assumed": 246.0,
+      "eventID": "i0/verify/layer37/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer37/j3/r17",
+      "start_ns_assumed": 245.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer36/j0/r17",
+        "i0/verify/layer36/j1/r17",
+        "i0/verify/layer36/j2/r17",
+        "i0/verify/layer36/j3/r17",
+        "i0/verify/layer36/j4/r17",
+        "i0/verify/layer36/j5/r17"
+      ],
+      "end_ns_assumed": 247.0,
+      "eventID": "i0/verify/layer37/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer37/j4/r17",
+      "start_ns_assumed": 246.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer36/j0/r17",
+        "i0/verify/layer36/j1/r17",
+        "i0/verify/layer36/j2/r17",
+        "i0/verify/layer36/j3/r17",
+        "i0/verify/layer36/j4/r17",
+        "i0/verify/layer36/j5/r17"
+      ],
+      "end_ns_assumed": 248.0,
+      "eventID": "i0/verify/layer37/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer37/j5/r17",
+      "start_ns_assumed": 247.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer37/j0/r17",
+        "i0/verify/layer37/j1/r17",
+        "i0/verify/layer37/j2/r17",
+        "i0/verify/layer37/j3/r17",
+        "i0/verify/layer37/j4/r17",
+        "i0/verify/layer37/j5/r17"
+      ],
+      "end_ns_assumed": 249.0,
+      "eventID": "i0/verify/layer38/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer38/j0/r17",
+      "start_ns_assumed": 248.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer37/j0/r17",
+        "i0/verify/layer37/j1/r17",
+        "i0/verify/layer37/j2/r17",
+        "i0/verify/layer37/j3/r17",
+        "i0/verify/layer37/j4/r17",
+        "i0/verify/layer37/j5/r17"
+      ],
+      "end_ns_assumed": 250.0,
+      "eventID": "i0/verify/layer38/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer38/j1/r17",
+      "start_ns_assumed": 249.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer37/j0/r17",
+        "i0/verify/layer37/j1/r17",
+        "i0/verify/layer37/j2/r17",
+        "i0/verify/layer37/j3/r17",
+        "i0/verify/layer37/j4/r17",
+        "i0/verify/layer37/j5/r17"
+      ],
+      "end_ns_assumed": 251.0,
+      "eventID": "i0/verify/layer38/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer38/j2/r17",
+      "start_ns_assumed": 250.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer37/j0/r17",
+        "i0/verify/layer37/j1/r17",
+        "i0/verify/layer37/j2/r17",
+        "i0/verify/layer37/j3/r17",
+        "i0/verify/layer37/j4/r17",
+        "i0/verify/layer37/j5/r17"
+      ],
+      "end_ns_assumed": 252.0,
+      "eventID": "i0/verify/layer38/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer38/j3/r17",
+      "start_ns_assumed": 251.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer37/j0/r17",
+        "i0/verify/layer37/j1/r17",
+        "i0/verify/layer37/j2/r17",
+        "i0/verify/layer37/j3/r17",
+        "i0/verify/layer37/j4/r17",
+        "i0/verify/layer37/j5/r17"
+      ],
+      "end_ns_assumed": 253.0,
+      "eventID": "i0/verify/layer38/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer38/j4/r17",
+      "start_ns_assumed": 252.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer37/j0/r17",
+        "i0/verify/layer37/j1/r17",
+        "i0/verify/layer37/j2/r17",
+        "i0/verify/layer37/j3/r17",
+        "i0/verify/layer37/j4/r17",
+        "i0/verify/layer37/j5/r17"
+      ],
+      "end_ns_assumed": 254.0,
+      "eventID": "i0/verify/layer38/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer38/j5/r17",
+      "start_ns_assumed": 253.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer38/j0/r17",
+        "i0/verify/layer38/j1/r17",
+        "i0/verify/layer38/j2/r17",
+        "i0/verify/layer38/j3/r17",
+        "i0/verify/layer38/j4/r17",
+        "i0/verify/layer38/j5/r17"
+      ],
+      "end_ns_assumed": 255.0,
+      "eventID": "i0/verify/layer39/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer39/j0/r17",
+      "start_ns_assumed": 254.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer38/j0/r17",
+        "i0/verify/layer38/j1/r17",
+        "i0/verify/layer38/j2/r17",
+        "i0/verify/layer38/j3/r17",
+        "i0/verify/layer38/j4/r17",
+        "i0/verify/layer38/j5/r17"
+      ],
+      "end_ns_assumed": 256.0,
+      "eventID": "i0/verify/layer39/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer39/j1/r17",
+      "start_ns_assumed": 255.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer38/j0/r17",
+        "i0/verify/layer38/j1/r17",
+        "i0/verify/layer38/j2/r17",
+        "i0/verify/layer38/j3/r17",
+        "i0/verify/layer38/j4/r17",
+        "i0/verify/layer38/j5/r17"
+      ],
+      "end_ns_assumed": 257.0,
+      "eventID": "i0/verify/layer39/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer39/j2/r17",
+      "start_ns_assumed": 256.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer38/j0/r17",
+        "i0/verify/layer38/j1/r17",
+        "i0/verify/layer38/j2/r17",
+        "i0/verify/layer38/j3/r17",
+        "i0/verify/layer38/j4/r17",
+        "i0/verify/layer38/j5/r17"
+      ],
+      "end_ns_assumed": 258.0,
+      "eventID": "i0/verify/layer39/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer39/j3/r17",
+      "start_ns_assumed": 257.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer38/j0/r17",
+        "i0/verify/layer38/j1/r17",
+        "i0/verify/layer38/j2/r17",
+        "i0/verify/layer38/j3/r17",
+        "i0/verify/layer38/j4/r17",
+        "i0/verify/layer38/j5/r17"
+      ],
+      "end_ns_assumed": 259.0,
+      "eventID": "i0/verify/layer39/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer39/j4/r17",
+      "start_ns_assumed": 258.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer38/j0/r17",
+        "i0/verify/layer38/j1/r17",
+        "i0/verify/layer38/j2/r17",
+        "i0/verify/layer38/j3/r17",
+        "i0/verify/layer38/j4/r17",
+        "i0/verify/layer38/j5/r17"
+      ],
+      "end_ns_assumed": 260.0,
+      "eventID": "i0/verify/layer39/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify/layer39/j5/r17",
+      "start_ns_assumed": 259.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer39/j0/r17",
+        "i0/verify/layer39/j1/r17",
+        "i0/verify/layer39/j2/r17",
+        "i0/verify/layer39/j3/r17",
+        "i0/verify/layer39/j4/r17",
+        "i0/verify/layer39/j5/r17"
+      ],
+      "end_ns_assumed": 261.0,
+      "eventID": "i0/verify_head_seed/head_seed/j0/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify_head_seed/head_seed/j0/r17",
+      "start_ns_assumed": 260.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer39/j0/r17",
+        "i0/verify/layer39/j1/r17",
+        "i0/verify/layer39/j2/r17",
+        "i0/verify/layer39/j3/r17",
+        "i0/verify/layer39/j4/r17",
+        "i0/verify/layer39/j5/r17"
+      ],
+      "end_ns_assumed": 262.0,
+      "eventID": "i0/verify_head_seed/head_seed/j1/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify_head_seed/head_seed/j1/r17",
+      "start_ns_assumed": 261.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer39/j0/r17",
+        "i0/verify/layer39/j1/r17",
+        "i0/verify/layer39/j2/r17",
+        "i0/verify/layer39/j3/r17",
+        "i0/verify/layer39/j4/r17",
+        "i0/verify/layer39/j5/r17"
+      ],
+      "end_ns_assumed": 263.0,
+      "eventID": "i0/verify_head_seed/head_seed/j2/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify_head_seed/head_seed/j2/r17",
+      "start_ns_assumed": 262.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer39/j0/r17",
+        "i0/verify/layer39/j1/r17",
+        "i0/verify/layer39/j2/r17",
+        "i0/verify/layer39/j3/r17",
+        "i0/verify/layer39/j4/r17",
+        "i0/verify/layer39/j5/r17"
+      ],
+      "end_ns_assumed": 264.0,
+      "eventID": "i0/verify_head_seed/head_seed/j3/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify_head_seed/head_seed/j3/r17",
+      "start_ns_assumed": 263.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer39/j0/r17",
+        "i0/verify/layer39/j1/r17",
+        "i0/verify/layer39/j2/r17",
+        "i0/verify/layer39/j3/r17",
+        "i0/verify/layer39/j4/r17",
+        "i0/verify/layer39/j5/r17"
+      ],
+      "end_ns_assumed": 265.0,
+      "eventID": "i0/verify_head_seed/head_seed/j4/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify_head_seed/head_seed/j4/r17",
+      "start_ns_assumed": 264.0
+    },
+    {
+      "SM": 3,
+      "clock_source": "positive protocol test; not sourceSS clock",
+      "dependencies": [
+        "i0/verify/layer39/j0/r17",
+        "i0/verify/layer39/j1/r17",
+        "i0/verify/layer39/j2/r17",
+        "i0/verify/layer39/j3/r17",
+        "i0/verify/layer39/j4/r17",
+        "i0/verify/layer39/j5/r17"
+      ],
+      "end_ns_assumed": 266.0,
+      "eventID": "i0/verify_head_seed/head_seed/j5/r17",
+      "resource": "one selected invocation slot perSM",
+      "source_receipt": "protocol-i0/verify_head_seed/head_seed/j5/r17",
+      "start_ns_assumed": 265.0
+    }
+  ],
+  "full_iteration_ns": null,
+  "physical_latency_qualified": false,
+  "primitive_resource_occupancy_joined": false,
+  "selected_invocation_span_ns_assumed": 266.0
+}

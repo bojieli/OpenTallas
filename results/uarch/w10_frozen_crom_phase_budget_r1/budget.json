@@ -1,0 +1,297 @@
+{
+  "actual_power_qualified": false,
+  "catalog_reencoded_for_frozen_padded_layout": false,
+  "catalog_scope": "bc1 historical catalog structure dimensions only; current padded bank/base/validity lowering not qualified.",
+  "complete_phase_budget": false,
+  "consumer_operand_bases_encoded": false,
+  "headline_rate": null,
+  "image_valid": false,
+  "local_fit": {
+    "actual_macro_and_SU_coordinates_bound": false,
+    "actual_route_fit": false,
+    "actual_track_capacity": null,
+    "exclusive_route_tracks_required": 1152,
+    "existing_SU_occupied_area_credit_mm2": 0,
+    "macro_cell_area_only_not_placement": true,
+    "placement_verdict": "REJECT_UNRESERVED_SU_DISPLACEMENT",
+    "retained_SU_region_area_mm2": "12.80498927616",
+    "track_recipe": "1024payload +64forward +64reverse distinct control; no optional initializer3008-track corridor reuse"
+  },
+  "local_route_cycles_each_direction": 11,
+  "missing": [
+    "L1 words508800..529279 and complete immutable image publication/consumer encoded bases",
+    "actual localhome/replica/placement and nonoverlap with retained SU",
+    "descriptor decoders/arbiters/enables/fanout/reset/CRC/image-valid-state and actualCDC",
+    "whole resident phase simultaneity, payload/disabledMUX raw pin trace, source load/RC",
+    "complete synchronousbranch localidle predicates/endpointcompare/serializer and drain bindings",
+    "fullallport CTS/PG/contextualSSFF/packageIR"
+  ],
+  "phase_composition": {
+    "actual_1p2_to_0p9_CDC": null,
+    "actual_data_trace": null,
+    "actual_resident_home_count_and_intervals": null,
+    "adaptive_clock_gate_credit": 0,
+    "full_E32_identity_setup_and_drain_complete": false,
+    "full_engram_sync_control_complete": false,
+    "historical_power_subtraction_W": 0,
+    "mandatory_macro_CLK_energy_retained": true,
+    "root_stop_credit": 0,
+    "whole_point_power_W": null,
+    "whole_point_power_margin_W": null
+  },
+  "phase_service_floors_fast_cycles": {
+    "all_words": 34360,
+    "gamma_all": 25920,
+    "single_gamma_home": 320
+  },
+  "physical_admission": false,
+  "rows": [
+    {
+      "actual_provider": false,
+      "credits": 2,
+      "explicit_select_MUX2_bits": 334040,
+      "macro_count_including_catalog": 61,
+      "phase_allocations": [
+        {
+          "clock_exposure_allocation_J_at_floor": "0.0002050974163108400506240000000",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.0007312353828641584913279999999",
+          "leakage_allocation_J_at_floor": "0.000001802812868368806400000000000",
+          "minimum_service_interval_seconds": "0.00002863333333333333333333333333",
+          "phase": "all_words",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.003619621438332641280000000000",
+          "service_floor_fast_cycles": 34360
+        },
+        {
+          "clock_exposure_allocation_J_at_floor": "0.0001547184234801214817280",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.0005516187754318681052160",
+          "leakage_allocation_J_at_floor": "0.00000135997990535854080",
+          "minimum_service_interval_seconds": "0.00002160",
+          "phase": "gamma_all",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.002730517685727068160",
+          "service_floor_fast_cycles": 25920
+        },
+        {
+          "clock_exposure_allocation_J_at_floor": "0.000001910103993581746688000000000",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.000006810108338665038336000000001",
+          "leakage_allocation_J_at_floor": "1.678987537479680000000000000E-8",
+          "minimum_service_interval_seconds": "2.666666666666666666666666667E-7",
+          "phase": "single_gamma_home",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.00003371009488551936000000000000",
+          "service_floor_fast_cycles": 320
+        }
+      ],
+      "recomputed_declared_reservation": {
+        "FF_bits": 500588,
+        "additional_clock_buffers": 20896,
+        "all_state_leakage_upper_W": "0.062962032655488",
+        "clock_leak_data_pin_subtotal_W": "32.76375827858093184",
+        "conditional_cell_plus_macro_area_mm2": "1.45414434816",
+        "data_input_pin_upper_W": "5.35192336479869376",
+        "data_internal_upper_W": "20.1859829051952",
+        "explicit_MUX2_bits": 334040,
+        "macros": 61,
+        "total_NAND2_cells": 3338512,
+        "ungated_clock_W": "7.16288997593155008",
+        "unresolved_output_load_ceiling_W": "126.4128558206976",
+        "write_enable_NAND2_cells_included": 2002352
+      },
+      "storage_FF_by_role": {
+        "RX_fullpacket": 1344,
+        "TX_fullpacket": 1344,
+        "catalog_raw_capture": 4384,
+        "credit_valid_return": 6,
+        "forward_control_route": 704,
+        "payload_route": 11264,
+        "reverse_control_route_and_ACK_serialization": 768,
+        "tag_valid_epoch": 5372,
+        "two_operand_gamma_capture_landing": 475402
+      },
+      "total_FF_bits": 500588
+    },
+    {
+      "actual_provider": false,
+      "credits": 4,
+      "explicit_select_MUX2_bits": 334040,
+      "macro_count_including_catalog": 61,
+      "phase_allocations": [
+        {
+          "clock_exposure_allocation_J_at_floor": "0.0002061045487768335922560000000",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.0007336811092990565755919999999",
+          "leakage_allocation_J_at_floor": "0.000001810968306491516933333333333",
+          "minimum_service_interval_seconds": "0.00002863333333333333333333333333",
+          "phase": "all_words",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.003632266317150535680000000000",
+          "service_floor_fast_cycles": 34360
+        },
+        {
+          "clock_exposure_allocation_J_at_floor": "0.0001554781695080188216320",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.0005534637471778680570240",
+          "leakage_allocation_J_at_floor": "0.00000136613208685273920",
+          "minimum_service_interval_seconds": "0.00002160",
+          "phase": "gamma_all",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.002740056546581544960",
+          "service_floor_fast_cycles": 25920
+        },
+        {
+          "clock_exposure_allocation_J_at_floor": "0.000001919483574173071872000000000",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.000006832885767628000704000000001",
+          "leakage_allocation_J_at_floor": "1.686582823274986666666666667E-8",
+          "minimum_service_interval_seconds": "2.666666666666666666666666667E-7",
+          "phase": "single_gamma_home",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.00003382785859977216000000000000",
+          "service_floor_fast_cycles": 320
+        }
+      ],
+      "recomputed_declared_reservation": {
+        "FF_bits": 503282,
+        "additional_clock_buffers": 21008,
+        "all_state_leakage_upper_W": "0.063246855872812",
+        "clock_leak_data_pin_subtotal_W": "32.88463188762683416",
+        "conditional_cell_plus_macro_area_mm2": "1.45812445488",
+        "data_input_pin_upper_W": "5.36967522694020264",
+        "data_internal_upper_W": "20.2536464016648",
+        "explicit_MUX2_bits": 334040,
+        "macros": 61,
+        "total_NAND2_cells": 3349288,
+        "ungated_clock_W": "7.19806340314901952",
+        "unresolved_output_load_ceiling_W": "126.8544697491456",
+        "write_enable_NAND2_cells_included": 2013128
+      },
+      "storage_FF_by_role": {
+        "RX_fullpacket": 2688,
+        "TX_fullpacket": 2688,
+        "catalog_raw_capture": 4384,
+        "credit_valid_return": 12,
+        "forward_control_route": 704,
+        "payload_route": 11264,
+        "reverse_control_route_and_ACK_serialization": 768,
+        "tag_valid_epoch": 5372,
+        "two_operand_gamma_capture_landing": 475402
+      },
+      "total_FF_bits": 503282
+    },
+    {
+      "actual_provider": false,
+      "credits": 128,
+      "explicit_select_MUX2_bits": 334040,
+      "macro_count_including_catalog": 61,
+      "phase_allocations": [
+        {
+          "clock_exposure_allocation_J_at_floor": "0.0002685568745180316214880000000",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.0008852126542710605981759999999",
+          "leakage_allocation_J_at_floor": "0.000002316273748898638466666666666",
+          "minimum_service_interval_seconds": "0.00002863333333333333333333333333",
+          "phase": "all_words",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.004415713719901102079999999999",
+          "service_floor_fast_cycles": 34360
+        },
+        {
+          "clock_exposure_allocation_J_at_floor": "0.0002025900520229155887360",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.0006677739231288093918720",
+          "leakage_allocation_J_at_floor": "0.00000174731710044972960",
+          "minimum_service_interval_seconds": "0.00002160",
+          "phase": "gamma_all",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.003331062270658805760",
+          "service_floor_fast_cycles": 25920
+        },
+        {
+          "clock_exposure_allocation_J_at_floor": "0.000002501111753369328256000000000",
+          "full_activity_data_internal_pin_allocation_J_at_floor": "0.000008244122507763078912000000001",
+          "leakage_allocation_J_at_floor": "2.157181605493493333333333334E-8",
+          "minimum_service_interval_seconds": "2.666666666666666666666666667E-7",
+          "phase": "single_gamma_home",
+          "scope": "Declared inventory alpha1 envelope over service floor ONLY; not elapsed execution energy or actual data trace. Stalls/CDC/setup/drain extend exposure; no averaging or inactive-cone credit.",
+          "separate_output_load_ceiling_allocation_J_at_floor": "0.00004112422556368896000000000001",
+          "service_floor_fast_cycles": 320
+        }
+      ],
+      "recomputed_declared_reservation": {
+        "FF_bits": 670196,
+        "additional_clock_buffers": 27963,
+        "all_state_leakage_upper_W": "0.080894310206006",
+        "clock_leak_data_pin_subtotal_W": "40.37552278945253288",
+        "conditional_cell_plus_macro_area_mm2": "1.70472999168",
+        "data_input_pin_upper_W": "6.46953948732914592",
+        "data_internal_upper_W": "24.4459199167824",
+        "explicit_MUX2_bits": 334040,
+        "macros": 61,
+        "total_NAND2_cells": 4016944,
+        "ungated_clock_W": "9.37916907513498096",
+        "unresolved_output_load_ceiling_W": "154.2158458638336",
+        "write_enable_NAND2_cells_included": 2680784
+      },
+      "storage_FF_by_role": {
+        "RX_fullpacket": 86016,
+        "TX_fullpacket": 86016,
+        "catalog_raw_capture": 4384,
+        "credit_valid_return": 270,
+        "forward_control_route": 704,
+        "payload_route": 11264,
+        "reverse_control_route_and_ACK_serialization": 768,
+        "tag_valid_epoch": 5372,
+        "two_operand_gamma_capture_landing": 475402
+      },
+      "total_FF_bits": 670196
+    }
+  ],
+  "schema": "w10_frozen_crom_local_phase_budget_v1",
+  "selected_FP32_ports_per_fast_cycle": 16,
+  "source_invalid_hole": [
+    508800,
+    529280
+  ],
+  "source_logical_words": 549760,
+  "source_padded_words": 552960,
+  "source_pins": {
+    "area": {
+      "commit": "6da3c7a60",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
+      "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "base": {
+      "commit": "cda48d1f7",
+      "path": "results/uarch/w10_crom_staging_correction_r1/budget.json",
+      "sha256": "c6f54e5ff64feff70150a3e7d2dd64da0042adaabe3437d873666669b7db9a80"
+    },
+    "calendar": {
+      "commit": "bc1ec8b8f",
+      "path": "results/quality/w16_w17_crom_finite_prefetch_20261001/calendar.json",
+      "sha256": "0912eac48cc9a017e44b96b1c81f482cbf27c9a773100241fe26dcaa8c5c0899"
+    },
+    "clock": {
+      "commit": "fea811df4",
+      "path": "results/uarch/w10_q_existing_icg_r1/clock.json",
+      "sha256": "19291d798b14a4f920e6da2d8c310727b5afb6b19efc36df3f850b3a84728b1f"
+    },
+    "controls": {
+      "commit": "ebef36895",
+      "path": "results/uarch/w10_crom_control_reservation_r1/budget.json",
+      "sha256": "0937b1fc7e3664652c701ccddcc3fe3a62f1ef3030e6a88a6da586986b4ef55b"
+    },
+    "frozen": {
+      "commit": "64a04715c",
+      "path": "results/quality/w16_engram_initializer_20261001/frozen_closure.json",
+      "sha256": "22e676348224ee74bed4a84f9f096ae3d677e412abef53b47746da74e891cddc"
+    },
+    "local": {
+      "commit": "47b715428",
+      "path": "results/quality/w16_w17_crom_finite_prefetch_20261001/local_home.json",
+      "sha256": "f75149f47f51e081d003dd815cd1d610463b2bc6579d529cc17233fd4d8eda1e"
+    },
+    "power": {
+      "commit": "e79394b1c",
+      "path": "results/uarch/w10_q_power_envelope_r1/power.json",
+      "sha256": "75d15a6c456b846a9a2e454383a46e91eeece71f8e537921b91e820d43a36105"
+    }
+  },
+  "verdict": "FINITE_DECLARED_LOCAL_CROM_PHASE_ALLOCATION_SOURCE_IMAGE_AND_FULL_CONTROL_FIT_GATE_FAIL_NO_ADMISSION",
+  "whole_token_latency_cycles": null
+}

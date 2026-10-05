@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.ds-bound-engine-parent-review.v1",
+  "status": "PASS_ACTUAL_FULL_ENGINE_CONSTRUCTION_NUMERICAL_PENDING",
+  "source_commit": "78387f890",
+  "artifact_pins_verified": 23,
+  "actual_preflight_source_files_matched": 4,
+  "receipt_sha256": "a18f42eca44128bd84d855360614e5476aeec83eaac8f5c44abd2cba4b458e63",
+  "preflight_scope": "actual checkpoint provider, comparison Witness, NativeExecution plus all40 group contracts",
+  "expected_outputs": 1568,
+  "native_PCs_executed": 0,
+  "journal_event_rows": 0,
+  "lineage_checks": [
+    "original c65 artifact exact",
+    "generated bound artifact exact and complete only-home-index regeneration",
+    "provider complete native and allocated homes equal regenerated directory",
+    "original arithmetic templates/provider/writer/rank contracts retained",
+    "corrected dispatch artifact exact"
+  ],
+  "remaining": [
+    "actual PC0-9 numerical comparison",
+    "actual produced-state retirement journal",
+    "production PC10 extended-home lineage join",
+    "hardware finite service composition and contextual SS/FF"
+  ],
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "focused_test_count": 19,
+  "focused_test_status": "PASS_19_FOCUSED_TESTS"
+}

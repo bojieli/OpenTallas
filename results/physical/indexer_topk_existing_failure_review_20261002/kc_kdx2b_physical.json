@@ -1,0 +1,171 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-02T13:14:46.072959+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_w11_kdata_m_x2_phys",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.0,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_w11_ring_phys.sv",
+        "sha256": "b55263ac1a95e017ddb784b3fa22fcbd8d65af09b0c9ec5f418d307cfce57673",
+        "size_bytes": 16321
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv",
+        "sha256": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
+        "size_bytes": 7356
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+        "size_bytes": 661
+      }
+    ],
+    "top": "ot_w11_kdata_m_x2_phys"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n_17261\nViolation in place1204224\nViolation in place1156669\nViolation in place1156650\nViolation in place1237772\nViolation in place1232077\nViolation in place976666\nViolation in place1204309\nViolation in place1202162\nViolation in place976509\nViolation in place976714\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17396\nViolation in place977022\nViolation in place1201811\nViolation in place1203432\nViolation in place1174732\nViolation in place1236685\nViolation in place1202180\nViolation in place1157297\nViolation in place1178950\nViolation in place1182515\nViolation in place1196474\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17285\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17487\nViolation in place1200085\nViolation in u.dut.g_bank\\[18\\].g_beat\\[1\\].g_m.u_mem_13909\nViolation in place1182779\nViolation in place1232346\nViolation in place1158105\nViolation in place1204975\nViolation in place1196701\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17395\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17434\nViolation in place1200043\nViolation in place1152355\nViolation in place1196736\nViolation in wire1294565\nViolation in place1203768\nViolation in place1203830\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17440\nViolation in place1181024\nViolation in place1156601\nViolation in place1208169\nViolation in wire1294531\nViolation in u.dut.g_bank\\[20\\].g_beat\\[2\\].g_m.u_mem_17307\nViolation in place1202117\nViolation in place1198945\nViolation in place1179627\nViolation in place1208154\nViolation in place979854\nViolation in place1210882\nViolation in place1202537\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_15347\nViolation in place1177591\nViolation in place1167785\nViolation in place975194\nViolation in place1184374\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_15352\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_15351\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_1499\nViolation in place981206\nViolation in place1172977\nViolation in place1196232\nViolation in place1196598\nViolation in place1202245\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_15341\nViolation in place1202225\nViolation in place1168095\nViolation in place1204881\nViolation in place1177922\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_15316\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_15338\nViolation in place1152048\nViolation in u.dut.g_bank\\[19\\].g_beat\\[2\\].g_m.u_mem_1500\nViolation in place1210972\nViolation in place1204704\nViolation in place1202452\n[INFO DPL-0312] Found 5057 edge spacing violations and 671 padding violations.\n[WARNING DPL-0201] Placement check failure during legalization.\n[INFO DPL-0303] Running algorithm for independent set matching.\n[INFO DPL-0300] Set matching objective is wirelength.\n[INFO DPL-0301] Pass   1 of matching; objective is 5.394751e+10.\nwrite_db /work/results/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp-failed.odb\nError: detail_place.tcl, 39 bad optional access\n\nElapsed time: 0:55.54[h:]min:sec. CPU time: user 52.31 sys 2.97 (99%). Peak memory: 2118428KB.\nElapsed time: 21:23.00[h:]min:sec. CPU time: user 1364.03 sys 11.70 (107%). Peak memory: 4183436KB.\nElapsed time: 1:22:52.38[h:]min:sec. CPU time: user 5597.46 sys 503.41 (122%). Peak memory: 4944176KB.\nElapsed time: 0:19.02[h:]min:sec. CPU time: user 16.67 sys 2.08 (98%). Peak memory: 1170268KB.\nElapsed time: 3:49.25[h:]min:sec. CPU time: user 223.90 sys 4.90 (99%). Peak memory: 3709360KB.\nElapsed time: 18:09.07[h:]min:sec. CPU time: user 2129.99 sys 15.23 (196%). Peak memory: 5379180KB.\nElapsed time: 0:22.24[h:]min:sec. CPU time: user 19.30 sys 2.78 (99%). Peak memory: 1999684KB.\nElapsed time: 5:18:29.82[h:]min:sec. CPU time: user 40001.68 sys 6007.89 (240%). Peak memory: 21019780KB.\nElapsed time: 40:43.91[h:]min:sec. CPU time: user 3831.80 sys 582.76 (180%). Peak memory: 7786796KB.\nElapsed time: 3:48:28.43[h:]min:sec. CPU time: user 13699.59 sys 8.26 (99%). Peak memory: 10236428KB.\nmake[1]: *** [Makefile:511: do-3_5_place_dp] Error 1\nmake: *** [Makefile:511: /work/results/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-02T00:37:21.621641+00:00",
+  "git": {
+    "commit": "0ce523d1b6dff5649eb3f97886cb5f15d3b3bc86",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0",
+      "--false-path-from",
+      "rst_n",
+      "--slew-margin-percent",
+      "40",
+      "--stages",
+      "synth,pnr",
+      "--force",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--keep-heavy-artifacts",
+      "--hold-margin-ns",
+      "0.01",
+      "--nickname-tag",
+      "w11kc_kdx2b",
+      "--output",
+      "/tmp/claude-1000/w11s/hard/kc_kdx2b/physical.json",
+      "--top",
+      "ot_w11_kdata_m_x2_phys",
+      "--source",
+      "rtl/chip/physical/ot_w11_ring_phys.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--macro-place-halo",
+      "4.32",
+      "2.16",
+      "--core-utilization",
+      "30",
+      "--stages",
+      "pnr"
+    ],
+    "driver": {
+      "commit": "0ce523d1b6dff5649eb3f97886cb5f15d3b3bc86",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w11-kc2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+      "tree": "/tmp/claude-1000/wt/w11-kc2"
+    },
+    "platform": "Linux-5.15.0-191-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w11-kc2"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

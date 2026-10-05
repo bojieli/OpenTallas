@@ -1,0 +1,102 @@
+{
+  "schema": "w2.nc6.split_corrector_actual_validation.v1",
+  "verdict": "PASS_HELPER_CONE_ISOLATION_ONLY",
+  "predecessor_commit": "c0a826787a694e4db19d5fce8bac869b8408dbd2",
+  "source_sha256": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+  "pytest_command": [
+    "python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_w2_nc6_correction_control_split.py"
+  ],
+  "pytest_tests": 17,
+  "actual_vector_sets": {
+    "baseline": 560,
+    "ready_masks": 256,
+    "II9": 2
+  },
+  "actual_vectors_total": 818,
+  "baseline_inputs_expected_byte_equivalent_to_predecessor": true,
+  "all256_readiness_masks": "scrub valid/address/original/candidate/busy/error invariant; context clearing exactly follows acceptedmask",
+  "per_engine_II": 9,
+  "II9_actual": "scrub8 does not load next pending target; oldvalid predicate preventsreuse; nextload9 tested",
+  "CAP": 4,
+  "FIX": 4,
+  "feedback_lint": "r2 bundled predecessor actualUNOPTFLAT exit1; split exit0 noUNOPTFLAT, warningfatal unchanged no waiver",
+  "mutants": {
+    "CAP_three_edges": {
+      "replace_once": [
+        "if(ph<3)begin",
+        "if(ph<2)begin"
+      ],
+      "source_sha256": "d0976e602432ff0707df3bb3d4fb8306d7c0960370b3a548731dcb5fe3b45311",
+      "verdict": "EXPECTED_FAIL",
+      "actual_witness": "FATAL: /tmp/Hubble-W2-split-tests-r2/test_real_mutants_rejected_CAP0/CAP_three_edges/tb.sv:108: case 4 CAP_fourth_capture_2 context_next got=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000820400800044000000000009 expected=ac0000000000000000000000\n       Time: 5 Scope: tb"
+    },
+    "retire_without_ready": {
+      "replace_once": [
+        "if(scrub_v[r]&&retire_ready[r])begin",
+        "if(scrub_v[r])begin"
+      ],
+      "source_sha256": "fb5b67e99900097a5c4ac0ab56dccf750ca8f87cdf60f8a704e3e9e529dab503",
+      "verdict": "EXPECTED_FAIL",
+      "actual_witness": "FATAL: /tmp/Hubble-W2-split-tests-r2/test_real_mutants_rejected_ret0/retire_without_ready/tb.sv:203: case 9 FIX_fourth_offer_held context_next got=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 expected=8e0400800044000000000009\n       Time: 10 Scope: tb"
+    },
+    "missing_raw_snapshot": {
+      "replace_once": [
+        "current_raw[72*a+:72]!=rawword||",
+        ""
+      ],
+      "source_sha256": "c4b3c507b5ceec12c4de67a3390d98b418e5badd64b5cfe0db433e760d5dac00",
+      "verdict": "EXPECTED_FAIL",
+      "actual_witness": "FATAL: /tmp/Hubble-W2-split-tests-r2/test_real_mutants_rejected_mis0/missing_raw_snapshot/tb.sv:10560: case 554 stale_original_different_CE scrub_v got=01 expected=0\n       Time: 555 Scope: tb"
+    },
+    "both_utilities_not_failclosed": {
+      "replace_once": [
+        "if(!trusted[6]&&!trusted[7])error=1;",
+        ""
+      ],
+      "source_sha256": "abfafea4164fc716b40dbac7a681fbbb1b1768b2f726987b94c4e62c2d1aea2f",
+      "verdict": "EXPECTED_FAIL",
+      "actual_witness": "FATAL: /tmp/Hubble-W2-split-tests-r2/test_real_mutants_rejected_bot0/both_utilities_not_failclosed/tb.sv:10337: case 542 both_utilities_dirty error got=0 expected=1\n       Time: 543 Scope: tb"
+    },
+    "peer_phase_not_restarted": {
+      "replace_once": [
+        "ack_restored[92:90]=0;",
+        "ack_restored[92:90]=ack_restored[92:90];"
+      ],
+      "source_sha256": "b32e2703b8d9813f138deb9ea1d8ed2078ea3f72e1043ae9cd463c664df1e787",
+      "verdict": "EXPECTED_FAIL",
+      "actual_witness": "FATAL: /tmp/Hubble-W2-split-tests-r2/test_real_mutants_rejected_pee0/peer_phase_not_restarted/tb.sv:10159: case 533 peer_restores_restart_phase0 context_next got=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008e0400800044000000000009 expected=820400800044000000000009\n       Time: 534 Scope: tb"
+    }
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "real_path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "real_path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "verilator": {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "real_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf"
+    }
+  },
+  "protected_predecessor_hashes_verified": 30,
+  "new_FF": 0,
+  "new_CW": 0,
+  "total_CW": 219,
+  "scope": "No full219 controller rerun, codec runtime, fullSM, Qwen token, mapped SSFF/physical/rate admission. Nash owns composed fullgate; primaryII19 separately modeled.",
+  "retirement_equivalence_reason": "See handoff disjoint oldvalid/untrusted allocation and acknowledgment write-set proof",
+  "failure_preservation": [
+    "feedback_gate_r1_FAIL",
+    "development_test_guard_FAIL"
+  ],
+  "inputs_source": "predecessor unchanged archived codec/canonical219 map only, no private peer reads"
+}
