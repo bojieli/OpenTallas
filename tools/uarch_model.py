@@ -7823,3 +7823,9 @@ def dsrom_field_address_lookahead_price():
             "component_functional_admitted":True,"physical_admitted":False,
             "clock_target_ns":.833333,"ss_setup_uncertainty_ns":.060,"ff_hold_uncertainty_ns":.025,
             "token_latency_delta_cycles":0,"performance_adopted":False}
+
+
+def dsrom_field_static_provider_price(image_directory):
+    """Current canonical immutable provider plus issuer reservation; no physical credit."""
+    from dsrom_field_static_provider import model
+    return model(image_directory)
