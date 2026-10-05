@@ -23,6 +23,9 @@ module tb_qwen_p0_linked #(
     output wire join_desc_accepted, join_go,
     output wire join_desc_committed, join_go_committed,
     output wire [127:0] join_row_valid, join_row_take, join_ack_valid, join_write_accepted,
+    output wire [128*17-1:0] join_row_sec,
+    output wire [128*8-1:0] join_row_layer,
+    output wire [128*256-1:0] join_row_data,
     output wire [6:0] join_debt,
     output wire join_bad_ack_seen,
     input  wire              clk,
@@ -52,7 +55,6 @@ module tb_qwen_p0_linked #(
     localparam integer NT = 1536;
     initial if(PROTECTED!=1 || NSTK!=4 || NPC!=128 || WBW!=4 || LAYERS!=1 || PULLIN!=0 || SYNC!=2)
         $fatal(1,"linked P0 bench requires explicit protected full service shape, one actual layer");
-    wire [NT-1:0] kvw_ce; wire [NT*7-1:0] kvw_addr; wire [NT*512-1:0] kvw_data, kvw_mask;
     wire hd_v, hd_rdy, h_go; wire [18:0] hd_row; wire [10:0] hd_n;
     wire [NPC-1:0] hl_v, hl_pop, hw_v, hw_room, hwd_v;
     wire [NPC*17-1:0] hl_sec; wire [NPC*8-1:0] hl_row; wire [NPC*256-1:0] hl_data, hw_data;
@@ -68,45 +70,35 @@ module tb_qwen_p0_linked #(
     end
     assign join_desc_accepted=hd_v&&hd_rdy;
     assign join_go=h_go;
-    assign join_desc_committed=u_hbm.protected_dv && u_hbm.desc_r;
-    assign join_go_committed=u_hbm.protected_go;
     assign join_row_valid=producer_lv;
+    assign join_row_sec=hl_sec;
+    assign join_row_layer=hl_row;
+    assign join_row_data=hl_data;
     assign join_row_take=producer_pop&producer_lv;
     assign join_ack_valid=hwd_v;
-    assign join_write_accepted=hw_v & hw_room;
-    assign join_debt=7'($countones(u_svc.w_valid));
     assign join_bad_ack_seen=bad_ack_tag && (|hwd_v);
     wire svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code;
-    ot_qwen_rt_kv_stream4_service #(.NSTK(NSTK), .NPC(NPC), .KV_IDEAL(KV_IDEAL), .WBW(WBW)) u_svc (
-        .clk(clk), .rst_n(rst_n), .start(start), .ideal_in(1'b0), .pos(pos), .layer(layer),
-        .nx_layer(nx_layer), .pos_hint(pos_hint),
-        .kv_free(kv_free), .early_go_in(early_go), .posted_wb_in(posted_wb), .wb_busy(wb_busy),
-        .kvd_v(kvd_v), .kvd_pos(kvd_pos), .kvd_kindk(1'b0), .kv_ok(kv_ok),
-        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .kv_write_drained(kv_write_drained),
-        .kvw_ce(kvw_ce), .kvw_addr(kvw_addr), .kvw_data(kvw_data), .kvw_mask(kvw_mask),
-        .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
-        .l_v(hl_v), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(hl_pop),
-        .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(hwd_tag),
-        .fault(svc_fault), .fault_code(svc_code), .st_fill_cycles(st_fill_cycles), .st_fill_sectors(st_fill_sectors),
-        .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall), .st_kvok_low_desc(st_kvok_low_desc),
-        .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed));
-    ot_qwen_hbm_stream4_cdc #(.NSTK(NSTK), .NPC(NPC), .MEM_WORDS(LAYERS * 131072), .TAGW(9), .PHASE(PHASE), .PULLIN(PULLIN),
-        .PROTECTED(PROTECTED), .SYNC(SYNC)) u_hbm (
+    ot_qwen_p0_linked_consumer #(.NSTK(NSTK),.NPC(NPC),.KV_IDEAL(KV_IDEAL),.WBW(WBW)) u_consumer (
+        .clk(clk), .rst_n(rst_n), .start(start), .pos(pos),
+        .layer(layer), .nx_layer(nx_layer), .pos_hint(pos_hint), .kv_free(kv_free),
+        .early_go(early_go), .posted_wb(posted_wb), .wb_busy(wb_busy), .kvd_v(kvd_v),
+        .kvd_pos(kvd_pos), .kv_ok(kv_ok), .kv_we(kv_we), .kv_waddr(kv_waddr),
+        .kv_wdata(kv_wdata), .kv_write_drained(kv_write_drained), .fault(svc_fault), .fault_code(svc_code),
+        .st_fill_cycles(st_fill_cycles), .st_fill_sectors(st_fill_sectors), .st_wr_sectors(st_wr_sectors), .st_rsp_stall(st_rsp_stall),
+        .st_kvok_low_desc(st_kvok_low_desc), .st_drain_low(st_drain_low), .st_wr_lat_max(st_wr_lat_max), .st_fill_exposed(st_fill_exposed),
+        .hd_v(hd_v), .h_go(h_go), .hd_rdy(hd_rdy), .hd_row(hd_row),
+        .hd_n(hd_n), .hl_v(hl_v), .hw_room(hw_room), .hwd_v(hwd_v),
+        .hl_pop(hl_pop), .hw_v(hw_v), .hl_sec(hl_sec), .hl_row(hl_row),
+        .hl_data(hl_data), .hw_data(hw_data), .hw_sec(hw_sec), .hw_tag(hw_tag),
+        .hwd_tag(hwd_tag), .join_debt(join_debt));
+    ot_qwen_p0_producer_exports #(.NSTK(NSTK), .NPC(NPC), .LAYERS(LAYERS), .PHASE(PHASE), .PULLIN(PULLIN),
+        .PROTECTED(PROTECTED), .SYNC(SYNC)) u_producer (
         .clk(clk), .rst_n(rst_n), .warm_rst_n(warm_rst_n), .hclk(hclk), .d_v(hd_v), .d_rdy(hd_rdy), .d_row(hd_row), .d_n(hd_n), .go(h_go),
         .l_v(producer_lv), .l_sec(hl_sec), .l_row(hl_row), .l_data(hl_data), .l_pop(producer_pop),
         .w_v(hw_v), .w_sec(hw_sec), .w_data(hw_data), .w_tag(hw_tag), .w_room(hw_room), .wd_v(hwd_v), .wd_tag(producer_ack_tag),
-        .fault(hbm_fault), .fault_code(hbm_code));
+        .fault(hbm_fault), .fault_code(hbm_code),
+        .join_desc_committed(join_desc_committed), .join_go_committed(join_go_committed),
+        .join_write_reserved(join_write_accepted));
     assign fault = svc_fault | hbm_fault;
     assign fault_code = svc_code | (hbm_fault ? 16'h8000 : 16'h0);
-    // tile slices: the hardened tile's registered kvw port, then the masked write
-    reg [511:0] slice [0:NT-1][0:127] /*verilator public_flat_rw*/;
-    reg [NT-1:0] ce_q; reg [6:0] a_q [0:NT-1]; reg [511:0] d_q [0:NT-1]; reg [511:0] m_q [0:NT-1];
-    integer i;
-    always @(posedge clk) begin
-        for (i = 0; i < NT; i = i + 1) begin
-            ce_q[i] <= rst_n && kvw_ce[i];
-            if (kvw_ce[i]) begin a_q[i] <= kvw_addr[i*7 +: 7]; d_q[i] <= kvw_data[i*512 +: 512]; m_q[i] <= kvw_mask[i*512 +: 512]; end
-            if (ce_q[i]) slice[i][a_q[i]] <= (slice[i][a_q[i]] & ~m_q[i]) | (d_q[i] & m_q[i]);
-        end
-    end
 endmodule
