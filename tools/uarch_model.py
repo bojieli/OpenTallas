@@ -9311,3 +9311,9 @@ def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None):
         join['added_latency_ns_at_target']=parent_record['added_executor_start_edges']/1.2
         join['source_sha256']=parent_record['source_sha256']
     return result
+
+
+def dsrom_v9_field_boundary_model():
+    """Source-owned enclosing field clock/load terms; no invented arrivals."""
+    from dsrom_v9_field_boundary import model
+    return model(Path(__file__).resolve().parents[1])
