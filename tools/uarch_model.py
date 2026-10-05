@@ -8405,3 +8405,47 @@ def dsrom_s81_native_port_hc_pair():
             exact_component_measured=False, SS_FF_closed=False,
             headline_unchanged=True,
             next_owner_action='Maxwell map native-port calendar onto real critical-chain exposure; Einstein review same-lane bank/packet binding; no RTL/build authorized by this model.'))
+
+
+def hbm_topk_predicate_lookahead_model():
+    """Default-off N384/P16/K6 selector control successor; no adopted timing gain.
+
+    Price before RTL: compare payloads before selecting one-bit predicates.
+    Gross proxy deliberately takes no credit for removed wide compare-input muxes.
+    0.2 um2/bit mux is the existing assumed mux basis in this unified model.
+    Comparator budget: 32 XNOR + 32 decision gates per added comparator;
+    use the same 0.2 um2 gate-equivalent screening basis, not mapped cell area.
+    """
+    comparators = 16
+    gates = comparators*64 + 2*128 + 3*128
+    proxy = gates*0.2
+    return dict(default_enabled=False, N=384, P=16, K=6, IW=9,
+                original_source_sha256='74a669e6d21b25945de777257813bfc4d9f6e7db25fdc261751d1381c9b742f2',
+                MACs_per_cycle=0, memory_bytes_per_cycle=0,
+                input_bits_per_cycle=512, output_bits_per_result=54,
+                extra_boundary_bits=0, replicas=1, input_beats_per_vector=24,
+                added_register_bits=0, added_queue_entries=0,
+                extra_comparators_32bit=comparators,
+                comparator_count_before=128, comparator_count_after=144,
+                eligibility_AND_bits=256, one_bit_select_upper_bound=384,
+                gross_added_gate_equivalents=gates,
+                gross_added_cell_area_proxy_um2=proxy,
+                area_proxy_basis='ASSUMED 0.2 um2/gate equivalent; no removed mux credit',
+                original_synthesis_cell_area_um2=22760.02,
+                cell_area_screen_um2=22760.02+proxy,
+                original_routed_core_area_um2=83806.8,
+                cell_utilization_screen=(22760.02+proxy)/83806.8,
+                floorplan_screen_pass=(22760.02+proxy)/83806.8<0.30,
+                incoming_key_compare_fanout_before=8,
+                incoming_key_compare_fanout_after=9,
+                registered_key_predicate_fanout=8,
+                fresh_predicate_sinks=128, lane_fresh_predicate_sinks=8,
+                routing_tracks_added_boundary=0,
+                local_routing_and_buffer_area_measured=False,
+                added_latency_cycles=0, initiation_interval_cycles=1,
+                composed_token_latency_delta_cycles=0,
+                setup_period_ps=833, setup_uncertainty_ps=60,
+                hold_uncertainty_ps=25, io_delay_fraction=0.2,
+                baseline_SS_slack_ps=-362.448517,
+                baseline_FF_slack_ps=3.35,
+                candidate_SSFF_closed=False, adopted=False)
