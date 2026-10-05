@@ -96,12 +96,13 @@
   },
   "source_context_sha256": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
   "construction_files_sha256": {
+    "physical/dsrom_static_provider_context/threads.tcl": "91a9fa1a2931aa3859bd3c649e25bb61c6d02418d3db28c6d16379e8c97ebf42",
     "physical/dsrom_static_provider_context/fastroute.tcl": "ffe3000a93a017eec69a757a185126f46396f3a76bf223f80db5341c88aae124",
     "physical/dsrom_static_provider_context/ot_v41_static_provider_context.sv": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
     "physical/dsrom_static_provider_context/pdn.tcl": "4f4fbdfd8a93af90c935cdad9efcb75a54de8a944869f19ee2b6c5cce2ad1dcd",
     "physical/dsrom_static_provider_context/regions.tcl": "3f75bc15514ed12cec58a109abeab10cd40b51fb2fdbb57fa17aa103726cebf7",
-    "physical/dsrom_static_provider_context/clock.tcl": "eac3c22c882dc42036252528eef2c27a38056b4fe254708471133e87d52169ee",
-    "physical/dsrom_static_provider_context/run.sh": "4f02fc5d5785b6db123f48d6eecdee9da83200f0024979b3f5ff59e92be2fed4"
+    "physical/dsrom_static_provider_context/clock.tcl": "068db3460f6fc9ee811e146611e6cb630c5cedf42209654495be07cffb0942a5",
+    "physical/dsrom_static_provider_context/run.sh": "ebc44e8a09ac59e0a38df0f561bc30ee283640f39d5ff970d955d3eb9702b18a"
   },
   "route_policy": {
     "synthesis_host_lib": "TT host pre-layout screen only; no TT closure credit",
@@ -141,5 +142,12 @@
     "both_50pct_budgets_pass": true,
     "includes_source_tap_physical_cells": true,
     "not_placed_or_timing_closed": true
+  },
+  "placement_flow_binding": {
+    "density": 0.5,
+    "matches_original_named_slot_budget": true,
+    "disable_auto_lb_query": "Empty PLACE_DENSITY_LB_ADDON prevents optional empty-default-region numerical error; actual explicit density placement retains source fences.",
+    "actual_placement_CTS_threads": 4,
+    "RTL_area_clock_slots_unchanged": true
   }
 }

@@ -1,3 +1,4 @@
+set_thread_count 4
 # Native source clock metal. Clock NDR gives an actual spacing guard; not a shield credit.
 set_wire_rc -clock -layer M8
 set_routing_layers -signal M2-M7 -clock M7-M8
