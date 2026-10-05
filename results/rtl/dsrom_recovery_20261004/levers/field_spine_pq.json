@@ -1,0 +1,2379 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "field_spine_pq",
+ "verdict": "PENDING_SSFF",
+ "exact": true,
+ "ss_ff": {
+  "basis": "routed ORFS (detail route, RCX spef), OpenSTA corner_sta SS 60 ps / FF 25 ps at 0.833 ns; screen top physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv (registered neighbours, 2-cycle ROM models); RTL v8 = this commit",
+  "ss_wns_ps": {
+   "PQ0_R16": 18.74,
+   "PQ1_R16": 13.98,
+   "PQ0_R128": "pending (post-CTS -7.4)",
+   "PQ1_R128": "pending (post-CTS 0.0, post-GRT -13.2)"
+  },
+  "ff_hold_wns_ps": {
+   "PQ0_R16": -0.18,
+   "PQ1_R16": 0.61,
+   "PQ0_R128": "pending",
+   "PQ1_R128": "pending"
+  },
+  "residuals": {
+   "PQ0_R16": "1 hold pin -0.18 ps (bt_d -> BST stage)",
+   "PQ1_R16": "1 max-slew pin (g_ixq[5] copy D, 330 vs 320 ps)"
+  },
+  "old_spine_for_reference": {
+   "PQ0_R16": -684.06,
+   "PQ1_R16": -722.82,
+   "PQ1_R128": -905.9
+  },
+  "route_loop": "Codex: /tmp/claude-review-20261003/handoff_to_codex_20261004/dsrom_field_spine_route.md"
+ },
+ "nodes": {
+  "E1.wkv": {
+   "us": 0.563333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): E1.wkv: one-region full-shape ROM field RTL (S81 canonical placement), 6400 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.ffn.experts_gu": {
+   "us": 0.893333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L0.ffn.down": {
+   "us": 0.7625,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L0.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L1.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L1.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.attn.a_proj": {
+   "us": 1.0875,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 736 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.attn.cmp.wk": {
+   "us": 0.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.ffn.experts_gu": {
+   "us": 0.55,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L2.ffn.down": {
+   "us": 0.51,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L3.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L4.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L5.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L6.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L7.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.attn.a_proj": {
+   "us": 1.0875,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 736 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.attn.cmp.wk": {
+   "us": 0.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.ffn.experts_gu": {
+   "us": 0.55,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L8.ffn.down": {
+   "us": 0.51,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L9.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L10.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L11.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L12.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L13.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.attn.a_proj": {
+   "us": 1.0875,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 736 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.attn.cmp.wk": {
+   "us": 0.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.ffn.experts_gu": {
+   "us": 0.55,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L14.ffn.down": {
+   "us": 0.51,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L2.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L15.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L16.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L17.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L18.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.ffn.experts_gu": {
+   "us": 1.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L19.ffn.down": {
+   "us": 0.903333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.attn.a_proj": {
+   "us": 0.8625,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 608 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.attn.cmp.wk": {
+   "us": 0.236667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.ffn.experts_gu": {
+   "us": 0.893333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L20.ffn.down": {
+   "us": 0.7625,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L20.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L21.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L22.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L23.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.attn.a_proj": {
+   "us": 0.6375,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.ffn.experts_gu": {
+   "us": 1.065,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L24.ffn.down": {
+   "us": 0.791667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L25.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L26.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L27.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.attn.a_proj": {
+   "us": 0.6375,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.ffn.experts_gu": {
+   "us": 1.065,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L28.ffn.down": {
+   "us": 0.791667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L29.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L30.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L31.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.attn.a_proj": {
+   "us": 0.6375,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.ffn.experts_gu": {
+   "us": 1.065,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L32.ffn.down": {
+   "us": 0.791667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L33.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L34.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L35.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.attn.a_proj": {
+   "us": 0.6375,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 480 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.attn.wq_b": {
+   "us": 0.414167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 12288 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.ffn.experts_gu": {
+   "us": 1.065,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L36.ffn.down": {
+   "us": 0.791667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L24.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L37.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L38.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.attn.a_proj": {
+   "us": 0.383333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.attn.wq_b": {
+   "us": 0.328333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.attn.wo_a": {
+   "us": 0.6575,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.attn.wo_b": {
+   "us": 0.318333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.ffn.router": {
+   "us": 0.479167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.ffn.shared_gu": {
+   "us": 0.388333,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.ffn.experts_gu": {
+   "us": 0.721667,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + S81 floorplan wire stages"
+  },
+  "L39.ffn.down": {
+   "us": 0.539167,
+   "cls": "measured",
+   "source": "closed PQ spine (PQ=1, S81+R93): L21.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + S81 floorplan wire stages"
+  }
+ },
+ "measurement": {
+  "record": "results/rtl/dsrom_field_spine_20261004/field_pq.json",
+  "record_sha256": "8888faba2fe29aa6d946ab3218600aa23eddd855067c68d4b533bf169adca37e",
+  "config": "pq",
+  "vehicle": "ot_v41_fieldtop_pqc_w17w10 (PQ=1, flat)",
+  "placement": "S81 canonical + R93 re-placement (tools/dsrom_recovery_field.py variant)",
+  "node_summary": [
+   {
+    "node": "L0.attn.a_proj",
+    "dies": [
+     0
+    ],
+    "total_cycles": 460,
+    "us": 0.38333333333333336,
+    "asbuilt_us": 0.4008333333333333,
+    "rows_checked": 448,
+    "exact": true
+   },
+   {
+    "node": "L0.attn.wo_a",
+    "dies": [
+     0
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L0.attn.wo_b",
+    "dies": [
+     0
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L0.attn.wq_b",
+    "dies": [
+     0
+    ],
+    "total_cycles": 394,
+    "us": 0.32833333333333337,
+    "asbuilt_us": 0.33666666666666667,
+    "rows_checked": 8192,
+    "exact": true
+   },
+   {
+    "node": "L0.ffn.down",
+    "dies": [
+     0,
+     1
+    ],
+    "total_cycles": 915,
+    "us": 0.7625,
+    "asbuilt_us": 1.5025,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L0.ffn.experts_gu",
+    "dies": [
+     0,
+     1
+    ],
+    "total_cycles": 1072,
+    "us": 0.8933333333333333,
+    "asbuilt_us": 1.5883333333333334,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L0.ffn.router",
+    "dies": [
+     0
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L0.ffn.shared_gu",
+    "dies": [
+     0
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   },
+   {
+    "node": "E1.wkv",
+    "dies": [
+     1
+    ],
+    "total_cycles": 676,
+    "us": 0.5633333333333334,
+    "asbuilt_us": 0.8383333333333333,
+    "rows_checked": 6400,
+    "exact": true
+   },
+   {
+    "node": "L1.attn.a_proj",
+    "dies": [
+     1
+    ],
+    "total_cycles": 460,
+    "us": 0.38333333333333336,
+    "asbuilt_us": 0.4008333333333333,
+    "rows_checked": 448,
+    "exact": true
+   },
+   {
+    "node": "L1.attn.wo_a",
+    "dies": [
+     1
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L1.attn.wo_b",
+    "dies": [
+     1
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L1.attn.wq_b",
+    "dies": [
+     1
+    ],
+    "total_cycles": 394,
+    "us": 0.32833333333333337,
+    "asbuilt_us": 0.33666666666666667,
+    "rows_checked": 8192,
+    "exact": true
+   },
+   {
+    "node": "L1.ffn.down",
+    "dies": [
+     1,
+     2,
+     3
+    ],
+    "total_cycles": 647,
+    "us": 0.5391666666666667,
+    "asbuilt_us": 0.9158333333333333,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L1.ffn.experts_gu",
+    "dies": [
+     1,
+     2,
+     3
+    ],
+    "total_cycles": 866,
+    "us": 0.7216666666666667,
+    "asbuilt_us": 1.1908333333333332,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L1.ffn.router",
+    "dies": [
+     1
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L1.ffn.shared_gu",
+    "dies": [
+     1
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.a_proj",
+    "dies": [
+     3
+    ],
+    "total_cycles": 1305,
+    "us": 1.0875,
+    "asbuilt_us": 1.8933333333333333,
+    "rows_checked": 736,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.cmp.wk",
+    "dies": [
+     3
+    ],
+    "total_cycles": 284,
+    "us": 0.23666666666666666,
+    "asbuilt_us": 0.23416666666666666,
+    "rows_checked": 128,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.wo_a",
+    "dies": [
+     3
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.wo_b",
+    "dies": [
+     3
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.wq_b",
+    "dies": [
+     3
+    ],
+    "total_cycles": 497,
+    "us": 0.4141666666666667,
+    "asbuilt_us": 0.6491666666666667,
+    "rows_checked": 12288,
+    "exact": true
+   },
+   {
+    "node": "L2.ffn.down",
+    "dies": [
+     3,
+     4,
+     5
+    ],
+    "total_cycles": 612,
+    "us": 0.51,
+    "asbuilt_us": 0.8908333333333333,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L2.ffn.experts_gu",
+    "dies": [
+     3,
+     4,
+     5
+    ],
+    "total_cycles": 660,
+    "us": 0.55,
+    "asbuilt_us": 0.7933333333333333,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L2.ffn.router",
+    "dies": [
+     3
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L2.ffn.shared_gu",
+    "dies": [
+     3
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   },
+   {
+    "node": "L3.attn.a_proj",
+    "dies": [
+     5
+    ],
+    "total_cycles": 460,
+    "us": 0.38333333333333336,
+    "asbuilt_us": 0.4008333333333333,
+    "rows_checked": 448,
+    "exact": true
+   },
+   {
+    "node": "L3.attn.wo_a",
+    "dies": [
+     5
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L3.attn.wo_b",
+    "dies": [
+     5
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L3.attn.wq_b",
+    "dies": [
+     5
+    ],
+    "total_cycles": 394,
+    "us": 0.32833333333333337,
+    "asbuilt_us": 0.33666666666666667,
+    "rows_checked": 8192,
+    "exact": true
+   },
+   {
+    "node": "L3.ffn.down",
+    "dies": [
+     5,
+     6
+    ],
+    "total_cycles": 1084,
+    "us": 0.9033333333333333,
+    "asbuilt_us": 1.8333333333333333,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L3.ffn.experts_gu",
+    "dies": [
+     6
+    ],
+    "total_cycles": 1484,
+    "us": 1.2366666666666668,
+    "asbuilt_us": 2.3833333333333333,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L3.ffn.router",
+    "dies": [
+     5
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L3.ffn.shared_gu",
+    "dies": [
+     5
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.a_proj",
+    "dies": [
+     37
+    ],
+    "total_cycles": 1035,
+    "us": 0.8625,
+    "asbuilt_us": 1.3958333333333333,
+    "rows_checked": 608,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.cmp.wk",
+    "dies": [
+     37
+    ],
+    "total_cycles": 284,
+    "us": 0.23666666666666666,
+    "asbuilt_us": 0.23416666666666666,
+    "rows_checked": 128,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.wo_a",
+    "dies": [
+     37
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.wo_b",
+    "dies": [
+     37
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.wq_b",
+    "dies": [
+     37
+    ],
+    "total_cycles": 497,
+    "us": 0.4141666666666667,
+    "asbuilt_us": 0.6491666666666667,
+    "rows_checked": 12288,
+    "exact": true
+   },
+   {
+    "node": "L20.ffn.down",
+    "dies": [
+     37,
+     38
+    ],
+    "total_cycles": 915,
+    "us": 0.7625,
+    "asbuilt_us": 1.5025,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L20.ffn.experts_gu",
+    "dies": [
+     37,
+     38
+    ],
+    "total_cycles": 1072,
+    "us": 0.8933333333333333,
+    "asbuilt_us": 1.5883333333333334,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L20.ffn.router",
+    "dies": [
+     37
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L20.ffn.shared_gu",
+    "dies": [
+     37
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   },
+   {
+    "node": "L21.attn.a_proj",
+    "dies": [
+     38
+    ],
+    "total_cycles": 460,
+    "us": 0.38333333333333336,
+    "asbuilt_us": 0.4008333333333333,
+    "rows_checked": 448,
+    "exact": true
+   },
+   {
+    "node": "L21.attn.wo_a",
+    "dies": [
+     38
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L21.attn.wo_b",
+    "dies": [
+     38
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L21.attn.wq_b",
+    "dies": [
+     38
+    ],
+    "total_cycles": 394,
+    "us": 0.32833333333333337,
+    "asbuilt_us": 0.33666666666666667,
+    "rows_checked": 8192,
+    "exact": true
+   },
+   {
+    "node": "L21.ffn.down",
+    "dies": [
+     38,
+     39,
+     40
+    ],
+    "total_cycles": 647,
+    "us": 0.5391666666666667,
+    "asbuilt_us": 0.9158333333333333,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L21.ffn.experts_gu",
+    "dies": [
+     38,
+     39,
+     40
+    ],
+    "total_cycles": 866,
+    "us": 0.7216666666666667,
+    "asbuilt_us": 1.1908333333333332,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L21.ffn.router",
+    "dies": [
+     38
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L21.ffn.shared_gu",
+    "dies": [
+     38
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.a_proj",
+    "dies": [
+     44
+    ],
+    "total_cycles": 765,
+    "us": 0.6375000000000001,
+    "asbuilt_us": 0.8983333333333333,
+    "rows_checked": 480,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.wo_a",
+    "dies": [
+     44
+    ],
+    "total_cycles": 789,
+    "us": 0.6575,
+    "asbuilt_us": 1.7283333333333333,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.wo_b",
+    "dies": [
+     44
+    ],
+    "total_cycles": 382,
+    "us": 0.31833333333333336,
+    "asbuilt_us": 0.33416666666666667,
+    "rows_checked": 5120,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.wq_b",
+    "dies": [
+     44
+    ],
+    "total_cycles": 497,
+    "us": 0.4141666666666667,
+    "asbuilt_us": 0.6491666666666667,
+    "rows_checked": 12288,
+    "exact": true
+   },
+   {
+    "node": "L24.ffn.down",
+    "dies": [
+     44,
+     45
+    ],
+    "total_cycles": 950,
+    "us": 0.7916666666666666,
+    "asbuilt_us": 1.5275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L24.ffn.experts_gu",
+    "dies": [
+     44,
+     45
+    ],
+    "total_cycles": 1278,
+    "us": 1.065,
+    "asbuilt_us": 1.9858333333333336,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L24.ffn.router",
+    "dies": [
+     44
+    ],
+    "total_cycles": 575,
+    "us": 0.4791666666666667,
+    "asbuilt_us": 0.4958333333333334,
+    "rows_checked": 96,
+    "exact": true
+   },
+   {
+    "node": "L24.ffn.shared_gu",
+    "dies": [
+     44
+    ],
+    "total_cycles": 466,
+    "us": 0.38833333333333336,
+    "asbuilt_us": 0.4058333333333333,
+    "rows_checked": 1152,
+    "exact": true
+   }
+  ],
+  "rtl": [
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+   "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+   "rtl/common/ot_prefix.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp",
+   "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_fieldtop_pqc_w17w10.sv",
+   "rtl/v41die/ot_v41_pair_pq_ld.sv",
+   "rtl/v41die/ot_v41_pair_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_retn_w17w10.sv",
+   "rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "rtl/v41rom/ot_v41_bmul2.sv",
+   "rtl/v41rom/ot_v41_bterm.sv",
+   "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_chain.sv",
+   "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+   "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/v41rom/ot_v41_kreg.sv",
+   "rtl/v41rom/ot_v41_ret.sv",
+   "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "rtl/v41rom/ot_v41_segtree.sv",
+   "rtl/v41rom/ot_v41_segtree2.sv"
+  ]
+ },
+ "note": "Closed PQ spine (PQ=1, S81+R93, exact). Adopt (flip verdict to ADOPT) when PQ1_R16 (one max-slew pin) and PQ1_R128 close in the route loop; RTL final.",
+ "composed_if_adopted": {
+  "baseline_AR_tok_s": 1710.8,
+  "baseline_MTP_tok_s": 5005.9,
+  "AR_tok_s": 2056.3,
+  "MTP_tok_s": 5822.4,
+  "AR_gain_pct": 20.2,
+  "MTP_gain_pct": 16.3,
+  "note": "tools/dsrom_1m_allmeasured.py on main levers (draft, field_spine, head, router, su_hcpost, su_routeract) with this record set to ADOPT; not applied"
+ },
+ "physical_cost_note": "pair/element cost unchanged from levers/field.json physical_cost (+1.979 mm2/die, 0 dies); spine screen area in results/rtl/dsrom_field_spine_20261004/DESIGN_NOTE.md"
+}
