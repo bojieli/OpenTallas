@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "scope": "completed L5 X only; full36/head/final KV drain pending",
+  "position": 4095,
+  "token": 1165,
+  "stage": "STAGE L5 done cycles=4666 start_cyc=23468 end_cyc=28134 me_busy=2637/2637 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=6466s",
+  "reference": "/srv/opentallas-scratch/codex/qwen-P4095-full36-reference-r1/P4095",
+  "dies": [
+    {
+      "die": 0,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75",
+      "expected_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75"
+    },
+    {
+      "die": 1,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75",
+      "expected_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75"
+    },
+    {
+      "die": 2,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75",
+      "expected_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75"
+    },
+    {
+      "die": 3,
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75",
+      "expected_sha256": "e9b13e665ed0df7ed0cbf54734a8ae42d4d49284edf6936e869912453fa3fb75"
+    }
+  ]
+}

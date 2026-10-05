@@ -4,14 +4,14 @@
 
 ## Gate figures
 
-| | AR µs/token | MTP step µs (τ 3.8879) | MTP tok/s |
+| | AR µs/token | MTP step µs (τ-independent) | MTP tok/s at τ 4.159 (sensitivity τ 3.8879) |
 |---|---:|---:|---:|
-| Inherited reference (the review's) | 460.053 | 888.077 | 4,377.9 |
-| Corrected only (C1–C3 measured, no levers) | 566.864 | 1,104.861 | 3,518.9 |
-| **Gate reference at 1.2 GHz** (best credited configuration per mode) | **474.808** | **1,050.638** | **3,700.5** |
-| Gate reference at today's closing clocks | 596.027 | 1,289.398 | 3,015.3 |
+| Inherited reference (the review's) | 460.053 | 888.077 | 4,683.2 (4,377.9) |
+| Corrected only (C1–C3 measured, no levers) | 566.864 | 1,104.861 | 3,764.3 (3,518.9) |
+| **Gate reference at 1.2 GHz** (best credited configuration per mode) | **474.808** | **1,050.638** | **3,958.5** (3,700.5) |
+| Gate reference at today's closing clocks | 596.027 | 1,289.398 | 3,225.5 (3,015.3) |
 
-**Gate rule.** ROM passes only if ROM AR ≤ 474.808 µs **and** ROM MTP step ≤ 1,050.638 µs, at τ 3.8879.
+**Target (owner 2026-10-05).** The DS ROM continues to closure, targeting ROM AR ≤ 474.808 µs **and** ROM MTP step ≤ 1,050.638 µs; the comparison is a measured checkpoint for the paper, not a kill switch. The MTP step does not depend on τ; MTP tok/s uses τ 4.159 (owner 6-class workload blend, adopted 2026-10-05), with the published V4.1 3.8879 as the sensitivity in parentheses.
 - Each HBM figure is the best credited configuration for its own mode, so the bar for ROM is the harder one.
 - The AR figure comes from `corrected+wg+fused_su0.9`.
 - The MTP figure comes from `corrected+wg+su12`. The fused chains are not measured at 6 positions (see L3 below), so they add nothing to MTP.

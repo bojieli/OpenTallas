@@ -1,0 +1,32 @@
+{
+  "variant": "pauli-code-banklocal-td-diamond-r2",
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch/codex/pauli-code-banklocal-td-diamond-r2",
+  "route_exit": 2,
+  "finish_exit": 2,
+  "last_stage": "do-5_1_grt",
+  "route_flow_completed": false,
+  "corner_sta": null,
+  "capture_locality": null,
+  "drc_log_counts": [],
+  "artifacts": {
+    "4_1_cts.odb": {
+      "bytes": 91223710,
+      "sha256": "71c3e0a89d5cd48758e83087b3dff1c45c551c4f45422fcba44a5d10fd8b2745"
+    },
+    "4_cts.odb": {
+      "bytes": 91223710,
+      "sha256": "71c3e0a89d5cd48758e83087b3dff1c45c551c4f45422fcba44a5d10fd8b2745"
+    },
+    "4_cts.sdc": {
+      "bytes": 881144,
+      "sha256": "c6bdc8b1f299c92f050534438563a2d1aa4eac62e266af4e4e95d2d27dd8b7b7"
+    }
+  },
+  "rtl_changed": false,
+  "added_cycles": 0,
+  "added_state_bits": 0,
+  "adopted": false,
+  "verdict": "ROUTE_FLOW_FAILED",
+  "scope": "Same 20 analytical-calibrated macro views, 864x673.92 slot, 833.333ps SS60 FF25 and original IO; no headline/adoption credit."
+}
