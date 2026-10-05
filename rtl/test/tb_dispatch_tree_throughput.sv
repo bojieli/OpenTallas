@@ -374,6 +374,7 @@ module tb_dispatch_tree_throughput #(
                 $display("FAIL functional units=%0d leaves=%0d group=%0d radix=%0d flat=%0d skew=%0d: %0d of %0d results wrong, %0d of %0d sub-ranges wrong",
                          UNITS, LEAVES, GROUP, RADIX, FLAT, SKEW,
                          mism, UNITS*LANES, tmism, LEAVES);
+            if (mism != 0 || tmism != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         end
     endtask
 
