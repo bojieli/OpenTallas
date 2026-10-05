@@ -10061,6 +10061,10 @@ def hbm_r5a_p2_stack_context_model():
     minimum context does not claim legacy task/lease completion.
     """
     leaf=hbm_r5a_protected_pipeline_model()
+    r4path=ROOT/'results/rtl/hbm_accel_r5a_p2_20261005/r4_STACK_PROTECTION_FAIL/exact.json'
+    r4=json.loads(r4path.read_text()) if r4path.exists() else None
+    ordinary=None if r4 is None else [r for r in r4['cases'] if not r['case'].startswith('neg_')]
+    ordinary_pass=False if ordinary is None else all(r['verdict']=='PASS' for r in ordinary)
     ff=dict(configuration_SECC=100*72,configuration_valid_and_fault=4,
         descriptor_code_and_valid=74,notice_dual_rail=2,
         PC_issued_returned_counters=32*16*4,PC_codec_slot=32*362,
@@ -10103,12 +10107,18 @@ def hbm_r5a_p2_stack_context_model():
             first_access_criterion_ns=140,criterion_independent_of_token_gain=True,
             current_R3_first_access_ns=150.423,estimated_context_first_access_ns=153.947,
             estimated_composed_gain_us=13.023-40*(3/1.2+1.024)/1000,
-            measured_context=False),
+            measured_context=None if r4 is None else dict(
+                source_commit=r4['source_commit'],record=str(r4path.relative_to(ROOT)),
+                ordinary_cases=len(ordinary),ordinary_pass=ordinary_pass,
+                first_access_ns=r4['measured_first_access_worst_ns'],
+                matched_R3_delta_ns=round(r4['measured_first_access_worst_ns']-150.423,6),
+                component_gain_us=r4['measured_r5a_gain_us_vs_central'],
+                performance=r4['performance'],protection_pass=r4['protection_pass'])),
         targets={k:dict(applicable=k.endswith('_hbm'),added_ns_per_fetch=3/1.2+1.024 if k.endswith('_hbm') else 0)
             for k in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
         clocks=dict(stream_ps=833.333333333,service_ps=1024,setup_uncertainty_ps=60,
             hold_uncertainty_ps=25,source_owned_register_relations=True,actual_CTS_and_loads_pending=True),
-        gates=dict(exact=False,physical=False,performance=False,adopted=False))
+        gates=dict(exact=ordinary_pass,protection=False,physical=False,performance=False,adopted=False))
 
 
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
