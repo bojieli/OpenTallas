@@ -265,7 +265,8 @@ def build_proposal(root, position=8191, token=24):
                     local_operand_ports_are_wiring_and_2to1_selection_not_free_SRAM_reads=True,
                     per_die_macro_body_plus_local_DFF_mux_floor_um2=256*AREA+131072*.2916+65536*.2,
                     fill_requires_real_SU_PC2_write_visibility_ACK=True,
-                    current_chase_n64_is_not_whole_input_visibility=True,
+                    current_chase_n64_covers_all_64_SU_source_vectors=True,
+                    current_SU_progress_has_no_physical_backend_ACK_binding=True,
                     producer_wait_cycles=None,control_clock_fanout_wire_area_um2=None,
                     per_stage_total_latency_us=None,adopted=False,credited_reuse_cycles=0)
     result=dict(schema='opentallas.qwen-hbm.activation-vm-realization.v1',

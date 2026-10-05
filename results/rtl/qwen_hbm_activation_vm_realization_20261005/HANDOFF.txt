@@ -86,7 +86,9 @@ reordering or widened global face. 131072 register bits ->38220.5952um2 DFF
 floor plus65536 2:1 mux bits ->13107.2um2 ASSUMED .2um2/bit model cost.
 Full macro bodies+these local data/mux terms =1.376801669mm2/die BEFORE control,
 clock, fanout, protection, loaded routes and slot placement. No free local RF.
-Head chase_n64 is NOT whole-input write visibility. Producer wait and actual
+Head chase_n64 covers all64 source SU vector retirements. Those counters
+track native strobes, not physical SRAM ACKs; require physical visibility
+binding rather than a new invented source-progress wait. Producer wait and actual
 loaded local selector/ready integration remain NULL, so total latency and rate
 remain NULL and credited reuse is ZERO. This is the concrete source-owned reuse
 hook for Maxwell to compose before RTL, not an independent architecture stream.

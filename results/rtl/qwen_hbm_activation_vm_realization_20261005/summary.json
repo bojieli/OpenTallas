@@ -123,7 +123,8 @@
     "local_operand_ports_are_wiring_and_2to1_selection_not_free_SRAM_reads": true,
     "per_die_macro_body_plus_local_DFF_mux_floor_um2": 1376801.6691200002,
     "fill_requires_real_SU_PC2_write_visibility_ACK": true,
-    "current_chase_n64_is_not_whole_input_visibility": true,
+    "current_chase_n64_covers_all_64_SU_source_vectors": true,
+    "current_SU_progress_has_no_physical_backend_ACK_binding": true,
     "producer_wait_cycles": null,
     "control_clock_fanout_wire_area_um2": null,
     "per_stage_total_latency_us": null,
@@ -271,5 +272,5 @@
     "numerical_oracle_or_activation_inputs_used": false,
     "jobs_started": 0
   },
-  "proposal_sha256": "0694e4ddd9079a8efcabffaba017973526f61c2287f3cbd2971ab9fe85a90c00"
+  "proposal_sha256": "0b005d08baedd81c68ebab1aef9a6f9f0cb3a5cf91944a10627e57486beaa449"
 }
