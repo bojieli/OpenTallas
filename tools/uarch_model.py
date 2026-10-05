@@ -8946,6 +8946,56 @@ def qwen_me_bypass_capture_price(*, gt=6144, smin=6, tcut=6, tree_lat=7):
         next_gate='Minimum same-adder old/off/on arithmetic and edge gate, then ONE frozen tree context SS/FF route; never timeout-only rerun')
 
 
+def qwen_me_port_route_context(*, utilization=25):
+    """Unchanged full TP2 port, prospective placement variant; NOT a new cut.
+
+    Current t4 source-path is e_f[60] (ots bit3) through the 16-row CSA and
+    final24-bit sum into a_qots[23]. The early tag->E->A boundaries and all
+    result/argmax edges remain unchanged. Loaded SS/FF failures are retained.
+    This prices a placement-only trial, never assumes that utilization fixes
+    that cone. A future registered partial-sum repair needs its own model.
+    """
+    if utilization not in (25, 30, 35):
+        raise ValueError('Only the owner supplied three placement utilizations')
+    w, pq, aw, nw, gt, smin = 16, 4, 24, 18, 6144, 6
+    lanes, groups = w*pq, gt >> smin
+    replicas = groups // pq
+    tag = 8 + 2*aw + 3*(nw+1)
+    in_bits = 16 + lanes*32 + 1 + tag + lanes*16
+    out_bits = pq + pq*aw + lanes + lanes*32 + (1+32+nw) + 1
+    cells = 56431.7  # Actual t4 final routed port standard-cell footprint.
+    # 15% additional implementation reserve, not measured buffer/clock savings.
+    reserved = cells*1.15
+    return dict(schema='opentallas.qme.port-route-context.v1',
+        source='ot_qwen_me_spport_w12; unchanged v3 kept prefix/ring source',
+        params=dict(W=w,IL=8,AW=aw,NW=nw,GT=gt,SMIN=smin,PQ=pq,TREE_LAT=7,SCALE_LAT=6),
+        replicas=replicas, result_groups=groups, postscale_muls_per_port_edge=lanes,
+        MACs_per_cycle=0, raw_result_bytes_per_port_edge=lanes*4,
+        scale_bytes_per_port_edge=lanes*2, output_bytes_per_port_edge=lanes*4,
+        added_memory_ports=0, added_external_boundary_bits=0,
+        boundary=dict(input_bits_per_edge=in_bits,output_bits_per_edge=out_bits,
+                      parent_registered=True,pt_id='static port-instance index in enclosing g_pt; never dynamic owner allocation'),
+        address_cone=dict(ots_bits=aw,qrows=16,port_offset_sums=pq,
+                          unbuffered_ots_bit_destination_upper_bound=16*pq,
+                          registered_partials=False,
+                          measured_SS_ps=-262.587738,measured_FF_ps=-.387551),
+        ports_and_tracks=dict(top_signal_pins=in_bits+out_bits+2,
+                              external_track_demand_upper_bound=in_bits+out_bits,
+                              channel_capacity_and_loaded_cut_fit=None,
+                              new_mux_demux_or_fanout=0),
+        area=dict(actual_t4_cell_um2=cells,actual_t4_core_um2=146210,
+                  gross_cell_reservation_um2=reserved,
+                  planned_utilization_percent=utilization,
+                  minimum_core_for_reserved_cells_um2=reserved/(utilization/100),
+                  all24_port_cell_reservation_um2=replicas*reserved,
+                  parent_slot_fit=None,additional_15_percent_is_reserve=True),
+        latency=dict(added_edges=0,changed_II=0,changed_token_edges=0,
+                     result_pipeline='existing E/A, SCALE_LAT6, two output captures; original golden tree/argmax order unchanged'),
+        clock=dict(period_ps=833,SS_setup_ps=60,FF_hold_ps=25,relaxed=False),
+        adoption=False, SSFF_qualified=False,
+        physical_scope='one full64-lane port, not a whole-SM or whole-token qualification')
+
+
 def dsrom_field_address_lookahead_price():
     """Current single S81 field issuer; new reservation, no existing-state credit.
 
