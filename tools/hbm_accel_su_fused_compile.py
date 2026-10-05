@@ -283,10 +283,13 @@ def compile_case(case, index, pickle_sha, widths):
                 if 'also_bitexact_window_row' in case['meta'] else None}
 
 
-def compile_saved(path: Path, root: Path = ROOT):
+def compile_saved(path: Path, root: Path = ROOT, *, case_index: int | None = None):
     blob, sha = load_cases(path)
+    if case_index is not None and not 0 <= case_index < len(blob['cases']):
+        raise ValueError('case_index is outside the actual saved cases')
     widths = field_widths(root)
-    cases = [compile_case(case, i, sha, widths) for i, case in enumerate(blob['cases'])]
+    cases = [compile_case(case, i, sha, widths) for i, case in enumerate(blob['cases'])
+             if case_index is None or i == case_index]
     return {'schema': SCHEMA, 'descriptor_encoding': 'software v1, NOT native ISA words',
             'saved_cases': {'path': str(path), 'sha256': sha,
                             'snapshots_sha256': blob.get('snapshots_sha256')},
@@ -304,9 +307,10 @@ def compile_saved(path: Path, root: Path = ROOT):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cases', type=Path, required=True)
+    parser.add_argument('--case-index', type=int, help='Export only this original saved case index')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    result = compile_saved(args.cases)
+    result = compile_saved(args.cases, case_index=args.case_index)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result['summary']))
