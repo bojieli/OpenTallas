@@ -25,7 +25,7 @@ module tb_hbm_accel_r5a_p2;
   integer MUT = 0, STALL = 0;                // +mut=1: corrupt one sector (negative control); 2: tRCD check +1 ns
   reg [7:0] s_rdy = 8'hFF;
   localparam integer NSM = 8, NPC = 32, NSECT = 49, NLINE = 392, NIDS = 6, ROW_BASE = 0;
-  localparam integer CYC = 1024, CLK = 833;
+  localparam integer CYC = 1024; localparam realtime CLK = 833.333333333;
   localparam longint BURST=1024, TCCDL=2560, CL=12500, RCD=19375, RP=16250, RAS=28125, RTP=5625,
     RRDS=2500, RRDL=3125, FAW=15000, RFC=350000, RFCPB=200000, REFI=3900000, RSP=10000, RREFD=8000;
   // c52 layout (results/rtl/w19_expert_fetch.json layout): lines and w1/w3 lines per SM, offsets
@@ -35,7 +35,7 @@ module tb_hbm_accel_r5a_p2;
   localparam integer EXP_LINES = 392;
 
   reg clk = 0, hclk = 0, rst_n = 0, hrst_n = 0;
-  always #416.5 clk = ~clk;
+  always #(CLK/2) clk = ~clk;
   initial begin #(HPHASE_PS); forever #(CYC/2) hclk = ~hclk; end
 
   // ---------------- static layout: line order L -> (sm, line); w1/w3 of every SM first ----------------
@@ -70,7 +70,7 @@ module tb_hbm_accel_r5a_p2;
     always @(posedge hclk or negedge hrst_n)if(!hrst_n)return_seq[p]<=0;else if(rd_v[p])return_seq[p]<=return_seq[p]+1'b1;
     for(genvar k=0;k<4;k++)begin:word
       wire[71:0] c=encode64(rd_data[p*256+k*64+:64]);
-      assign rd_code[p*360+k*72+:72]=c ^ ((p==7&&k==0&&return_seq[p]==0&&MUT==3)?72'd1:
+      assign rd_code[p*360+k*72+:72]=c ^ ((p==7&&k==0&&return_seq[p]==0&&MUT==3)?72'd4:
         (p==7&&k==0&&return_seq[p]==0&&MUT==4)?72'd3:72'd0);
     end
     assign rd_code[p*360+288+:72]=encode64({43'd0,5'(p),return_seq[p] ^ ((MUT==5&&p==7&&return_seq[p]==0)?16'd1:16'd0)});

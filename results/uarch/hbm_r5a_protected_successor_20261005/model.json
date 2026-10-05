@@ -39,7 +39,7 @@
     "ingress": "SECDED64 id word plus complemented occupancy/valid",
     "landing": "4 SECDED64 payload words + SECDED64 PC/sector sequence identity, depth32 unchanged",
     "SRAM": "64 raw128 macros +32 parity/tag128 macros; correct single bit, poison double bit before delivery",
-    "mutable": "complement mirrors on FIFO local pointers, dispatch, location, masks and PC refresh state; mismatched synchronised Gray rails conservatively refuse",
+    "mutable": "complement mirrors on FIFO pointers/faults, dispatch, location, masks, PC refresh, macro address/valid/index and syndrome; captured coded packet parity prevents post-syndrome corruption resealing; synchronised Gray rail mismatch conservatively refuses",
     "config": "duplicated local LUT/base with bounds/validity; never waive HBM/link/SRAM protection"
   },
   "cuts": {
@@ -88,20 +88,23 @@
       2000.16
     ],
     "existing_service_estimate_mm2": 1.4,
-    "parent_slot_fit": false,
+    "parent_slot_fit": true,
+    "finite_parent_allocation": "results/uarch/hbm_r5a_finite_parent_20261005/model.json",
     "allocation_owner": "Turing"
   },
   "routing": {
-    "demand_tracks": 21088,
-    "requested_channel_width_um": 600,
+    "demand_tracks": 27488,
+    "requested_channel_width_um": 617.76,
     "layers": 4,
     "pitch_um": 0.08,
     "PG_via_reserved_fraction": 0.2256,
     "clock_tracks": 64,
-    "capacity_tracks": 23168,
+    "capacity_tracks": 27688,
     "local_reservation_fits": true,
-    "actual_parent_residual_tracks": null,
-    "parent_channel_fit": false
+    "actual_parent_residual_tracks": 200,
+    "parent_channel_fit": true,
+    "finite_parent_die_mm2": 737.2803062592001,
+    "parent_clock_load_qualification": false
   },
   "latency": {
     "added_clk_edges_upper": 7,
