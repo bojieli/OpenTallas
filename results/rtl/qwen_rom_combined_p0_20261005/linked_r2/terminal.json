@@ -1,0 +1,26 @@
+{
+  "status": "PASS_RELEASED_P8191_LINKED_JOIN",
+  "exits": {
+    "compile": 0,
+    "link": 0,
+    "ABI_probe": 0,
+    "runtime": 0
+  },
+  "new_frontend_launched": false,
+  "linked_runtime_exercised": true,
+  "full_token_exercised": false,
+  "physical_qualified": false,
+  "existing_compiled_seam_exports": {
+    "warm_rst_n": true,
+    "hold_rows": true,
+    "bad_ack_tag": true,
+    "join_debt": true,
+    "join_row_sec": true,
+    "join_row_layer": true,
+    "join_row_data": true,
+    "join_ack_valid": true,
+    "join_write_accepted": true,
+    "join_desc_committed": true,
+    "join_go_committed": true
+  }
+}
