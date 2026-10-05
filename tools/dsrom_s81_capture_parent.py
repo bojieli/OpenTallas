@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 SPINE='rtl/v41die/ot_v41_spine_w17w10.sv'
 ADAPTER='rtl/v41die/ot_v41_rom_adapt.sv'
 
-PARAM='    parameter integer S81_CAPTURE=0,\n'
+PARAM='    parameter integer S81_PUBLICATION=0,\n    parameter integer S81_CAPTURE=0,\n'
 INPUTS="""    input wire [ROM_R*19-1:0] capture_root_rows,
     input wire [46:0] capture_identity,
     input wire capture_reset_request,
@@ -34,12 +34,15 @@ def hook(role,s, *, stream=False):
     if role=='core':
         s=one(s,'ot_v41_rom_adapt #(', 'ot_v41_rom_adapt #(.S81_CAPTURE(S81_CAPTURE),')
         s=one(s,'.s_go(s_go),', '.capture_command_ready(!capture_live && !capture_fault && !capture_reset_request),.s_go(s_go),')
-        s=one(s,'ot_v41_spine_w17w10 #(', 'ot_v41_spine_w17w10 #(.CAPTURE_ENABLE(S81_CAPTURE),.CAPTURE_S81_PROFILE(S81_CAPTURE),.CAPTURE_CAPACITY(1),.CAPTURE_VM_ALWAYS_ACCEPT(1),')
+        publication_arg='' if stream else '.CAPTURE_PUBLICATION(S81_PUBLICATION),'
+        s=one(s,'ot_v41_spine_w17w10 #(', 'ot_v41_spine_w17w10 #('+publication_arg+'.CAPTURE_ENABLE(S81_CAPTURE),.CAPTURE_S81_PROFILE(S81_CAPTURE),.CAPTURE_CAPACITY(1),.CAPTURE_VM_ALWAYS_ACCEPT(1),')
+        if stream:
+            s=one(s,'\nendmodule','\n    initial if(S81_PUBLICATION) $fatal(1,"paired publication binds original capture only, not indexed stream");\nendmodule')
         s=one(s,'.go(s_go), .i_ph(s_ph)', connections+'\n            .go(s_go), .i_ph(s_ph)')
         s=one(s,"assign rom_ready_w = 1'b1;", "assign capture_live=0;assign capture_drained=1;assign capture_fault=0;\n        assign rom_ready_w = 1'b1;")
     else:
         target={'tile':'ot_hdc_core_v41x','die':'ot_chip_v41x_tile','top':'ot_chip_v41x_die_owner_safe_c8'}[role]
-        s=one(s,target+' #(',target+' #(.S81_CAPTURE(S81_CAPTURE),')
+        s=one(s,target+' #(',target+' #(.S81_PUBLICATION(S81_PUBLICATION),.S81_CAPTURE(S81_CAPTURE),')
         anchor={ 'tile':'.clk(clk), .rst_n(rst_n), .start(start)',
                  'die':'.clk(clk), .rst_n(rn), .rom_fb(rom_fb)',
                  'top':'.clk(clk), .rst_n(rst_n), .rom_fb(rom_fb)'}[role]
@@ -69,6 +72,9 @@ def dependencies(paths,out, *, stream=False):
     text=one(spine.read_text(),'.VM_AW(VAW)', '.VM_AW(19)')
     if stream:
         text=stream_spine(text)
+    if not stream:
+        from dsrom_s81_spine_publication import bind_spine, LEAF as publication_leaf
+        text=bind_spine(text)
     spine.write_text(text)
     receipt['before_actual_VM_bound_sha256']=receipt['generated_sha256']
     receipt['generated_sha256']=hashlib.sha256(spine.read_bytes()).hexdigest()
@@ -85,6 +91,8 @@ def dependencies(paths,out, *, stream=False):
     adapter=out/'adapter'/adapters[0].name;adapter.parent.mkdir(parents=True,exist_ok=False);adapter.write_text(s)
     replacements={matches[0]:spine,adapters[0]:adapter}
     result=[replacements.get(p,p) for p in paths]
+    if not stream:
+        result.append(publication_leaf)
     if stream:
         indexed=ROOT/'rtl/dsrom_sys/level2_stream/ot_dsrom_rd64_indexed_capture.sv'
         if not indexed.is_file():

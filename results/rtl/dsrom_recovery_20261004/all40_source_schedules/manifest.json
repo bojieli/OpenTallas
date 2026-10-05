@@ -1,0 +1,401 @@
+{
+  "schema": "opentallas.dsrom.existing-field-source-schedules.v1",
+  "layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "inputs": {
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434",
+    "tools/dsrom_1m_field.py": "b67eb4508aae1d697cf174049c0edc5f181ac101de58544651b3ac7a879df170",
+    "tools/dsrom_s81_execution_binding.py": "9f23441c37bbc55df83873cfb7f04b9986ddfd18d785b42b76a5f54834ac2ab2",
+    "tools/dsrom_stage_program_join.py": "8572e533fa494a5c5162b0fe27fc32890bbdd3d7251ae73944cc224543aecc19",
+    "tools/dsrom_s82_payload_interface.py": "10675dc114e4fa8731d56c09cb31fa767f6804428cf679b4cb44d33fed2a050a",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+    "tools/v41_die_images_w17w10.py": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780",
+    "results/rtl/dsrom_recovery_20261004/coverage_manifest/inputs/all40_golden_json.json.gz": "3e6ec1a74b94a686a40c9e817462298496fc10abd23d77c4fe44831e3896b542",
+    "results/rtl/dsrom_recovery_20261004/coverage_manifest/inputs/retained_plan.json.gz": "f755e084eb706baf1cd17fd164be02f84d41ecd1a3769a9bc616942ce781970a"
+  },
+  "files": [
+    {
+      "layer": 0,
+      "path": "L00.json.gz",
+      "sha256": "f2851b5feef0134173b028d7b360ea87b6a4f48b572f8bb64d64b7b2279fc224",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 1,
+      "path": "L01.json.gz",
+      "sha256": "e08388842bf397a95aa0d110c3248253e672ea06d6c7d486802728c6e89f497d",
+      "phase_count": 24,
+      "source_operations": 29
+    },
+    {
+      "layer": 2,
+      "path": "L02.json.gz",
+      "sha256": "30075b13411c293e938fe586cb431f99f622923b1ff3d1038325a923d95855d3",
+      "phase_count": 27,
+      "source_operations": 33
+    },
+    {
+      "layer": 3,
+      "path": "L03.json.gz",
+      "sha256": "263c23da8ce38276c554b07a906440e7f66d10548d78df80da1ea47ba0832679",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 4,
+      "path": "L04.json.gz",
+      "sha256": "66be7c6e374259c1f62083f6b366ef927f5b7be4da1178dc630361fbd9ba1888",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 5,
+      "path": "L05.json.gz",
+      "sha256": "4c436f5d0b6724d4f912e8e07a3da2f84e50fb6a07cd84c4e132cad0c0c92df6",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 6,
+      "path": "L06.json.gz",
+      "sha256": "1ef36086c163b5e81d015c8ed2d6795208fe517d6ecd5a62b226338c6546fd6f",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 7,
+      "path": "L07.json.gz",
+      "sha256": "9c1a4b65ddaece6a3ef008808ff241e6c26c5f5b7925ea895c1436e86859f994",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 8,
+      "path": "L08.json.gz",
+      "sha256": "87ed6a23eaaee5b6c06f648b4322532b044ed3903e90890bec949d38cc39b5be",
+      "phase_count": 27,
+      "source_operations": 33
+    },
+    {
+      "layer": 9,
+      "path": "L09.json.gz",
+      "sha256": "b6f208fe26160e394c07a0645af2cea436339ee4d5c5bcfc387b0417e17fc612",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 10,
+      "path": "L10.json.gz",
+      "sha256": "7bdb5a18cf8acb970168aae685ff57042a67559da19353ace6a24453c0b71aa2",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 11,
+      "path": "L11.json.gz",
+      "sha256": "aa5adece0605e2181d65ff90d61f074917dbc851d9a914c1819c5f2967cc7cd0",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 12,
+      "path": "L12.json.gz",
+      "sha256": "7d28ae2aaa10da1da34fd46149e13701d8d328eb3fb10de8ef4ab30a753d8fc7",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 13,
+      "path": "L13.json.gz",
+      "sha256": "1cc1de371b641f99a110da4b7cf85c1cfb164d7310a039c5d4902f6c5da914c2",
+      "phase_count": 23,
+      "source_operations": 28
+    },
+    {
+      "layer": 14,
+      "path": "L14.json.gz",
+      "sha256": "89aba57cf44e32f04ccc78e73d564515fe01370597f8b8ace873f33bba095c87",
+      "phase_count": 29,
+      "source_operations": 34
+    },
+    {
+      "layer": 15,
+      "path": "L15.json.gz",
+      "sha256": "806afadc82b1e0a6a87977729c5c417adaad20c73fa1e74d1649f800f0d0740f",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 16,
+      "path": "L16.json.gz",
+      "sha256": "c133a60e76c95b0dd030246fbf17369f72baff2285ff115c0e64b3b28b262764",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 17,
+      "path": "L17.json.gz",
+      "sha256": "d3937163d29b910be6c539d6a9ae04392f44001cb8a5b09cd9646104854bdd02",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 18,
+      "path": "L18.json.gz",
+      "sha256": "8742fa3dc40de135bb08b2ee4a075c5067aa1aacedb2d257f0ae0a9a6801e905",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 19,
+      "path": "L19.json.gz",
+      "sha256": "229adc2477def9b04207f7f96a38754236bdae567aed42ffbfff8e9d8d0fcdba",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 20,
+      "path": "L20.json.gz",
+      "sha256": "23108078cac2f2fa949a628648ab492cd655ae62691a9a461b6b6b0398ff13d9",
+      "phase_count": 26,
+      "source_operations": 32
+    },
+    {
+      "layer": 21,
+      "path": "L21.json.gz",
+      "sha256": "08667a906d425b4de744e5536625b191244381785d613489823edd2f90f74112",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 22,
+      "path": "L22.json.gz",
+      "sha256": "a53bb101d827f00fd45d74dc223b6d2e8441359dbb0b8dbb65be8e561567a130",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 23,
+      "path": "L23.json.gz",
+      "sha256": "ebd430940f0d1b4b5732fd6091291301e41d7a22c40642a7788122609faa4f68",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 24,
+      "path": "L24.json.gz",
+      "sha256": "e3bc988e1a6a0f34bd2ef23254473ae92c0fc06ed7703c77a3840b26ddde44ae",
+      "phase_count": 24,
+      "source_operations": 30
+    },
+    {
+      "layer": 25,
+      "path": "L25.json.gz",
+      "sha256": "b1d00711b9bd7cb884ad457320f673fa04948c633c31cf631475f9aa2b7d3b09",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 26,
+      "path": "L26.json.gz",
+      "sha256": "422a486600f5ecd08445818b4c30661c51b0848bdb42fa723d677a3520b0ece8",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 27,
+      "path": "L27.json.gz",
+      "sha256": "9b5c49f2e91de1f6529eb0e7d1f86eb3799d4f2440b5f9d23fce1383b508ec2b",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 28,
+      "path": "L28.json.gz",
+      "sha256": "babd9d750b805bd72ee4b8b819fd9b6a06de62d9b36d9ddd4a633d9a13cc6e33",
+      "phase_count": 24,
+      "source_operations": 30
+    },
+    {
+      "layer": 29,
+      "path": "L29.json.gz",
+      "sha256": "c9058fab0fa040b8a62e67e02a261ff330a313d6bf8b1adbbf8599202dec7de2",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 30,
+      "path": "L30.json.gz",
+      "sha256": "cee7bfa4c98126025abd6dcc91240f5644f472bd9bf1b522bf7e67cbd7dd60d9",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 31,
+      "path": "L31.json.gz",
+      "sha256": "cd3f7ed00d842b3a2bea80e4bc0fb6a4a73688e11fa209dd5f505ff2ea4ef421",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 32,
+      "path": "L32.json.gz",
+      "sha256": "544da18c1271b4bb9583b1fb8211063e0e0d1aa2d8be7759e3277813461985ec",
+      "phase_count": 24,
+      "source_operations": 30
+    },
+    {
+      "layer": 33,
+      "path": "L33.json.gz",
+      "sha256": "86d36ea10714c70ec5aea37f09a5de586c00c06e8ed1a4144d723c872bbd2bc2",
+      "phase_count": 23,
+      "source_operations": 28
+    },
+    {
+      "layer": 34,
+      "path": "L34.json.gz",
+      "sha256": "04a209fdfec30302799676bc46c3730b14aabf16deddd86975ba20241d89a4d5",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 35,
+      "path": "L35.json.gz",
+      "sha256": "8340629811950f5672423bf0c287150009b9ee9ecb17ef572d3050b4f1d56608",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 36,
+      "path": "L36.json.gz",
+      "sha256": "5793c951ffbbbf7236108c5a0322ab277d07d8fd77ba749eefa8428d3d03b3fe",
+      "phase_count": 24,
+      "source_operations": 30
+    },
+    {
+      "layer": 37,
+      "path": "L37.json.gz",
+      "sha256": "967b3de043bf51b763bc44f7c63edb499e4edf432390d7dbce311482f81c3d92",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 38,
+      "path": "L38.json.gz",
+      "sha256": "ffe9ab652ebaf0bdfe829bff2131c8856efef2aa3112ab7355072c22373fb996",
+      "phase_count": 22,
+      "source_operations": 28
+    },
+    {
+      "layer": 39,
+      "path": "L39.json.gz",
+      "sha256": "e9c29d2bbc0c21f59004156abe17d28b8a30fe1cf4ce2b53e26d80f46775bb52",
+      "phase_count": 22,
+      "source_operations": 28
+    }
+  ],
+  "totals": {
+    "source_operations": 1149,
+    "canonical_dispatch_fragments": 5244,
+    "observer_phases": 913,
+    "selected_matrix_records": 1311
+  },
+  "retained_observer_layers": [
+    0,
+    1,
+    2,
+    3,
+    20,
+    21,
+    24
+  ],
+  "missing_layers_resolved": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    22,
+    23,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "source_order": "Literal demand-r5 instruction order; rank fragment order is existing dispatch order",
+  "observer_order": "Existing dsrom_1m_field.layer_groups and greedy phase partition; NOT native issue order",
+  "current_candidate_difference": "Retained planv is S81+R93 BF520. These canonical BF519 schedules have no remap; candidate phase merge must use actual existing R93 source recipe, not inherit canonical CFG IDs.",
+  "no_payload_or_activation_generated": true,
+  "new_archives": 0,
+  "new_frontend_builds": 0,
+  "measured_gain": null,
+  "accepted_runtime_journal": null
+}

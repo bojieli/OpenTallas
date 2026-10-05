@@ -40,6 +40,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -240,11 +241,13 @@ def apply_table(P, rows, label):
             P.put(n, t, f"{label}: {src}", cls=cls, modelled_s=mod)
 
 
-def apply_levers(P, info, lever_dir):
+def apply_levers(P, info, lever_dir, excluded=()):
     """Recovery baseline: every ADOPTED lever record in `lever_dir`/levers/*.json replaces the measured terms it
     re-measured on its successor RTL.  Record schema (opentallas.dsrom-recovery.lever.v1):
       lever, verdict ("ADOPT" | "REJECT" | ...), exact (bool), ss_ff (signoff summary),
-      nodes  {"<node name>" | "*.<suffix>": {"us": float, "source": str, "cls": "measured"}}
+      nodes  {"<node name>" | "*.<suffix>": {"us": float, "source": str, "cls": "measured",
+              "kind": optional graph kind, e.g. "fused_fast" for a node moved to the 1.2 GHz domain (not in
+              uarch_model.SLOW_KINDS), so the measured CDC is charged on the edges the move creates or removes}}
       info   {"hop_us": all stage hops + extra S81 hops, "head_stage_occupancy_us", "head_argmax_drain_us",
               "draft_blocks_total_us" + "draft_blocks_source": the three DSpark blocks re-measured with the recovery
               levers (ONE lever record owns it, normally levers/draft.json; the 5 draft head sweeps follow
@@ -254,7 +257,7 @@ def apply_levers(P, info, lever_dir):
     for f in sorted((lever_dir / "levers").glob("*.json")):
         r = json.loads(f.read_text())
         row = dict(lever=r["lever"], record=rel(f), sha256=sha(f), verdict=r.get("verdict"))
-        if r.get("verdict") != "ADOPT" or r.get("exact") is not True:
+        if r["lever"] in excluded or r.get("verdict") != "ADOPT" or r.get("exact") is not True:
             skipped.append(row)
             continue
         for key, v in r.get("nodes", {}).items():
@@ -262,6 +265,8 @@ def apply_levers(P, info, lever_dir):
             assert names and all(n in P.g.nodes for n in names), (f, key)
             for n in names:
                 P.put(n, v["us"] * 1e-6, f"{r['lever']}: {v['source']}", cls=v.get("cls", "measured"))
+                if "kind" in v:
+                    P.g.nodes[n]["kind"] = v["kind"]
         li = r.get("info", {})
         if "hop_us" in li:
             for n, nd in P.g.nodes.items():
@@ -280,6 +285,35 @@ def apply_levers(P, info, lever_dir):
                                         source=li.get("draft_blocks_source", rel(f)))
         applied.append(row)
     return dict(applied=applied, not_applied=skipped)
+
+
+def apply_candidate(P, record):
+    """Conditional decision study only; never changes a lever's adoption record.
+
+    Uses the same node replacement semantics as apply_levers. Candidate costs exclude
+    the independently inserted CDC terms, which the composer adds exactly once.
+    """
+    if record.get("exact") is not True:
+        raise ValueError("candidate must have a positive exactness measurement")
+    seen = set()
+    for key, value in record.get("nodes", {}).items():
+        names = suffix_nodes(P.g, key[2:]) if key.startswith("*.") else [key]
+        if not names or any(n not in P.g.nodes for n in names):
+            raise ValueError(f"candidate node not in the baseline: {key}")
+        for name in names:
+            if name in seen:
+                raise ValueError(f"candidate replaces a node twice: {name}")
+            seen.add(name)
+            seconds = float(value["us"]) * 1e-6
+            if not math.isfinite(seconds) or seconds < 0:
+                raise ValueError(f"invalid candidate latency: {name}")
+            if seconds == 0 and not value.get("covered_by"):
+                raise ValueError(f"zero candidate latency requires a measured covering node: {name}")
+            P.put(name, seconds, f"conditional {record['lever']}: {value['source']}",
+                  cls=value.get("cls", "measured"))
+            if "kind" in value:
+                P.g.nodes[name]["kind"] = value["kind"]
+    return sorted(seen)
 
 
 def apply_engram(P, eng):
@@ -399,6 +433,15 @@ def main():
                     help="s81 (default): the S81-bound window record; stream_la / asbuilt_c1: the audit's component")
     ap.add_argument("--hop-tier", default="light_fec", choices=("light_fec", "kp4_209ns"))
     a = ap.parse_args()
+    return compose(a)
+
+
+def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_output=True):
+    """Replay the timing authority without a CLI subprocess or mutable lever directory.
+
+    The default path is unchanged. Decision-gate callers can hold adopted inputs
+    fixed and price preliminary measurements without enabling their hardware.
+    """
     if a.out is None:
         a.out = (a.rec if a.baseline == "asbuilt" else a.recovery) / "composition.json"
     ins = {k: a.rec / f"{k}.json" for k in ("field", "su", "head", "links", "cand_select", "engram", "embed",
@@ -435,10 +478,14 @@ def main():
             su = su_without_model_cdc(su)
         apply_table(P, AD.su_rows(g, su), "SU")
     if a.baseline == "recovery":
-        info["levers"] = apply_levers(P, info, a.recovery)
+        info["levers"] = apply_levers(P, info, a.recovery, excluded_levers)
+    if candidates:
+        info["conditional_candidates"] = [dict(lever=r["lever"], nodes=apply_candidate(P, r)) for r in candidates]
     cdc_nodes = {}
     if "su_cdc" in recs:
         info["cdc"], cdc_nodes = apply_cdc(P, recs["su_cdc"])
+    if graph_hook is not None:
+        graph_hook(g, P, base_patches, info)
     t, path = classify(g, P, base_patches)
     hop_extra = info.get("hop_us", M.HOP_US)
     ar = t + EXTRA_HOPS * hop_extra
@@ -551,8 +598,9 @@ def main():
                                                              RC / "select.json"] if Path(p).exists()},
         tool_sha256={rel(ROOT / "tools/dsrom_1m_allmeasured.py"): sha(ROOT / "tools/dsrom_1m_allmeasured.py"),
                      rel(ROOT / "tools/dsrom_1m_measure.py"): sha(ROOT / "tools/dsrom_1m_measure.py")})
-    a.out.write_text(json.dumps(rec, indent=1, default=str) + "\n")
-    print(json.dumps(dict(AR_us=rec["AR_us"], AR_tok_s=rec["AR_tok_s"], by=by, share=rec["measured_share"],
+    if write_output:
+        a.out.write_text(json.dumps(rec, indent=1, default=str) + "\n")
+        print(json.dumps(dict(AR_us=rec["AR_us"], AR_tok_s=rec["AR_tok_s"], by=by, share=rec["measured_share"],
                           modelled=rec["still_modelled_total_us"], II=rec["MTP"]["II_us"], worst=worst["hop"],
                           draft=rec["MTP"]["draft_us"], MTP=rec["MTP"]["MTP_tok_s"]), indent=0))
     return rec

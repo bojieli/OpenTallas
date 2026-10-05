@@ -1,0 +1,72 @@
+{
+  "E1_basis": "Noether corrected CTS owner terminal: Q0 FF-112.19/SS+204.96ps; Q1 FF-100.90/SS+173.34ps. Numbers are rounded owner report, not independently extracted raw STA.",
+  "binding_status": "Parent reservation abstracts exist; no selected routed launch/capture clock and Q-data path record. BST source is real but is not a substitute for FIFO output timing.",
+  "equations": {
+    "earliest": "launch insertion FF_min + clkQ FF_min + logic FF_min + wire FF_min + phase/reference offset",
+    "hold": "earliest >= capture insertion FF_max + hold25ps + actual receiver hold - capture internal minimum data delay",
+    "latest": "launch insertion SS_max + clkQ SS_max + logic SS_max + wire SS_max + phase/reference offset",
+    "setup": "latest <= next capture edge + capture insertion SS_min - setup60ps - actual receiver setup - capture internal maximum data delay"
+  },
+  "minimum_repair_model": {
+    "added_area_um2": null,
+    "added_buffer_count": null,
+    "added_cycles": 0,
+    "candidate_cycle_policy": "Retain existing source/FIFO/capture cycles while sizing matched clock paths. Additional cycles need separate actual dependency model if same-edge construction cannot close.",
+    "hold_deficit_if_and_only_if_vehicle_is_actual_ns": [
+      0.11219,
+      0.1009
+    ],
+    "hold_deficit_under_actual_parent_ns": null,
+    "launch_capture_skew_adjustment_ns": null,
+    "required_common_arrival_window_ns": [
+      0.47219,
+      0.90034
+    ],
+    "route_admitted": false,
+    "selection": "Matched producer/receiver clock construction and real data path first; no speculative delay-chain or new capture cycle selected.",
+    "wire_or_clock_repair_acceptance": "Both earliest and latest corners must pass with unchanged60/25 uncertainty; lowering capture insertion helps hold but consumes setup headroom and must use actual min/max clock paths."
+  },
+  "physical_closes": false,
+  "ports": {
+    "xs_q0": {
+      "current_E1_requirement": {
+        "declared_vehicle_max_ns": 0.727,
+        "declared_vehicle_min_ns": 0.36,
+        "max_arrival_ns": 0.93196,
+        "min_arrival_ns": 0.47219,
+        "production_constraint": false
+      },
+      "earliest_data_arrival_ns": null,
+      "latest_data_arrival_ns": null,
+      "physicalrecord": null,
+      "reference_clock_name": null,
+      "source_clock_insertion_max_ns": null,
+      "source_clock_insertion_min_ns": null
+    },
+    "xs_q1": {
+      "current_E1_requirement": {
+        "declared_vehicle_max_ns": 0.727,
+        "declared_vehicle_min_ns": 0.36,
+        "max_arrival_ns": 0.90034,
+        "min_arrival_ns": 0.4609,
+        "production_constraint": false
+      },
+      "earliest_data_arrival_ns": null,
+      "latest_data_arrival_ns": null,
+      "physicalrecord": null,
+      "reference_clock_name": null,
+      "source_clock_insertion_max_ns": null,
+      "source_clock_insertion_min_ns": null
+    }
+  },
+  "production_IO_bound": false,
+  "schema": "opentallas.s81.q-parent-boundary.v1",
+  "source_chain": "spine BST final ot_hdc_delay register -> planned region meso FIFO/fanout -> element g_ir r_xs_q0/1",
+  "source_sha256": {
+    "rtl/common/ot_meso_fifo.sv": "7e05230e70d6113af2da3326e678d86dd0c1e78e6cbf985d06b18c955f4b0ecb",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/v41die/ot_v41_spine_pq_w17w10.sv": "0595a27f197dc81df0cd9bb4d1dbbeb40c3437219e73698b414c819618cfe3e6",
+    "rtl/v41rom/ot_v41_rom_stage_pg_cdc.sv": "0982e92a7b2b72585e43f2f7dc3f6a0da9d078be9f90b066ef91c63cd3f49364",
+    "tools/dsrom_s81_fulldie.py": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955"
+  }
+}

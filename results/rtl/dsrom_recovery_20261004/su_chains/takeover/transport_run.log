@@ -1,0 +1,46 @@
+SU_BOUNDARY gain_load cycle=6 vector=0
+SU_BOUNDARY gain_load cycle=7 vector=1
+SU_BOUNDARY gain_load cycle=8 vector=2
+SU_BOUNDARY gain_load cycle=9 vector=3
+SU_BOUNDARY gain_load cycle=10 vector=4
+SU_BOUNDARY go cycle=16
+SU_BOUNDARY lane_input cycle=50 vector=0
+SU_BOUNDARY lane_input cycle=51 vector=1
+SU_BOUNDARY lane_input cycle=52 vector=2
+SU_BOUNDARY lane_input cycle=53 vector=3
+SU_BOUNDARY lane_input cycle=54 vector=4
+SU_BOUNDARY mix_output cycle=68 vector=0
+SU_BOUNDARY mix_output cycle=69 vector=1
+SU_BOUNDARY mix_output cycle=70 vector=2
+SU_BOUNDARY mix_output cycle=71 vector=3
+SU_BOUNDARY mix_output cycle=72 vector=4
+SU_BOUNDARY sumsq_root cycle=144
+SU_BOUNDARY scalar_input cycle=153
+SU_BOUNDARY reduction_scalar cycle=234
+SU_BOUNDARY scalar_broadcast cycle=243
+SU_BOUNDARY raw_y cycle=254 vector=0
+SU_BOUNDARY raw_y cycle=255 vector=1
+SU_BOUNDARY raw_y cycle=256 vector=2
+SU_BOUNDARY raw_y cycle=257 vector=3
+SU_BOUNDARY raw_y cycle=258 vector=4
+SU_BOUNDARY raw_q cycle=267 vector=0
+SU_BOUNDARY raw_q cycle=268 vector=1
+SU_BOUNDARY raw_q cycle=269 vector=2
+SU_BOUNDARY raw_q cycle=270 vector=3
+SU_BOUNDARY raw_q cycle=271 vector=4
+SU_BOUNDARY consumer_y cycle=277 vector=0
+SU_BOUNDARY consumer_y cycle=278 vector=1
+SU_BOUNDARY consumer_y cycle=279 vector=2
+SU_BOUNDARY consumer_y cycle=280 vector=3
+SU_BOUNDARY consumer_y cycle=281 vector=4
+SU_BOUNDARY consumer_q cycle=290 vector=0
+SU_BOUNDARY consumer_q cycle=291 vector=1
+SU_BOUNDARY consumer_q cycle=292 vector=2
+SU_BOUNDARY consumer_q cycle=293 vector=3
+SU_BOUNDARY consumer_q cycle=294 vector=4
+SUN go=16 y_last=265 r=218 ro_last=-1 q_last=278 ey=0 er=0 eq=0 checked_y=5120 checked_r=0 checked_q=160 fault=0
+PASS
+- /srv/opentallas/repos/einstein-su-transport-d73430c5f/rtl/test/tb_dsrom_su_norm_transport.sv:174: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.571 s; speed 2.945 us/s
+- Verilator: cpu 0.571 s on 1 threads; allocated 17 MB
