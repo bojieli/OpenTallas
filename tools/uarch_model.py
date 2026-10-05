@@ -10537,12 +10537,12 @@ def hbm_cp_balanced_veto_model(measurement=None):
         protected_state='original W6 header,18 phase rails,14 status rails,sticky qualification retained',
         external_boundary_delta_bits_per_cycle=0,additional_external_tracks=0,
         internal_owner_compare_tracks_lower_bound=384,
-        local_branch_fanout=8,external_channel_capacity='unchanged original port context; local routing unqualified',
+        local_branch_fanout=8,external_channel_capacity=None,
         baseline_routed_body_um2=metrics['standard_cell_area_um2'],
         conservative_logic_allowance_um2=allowance,removal_credit_um2=0,
         body_ceiling_um2=metrics['standard_cell_area_um2']+allowance,
         existing_component_core_um2=metrics['core_area_um2'],
-        body_fits_existing_core_capacity=(metrics['standard_cell_area_um2']+allowance < metrics['core_area_um2']),
+        body_fits_existing_core_capacity=None,
         full_parent_slot_fit=None,area_proxy_basis='NAND2=.08748um2; allowance counts complete replacement logic without subtraction, not mapped proof',
         prelease_edges=5,grant_edges=1,rearm_edges=1,added_serial_edges=0,
         release_acceptance='same live192-bit owner,all existing error/status/completion/grant predicates and actual release_r; no output-qualified signal fed through priority next-state chain',
@@ -10552,6 +10552,87 @@ def hbm_cp_balanced_veto_model(measurement=None):
         context_route='same original full ports,IO20/u25/density.5; only after exact8713 and fresh Kant admission',
         measured_gain=None,clock_qualified=False,adopted=False,
         adoption='exact changed gate and SS/FF context required; timing-failed successor rejected without tuning')
+
+    # CP boundary bookkeeping only. W2 publication/provider/calendar belongs
+    # to its owner; its completion supplies exec_done here and is not repriced.
+    source = 'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv'
+    decoder = 'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv'
+    bench = 'rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv'
+    inputs = dict(clk=1,por_n=1,launch_v=2,launch_pc=32,cp_job=32,
+        cp_gen=4,launch_token=17,launch_pos=20,lease_granted=1,
+        release_r=1,exec_done=1,exec_fault=1,retired_original_ops=4,shared_fault=1)
+    outputs = dict(native_launch=2,lease_v=1,release_v=1,owned=1,
+        pending=1,quiet=1,selected=1,done=1,fault=1,selected_pc=32,
+        held_job=32,held_gen=4,held_token=17,held_pos=20)
+    cp_state = dict(header_W6=216,phase_dual_rails=18,owner_match=5,
+        shape=1,qualification_fault_dual_rails=2,status_dual_rails=14,
+        ecc_fault=1,checked_valid=1,decoder_start=1)
+    decoder_state = dict(state=2,held_code=216,held_syndrome=21,
+        held_overall=3,corrected_header=192,bad=1)
+    assert sum(inputs.values()) == 118 and sum(outputs.values()) == 115
+    assert sum(cp_state.values()) == 259 and sum(decoder_state.values()) == 435
+    result.update(schema='hbm.cp.balanced-veto.component-composition.v2',
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest()
+            for p in (source,decoder,bench)},
+        ports=dict(input_bits=inputs,output_bits=outputs,
+            total_input_bits=118,total_output_bits=115,
+            sampled_input_bits_excluding_clock_reset=116,
+            boundary_signal_tracks_lower_bound=231,
+            memory_ports={},memory_bytes_per_cycle=0,
+            physical_pin_bits_including_clock_reset=233,
+            internal_decoder_boundary=dict(code_bits=216,data_bits=192,
+                request_handshake_bits=2,response_handshake_bits=2,bad_bits=1),
+            clock_domains=1,CDC_added=0,
+            rate_basis='Signal width per target edge; handshake/backpressure controls accepted rate, not all bits are transfers every edge'),
+        state_inventory=dict(CP_source_bits=cp_state,decoder_source_bits=decoder_state,
+            total_source_state_bits_before_constant_pruning=694,
+            source_count_basis='Selected registered/balanced branches; legacy constant72-bit control and blocking capture temporary are excluded. Padding/constant pruning means this is not mapped FF count.',
+            additional_FF_bits=0,transactions=1,queue_depth=0),
+        replication=dict(component_instances=1,parent_instances_per_die=None,
+            new_replica_mux_bits=0,new_replica_demux_bits=0,
+            new_replica_fanout=0,local_equal64_loads=8,
+            parent_launch_and_reset_fanout=None),
+        intensity=dict(MACs_per_cycle=0,memory_bytes_per_cycle=0,
+            arithmetic_intensity_MACs_per_memory_byte=None,
+            communication='Control/owner-only component; no arithmetic or added memory service'),
+        floorplan=dict(component_reference_core_um2=metrics['core_area_um2'],
+            planning_density=.5,
+            required_placement_area_um2=(metrics['standard_cell_area_um2']+allowance)/.5,
+            basis='Positive full replacement logic allowance plus prior routed body; geometric area estimate excludes CTS/PG and route overhead.',
+            allocated_parent_slot=None,parent_slot_fit=None,
+            channel_tracks_required_lower_bound=231,allocated_channel_capacity=None,
+            channel_layer_pitch_and_length=None,channel_fit=None,
+            new_memory_macros=0,existing_W6_mutable_state_protection_retained=True),
+        latency_calendar=dict(
+            launch_capture='E0; launch accepted, complete header retained',
+            prelease_edges=5,grant_accept_edges=1,
+            qualified_exec_done_to_release_offer_edges=1,
+            release_offer_to_actual_accept_edges=1,
+            actual_grant_and_exec_done_clear_to_CP_done_edges=1,
+            CP_done_to_quiet_edges=2,
+            minimum_launch_to_done_local_edges=9,
+            minimum_launch_to_quiet_local_edges=11,
+            minimum_launch_to_done_local_ns_at_target=9/1.2,
+            minimum_launch_to_quiet_local_ns_at_target=11/1.2,
+            basis='Existing exact bench E1-E5, granted(), good_case() and warm rearm assertions; conditional immediate acceptance/cleanup, excluding external work and stalls.',
+            measured_extra_status_rearm_edges=1,
+            completion_input='Actual executor exec_done with four retired original operations and shared grant; W2 publication is an upstream term owned by Jason, never counted here.',
+            external_wait_terms=['shared lease grant refusal','executor work until qualified exec_done',
+                'shared release_r refusal','actual lease_granted/exec_done cleanup',
+                'actual CPL and cold/warm reset coordination outside this bind'],
+            fault_or_refusal_latency_bound=None,
+            local_transaction_expression='launch_to_done = (9 + grant_wait + executor_work_wait + release_wait + cleanup_wait) * target_period; quiet adds2 edges',
+            parent_token_expression='Sum scheduled CP intervals on the token critical path; count executor/provider/W2 intervals once at their owning term; overlap must come from actual parent calendar',
+            parent_scheduled_transactions_per_token=None,
+            parent_overlap_calendar=None,composed_token_latency_ns=None,
+            added_local_latency_edges=0,added_local_latency_ns_at_target=0),
+        model_prerequisites=dict(physical_build_admitted=False,
+            parent_composition_qualified=False,
+            required_owner_input=[
+                'Parent selected-program CP transaction count and critical-path/overlap calendar per target model/context, including grant/release/cleanup and CPL/reset readiness',
+                'Claude selected HBM parent CP instance count, allocated slot dimensions/usable area and routing/CTS/PG reservation',
+                'Claude actual CP channel layer/pitch/length and available tracks, plus launch/reset fanout and boundary loading'],
+            unknown_policy='Fail closed: standalone u25 IO20 recipe is a characterization context, not a parent slot/channel/calendar reservation; no new route until these prerequisites are supplied'))
 
     if measurement is not None:
         measured = json.loads((root / measurement).read_text())
