@@ -143,15 +143,18 @@ module ot_dsrom_reindex_kgctl_parent #(
     // One priced edge splits the global head into two physical halves.
     // The word and its real dispatch enable move together; no ready bypass.
     localparam integer HCW=SLW+2*HW+SW+WB;
-    wire [4*HCW-1:0] half_q;
+    localparam integer HCP=HCW+1;
+    wire [4*HCP-1:0] half_q;
+    wire [3:0] half_bad;
     generate for(genvar hh=0;hh<2;hh=hh+1)begin:g_half
         for(genvar hl=0;hl<2;hl=hl+1)begin:g_lane
             wire [SW-1:0] hs=hl?hd_s1:hd_seq[SW-1:0];
-            ot_hdc_v41x_kg_kreg_parent #(.W(HCW)) u_h(.clk(clk),
-                .d({hl?w_oh1_d:w_oh0_d,hd_b0[hl],hd_bc[hl],hs,
+            wire [HCW-1:0] d={hl?w_oh1_d:w_oh0_d,hd_b0[hl],hd_bc[hl],hs,
                     hd_blk[hl],hd_j[hl],hd_f0[hl],hd_fc[hl],
-                    disp?hd_cm[hl]:{NPC{1'b0}},disp?hd_sm[hl]:{NPC{1'b0}}}),
-                .q(half_q[(2*hh+hl)*HCW+:HCW]));
+                    disp?hd_cm[hl]:{NPC{1'b0}},disp?hd_sm[hl]:{NPC{1'b0}}};
+            ot_hdc_v41x_kg_kreg_parent #(.W(HCP)) u_h(.clk(clk),.d({^d,d}),
+                .q(half_q[(2*hh+hl)*HCP+:HCP]));
+            assign half_bad[2*hh+hl]=^half_q[(2*hh+hl)*HCP+:HCP];
         end
     end endgenerate
 
@@ -230,8 +233,8 @@ module ot_dsrom_reindex_kgctl_parent #(
     assign w_oh1_d = (rst_n && !(cmd_v && !busy) && run && disp && hd_m[1]) ? onehot(hd_s1) : {WB{1'b0}};
     generate for (genvar wc = 0; wc < 3; wc = wc + 1) begin : g_woh
         if (OPT_KC8 != 0) begin : g_on
-            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w0 (.clk(clk), .d(half_q[0*HCW+SLW+2*HW+SW+:WB]), .q(w_oh0_c[wc*WB +: WB]));
-            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w1 (.clk(clk), .d(half_q[1*HCW+SLW+2*HW+SW+:WB]), .q(w_oh1_c[wc*WB +: WB]));
+            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w0 (.clk(clk), .d(half_q[0*HCP+SLW+2*HW+SW+:WB]), .q(w_oh0_c[wc*WB +: WB]));
+            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w1 (.clk(clk), .d(half_q[1*HCP+SLW+2*HW+SW+:WB]), .q(w_oh1_c[wc*WB +: WB]));
         end else begin : g_off
             assign w_oh0_c[wc*WB +: WB] = w_oh0;
             assign w_oh1_c[wc*WB +: WB] = w_oh1;
@@ -246,7 +249,7 @@ module ot_dsrom_reindex_kgctl_parent #(
     always @* begin
         for (q = 0; q < NPC; q = q + 1) begin
             use_s[q] = (fq_n[NPC + q] != 0);
-            iss[q] = run && ((fq_n[q] != 0) || use_s[q]) && (!req_v[q] || req_rdy[q]);
+            iss[q] = run && !fault && !memory_fault && ((fq_n[q] != 0) || use_s[q]) && (!req_v[q] || req_rdy[q]);
         end
     end
 
@@ -254,7 +257,7 @@ module ot_dsrom_reindex_kgctl_parent #(
     genvar gg, gl;
     generate for (gg = 0; gg < GS; gg = gg + 1) begin : g_cp
         for (gl = 0; gl < 2; gl = gl + 1) begin : g_l
-            wire [HCW-1:0] h=half_q[(2*(gg/(GS/2))+gl)*HCW+:HCW];
+            wire [HCW-1:0] h=half_q[(2*(gg/(GS/2))+gl)*HCP+:HCW];
             wire [SW-1:0] rs=h[SLW+:SW];
             wire [HW-1:0] bc=h[SLW+SW+:HW],b0=h[SLW+SW+HW+:HW];
             wire [4:0] fc=h[2*NPC+:5];
@@ -334,7 +337,7 @@ module ot_dsrom_reindex_kgctl_parent #(
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
             for (p = 0; p < 4 * WB; p = p + 1) cntc[p] <= 5'd0;   // empty distinct-beat mask
         end else begin
-            if(memory_fault)fault<=1;
+            if(memory_fault||(run&&(|half_bad)))fault<=1;
             // completion, two cycles late: per-group partials, then their AND (never early: adm_q is
             // registered alongside the partials)
             adm_q <= adm;
