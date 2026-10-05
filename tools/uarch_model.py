@@ -9908,3 +9908,44 @@ def hbm_r5a_protected_pipeline_model():
             FF_hold_uncertainty_ps=25,macro_clkQ_from_own_SS_FF=True),
         gates=dict(fullshape_exact=False,physical_admitted=False,routed_SS_FF=False,
             parent_context=False,adopted=False))
+
+
+def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
+    """Mandatory baseline closure: local owner replication, priced before RTL.
+
+    The retained TX-mask endpoint is the ONLY selected mask successor. Neither
+    r7's false-IO route nor utilisation-only live routes qualify this new cut.
+    Parent allocation is deliberately unknown until Turing supplies real loads.
+    """
+    if nsm < 1 or nl < 1 or owner_copies < 1 or owner_copies > nl*32:
+        raise ValueError('nonempty full-shape owner slices required')
+    sb = max(1, (nsm-1).bit_length())
+    width = nl*32
+    copies = min(owner_copies, width)
+    added = max(0, copies-16)*sb
+    return dict(item=9, status='PREBUILD_DEFAULT_OFF', mandatory_clock_closure=True,
+        selected_endpoint='ot_gpu_coll_endpoint_f12_txmask',
+        arithmetic=dict(MACs_per_cycle=0, rounding_changes=0, reduction_order_changes=0),
+        shape=dict(NSM=nsm, NL=nl, data_bits=width, owner_copies=copies,
+            owner_bits_per_copy=sb, max_select_fanout_bits=(width+copies-1)//copies),
+        memory=dict(ingress_bytes_per_accept=nsm*width/8, endpoint_bytes_per_accept=width/8,
+            TX_bytes_per_cycle=64, RX_bytes_per_cycle=64, memory_ports_added=0),
+        communication=dict(SM_ingress_bits_per_cycle=nsm*(width+11),
+            mux_endpoint_bits_per_cycle=width+12, link_record_bits_per_cycle=546,
+            response_bits_per_cycle=width+nsm*2, external_boundary_bits_added=0,
+            added_local_owner_bits=added, owner_update_fanout=copies,
+            select_mux_bit_equivalents=width*(nsm-1), demux_control_outputs=nsm*2,
+            tracks_needed_lower_bound=width+12, actual_channel_capacity=None,
+            actual_parent_channel_fit=False),
+        area=dict(added_owner_FF_bits=added, FF_cell_floor_um2=added*DFF_UM2,
+            retained_context_cell_um2=29809.2, mux_bit_delta=0,
+            extra_buffer_reset_CTS_area_um2=None, actual_floorplan_slot=None,
+            actual_slot_fit=False),
+        latency=dict(new_mux_cycles_per_collective=0, new_mux_cycles_per_record=0,
+            new_mux_token_delta_ns=0, retained_XREG_cycles_per_collective=2,
+            historical_collective_count=265, retained_XREG_token_delta_ns=265*2/1.2,
+            composed_current_token_delta_ns=None, fullshape_cycle_gate=False),
+        clock=dict(period_ns=.833, SS_setup_uncertainty_ps=60,
+            FF_hold_uncertainty_ps=25, macro_load_and_parent_clock_bound=False),
+        gates=dict(fullshape_exact=False, contextual_SS_FF=False,
+            hub_routing_layer_check=False, installed=False, adoption=False))
