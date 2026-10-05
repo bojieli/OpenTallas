@@ -1,0 +1,16 @@
+{
+  "disposition": "SCHEDULE_SOURCE_REPLACEMENT",
+  "date_utc": "2026-10-05T14:22:50.012396+00:00",
+  "runtime_pid": 639236,
+  "supervisor_pid": 638639,
+  "runner_pid": 639235,
+  "cause": "Demonstrated native QE XR response is one block early. Frozen I20/I38 wrapper has same chronology defect as standalone I20 R1 numerical failure. Correct canonical current WINDOW/CKV payload cannot be claimed.",
+  "source_fix": "f5753dda5",
+  "frozen_quantizer_source_sha256": "760d57ed9c7fbc44216be3a6120e737fed8214fa670cd84a5d81e86cc734f88a",
+  "frozen_quantizer_object_sha256": "64281b2e2a1a788357bcf86e7a1552b47f96e49bcb14f53957d7b69ced122554",
+  "numerical_verdict": null,
+  "continuation_disabled": true,
+  "signal": "SIGTERM exact runtime only; parents reap naturally",
+  "automatic_restart": false,
+  "all_sources_partial_outputs_and_logs_preserved": true
+}
