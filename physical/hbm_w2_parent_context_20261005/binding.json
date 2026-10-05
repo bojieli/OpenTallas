@@ -8665,13 +8665,14 @@
   "source_callbacks_have_no_ready": true,
   "independent_owner_ledgers_added": 0,
   "local_CP_reset_cannot_clear_root_state": true,
-  "connected_R2_terminal_required": true,
+  "connected_R2_terminal": "results/rtl/w2_transaction_pipeline_20261005/connected_r2_PASS/terminal.json",
+  "connected_R2_gate_passed": true,
+  "extracted_context_gate_passed": false,
   "physical_dispatch_admitted": false,
   "remaining_bindings": [
     "Turing: actual mapped W2 boundary source/receiver objects and inherited-register allocations",
     "Turing: source clk_sm/clk_mem/reset roots, periods/relations and propagated SS/FF clock evidence",
     "Turing: per-net SS/FF receiver pins plus extracted wire loading from selected parent",
-    "Selected-parent/caller owner: installed/priced gateway transport and inherited control/CDC protection",
-    "Current-source connected R2 PASS, with publication and actual local CP warm-quarantine evidence"
+    "Selected-parent/caller owner: installed/priced gateway transport and inherited control/CDC protection"
   ]
 }

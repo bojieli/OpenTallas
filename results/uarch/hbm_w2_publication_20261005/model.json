@@ -53,16 +53,24 @@
     "actual_composed_clock_and_latency_qualified": false,
     "actual_parent_basis": "72e15410b (published parent join main2eb337dc8)",
     "actual_parent_diff_scope": "only W2 default-off parameter and u_w2_sink binding; all CP/association hooks unchanged",
+    "added_fixture_finish_edges": 20,
+    "added_observed_release_edges": 17,
     "added_sink_state_bits": 0,
     "bench": "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv",
     "bench_scope": "one selected pair with retained GU/SwiGLU inputs, live native W2/sector/provider/shared owner and actual CP reset hook; no SU/gather/formatter or full-die reset claim",
     "companion_CP_callable": "hbm_cp_balanced_veto_model restored verbatim from2eb337dc8; owner Harvey",
     "composition_condition": "Actual parent must bind clk_sm and scheduled CP/SU/W2 overlap calendar; native-only W2 bench does not exercise SU association",
-    "connected_gate_passed": false,
+    "connected_gate_passed": true,
+    "connected_terminal": "results/rtl/w2_transaction_pipeline_20261005/connected_r2_PASS/terminal.json",
+    "connected_warm_quarantine_passed": true,
     "default": 0,
+    "finish_delta_scope": "20 edges includes local warm ACK/reopen; publication release delta is17",
     "finite_ingress_seats": 4,
     "inherited_CP_join_terminal": "results/rtl/hbm_cp_parent_association_20261005/functional_r1/terminal.json (266checks/17responses; no replay or W2 credit)",
+    "measured_release_cycle": 12845,
+    "new_extracted_context_gate_passed": false,
     "no_physical_admission": true,
+    "original_release_cycle": 12828,
     "parameter": "W2_PROTECTED_TRANSACTION_PIPELINE",
     "parent_source": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
     "preserved_CP_parameters": [
@@ -74,6 +82,18 @@
     "preserved_association": "ot_hbm_integrated_su_cp_association; accepted executor lifetime separate from live admission",
     "reset_hook": "ot_hbm_integrated_cp_reset; CP local reset after CP idle and all_routes_drained",
     "root_POR": "rst_sm_n; stays distinct from local CP reset",
+    "warm_ack": {
+      "accepted": 220,
+      "consumed": 220,
+      "cycle": 12864,
+      "releases": 1
+    },
+    "warm_request": {
+      "accepted": 199,
+      "consumed": 198,
+      "cycle": 11398,
+      "retained": 1
+    },
     "warm_test": "request while accepted publication debt outstanding; drain normally, preserve held CPL, ACK only after matched CPL take"
   },
   "dedicated_W2_context": {
@@ -392,13 +412,14 @@
     "assertions": "accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high",
     "existing_fourrow_inputs_unchanged": true,
     "immutable_parent_source": "inputs/immutable_parent.sv (f835c8641)",
-    "parent_condition": "real CP reset/quarantine hook must hold root POR high and retain sink/borrower/CDC accepted debt until matched consumption; gate does not certify warm reset",
+    "parent_condition": "Selected live W2/provider/shared-owner/CP-reset warm quarantine PASS with root POR high. Extracted CDC/context and other parent routes still require their actual protection/clock binding; no full-die warm claim",
     "real_parent_hooks": [
       "g_on.g_die[d].u_w2_sink.por_n(rst_sm_n)",
       "g_on.g_die[d].u_cp.rst_n(cp_reset_n)",
       "all_routes_drained",
       "cp_reset_wait"
     ],
+    "selected_connected_warm_terminal": "results/rtl/w2_transaction_pipeline_20261005/connected_r2_PASS/terminal.json",
     "targeted_new_cases": [
       "sink_control_UE_after_provider_accept",
       "shared_owner_UE_after_provider_accept",
@@ -606,7 +627,7 @@
   },
   "model_bounded": true,
   "parent_binding_complete": false,
-  "parent_binding_remaining": "actual propagated clock/receiver loads and required gateway transport installation; current connected gate",
+  "parent_binding_remaining": "actual propagated clock/receiver loads, inherited-register allocations/protection and required gateway transport installation; selected connected warm gate PASS",
   "parent_boundary_requirements": {
     "boundary_inputs_bits": {
       "base_a": 32,
