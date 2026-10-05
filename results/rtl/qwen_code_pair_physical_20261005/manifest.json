@@ -1,0 +1,31 @@
+{
+  "scope": "physical-flow mapped cell/load price ONLY; no PNR or SS/FF context claim",
+  "sources": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",
+    "physical/qwen_code_pair/ot_qwen_hbm_code_pair_context.sv": "633ae741c0d32b80190d8f2ca9979da144977d3afbd8cd57035aec4ab39b52ae"
+  },
+  "libraries": {
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib": "e6a397c74d65b9e4f30128663e588bcf1192f680c3e86d01da34a328041d85b3",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib": "55584f8ac4910eefdbaf0183b021681cd87b3b9d62a62d6f802a601e79002df9",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib": "971247fdbb98c969300444c440ce5a5f3bc64a17c402e2025cf09c87908e97c0",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib": "13b59dfb321f154bc36f1b95b3942907176b01a0a951cac34a9dcd9c30a91a60",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib": "bf962aaa931b8bfeb8133719db6f6da0dde86fb373dd03629bf492f33f75c649",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+    "/srv/opentallas-scratch/codex/pauli-code-pair-physical-20261005-r1/libs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib": "29f2d9c5153299a3907df523633bb84fda8f291d90b3b0058d22ed5d67e719ee"
+  },
+  "period_ps": 833.333333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "engines_unchanged": true,
+  "extra_wrapper_registers": 0,
+  "route_admitted": false
+}
