@@ -11,8 +11,7 @@
   "environment": {
     "OT_ORFS_NUM_CORES": "16",
     "OT_SYNTH_TIMEOUT_SECONDS": "unlimited",
-    "OT_FLOW_TIMEOUT_SECONDS": "unlimited",
-    "RESERVE_GB": "24"
+    "OT_FLOW_TIMEOUT_SECONDS": "unlimited"
   },
   "admission_peak_GiB": 24,
   "argv": [
@@ -95,5 +94,6 @@
   },
   "existing_util30_reused": true,
   "component_only": true,
-  "whole_target_adopted": false
+  "whole_target_adopted": false,
+  "admission": "Use existing EPYC1 admit.sh unchanged; no reserve override"
 }
