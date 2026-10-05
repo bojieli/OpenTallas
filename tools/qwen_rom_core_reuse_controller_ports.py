@@ -31,7 +31,6 @@ def enroll(text, retained):
     if {n:declarations[n] for n in kept}!=target:
         raise ValueError('retained port direction or width changed')
     removed=set(names)-set(kept)
-    identifiers=['\\'+n+' ' if n.startswith(('u_me.','g_vsu.')) else n for n in kept]
     # Reuse spelling from the emitted header, including escape termination.
     spelling={n.strip().removeprefix('\\'):n.strip() for n in match[1].split(',')}
     identifiers=[spelling[n]+(' ' if spelling[n].startswith('\\') else '') for n in kept]

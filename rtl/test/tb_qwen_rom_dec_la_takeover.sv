@@ -53,6 +53,7 @@ always @(posedge clk) begin
  end
 end
 initial begin
+ if(BOUNDED != 0 && b.LA_LO_W != 9) $fatal(1,"bounded-state parameter not selected");
  for(i=0;i<64;i=i+1) begin
   for(v=0;v<32;v=v+1) mem[i][v*32+:32]=$random;
   mem[i][O_UNIT+:W_UNIT]=(i%2)+1;
