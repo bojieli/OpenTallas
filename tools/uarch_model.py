@@ -1075,6 +1075,57 @@ def dsrom_reindex_kc7_model():
         admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
 
 
+def dsrom_reindex_kc8_model():
+    """Claude's cycle-identical structural repair, priced before its sole route."""
+    # 6 kept WB128 copies plus 8 grouped room flags. No removed-cell credit:
+    # the old room_all flop may disappear, but mapping determines that debit.
+    copies, room = 6 * 128, 8
+    ff = copies + room
+    nand2 = copies * 4 + room * 4 + (8 * 7 + 7) * 2 + 64
+    gross = round(ff * 0.37908 + nand2 * 0.08748, 8)
+    parent, cap = 35166.3, 37452.2
+    return dict(
+        schema="opentallas.dsrom-reindex.kc8-model.v1", selected=False,
+        default_enabled=False, source_commit="0b598c6dbf8136463dc11b65373b5f84039fe4c0",
+        parent="kc7 terminal FAIL; measured same-context cells, not a die net debit",
+        dimensions=dsrom_reindex_kc7_model()["dimensions"],
+        mechanism=["8 registered local AND8 room groups; AND8 dispatch join at same edge",
+                   "3 kept write-enable copies per lane: metadata31/code32/scale32 loads"],
+        compute=dict(new_macs_per_cycle=0, new_rounding_points=0),
+        state=dict(gross_added_ff=ff, kept_copy_ff=copies, grouped_room_ff=room,
+                   gross_added_clock_sinks=ff, removed_room_all_credit=0,
+                   room_reset_set_loads=8, copied_enable_reset="rst_n in synchronous D predicate",
+                   accepted_debt_reset_semantics="unchanged"),
+        timing=dict(new_edges=0, new_cdc=0, per_user_latency_delta_cycles=0,
+                    actual_existing_gate_cases=20, actual_worst_cycles=738,
+                    conditional_833ps_us=0.614754, period_ps=833,
+                    SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+                    ready_external_budget_ps=166.6, original_max_and_min_groups_required=True,
+                    dispatch_added_combinational_AND_inputs=8, SS_FF_closed=False,
+                    slew_margin_percent=20, acceptance_slew_limit_ps=320, hold_margin_ps=8),
+        ports=dsrom_reindex_kc7_model()["ports"],
+        replicas=dict(controls_per_stack=1, stacks_per_rank=4, ranks=4,
+                      kept_enable_copies_per_lane=3, lanes=2, room_groups=8,
+                      FIFOs_per_room_group=8, no_new_memory_ports=True),
+        construction=dict(gross_ff_um2=round(ff*0.37908,8),
+                          decode_D_reset_allowance_nand2=copies*4+room*4+64,
+                          local_AND_and_join_nand2=(8*7+7)*2,
+                          gross_nand2_equivalents=nand2, gross_extra_um2=gross,
+                          footprint_basis="0.37908um2 FF and 0.08748um2 NAND2; footprint only, no TT delay transfer",
+                          conservative_decode_allowance="4 NAND2 per copied bit, no shared-decode or removed-logic credit",
+                          mapped_buffers_clock_tree_and_net_delta_um2=None),
+        slot=dict(core_um2=93630.5, max_cell_fraction=0.40, max_cells_um2=cap,
+                  measured_kc7_cells_um2=parent, construction_total_um2=round(parent+gross,8),
+                  remaining_mapping_CTS_repair_budget_um2=round(cap-parent-gross,8),
+                  fit_verified=False, parent_die_reservation=False),
+        routing=dict(new_internal_copy_Q_nets=copies, new_room_Q_nets=room,
+                     copy_Q_select_loads=[31,32,32], same_D_copy_loads=3,
+                     clock_reset_wire_sites_and_loaded_delay_unknown=True,
+                     additional_tracks=None, available_tracks=None,
+                     acceptance="same fixed core; mapped occupancy within cap and zero DRC/antenna/slew/cap/fanout"),
+        admission="consume completed20case gate; one OPT_KC8=1 route with slew margin20; new failing cone escalates to Claude, no blind rescue")
+
+
 def dsrom_reindex_kc7_parallel_model():
     """Owner-directed named fanout; contexts are measured, never die admission."""
     lib = "SEQ_RVT_TT_nldm_220123.lib footprint only, no TT timing transfer"
@@ -1151,6 +1202,7 @@ DEDICATED = dict(
         reindex_control_closure_successor=dsrom_reindex_kc6_model(),
         reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
         reindex_parallel_closure=dsrom_reindex_kc7_parallel_model(),
+        reindex_grouped_room_write_enable_successor=dsrom_reindex_kc8_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
