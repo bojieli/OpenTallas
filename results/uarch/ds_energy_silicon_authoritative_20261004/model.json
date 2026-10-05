@@ -2,7 +2,7 @@
  "schema": "opentallas.uarch.ds_energy_silicon_authoritative.v1",
  "date": "2026-10-04",
  "status": "MODEL on authoritative/measured inputs; every non-record constant in ASSUMED",
- "source_commit": "1fcace8ca4847c5a70399149fd64691869ae174f",
+ "source_commit": "4eee27714275b8a9cf60b19c3f4a1ac4849b84fd",
  "tau": 4.159,
  "sources": {
   "rates": "tools/uarch_model.py hbm_switch_latency_authoritative() (record results/uarch/hbm_switch_latency_authoritative_20261004)",
