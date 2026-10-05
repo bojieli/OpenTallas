@@ -1,0 +1,1406 @@
+{
+ "a1/ar_l20_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/ar_l20_haz1_g0",
+  "active_columns": 1,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 1,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 40,
+    "expected_beats": 40,
+    "expected_load_cycles": 41
+   },
+   {
+    "op": 2,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 3,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 4,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 5,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 16,
+    "expected_beats": 16,
+    "expected_load_cycles": 17
+   },
+   {
+    "op": 6,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 7,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 8,
+    "expected_beats": 8,
+    "expected_load_cycles": 9
+   },
+   {
+    "op": 8,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 64,
+    "expected_beats": 64,
+    "expected_load_cycles": 65
+   },
+   {
+    "op": 9,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 10,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 24,
+    "expected_beats": 48,
+    "expected_load_cycles": 49
+   },
+   {
+    "op": 11,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 12,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 13,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 14,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 15,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 16,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 17,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 18,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 19,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 20,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 21,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 22,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 40,
+    "expected_beats": 40,
+    "expected_load_cycles": 41
+   },
+   {
+    "op": 23,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 24,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 25,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 26,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 27,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 28,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 29,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 30,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 24,
+    "expected_beats": 24,
+    "expected_load_cycles": 25
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "c9de86a08f421bb29154e623f8a429777367048037678939ac3adac1b5cac64a",
+   "lines.hex": "693cd177d2be7c1fc4e13a4ca1e1e113d94fb5d3053413ab638c5beefea27c9c",
+   "x.hex": "53df4713fc1c6f90ea13ffeab277cb91db57271919ab1c106f5180606d97155f",
+   "out.txt": "52024443f3a3a6c1befc6117f2adacee26bb1b25439c45f0e24676bc8ef8da40"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a1/other_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/other_haz1_g0",
+  "active_columns": 1,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 1,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 48,
+    "expected_beats": 48,
+    "expected_load_cycles": 49
+   },
+   {
+    "op": 2,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 16,
+    "expected_beats": 16,
+    "expected_load_cycles": 17
+   },
+   {
+    "op": 3,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "897308a5282652a7c4e44d39328c7b95370159d875a08eb1580e05ce127edde3",
+   "lines.hex": "7e1ce96fe0197527008d1c82d9677a75fac1ca90933927fa9ab9e6414b34015b",
+   "x.hex": "04ceaeeed9bb667cffcb1c9993cd9c75159a1df4f174828e71f06272cd0182b6",
+   "out.txt": "f985328bf67ea6026259d8964b46d06fcac04de3bac00e59f96f3a4d87a483b1"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a1/stress_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/stress_haz1_g0",
+  "active_columns": 1,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 1,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 2,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 3,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 8,
+    "expected_beats": 8,
+    "expected_load_cycles": 9
+   },
+   {
+    "op": 4,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 64,
+    "expected_beats": 64,
+    "expected_load_cycles": 65
+   },
+   {
+    "op": 5,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 24,
+    "expected_beats": 48,
+    "expected_load_cycles": 49
+   },
+   {
+    "op": 6,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 7,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 16,
+    "expected_beats": 16,
+    "expected_load_cycles": 17
+   },
+   {
+    "op": 8,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 9,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 10,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 24,
+    "expected_beats": 24,
+    "expected_load_cycles": 25
+   },
+   {
+    "op": 11,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 16,
+    "expected_beats": 32,
+    "expected_load_cycles": 33
+   },
+   {
+    "op": 12,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 8,
+    "expected_beats": 8,
+    "expected_load_cycles": 9
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+   "lines.hex": "542ae239ee22cf3f3df495a84795201a0f91a982eb854d8069d902dc0dabd51c",
+   "x.hex": "c3a0ae29622fd0dfd035e719ae1e05c1c42522a4b3bc8f1230aa2f91352cc063",
+   "out.txt": "be368bc4607befb954bf61d8f17fe4d7594c8304a9eec962f2a6da30c5902515"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a1/wg_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/wg_haz1_g0",
+  "active_columns": 1,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0
+    ],
+    "addresses": 80,
+    "expected_beats": 80,
+    "expected_load_cycles": 81
+   },
+   {
+    "op": 1,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     4
+    ],
+    "addresses": 24,
+    "expected_beats": 48,
+    "expected_load_cycles": 49
+   },
+   {
+    "op": 2,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 40,
+    "expected_beats": 40,
+    "expected_load_cycles": 41
+   },
+   {
+    "op": 3,
+    "fmt": "fp8",
+    "groups": [
+     0
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "d642597a3e6e09341f81dfdffb2d1d134e1918539f9a4e5769128afebbee5183",
+   "lines.hex": "b8e9c1537d75d211ab67c437ccac24728f07b690853eaa7be21861d8c290d737",
+   "x.hex": "a7963eaea7629709f66f5dc8dfba409994752dade5b994ddb554138ac1139a4e",
+   "out.txt": "8ba6ab2717d12ab0beabfe1384dd6c4a95c051f2a57b3a835c433c1d50602f90"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a6/p6_l20_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/p6_l20_haz1_g0",
+  "active_columns": 6,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 1,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 40,
+    "expected_beats": 160,
+    "expected_load_cycles": 161
+   },
+   {
+    "op": 2,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 3,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 4,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 5,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 16,
+    "expected_beats": 64,
+    "expected_load_cycles": 65
+   },
+   {
+    "op": 6,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 7,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 8,
+    "expected_beats": 24,
+    "expected_load_cycles": 25
+   },
+   {
+    "op": 8,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 64,
+    "expected_beats": 256,
+    "expected_load_cycles": 257
+   },
+   {
+    "op": 9,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 10,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 24,
+    "expected_beats": 192,
+    "expected_load_cycles": 193
+   },
+   {
+    "op": 11,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 12,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 13,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 14,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 15,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 16,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 17,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 18,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 19,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 20,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 21,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 22,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 40,
+    "expected_beats": 160,
+    "expected_load_cycles": 161
+   },
+   {
+    "op": 23,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 24,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 25,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 26,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 27,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 28,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 29,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 30,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 24,
+    "expected_beats": 96,
+    "expected_load_cycles": 97
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "c9de86a08f421bb29154e623f8a429777367048037678939ac3adac1b5cac64a",
+   "lines.hex": "693cd177d2be7c1fc4e13a4ca1e1e113d94fb5d3053413ab638c5beefea27c9c",
+   "x.hex": "53df4713fc1c6f90ea13ffeab277cb91db57271919ab1c106f5180606d97155f",
+   "out.txt": "f38e95e2daf1953e3130960ac5390f1adc825c055fc62f3ad7e31b51bd3670c2"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a6/p6_other_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/p6_other_haz1_g0",
+  "active_columns": 6,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 1,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 48,
+    "expected_beats": 192,
+    "expected_load_cycles": 193
+   },
+   {
+    "op": 2,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 16,
+    "expected_beats": 64,
+    "expected_load_cycles": 65
+   },
+   {
+    "op": 3,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "897308a5282652a7c4e44d39328c7b95370159d875a08eb1580e05ce127edde3",
+   "lines.hex": "7e1ce96fe0197527008d1c82d9677a75fac1ca90933927fa9ab9e6414b34015b",
+   "x.hex": "04ceaeeed9bb667cffcb1c9993cd9c75159a1df4f174828e71f06272cd0182b6",
+   "out.txt": "f08c1bb70ffea647df141f9cd29d108976bdb938a64ea2e98740d3d23cbbc405"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a6/p6_stress_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/p6_stress_haz1_g0",
+  "active_columns": 6,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 1,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 2,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 3,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 8,
+    "expected_beats": 24,
+    "expected_load_cycles": 25
+   },
+   {
+    "op": 4,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 64,
+    "expected_beats": 256,
+    "expected_load_cycles": 257
+   },
+   {
+    "op": 5,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 24,
+    "expected_beats": 192,
+    "expected_load_cycles": 193
+   },
+   {
+    "op": 6,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 7,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 16,
+    "expected_beats": 64,
+    "expected_load_cycles": 65
+   },
+   {
+    "op": 8,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   },
+   {
+    "op": 9,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 10,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 24,
+    "expected_beats": 96,
+    "expected_load_cycles": 97
+   },
+   {
+    "op": 11,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 16,
+    "expected_beats": 128,
+    "expected_load_cycles": 129
+   },
+   {
+    "op": 12,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 8,
+    "expected_beats": 24,
+    "expected_load_cycles": 25
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "217bae8ead442cc2bce48249b909346c9fd7371f7feb5f4288cd8d7188113a92",
+   "lines.hex": "542ae239ee22cf3f3df495a84795201a0f91a982eb854d8069d902dc0dabd51c",
+   "x.hex": "c3a0ae29622fd0dfd035e719ae1e05c1c42522a4b3bc8f1230aa2f91352cc063",
+   "out.txt": "dcd96ba5e152fb49f85a9ef3ee40421a5413033f3b55e82df474ad7dccb0f2c2"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ },
+ "a6/p6_wg_haz1_g0/layout.json": {
+  "retained_fixture": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/fixtures/p6_wg_haz1_g0",
+  "active_columns": 6,
+  "xmap": 1,
+  "ops": [
+   {
+    "op": 0,
+    "fmt": "bf16",
+    "groups": [
+     0,
+     1,
+     2
+    ],
+    "addresses": 80,
+    "expected_beats": 240,
+    "expected_load_cycles": 241
+   },
+   {
+    "op": 1,
+    "fmt": "fp4",
+    "groups": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "addresses": 24,
+    "expected_beats": 192,
+    "expected_load_cycles": 193
+   },
+   {
+    "op": 2,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 40,
+    "expected_beats": 160,
+    "expected_load_cycles": 161
+   },
+   {
+    "op": 3,
+    "fmt": "fp8",
+    "groups": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "addresses": 0,
+    "expected_beats": 0,
+    "expected_load_cycles": 0
+   }
+  ],
+  "source_sha256": {
+   "seq.hex": "d642597a3e6e09341f81dfdffb2d1d134e1918539f9a4e5769128afebbee5183",
+   "lines.hex": "b8e9c1537d75d211ab67c437ccac24728f07b690853eaa7be21861d8c290d737",
+   "x.hex": "a7963eaea7629709f66f5dc8dfba409994752dade5b994ddb554138ac1139a4e",
+   "out.txt": "6dbf8a5523694ecab9e5c4b633f4219e51ef2fe7942096f7ca63428d152f1bce"
+  },
+  "compiler_sha256": "e7f96e8bd0227ad1cbab7a53fd0de554935d3ba84f7a5f63d5d3a40cb8525bff"
+ }
+}
