@@ -55,3 +55,9 @@ corner collector failed because6_final.sdc absent. This is a driver terminal,
 NOT automatically a route terminal: live container/dependency audit required.
 Existing progressing container must be retained. Immutable partial evidence
 at terminal_collection/colldie_f12_r8; no new closure claim or rerun.
+
+HA2 full16 bench correction: original owner_reduce E is scalar elements,
+PF=E/LANES. Initial own referenceE64/384 was INVALID at LANES16 (OF0/3),
+not a qualified numerical vehicle. Correct referencesE1024/6144 produce
+PF64/384 andOF8/48. Sole own invalid Icarus compiler identity/cwd/consumer
+audited before SIGTERM; archive and partial output retained. No route changed.
