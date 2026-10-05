@@ -8978,3 +8978,43 @@ def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
                   qualified_route_count_allowed=1,
                   failure_policy='stop and report actual limiting cone; no rescue')
     return record
+
+
+def hbm_stream_aq_period_bound_candidate(*, exposed_service_cycles=None):
+    """Unadopted slower-service bound from the failed two-PC extracted path.
+
+    No SDC change, new hardware or route admission. N must be actual exposed
+    critical-path service edges, not total issued traffic; absent journal
+    keeps whole-token composition unknown. Existing overlap cannot be freed.
+    """
+    if exposed_service_cycles is not None and exposed_service_cycles < 0:
+        raise ValueError('nonnegative actual exposed service cycles required')
+    nominal_ps = 833.333
+    measured_violation_ps = 21.277424
+    bound_ps = nominal_ps + measured_violation_ps
+    return dict(status='UNADOPTED_PERIOD_BOUND_ONLY', source_measured_pcs=2,
+                nominal_target_period_ps=nominal_ps,
+                actual_routed_period_ps=833.0,
+                measured_SS_setup_ps=-measured_violation_ps,
+                measured_FF_hold_ps=7.988277,
+                setup_uncertainty_ps=60,hold_uncertainty_ps=25,
+                nominal_period_bound_ps=bound_ps,
+                same_existing_SDC_linear_bound_ps=833.0+measured_violation_ps,
+                candidate_service_frequency_MHz=1e6/bound_ps,
+                service_time_multiplier=bound_ps/nominal_ps,
+                service_only_time_increase_fraction=measured_violation_ps/nominal_ps,
+                service_only_rate_loss_fraction=1-nominal_ps/bound_ps,
+                actual_exposed_service_cycles=exposed_service_cycles,
+                added_exposed_service_time_us=(None if exposed_service_cycles is None
+                    else exposed_service_cycles*measured_violation_ps/1e6),
+                composed_single_user_token_delta_us=None,
+                composed_rate_prediction=None,full128_clock_qualified=False,
+                additional_CDC_phase_wait_us=None, additional_overlap_credit_us=0,
+                whole_token_composition='deltaT=N_exposed*21.277424ps + changed CDC/phase waits + changed competing-service waits; derive N and waits from accepted source calendar',
+                selected_installed_service_period_changed=False,
+                actual_selected_caller_clock_must_be_reconciled=True,
+                added_state_bits=0, added_ports=0, added_area_um2=0,
+                constraints_relaxed=False, adopted=False, route_admitted=False,
+                timing_requalification='linear fixed-netlist bound only; changed clock/CTS/IO/CDC context not measured',
+                limiting_cone='PC1 refwin -> wq_act / oldest pwin -> wab_oh[27]',
+                physical_record='results/rtl/svc_aq_block_nonempty_cut_20261005/route_r1/terminal.json')
