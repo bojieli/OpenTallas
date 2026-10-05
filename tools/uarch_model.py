@@ -396,6 +396,31 @@ def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
                 SSFF_closed=False, physical_admission=False)
 
 
+def rom_stage_retention_edge_price(elements=2417):
+    """Mandatory write preservation on the PG falling edge, NB2 full25 map.
+
+    Reuse the existing address decode/valid/dirty/shadow bits. Added override
+    enters only the existing power-loss branch; no new port, FF or cycle.
+    Conservative per-entry decode-qualified AND+OR bound, before synthesis.
+    Clock/loading/placement/power remain unqualified, not zero-cost credit.
+    """
+    if elements < 1:
+        raise ValueError("positive element count required")
+    return dict(retention_entries=25, retained_payload_bits=8*43+8*23+20+8*16,
+                compute_macs_per_cycle=0, host_bits_per_cycle=54,
+                host_bytes_per_cycle=6.75, replay_bits_per_cycle=54,
+                added_boundary_bits_per_cycle=0, added_ff_bits=0,
+                added_latency_cycles=0, added_token_latency_ns=0,
+                replica_count=elements, decode_fanout_sinks_per_entry=2,
+                conservative_override_gates_per_element=100,
+                conservative_cell_body_um2_per_element=100*.08748,
+                conservative_placement_um2_per_element_at50pct=200*.08748,
+                replicated_cell_body_mm2=elements*100*.08748/1e6,
+                default_enabled=False, mandatory_protection_fix=True,
+                channel_tracks_delta=0, slot_fit=None, residual_power_w=None,
+                SSFF_context_closed=False, adopted=False)
+
+
 def rom_spine_repin_price(displacements_um, setup_slack_ps, hold_slack_ps):
     """Same-frame pin-only recipe: bound both shorter and longer Manhattan wires.
 

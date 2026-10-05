@@ -73,6 +73,7 @@ endmodule
 
 // ---- A side of one element: isolation, retention shadow, replay handshake, synchronisers (aon_clk) ----
 module ot_v41_rom_pg_eao #(
+    parameter integer RETENTION_EDGE_WRITE = 0,
     parameter integer NSEG = 8,
     parameter integer NB = 2
 ) (
@@ -175,6 +176,13 @@ module ot_v41_rom_pg_eao #(
             cdc_ra1 <= rdy & iso_q;   ra2 <= cdc_ra1;
             if (pg_q && !pwr_good) begin                      // power lost: replay everything on the next wake
                 ready <= 1'b0; dirty <= valid; rq <= 1'b0; infl <= 1'b0;
+                // The shadow clock accepts this host write even on power loss.
+                // Preserve its validity and replay debt on the same edge. The
+                // domain never consumes it directly while power is falling.
+                if (RETENTION_EDGE_WRITE != 0 && host_wr) begin
+                    valid[cfg_a] <= 1'b1;
+                    dirty[cfg_a] <= 1'b1;
+                end
                 cdc_bs1 <= 1'b0; bs2 <= 1'b0; cdc_rr1 <= 1'b0; rr2 <= 1'b0; cdc_ak1 <= 1'b0; ak2 <= 1'b0;
                 cdc_ra1 <= 1'b0; ra2 <= 1'b0;
             end else begin
@@ -259,6 +267,7 @@ endmodule
 
 // ---- the always-on block of a stage: the shared controller + K element AO parts (routed alone for its leakage) ----
 module ot_v41_rom_stage_pg_ao_cdc #(
+    parameter integer RETENTION_EDGE_WRITE = 0,
     parameter integer K = 1,
     parameter integer NSEG = 8,
     parameter integer NB = 2,
@@ -327,7 +336,7 @@ module ot_v41_rom_stage_pg_ao_cdc #(
         .s_clk(s_clk), .iso_n(iso_n), .dom_rst_n(dom_rst_n), .pwr_good(pwr_good), .late(late), .ctl_fault(ctl_fault));
     genvar g;
     for (g = 0; g < K; g = g + 1) begin : g_e
-        ot_v41_rom_pg_eao #(.NSEG(NSEG), .NB(NB)) u_eao (
+        ot_v41_rom_pg_eao #(.RETENTION_EDGE_WRITE(RETENTION_EDGE_WRITE), .NSEG(NSEG), .NB(NB)) u_eao (
             .a_clk(aon_clk), .rst_n(rst_n), .cfg_v(cfg_v[g]), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go),
             .pwr_good(pwr_good), .iso_n(iso_n),
             .e_pv(e_pv[g*NB +: NB]), .e_pval(e_pval[g*32*NB +: 32*NB]), .e_prow(e_prow[g*16*NB +: 16*NB]),
@@ -348,6 +357,7 @@ endmodule
 
 // ---- a stage of K power-gated S81 FP8/FP4 pair elements (BF16 0, NB 2) sharing the x broadcast and `go` ----
 module ot_v41_rom_stage_q_pg_cdc_w10 #(
+    parameter integer RETENTION_EDGE_WRITE = 0,
     // Component alternative to the enclosing root publication edge. Never
     // enable both without charging two edges and testing the actual consumer.
     parameter integer PUBLICATION_CAPTURE = 0,
@@ -428,7 +438,7 @@ module ot_v41_rom_stage_q_pg_cdc_w10 #(
     wire [K*5*NB-1:0] e_pseg, e_pnseg; wire [K*3*NB-1:0] e_ppos;
     wire [K-1:0] e_busy, e_fault, dbusy, dack, ack, rdy, rq, ready_a;
     wire [K*5-1:0] rp_a; wire [K*48-1:0] rp_d;
-    ot_v41_rom_stage_pg_ao_cdc #(.K(K), .NB(NB), .NSUB(NSUB), .TW(TW)) u_ao (
+    ot_v41_rom_stage_pg_ao_cdc #(.RETENTION_EDGE_WRITE(RETENTION_EDGE_WRITE), .K(K), .NB(NB), .NSUB(NSUB), .TW(TW)) u_ao (
         .clk(clk), .aon_clk(aon_clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go),
         .pg_en(pg_en), .sched_v(sched_v), .sched_gap(sched_gap), .pg_lead(pg_lead), .pg_bet(pg_bet),
         .pg_idle(pg_idle), .pg_step(pg_step), .pg_rst(pg_rst), .pg_ack_to(pg_ack_to), .sw_en(sw_en), .sw_ack(sw_ack),
