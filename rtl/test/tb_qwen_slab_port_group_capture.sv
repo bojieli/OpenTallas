@@ -35,7 +35,14 @@ endmodule
 
 module tb_qwen_slab_port_group_capture;
     parameter integer W = 16, IL = 8, AW = 24, NW = 16, GID = 95, MUL_LAT = 7, LEAD = 8;
-    parameter integer PHASE_PS = 170;
+    parameter integer PHASE_PS = 170, DATA_SEED = 3, CREDIT_SEED = 5;
+    // These free-running counters intentionally have no hardware reset. A
+    // four-state simulator needs an arbitrary binary power-up realization;
+    // leaving them X would stay X forever (tc<=tc+1). No ring reset is added.
+    initial begin
+        dut.g_bw.u_bw.active.u_data.tc = DATA_SEED;
+        dut.g_bw.u_bw.active.u_cred.tc = CREDIT_SEED;
+    end
     reg clk = 0, rst_n = 0, bw_clk = 0;
     initial begin #(PHASE_PS * 0.001); forever #0.5 bw_clk = !bw_clk; end
     reg bw_v = 0, tw_rdy = 0;
@@ -217,7 +224,7 @@ module tb_qwen_slab_port_group_capture;
         end
         p_v <= 0;
         repeat (60) @(posedge clk);
-        if (!fifo_done) $fatal(1, "FIFO did not drain within arithmetic gate");
+        if (!fifo_done) $fatal(1, "FIFO did not drain: sent=%0d received=%0d w_live=%b r_live=%b w_ready=%b data_tc=%b credit_tc=%b", sent, received, wl, rl, bw_rdy, dut.g_bw.u_bw.active.u_data.tc, dut.g_bw.u_bw.active.u_cred.tc);
         if (nd != nq) begin $display("FAIL: %0d results for %0d requests", nd, nq); errors = errors + 1; end
         if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
         else $display("FAIL: %0d errors", errors);

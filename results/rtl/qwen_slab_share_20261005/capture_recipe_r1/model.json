@@ -52,7 +52,26 @@
     "historical_1505_arithmetic_gate_BW_FIFO": 0,
     "isolated_fifo_evidence_reused_only_as_primitive": true,
     "new_gate_required": "changed column capture arithmetic plus connected FIFO phase/stall/reset traffic",
-    "physical_BW_FIFO": 1
+    "physical_BW_FIFO": 1,
+    "ring_powerup": "arbitrary binary counters explicitly initialized by four-state testbench only; no hardware reset",
+    "tested_seed_pairs_if_gate_passes": [
+      [
+        0,
+        7
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        7,
+        0
+      ]
+    ]
   },
   "groups_per_die": 96,
   "growth_is_combined_port_scale_not_two_debits": true,
@@ -160,9 +179,9 @@
     "rtl/physical/ot_qwen_slab_port_group_capture.sv": "d45f780a7b0fe6478c78f6aa3d903dcf4bb60c95fefa6ea5a6daa5c85301ef6d",
     "rtl/test/qwen_runtime/ot_qwen_rt_tree.sv": "de118f21249f823a7786742a59bbdafe83a81a1f7eaf1c11c75332c6c6d3994e",
     "rtl/test/tb_qwen_slab_port_group.sv": "7a9fd0c303d53e7f15873f050416f976b53d11aba0965d2203205bb2ce019c1a",
-    "rtl/test/tb_qwen_slab_port_group_capture.sv": "9e79649f912aca3bb51e22a1918a2559ab91e0ae53f6e1998587859a3a05e89d",
-    "tools/qwen_slab_capture_contract.py": "c3b33351f0d0a8c8a19f80ec18b66a9fd08cb2a963efd313a10fbf3857a100ce",
-    "tools/qwen_slab_capture_gate.sh": "df4c197d5f1f6967f0580224e0b9fa43f308604a7ab7437d8025a33af29adb0a"
+    "rtl/test/tb_qwen_slab_port_group_capture.sv": "aceeebd25148a666df77691d57485f2ae2bdd7cf5ed02a3ca4d012be6eea7ebf",
+    "tools/qwen_slab_capture_contract.py": "2f66f44f64b4f6969f7b378a7247a53d19cad5c5e5aca8c6f9b5db035d1c43dc",
+    "tools/qwen_slab_capture_gate.sh": "7d00e7ac76f104b1ec74a1e0189998c3432632876462d7583dccf48d73f069a9"
   },
   "ss_setup_uncertainty_ps": 60,
   "timeout_policy": {
