@@ -93,7 +93,7 @@ def activation_fragments(x, fmt, groups, depth=128):
 
 
 def emit_case(source, name, ids, out, bankgroup, x=None, seed=20261005,
-              layout_mode='compact', output_rounding='auto'):
+              layout_mode='compact', output_rounding='auto', record_offset=0, activation_group=None):
     V.set_arith('chunk8')
     payload = checkpoint_rows(source, name, ids)
     fmt = payload['format']; codes = payload['codes']; k = codes.shape[1]
@@ -125,12 +125,13 @@ def emit_case(source, name, ids, out, bankgroup, x=None, seed=20261005,
         virtual.append(A.swizzle(fmt,words)); line_addresses.append(addresses.get((r,g,t),-1))
     # Each local bankgroup is four streams with two alternating 4096-row macros.
     # Large row shards may require consecutive physical bankgroups.
-    image_groups = (len(physical)+8191)//8192
+    if record_offset<0 or record_offset>=8192:raise ValueError('record offset')
+    image_groups = (record_offset+len(physical)+8191)//8192
     for bg in range(image_groups):
-        entries = physical[bg*8192:(bg+1)*8192]
+        entries = [(record_offset+r-bg*8192,words) for r,words in enumerate(physical) if bg*8192<=record_offset+r<(bg+1)*8192]
         for stream in range(4):
             for parity in range(2):
-                locations = {((r//16)*8+r%8): words[stream] for r,words in enumerate(entries) if (r//8)%2 == parity}
+                locations = {((r//16)*8+r%8): words[stream] for r,words in entries if (r//8)%2 == parity}
                 vals = [locations.get(addr,0) for addr in range(max(locations,default=-1)+1)]
                 (out/f'rom_g{bankgroup+bg}_s{stream}_p{parity}.hex').write_text(''.join(f'{v:069x}\n' for v in vals))
     (out/'lines_reference.hex').write_text(''.join(f'{v:0272x}\n' for v in virtual))
@@ -145,6 +146,7 @@ def emit_case(source, name, ids, out, bankgroup, x=None, seed=20261005,
     files = {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()}
     result = dict(schema='opentallas.hbrom.vectors.v1',tensor=name,source_rows=ids,logical_K=k,
                   format=fmt,geometry=geom,bankgroup_base=bankgroup,bankgroups=image_groups,
+                  physical_base_record=bankgroup*8192+record_offset,activation_group=activation_group,
                   physical_records=len(physical),issued_records=len(virtual),activation_origin=origin,
                   output_rounding=output_rounding,source_sha256=payload['source_sha256'],
                   source_dtype=payload['source_dtype'],source_shape=payload['source_shape'],
@@ -163,22 +165,39 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--checkpoint',type=Path,default=P.DEFAULT_CHECKPOINT)
     ap.add_argument('--tensor',action='append',help='Repeat for multiple sequential operations; default representative suite')
-    ap.add_argument('--rows',type=int,required=True,help='Actual rows assigned to selected cluster (no pilot default)')
+    ap.add_argument('--rows',type=int,help='Explicit row count; otherwise --owners required')
+    ap.add_argument('--owners',type=int,help='Full-shape cyclic row ownership; all rows belonging to --row-start owner')
+    ap.add_argument('--six-experts',action='store_true',help='Exercise experts0..5 w1/w3/w2 on the same compute plus dense/head suite')
     ap.add_argument('--row-start',type=int,default=0);ap.add_argument('--row-stride',type=int,default=1)
     ap.add_argument('--bankgroup-base',type=int,default=0)
     ap.add_argument('--layout-mode',choices=['padded','compact'],default='compact')
     ap.add_argument('--activation',type=Path);ap.add_argument('--out',type=Path,required=True)
     a=ap.parse_args()
-    if min(a.rows,a.row_stride)<=0 or min(a.row_start,a.bankgroup_base)<0:ap.error('invalid row/bankgroup geometry')
+    if (a.rows is None)==(a.owners is None):ap.error('choose exactly one of --rows or --owners')
+    if (a.rows is not None and a.rows<=0) or (a.owners is not None and a.owners<=0) or a.row_stride<=0 or min(a.row_start,a.bankgroup_base)<0:ap.error('invalid row/bankgroup geometry')
     source=P.Checkpoint(a.checkpoint);cases=[];bg=a.bankgroup_base
     try:
-        for i,name in enumerate(a.tensor or DEFAULT_TENSORS):
-            result=emit_case(source,name,[a.row_start+j*a.row_stride for j in range(a.rows)],
-                             a.out/f'op{i:02d}',bg,None if a.activation is None else np.load(a.activation),
-                             layout_mode=a.layout_mode)
-            cases.append(result);bg+=result['bankgroups']
+        names=a.tensor or ([f'layers.0.ffn.experts.{e}.{w}.weight' for e in range(6) for w in ['w1','w3','w2']]+DEFAULT_TENSORS[2:] if a.six_experts else DEFAULT_TENSORS)
+        for name in names:
+            ids=list(range(a.row_start,source.descriptor(name)[2]['shape'][0],a.owners)) if a.owners else [a.row_start+j*a.row_stride for j in range(a.rows)]
+            grouped=name.endswith('attn.wo_a.weight')
+            partitions=[(g,[r for r in ids if g*1024<=r<(g+1)*1024]) for g in range(8)] if grouped else [(None,ids)]
+            offset=0
+            for group,owned in partitions:
+                if not owned:continue
+                x=None if a.activation is None else np.load(a.activation)
+                if grouped and x is not None:
+                    if x.shape!=(8,4096):raise ValueError('wo_a activation requires eight distinct group rows [8,4096]')
+                    x=x[group]
+                result=emit_case(source,name,owned,a.out/f'op{len(cases):02d}',bg,x,
+                                 seed=20261005+(group or 0),layout_mode=a.layout_mode,
+                                 record_offset=offset,activation_group=group)
+                cases.append(result)
+                if grouped:offset+=result['physical_records']
+                else:bg+=result['bankgroups']
+            if grouped:bg+=(offset+8191)//8192
     finally:source.close()
     (a.out/'campaign.json').write_text(json.dumps(dict(schema='opentallas.hbrom.vector_campaign.v1',
-       sequential_same_compute=True,cases=cases,selected_rows=a.rows,physical_bankgroups=bg-a.bankgroup_base),indent=2)+'\n')
+       sequential_same_compute=True,cases=cases,selected_rows=a.rows,selected_owner=a.row_start,owners=a.owners,physical_bankgroups=bg-a.bankgroup_base),indent=2)+'\n')
 
 if __name__=='__main__':main()
