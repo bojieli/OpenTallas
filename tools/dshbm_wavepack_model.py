@@ -103,7 +103,7 @@ def request_join_model(dq=4, pio=2):
     # request offset6 and remaining24. Response ring/tag logic is unchanged.
     entry = 32+32+24+2
     queue = dq*entry + 2*(dq-1).bit_length() + dq.bit_length()
-    request = 24+6
+    request = 24+6+32+32+1+1+1  # active A/B bases, PAIR/bound/active flags
     op_hook = 8*(pio+(2*pio+3))+8
     ff = queue+request+op_hook
     logic = 1100  # two32b address adders +32b mux +FIFO selectors/bounds/control
