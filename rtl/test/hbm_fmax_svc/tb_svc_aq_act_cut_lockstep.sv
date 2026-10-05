@@ -59,6 +59,7 @@ module tb_svc_aq_act_cut_lockstep;
     end
     $display("SUMMARY wr_lockstep PULLIN=%0d AQR=%0d REFM=%0d PC=%0d PH=%0d WQ=%0d WP=%0d seed=%0d cycles=%0d mismatches=%0d acts=%0d rds=%0d wrs=%0d aqrds=%0d pushes=%0d refpb=%0d busy_starts=%0d fault_cycles=%0d verdict=%s",
              PULLIN, AQR, REFM, PCI, PH, WQN, WP, seed0, cyc, mism, acts, rds, wrs, aqs, pushes, refs, descs, faults, (mism == 0) ? "PASS" : "FAIL");
+    if (mism != 0) $fatal(1, "LOCKSTEP_TERMINAL_FAIL");
     $finish;
   end
 endmodule

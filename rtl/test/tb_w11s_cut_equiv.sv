@@ -67,7 +67,8 @@ module tb_w11s_cut_equiv;
         end
         if (cyc == ncyc + 12) begin
             $display("W11SEQ checked=%0d errors=%0d", checked, errors);
-            $finish;
+            if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+        $finish;
         end
     end
 endmodule

@@ -83,7 +83,8 @@ module tb_hdc_fastfp_equiv (input wire clk);
             if (quiet > 20) begin
                 $display("FASTFP checked=%0d add_mismatches=%0d mul_mismatches=%0d", checked, bada, badm);
                 if (bada == 0 && badm == 0 && checked == n) $display("PASS"); else $display("FAIL");
-                $finish;
+                if (!(bada == 0 && badm == 0 && checked == n)) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+        $finish;
             end
         end
     end
