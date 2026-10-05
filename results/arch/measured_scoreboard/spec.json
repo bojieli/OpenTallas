@@ -4082,6 +4082,28 @@
    "unit": "cycles",
    "status": "measured",
    "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_increment_cycles",
+   "label": "Paired W2 interval reduction versus source-matched PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.measured_component_saved_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "86 exact rows, 28 descriptors and same-executable controls; W2 term replaced once over 40 exposed groups at target1.2GHz. No analytic partial-wave addition; combined PACK+XMAP/SSFF/full-token unqualified, MTP unknown."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_ar_projection_us",
+   "label": "Paired W2 incremental exposed AR projection",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.incremental_AR_projection_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "86 exact rows, 28 descriptors and same-executable controls; W2 term replaced once over 40 exposed groups at target1.2GHz. No analytic partial-wave addition; combined PACK+XMAP/SSFF/full-token unqualified, MTP unknown."
   }
  ],
  "derived": [
