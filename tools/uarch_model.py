@@ -10348,3 +10348,37 @@ def hbm_smh_round_prefix_price():
         area_and_slot_fit='Map reserved gates using actual WC cells; measure mapping delta before route; no area or fit PASS inferred.',
         latency_composition_delta_us=0, physical_adopted=False,
         constraints=dict(period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25))
+
+def hbm_simt_gu_retirement_export_model(nl=128, imw=13):
+    """One caller-enrolled conversion per kernel; reuse existing ALU payload.
+
+    This source boundary is not the downstream four-vector buffering model.
+    Latency is a blocking accept edge per span plus real consumer backpressure;
+    the composed full-image driver must price its actual launch calendar.
+    """
+    if not 1 <= nl <= 256 or not 1 <= imw <= 32:
+        raise ValueError('Unsupported selected SIMT geometry')
+    metadata = dict(frame=73, op=32, pc=imw, source_register=8, expert=9,
+                    matrix=1, row_base=12, lane_first=8, count=9,
+                    enrolled=1, accepted=1, pending=1, source_instance=16)
+    bits = sum(metadata.values())
+    return dict(schema='opentallas.hbm.simt.gu_retirement_export.v1',
+        metadata_register_bits=bits, metadata_fields=metadata,
+        added_payload_register_bits=0, reused_payload_register='alu_wy:NL*32',
+        replicas_per_sm=1, MACs_per_cycle_delta=0,
+        memory_bytes_per_cycle_delta=0, boundary_bf16_bits=nl*16,
+        boundary_identity_bits=9+1+12+8+9+73+32+16,
+        boundary_control_bits=3, peak_rows_per_accept=nl,
+        mux='NL high16 slices; contiguous lane first/count qualifier; no arithmetic',
+        tracks_required=nl*16+9+1+12+8+9+73+32+16+3,
+        channel_capacity=None, parent_slot_fit=None,
+        area='Metadata FFs plus validation/comparison; mapping not yet measured',
+        added_minimum_blocking_cycles_per_span=1,
+        backpressure_cycles='actual held-valid cycles beyond immediate accept',
+        full_vectors=4, full_rows_per_vector=2304,
+        partition_rows=12, full_partition_launches=4*2304//12,
+        full_driver_latency='768 launch/convert spans plus actual TC/load calendar; not yet enrolled',
+        existing_composition='SMH model unchanged; this selected SIMT source adapter is default off',
+        composed_full_image_ready=False, physical_build_admitted=False,
+        adopted=False, period_ps=833, SS_setup_uncertainty_ps=60,
+        FF_hold_uncertainty_ps=25)
