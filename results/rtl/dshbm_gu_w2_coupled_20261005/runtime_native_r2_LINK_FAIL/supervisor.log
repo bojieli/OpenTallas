@@ -1,0 +1,3 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: /srv/opentallas-scratch/claude/dsrom-suchains/swiglu/work4/obj_swiglu_W64_ROUTED1_NIN33_NOUT23_LM5_LA4_QLAT5_rtl/Vtb_dsrom_su_swiglu__ALL.a(Vtb_dsrom_su_swiglu_vm_classes_15.o): in function `main':
+Vtb_dsrom_su_swiglu_vm_classes_15.cpp:(.text.startup+0x0): multiple definition of `main'; /srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r2/swiglu.o:retained_swiglu_accept.cpp:(.text.startup+0x0): first defined here
+collect2: error: ld returned 1 exit status
