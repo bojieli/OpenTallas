@@ -232,6 +232,7 @@ module tb_vector_scale_pipe_equivalence;
                      ((total_cyc_a * 100) / total_cyc_p) % 100);
         if (errors == 0) $display("VECTOR_SCALE_PIPE_EQUIVALENCE: PASS");
         else $display("VECTOR_SCALE_PIPE_EQUIVALENCE: FAIL (%0d mismatches)", errors);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

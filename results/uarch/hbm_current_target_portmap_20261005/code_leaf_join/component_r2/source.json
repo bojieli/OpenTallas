@@ -1,0 +1,13 @@
+{
+  "source": "/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1/L0-d0/matrix_int8.hex",
+  "source_sha256": "ff43369878ef7ffa3817e657e82f6c16fc786d3fbc327d3cd8fbe4009f604eca",
+  "returned_payload_sha256": "8d73d29e9d45a8ac2c1b3d5b770586c24291171d5691b952e24a6496f26354c9",
+  "source_words": 512,
+  "tile": 0,
+  "pairs": [
+    0,
+    1
+  ],
+  "source_formula": "(word*6144+tile*4+2*pair)*16",
+  "scope": "return-port stimuli, never consumer/SRAM preload; not complete physical HBM issuer qualification"
+}

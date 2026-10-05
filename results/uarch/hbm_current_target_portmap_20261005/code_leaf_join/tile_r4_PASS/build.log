@@ -1,0 +1,426 @@
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:2:9: ... Location of module with timescale
+    2 | package ot_hbm_r14_pkg;
+      |         ^~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_tile_logic_w12.sv:68:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                        : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile'
+   68 | generate if(!ENABLE)begin:off
+      |             ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv:27:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.leaf'
+   27 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv:22:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                       : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.fixed_pipeline.align'
+   22 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:296:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  296 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:298:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  298 |     localparam integer NPG = PRUNE ? (((GT >> SMIN) < G) ? (GT >> SMIN) : G) : G;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:300:24: Operator VAR 'LANES' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  300 |     localparam integer LANES = (PART != 2);
+      |                        ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:301:24: Operator VAR 'PORTS' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  301 |     localparam integer PORTS = (PART != 1);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:304:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  304 |     localparam integer GL = LANES ? G : 1;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:306:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  306 |     localparam integer GR = PRUNE ? NPG : G;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:565:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  565 |     generate if (LANES && KV_PREP == 0) begin : g_kv_addr
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:646:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  646 |     generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:660:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  660 |     end else if (LANES) begin : g_gm
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:717:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  717 |     generate if (LANES) begin : g_operand
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:736:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  736 |     generate if (PORTS) begin : g_atag
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:754:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  754 |     generate if (LANES) begin : g_lanes
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:814:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  814 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:814:32: Operator VAR 'ALWAYS' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  814 |             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
+      |                                ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:815:48: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  815 |             localparam integer HOLD_TO = PRUNE ? NPG : G;       
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:826:44: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ALWAYS' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  826 |             localparam integer R1 = ALWAYS ? R0 : ((HOLD_TO > R0) ? HOLD_TO : R0);
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:830:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ALWAYS' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  830 |             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
+      |                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:845:17: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ALWAYS' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  845 |                 if (ALWAYS) begin : g_a
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:883:35: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile.on.u_me'
+  883 |     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fpu.sv:66:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                 : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me.g_lanes.g_grp[3].g_lane[15].g_legacy_mul.u_mul'
+   66 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:344:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'j' generates 3 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  344 |     wire             j_last = (j == IL - 1);
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:356:35: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  356 |     wire [$clog2(GT):0] per_round = GT >> i_split;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:358:55: Operator SHIFTL expects 18 bits on the LHS, but LHS's CONST '16'h1' generates 16 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  358 |     wire [NW-1:0]    kc_in = i_wsrc ? ((i_k + ((16'd1 << i_split) - 16'd1)) >> i_split) : i_k;
+      |                                                       ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:358:67: Operator SUB expects 18 bits on the RHS, but RHS's CONST '16'h1' generates 16 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  358 |     wire [NW-1:0]    kc_in = i_wsrc ? ((i_k + ((16'd1 << i_split) - 16'd1)) >> i_split) : i_k;
+      |                                                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:368:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  368 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:368:38: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  368 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:381:45: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  381 |                 nb <= 0; nb_t <= 0; nb_step <= per_round * (W * IL);
+      |                                             ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:382:34: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  382 |                 lb <= 0; lb_step <= per_round * W;
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:389:59: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'nb' generates 19 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  389 |                 j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:389:53: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  389 |                 j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
+      |                                                     ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:562:39: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xc' generates 24 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  562 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:562:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  562 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                 ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:569:49: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'cur' generates 24 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  569 |                     kv_addr[gi*AW +: AW] <= cur + ((gb + gi) >> split_r) * ts_r + ((gb + gi) & ((1 << split_r) - 1)) * wcs_r;
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:569:42: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  569 |                     kv_addr[gi*AW +: AW] <= cur + ((gb + gi) >> split_r) * ts_r + ((gb + gi) & ((1 << split_r) - 1)) * wcs_r;
+      |                                          ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:842:125: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  842 |                 ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+      |                                                                                                                             ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:965:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  965 |         assign result_v = PORTS ? raw_v : 1'b0;
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:997:33: Operator ASSIGNW expects 14 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+  997 |     wire [$clog2(GT):0] r_ports = GT >> r_split;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1005:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_lb' generates 19 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1005 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1005:76: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_nb' generates 19 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1005 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1018:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_oa' generates 24 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1018 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1018:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1018 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                 ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1091:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 18 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1091 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1091:31: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1091 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1160:42: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1160 |                 mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1161:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1161 |                 mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1162:25: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 't_j' generates 3 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference.u_me'
+ 1162 |                     (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:25:10: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's AND generates 34 bits.
+                                                                    : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.fixed_pipeline.align'
+   25 |     pc_of=((s>>2)^(s>>7)^(s>>12))&31;
+      |          ^
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:28:31: Operator ASSIGN expects 19 bits on the Assign RHS, but Assign RHS's SHIFTR generates 34 bits.
+                                                                    : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.fixed_pipeline.align'
+   28 |     logic [18:0] row;begin row=s>>15;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:29:30: Operator SHIFTR expects 34 bits on the LHS, but LHS's VARREF 'row' generates 19 bits.
+                                                                     : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.fixed_pipeline.align'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:29:46: Operator XOR expects 34 bits on the RHS, but RHS's VARREF 'row' generates 19 bits.
+                                                                     : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.fixed_pipeline.align'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:29:14: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's OR generates 34 bits.
+                                                                    : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.fixed_pipeline.align'
+   29 |       bank_of=((((s>>12)^(row>>2))&7)<<2)|((s^row)&3);end
+      |              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv:63:52: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'wr_row' generates 13 bits.
+                                                                                       : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.leaf'
+   63 |     wire format_ok=!wr_kind && column_ok && (wr_row<ROWS);
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv:71:78: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 13 bits.
+                                                                                       : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.leaf'
+   71 |       assign rd_r[p]=rd_span_bound[p] && rd_published[p] && (rd_row[p*13+:13]<ROWS) && !fault;
+      |                                                                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv:123:34: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's SHIFTR generates 256 bits.
+                                                                                       : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.leaf'
+  123 |       wire [31:0] selected_checks=check_q[p][rb] >> (rs*32);
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:27:9: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'installed_segment' generates 3 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   27 |     if(i==installed_segment&&seg_base[i*24+:24]==installed_base&&
+      |         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:34:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   34 |   read_bound=ENABLE&&installed&&published&&hits==1&&source_match&&
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:36:21: Operator EQ expects 24 bits on the RHS, but RHS's VARREF 'installed_rows' generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   36 |     installed_length==installed_rows&&installed_rows!=0&&
+      |                     ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:37:32: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   37 |     ({1'b0,installed_first_row}+installed_rows)<=ROWS&&destination<ROWS&&
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:37:32: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'installed_rows' generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   37 |     ({1'b0,installed_first_row}+installed_rows)<=ROWS&&destination<ROWS&&
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:37:67: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'destination' generates 25 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   37 |     ({1'b0,installed_first_row}+installed_rows)<=ROWS&&destination<ROWS&&
+      |                                                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:41:23: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   41 |   mapping_fault=ENABLE&&read_v&&installed&&
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:42:46: Operator NEQ expects 24 bits on the RHS, but RHS's VARREF 'installed_rows' generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   42 |     (hits!=1||!source_match||installed_length!=installed_rows||
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:43:33: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   43 |      ({1'b0,installed_first_row}+installed_rows)>ROWS||virtual_address>=24'd20480);
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_span_read.sv:43:33: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'installed_rows' generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.read_mapper'
+   43 |      ({1'b0,installed_first_row}+installed_rows)>ROWS||virtual_address>=24'd20480);
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:22:60: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'span_rows' generates 14 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   22 |  wire span_ok=installed_span_valid&&span_rows!=0&&span_rows<=ROWS&&span_first_column==0&&
+      |                                                            ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:23:26: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 14 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   23 |    ({1'b0,span_first_row}+span_rows)<=ROWS&&end_sector<=35'd703125000&&
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:23:26: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'span_rows' generates 14 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   23 |    ({1'b0,span_first_row}+span_rows)<=ROWS&&end_sector<=35'd703125000&&
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:24:110: Operator LT expects 35 bits on the RHS, but RHS's VARREF 'ROWS' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   24 |    owned.id.stack==span_stack&&owned.id.sector>=span_first_sector&&{1'b0,owned.id.sector}<end_sector&&destrow<ROWS;
+      |                                                                                                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:29:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   29 |  assign leaf_v=ENABLE&&owned_v&&legal&&!sticky;
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:30:27: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   30 |  assign leaf_packet=ENABLE?{operation,phase,global_rank,row,col,owned}:593'b0;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:32:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   32 |  assign fault=ENABLE&&sticky;
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_leaf_map.sv:33:65: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut.mapper'
+   33 |  always @(posedge clk or negedge por_n)if(!por_n)sticky<=0;else if(ENABLE)begin
+      |                                                                 ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:99:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                          : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference'
+   99 |     wire             go_i  = IREG ? go_q : ib_go;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:100:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference'
+  100 |     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:101:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                           : ... note: In instance 'tb_hbm_qwen_code_tile_join.reference'
+  101 |     wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_tile_logic_w12.sv:123:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile'
+  123 |     wire             go_i  = IREG ? go_q : (ib_go && code_span_retained);
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_tile_logic_w12.sv:124:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile'
+  124 |     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_tile_logic_w12.sv:125:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hbm_qwen_code_tile_join.newtile'
+  125 |     wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_pair_join.sv:33:20: Operator EQ expects 24 bits on the RHS, but RHS's VARREF 'span_rows' generates 14 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut'
+   33 |    installed_length==span_rows&&installed_length!=0&&installed_segment<NSEG&&
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/integration/ot_hbm_qwen_code_pair_join.sv:33:71: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'installed_segment' generates 3 bits.
+                                                                                   : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut'
+   33 |    installed_length==span_rows&&installed_length!=0&&installed_segment<NSEG&&
+      |                                                                       ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/integration/ot_hbm_qwen_code_pair_join.sv:40:16: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_hbm_qwen_code_tile_join.dut'
+   40 |   .iv(service_v&&ENABLE),.ir(service_r),.id(service_owned),.ov(ov),.ore(ore),.od(delivered),.fault(xf),.empty(crossing_empty));
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/test/hbm_accel/integration/tb_hbm_qwen_code_tile_join.sv:21:58: Operator ADD expects 34 bits on the RHS, but RHS's VARREF 'n' generates 32 bits.
+                                                                                        : ... note: In instance 'tb_hbm_qwen_code_tile_join'
+   21 |  @(negedge sc);o='0;o.id.stack=3;o.id.sector=34'h20000000+n;
+      |                                                          ^
+%Warning-SYMRSVDWORD: rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:5:28: Symbol matches C++ common word: 'stack'
+    5 |     logic die; logic [1:0] stack; logic [33:0] sector;
+      |                            ^~~~~
+                      ... For warning description see https://verilator.org/warn/SYMRSVDWORD?v=5.050
+                      ... Use "/* verilator lint_off SYMRSVDWORD */" and lint_on around source to disable this message.
+make: Entering directory '/srv/opentallas-scratch/jobs/sagan-qwen-code-tile-r4-held-kv/gate/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_hbm_qwen_code_tile_join__pch.h -o Vtb_hbm_qwen_code_tile_join__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_hbm_qwen_code_tile_join__pch.h -o Vtb_hbm_qwen_code_tile_join__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__3__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__4__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__5__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__6__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__7__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__8__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__9__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__10__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__11__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__12__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__13__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__14__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__15__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__16__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__17__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__18__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__19__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__20__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join___024root__21__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.slow -c Vtb_hbm_qwen_code_tile_join__Syms__Slow.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__6.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__7.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__8.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__9.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__10.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__11.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__12.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__13.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__14.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__15.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__16.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__17.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__18.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__19.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__20.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__21.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__22.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__23.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__24.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__25.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__26.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__27.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__28.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join___024root__29.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_qwen_code_tile_join__pch.h.fast -c Vtb_hbm_qwen_code_tile_join__main.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_hbm_qwen_code_tile_join__ALL.a    -pthread -lpthread -latomic   -o Vtb_hbm_qwen_code_tile_join
+rm Vtb_hbm_qwen_code_tile_join__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/jobs/sagan-qwen-code-tile-r4-held-kv/gate/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.746 MB sources in 62 modules, into 67.210 MB in 57 C++ files needing 0.041 MB
+- Verilator: Walltime 39.844 s (elab=0.113, cvt=11.619, bld=27.621); cpu 12.690 s on 16 threads; allocated 1424.406 MB

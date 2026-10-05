@@ -96,11 +96,13 @@
   },
   "source_context_sha256": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
   "construction_files_sha256": {
+    "physical/dsrom_static_provider_context/threads.tcl": "91a9fa1a2931aa3859bd3c649e25bb61c6d02418d3db28c6d16379e8c97ebf42",
+    "physical/dsrom_static_provider_context/fastroute.tcl": "ffe3000a93a017eec69a757a185126f46396f3a76bf223f80db5341c88aae124",
     "physical/dsrom_static_provider_context/ot_v41_static_provider_context.sv": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
     "physical/dsrom_static_provider_context/pdn.tcl": "4f4fbdfd8a93af90c935cdad9efcb75a54de8a944869f19ee2b6c5cce2ad1dcd",
-    "physical/dsrom_static_provider_context/regions.tcl": "6f4863263a0aa465f33596630302ef9d7adc40810e28e62200c1b2fed79c4a4d",
-    "physical/dsrom_static_provider_context/clock.tcl": "1edf752df7698d71b49a471bec05cf6b9e743b76c7a462f0eda519ce3085e93f",
-    "physical/dsrom_static_provider_context/run.sh": "1541cfcda4b7be5bf792eab987c76f67f89c4623a2900f1b393f59cc4344cf8b"
+    "physical/dsrom_static_provider_context/regions.tcl": "3f75bc15514ed12cec58a109abeab10cd40b51fb2fdbb57fa17aa103726cebf7",
+    "physical/dsrom_static_provider_context/clock.tcl": "5d275f354548fec4d7b39a585af79f7aa68fa6b9b3ab73aef7c355c581511619",
+    "physical/dsrom_static_provider_context/run.sh": "ebc44e8a09ac59e0a38df0f561bc30ee283640f39d5ff970d955d3eb9702b18a"
   },
   "route_policy": {
     "synthesis_host_lib": "TT host pre-layout screen only; no TT closure credit",
@@ -112,5 +114,40 @@
     "no_retry": true,
     "expensive_job_limits": "No wall/CPU-time/file/AS cap; actual fleet admission and persistent outputs"
   },
-  "attempt_r1": "FAIL_SOURCE_PARSE_BEFORE_PLACEMENT; preserved static_context_attempt_r1; whitespace successor not launched"
+  "attempt_r1": "FAIL_SOURCE_PARSE_BEFORE_PLACEMENT; preserved static_context_attempt_r1; whitespace successor not launched",
+  "installed_flow_binding": {
+    "MAX_CLK_ROUTING_LAYER": "not an installed variable; removed",
+    "global_maximum": "M8 permits selected clock",
+    "signal_layer_limit": "M2-M7 in pinned fastroute",
+    "clock_layer_limit": "M8-M8 in pinned fastroute",
+    "unchanged_logical_or_physical_design": true,
+    "attempt_r2": "FAIL_FLOW_CONFIGURATION_BEFORE_PLACEMENT"
+  },
+  "installed_clock_access": {
+    "trunk": "M8",
+    "vertical_leaf_access": "M7",
+    "proof": "static_context_attempt_r3/routing-binding-two-layer.log",
+    "reason": "Actual installed grt refuses M8-only layer range; permits source M8 trunk with M7 leaf access. Existing M7 power stripe/via/spacing retained, no free clock/PG overlap.",
+    "additional_registers_or_cycles": 0,
+    "additional_RTL_or_provider": false,
+    "clock_grid_unchanged": true,
+    "physical_admitted_context_only": true,
+    "physical_closed": false
+  },
+  "mapped_partition_binding": {
+    "provider_cells": 2137,
+    "provider_area_um2": 235.2483,
+    "issuer_cells": 871,
+    "issuer_area_um2": 75.42234,
+    "both_50pct_budgets_pass": true,
+    "includes_source_tap_physical_cells": true,
+    "not_placed_or_timing_closed": true
+  },
+  "placement_flow_binding": {
+    "density": 0.5,
+    "matches_original_named_slot_budget": true,
+    "disable_auto_lb_query": "Empty PLACE_DENSITY_LB_ADDON prevents optional empty-default-region numerical error; actual explicit density placement retains source fences.",
+    "actual_placement_CTS_threads": 4,
+    "RTL_area_clock_slots_unchanged": true
+  }
 }
