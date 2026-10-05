@@ -3272,7 +3272,7 @@ def main(argv: list[str] | None = None, *,
             previous[env] = os.environ.get(env)
             os.environ[env] = "unlimited" if override is None else str(override)
             callback()  # Validate before starting any tools.
-        return _main(args)
+        return _main(args, argv=argv)
     finally:
         for env, value in previous.items():
             if value is None:
@@ -3281,7 +3281,7 @@ def main(argv: list[str] | None = None, *,
                 os.environ[env] = value
 
 
-def _main(args: argparse.Namespace) -> int:
+def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
     global ROOT
 
     if args.source_root:
