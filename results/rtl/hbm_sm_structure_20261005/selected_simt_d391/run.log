@@ -1,0 +1,5 @@
+PASS sm_capture_lsu X=8 adjacent=7 LSUread=102 LSUwrite=102 ACK=204 exactbytes=3072
+- /srv/opentallas-scratch2/scratch/codex/hbmsm-selected-c25aafa16/src/rtl/test/hbm_accel/tb_hbm_accel_sm_capture_lsu.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 342ns; walltime 0.014 s; speed 25.107 us/s
+- Verilator: cpu 0.098 s on 8 threads; allocated 71 MB
