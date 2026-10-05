@@ -17,7 +17,7 @@ def model():
       actual_screen=dict(host='ot-epyc1tb',run='core_d1v0g',SS_setup_ps=-64.189598,clock_ps=833,uncertainty_ps=60,
                          path='d_chase_n[2] -> chase/issue/load enable fanout -> run_val[7]',physical_signoff=False),
       change='read predecoded chase count from held NEXT FIFO entry; use registered DYN selects; retained startup E1/E2/E3 tables ready before earliest E4 push',
-      instruction_semantics='unaltered fields, DYN truncation, VPOS moduloNW, invalid split, held FIFO, actual ready/idle/barrier, END/reset',
+      instruction_semantics='unaltered fields at tested 8K positions/offsets; invalid split, held FIFO, ready/idle/barrier, actual chunked argmax END/reset; generic NW wrap not qualified',
       state=dict(decoded_entry_bits=878,entry_count=8,decoded_FIFO_bits=878*8+3*8,staged_instruction_bits=1024,
                  dyn_selector_count=len(dynsel),dyn_selection_regs_bits=len(dynsel)*24,
                  incremental_vs_previous_CLAUDE_screen_bits=len(dynsel)*(24-8)-16,
@@ -38,6 +38,10 @@ def component():
     seq=text[text.index('    localparam integer LW'):text.index('    always @(posedge clk or negedge rst_n) begin\n        if (!rst_n) begin kvd_v')]
     seq=seq.replace('    wire       me_ready, me_idle, su_ready, su_idle;','')
     seq=seq.replace('    wire [15:0] su_progress, me_progress, su_rows;','')
+    for declaration in ('    wire [NW-1:0] am_idx;\n','    wire [31:0] am_val;\n','    wire       am_any;\n'):
+        assert seq.count(declaration)==1
+        seq=seq.replace(declaration,'')
+    argmax=text[text.index('    // The chunked weight program'):text.index('    // DYN offsets derived once per token.')]
     dyn=text[text.index('    // DYN offsets derived once per token.'):text.index('    // -- units')]
     baseline=E.V.emit(E.V.E.CORE.read_text())
     body=baseline[baseline.index(E.DEC_START)+len(E.DEC_START):baseline.index(E.DEC_END)]
@@ -48,6 +52,7 @@ input clk,rst_n,start, input [17:0] token,pos,
 input me_ready,me_idle,su_ready,su_idle,
 input [15:0] me_progress,su_progress,su_rows,
 input [1023:0] prog_q,
+input [17:0] am_idx,input [31:0] am_val,input am_any,
 output reg prog_re,output reg [11:0] prog_addr,
 output reg done,output reg [31:0] cycles,
 output reg [17:0] next_token,output reg [31:0] next_val,
@@ -58,10 +63,9 @@ INSTR_BITS=1024,KV_HBM=1,W_HBM=1,KV_VEC_WRITE_BRIDGE=1,QWEN_FULLSHAPE=1;
 assign me_en=1;
 wire kv_ok=1,kvd_v=0,w_ok=1,wd_v=0,emb_ok=1,kv_write_drained=1;
 wire [15:0] kv_we=0; wire kv_write_flush;
-wire [17:0] fin_idx=5; wire [31:0] fin_val=32'h3f800000;
 assign accepted=issue; assign invalid_at_load=dyn_tiles_bad_instruction;
 '''
-    return (header+seq+dyn+'\nassign decoded={'+','.join(fields)+'};\nendmodule\n'+helpers).replace('`include "ot_hdc_isa.svh"',(E.V.E.CORE.parent/'ot_hdc_isa.svh').read_text())
+    return (header+seq+argmax+dyn+'\nassign decoded={'+','.join(fields)+'};\nendmodule\n'+helpers).replace('`include "ot_hdc_isa.svh"',(E.V.E.CORE.parent/'ot_hdc_isa.svh').read_text())
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--model',action='store_true');p.add_argument('--out',type=Path);a=p.parse_args()
