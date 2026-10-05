@@ -45,7 +45,7 @@ module ot_hbm_accel_su_fused_vm #(
  wire read_data=state==DATA && requested<NB && in_ready;
  assign cmd_ready=ENABLE && !busy && !fault && source_ready && landing_reserved;
  wire accepted=cmd_valid && cmd_ready;
- integer l,k,element;
+ integer l,k,element,wl;
  always @* begin
   rd_addr=0;rd_re=0;rd_src=0;
   if(read_gain) for(l=0;l<N;l=l+1) begin
@@ -96,13 +96,13 @@ module ot_hbm_accel_su_fused_vm #(
  assign vm_wdata=ro_valid?rod:yd;
  always @* begin
   vm_we=0;vm_waddr=0;
-  for(l=0;l<N;l=l+1) begin
+  for(wl=0;wl<N;wl=wl+1) begin
    if(KIND==4) begin
-    vm_waddr[l*AW+:AW]=yb+(l%4)*D+y_index*(N/4)+l/4;
-    vm_we[l]=y_valid && (y_index*(N/4)+l/4<D) && !fault;
+    vm_waddr[wl*AW+:AW]=yb+(wl%4)*D+y_index*(N/4)+wl/4;
+    vm_we[wl]=y_valid && (y_index*(N/4)+wl/4<D) && !fault;
    end else begin
-    vm_waddr[l*AW+:AW]=yb+(ro_valid?ro_index:y_index)*N+l;
-    vm_we[l]=(y_valid||ro_valid) && ((ro_valid?ro_index:y_index)*N+l<D) && !fault;
+    vm_waddr[wl*AW+:AW]=yb+(ro_valid?ro_index:y_index)*N+wl;
+    vm_we[wl]=(y_valid||ro_valid) && ((ro_valid?ro_index:y_index)*N+wl<D) && !fault;
    end
   end
  end
