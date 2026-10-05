@@ -3,7 +3,7 @@
 # usage: run_variant.sh NAME FALLBACK BOUNDARY(plain|ref) UTIL DENSITY [extra run_abi3_physical args...]
 #   FALLBACK: N (DEC_LA_ISSUE_FB), suffix b = DEC_LA_BOUND, suffix a = DEC_LA_AMQ (e.g. 2ba)
 set -euo pipefail
-B=/srv/opentallas-scratch2/scratch/claude/qwen-core-ctx
+B=${QCC_B:-/srv/opentallas-scratch2/scratch/claude/qwen-core-ctx}   # host root: src/, runs/
 NAME=$1; FB=$2; BND=$3; UTIL=$4; DENS=$5; shift 5
 R=$B/runs/$NAME; S=$B/src
 Y=/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
