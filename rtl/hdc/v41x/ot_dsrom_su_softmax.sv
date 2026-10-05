@@ -25,8 +25,8 @@
 //
 // THE ROW SUM'S TREE.  In a vector: LPH/8 chunk sums, log2(LPH/8) levels.  Across vectors: a streaming binary
 // counter, level t holds a left operand until its right sibling arrives; the row's last item combines with a held
-// operand or passes (its sibling is the +0 padding: x + (+0) = x).  Every level step, pass or add, takes LA cycles,
-// so items stay in order.  The result is tapped at level lt = ceil(log2 nv) (an input).  This is exactly the
+// operand or passes (its sibling is the +0 padding: x + (+0) = x).  Every level step, pass or add, takes LA + 1
+// cycles (the pass / add select is registered), so items stay in order.  The result is tapped at level lt = ceil(log2 nv) (an input).  This is exactly the
 // golden's tree over 2^ceil(log2(T/8)) leaves (ot_hdc_v41x_vec_red's argument).
 //
 // WIRE.  DIN register stages on the score and PV inputs (hub traverse in), DOUT on the e and o outputs (out), RWU
@@ -180,7 +180,8 @@ module ot_dsrom_su_softmax #(
     reg  [6:0]       rcnt;
     reg              rd_on, rv, rlast;
     reg  [NL*32-1:0] s_rd;
-    reg  [NL*32-1:0] mbn;                        // -max of the lane's head, a leaf register per lane
+    (* keep *) reg [NL*32-1:0] mbn;              // -max of the lane's head, a leaf register per lane (kept: the
+                                                 // copies must survive synthesis, each drives one lane's adder)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rd_on <= 1'b0; rcnt <= 7'd0; rv <= 1'b0; rlast <= 1'b0; end
         else begin
@@ -281,9 +282,17 @@ module ot_dsrom_su_softmax #(
                                                        sum[32*l +: 32], fa);
         end
         ot_hdc_delay #(.W(H*32), .D(LA)) u_pd (.clk(clk), .rst_n(rst_n), .d(xi), .q(pd));
-        assign tl_x[(k+1)*H*32 +: H*32] = op[LA] ? pd : sum;
-        assign tl_v[k+1] = ov[LA];
-        assign tl_l[k+1] = ol[LA];
+        // the level's output is registered (pass / add select off the next level's adder input path): LA + 1
+        reg  [H*32-1:0] xo;
+        reg             vo_r, lo_r;
+        always @(posedge clk) xo <= op[LA] ? pd : sum;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin vo_r <= 1'b0; lo_r <= 1'b0; end
+            else begin vo_r <= ov[LA]; lo_r <= ol[LA]; end
+        end
+        assign tl_x[(k+1)*H*32 +: H*32] = xo;
+        assign tl_v[k+1] = vo_r;
+        assign tl_l[k+1] = lo_r;
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) par <= 1'b0;
             else if (vi) par <= li ? 1'b0 : ~par;
@@ -323,7 +332,7 @@ module ot_dsrom_su_softmax #(
         if (!rst_n) den_v <= 1'b0; else den_v <= dndv[RWD];
     end
     always @(posedge clk) if (dndv[RWD]) den_d <= den_dn;
-    reg  [NL*32-1:0] denl;                       // den of the lane's head, a leaf register per lane
+    (* keep *) reg [NL*32-1:0] denl;             // den of the lane's head, a leaf register per lane (kept)
     generate for (l = 0; l < NL; l = l + 1) begin : g_dl
         always @(posedge clk) if (dndv[RWD]) denl[32*l +: 32] <= den_dn[32*(l / LPH) +: 32];
     end endgenerate

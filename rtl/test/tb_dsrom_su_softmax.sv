@@ -9,6 +9,8 @@ module tb_dsrom_su_softmax;
     parameter integer LPH = 16;
     parameter integer NVMAX = 40;
     parameter integer LTMAX = 6;
+    parameter integer LM = 5;
+    parameter integer LA = 4;
     parameter integer ELM = 5;
     parameter integer ELA = 4;
     localparam integer NL = H * LPH;
@@ -35,7 +37,7 @@ module tb_dsrom_su_softmax;
     wire [6:0] nv = par[0][6:0];
     wire [2:0] lt = par[1][2:0];
 
-    ot_dsrom_su_softmax #(.H(H), .LPH(LPH), .NVMAX(NVMAX), .LTMAX(LTMAX), .ELM(ELM), .ELA(ELA)) dut (
+    ot_dsrom_su_softmax #(.H(H), .LPH(LPH), .NVMAX(NVMAX), .LTMAX(LTMAX), .LM(LM), .LA(LA), .ELM(ELM), .ELA(ELA)) dut (
         .clk(clk), .rst_n(rst_n), .nv(nv), .lt(lt), .scale(par[2]), .sink(vec[0]), .cosv(rope[0]), .sinv(rope[1]),
         .s_v(s_v), .s_d(s_d), .e_v(e_v), .e_d(e_d), .mx_v(mx_v), .mx_d(mx_d), .es_v(es_v), .es_d(es_d),
         .den_v(den_v), .den_d(den_d), .pv_v(pv_v), .pv_d(pv_d), .o_v(o_v), .o_d(o_d), .fault(fault));
