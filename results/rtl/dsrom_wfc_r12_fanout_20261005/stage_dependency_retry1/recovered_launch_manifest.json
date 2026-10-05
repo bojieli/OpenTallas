@@ -1,0 +1,109 @@
+{
+  "status": "ALL_SIX_SUBMITTED",
+  "source_sha256": "601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099",
+  "gate_summary": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_recovered_functional_summary.json",
+  "jobs": {
+    "R12_stg_u40": {
+      "pid": 582613,
+      "inst": "stg",
+      "utilization": 0.4,
+      "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_stg_u40",
+      "command": [
+        "/srv/opentallas-scratch/admit.sh",
+        "12",
+        "--",
+        "bash",
+        "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route.sh",
+        "stg",
+        "40"
+      ],
+      "time_epoch": 1791183839.1547132,
+      "status": "submitted_to_unchanged_admission"
+    },
+    "R12_stg_u45": {
+      "pid": 582614,
+      "inst": "stg",
+      "utilization": 0.45,
+      "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_stg_u45",
+      "command": [
+        "/srv/opentallas-scratch/admit.sh",
+        "12",
+        "--",
+        "bash",
+        "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route.sh",
+        "stg",
+        "45"
+      ],
+      "time_epoch": 1791183839.1557684,
+      "status": "submitted_to_unchanged_admission"
+    },
+    "R12_stg_u50": {
+      "pid": 582617,
+      "inst": "stg",
+      "utilization": 0.5,
+      "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_stg_u50",
+      "command": [
+        "/srv/opentallas-scratch/admit.sh",
+        "12",
+        "--",
+        "bash",
+        "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route.sh",
+        "stg",
+        "50"
+      ],
+      "time_epoch": 1791183839.1604912,
+      "status": "submitted_to_unchanged_admission"
+    },
+    "R12_src_u40": {
+      "pid": 582618,
+      "inst": "src",
+      "utilization": 0.4,
+      "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u40",
+      "command": [
+        "/srv/opentallas-scratch/admit.sh",
+        "15",
+        "--",
+        "bash",
+        "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route.sh",
+        "src",
+        "40"
+      ],
+      "time_epoch": 1791183839.162364,
+      "status": "submitted_to_unchanged_admission"
+    },
+    "R12_src_u45": {
+      "pid": 582620,
+      "inst": "src",
+      "utilization": 0.45,
+      "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u45",
+      "command": [
+        "/srv/opentallas-scratch/admit.sh",
+        "15",
+        "--",
+        "bash",
+        "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route.sh",
+        "src",
+        "45"
+      ],
+      "time_epoch": 1791183839.1634114,
+      "status": "submitted_to_unchanged_admission"
+    },
+    "R12_src_u50": {
+      "pid": 582622,
+      "inst": "src",
+      "utilization": 0.5,
+      "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50",
+      "command": [
+        "/srv/opentallas-scratch/admit.sh",
+        "15",
+        "--",
+        "bash",
+        "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route.sh",
+        "src",
+        "50"
+      ],
+      "time_epoch": 1791183839.164637,
+      "status": "submitted_to_unchanged_admission"
+    }
+  }
+}
