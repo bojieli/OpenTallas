@@ -83,8 +83,8 @@ module ot_mbist_bira_pipe #(
     localparam [7:0]  R8 = R[7:0];
     localparam [15:0] R16 = R[15:0], C16 = C[15:0], E16 = E[15:0], D16 = DMAX[15:0];
     localparam integer DI = (DMAX <= 2) ? 1 : $clog2(DMAX);
-    localparam [3:0] S_IDLE = 3'd0, S_SRCH = 3'd1, S_ROWS = 3'd2, S_COLS = 3'd3, S_DONE = 3'd4,
-                     S_SRCH3 = 3'd5, S_SRCH2 = 3'd6, S_SRCH2B = 4'd7, S_SRCH2C = 4'd8;
+    localparam [3:0] S_IDLE = 4'd0, S_SRCH = 4'd1, S_ROWS = 4'd2, S_COLS = 4'd3, S_DONE = 4'd4,
+                     S_SRCH3 = 4'd5, S_SRCH2 = 4'd6, S_SRCH2B = 4'd7, S_SRCH2C = 4'd8;
 
     reg [E-1:0]      valid;
     reg [RMAX-1:0]   row  [0:E-1];
@@ -157,7 +157,7 @@ module ot_mbist_bira_pipe #(
     always @* begin
         search_total = {SCW{1'b0}};
         for (sc = 0; sc < NSG; sc = sc + 1)
-            search_total = search_total + search_group[sc];
+            search_total = search_total + SCW'(search_group[sc]);
     end
 
     assign busy = (st != S_IDLE && st != S_DONE) || ana_pend || (q_n + QSLACK[QW:0] > QD[QW:0]);
@@ -298,13 +298,13 @@ module ot_mbist_bira_pipe #(
                     for (sg = 0; sg < NSG; sg = sg + 1) begin
                         group_sum = 7'd0;
                         for (sj = 0; sj < 4; sj = sj + 1)
-                            if (sg * 4 + sj < NCH) group_sum = group_sum + search_part[sg * 4 + sj];
+                            if (sg * 4 + sj < NCH) group_sum = group_sum + {2'd0, search_part[sg * 4 + sj]};
                         search_group[sg] <= group_sum;
                     end
                     st <= S_SRCH2C;
                 end
                 S_SRCH2C: begin
-                    cm_pop_r <= search_total;
+                    cm_pop_r <= 16'(search_total);
                     st <= S_SRCH3;
                 end
                 S_SRCH3: begin                                 // feasibility, best
