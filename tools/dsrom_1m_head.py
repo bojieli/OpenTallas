@@ -651,12 +651,103 @@ def cmd_record(a):
                                                                argmax_tail=tail, term_occ=thr)))
 
 
+def stream_model():
+    """Minimum missing native writer hooks; no measured drain-removal credit."""
+    import uarch_model as U
+    hook = U.dsrom_s81_head_result_hook(128)
+    per_rank = hook['native_declared_state_bits_per_rank'] + hook['adapter_state_bits_per_rank']
+    return dict(
+        status='SOURCE_MODEL_ONLY_NOT_SYSTEM_MEASUREMENT', opt_in_default=False,
+        source='rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv',
+        parameters=dict(R=128, AW=30, NW=21, ranks=[1, 2, 3]),
+        existing_rank0='current core native masked-writer hook; retain it',
+        architectural_replicas_already_priced=hook['replicas'],
+        missing_implementation_replicas=3, extra_architectural_replicas=0,
+        logical_state_bits_per_rank=per_rank,
+        missing_implementation_state_bits=3 * per_rank,
+        missing_implementation_FF_floor_mm2=3 * per_rank * U.DFF_UM2 / 1e6,
+        architectural_state_debit='existing four-rank hook charge, reconcile once; do not add three again',
+        input_ports_per_rank=hook['source_return_boundary_bits'] + 128 + 47 + 21 + 30 + 1,
+        input_scope='128 native valid/accept lanes, address30/data32, owner47, nout21/base30/start',
+        logit_bytes_per_edge_peak=512, actual_scalar_component_bytes_per_edge_peak=4,
+        tracks_per_rank=hook['routing_tracks_required'],
+        readiness='actual native_ready AND busy AND NOT fault, before same VM accepting edge',
+        readiness_added_FF=0, readiness_logic_per_missing_rank=dict(AND2=2, INV=1),
+        compiled_rank_output_bits=2,
+        VM_valid_gate='four host VM wr_v bits held off while actual leaf cannot accept; no extra data seats',
+        producer_buffer_added_bits=0,
+        retained_buffer='existing NativeBfHeadRoots + held_join_bits/tag until native take AND positive VM ACK',
+        local_tail_cycles_lower_bound=hook['native_last_writer_to_local_slice_cycles_lower_bound'],
+        retained_measured_ordered_terminal_tail_cycles=12,
+        conservative_source_tail_cycles=12 + hook['native_last_writer_to_local_slice_cycles_lower_bound'],
+        source_tail_scope='retain12, add native writer-to-packet lower bound; VM acceptance/ACK and global transport remain explicit',
+        removable_ordered_feed_us_upper_bound=(ROWS_RANK - GROUP_ROWS) / F_SERIAL * 1e6,
+        drain_removal_credit_us=0,
+        drain_scope='upper opportunity only; actual all-rank producer feed/collective measurement required',
+        collective='existing DsromS81NativeHeadPorts/Collective; positive link/final delays, all four real ports',
+        final_retirement='real final_ready then END/ReadResult; no local packet treated as global winner',
+        clock='same shared native clock/reset; physical 1.2->0.9 CDC remains separately unqualified',
+        comparator_mapped_area_mm2=None, ready_route_delay_ps=None,
+        floorplan_slot_fit=None, SS_FF=False, headline_gain=None)
+
+
+def cmd_stream_model(a):
+    print(json.dumps(stream_model(), indent=1))
+
+
+def cmd_stream_build(a):
+    """Three missing wrappers only; never build a core or run a head."""
+    if a.jobs < 1:
+        raise SystemExit('stream-build jobs must be positive')
+    work = a.work.resolve()
+    work.mkdir(parents=True, exist_ok=False)
+    sources = [ROOT / p for p in (
+        'rtl/rom/collectives/ot_rom_coll_pkg.sv',
+        'rtl/rom/collectives/ot_rom_coll_skid.sv',
+        'rtl/dsrom_sys/s81_native_head/ot_rom_argmax_rows.sv',
+        'rtl/dsrom_sys/s81_native_head/ot_dsrom_s81_head_amax.sv',
+        'rtl/test/s81_native_bf_head_producer/native_stream_amax.sv')]
+    pins = {str(p.relative_to(ROOT)): sha(p) for p in sources}
+    receipt = dict(status='BUILDING_COMPONENTS_ONLY', model=stream_model(),
+                   source_sha256=pins, commands=[], archives={}, runtime=False,
+                   source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+                   verilator_version=subprocess.check_output([str(gate.VERILATOR), '--version'], text=True).strip(),
+                   compiler_version=subprocess.check_output(['g++', '--version'], text=True).splitlines()[0])
+    for rank in (1, 2, 3):
+        prefix = f'VDsromHeadStreamR{rank}'
+        obj = work / f'rank{rank}'
+        cmd = [str(gate.VERILATOR), '--cc', '--build', '--build-jobs', str(a.jobs),
+               '--verilate-jobs', '1', '-Wno-fatal', '-Wno-TIMESCALEMOD',
+               '--top-module', 'DsromHeadStream', '--prefix', prefix,
+               '--Mdir', str(obj), f'-GRANK={rank}', *map(str, sources)]
+        receipt['commands'].append(cmd)
+        with (work / f'rank{rank}.log').open('x') as log:
+            process = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT)
+        if process.returncode:
+            receipt.update(status='FAIL_COMPONENT_BUILD', failed_rank=rank, exit_code=process.returncode)
+            (work / 'native_stream_build.json').write_text(json.dumps(receipt, indent=1) + '\n')
+            raise SystemExit(process.returncode)
+        archive = obj / f'{prefix}__ALL.a'
+        receipt['archives'][str(archive)] = sha(archive)
+    if pins != {str(p.relative_to(ROOT)): sha(p) for p in sources}:
+        receipt['status'] = 'FAIL_SOURCE_POSTCHECK'
+    else:
+        receipt['status'] = 'PASS_THREE_COMPONENT_ARCHIVES_ONLY'
+    receipt['caller_scope'] = ('BIND_ONLY helper in retained_smoke.cpp consumes actual same-edge VM acceptance; '
+                               'four-port collective/real END caller still must enroll these three archives')
+    (work / 'native_stream_build.json').write_text(json.dumps(receipt, indent=1) + '\n')
+    print(json.dumps(receipt, indent=1))
+    if receipt['status'].startswith('FAIL'):
+        raise SystemExit(1)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sp = ap.add_subparsers(dest="cmd", required=True)
-    for c in ("golden", "lmhead", "argmax", "record", "bundle", "lever"):
+    for c in ("golden", "lmhead", "argmax", "record", "stream-model", "stream-build", "bundle", "lever"):
         p = sp.add_parser(c)
-        p.add_argument("--work", type=Path, required=c != "lever")
+        if c not in ("stream-model", "lever"):
+            p.add_argument("--work", type=Path, required=True)
         if c == "lever":
             p.add_argument("--bundle", type=Path, required=True)
             p.add_argument("--route-a", required=True)
@@ -666,8 +757,11 @@ def main(argv=None):
             p.add_argument("--build-only", action="store_true")
         if c in ("record", "lever"):
             p.add_argument("--output", type=Path, required=True)
+        if c == 'stream-build':
+            p.add_argument('--jobs', type=int, default=4)
     a = ap.parse_args(argv)
-    return dict(golden=cmd_golden, lmhead=cmd_lmhead, argmax=cmd_argmax, record=cmd_record, bundle=cmd_bundle, lever=cmd_lever)[a.cmd](a)
+    return dict(golden=cmd_golden, lmhead=cmd_lmhead, argmax=cmd_argmax, record=cmd_record, bundle=cmd_bundle,
+                lever=cmd_lever, **{'stream-model': cmd_stream_model, 'stream-build': cmd_stream_build})[a.cmd](a)
 
 
 if __name__ == "__main__":

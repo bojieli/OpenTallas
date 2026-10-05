@@ -1,0 +1,46 @@
+{
+  "status": "ARCHIVES_READY_NO_RUNTIME_OR_QUALIFICATION",
+  "pid": 2948747,
+  "host": "vm-xry57mhfyn",
+  "source_fix": "be155754b5edbf51b780c0db1afcee0f949d6580",
+  "parts": [
+    {
+      "part": "pq",
+      "old_archive_sha256": "f53d97feeb5c824222276ec0a16cae2d83b145f3f60849c21ebb6e37a7195520",
+      "started_ns": 1791146848756093743,
+      "generated_changed_files": [
+        "Vpq.mk",
+        "Vpq___024root__1.cpp",
+        "Vpq_classes.mk"
+      ],
+      "public_header_sha256": "40b1e463b7c1d9627dd54ded5896229db8aa77b4dbf0d91e4c35b55f48b1664e",
+      "status": "BUILD_PASS",
+      "completed_ns": 1791146865602233060,
+      "new_archive_sha256": "5ffc3b8de8bcc71223c6c94cf8559f407e942e8289645904c70a3adb56783042",
+      "archive": "/home/ubuntu/s81-rowdecode-enrollment-20261004-r1/repaired/pq/libVpq.a"
+    },
+    {
+      "part": "pb",
+      "old_archive_sha256": "bb809388d54e9f2dc65340da5ce11ac9d50761d696a0489fc2a31e7db9778dd1",
+      "started_ns": 1791146865609933252,
+      "generated_changed_files": [
+        "Vpb___024root__3.cpp",
+        "Vpb_vm_classes_Slow_0.cpp",
+        "Vpb_classes.mk",
+        "Vpb_vm_classes_Slow_1.cpp",
+        "Vpb.mk"
+      ],
+      "public_header_sha256": "784db2b9e98ec74e521012f43dd23c1649949a0fdaf4895c4ebc654a9834225d",
+      "status": "BUILD_PASS",
+      "completed_ns": 1791146914412862722,
+      "new_archive_sha256": "b152c091f03d62e67b3c52eef417db6c5ffac26d4a1a6ff22a03abb12d903e7e",
+      "archive": "/home/ubuntu/s81-rowdecode-enrollment-20261004-r1/repaired/pb/libVpb.a"
+    }
+  ],
+  "simulation": false,
+  "host_relink": false,
+  "unaffected_models_reused": true,
+  "retries": 0,
+  "verilator_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "compiler_version": "g++-11 (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+}

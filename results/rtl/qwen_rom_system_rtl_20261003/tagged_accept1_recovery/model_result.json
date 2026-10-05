@@ -1,0 +1,35 @@
+{
+  "source_commit": "a60af57e4",
+  "runtime_source_commit": "f6c5e4af1613b142ea22d5024f3911f3dc089830",
+  "geometry": {
+    "G": 6144,
+    "SW": 64,
+    "NW": 18,
+    "HBM_LAYERS": 36,
+    "VM_ELEMS": 1048576,
+    "VPMAX": 4
+  },
+  "flags": {
+    "REAL_MEM": 1,
+    "NEAR_HBM": 1,
+    "HBM_STREAM4": 1,
+    "DSPARK": 1,
+    "ACCEPT_COMMIT": 1,
+    "ENABLE_AR256": 1
+  },
+  "r1": {
+    "model_exit": 2,
+    "cause": "kernel-confirmed global OOM SIGKILL of PID1310929; no cgroup cap",
+    "peak_rss_KiB": 269236592
+  },
+  "r2": {
+    "model_exit": 0,
+    "peak_rss_KiB": 269234860,
+    "wall_seconds": 4665.181,
+    "generated_cpp_files": 26406,
+    "generated_cpp_MB": 13598.663,
+    "resume": "Existing Vdie_hier.mk hier_verilation; completed HBM and hierarchy wrappers retained"
+  },
+  "scope": "Model generation PASS only. CXX/access/link/NP1 numerical result pending; no fulltoken/physical/rate claim.",
+  "remote_root": "/srv/opentallas-scratch/jobs/laplace-qwen-tagged-accept1-a60af57e4-r1/top_resume_r2"
+}

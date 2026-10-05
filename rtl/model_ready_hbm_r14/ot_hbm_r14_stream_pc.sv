@@ -62,8 +62,8 @@
 // queued read (col_we = 0).  ARBITRATION (the stream keeps its bandwidth): a read head is
 // background -- it issues only in a cycle the stream does not, and its bank's ACT yields to the
 // stream's ACT-ahead -- until it has waited AQ_STARVE cycles, then it takes priority as a write-back
-// head does (stops new stream RDs until it issues).  No column command goes to a bank whose PRE
-// fires in the same cycle (open_nx).
+// head does (stops new stream RDs until it issues).  A bank holding a queued access is never
+// precharged (hold_n, the current queue), nor a write-opened bank the stream still needs.
 module ot_hbm_r14_stream_pc #(
   parameter integer ENABLE   = 0,
   parameter integer REF_MODE = 1,
@@ -279,7 +279,7 @@ module ot_hbm_r14_stream_pc #(
     reg [7:0] hwait;                                  // AQ_RD: cycles the read head has waited
     wire starve = AQ && hr && hwait >= 8'(AQ_STARVE);
     wire head_prio = !(AQ && hr) || starve;
-    wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & ((AQ && hr) ? rcd_z : rcdw_z) & ~blk & (AQ ? open_nx : 32'hffffffff));
+    wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & (AQ ? rcd_z : rcdw_z) & ~blk);   // AQ: every access-queue head waits full tRCD (no hr on this path)
     wire rd_ok_base = running && streaming && !rd_block && |(rd_oh & open & ~stale & rcd_z & ~blk) &&
                       |(rd_bgoh & ccdl_z) && cred_nz;
     assign wr_ok = wr_bank_rdy && ccdl_z[hb[1:0]] && ((AQ && hr) ? (wtr_c == 0) : (rtw_c == 0)) && !rd_block &&
