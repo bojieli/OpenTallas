@@ -9295,3 +9295,40 @@ def qwen_service_aq_act_parent_clock_model():
         command_calendar="same accepted-edge count; wall latency depends on actual accumulator phase and consumer stalls",
         SSFF_closed=False, adopted=False, full128_clock_credit=False,
         slower854_61_bound_selected=False)
+
+
+def hbm_topk_balanced_fanout_model():
+    """Same frozen balanced source; owner-directed concurrent utilization contexts.
+
+    Actual retained 30% core is the footprint basis. Larger 25/20% contexts
+    charge their full area and longer local wire reserve; parent fit unbound.
+    No changed clock/IO, arithmetic, pipeline, replica or semantic admission.
+    """
+    base = hbm_topk_balanced_compare_model()
+    contexts = []
+    for util in (25, 20):
+        scale = (30.0/util)**0.5
+        x0,y0,x1,y1 = base['core_area_um']
+        width,height = (x1-x0)*scale,(y1-y0)*scale
+        core = [x0,y0,round(x0+width,6),round(y0+height,6)]
+        die = [0,0,round(core[2]+2.018,6),round(core[3]+2.180,6)]
+        route = base['local_route_buffer_reserve_um2']*scale
+        area = base['candidate_stdcell_upper_screen_um2']-base['local_route_buffer_reserve_um2']+route
+        contexts.append(dict(utilization_percent=util, core_area_um=core,
+            die_area_um=die, core_area_um2=width*height,
+            extra_core_area_vs_retained_um2=width*height-base['core_area_um2'],
+            local_wire_length_scale=scale, routing_buffer_reserve_um2=route,
+            independent_hold_reserve_um2=base['independent_hold_reserve_um2'],
+            gross_cell_area_screen_um2=area, cell_occupancy=area/(width*height),
+            place_density=0.55, component_screen_fit=area/(width*height)<0.55,
+            parent_named_slot_fit=False, parent_routing_tracks_available=None,
+            clock_period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+            hold_repair_margin_ps=20, io_delay_fraction=0.2,
+            replicas=1, MACs_per_cycle=0, added_memory_ports=0,
+            input_bits_per_cycle=512, output_bits_per_result=54,
+            added_latency_cycles=0, latency_cycles=23, initiation_interval_cycles=1,
+            adopted=False, SSFF_closed=False))
+    return dict(source_commit='5ee4cde5b11b31b7f45964f24165a46b9eb3f90d',
+                source_and_common_helper_unchanged=True,
+                retained_live_context='peirce-topk-balanced-route-r1',
+                retained_supervisor=3271408, contexts=contexts)
