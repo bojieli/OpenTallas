@@ -3722,6 +3722,83 @@
    "note": ""
   },
   {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us",
+   "label": "DS HBM MATCHED gate reference AR at 1M (C1 issue slots + C2 per-op drains + C3 x loading measured on the 1.2 GHz SM element; workgroup + fused SU chains credited)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "DS ROM gate bar (~2026-10-07); row corrected+wg+fused_su0.9; inherited 460.053"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_step_us",
+   "label": "DS HBM MATCHED gate reference MTP step (verify6 + draft + seed) at 1M",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "row corrected+wg+su12; tau 3.8879; union increments modelled (lower bound)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_tok_s",
+   "label": "DS HBM MATCHED gate reference MTP useful tok/s",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": ""
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_corrected_ar_us",
+   "label": "DS HBM corrected AR (C1-C3 measured, no levers)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.corrected_only_AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "+106.81 us SM correction vs inherited"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_corrected_mtp_step_us",
+   "label": "DS HBM corrected MTP step (C1-C3 measured, no levers)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.corrected_only_MTP_step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "P6 x loads 137.94 us through the as-built port"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_today",
+   "label": "DS HBM MATCHED AR at today's closing clocks",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.today_AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "SM element route open; SU m6a5 lanes not closed; index path on borrowed shared blocks"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_step_us_today",
+   "label": "DS HBM MATCHED MTP step at today's closing clocks",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.today_MTP_step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": ""
+  },
+  {
    "target": "hbm_qwen",
    "section": "rate",
    "key": "ar_tok_s_p8191_tp2",
