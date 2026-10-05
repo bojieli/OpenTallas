@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ot_dsrom_window_attn_source_la: default-off successor of ot_chip_v41x_window_attn_source_owner_safe
+// ot_dsrom_window_source_pipeline: default-off successor of ot_chip_v41x_window_attn_source_owner_safe
 // (rtl/chip/window_owner_safe/, unchanged) for the S81 layer die (claude/dsrom-s81-window-bind-20261004).
 //
 // STREAM_LA = 0 (default): the original module, instantiated with the same parameters and ports; the wide
@@ -25,9 +25,8 @@
 // Exactness: bytes are moved, never transformed; tb_dsrom_s81_window_la checks every staged and streamed row
 // against the golden packed rows of the 1M token.
 // ---------------------------------------------------------------------------
-module ot_dsrom_window_attn_source_la #(
+module ot_dsrom_window_source_pipeline #(
     parameter bit STREAM_LA = 0,
-    parameter bit WINDOW_PIPELINE = 0,
     parameter bit REFILL_OWNER_SAFE = 0,
     parameter integer POS_W = 21, USER_W = 10, SEC_W = 30, HAW = 30, TAGW = 16,
     parameter bit RETAIN_L0 = 0,
@@ -94,13 +93,7 @@ module ot_dsrom_window_attn_source_la #(
     // measurement: cycles from job acceptance to every job row staged (LA), 0 when STREAM_LA = 0
     output wire [31:0] la_load_cycles
 );
-    generate if (STREAM_LA && WINDOW_PIPELINE) begin : g_pipeline
-        ot_dsrom_window_source_pipeline #(.STREAM_LA(1), .REFILL_OWNER_SAFE(REFILL_OWNER_SAFE),
-            .POS_W(POS_W), .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .RETAIN_L0(RETAIN_L0),
-            .WIN_STACK(WIN_STACK), .STREAM_II1(STREAM_II1), .REFILL_CREDITS(REFILL_CREDITS),
-            .NPC(NPC), .WTAGW(WTAGW), .WLENW(WLENW), .BEATW(BEATW), .LA_IW(LA_IW),
-            .LA_ISSUE_PC(LA_ISSUE_PC), .MAX_CONTEXT(MAX_CONTEXT)) u_pipe (.*);
-    end else if (!STREAM_LA) begin : g_asbuilt
+    generate if (!STREAM_LA) begin : g_asbuilt
         ot_chip_v41x_window_attn_source_owner_safe #(.REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
             .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .RETAIN_L0(RETAIN_L0), .WIN_STACK(WIN_STACK),
             .STREAM_II1(STREAM_II1), .REFILL_CREDITS(REFILL_CREDITS)) u_src (
@@ -125,10 +118,10 @@ module ot_dsrom_window_attn_source_la #(
     end else begin : g_la
 `ifndef SYNTHESIS
         initial if (RETAIN_L0 || NPC != 32 || WTAGW < 10 || HAW < SEC_W)
-            $fatal(1, "ot_dsrom_window_attn_source_la: STREAM_LA needs RETAIN_L0=0, NPC=32, WTAGW>=10");
+            $fatal(1, "ot_dsrom_window_source_pipeline: STREAM_LA needs RETAIN_L0=0, NPC=32, WTAGW>=10");
 `endif
         localparam integer PITCH = 17, REGION_SECTORS = 128 * PITCH;
-        localparam [2:0] IDLE = 0, LOAD = 1, ISSUE = 2, RUN = 3, FAILED = 4;
+        localparam [2:0] IDLE = 0, LOAD = 1, ISSUE = 2, RUN = 3, FAILED = 4, ADMIT1=5, ADMIT2=6, ADMIT3=7;
         reg [2:0] st;
         reg [USER_W-1:0] j_user;
         reg [POS_W-1:0] j_first;
@@ -139,7 +132,7 @@ module ot_dsrom_window_attn_source_la #(
         // ---- the as-built packed-row writer (K port): block writes and priming only ----
         wire wr_prime_ready, wr_blk_ready, wr_pf_ready, wr_fault;
         wire [4:0] wr_code;
-        ot_chip_v41x_window_kv_prefetch_owner_safe #(.REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
+        ot_dsrom_window_writer_pipeline #(.REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),
             .USER_W(USER_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(TAGW), .WIN_STACK(WIN_STACK),
             .REFILL_CREDITS(REFILL_CREDITS), .BANKED_STAGE(1)) u_writer (
             .clk(clk), .rst_n(rst_n),
@@ -182,23 +175,27 @@ module ot_dsrom_window_attn_source_la #(
                 end
             end
         // ---- job admission: geometry / region bound (the as-built schedule's and prefetch's checks) ----
-        wire [SEC_W:0] region_end = {1'b0, region_base_sector} + {1'b0, region_sector_count};
-        wire [SEC_W:0] user_base = {1'b0, region_base_sector} + (SEC_W+1)'(start_user) * (SEC_W+1)'(REGION_SECTORS);
-        wire [POS_W:0] end_pos = {1'b0, start_first} + (POS_W+1)'(start_count);
-        wire start_bad = start_count > 8'd128 || end_pos > (POS_W+1)'(MAX_CONTEXT) || region_end[SEC_W] ||
-                         {1'b0, region_sector_count} < ((SEC_W+1)'(start_user) + 1'b1) * (SEC_W+1)'(REGION_SECTORS);
+        reg [SEC_W-1:0] cfg_base, cfg_count;
+        reg [SEC_W:0] region_end, user_plus, required_size, user_offset;
+        reg [POS_W:0] end_pos;
+        wire start_bad = j_count > 8'd128 || end_pos > (POS_W+1)'(MAX_CONTEXT) || region_end[SEC_W] ||
+                         {1'b0,cfg_count}<required_size || cfg_base!=region_base_sector || cfg_count!=region_sector_count;
         wire la_busy, la_fault;
         assign start_ready = st == IDLE && wr_pf_ready && !la_busy && !(ctl_fault || wr_fault);
         wire accept = start_v && start_ready;
         reg [SEC_W-1:0] j_base;
         // ---- tag check, 4 slots a cycle, overlapping the load ----
-        reg [5:0] ck_i; reg ck_run, ck_bad;
+        reg [5:0] ck_i; reg ck_run, ck_bad, ck_issue;
+        reg [1:0] ck_valid;
+        reg [POS_W-1:0] ck_row0 [0:3], ck_row1 [0:3], ck_tag1 [0:3];
+        reg [USER_W-1:0] ck_user1 [0:3];
+        reg [3:0] ck_use0, ck_use1, ck_mv1;
         integer ck_l; reg [8:0] ck_t; reg [POS_W-1:0] ck_r;
         // ---- stream engine + stage ----
         wire [NPC-1:0] st_acc_v; wire [NPC*WTAGW-1:0] st_acc_tag; wire [NPC*BEATW-1:0] st_acc_beat;
         wire [NPC*256-1:0] st_acc_data;
         wire all_rows, stage_fault; wire [11:0] landed;
-        reg la_start;
+        reg la_start, stage_job;
         ot_dsrom_window_stream_la_s81 #(.NPC(NPC), .AW(HAW), .TAGW(WTAGW), .LENW(WLENW), .BEATW(BEATW), .IW(LA_IW), .ISSUE_PC(LA_ISSUE_PC)) u_la (
             .clk(clk), .rst_n(rst_n), .start(la_start), .base(HAW'(j_base)), .busy(la_busy), .fault(la_fault),
             .req_v(wl_req_v), .req_rdy(wl_req_rdy), .req_addr(wl_req_addr), .req_len(wl_req_len), .req_tag(wl_req_tag),
@@ -208,10 +205,10 @@ module ot_dsrom_window_attn_source_la #(
         wire [POS_W-1:0] wb_req_first, wb_rsp_first;
         wire [3:0] wb_req_m, wb_rsp_m, wb_rsp_lane_valid;
         wire [4*4224-1:0] wb_rsp_rows;
-        ot_dsrom_window_la_stage #(.POS_W(POS_W), .USER_W(USER_W), .NPC(NPC), .WTAGW(WTAGW), .BEATW(BEATW),
+        ot_dsrom_window_stage_pipeline #(.POS_W(POS_W), .USER_W(USER_W), .NPC(NPC), .WTAGW(WTAGW), .BEATW(BEATW),
             .MAX_CONTEXT(MAX_CONTEXT)) u_stage (
-            .clk(clk), .rst_n(rst_n), .job_v(accept && !start_bad), .job_user(start_user), .job_first(start_first),
-            .job_count(start_count), .all_rows(all_rows), .sectors_landed(landed), .fault(stage_fault),
+            .clk(clk), .rst_n(rst_n), .job_v(stage_job), .job_user(j_user), .job_first(j_first),
+            .job_count(j_count), .all_rows(all_rows), .sectors_landed(landed), .fault(stage_fault),
             .in_v(wl_rsp_v), .in_rdy(wl_rsp_rdy), .in_tag(wl_rsp_tag), .in_beat(wl_rsp_beat), .in_data(wl_rsp_data),
             .acc_v(st_acc_v), .acc_tag(st_acc_tag), .acc_beat(st_acc_beat), .acc_data(st_acc_data),
             .req_v(wb_req_v), .req_ready(wb_req_ready), .req_user(wb_req_user), .req_first_row(wb_req_first),
@@ -255,42 +252,66 @@ module ot_dsrom_window_attn_source_la #(
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin
                 st <= IDLE; j_user <= 0; j_first <= 0; j_count <= 0; j_base <= 0; load_cyc <= 0; load_cyc_q <= 0;
-                staged_sent <= 0; done_r <= 0; ctl_fault <= 0; ctl_code <= 0; la_start <= 0;
+                staged_sent <= 0; done_r <= 0; ctl_fault <= 0; ctl_code <= 0; la_start <= 0; stage_job<=0;
+                cfg_base<=0; cfg_count<=0; ck_valid<=0; ck_issue<=0;
                 ck_i <= 0; ck_run <= 0; ck_bad <= 0;
             end else begin
-                done_r <= 1'b0; la_start <= 1'b0;
+                done_r <= 1'b0; la_start <= 1'b0; stage_job<=0;
                 if (staged_v) staged_sent <= 1'b1;
                 if (st != IDLE && st != FAILED && (wr_fault || la_fault || stage_fault || merge_fault)) begin
                     ctl_fault <= 1'b1; if (merge_fault) ctl_code[0] <= 1'b1; st <= FAILED;
                 end else case (st)
                     IDLE: if (accept) begin
-                        j_user <= start_user; j_first <= start_first; j_count <= start_count;
-                        j_base <= user_base[SEC_W-1:0]; load_cyc <= 0; staged_sent <= 1'b0;
-                        ck_i <= 0; ck_run <= 1'b1; ck_bad <= 1'b0;
-                        if (start_bad) begin ctl_fault <= 1'b1; ctl_code[2] <= 1'b1; st <= FAILED; end
-                        else begin la_start <= 1'b1; st <= start_count == 0 ? ISSUE : LOAD; end
+                        j_user<=start_user; j_first<=start_first; j_count<=start_count;
+                        cfg_base<=region_base_sector; cfg_count<=region_sector_count;
+                        load_cyc<=0; staged_sent<=0; st<=ADMIT1;
+                    end
+                    ADMIT1: begin
+                        region_end<={1'b0,cfg_base}+{1'b0,cfg_count};
+                        user_plus<=(SEC_W+1)'(j_user)+1'b1;
+                        end_pos<={1'b0,j_first}+(POS_W+1)'(j_count); st<=ADMIT2;
+                    end
+                    ADMIT2: begin
+                        required_size<=(user_plus<<11)+(user_plus<<7);
+                        user_offset<=((SEC_W+1)'(j_user)<<11)+((SEC_W+1)'(j_user)<<7); st<=ADMIT3;
+                    end
+                    ADMIT3: begin
+                        j_base<=cfg_base+user_offset[SEC_W-1:0];
+                        ck_i<=0; ck_run<=1; ck_issue<=1; ck_bad<=0;
+                        if(start_bad) begin ctl_fault<=1; ctl_code[2]<=1; st<=FAILED; end
+                        else begin la_start<=1; stage_job<=1; st<=LOAD; end
                     end
                     LOAD: begin
                         load_cyc <= load_cyc + 1;
                         if (!ck_run && ck_bad) begin ctl_fault <= 1'b1; ctl_code[1] <= 1'b1; st <= FAILED; end
-                        else if (!ck_run && all_rows && !la_start) begin load_cyc_q <= load_cyc + 1; st <= ISSUE; end
+                        else if (!ck_run && all_rows && !la_start && !la_busy) begin load_cyc_q <= load_cyc + 1; st <= ISSUE; end
                     end
                     ISSUE: if (issue_ready) st <= RUN;
                     RUN: if (merge_done) begin done_r <= 1'b1; st <= IDLE; end
                     FAILED: st <= FAILED;
                     default: begin ctl_fault <= 1'b1; st <= FAILED; end
                 endcase
-                // tag mirror check of the job rows (the writer's prefetch admission check: row_valid, tag, user)
-                if (ck_run) begin
-                    for (ck_l = 0; ck_l < 4; ck_l = ck_l + 1) begin
-                        ck_t = {ck_i, 2'b00} + ck_l;
-                        ck_r = j_first + ck_t;
-                        if (ck_t < j_count && (!mv[ck_r[6:0]] || mtag[ck_r[6:0]] != ck_r || muser[ck_r[6:0]] != j_user))
-                            ck_bad <= 1'b1;
+                // Register row arithmetic, tag-memory read and comparison separately.
+                // ck_run remains asserted until the last qualified comparison drains.
+                ck_valid<={ck_valid[0],ck_issue};
+                if(ck_issue) begin
+                    for(ck_l=0;ck_l<4;ck_l=ck_l+1) begin
+                        ck_t={ck_i,2'b00}+ck_l;
+                        ck_row0[ck_l]<=j_first+ck_t;
+                        ck_use0[ck_l]<=ck_t<j_count;
                     end
-                    ck_i <= ck_i + 1'b1;
-                    if (ck_i == 6'd31) ck_run <= 1'b0;
+                    ck_i<=ck_i+1'b1;
+                    if(ck_i==31) ck_issue<=0;
                 end
+                if(ck_valid[0]) for(ck_l=0;ck_l<4;ck_l=ck_l+1) begin
+                    ck_row1[ck_l]<=ck_row0[ck_l]; ck_use1[ck_l]<=ck_use0[ck_l];
+                    ck_tag1[ck_l]<=mtag[ck_row0[ck_l][6:0]];
+                    ck_user1[ck_l]<=muser[ck_row0[ck_l][6:0]];
+                    ck_mv1[ck_l]<=mv[ck_row0[ck_l][6:0]];
+                end
+                if(ck_valid[1]) for(ck_l=0;ck_l<4;ck_l=ck_l+1)
+                    if(ck_use1[ck_l] && (!ck_mv1[ck_l] || ck_tag1[ck_l]!=ck_row1[ck_l] || ck_user1[ck_l]!=j_user)) ck_bad<=1;
+                if(ck_run && !ck_issue && ck_valid==0) ck_run<=0;
             end
         end
         assign done = done_r;
