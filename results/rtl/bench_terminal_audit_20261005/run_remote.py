@@ -1,7 +1,8 @@
 from pathlib import Path
 import concurrent.futures,json,subprocess,sys
-p=Path(__file__).resolve().parent
-cmd=['iverilog','-g2012','-s','terminal_policy','-o',str(p/'terminal.vvp'),str(p/'terminal_policy.sv')]
+s=Path(__file__).resolve().parent
+p=Path(sys.argv[1]);p.mkdir(parents=True,exist_ok=False)
+cmd=['iverilog','-g2012','-s','terminal_policy','-o',str(p/'terminal.vvp'),str(s/'terminal_policy.sv')]
 b=subprocess.run(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
 (p/'compile.log').write_text(b.stdout)
 if b.returncode:sys.exit(b.returncode)
