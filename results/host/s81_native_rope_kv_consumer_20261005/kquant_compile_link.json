@@ -1,0 +1,27 @@
+{
+  "source_commit": "484b18752",
+  "scope": "Changed host objects/link only; actual native I20 binder/library reused; no numerical/WINDOW-current/token/physical claim",
+  "stages": [
+    {
+      "name": "s81_minimum_l20_qnorm",
+      "exit": 0,
+      "seconds": 4.328541095950641
+    },
+    {
+      "name": "s81_minimum_qe_quantizer",
+      "exit": 0,
+      "seconds": 1.982404593960382
+    },
+    {
+      "name": "link",
+      "exit": 0,
+      "seconds": 0.9894610889605246
+    }
+  ],
+  "sources": {
+    "s81_minimum_qe_quantizer.cpp": "760d57ed9c7fbc44216be3a6120e737fed8214fa670cd84a5d81e86cc734f88a",
+    "s81_minimum_qe_quantizer.hpp": "e2b4f459c9fb3a782e55500ceaa52e3b25badcaf33a84d85b9ca4103e67f9d25",
+    "s81_minimum_l20_qnorm.cpp": "0c474a8d03da633201592bab3fcd78ca605d6e9d804be99ae5f0119636eccdde"
+  },
+  "exit": 0
+}
