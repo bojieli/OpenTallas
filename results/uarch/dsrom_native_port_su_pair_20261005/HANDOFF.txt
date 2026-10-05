@@ -1,0 +1,37 @@
+MODEL ONLY: native-port-matched HC-pre first-pair retention
+
+Canonical callable: tools/uarch_model.py::dsrom_s81_native_port_hc_pair()
+Runnable: python3 tools/dsrom_native_port_su_model.py --output NEW_MODEL.json
+No inference/checkpoint reads/RTL/native build/proof/route executed.
+
+Exact source hook: tools/dshbm_baseline_measure.py lower_hc_pre_norm, ops0/1,
+L20.attn.hc_pre. T1=mul(H0,P0)+mul(H1,P1), T2=mul(H2,P2)+T1.
+Separate FP32 rounding, no FMA or BF16 intermediate. Both1x5120 same traversal.
+Retain only T1 lane-locally. T2 still writes VM before op2 8x640 segmented
+geometry; original reduction, BF16 rounding, RMSNorm/SFU and broadcasts remain.
+No full-wide NORM131072/SwiGLU98304bit face assumption.
+
+Native aggregate budget1024bits/cycle at0.9GHz, even though two physical slabs
+have faces. Peakface128B/cy. Baseline960payloadbeats vs candidate640; fixed
+73slowcycles/op preserved, coefficient load1 and new local select2 charged:
+1107 vs789 slowcycles, 1.230 vs0.876667us, saving318cy/0.353333us MODEL ONLY.
+This is conservative no-overlap envelope, not a runnable timing measurement.
+Actual ACK/credit calendar and currentDAG exposed increment remain UNKNOWN;
+Maxwell owns composition, no subtraction from already-fused baseline/network.
+
+Gross allocation: T20KiB; two ping-pong input packets16KiB; output pack4KiB;
+309metadata/coefficientbits. 327989addedFF/clock sinks, 131072local5:1 mux2
+allowance plus heldstate muxes, 512NAND2eq decode allowance. Reuse existing
+1024 lane arithmetic MLAT5/ALAT4; no new arithmetic/SFU replica. Known gross
+cell0.256321mm2; FF50/logic50 slot0.512642mm2 additional, keep old12.80594mm2SU
+cost. Existing slabwidth1015.2um gives505.44um totalheight; equalhalf252.72um
+illustration only, NOT assigned fit. Existing172.8um escape gaps retained.
+Clock/PDN/protection/localwires/trackcapacity remain unpriced UNKNOWN, not zero.
+Native lane-to-half ownership must be provided before physical admission;
+keep words in existing owner lane and do not invent an inter-slab bus.
+
+MAXWELL: map this matched port-limited pair onto actual critical exposure,
+retaining current full-system authority/headlines and >=1percent gate.
+EINSTEIN: review native lane/packet geometry and local bank placement; keep
+current wide candidate records/jobs untouched. This owns one new model helper,
+not sharedDAG edits or another nativeunit. No RTL authorized by this record.
