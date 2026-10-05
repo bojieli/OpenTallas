@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "f1e95cc9d",
+ "generated_from_commit": "03b719944",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -168,7 +168,7 @@
    "status": "modelled",
    "path": "results/uarch/qwen_rom_calibrated_calendar_20261003/summary-r1.json",
    "pointer": "headline_numbers.near_hbm_selected_for_build.tokens_per_s",
-   "note": "MODEL_ONLY; near-HBM not integrated, hub/row-engine P&R FAIL",
+   "note": "MODEL_ONLY; near-HBM attention DROPPED 2026-10-04 (retry_20261004/verdict.json)",
    "value": 5236.6,
    "resolved": true,
    "blob": "8d8ea38d8aed9b04301310495b64e56a25578883",
@@ -807,6 +807,21 @@
    "blob": "ff70661f9c7add820d314a4f08e203d9a043d15a",
    "last_commit": "025d6a6be 2026-10-03"
   },
+  "qwen_rom.nearhbm_retry_verdict": {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "nearhbm_retry_verdict",
+   "label": "Near-HBM attention final verdict (retry 2026-10-04)",
+   "unit": "verdict",
+   "status": "measured",
+   "path": "results/uarch/qwen_nearhbm_attn_rtl_20261003/pnr/retry_20261004/verdict.json",
+   "pointer": "verdict",
+   "note": "DROP: hub r9 post-CTS WNS -88.95 ps, row engines unplaced at 6 h; KV path stays STREAM4",
+   "value": "DROP",
+   "resolved": true,
+   "blob": "8a89546f2e1271e7eea1e7c5d68c68d55b4d135a",
+   "last_commit": null
+  },
   "qwen_rom.energy_per_token_mj_stale": {
    "target": "qwen_rom",
    "section": "energy",
@@ -1254,7 +1269,7 @@
    "value": 1612.7,
    "resolved": true,
    "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "1c4e785ee 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1284,7 +1299,7 @@
    "value": 1362.2,
    "resolved": true,
    "blob": "ffff2b2370046703d42ea9a164723bc50e92102f",
-   "last_commit": "e08111227 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m": {
    "target": "ds_rom",
@@ -1299,7 +1314,7 @@
    "value": 4462.1,
    "resolved": true,
    "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "1c4e785ee 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1329,7 +1344,7 @@
    "value": 2429.8,
    "resolved": true,
    "blob": "ffff2b2370046703d42ea9a164723bc50e92102f",
-   "last_commit": "e08111227 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
    "target": "ds_rom",
@@ -1374,7 +1389,7 @@
    "value": 620.078,
    "resolved": true,
    "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "1c4e785ee 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1404,7 +1419,7 @@
    "value": 748.887,
    "resolved": true,
    "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "1c4e785ee 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1433,7 +1448,7 @@
    "value": 25.762,
    "resolved": true,
    "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "1c4e785ee 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -4527,7 +4542,7 @@
    "value": 0.9999,
    "resolved": true,
    "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "1c4e785ee 2026-10-04"
+   "last_commit": "42cf43125 2026-10-04"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",
@@ -5085,8 +5100,8 @@
    "note": "verify L0 17,197 exact on STREAM4 (P8187..8190, commit 1, rollback) x36 + verify head; draft from the REAL_MEM record; tau third-party 3.1445; below AR-with-prefetch (0.763x): verify not weight-reusing (ME 1.47x/2.09x)",
    "value": 4710.4,
    "resolved": true,
-   "blob": "4767f67742171c9cd115decd6561fd8001ddd56e",
-   "last_commit": "f44553f6d 2026-10-04"
+   "blob": "be3019fd4e57ad987ec03d47918e343e5ad99ab7",
+   "last_commit": "e1c0371be 2026-10-04"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
