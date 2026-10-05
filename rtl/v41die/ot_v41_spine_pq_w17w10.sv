@@ -281,8 +281,8 @@ module ot_v41_spine_pq_w17w10 #(
     localparam integer NGR = (R + 15) / 16;
     reg [4:0] ga [0:NGR-1][0:3];
     reg [7:0] rc [0:3];
-    reg [4:0] gs [0:3];
-    reg [7:0] rs_ [0:3];
+    reg [15:0] gm [0:3];
+    reg [7:0] racc;
     integer kr, kt, kg;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -291,16 +291,19 @@ module ot_v41_spine_pq_w17w10 #(
                 for (kg = 0; kg < NGR; kg = kg + 1) ga[kg][kt] <= 5'd0;
             end
         end else begin
-            for (kg = 0; kg < NGR; kg = kg + 1) begin
-                for (kt = 0; kt < 4; kt = kt + 1) gs[kt] = 5'd0;
-                for (kr = 16 * kg; kr < 16 * kg + 16 && kr < R; kr = kr + 1)
-                    if (r_v[kr]) gs[r_row[16*kr + 14 +: 2]] = gs[r_row[16*kr + 14 +: 2]] + 5'd1;
-                for (kt = 0; kt < 4; kt = kt + 1) ga[kg][kt] <= gs[kt];
-            end
+            // stage A: per group of 16 roots and per tag, a one-hot mask and its population count (balanced)
+            for (kg = 0; kg < NGR; kg = kg + 1)
+                for (kt = 0; kt < 4; kt = kt + 1) begin
+                    gm[kt] = 16'd0;
+                    for (kr = 0; kr < 16; kr = kr + 1)
+                        if (16 * kg + kr < R)
+                            gm[kt][kr] = r_v[16 * kg + kr] && r_row[16 * (16 * kg + kr) + 14 +: 2] == 2'(kt);
+                    ga[kg][kt] <= 5'($countones(gm[kt]));
+                end
             for (kt = 0; kt < 4; kt = kt + 1) begin
-                rs_[kt] = 8'd0;
-                for (kg = 0; kg < NGR; kg = kg + 1) rs_[kt] = rs_[kt] + 8'(ga[kg][kt]);
-                rc[kt] <= rs_[kt];
+                racc = 8'd0;
+                for (kg = 0; kg < NGR; kg = kg + 1) racc = racc + 8'(ga[kg][kt]);
+                rc[kt] <= racc;
             end
         end
     end

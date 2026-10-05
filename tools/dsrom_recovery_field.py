@@ -347,38 +347,48 @@ def cmd_run(a):
 
 
 # ------------------------------------------------------------------------------------------------ record
-def compose(phs, rs):
-    """Die-level node cycles from the region runs (see the module docstring)."""
+def spine_rule(groups_rs):
+    """The spine's measured issue constants over every node run: c_first (accept -> first go), c_gap (last beat
+    -> next go), c_guard (last beat of op j-2 -> go of op j where that binds), c_cfg (go -> next go floor: the
+    next configuration is broadcast after a go and loads CW words + settle).  Every consecutive pair is checked."""
+    first, gaps = [], []
+    for rs in groups_rs:
+        for r in rs:
+            o = r["ops"]
+            first.append(o[0]["go"] - o[0]["accept"])
+            for j in range(1, len(o)):
+                gaps.append((o[j]["go"], o[j - 1]["end"], o[j - 2]["end"] if j >= 2 else None, o[j - 1]["go"]))
+    c_first = max(first)
+    assert min(first) == c_first, ("first go latency differs", sorted(set(first)))
+    c_gap = min(g - e1 for g, e1, e2, g1 in gaps)
+    c_guard = max([g - e2 for g, e1, e2, g1 in gaps if e2 is not None and g - e1 > c_gap] or [0])
+    c_cfg = c_first + 1
+    rule = lambda e1, e2, g1: max(e1 + c_gap, (e2 + c_guard) if e2 is not None else 0, g1 + c_cfg)
+    viol = [x for x in gaps if x[0] != rule(*x[1:])]
+    return dict(c_first=c_first, c_gap=c_gap, c_guard=c_guard, c_cfg=c_cfg, rule_checked=len(gaps),
+                rule_violations=len(viol), violations=viol[:5])
+
+
+def compose(phs, rs, k):
+    """Die-level node cycles from the region runs (see the module docstring), spine constants k (spine_rule)."""
     n = len(phs)
     idx = {ph["phase"]: i for i, ph in enumerate(phs)}
     s = [0] * n
-    first, gaps, guards, drains = [], [], [], []
+    drains = []
     for r in rs:
-        o = r["ops"]
-        for j, op in enumerate(o):
+        for op in r["ops"]:
             i = idx[op["phase"]]
             s[i] = max(s[i], op["end"] - op["go"])
             drains.append((i, op["last_w"] - op["go"] if op["last_w"] is not None else None))
-        first.append(o[0]["go"] - o[0]["accept"])
-        for j in range(1, len(o)):
-            gaps.append((o[j]["go"], o[j - 1]["end"], o[j - 2]["end"] if j >= 2 else None))
-    c_first = max(first)
-    assert min(first) == c_first, ("first go latency differs", sorted(set(first)))
-    # the spine rule go_{j} = max(end_{j-1} + c_gap, end_{j-2} + c_guard): c_gap = min over pairs where the guard
-    # did not bind; check every pair against the rule
-    c_gap = min(g - e1 for g, e1, e2 in gaps)
-    c_guard = max([g - e2 for g, e1, e2 in gaps if e2 is not None and g - e1 > c_gap] or [0])
-    viol = [(g, e1, e2) for g, e1, e2 in gaps if g != max(e1 + c_gap, (e2 + c_guard) if e2 is not None else 0)]
     go = [0] * n
     end = [0] * n
-    go[0] = c_first
+    go[0] = k["c_first"]
     for i in range(n):
         if i:
-            go[i] = max(end[i - 1] + c_gap, (end[i - 2] + c_guard) if i >= 2 else 0)
+            go[i] = max(end[i - 1] + k["c_gap"], (end[i - 2] + k["c_guard"]) if i >= 2 else 0, go[i - 1] + k["c_cfg"])
         end[i] = go[i] + s[i]
     dmax = max((go[i] + d) for i, d in drains if d is not None)
-    return dict(cycles=dmax, stream=s, go=go, c_first=c_first, c_gap=c_gap, c_guard=c_guard,
-                rule_violations=len(viol), rule_checked=len(gaps))
+    return dict(cycles=dmax, stream=s, go=go)
 
 
 def cmd_record(a):
@@ -394,18 +404,24 @@ def cmd_record(a):
     W_S81 = 2 * fp["stages_at_504"]["field_one_way"] - F1.BST_IN_VEHICLE
     W = F1.WIRE_X_TO_FARTHEST - F1.BST_IN_VEHICLE + F1.WIRE_CLUSTER_TO_VM
     out_nodes, allx = [], True
+    runs = {}
     for key, phs in sorted(groups.items()):
-        L, node, st = key
         regs = sorted({r for ph in phs for r in ph["regions"]})
         rs = []
         for reg in regs:
             f = work / "runs" / gname(key) / f"r{reg:03d}" / "result.json"
             rs.append(json.loads(f.read_text()) if f.exists() else None)
+        runs[key] = (regs, rs)
+    k_rule = spine_rule([[r for r in rs if r] for regs, rs in runs.values()])
+    print("spine rule", k_rule)
+    for key, phs in sorted(groups.items()):
+        L, node, st = key
+        regs, rs = runs[key]
         complete = all(r is not None for r in rs)
         rs = [r for r in rs if r]
         exact = complete and all(r["pass_"] for r in rs)
         allx &= exact
-        c = compose(phs, rs) if complete and exact else None
+        c = compose(phs, rs, k_rule) if complete and exact else None
         mname = node if node.startswith("E1.") else f"L{L}.{node}"
         ab = asb_nodes.get((mname, st))
         tot = c["cycles"] + W_S81 if c else None
@@ -441,7 +457,7 @@ def cmd_record(a):
         vehicle=dict(top="ot_v41_fieldtop_pq_w17w10 (PQ=1, flat)", NP_slots=NP, R=NR, NBF_slots=NBF, PHW=PHW,
                      VAW=VAW, FAST=1, PP=1, BP=0, BST=F1.BST_IN_VEHICLE, build_params=build["params"],
                      description=__doc__.split("VEHICLE.")[1].split("COMPOSITION")[0].strip()),
-        composition_rule=__doc__.split("COMPOSITION")[1].strip(),
+        composition_rule=__doc__.split("COMPOSITION")[1].strip(), spine_rule=k_rule,
         plan_dir=str(pdir), plan_sha256=sha(pdir / "plan.json"), x_sha256=sha(pdir / "x.npz"),
         golden=dict(token_position=1048575, context=1048576, experts=plan["experts"], gold_vm=plan["gold_vm"],
                     arith="chunk8 (tools/hdc_golden_v41)"),
