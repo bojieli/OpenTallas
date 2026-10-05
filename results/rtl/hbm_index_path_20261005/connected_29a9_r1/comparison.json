@@ -1,0 +1,13 @@
+{
+  "scope": "Native VM query/full NS16NK4 scorer/native local top512 and1366 block candidates, rank0 retained1M operands. Final collective gather/actual production VM/SRAM/SSFF remain unqualified.",
+  "topk_exact": 512,
+  "candidate_exact": 1366,
+  "full_index_qualified": false,
+  "full_token_qualified": false,
+  "SS_FF_closed": false,
+  "actual_output_hashes": {
+    "topk.txt": "800c91f2e620c370dcecb7841f871468a7f977fbe30f89aeebcde05f4c9d8849",
+    "candidates.txt": "9cafeda66966ce760f0a81d821102475dc75740248bd4e8e7d47e9c2c546e20a",
+    "runtime.log": "ae5823a3866c0a156cfe548359232a395c2188d403cf48c75d1de1f54c4bda41"
+  }
+}
