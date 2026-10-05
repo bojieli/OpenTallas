@@ -9429,6 +9429,14 @@ def hbm_existing_cp_local_pg_model():
     return cp_local_pg_model()
 
 
+def hbm_existing_cp_cts_allocation_model():
+    """Measured inserted-cell census and finite ancestry-based CP CTS allocation."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/physical/hbm_cp_cts_allocation_20261005/model.json').read_text())
+
+
 def hbm_existing_attention_source_cut_model():
     """Actual after-E/mux boundary of the selected DS engine, not proxy tile chains."""
     allocation = hbm_existing_attention_allocation_model()
