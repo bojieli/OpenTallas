@@ -101,12 +101,15 @@ module ot_qwen_finite_vm_adapter #(
     // Reset is not a rollback of SRAM visibility. Startup reset is allowed;
     // a live owned frame must drain before the caller may reset this unit.
     always @(negedge rst_n)
-        if(ENABLE && (state!=CAP || pack_valid) && native_epoch!=0)
+        if(ENABLE && (state!=CAP || pack_valid))
             $fatal(1,"finite VM reset with owned frame/visibility debt");
 `endif
     // source_me_wanted includes the actual weight-window readiness. A stalled
     // weight path cannot be admitted merely because the activation cache hit.
-    assign native_tick = ENABLE ? (rst_n && !fault && !frame_ue && native_epoch!=64'hffffffffffffffff && ((state==ADMIT && (!me_frame||source_me_wanted))||fast_head||fast_empty)) : 1'b1;
+    // A response must be consumed on a held physical edge, including a stray
+    // pulse on the empty-frame fast path. Gate on bounded event reduction;
+    // the owned FSM checks identity without a227-bit comparator on the gate.
+    assign native_tick = ENABLE ? (rst_n && !fault && !frame_ue && !service_event && native_epoch!=64'hffffffffffffffff && ((state==ADMIT && (!me_frame||source_me_wanted))||fast_head||fast_empty)) : 1'b1;
     assign native_me_lease = ENABLE ? (native_tick && ((state==ADMIT)?me_frame:source_me_wanted)) : source_me_wanted;
     assign drained = ENABLE ? (state==CAP && !pack_valid && !fault) : 1'b1;
 
@@ -119,6 +122,7 @@ module ot_qwen_finite_vm_adapter #(
     wire [59:0] wr_ACK_addr;
     wire [63:0] wr_ACK_mask;
     wire wr_fault,rw_fault;
+    wire service_event=rd_valid || (|wr_ACK) || rd_fault || wr_fault || rw_fault;
     wire rd_issue = ENABLE && rst_n && !fault && !frame_ue && (state==RISSUE || (state==HFISSUE && hf_sent<64));
     wire [14:0] rd_base = state==HFISSUE ? (15'd512+{hf_sent[5:0],2'b00}) : requested_base;
     wire wr_issue = ENABLE && rst_n && !fault && !frame_ue && state==WISSUE;
@@ -186,6 +190,8 @@ module ot_qwen_finite_vm_adapter #(
             cache_valid<=0;head_visible<=0;head_coverage<=0;head_producer_owned<=0;hf_sent<=0;hf_received<=0;hf_owner_base<=0;
         end else if(ENABLE && !fault)begin
             if(rd_fault||wr_fault||rw_fault||frame_ue)fault<=1;
+            if(rd_valid && state!=RWAIT && state!=HFISSUE)fault<=1;
+            if((|wr_ACK) && state!=WWAIT)fault<=1;
             if(!native_tick)held_edges<=held_edges+1;
             if(native_tick && head_source_producer_go)begin
                 head_producer_owned<=1;head_coverage<=0;head_visible<=0;cache_valid<=0;
