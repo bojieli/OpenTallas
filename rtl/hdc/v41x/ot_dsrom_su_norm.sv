@@ -28,7 +28,7 @@
 // Timing (1.2 GHz units: ot_hdc_qmul_lat LM 5 / ot_hdc_qadd_lat LA 4 through rtl/hdc/ot_hdc_fastfp_lat_f12.sv):
 //   mix LM + 3 LA + 1 (HC), square LM, chain 7 LA, tree log2(N/8) LA, vector levels LA per real add,
 //   RW result-wire stages, divide by D 8 (ot_dsrom_divc), + eps LA, rsqrt 1 + 3(3 LM + LA) (ot_hdc_v41x_rsqrt),
-//   BW broadcast-wire stages back to the lanes, scale 2 LM + 1, RoPE LM + LA + 1, act-quant 18.
+//   BW broadcast-wire stages back to the lanes, scale 2 LM + 1, RoPE (LM+1) + (LA+1) + 1, act-quant 18.
 // The x values wait in the lanes (NV words a lane) between the mix and the scale: nothing is written back.
 // ---------------------------------------------------------------------------
 module ot_dsrom_su_norm #(
@@ -153,6 +153,7 @@ module ot_dsrom_su_norm #(
     wire [NC*32-1:0] cs;                // chunk sums
     wire [NC-1:0]   cf;
     wire [N*32-1:0] yb;
+    wire [N*32-1:0] ybr;                // the RoPE's copy of yb
 
     genvar l, c, k, n;
     generate
@@ -194,8 +195,10 @@ module ot_dsrom_su_norm #(
             ot_hdc_qmul_lat #(LM) u_xr (clk, rst_n, sc_go, xo, rh, p, f[8]);
             ot_hdc_qmul_lat #(LM) u_w  (clk, rst_n, vy[LM], wo, p, q, f[9]);
             reg [31:0] yr;
-            always @(posedge clk) yr <= bf16(q);
+            (* keep *) reg [31:0] yrr;          // the RoPE's copy (its two multipliers), kept through synthesis
+            always @(posedge clk) begin yr <= bf16(q); yrr <= bf16(q); end
             assign yb[l * 32 +: 32] = yr;
+            assign ybr[l * 32 +: 32] = yrr;
             assign lf[l] = |f;
         end
         // chunk chains: lane 8c+j joins after j-1 adds
@@ -323,36 +326,39 @@ module ot_dsrom_su_norm #(
 
     // ---------------------------------------------------------------- RoPE tail (forward), BF16
     // The tail is the last RD elements of the row: lanes LB-RD .. LB-1 of the last vector (LB = its length); the
-    // other vectors (and lanes) pass with the same delay.
-    localparam integer DRO = LM + LA + 1;
+    // other vectors (and lanes) pass with the same delay.  Routed timing: the rotation reads its operands from its own
+    // (kept) copy of the scale output register, uses the operand-cut multiplier (LAT 6) and adder (l5x, LAT 5), and
+    // selects rotated / passed BEFORE the output register, so ro leaves a register.
+    localparam integer LMR = LM + 1, LAR = LA + 1;
+    localparam integer DRO = LMR + LAR + 1;
     wire [DRO:0] vr;
     ot_hdc_vline #(.D(DRO)) u_vr (.clk(clk), .rst_n(rst_n), .v(y_v), .vd(vr));
-    wire [7:0] ro_i;
+    wire [7:0] ro_i, ro_im;
     ot_hdc_delay #(.W(8), .D(DRO)) u_roi (.clk(clk), .rst_n(rst_n), .d(yi_o), .q(ro_i));
-    wire last_ro = (ro_i == NV - 1);
+    ot_hdc_delay #(.W(8), .D(DRO - 1)) u_rom (.clk(clk), .rst_n(rst_n), .d(yi_o), .q(ro_im));
+    wire last_rm = (ro_im == NV - 1);              // the vector index at the output register's input
     wire [N-1:0] rf;
     generate
         if (RD > 0) begin : g_rope
             for (l = 0; l < N; l = l + 1) begin : g_rl
-                wire [31:0] dl;
-                ot_hdc_delay #(.W(32), .D(DRO)) u_d (.clk(clk), .rst_n(rst_n), .d(yb[l * 32 +: 32]), .q(dl));
                 if (l >= LB - RD && l < LB) begin : g_rot
                     localparam integer KK = (l - (LB - RD)) / 2;
                     localparam integer ODD = (l - (LB - RD)) % 2;
                     wire [31:0] cc = cos_t[KK * 32 +: 32], sn = sin_t[KK * 32 +: 32];
-                    wire [31:0] mine = yb[l * 32 +: 32];
-                    wire [31:0] pair = yb[(ODD ? l - 1 : l + 1) * 32 +: 32];
-                    wire [31:0] pp, qq, rs;
+                    wire [31:0] mine = ybr[l * 32 +: 32];
+                    wire [31:0] pair = ybr[(ODD ? l - 1 : l + 1) * 32 +: 32];
+                    wire [31:0] pp, qq, rs, dl;
                     wire f0, f1, f2;
-                    ot_hdc_qmul_lat #(LM) u_p (clk, rst_n, y_v, mine, cc, pp, f0);                              // a*c | b*c
-                    ot_hdc_qmul_lat #(LM) u_q (clk, rst_n, y_v, pair, ODD ? sn : {~sn[31], sn[30:0]}, qq, f1);  // -(b*s) | a*s
-                    ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_a (clk, rst_n, vr[LM], pp, qq, rs, f2);
+                    ot_hdc_qmul_lat #(LMR) u_p (clk, rst_n, y_v, mine, cc, pp, f0);                             // a*c | b*c
+                    ot_hdc_qmul_lat #(LMR) u_q (clk, rst_n, y_v, pair, ODD ? sn : {~sn[31], sn[30:0]}, qq, f1); // -(b*s) | a*s
+                    ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LAR)) u_a (clk, rst_n, vr[LMR], pp, qq, rs, f2);
+                    ot_hdc_delay #(.W(32), .D(DRO - 1)) u_d (.clk(clk), .rst_n(rst_n), .d(yb[l * 32 +: 32]), .q(dl));
                     reg [31:0] o;
-                    always @(posedge clk) o <= bf16(rs);
-                    assign ro[l * 32 +: 32] = last_ro ? o : dl;
-                    assign rf[l] = last_ro & (f0 | f1 | f2);
+                    always @(posedge clk) o <= last_rm ? bf16(rs) : dl;
+                    assign ro[l * 32 +: 32] = o;
+                    assign rf[l] = vr[DRO] & (ro_i == NV - 1) & (f0 | f1 | f2);
                 end else begin : g_keep
-                    assign ro[l * 32 +: 32] = dl;
+                    ot_hdc_delay #(.W(32), .D(DRO)) u_d (.clk(clk), .rst_n(rst_n), .d(yb[l * 32 +: 32]), .q(ro[l * 32 +: 32]));
                     assign rf[l] = 1'b0;
                 end
             end

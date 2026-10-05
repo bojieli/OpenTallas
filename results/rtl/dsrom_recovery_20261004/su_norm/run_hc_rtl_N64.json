@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.dsrom-recovery.su-norm.run.v1",
- "generated_utc": "2026-10-05T07:36:44Z",
+ "generated_utc": "2026-10-05T11:58:45Z",
  "variant": "hc",
  "fp": "rtl",
  "params": {
@@ -346,7 +346,7 @@
   "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
   "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
   "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
-  "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "a10179da308551a84680a9c3ba12f525ad72558da8edab215bd43f36c44a40d3",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "f89873611a0f71cad818567210ee3150145e8e5f3d4a9a3b1e8bc697c662a650",
   "rtl/test/tb_dsrom_su_norm.sv": "63705c54770c3dfbd15d94374e97c50e389689bda6beaa02c2ec872eba394914"
  }
 }

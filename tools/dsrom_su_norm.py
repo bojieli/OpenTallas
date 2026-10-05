@@ -285,7 +285,7 @@ def floor_terms(v):
              stream_and_vector_levels=vector_levels(nv, LA + 1), result_wire=RW, divide_by_D_divc=9, add_eps=LA,
              rsqrt=1 + 3 * (3 * LM + LA), broadcast_wire=BW, scale_stream=nv - 1, scale_mul_mul_rnd=2 * LM + 1)
     if p["RD"]:
-        t["rope_mul_add_rnd"] = LM + LA + 1
+        t["rope_mul6_add5_rnd"] = (LM + 1) + (LA + 1) + 1
     if p["QUANT"]:
         t["actquant_aq12"] = 18
     t["hub_out"] = HUB_OUT
