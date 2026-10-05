@@ -8662,3 +8662,43 @@ def hbm_stream_aq_last_bound_predicate_cut(*, pcs=128):
                 period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
                 SSFF_closed=False, adopted=False,
                 build_condition='Only if current head-ready route final verdict requires remaining bounddecode repair')
+
+
+def hbm_stream_aq_slot_ready_cut(*, pcs=128, queue_depth=4):
+    """Mandatory exact slot-readiness alternative after head-ready input failure.
+
+    Each valid slot mirrors its next bank's next readiness. Read-pointer and
+    pop choice stay outside flag D. Invalid flags carry no ownership credit.
+    This replaces the one-bit head cut, not the inherited 32-bit hold cut.
+    """
+    if pcs < 1 or queue_depth < 2 or queue_depth & (queue_depth-1):
+        raise ValueError('positive PCs and retained power-of-two queue required')
+    return dict(default_enabled=False, MACs_per_cycle=0, pcs=pcs,
+                queue_depth=queue_depth, added_state_bits_per_pc=queue_depth,
+                total_added_state_bits=pcs*queue_depth,
+                replaces_head_ready_bits_per_pc=1,
+                net_state_delta_vs_failed_head_cut=pcs*(queue_depth-1),
+                FF_cell_area_floor_um2=pcs*queue_depth*DFF_UM2,
+                slot_bank_mask_AND_per_pc=32*queue_depth,
+                slot_bank_reduce_OR2_per_pc=31*queue_depth,
+                accepted_push_bank_mux_bits_per_pc=32*queue_depth,
+                accepted_push_slot_comparisons_per_pc=queue_depth,
+                slot_live_capture_gates_per_pc=queue_depth,
+                current_read_pointer_select_AND3_per_pc=queue_depth,
+                current_read_pointer_select_OR2_per_pc=queue_depth-1,
+                next_readiness_extra_sinks_per_bank=queue_depth,
+                accepted_push_decode_extra_sinks_per_slot=32,
+                clock_reset_extra_sinks_per_pc=queue_depth,
+                inherited_hold_state_bits_per_pc=32,
+                queue_payload_and_pop_order_unchanged=True,
+                added_memory_ports=0, added_memory_bytes_per_cycle=0,
+                added_boundary_bits=0, added_external_tracks=0,
+                output_bytes_per_cycle_max_per_pc=32,
+                added_command_cycles=0, added_grant_cycles=0, added_ACK_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                local_wire_and_buffer_area='unknown positive; per-slot flag D fanout, push decode and read-pointer select need route',
+                loaded_delay_ps=None, SSFF_closed=False, adopted=False,
+                area_fit='WQ flag FF/PC in same service slot; mapped/control/reset fit unknown',
+                invariant='for every valid queue slot: ready_q[i] == OR(wq_boh[i] & rdyr_q); current head select equals original wr_bank_rdy',
+                source_constraint='all grant/refresh/open/stale/tRCD next equations unchanged; no stale readiness or earlier visibility',
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
