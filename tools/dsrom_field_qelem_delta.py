@@ -97,6 +97,10 @@ def main() -> int:
                        II_us=m["II_us"], verify_us=m["verify_us"], tau=m["tau"],
                        field_nodes_on_critical_path=field_on_path(c, fields[t]),
                        field_us_on_critical_path=round(sum(h["us"] for h in field_on_path(c, fields[t])), 3))
+        # Carry the composer's physical rejection through the comparison.
+        for key in ("physical_qualified", "qualified_headline_rate", "wavefront_implementation"):
+            if key in m:
+                summ[t][f"MTP_{key}"] = m[key]
     for t in summ:
         if t != "base":
             summ[t]["delta_vs_base"] = dict(
@@ -113,6 +117,8 @@ def main() -> int:
                composition=summ, nodes=nodes,
                inputs={str(a.base): sha(a.base), **{str(p): sha(p) for p in qs.values()}},
                tool_sha256=sha(Path(__file__)),
+               composer_sha256=sha(ROOT / "tools/dsrom_1m_allmeasured.py"),
+               uarch_model_sha256=sha(ROOT / "tools/uarch_model.py"),
                git_head=subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,
                                        text=True).stdout.strip())
     a.out.parent.mkdir(parents=True, exist_ok=True)
