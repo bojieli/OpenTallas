@@ -36,7 +36,7 @@ def model():
             unmeasured_mapping_logic_CTS_delta_um2=None,control_cap_unchanged=True,
             list_macro_reservation_um2=banks*m['area']['macro_area_um2'],
             parent_component_outline_um=[max(310.164,4*(m['area']['macro_width_um']+8)),310.164+4*(m['area']['macro_height_um']+8)],
-            parent_component_reservation_basis='control retains93630.5um2 core and37452.2um2 cell cap; sixteen aligned list macros in adjacent4x4 region, not a control density rescue',
+            control_fence_um=[2.052,2.160,308.124,308.070],macro_frontend_fence_um=[2.052,312.324,726.324,458.910],parent_component_reservation_basis='control retains93630.5um2 core and37452.2um2 cell cap; sixteen aligned list macros in adjacent4x4 region, not a control density rescue',
             enclosing_die_fit=False,die_gather_reservation_mm2=1.38823),
         boundaries=dict(list_write_bits=1+3+11+14,list_read_bits=1+13+28,HBM_request_bits=npc*(1+28+4+16),HBM_response_control_bits=npc*(1+16+4),drain_metadata_bits=71,
             control_copies=8,list_macro_output_bits=16*70,local_fourway_mux_bits=4*70,MAC_to_communication_intensity=0),
