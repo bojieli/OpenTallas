@@ -3,6 +3,76 @@
 Physical costs are explicit inventory, never a routed closure or rate credit.
 This does not allocate x memory, alter arithmetic or price the entire SM twice.
 """
+def production_adapter_model():
+    """One finite DS20 MREQ adapter; existing PQ bench is not production IO."""
+    import hashlib, json, math
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    cost='results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json'
+    codec=json.loads((root/cost).read_text())['SRAM_protection_candidate']
+    counts=dict(packet_slots=32*1512, restored_rows=14*432, xbeat=2304,
+                configuration=4160, control=576)
+    ff=sum(counts.values()); assert ff==61472
+    pairs=21+6+4+1
+    mux_bits=1512*31+432*13+337
+    buf=math.ceil((ff-1)/7)
+    body=ff*.2916+ff*.2+mux_bits*.2+pairs*codec['pair_cell_body_um2']+buf*.10206
+    area=2*body*1.02/1e6
+    paths=['rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv',
+           'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv',
+           'rtl/gpu_sys/ot_gpu_mreq_cdc.sv','rtl/gpu_sys/ot_gpu_memsys.sv',
+           'rtl/gpu_sys/ot_gpu_hbm_partition.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv',
+           'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',cost]
+    return dict(schema='dshbm.wavepack.production-adapter.minimum.v1',default_enabled=False,
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths},
+        RTL_owner='Erdos production adapter; Rawls sole enclosing top/mux',
+        actual_launch='CP20 launch_v0/launch_pc32/token17/pos20; job32/gen4 captured only db_v&&db_rdy',
+        loader='existing64-bit loader; compiler must bind original linked W2PC and nonoverlapping installed weight/X/result extents; no reserved guessed opcode/addresses',
+        packet_capacity=32,packet_raw_bits=1280,packet_check_bits=160,packet_metadata_bits=72,
+        restored_row_capacity=14,restored_NC=8,one_xbeat_bits=2048,one_xbeat_capacity=1,
+        descriptor_capacity=4,descriptor_words64=16,protected_FF=counts,total_FF=ff,
+        provider=dict(route='borrowed SM0 LSU -> existingAW3 CDC -> memsys',
+            request_bits=337,response_bits=273,sector_bits=256,sector_bytes=32,tag_bits=16,
+            outstanding_requests=1,added_ports=0,memory_clock_ns=1,source_clock_target_ns=1/1.2,
+            NS=2,NPC=2,MEM_WORDS=2097152,USE_W2=0,
+            exclusion='Actual all old accepted requests/responses drained before borrow; mutually exclusive with Einstein SU; no req_ready tie or acceptance-as-publication'),
+        packet_service=dict(useful_bytes=136,sector_actions=5,physical_bytes=160,padding_bytes=24,
+            padding_fraction_of_useful=24/136,
+            response_to_caller_edges=1,assembly_to_xwrite_edges=1,descriptor_validation_edges=1,
+            encode_held_edges=2,decode_held_edges=3,
+            minimum_packet_local_edges=8,
+            provider_roundtrip_ns_planning_range=[45,500],
+            occupied_packet_ns_planning_range=[5*45+8/1.2,5*500+8/1.2],
+            planning_assumptions='same exclusive/drained provider source as finiteSU; actual request-to-response may stall on CDC/backend/refresh/held sinks; range is not a measured guarantee',
+            stripe_capture='reserve whole packet before request, collect5actualsectors, validate owner and decode held W6 state before exposing1088bits once',
+            X='source A/B bytes fetched through real provider before xwrite/start; no cached bench XB as installed memory authority',
+            publication='real restored row address -> actual writeACK -> same-address readback before sm_done; CPLtoken is never taken from W2 data'),
+        component_cost=dict(body_FF_mm2=ff*.2916/1e6,codec_pairs=pairs,
+            codec_body_mm2=pairs*codec['pair_cell_body_um2']/1e6,
+            codec_timing_basis='retained W6 encode905.013ps/decode1633.328ps incl60unc, positive250ps local loading estimate:2encode/3decode held targetedges; not II1 or contextual signoff',
+            mux_bits=mux_bits,mux_um2_per_bit_assumed=.2,feedback_mux_bits=ff,
+            fanout8_clock_buffers_estimate=buf,buffer_um2_assumed=.10206,
+            placement_at50pct_mm2=area,required_component_outline_um=[400,400],component_envelope_mm2=.16,
+            estimate_fits_component_envelope=area<=.16,parent_home_reserved=False,
+            original_mapped_W2_body_um2=845.7129,original_mapped_W2_FF=1364,
+            original_clock_load_fF=645.941909,
+            original_W2_debit_separate_once=True,
+            exclusions='actual codec cut FF/extra hold repair/long routes/PG/loaded CTS; envelope not die-space containment'),
+        boundary_tracks_lower_bound=337+273,loaded_channel_fit=False,
+        measured_609_to425_scope='retained logical PQ fixture only, NOT production fetched-packet latency',
+        actual_production_exposed_packet_count=None,composed_production_gain_us=None,
+        one_percent_threshold_established_for_production=False,
+        selection='existing DS20 singleSM0 LSU correctness-only production integration; Rawls14:15 decision',
+        production_rate_binding='REJECT_SINGLE_MREQ_ACCELERATION_CREDIT',
+        production_traffic_floor=dict(useful_weights_bytes=32640,sector_weights_bytes=38400,
+            X_bytes=55296,write_readback_bytes=896,total_bytes=94592,
+            minimum_sector_edges=2956,source_memory_clock_ns=1,minimum_us=2.956,
+            excludes='latency/arbitration/CDC/codec; different provider from retained609->425'),
+        source_implementation_model_selected=True,component_RTL_implementation_permitted=True,
+        physical_route_admitted=False,physical_clock_qualified=False,adopted=False,
+        next='Rawls binds exact original installed image/PC/span map; Erdos implements finite adapter under these seats/cuts; actual same-provider production baseline/candidate gate decides benefit, no modeled gain transfer')
+
+
 def model(nc=8, sub=4, ds=3, dg=3, pio=2, rmax=4096, nout=4):
     rw = (rmax - 1).bit_length()
     # SEG and FP4 per physical issue slot; registered second context, counts,
