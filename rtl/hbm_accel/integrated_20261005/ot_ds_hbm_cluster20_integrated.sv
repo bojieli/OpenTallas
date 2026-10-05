@@ -7,10 +7,11 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,W2_RESULT_ENABLE=0,W2_PROTECTED_TRANSACTION_PIPELINE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
- parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1
+ parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1,
+ parameter integer W2_PROTECTED_TRANSACTION_PIPELINE=0
 )(
  input wire por_n, clk_host, clk_sm, clk_mem, clk_link,
  // Local reset is deferred; it never resets shared credit or the provider.

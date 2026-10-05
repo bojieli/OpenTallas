@@ -11,6 +11,15 @@ from pathlib import Path
 import shutil
 import subprocess
 import os
+import signal
+
+
+def record_exit(job, stage, rc):
+    (job / (stage + '.exit')).write_text(str(rc) + '\n')
+    detail = {'returncode': rc, 'signal': signal.Signals(-rc).name if rc < 0 else None}
+    (job / (stage + '_terminal.json')).write_text(json.dumps(detail, indent=2) + '\n')
+    if rc:
+        print(stage + ' failed: ' + json.dumps(detail), flush=True)
 
 
 def sha(p):
@@ -66,9 +75,9 @@ def run(donor, job, overlay, reuse_objects=None):
     (job / 'command.json').write_text(json.dumps(command, indent=2) + '\n')
     with (job / 'compile.log').open('w') as log:
         rc = subprocess.run(command, cwd=job, stdout=log, stderr=subprocess.STDOUT).returncode
-    (job / 'compile.exit').write_text(str(rc) + '\n')
+    record_exit(job, 'compile', rc)
     if rc:
-        raise SystemExit(rc)
+        raise SystemExit(1)
     runtime = [str(job / 'obj/Vtb_hbm_integrated_gu_w2_hubble'),
                '+DIR=' + str(donor / 'case'),
                '+gpu_sys_mem_prefix=' + str(donor / 'original/mem'),
@@ -76,10 +85,10 @@ def run(donor, job, overlay, reuse_objects=None):
     (job / 'runtime_command.json').write_text(json.dumps(runtime, indent=2) + '\n')
     with (job / 'runtime.log').open('w') as log:
         rc = subprocess.run(runtime, cwd=job, stdout=log, stderr=subprocess.STDOUT).returncode
-    (job / 'runtime.exit').write_text(str(rc) + '\n')
+    record_exit(job, 'runtime', rc)
     log = (job / 'runtime.log').read_text()
     if rc or 'PASS_W2_PARENT_WARM_QUARANTINE' not in log or 'PASS_NATIVE_W2_CONNECTED_PUBLICATION_CPL' not in log:
-        raise SystemExit(rc or 1)
+        raise SystemExit(1)
 
 
 if __name__ == '__main__':
