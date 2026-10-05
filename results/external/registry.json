@@ -3,6 +3,15 @@
  "date": "2026-10-04",
  "owner_rule": "OWNER RULE 2026-10-04: speculative-decoding acceptance and the DeepSeek-V4.1 GPU decode baseline must come from PUBLISHED THIRD-PARTY sources (MLCommons, LMSys/SGLang, vLLM, model vendors, NVIDIA/AMD, ...), never from our own measurement. OWNER CORRECTION: cite this registry instead of re-researching.",
  "tool": "tools/external_registry.py",
+ "decisions": [
+  {
+   "date": "2026-10-05",
+   "id": "owner:ds_tau_owner6_blend",
+   "decision": "DeepSeek-V4.1 composition default tau = 4.159, the owner 6-class workload blend (harmonic, greedy, gamma 5) in results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json; the published V4.1 value 3.8879 and the published V4.1 gamma-5 range 3.43-4.32 are kept as a SENSITIVITY (OT_TAU_SOURCE=third_party). Qwen3-8B keeps the third-party derived 3.1445.",
+   "reason": "OWNER: a single GSM8K dataset (the 3.8879 primary) makes no sense as the headline workload, and several published sources are V4-Flash, not V4.1.",
+   "supersedes": "the 2026-10-04 owner rule's DS default (published 3.8879); the third-party figures below are unchanged"
+  }
+ ],
  "counts": {
   "total": 121,
   "new": 13

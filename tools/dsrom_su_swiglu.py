@@ -36,7 +36,7 @@ F = np.float32
 LAYERS = ("L0", "L3", "L20", "L24")
 FAST = 1.2e9
 NIN, NOUT = 33, 23            # hub traverse at 1.2 GHz: 22 / 15 slow stages x 748/504 (SS wire reach)
-RTL = ["rtl/hdc/v41x/ot_dsrom_su_swiglu.sv"]
+RTL = ["rtl/hdc/v41x/ot_dsrom_su_swiglu.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv"]
 LIB = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
        "rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
@@ -328,7 +328,12 @@ def main():
     ap.add_argument("--w", type=int, default=64)
     ap.add_argument("--nb", type=int, default=32)
     ap.add_argument("--only", default=None)
+    ap.add_argument("--nin", type=int, default=None, help="hub stages in (default 33: the ROM's 22 slow stages)")
+    ap.add_argument("--nout", type=int, default=None, help="hub stages out (default 23: the ROM's 15 slow stages)")
     a = ap.parse_args()
+    global NIN, NOUT
+    NIN = a.nin if a.nin is not None else NIN
+    NOUT = a.nout if a.nout is not None else NOUT
     return dict(prep=cmd_prep, run=cmd_run)[a.step](a)
 
 

@@ -32,6 +32,15 @@ OWNER_RULE = ("OWNER RULE 2026-10-04: speculative-decoding acceptance and the De
               "from PUBLISHED THIRD-PARTY sources (MLCommons, LMSys/SGLang, vLLM, model vendors, NVIDIA/AMD, ...), never "
               "from our own measurement. OWNER CORRECTION: cite this registry instead of re-researching.")
 
+DECISION_DS_TAU = dict(
+    date="2026-10-05", id="owner:ds_tau_owner6_blend",
+    decision="DeepSeek-V4.1 composition default tau = 4.159, the owner 6-class workload blend (harmonic, greedy, gamma 5) "
+             "in results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json; the published V4.1 value 3.8879 "
+             "and the published V4.1 gamma-5 range 3.43-4.32 are kept as a SENSITIVITY (OT_TAU_SOURCE=third_party). "
+             "Qwen3-8B keeps the third-party derived 3.1445.",
+    reason="OWNER: a single GSM8K dataset (the 3.8879 primary) makes no sense as the headline workload, and several "
+           "published sources are V4-Flash, not V4.1.",
+    supersedes="the 2026-10-04 owner rule's DS default (published 3.8879); the third-party figures below are unchanged")
 OUT_REG = ROOT / "results/external"
 OUT_ACC = ROOT / "results/speculative/third_party_acceptance_20261004"
 OUT_GPU = ROOT / "results/measured/gpu_third_party_20261004"
@@ -315,6 +324,11 @@ def _trunc(r, k):
     return 1 + sum(r ** i for i in range(1, k + 1))
 
 
+def _owner6_tau() -> float:
+    b = json.loads((ROOT / "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json").read_text())
+    return b["blends"]["owner 6-class equal"]["greedy"]["tau_blend_harmonic"]
+
+
 def acceptance() -> dict:
     cols = NEW[0]["value"]["columns"]
     ds7 = GAMMA7["DSpark"]
@@ -386,11 +400,14 @@ def acceptance() -> dict:
                       dict(source_id="new:infx_dsv4pro_dspark_curve", tau_k5=3.61, mismatch=["V4-Pro", "thinking on"]),
                       dict(source_id="new:infx_dsv4_mtp_curve", tau_k5_thinking_off=3.10, mismatch=["V4-Pro native MTP, not DSpark"]),
                       dict(source_id="acc:V3", tau_k1=[1.85, 1.90], mismatch=["DeepSeek-V3 MTP-1 (derived 1 + a1)"])],
-        superseded_self_measured=dict(tau=4.159, draft_tokens=5,
-                                      source="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json",
-                                      note="our measurement (owner 6-class equal blend); SUPERSEDED 2026-10-04 by the owner rule"),
+        adopted=dict(draft_tokens=5, tau=_owner6_tau(), grade="owner decision 2026-10-05",
+                     label="owner 6-class workload blend (adopted 2026-10-05)",
+                     source="results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json "
+                            "blends['owner 6-class equal'].greedy.tau_blend_harmonic",
+                     note="composition default (tools/third_party_tau.py); the published primary above and its range are "
+                          "the sensitivity (OT_TAU_SOURCE=third_party)"),
     )
-    return dict(schema="opentallas.third_party_acceptance.v1", date=DATE, owner_rule=OWNER_RULE,
+    return dict(schema="opentallas.third_party_acceptance.v1", date=DATE, owner_rule=OWNER_RULE, decisions=[DECISION_DS_TAU],
                 convention="tau = mean tokens committed per verify step INCLUDING the bonus token (EAGLE/DSpark 'accepted length')",
                 registry="results/external/registry.json", consumer="tools/third_party_tau.py",
                 models=dict(qwen3_8b=q, deepseek_v41=d))
@@ -498,7 +515,8 @@ def md_registry(reg):
          "cite each URL.", "", f"> {OWNER_RULE}", "",
          "Topical views: [acceptance](../speculative/third_party_acceptance_20261004/README.md), "
          "[GPU baselines](../measured/gpu_third_party_20261004/README.md), "
-         "[vendor assumption check](../arch/vendor_assumption_check_20261004/README.md).", "",
+         "[vendor assumption check](../arch/vendor_assumption_check_20261004/README.md).", ""] + [
+         f"**Owner decision {x['date']}:** {x['decision']} Reason: {x['reason']}" for x in reg["decisions"]] + ["",
          "| id | new | class | title | used by |", "|---|---|---|---|---|"]
     for e in reg["entries"]:
         t = (e.get("title") or "").replace("|", "/")[:110]
@@ -511,13 +529,16 @@ def md_acc(a):
     q, d = a["models"]["qwen3_8b"], a["models"]["deepseek_v41"]
     L = ["# Third-party speculative-decoding acceptance (2026-10-04)", "", f"> {a['owner_rule']}", "",
          f"Convention: {a['convention']}. Sources are ids in [`results/external/registry.json`](../../external/registry.json). "
-         "Read by `tools/third_party_tau.py`, which every composition now uses by default (`OT_TAU_SOURCE=self_measured` "
-         "reproduces the superseded records).", "",
-         "| Model | Draft tokens | Primary tau | Grade | Range | Superseded (ours) |", "|---|---|---|---|---|---|",
+         "Read by `tools/third_party_tau.py`, which every composition uses (`OT_TAU_SOURCE=adopted` is the default; "
+         "`third_party` gives the published DS sensitivity; `self_measured` reproduces the superseded records).", ""] + [
+         s for x in a["decisions"] for s in (f"## Owner decision {x['date']}", "", x["decision"], "", "Reason: " + x["reason"], "",
+                                               "Supersedes: " + x["supersedes"] + ".", "")] + [
+         "| Model | Draft tokens | Composition default tau | Basis | Published primary (third-party) | Published range | Superseded (ours) |",
+         "|---|---|---|---|---|---|---|",
          f"| Qwen3-8B + DSpark | {q['primary']['draft_tokens']} | **{q['primary']['tau']}** | {q['primary']['grade']} | "
-         f"{q['range']['low']}-{q['range']['high']} | 3.0375 |",
-         f"| DeepSeek-V4.1-Flash + DSpark | {d['primary']['draft_tokens']} | **{d['primary']['tau']}** | {d['primary']['grade']} | "
-         f"{d['range']['low']}-{d['range']['high']} | 4.159 |", "",
+         f"{q['primary']['tau']} | {q['range']['low']}-{q['range']['high']} | 3.0375 |",
+         f"| DeepSeek-V4.1-Flash + DSpark | {d['adopted']['draft_tokens']} | **{d['adopted']['tau']}** | {d['adopted']['label']} | "
+         f"{d['primary']['tau']} (sensitivity) | {d['range']['low']}-{d['range']['high']} (sensitivity) | - |", "",
          "## Qwen3-8B", "", q["composition_block"], "",
          "No source publishes a Qwen3-8B DSpark acceptance length at 3-5 draft tokens. DeepSeek's DSpark paper (Table 1) "
          "publishes it at gamma 7, and its drafters are released only as block-7 checkpoints. The primary is therefore "
@@ -535,7 +556,9 @@ def md_acc(a):
          "dspark_qwen3_8b_block7 measured 3.41 on SPEED-Bench coding with a community harness (k=7). AngelSlim EAGLE-3 gives "
          "1.99 at k=2.", "",
          "## DeepSeek-V4.1-Flash (DSpark, block 5)", "",
-         f"Primary {d['primary']['tau']} (vLLM PR #57432, TP4, same model revision, after the acceptance fix). It is "
+         f"Composition default: **{d['adopted']['tau']}**, the {d['adopted']['label']} "
+         f"(`{d['adopted']['source']}`). The published values below are kept as a sensitivity.", "",
+         f"Published primary {d['primary']['tau']} (vLLM PR #57432, TP4, same model revision, after the acceptance fix). It is "
          f"{d['primary']['why'].split('; it is ')[1]}. Mismatch: {d['primary']['mismatch'][0]}.", "",
          "| Source | tau | Conditions |", "|---|---|---|"] + [
          f"| `{p['source_id']}` | {p['tau']} | {p['conditions']} |" for p in d["published_set"]] + [
@@ -586,6 +609,7 @@ def build():
         e.setdefault("new", False)
     attach_used_by(entries, corpus())
     reg = dict(schema="opentallas.external_registry.v1", date=DATE, owner_rule=OWNER_RULE, tool="tools/external_registry.py",
+               decisions=[DECISION_DS_TAU],
                counts=dict(total=len(entries), new=sum(e["new"] for e in entries)), entries=entries)
     acc, gpu, ven = acceptance(), gpu_baselines(), vendor_check()
     known = set(ids)

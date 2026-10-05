@@ -1,0 +1,12 @@
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 165722 um^2 30% utilization.
+source /work/regions.tcl
+Error: floorplan.tcl, 168 Invalid method. Must be one of: configure cget -acquire -disown -delete getName getParentGroup getRegion setType getType addModInst removeModInst getModInsts addInst removeInst getInsts addGroup removeGroup getGroups addPowerNet addGroundNet removeNet getPowerNets getGroundNets getObjectType getDb getId isValid getDebugName
+Elapsed time: 7:43.05[h:]min:sec. CPU time: user 650.75 sys 33.40 (147%). Peak memory: 455292KB.
+make[1]: *** [Makefile:450: do-2_1_floorplan] Error 1
+make: *** [Makefile:450: /work/results/asap7/erdos_code_directcapture_ascending_f50_r1/base/2_1_floorplan.odb] Error 2

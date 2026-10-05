@@ -1,0 +1,8 @@
+MACRO_TRACK_GATE PASS macros=0 hooks=2 warnings=0
+view=asap7 corner=TT block=ot_hdc_v41x_vec_light1024rk top=ot_hdc_v41x_vec_light1024rk purpose=signoff_target
+  synth: cells=65115 area=8216.088 um2 seq_area=3171.685 um2 macros=0
+  pnr:   wirelength=257118 um vias=586725 DRC=0 antenna_nets=0 Fmax=1055.76 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/codex/nash-kr40-capture-88b13fdec-r2/physical.json

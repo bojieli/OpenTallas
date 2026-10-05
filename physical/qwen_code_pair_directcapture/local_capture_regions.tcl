@@ -28,7 +28,7 @@ proc ot_code_pair_capture_regions {bank_members} {
    odb::dbBox_create $region [expr {round($x*$units)}] [expr {round($y*$units)}] \
       [expr {round(($x+17.28)*$units)}] [expr {round(($y+51.84)*$units)}]
    set group [odb::dbGroup_create $block "code.column$p.bank$b.capture"]
-   $group setRegion $region
+   $region addGroup $group
    foreach name $members {$group addInst [$block findInst $name]}
   }
  }
