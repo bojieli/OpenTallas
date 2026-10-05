@@ -47,6 +47,34 @@ FP8_MAC_UM2 = 78.466875       # arch_budget_v41 unit_areas (ot_hdc_blockdot / 32
 BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pipe)
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
+
+def mbist_bira_pipeline_cost(dmax=256, entries=6, sram_banks=2, clock_ns=0.833):
+    """Item8(b) repair-search pipeline; deterministic cycle/bit pricing, no closure claim."""
+    chunks = (dmax + 15) // 16
+    groups = (chunks + 3) // 4
+    partial_bits = chunks * 5 + groups * 7
+    extra_cycles_per_subset = 2
+    extra_cycles_per_analysis = extra_cycles_per_subset * (1 << entries)
+    return dict(schema="opentallas.uarch.mbist-bira-pipeline.v1", enabled_default=False,
+        source="rtl/dft/ot_mbist_bira.sv S_SRCH/S_SRCH2/S_SRCH3; item8(b) prescribed pipeline",
+        geometry=dict(dmax=dmax, entries=entries, sram_banks=sram_banks),
+        search_cycles_per_subset=dict(baseline=3, successor=5),
+        added_cycles_per_analysis=extra_cycles_per_analysis,
+        worst_added_bist_cycles=sram_banks * extra_cycles_per_analysis,
+        worst_added_bist_ns=clock_ns * sram_banks * extra_cycles_per_analysis,
+        clean_bist_added_cycles=0, single_user_token_added_cycles=0,
+        memory_port_bytes_per_cycle_delta=0, external_boundary_bits_per_cycle_delta=0,
+        macs_per_cycle=0, replicas=1, shared_controller=True,
+        pipeline_register_bits=partial_bits, added_state_bits=1,
+        registered_boundaries_bits=[chunks * 5, groups * 7],
+        fanin=dict(chunk_bits=16, group_chunks=4, final_groups=groups),
+        fanout="each cm_r bit to one chunk; each chunk count to one group; no new external fanout",
+        area_estimate_um2=(partial_bits + 1) * DFF_UM2,
+        area_status="ESTIMATE flop-only; adder/mux/clock/routing delta requires measured shell",
+        routing_tracks_status="ESTIMATE internal local tree, no added shell ports; actual route required",
+        floorplan_status="existing shell vehicle; slot fit requires measured total area",
+        clock_status="UNVALIDATED: require routed SS60/FF25 at 0.833ns, DRC/antenna/electrical zero")
+
 # weights delivered by one ROM word, by the node's format (W1 bank map: FP4 two 136-bit 32-blocks per
 # 274-bit word, FP8 one 264-bit block, BF16 16 x 16 bit, FP32 8 x 32 bit)
 WEIGHTS_PER_WORD = {"fp4": 64, "fp8": 32, "bf16": 16, "fp32": 8}
@@ -7817,3 +7845,37 @@ def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
                 adopted=False,
                 source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
                 physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
+
+
+def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
+                                   service_period_fs=833333, ack_tail_edges=0):
+    """Additional alignment around the existing canonical MP commit element.
+
+    A raw lane sampled E0 is decoded after E1 and enters service at E2.
+    Compose the final lane's actual ACK tail with pipeline empty, never sum
+    two edges onto every FILL stage or assume they are unhidden token delay.
+    Canonical decoder/state area belongs to the existing element model.
+    """
+    bits=2*sw*aw+2
+    old_empty=fill_lat+3
+    new_empty=fill_lat+5
+    before=max(old_empty,ack_tail_edges)
+    after=max(new_empty,ack_tail_edges)
+    return dict(default_enabled=False, replicas=replicas, MACs_per_cycle=0,
+                added_register_bits_per_die=bits, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='canonical decoder/state, enable muxes, clock/reset/routing',
+                initiation_interval_service_edges=1, added_lane_service_edges=2,
+                existing_lane_address_bits_per_edge=sw*aw,
+                existing_lane_data_bits_per_edge=sw*32,
+                added_memory_ports=0, new_boundary_bits=0, routing_tracks_added=0,
+                existing_lane_input_bytes_per_edge=sw*4,
+                empty_pipeline_tail_service_edges=new_empty,
+                actual_ack_tail_service_edges=ack_tail_edges,
+                composed_tail_service_edges=after,
+                composed_tail_delta_service_edges=after-before,
+                composed_tail_delta_fs=(after-before)*service_period_fs,
+                token_composition='per-layer max(actual native ACK tail, FILL_LAT+5); serialize only exposed fence tail',
+                service_period_fs=service_period_fs,
+                combined_context_clock_closed=False, floorplan_fit=False, adopted=False,
+                source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')

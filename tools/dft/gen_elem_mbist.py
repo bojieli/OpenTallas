@@ -7,7 +7,7 @@ mechanical edits, each asserted to match exactly once:
 1. module name -> ot_v41_rom_elem_qp_mb_w10, plus a ROM test bus (mb_*) before `clk`;
 2. the element ICG opens while any of its ROMs is under test (en = cg_en_q | mb_on), so the macros and the
    collars are clocked during BIST; with mb_on = 0 the gate is the original;
-3. each ot_rom_4096x274_m8 of the PP (ping-pong) path sits behind an ot_mbist_rom_collar: the collar muxes the
+3. each ot_rom_4096x274_m8 of the PP (ping-pong) path sits behind an ot_mbist_rom_collar_par (matrix-form CRC): the collar muxes the
    macro's ce/address to the test bus while its rom_sel bit is set and is a combinational pass-through
    otherwise; the read word goes straight back to the element (f_rd = m_rd).
 
@@ -54,7 +54,7 @@ def generate(src: str) -> str:
     for k, ce in ((0, "issue && !a_ctr[0]"), (1, "issue && a_ctr[0]")):
         old = (f"            u_rom{k} (.clk(gclk), .ce_in({ce}), .addr_in(a_ctr[12:1]), .rd_out(rd{k}));")
         new = (f"            u_rom{k} (.clk(gclk), .ce_in(mb_m_ce{k}), .addr_in(mb_m_a{k}), .rd_out(rd{k}));\n"
-               f"        ot_mbist_rom_collar #(.WORDS(4096), .DW(274), .AMAX(12)) u_rc{k} (\n"
+               f"        ot_mbist_rom_collar_par #(.WORDS(4096), .DW(274), .AMAX(12)) u_rc{k} (\n"
                f"            .clk(gclk), .rst_n(mb_rst_n), .f_ce({ce}), .f_addr(a_ctr[12:1]), .f_rd(),\n"
                f"            .m_ce(mb_m_ce{k}), .m_addr(mb_m_a{k}), .m_rd(rd{k}),\n"
                f"            .t_en(mb_sel[2*mb+{k}]), .t_clear(mb_clear), .t_req(mb_req), .t_addr(mb_addr),\n"
