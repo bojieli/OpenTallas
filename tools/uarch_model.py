@@ -9423,6 +9423,12 @@ def hbm_existing_attention_allocation_model():
 
 
 
+def hbm_existing_cp_local_pg_model():
+    """Priced native bridge for the existing CP child; PDN connectivity only."""
+    from hbm_cp_local_pg import cp_local_pg_model
+    return cp_local_pg_model()
+
+
 def hbm_existing_attention_source_cut_model():
     """Actual after-E/mux boundary of the selected DS engine, not proxy tile chains."""
     allocation = hbm_existing_attention_allocation_model()
@@ -9761,7 +9767,3 @@ def dsrom_window_full_block_pipeline_model():
             adoption=False))
 
 
-def hbm_existing_cp_local_pg_model():
-    """Priced native bridge for the existing CP child; PDN connectivity only."""
-    from hbm_cp_local_pg import cp_local_pg_model
-    return cp_local_pg_model()
