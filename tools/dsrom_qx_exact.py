@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """QX exactness gate for ot_v41_rom_elem_q_qx_w10 (2026-10-04): the QY gate below on the QX copy
-(rtl/test/tb_dsrom_qx_exact.sv): pos / xs0 / negatives with QX = 6, qx5 (QX = 5), qx4 (QX = 4), qx3 (QX = 3), qx2 (QX = 2), qx1 (QX = 1), qx0 (QX = 0: the qy circuit), qy0 (QX = QY = 0:
+(rtl/test/tb_dsrom_qx_exact.sv): pos / xs0 / negatives with QX = 7, qx6 (QX = 6), qx5 (QX = 5), qx4 (QX = 4), qx3 (QX = 3), qx2 (QX = 2), qx1 (QX = 1), qx0 (QX = 0: the qy circuit), qy0 (QX = QY = 0:
 the qz circuit), qz0 (QX = QY = QZ = 0: the qp circuit), plus neg_qxlu (the one-hot lookahead ignoring a sub-block
 advance) and neg_qxca (the registered case-A decision ignoring it).
 
@@ -53,7 +53,7 @@ CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
 BUILDS = {"pos": CHK, "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU"],
           "neg_qxca": ["+define+QX_MUTANT_CA"], "neg_qxnca": ["+define+QX_MUTANT_NCA"],
-          "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "neg_qxsf": ["+define+QX_MUTANT_SF"], "neg_qxhz": ["+define+QX_MUTANT_HZ"], "neg_p2s": ["+define+BT_MUTANT_P2S"],
+          "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "neg_qxsf": ["+define+QX_MUTANT_SF"], "neg_qxhz": ["+define+QX_MUTANT_HZ"], "neg_p2s": ["+define+BT_MUTANT_P2S"],
           "neg_bk": ["+define+QZ_MUTANT_BK"], "neg_z": ["+define+QZ_MUTANT_Z"], "neg_cl": ["+define+QY_MUTANT_CL"],
           "neg_dp": ["+define+QP_MUTANT_DP"], "neg_tree": ["+define+QP_MUTANT_TREE"],
           "neg_half": ["+define+QP_MUTANT_HALF"], "neg_shadow": ["+define+QP_MUTANT_SHADOW"],
@@ -101,7 +101,7 @@ def main() -> None:
                   parameters=dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, FRONT_PAR=0, QTIMING_FIX=1, HC=3, QPIPE=1,
                                   QP_XS="1 (pos, qz0) / 0 (xs0)", QP_CAP=0, QP_P1=1, QP_CSAM=10,
                                   QZ="1 / 0 (qz0)", QZ_NS=8, QZ_NE=4, QY="1 (pos, xs0, qx0, negatives) / 0 (qy0, qz0)",
-                                  QX="6 (pos, xs0, negatives) / 5 (qx5) / 4 (qx4) / 3 (qx3) / 2 (qx2) / 1 (qx1) / 0 (qx0, qy0, qz0)",
+                                  QX="7 (pos, xs0, negatives) / 6 (qx6) / 5 (qx5) / 4 (qx4) / 3 (qx3) / 2 (qx2) / 1 (qx1) / 0 (qx0, qy0, qz0)",
                                   fault_report_delay_cycles=2),
                   reference="pinned rtl/v41rom/ot_v41_rom_elem_q_w10.sv + ot_v41_rom_elem_w10.sv (unchanged)",
                   comparison="every cycle: dut pv, busy and fault equal the ref's L cycles earlier, and every data field "
@@ -117,6 +117,7 @@ def main() -> None:
         with cf.ThreadPoolExecutor(len(BUILDS)) as ex:
             record["build_commands"] = dict(zip(BUILDS, ex.map(build, BUILDS)))
         jobs = [("pos", s) for s in range(1, a.seeds + 1)] + [("qz0", 100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
+        jobs += [("qx6", 1100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("qx5", 1000 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("qx4", 900 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("qx3", 800 + s) for s in range(1, max(2, a.seeds // 2) + 1)]

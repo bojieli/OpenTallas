@@ -25,6 +25,8 @@
 // QX = 5 (after route Z7's post-CTS screen, SS -40.7 ps on w_cnt -> hazard compare -> issue -> walker enables): the
 // issue hazard is a register loaded with its next-cycle value (three register-only candidates selected by go / issue).
 // QP_CHECK asserts it equals the original every cycle.  Zero added cycles.
+// QX = 7 (after route Z11d, SS -3.8 ps on r_go's fan-out into nB): kept copies of the go boundary register for the
+// nA / nB, wA / wB / fF and walker-state loads.  Zero added cycles.
 // QX = 6 (after CTS screen Z9s2, SS -22.6 ps on w_s -> s_x[w_s] lookups -> w_seg_last -> w_h): w_s's segment flags
 // are a register loaded wherever w_s is.  QP_CHECK asserts it.  Zero added cycles.
 //
@@ -301,6 +303,7 @@ module ot_v41_rom_elem_qx_w10 #(
     wire [3:0]   xb_sv_e;
     wire [31:0]  xb_u_e;
     wire [1023:0] xb_d_e;
+    wire go_en, go_ew, go_em;            // QX = 7: kept copies of go_e for the nA / nB, wA / wB / fF and walker loads
     if (FAST != 0) begin : g_ir
         reg r_cfg_v, r_go, r_go_bf, r_xs_v, r_xb_v;
         reg [4:0] r_cfg_a; reg [47:0] r_cfg_d; reg [7:0] r_xs_p; reg [2:0] r_xs_b, r_xs_pos, r_xb_pos, r_xb_b;
@@ -321,12 +324,21 @@ module ot_v41_rom_elem_qx_w10 #(
         // configuration writes are not registered: the class registers must be final one cycle before go_e so the
         // registered sub-block facts below are current when go_e starts the walkers
         assign cfg_v_e = cfg_v; assign cfg_a_e = cfg_a; assign cfg_d_e = cfg_d; assign go_e = r_go; assign go_bf_e = r_go_bf;
+        if (QX >= 7) begin : g_gok
+            // Z11d: r_go -> nB[31] -3.8 ps through a 7 / 22 / 15 / 21-load buffer tree (slews 110-150 ps)
+            ot_v41_kreg #(.W(1), .AR(1)) u_gn (.clk(clk), .arst_n(rst_n), .d(go), .q(go_en));
+            ot_v41_kreg #(.W(1), .AR(1)) u_gw (.clk(clk), .arst_n(rst_n), .d(go), .q(go_ew));
+            ot_v41_kreg #(.W(1), .AR(1)) u_gm (.clk(clk), .arst_n(rst_n), .d(go), .q(go_em));
+        end else begin : g_ngok
+            assign go_en = r_go; assign go_ew = r_go; assign go_em = r_go;
+        end
         assign xs_v_e = r_xs_v; assign xs_p_e = r_xs_p; assign xs_b_e = r_xs_b; assign xs_sv_e = r_xs_sv;
         assign xs_q0_e = r_xs_q0; assign xs_e0_e = r_xs_e0; assign xs_q1_e = r_xs_q1; assign xs_e1_e = r_xs_e1;
         assign xs_pos_e = r_xs_pos; assign xb_pos_e = r_xb_pos; assign xb_v_e = r_xb_v; assign xb_b_e = r_xb_b;
         assign xb_sv_e = r_xb_sv; assign xb_u_e = r_xb_u; assign xb_d_e = r_xb_d;
     end else begin : g_nir
         assign cfg_v_e = cfg_v; assign cfg_a_e = cfg_a; assign cfg_d_e = cfg_d; assign go_e = go; assign go_bf_e = go_bf;
+        assign go_en = go; assign go_ew = go; assign go_em = go;
         assign xs_v_e = xs_v; assign xs_p_e = xs_p; assign xs_b_e = xs_b; assign xs_sv_e = xs_sv;
         assign xs_q0_e = xs_q0; assign xs_e0_e = xs_e0; assign xs_q1_e = xs_q1; assign xs_e1_e = xs_e1;
         assign xs_pos_e = xs_pos; assign xb_pos_e = xb_pos; assign xb_v_e = xb_v; assign xb_b_e = xb_b;
@@ -1062,7 +1074,7 @@ module ot_v41_rom_elem_qx_w10 #(
             hz_v <= {hz_v[LAT-2:0], issue};
             pp_last_v <= issue; pp_last_b <= a_ctr[0];
             if (BP != 0) bp_hold <= (issue && w_bf) ? HOLDM1 : (bp_hold != 3'd0 ? bp_hold - 3'd1 : 3'd0);
-            if (go_e) begin
+            if (go_em) begin
                 // go_e with no valid class of the phase's family is legal and a no-op (the spine broadcasts go_e to
                 // every element): no walker starts, so no x beat is captured and no word is issued.  Before this,
                 // the walkers started on the stale class 0 and could leave held operands in the segment tree that
@@ -1198,6 +1210,9 @@ module ot_v41_rom_elem_qx_w10 #(
         if (rst_n) w_sf_r <= qx_sw_hit ? qx_swd : qx_sld ? qx_sf_ld : w_sf_r;
         else if (qx_swr && qx_sa == w_s) w_sf_r <= qx_swd;
 `ifdef QP_CHECK
+    always @(negedge clk) if (QX >= 7 && (go_en !== go_e || go_ew !== go_e || go_em !== go_e)) begin
+        $display("QX_CHECK FAIL: go copies %b%b%b != %b at %t", go_en, go_ew, go_em, go_e, $time); $fatal(1);
+    end
     always @(negedge clk) if (QX >= 6 && rst_n && qy_seen && w_run && w_sf_r !== {s_fp4[w_s], s_bf[w_s], s_hi[w_s], s_lo[w_s]}) begin
         $display("QX_CHECK FAIL: segment flags %b for w_s %0d at %t", w_sf_r, w_s, $time); $fatal(1);
     end
@@ -1250,16 +1265,20 @@ module ot_v41_rom_elem_qx_w10 #(
         end
     end
 `endif
+    // go_en / go_ew equal go_e (QX = 7 copies); the go loads are split by register group, unchanged in function
     always @(posedge gclk) begin
-        if (go_e) begin
-            fF0 <= f0_go; fF1 <= f1_go; nA <= sbf(4'd0, 2'd3, nu_p, base_go); nB <= sbf(4'd1, 2'd3, nu_p, base_go);
-            wA <= f0_go; wB <= f1_go;
+        if (go_en) begin
+            nA <= sbf(4'd0, 2'd3, nu_p, base_go); nB <= sbf(4'd1, 2'd3, nu_p, base_go);
         end else begin
             // QTIMING_FIX: nA and nB take their enables from match copies 1 and 2 (equal to hit)
             if (hit_k[1 % HC] && qx_n_end && n_more) nA <= sbf(4'd0, 2'd3, nu_p, base_live);
             else if (hit_k[1 % HC] && qx_n_adv) nA <= nB;
             if (hit_k[2 % HC] && qx_n_end && n_more) nB <= sbf(4'd1, 2'd3, nu_p, base_live);
             else if (hit_k[2 % HC] && qx_n_adv) nB <= nQ2;
+        end
+        if (go_ew) begin
+            fF0 <= f0_go; fF1 <= f1_go; wA <= f0_go; wB <= f1_go;
+        end else begin
             if (w_restart) begin wA <= fF0; wB <= fF1; end
             else if (w_step && ((QX != 0) ? qx_adv : w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q)) begin
                 wA <= wB; wB <= wQ2;

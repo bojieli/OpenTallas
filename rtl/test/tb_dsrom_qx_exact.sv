@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 6 by default).
+// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 7 by default).
 // QY exactness bench (2026-10-04): tb_dsrom_qz_exact with dut = ot_v41_rom_elem_q_qy_w10 (QY = 1 by default).  QY
 // reports fault FL = 2 cycles later, so the dut's fault bit is compared with the ref's L + FL cycles earlier (every
 // other field still L) and the post-reset exemption is L + FL + 1 cycles.  Built with QP_CHECK the dut also asserts
@@ -24,7 +24,7 @@ module tb_dsrom_qx_exact;
  parameter integer QP = 1, XS = 1, CAP = 0, P1 = 1, CSAM = 10;   // QP = 0: the copy's default (no shift)
  parameter integer QZ = 1;                                         // QZ = 0: the qp circuit
  parameter integer QY = 1;                                         // QY = 0: the qz circuit
- parameter integer QX = 6;                                         // 2, 1: earlier QX levels, 0: the qy circuit
+ parameter integer QX = 7;                                         // 2, 1: earlier QX levels, 0: the qy circuit
  localparam integer FL = QY != 0 ? 2 : 0;                          // fault reporting delay
  localparam integer QK = QP != 0 ? CAP + P1 : 0;
  localparam integer L = QP != 0 ? XS + QK : 0;
