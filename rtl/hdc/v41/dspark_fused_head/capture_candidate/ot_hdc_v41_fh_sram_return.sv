@@ -103,7 +103,10 @@ module ot_hdc_v41_fh_sram_lane #(parameter [5:0] BANK=0)(
                 write_v_r<=write_ok;
                 write_encoded_v_r<=write_v_r;
             end
-        assign wr_committed=write_encoded_v_r;
+        reg committed_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n) committed_q<=0;else committed_q<=write_encoded_v_r;
+        assign wr_committed=committed_q;
         wire [127:0] macro_word;
         ot_sram_1r1w_512x128_m4_r2c2 u_sram (
             .clk(clk),.r_ce_in(read_ok),.r_addr_in(read_row),.rd_out(macro_word),

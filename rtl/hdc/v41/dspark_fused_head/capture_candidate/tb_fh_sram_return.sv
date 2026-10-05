@@ -9,6 +9,11 @@ module tb_fh_sram_return;
     wire [2047:0] rd_data;
     wire [63:0] rd_valid,corrected,poisoned,wr_committed;
     wire fault;
+    reg [47:0] golden_payload=0;
+    wire [54:0] golden_word;
+    reg [54:0] gold_ecc[0:63];
+    string eccfile;
+    ot_hdc_v41_fh_sram_enc u_golden_encode(.payload(golden_payload),.word(golden_word));
     ot_hdc_v41_fh_sram_return dut(.*);
     function automatic [31:0] value(input integer row,input integer bank);
         value=32'h3f000000 ^ (row<<7) ^ bank;
@@ -64,6 +69,12 @@ module tb_fh_sram_return;
         end
     endtask
     initial begin
+        if(!$value$plusargs("ECC=%s",eccfile)) $fatal(1,"missing pinned K48 golden");
+        $readmemh(eccfile,gold_ecc);
+        for(b=0;b<64;b=b+1) begin
+            golden_payload=(48'(9)<<38)|(48'(b)<<32)|48'(value(9,b));
+            #1;if(golden_word!==gold_ecc[b]) $fatal(1,"canonical ECC mismatch lane%0d",b);
+        end
         repeat(4) @(negedge clk);rst_n=1;
         // Full rank shape, every independently masked lane and every used row.
         for(r=0;r<505;r=r+1) begin
