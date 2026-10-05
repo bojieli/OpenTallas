@@ -143,6 +143,143 @@ def cmd_route(a):
                     *(["--macro", MACRO] if rc["mem"] else []), "--output", str(work / "corner_sta.json")], cwd=ROOT)
 
 
+WINDOW_TCL = r"""
+read_db {odb}
+set_global_routing_layer_adjustment M2-M7 0.5
+set_routing_layers -clock M2-M7
+set_routing_layers -signal M2-M7
+global_route -allow_congestion -congestion_iterations 30
+set tech [ord::get_db_tech]
+set grid [[ord::get_db_block] getGCellGrid]
+set nx [llength [$grid getGridX]]; set ny [llength [$grid getGridY]]
+set worst 0.0; set wl ""; set over 0; set n 0
+foreach ln {{M2 M3 M4 M5 M6 M7}} {{
+  set layer [$tech findLayer $ln]
+  for {{set j 0}} {{$j + 4 <= $ny}} {{incr j 4}} {{
+    for {{set i 0}} {{$i + 4 <= $nx}} {{incr i 4}} {{
+      set c 0; set u 0
+      for {{set dj 0}} {{$dj < 4}} {{incr dj}} {{ for {{set di 0}} {{$di < 4}} {{incr di}} {{
+        set c [expr {{$c + [$grid getCapacity $layer [expr {{$i+$di}}] [expr {{$j+$dj}}]]}}]
+        set u [expr {{$u + [$grid getUsage $layer [expr {{$i+$di}}] [expr {{$j+$dj}}]]}}] }} }}
+      if {{$c > 0}} {{ incr n; set r [expr {{double($u) / $c}}]; if {{$r > 1.0}} {{ incr over }}
+        if {{$r > $worst}} {{ set worst $r; set wl "$ln $i $j" }} }}
+    }}
+  }}
+}}
+puts "OTW worst_window_use_cap $worst at $wl windows $n over $over"
+"""
+
+
+def cmd_congestion(a):
+    """4x4-gcell window use/capacity of the routed endpoint (global route re-run on the routed design, as
+    tools/qwen_rom_fulldie_b3r2.summarize), plus the flow's own final GRT congestion report."""
+    import glob
+    d = Path(a.work) / f"route_{a.config}"
+    base = Path(glob.glob(str(d / "work/orfs/results/asap7/*/base"))[0])
+    odb = next(p for p in (base / "6_final.odb", base / "5_3_route.odb", base / "5_1_grt.odb") if p.is_file())
+    rel = odb.relative_to(d / "work/orfs")
+    (d / "work/orfs/ot_window.tcl").write_text(WINDOW_TCL.format(odb=f"/work/{rel}"))
+    r = subprocess.run(["docker", "run", "--rm", "-v", f"{d / 'work/orfs'}:/work", os.environ.get(
+        "OPENTALLAS_ORFS_IMAGE", "openroad/orfs:latest"), "bash", "-lc",
+        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -exit -threads 8 /work/ot_window.tcl"],
+        capture_output=True, text=True)
+    m = re.search(r"OTW worst_window_use_cap (\S+) at (\S+ \S+ \S+) windows (\d+) over (\d+)", r.stdout)
+    log = next(iter(glob.glob(str(d / "work/orfs/logs/asap7/*/base/5_1_grt.log"))), None)
+    grt = {}
+    if log:
+        t = Path(log).read_text(errors="replace")
+        i = t.rfind("Final congestion report")
+        for ln in t[i:].splitlines()[3:12] if i >= 0 else []:
+            f = ln.split()
+            if len(f) >= 9 and (f[0].startswith("M") or f[0] == "Total"):
+                grt[f[0]] = dict(usage_pct=float(f[3].rstrip("%")), max_h=int(f[4]), max_v=int(f[6]), overflow=int(f[8]))
+    out = dict(odb=str(rel), worst_window_use_cap=float(m.group(1)) if m else None, worst_window_at=m and m.group(2),
+               windows=m and int(m.group(3)), windows_over_1=m and int(m.group(4)),
+               grt_final=grt, grt_overflow=grt.get("Total", {}).get("overflow"),
+               basis="4x4-gcell windows, layers M2-M7, use/cap after global_route (layer adjustment 0.5) on the routed "
+                     "design; grt_overflow = the ORFS 5_1_grt final congestion report Total overflow",
+               stderr_tail=r.stderr[-800:] if not m else "")
+    (d / "congestion.json").write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps({k: out[k] for k in ("worst_window_use_cap", "windows_over_1", "grt_overflow")}))
+
+
+MACRO_UM2 = 7091.712            # ot_sram_1r1w_256x256_m2_r2c2.json area.macro_area_um2
+S81_DIES = 324 + 12             # 81 stages x TP4 rank dies (dsrom_s81_component_word_service resource) + 12 head dies
+DRAFT_PRIMARY, DRAFT_REPLICA, DRAFT_LINKS_PER_PRIMARY = 4, 60, 15   # results/rtl/dsrom_recovery_20261004/draft/placement.json
+RT_A16_UM2 = 13622.28354        # results/rtl/dsrom_recovery_20261004/hop/hop_ct.json screen.baseline_link_rt_same_screen
+
+
+def physical_cost(work, routes, pre):
+    """Area (vs the pinned ot_dsrom_link_rt at its as-built S81 depths), per die and in total, slacks, congestion."""
+    sc = lambda n: json.loads((work / n / "screen.json").read_text())["cell_area_um2"]
+    hard = routes["hard"]
+    std_hard = hard["physical_summary"].get("standard_cell_area_um2")
+    cl_board = dict(stdcell_um2=std_hard, macros=6, macro_um2=6 * MACRO_UM2,
+                    total_um2=round((std_hard or 0) + 6 * MACRO_UM2, 1),
+                    basis="routed hard endpoint (FLIT 96, CREDITS 256): std-cell area of the routed run (incl. CTS and "
+                          "hold buffers) + 6 x ot_sram_1r1w_256x256_m2_r2c2 macro outlines")
+    cl_ucie = dict(total_um2=sc("area_ucie64_cl"), basis="ORFS synthesis cell area, ot_dsrom_link_cl FLIT 96 CREDITS 64 "
+                   "flop storage, unpaced (the in-package UCIe leg); pre-CTS, no hold buffers")
+    a64 = sc("area_rt64")
+    slope = (a64 - RT_A16_UM2) / 48.0
+    rt_board = dict(total_um2=round(RT_A16_UM2 + slope * (512 - 16), 1), basis=f"pinned ot_dsrom_link_rt FLIT 64 at the "
+                    f"as-built board depth CREDITS 512 (tb_dsrom_1m_hop), linear in depth from ORFS synthesis cell area "
+                    f"at CREDITS 16 ({RT_A16_UM2}) and 64 ({a64}) um2 (flop storage, as the pinned RTL builds it)")
+    rt_ucie = dict(total_um2=a64, basis="pinned ot_dsrom_link_rt FLIT 64 CREDITS 64 (the as-built UCIe leg), synthesis "
+                   "cell area")
+    per_die_new = cl_board["total_um2"] + cl_ucie["total_um2"]
+    per_die_old = rt_board["total_um2"] + rt_ucie["total_um2"]
+    d_stage = per_die_new - per_die_old
+    d_board = cl_board["total_um2"] - rt_board["total_um2"]
+    draft_d = DRAFT_PRIMARY * DRAFT_LINKS_PER_PRIMARY * d_board + DRAFT_REPLICA * d_board
+    total_mm2 = (S81_DIES * d_stage + draft_d) / 1e6
+    cg = {nm: json.loads((work / f"route_{nm}/congestion.json").read_text())
+          if (work / f"route_{nm}/congestion.json").is_file() else {} for nm in ROUTES}
+    ss = min(r["ss_setup_wns_ps"] for r in routes.values())
+    ff = min(r["ff_hold_wns_ps"] for r in routes.values())
+    return dict(
+        area_um2_per_element=dict(new_board_endpoint=cl_board, new_ucie_endpoint=cl_ucie,
+                                  old_board_endpoint=rt_board, old_ucie_endpoint=rt_ucie,
+                                  delta_board_um2=round(d_board, 1),
+                                  delta_stage_die_um2=round(d_stage, 1),
+                                  unit="one link module = its sender half on one die + its receiver half on the next; "
+                                       "a die hosts one board link's worth (stage hop in + out) and one UCIe link's "
+                                       "worth (peer exchange)"),
+        area_mm2_per_die=dict(s81_stage_or_head_die=round(d_stage / 1e6, 5),
+                              draft_primary_die=round(DRAFT_LINKS_PER_PRIMARY * d_board / 1e6, 5),
+                              draft_replica_die=round(d_board / 1e6, 5),
+                              new_per_s81_die_mm2=round(per_die_new / 1e6, 5),
+                              old_per_s81_die_mm2=round(per_die_old / 1e6, 5),
+                              basis="delta vs the pinned link_rt at its as-built depths; draft: 15 replica board links "
+                                    "per primary die and 1 per replica die (DP1-EP5), each a hardened board endpoint"),
+        area_mm2_total=round(total_mm2, 4),
+        area_total_basis=f"{S81_DIES} S81 stage+head dies x per-die delta + DP1-EP5 draft links "
+                         f"({DRAFT_PRIMARY} x {DRAFT_LINKS_PER_PRIMARY} + {DRAFT_REPLICA}) x board delta",
+        dies_added=0,
+        ss_wns_ps=ss, ff_hold_wns_ps=ff,
+        slack_basis="routed in context at 1.2 GHz (worst over the hard 256-deep SRAM endpoint and the like-for-like "
+                    "16-deep flop endpoint): run_abi3_physical pnr under " + CONTEXT_SDC + " (the baseline in-context "
+                    "record's I/O 100/30 in, 60/25 out, 0.6 fF), tools/w18/corner_sta.py SS setup 60 ps / FF hold "
+                    "25 ps on the routed 6_final + SPEF, propagated clock; pre-layout SS " + str(pre["ss_setup_wns_ps"])
+                    + " / FF " + str(pre["ff_hold_wns_ps"]),
+        grt_overflow={nm: c.get("grt_overflow") for nm, c in cg.items()},
+        worst_window_use_cap={nm: c.get("worst_window_use_cap") for nm, c in cg.items()},
+        congestion_basis="ORFS 5_1_grt final congestion report Total overflow; 4x4-gcell windows M2-M7 use/cap after "
+                         "global_route on the routed endpoint (tools/dsrom_hop_closed.py congestion)",
+        die_edge=dict(changes=False, stage_lanes_per_die_each_way=7, ucie_links=1,
+                      basis="per-die halves ride each die's already-budgeted 7 stage lanes each way "
+                            "(results/arch/v41_rack.json stage_out/stage_in 14 per 2-die package) and the existing "
+                            "UCIe peer link; the endpoint's port is the same flit interface to the same SerDes / UCIe "
+                            "PHY, so the S81 die's SerDes and UCIe shoreline and pin count are unchanged; draft replica "
+                            "links are the DP1-EP5 placement's own 15-per-primary star (already in placement.json)"),
+        s81_rerun_needed=False,
+        s81_rerun_why=("no S81 die re-floorplan: dies and shoreline are unchanged and the new endpoints are "
+                       + ("smaller" if d_stage <= 0 else "larger") + f" than the as-built ones by "
+                       f"{abs(d_stage) / 1e6:.4f} mm2 per die, against the S81 floorplan's 4.238 mm2 'link' "
+                       "allotment (results/rtl/dsrom_s81_fulldie_20261004/floorplan.json area_mm2_by_kind.link); only "
+                       "the per-token composition reruns (tools/dsrom_1m_allmeasured.py, done here)"))
+
+
 def cmd_record(a):
     work = Path(a.work)
     sim = json.loads((work / "hop_cl.json").read_text())
@@ -170,9 +307,13 @@ def cmd_record(a):
                           ff_hold_wns_ps=cs["hold_ff"]["worst_slack_ps"],
                           ff_violating=cs["hold_ff"].get("violating_d_pins"), corner_sta=cs,
                           flow_completed=ph.get("flow_completed"),
-                          drc=(ph.get("place_and_route") or {}).get("drc_errors"),
-                          physical_summary={k: v for k, v in (ph.get("place_and_route") or {}).items()
-                                            if not isinstance(v, (dict, list)) or k == "memory_macros"})
+                          drc=((ph.get("place_and_route") or {}).get("metrics") or {}).get("drc_errors"),
+                          physical_summary={k: v for k, v in ((ph.get("place_and_route") or {}).get("metrics") or {}).items()
+                                            if k in ("die_area_um2", "core_area_um2", "standard_cell_area_um2",
+                                                     "macro_area_um2", "macro_count", "drc_errors", "instance_count",
+                                                     "sequential_cell_count", "antenna_violating_nets",
+                                                     "max_slew_violations", "max_cap_violations",
+                                                     "utilization_fraction", "routed_wirelength_um")})
     ok = lambda r: (r["ss_setup_wns_ps"] is not None and r["ff_hold_wns_ps"] is not None
                     and r["ss_setup_wns_ps"] >= 0 and r["ff_hold_wns_ps"] >= 0)
     closes = pre["ss_setup_wns_ps"] >= 0 and pre["ff_hold_wns_ps"] >= 0 and all(ok(r) for r in routes.values())
@@ -248,7 +389,11 @@ def cmd_record(a):
         old_hop_us=old["per_hop_us"], new_hop_us=hop["us"], old_hop_cycles=old["total_cycles"],
         new_hop_cycles=hop["total_cycles"], detail=str((REC / "hop_closed/hop_cl.json").relative_to(ROOT)),
         rtl=dict(endpoint="rtl/dsrom_sys/ot_dsrom_link_cl.sv", bench="rtl/test/dsrom_sys/tb_dsrom_1m_hop_cl.sv"),
+        physical_cost=physical_cost(work, routes, pre),
         command="python3 tools/dsrom_hop_closed.py " + " ".join(sys.argv[1:]))
+    if lever["physical_cost"]["area_mm2_per_die"]["s81_stage_or_head_die"] > 4.238 / 8:
+        lever["physical_cost"]["s81_rerun_needed"] = True
+        lever["physical_cost"]["s81_rerun_why"] = "per-die endpoint delta exceeds one S81 floorplan link slot"
     (REC / "levers/hop_closed.json").write_text(json.dumps(lever, indent=1, default=str) + "\n")
     print(json.dumps(dict(verdict=verdict, exact=exact, pre=(pre["ss_setup_wns_ps"], pre["ff_hold_wns_ps"]),
                           routed={nm: (r["ss_setup_wns_ps"], r["ff_hold_wns_ps"]) for nm, r in routes.items()}, hop=hop["us"], draft=draft["us"], ret=ret["us"]), indent=1))
@@ -256,7 +401,7 @@ def cmd_record(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=("sim", "screen", "route", "record"))
+    ap.add_argument("cmd", choices=("sim", "screen", "route", "congestion", "record"))
     ap.add_argument("--work", required=True)
     ap.add_argument("--util", type=float, default=30)
     ap.add_argument("--density", type=float, default=0.55)
@@ -264,7 +409,8 @@ def main():
     ap.add_argument("--halo", type=float, default=5, help="macro placement halo (um)")
     ap.add_argument("--config", default="hard", choices=sorted(ROUTES))
     a = ap.parse_args()
-    {"sim": cmd_sim, "screen": cmd_screen, "route": cmd_route, "record": cmd_record}[a.cmd](a)
+    {"sim": cmd_sim, "screen": cmd_screen, "route": cmd_route, "congestion": cmd_congestion,
+     "record": cmd_record}[a.cmd](a)
 
 
 if __name__ == "__main__":
