@@ -47,7 +47,7 @@ module tb_hbm_accel_loader_high_addr_crc;
  if(swe)begin
  if(ss!==32'hffffffff)$fatal(1,"LOAD byte mask changed");
  for(integer byteidx=0;byteidx<32;byteidx++)if(ss[byteidx])memory[idx][byteidx*8+:8]<=sd[byteidx*8+:8];
- writes++;end else begin if(ss!==0)$fatal(1,"read byte mask changed");reads++;end
+ writes++;end else begin if(ss!==(st[15]?32'b0:32'hffffffff))$fatal(1,"owner-qualified read byte mask changed");reads++;end
  reply_pending<=1;reply_when<=memcy+6;reply_we<=swe;reply_tag<=st;reply_data<=swe?256'b0:memory[idx];
  end
  end
