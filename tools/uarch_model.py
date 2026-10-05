@@ -7897,3 +7897,241 @@ def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
                                      "actual serial result/scale grants and consumed write ACK",
                                      "source-sized slot and related-clock loaded SS/FF gate"],
         wrapper_rtl_admitted=False, physical_launch_admitted=False)
+
+
+# W2 publication: separate from Harvey's CP timing and index result storage.
+def hbm_w2_publication_model():
+    """One bounded protected-transaction candidate, before any sink RTL.
+
+    Count the released connected reservation, not weight descriptors/expert
+    slots. The selected component schedule is not a whole-token schedule.
+    Unknown parent geometry is a hard implementation gate, never free area.
+    """
+    import ast
+    import re
+    root = Path(__file__).resolve().parents[1]
+    inputs = root / 'results/uarch/hbm_w2_publication_20261005/inputs'
+    recipe = root / 'results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS'
+    seq_path = recipe / 'case/seq.hex'
+    alloc_path = recipe / 'case/private_alloc.svh'
+    prepare_path = root / 'tools/hubble_w2_connected_runtime.py'
+    connected_gate_path = root / 'rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv'
+    expected_inputs = {
+        seq_path: '1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9',
+        alloc_path: '0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82',
+        prepare_path: 'b364eb89a5c5d3a210cecb44cab41e7c6df0bdebb02b141556bfd33f7f2cb00f',
+        connected_gate_path: '1b89c72997ca02eccd4992358d748bcad93f89b435304c3b5358a0ab02162e6e',
+    }
+    for path, expected in expected_inputs.items():
+        if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise ValueError('released W2 recipe/source pin changed: ' + str(path))
+    seq = [int(x, 16) for x in seq_path.read_text().split()]
+    if seq != [4, 8, 2, 2, 64, 1, 1, 16, 1, 0, 1, 32, 16, 16, 0, 1]:
+        raise ValueError('released L20/sm4/pair0 recipe changed; rebind the schedule')
+    prepare = prepare_path.read_text()
+    tree = ast.parse(prepare)
+    fn = next(x for x in tree.body if isinstance(x, ast.FunctionDef) and x.name == 'prepare')
+    # The released selector truncates the original schedule to ONE descriptor.
+    cuts = [x for x in ast.walk(fn) if isinstance(x, ast.Subscript)
+            and isinstance(x.slice, ast.Slice) and isinstance(x.slice.upper, ast.Constant)
+            and x.slice.lower is None and x.slice.upper.value == 16]
+    if len(cuts) != 1 or 'seq[14:16] for row in (0, 1)' not in prepare:
+        raise ValueError('released descriptor selector/row schedule changed')
+    caller = connected_gate_path.read_text()
+    if len(re.findall(r'\breserve_v\s*=\s*1\s*;', caller)) != 1:
+        raise ValueError('connected reservation event schedule changed')
+    if 'write' not in caller or 'verified!=4' not in caller or 'released!=1' not in caller:
+        raise ValueError('connected publication/release fences changed')
+    allocation = alloc_path.read_text()
+    extents = {}
+    for name, expected in [('RAM_BYTES', 134217728), ('BASE_A', 119265280),
+                           ('LIMIT_A', 119265344), ('BASE_B', 119265344),
+                           ('LIMIT_B', 119265408)]:
+        value = re.search(r'\b' + name + r'\s*=\s*(?:32\x27d)?(\d+)', allocation)
+        if value is None or int(value[1]) != expected:
+            raise ValueError('released Program.put extent changed')
+        extents[name] = int(value[1])
+    census = json.loads((recipe / 'selected_program_cp_census.json').read_text())
+    n_publication = census['selected_case']['paired_descriptor_count']
+    if n_publication != 1 or census['selected_case']['operation_ids'] != seq[14:16]:
+        raise ValueError('selected canonical caller/program publication census changed')
+    rows = 2 * 2
+    snapshot = root / 'results/physical/hbm_w2_sink_registered_terminal_20261005/r1'
+    terminal = json.loads((snapshot / 'endpoint_groups.json').read_text())
+    for item in terminal['source_files']:
+        path = snapshot / 'source' / item['path']
+        if hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
+            raise ValueError('enrolled rejected source pin changed')
+    log = (recipe / 'build/runtime.log').read_text()
+    if (recipe / 'build/runtime.exit').read_text().strip() != '0':
+        raise ValueError('preserve failed connected terminal; cannot price it as PASS')
+    passed = re.search(r'PASS_NATIVE_W2_CONNECTED_PUBLICATION_CPL rows=(\d+) sectors=(\d+) requests=(\d+) returns=(\d+) writes=(\d+) readbacks=(\d+) sharedrelease=(\d+) cycles=(\d+)', log)
+    if passed is None or tuple(map(int, passed.groups())) != (4,212,64,64,4,4,1,12845):
+        raise ValueError('connected component trace/counts changed')
+    verified = [(int(c), int(slot)) for c, slot in re.findall(r'ACTUAL_PUBLICATION_VERIFIED cycle=(\d+) slot=(\d+)', log)]
+    release = re.findall(r'ACTUAL_SHARED_RELEASE cycle=(\d+) verified=(\d+)', log)
+    provider = [(int(c), int(we), int(addr), int(tag)) for c,we,addr,tag in re.findall(r'ACTUAL_PROVIDER_ACCEPT cycle=(\d+) we=(\d+) byte_address=(\d+) tag=(\d+) sink=1', log)]
+    if verified != [(11465,0),(12196,1),(12655,2),(12826,3)] or release != [('12828','4')] or len(provider) != 8:
+        raise ValueError('connected checked-readback/release ordering changed')
+    if len(re.findall(r'^NATIVE_REQUEST_ACCEPT ', log, re.M)) != 64 or len(re.findall(r'^NATIVE_RETURN_ACCEPT ', log, re.M)) != 64:
+        raise ValueError('actual native accepted-debt trace changed')
+    native_results = [(int(c), int(op), int(row)) for c,op,row in re.findall(r'ACTUAL_NATIVE_RESULT cycle=(\d+) op=(\d+) row=(\d+)', log)]
+    if native_results != [(11170,0,0),(11556,0,1),(12358,1,0),(12752,1,1)]:
+        raise ValueError('original no-ready native result timeline changed')
+    pins = json.loads((recipe / 'build/source_pin.json').read_text())
+    sink_rel = 'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv'
+    original = (inputs / 'original_f835_sink.sv').read_text()
+    if hashlib.sha256(original.encode()).hexdigest() != pins[sink_rel]:
+        raise ValueError('connected source does not match immutable original f835 sink')
+    enrolled = (snapshot / 'source' / sink_rel).read_text()
+    original_body = original.split(' localparam [2:0] IDLE=0,CAPTURE=1,WRITE=2', 1)[1].split(' end endgenerate', 1)[0]
+    enrolled_off_body = enrolled.split(' localparam [2:0] IDLE=0,CAPTURE=1,WRITE=2', 1)[1].split(' end endgenerate', 1)[0]
+    if original_body != enrolled_off_body:
+        raise ValueError('registered flag-OFF original engine bytes changed')
+    for i, (cycle, slot) in enumerate(verified):
+        write, read = provider[2*i:2*i+2]
+        expected_address = (extents['BASE_A'] if slot<2 else extents['BASE_B']) + 32*(slot%2)
+        if not (write[1]==1 and read[1]==0 and write[2]==read[2]==expected_address and write[3]==read[3]==62009 and write[0]<read[0]<cycle):
+            raise ValueError('connected full-sector publication tuple/order changed')
+    # Candidate has exactly four reserved ingress seats. Identity travels with
+    # each seat/stage: frame73 + op32 + row12 + slot2 + valid1 =120 raw bits,
+    # two64b stripes; add a separate64b protected phase/completion word. Never
+    # infer ownership from an unprotected cached comparison or an age alone.
+    identity_words = math.ceil((73 + 32 + 12 + 2 + 1) / 64) + 1
+    words = dict(metadata=8, ingress_payload=16,
+                 ingress_identity=rows * identity_words,
+                 selected_payload_and_identity=4 + identity_words,
+                 syndrome_code_identity_and_status=4 + identity_words + 1,
+                 checked_payload_and_identity=4 + identity_words,
+                 held_request=math.ceil(337 / 64),
+                 held_response=math.ceil(273 / 64),
+                 reservation_frame=math.ceil(73 / 64),
+                 control_and_completion=2)
+    ff = sum(words.values()) * 72
+    # A conservative fully spatial encode/decode allowance for every64b stripe,
+    # charged once, from the unified model's existing source W6 codec estimate.
+    codec_rel = 'results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json'
+    codec = json.loads((root / codec_rel).read_text())['SRAM_protection_candidate']
+    mux_bits = 4 * 72 * (rows - 1) + 337 + 273 + rows * identity_words * 72
+    codec_pairs = sum(words.values())
+    buffers = math.ceil(ff / 7)  # analytical7-load tree; mapped fanout is unknown
+    body = ff * .2916 + mux_bits * .2 + codec_pairs * codec['pair_cell_body_um2'] + buffers * .10206
+    placement = 2 * body * 1.05
+    # Local cut inventory relative to the rejected registered source. These
+    # edges compose serially; stalls can change observed release alignment.
+    cuts = dict(metadata_decode_check_capture=2, payload_select_decode_check_capture=3 * rows,
+                request_data_parity_capture=2 * rows, response_check_capture=rows,
+                verified_feedback_positive_fence=rows, final_completion_fence=1)
+    extra = sum(cuts.values())
+    paths = [seq_path, alloc_path, prepare_path, connected_gate_path,
+             inputs / 'immutable_parent.sv', snapshot / 'endpoint_groups.json',
+             recipe / 'build/runtime.log', recipe / 'build/runtime.exit',
+             recipe / 'build/source_pin.json', recipe / 'build/command.json', recipe / 'selected_program_cp_census.json',
+             inputs / 'original_f835_sink.sv',
+             root / codec_rel, root / 'tools/hbm_accel_sm_v_floorplan.py',
+             root / 'results/floorplan/hbm_gpu/v41_hbm_die.json']
+    return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
+        source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+        source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
+                            immutable_caller='f835c8641', released_selected_schedule='a86d3cfd3'),
+        scope='released connected L20/sm4/pair0 component; no whole-token multiplicity or rate claim',
+        measured_connected_component=dict(source_commit='a86d3cfd3', inherited_original_f835_sink_bytes_match=True,
+            registered_flag_OFF_original_body_unchanged=True,
+            recipe_Npublication=1, rows=4, sectors=212, native_requests=64, native_returns=64,
+            result_writes=4, full_checked_readbacks=4, releases=1,
+            provider_sink_accept_trace=provider, readback_verified_trace=verified,
+            native_result_trace=native_results,
+            native_result_to_full_readback_edges=[v[0]-n[0] for v,n in zip(verified,native_results)],
+            row_latency_scope='observed provider/arbitration/stall calendar included; not a universal service bound',
+            last_readback_edge=12826, matched_release_edge=12828,
+            last_readback_to_matched_release_edges=2,
+            END_CPL_held_completion_check_finish_edge=12845,
+            selected_component_end_edge_is_not_publication_service_edges=True,
+            functional_fixture_clock_ns=1.0, fixture_clock_is_not_SS_signoff=True,
+            retained_upstream='GU/SwiGLU output boundary reused; live native W2 and real installed NS2 provider',
+            new_replay=False, whole_token=False, changed_pipeline_measured=False),
+        publication_count=dict(Npublication=n_publication, selected_descriptor_records=1,
+            selected_operation_ids=seq[14:16], rows_per_operation=2,
+            canonical_program_census_source='results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json#selected_case',
+            schedule_source='tools/hubble_w2_connected_runtime.py prepare: native seq[:16], both op IDs x rows(0,1); tb_hbm_integrated_gu_w2_hubble.sv one reserve edge',
+            whole_token_Npublication=None,
+            whole_token_missing_key='selected caller schedule: accepted W2 reservations per die/token, with frame/op/rows and release ordering'),
+        compute=dict(MACs_per_cycle=0, incoming_FP32_words=rows*8,
+                     compute_intensity_MAC_per_byte=0, communication_payload_bytes=rows*32),
+        storage=dict(slots=rows, payload_bytes=rows*32, no_result_ready=True,
+            installed_output_extents=extents, new_SRAM_ports=0, new_HBM_ports=0,
+            protected_words_by_stage=words, planned_source_FF_bits=ff,
+            mapped_successor_FF_bits=None, replicas_per_selected_sink=1,
+            whole_die_sink_replica_count=None, independent_GO_ledger_added=False),
+        ports=dict(result_payload_B_per_accept=32, max_result_accepts_per_cycle=1,
+            provider_request_bits=337, provider_return_bits=273,
+            provider_payload_B_per_accept=32, provider_outstanding=1,
+            writes_per_publication=rows, checked_reads_per_publication=rows,
+            provider_payload_write_bytes=rows*32, provider_payload_read_bytes=rows*32,
+            new_memory_ports=0, provider_capacity_under_refusal=None),
+        protection=dict(code='unchanged W6 SECDED64/72, including every stage identity/phase/completion word',
+            planned_codec_pairs=codec_pairs, syndrome_bits_per_word=8,
+            syndrome_status_stored_as_W6=True, raw_code_retained_through_check=True,
+            completion='all source cuts valid + matching protected identity + four matched write ACKs + four full payload readbacks + positive verified/completion fences; shared matched release then CP callback/CPL',
+            no_parity_waiver=True, no_ROM_waiver_for_mutable_state=True,
+            normal_path='select unchanged code+identity; capture syndrome/overall; reject DUE; capture checked original code+identity with positive completion (no correction mux or re-encode of payload)',
+            CE_path='hold code+identity+owner/debt; serial correction select, corrected-code capture, fresh syndrome/DUE recheck, scrub/positive capture; resume only after successful recheck',
+            CE_extra_edges_per_corrected_stripe=4,
+            CE_max_selected_payload_stripes=4,
+            CE_selected_payload_extra_edges_bound=16,
+            CE_bound_scope='one transient correctable error per selected stripe; repeated faults/refusal have no finite completion bound',
+            CE_critical_path=False, CE_holds_accepted_debt=True,
+            CE_requires_preissued_noready_results_still_captured_in_reserved_seats=True,
+            DUE_always_vetoes_handshakes=True,
+            physical_triplicate_independence_credited=False,
+            representation_basis='72-bit SECDED code FF per64bit stripe, not textual triplicate views; successor mapping not measured',
+            implementation_present=False, exact_gate_passed=False),
+        routing=dict(selected_payload_code_bits=288, identity_code_bits=identity_words*72,
+            select_4to1_mux2_bits=288*3, result_4seat_demux_payload_bits=288,
+            logical_slot_select_fanout=288, buffer_tree_load_assumption=7,
+            estimated_buffer_count=buffers, mapped_fanout=None,
+            stage_boundary_tracks_lower_bound=(4+identity_words)*72,
+            provider_boundary_tracks_lower_bound=337+273,
+            actual_parent_channel_capacity_tracks=None, channel_fit=None,
+            unchanged_hub_layer_policy_required=True),
+        area=dict(planned_cell_body_um2=body, planned_50pct_placement_um2=placement,
+            FF_proxy_um2=.2916, mux2_bit_proxy_um2=.2,
+            codec_basis=codec_rel + '#SRAM_protection_candidate.pair_cell_body_um2',
+            includes='all planned protected FF, fully spatial codec allowance, select/held tuple mux,7load buffer tree,5pct placement margin',
+            exclusions='loaded CTS/PG, hold repair, actual long channels and physically distinct protection implementation',
+            historical_component_core_um2=terminal['physical_metrics']['core_area_um2'],
+            historical_component_core_is_not_parent_slot=True,
+            parent_instance_path='ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink',
+            actual_parent_slot_bbox_um=None, slot_fit=None,
+            binding_owner='Claude HBM floorplan owner',
+            owner_readonly_source_paths=['/home/ubuntu/wt-claude-hbmsm/tools/hbm_accel_sm_v_floorplan.py',
+                                        '/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json'],
+            inspected_existing_sources=['tools/hbm_accel_sm_v_floorplan.py', 'results/floorplan/hbm_gpu/v41_hbm_die.json'],
+            owner_existing_floorplan_source_sha256='1220a8ab77d53a4bd0bac98cf988cee3b116ae6186ab3faf2329d14b949538df',
+            missing_physical_keys=['W2 parent_instance/replica mapping', 'W2 parent_slot_bbox_um', 'W2 clk_sm clock/uncertainty constraint binding',
+                                   'W2 boundary corridor layers/pitch/usable tracks and competing allocations']),
+        timing=dict(target_clock_ps=833.333, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+            parent_sink_clock_port='clk_sm (immutable_parent.sv u_w2_sink .clk)',
+            parent_clock_constraint_source=None,
+            old_REGISTERED_SUBBLOCKS_verdict='REJECT_SS_SETUP',
+            old_SS_slack_ps=-733.090149, old_FF_hold_slack_ps=15.645707,
+            inherited_same_fourrow_gate_release_edges=dict(original=162, registered=181, measured_delta=19),
+            planned_added_local_edges_by_cut=cuts, planned_added_local_edges_per_publication=extra,
+            selected_recipe_serial_local_delta_ns=n_publication*extra/1.2,
+            CE_selected_payload_added_edges_bound=16*rows,
+            CE_selected_payload_bound_scope='at most4 transient CE stripes in each of4rows, serial correction; excludes control/identity faults and repeated injection',
+            total_fault_stall_bound=None,
+            measured_successor_release_edges=None, measured_successor_delta_edges=None,
+            release_181_plus_planned_edges_is_not_a_measurement=True,
+            whole_token_added_latency_ns=None, headline_rate_credit=False),
+        gate=dict(existing_fourrow_inputs_unchanged=True,
+            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept'],
+            assertions='accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high',
+            warm_hook_in_component=False,
+            immutable_parent_source='inputs/immutable_parent.sv (f835c8641)',
+            real_parent_hooks=['g_on.g_die[d].u_w2_sink.por_n(rst_sm_n)',
+                               'g_on.g_die[d].u_cp.rst_n(cp_reset_n)',
+                               'all_routes_drained', 'cp_reset_wait'],
+            parent_condition='real CP reset/quarantine hook must hold root POR high and retain sink/borrower/CDC accepted debt until matched consumption; gate does not certify warm reset'),
+        model_bounded=True, parent_binding_complete=False,
+        engine_RTL_admitted=False, physical_launch_admitted=False, adopted=False)
