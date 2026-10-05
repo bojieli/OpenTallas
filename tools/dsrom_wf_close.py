@@ -304,7 +304,7 @@ def main():
     r = sub.add_parser("route")
     r.add_argument("--inst", choices=sorted(INST), required=True)
     r.add_argument("--run-dir", type=Path, required=True)
-    r.add_argument("--util", type=float, default=40)
+    r.add_argument("--util", type=int, default=40)
     r.add_argument("--orfs-var", action="append", default=[])
     r.add_argument("--local-control", action="store_true", help="opt-in same-edge local group-read and queue write-bank controls")
     t = sub.add_parser("stage")

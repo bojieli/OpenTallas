@@ -622,7 +622,9 @@ def cmd_sensitivity(a):
         inputs={**baseline["inputs"], str(a.record.relative_to(ROOT)):sha(a.record),
                 "tools/dsrom_recovery_field.py":sha(Path(__file__)),
                 "tools/dsrom_1m_allmeasured.py":sha(ROOT/"tools/dsrom_1m_allmeasured.py")}, points=points)
-    target = a.out or REC_DIR / "levers/field_spine_sensitivity.json"
+    target = a.out or REC_DIR / "field_spine_sensitivity.json"
+    if target.parent.resolve() == (REC_DIR / "levers").resolve():
+        raise ValueError("sensitivity output belongs outside mutable adopted-lever inventory")
     if target.exists():
         raise ValueError("refusing to overwrite existing sensitivity result")
     target.parent.mkdir(parents=True, exist_ok=True)
