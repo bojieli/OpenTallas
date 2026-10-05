@@ -7817,3 +7817,83 @@ def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
                 adopted=False,
                 source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
                 physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
+
+
+def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
+                                  tcut=7, smin=7, tg=4, bd=41, nws=5,
+                                  tws=38, mem_extra=1, mul_lat=5, acc_lat=5,
+                                  tree_lat=3, depth=4, replicas=4):
+    """Source-sized PART2 clock-cut input to the joint pre-RTL model.
+
+    No arbitration, landing implementation, slot or schedule is assumed free.
+    Defaults bind lp_build's retained geometry; the selected generated core's
+    top.args must still match before authoring the wrapper. Existing e_v is
+    active on EVERY source edge, including non-last iterations.
+    """
+    if depth != 4 or tcut != 7 or smin != 7:
+        raise ValueError("This source carveout binds lvl7 / DEPTH4 only")
+    if gt % (1 << tcut) or tg & (tg-1):
+        raise ValueError("Integral groups and power-of-two tile groups required")
+    groups = gt >> tcut
+    tag = 5 + 4 + 4*aw + 3*(nw+1) + 1 + 3 + 1
+    data = groups*lanes*32
+    beat = data + tag + 2  # valid and fault; split is already inside e_tag
+    xd = bd + (tcut - (tg.bit_length()-1))*nws + tws + mem_extra
+    flight = mem_extra + 4 + mul_lat + acc_lat + (tree_lat+1)*tcut + xd
+    aw_fifo = 2
+    # wp/rp + peer samples, state + peer samples, HOLD2 counters + seen-down
+    fifo_control = 4*(aw_fifo+1) + 8 + 4 + 2
+    fifo_storage = 2*depth*beat
+    return dict(
+        status="PRE_RTL_SOURCE_INPUT_NOT_COMPOSED_ADMISSION", default_enabled=False,
+        selected_cut="PART2 g_tin/lvl[7]", data_bits=data, canonical_tag_bits=tag,
+        valid_bits=1, fault_bits=1, held_beat_bits=beat,
+        groups_at_cut=groups, replicas=replicas, MACs_added_per_cycle=0,
+        new_external_memory_ports=0, upper_tree_levels=list(range(tcut+1, (gt-1).bit_length()+1)),
+        original_rounding_and_adjacent_pair_order_preserved=True,
+        clock=dict(source_hz=1200000000, destination_hz=900000000,
+                   VCO_hz=3600000000, related=True, false_paths_allowed=False,
+                   setup_uncertainty_ps=60, hold_uncertainty_ps=25),
+        boundary=dict(source_bits_per_active_cycle=beat, source_bytes_per_active_cycle=beat/8,
+                      consumer_bits_per_accept_cycle=beat, consumer_bytes_per_accept_cycle=beat/8,
+                      maximum_service_entries_per_second=900000000,
+                      sustained_source_exceeds_service=True),
+        crossing=dict(source="rtl/common/ot_ratio_cdc_fifo.sv", depth=depth, hold=2,
+                      payload_and_shadow_ff=fifo_storage, control_ff=fifo_control,
+                      total_ff=fifo_storage+fifo_control,
+                      fifo_data_mux_fanin=depth, fifo_data_mux_output_bits=beat,
+                      shadow_storage_entries=depth, shadow_copies_per_stored_bit=1,
+                      crossing_data_tracks_per_entry=beat,
+                      protected_route_channel_capacity_tracks=None,
+                      forward_no_backpressure_ns=[5/3.6, 8/3.6],
+                      reverse_no_backpressure_ns=[4/3.6, 6/3.6],
+                      pipeline_backpressure_bound_ns=None),
+        issue=dict(existing_release="e_v <= active every fast edge",
+                   tile_issue="independent PART1 loops after delayed tgo",
+                   xd_logical_fast_edges=xd, issue_to_cut_logical_fast_edges=flight,
+                   reservation_required_before_irrevocable_issue=True,
+                   depth4_alone_covers_flight=False,
+                   full_rate_minimum_flight_reservations=flight,
+                   additional_return_credit_and_edge_guard_reservations=None,
+                   full_rate_flight_payload_bits_lower_bound=flight*beat,
+                   full_rate_flight_storage_ff_delta=None,
+                   alternative_common_advance_requires_all_tiles_and_IL8_feedback_phase=True,
+                   reservation_state_bits=None, accepted_tag_alignment_ff_delta=None),
+        reset=dict(peer_down_wait_existing=True, producer_pipeline_quiescence_required=True,
+                   discard_old_inflight_payload_and_tag_together=True,
+                   accepted_write_debt_must_drain_before_new_epoch=True,
+                   extra_quarantine_edges=None, extra_state_ff=None),
+        area=dict(fifo_register_cell_floor_um2=(fifo_storage+fifo_control)*0.2916,
+                  register_area_basis="DFFHQN 0.2916um2 proxy; not physical fit",
+                  fifo_mux_clock_reset_wire_area_um2=None,
+                  reservation_and_flight_landing_area_um2=None,
+                  per_die_slot_um2=None, floorplan_fit=False),
+        token=dict(selected_program_schedule=None, upper_tree_serial_edges_per_beat=(tree_lat+1)*((gt-1).bit_length()-tcut),
+                   crossing_entries=None, credit_stall_ns=None, final_write_ack_ns=None,
+                   composed_latency_delta_ns=None, headline_rate_credit=False),
+        implementation_dependencies=["match actual selected top.args to retained parameter census",
+                                     "Maxwell complete landing/credit/alignment/reset/mux/wire and literal schedule price",
+                                     "source-common issue admission across PART1 tiles and PART2 tags",
+                                     "actual serial result/scale grants and consumed write ACK",
+                                     "source-sized slot and related-clock loaded SS/FF gate"],
+        wrapper_rtl_admitted=False, physical_launch_admitted=False)
