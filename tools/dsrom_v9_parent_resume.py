@@ -27,9 +27,11 @@ def main():
   assert sha(ROOT/source['path'])==source['sha256'],source['path']
  boundary=ROOT/'physical/dsrom_v9_parent_context/boundary.sdc'
  original=(donor/'work/orfs/constraint.sdc').read_text()
- # Extra SDC is appended verbatim by the original driver.
+ # The original driver removes comments from appended SDC commands.
  old=(donor.parent/'source-r2/physical/dsrom_v9_parent_context/boundary.sdc').read_text()
- assert original.endswith(old)
+ def commands(text):
+  return [' '.join(line.split()) for line in text.splitlines() if line.strip() and not line.lstrip().startswith('#')]
+ assert commands(original)[-len(commands(old)):] == commands(old)
  assert boundary.read_text()==old.replace('remove_input_delay','unset_input_delay').replace('remove_output_delay','unset_output_delay')
  mapped_files=list((donor/'work/orfs/results').rglob('1_2_yosys.v'))
  assert len(mapped_files)==1

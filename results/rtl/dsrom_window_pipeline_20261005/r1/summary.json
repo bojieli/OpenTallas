@@ -1,0 +1,18 @@
+{
+  "status": "FULL_SHAPE_EXACT_PASS_PHYSICAL_PENDING",
+  "cases": 128,
+  "bad_cases": 0,
+  "dram_violations": 0,
+  "layer_load_mean_cycles": {
+    "0": 185.703125,
+    "24": 185.703125
+  },
+  "own_row_write_mean_cycles": 758.5,
+  "source_pin": "3dba63304",
+  "prelayout_failure_preserved": "results/rtl/dsrom_window_full_block_screen_20261005/wl_full4/screen.json",
+  "adoption": false,
+  "headline_changed": false,
+  "parent_clock_load_qualified": false,
+  "scope": "original PROGRAM_PLAN item4 window only; default-off candidate, no S81 native wiring",
+  "next": "cold/scan/gather variants and full SS60/FF25 physical characterization; actual enclosing parent qualification remains required"
+}

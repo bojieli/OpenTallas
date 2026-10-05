@@ -23,6 +23,7 @@
 // peak), WSTREAM (start -> merge done), KGSTACK per stack, and VERDICT.
 // ---------------------------------------------------------------------------
 module tb_dsrom_s81_window_la #(
+    parameter integer WINDOW_PIPELINE = 0,
     parameter integer LA = 1, CREDITS = 8, BG = 0, KG = 0, CLK_PS = 833, LA_IW = 8, LA_ISSUE_PC = 0,
     parameter integer OWN_WRITE = 1,  // 0: all 128 rows are host image (+WMEM must hold the own row): cold-row reference
     parameter integer KG_FIRST = 0,   // 1: the gather runs first (with the own-row write), the window job starts after it
@@ -60,7 +61,7 @@ module tb_dsrom_s81_window_la #(
     wire [NPC-1:0] wl_req_v, wl_req_rdy, wl_rsp_v, wl_rsp_rdy;
     wire [NPC*AW-1:0] wl_req_addr; wire [NPC*LENW-1:0] wl_req_len; wire [NPC*13-1:0] wl_req_tag, wl_rsp_tag;
     wire [NPC*BEATW-1:0] wl_rsp_beat; wire [NPC*DW-1:0] wl_rsp_data;
-    ot_dsrom_window_attn_source_la #(.STREAM_LA(LA != 0), .LA_IW(LA_IW), .LA_ISSUE_PC(LA_ISSUE_PC), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10),
+    ot_dsrom_window_attn_source_la #(.STREAM_LA(LA != 0), .WINDOW_PIPELINE(WINDOW_PIPELINE != 0), .LA_IW(LA_IW), .LA_ISSUE_PC(LA_ISSUE_PC), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10),
         .SEC_W(AW), .HAW(AW), .TAGW(TAGW), .WIN_STACK(0), .STREAM_II1(0), .REFILL_CREDITS(CREDITS)) u_src (
         .clk(clk), .rst_n(rst_n),
         .retain_qk(1'b0), .retain_pv(1'b0), .retain_complete(1'b0), .retain_invalidate(1'b0),
