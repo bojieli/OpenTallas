@@ -173,13 +173,39 @@ def prepare(config, root, profile):
                 headline_clock_eligible=bool(enabled) and all(
                     not levers[name]['physical_holds'] for name in enabled),
                 full_token_measured=False, composition_owner='Maxwell',
-                die_floorplan_owner='Claude')
+                die_floorplan_owner='Claude',
+                index_order_source_join=index_order_source_files(config, root)
+                    if config.get('index_order_adapter') else None)
 
 
 def save(path, record):
     with Path(path).open('x') as f:
         json.dump(record, f, indent=2)
         f.write('\n')
+
+
+def index_order_source_files(config, root):
+    """Join Sagan's measured adapter sources without granting enclosing enable.
+
+    W15 scores and IDs are separate words. Their checked pair formatter and the
+    exclusive gather/publication owner remain Sagan/parent dependencies; source
+    enrollment must never treat that storage as interleaved adapter responses.
+    """
+    spec = config['index_order_adapter']
+    sources, origins, errors = source_inventory(spec, root)
+    binding = spec['component_binding']
+    errors.extend(exact_errors(binding, root))
+    return dict(source_paths=spec['source_paths'], source_sha256=sources,
+                source_origins=origins,
+                ordered_source_files=[str(root / name) for name in spec['source_paths']],
+                source_holds=errors, component_exact=not errors,
+                component_geometry={'N': 2, 'NPER': 16},
+                target_geometry={'N': 96, 'NPER': 512},
+                formatter=spec['formatter'],
+                enclosing_holds=spec['enclosing_holds'],
+                enclosing_ready=False, parameters={'ENABLE': 0},
+                global_ordered_gather_qualified=False,
+                planning=spec['planning'], rate_credit=False)
 
 
 def expert_w2_service_inputs(config, root, layer, service_dir):

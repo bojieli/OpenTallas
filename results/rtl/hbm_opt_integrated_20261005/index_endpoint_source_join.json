@@ -57,7 +57,18 @@
   },
   "global_ordered_gather_qualified": false,
   "final_selection_connected": false,
-  "actual_downstream_adapter": null,
+  "actual_downstream_adapter": {
+    "path": "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+    "sha256": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007",
+    "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+    "source_owner": "Sagan",
+    "source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json",
+    "installed": false,
+    "source_formatter": null,
+    "source_formatter_owner": "Sagan",
+    "component_exact": true,
+    "full96_exact": false
+  },
   "constant_ready_or_drained_ties_allowed": false,
   "ports": {
     "frame_accept": "start && start_ready; hold job32/gen4/position20/rank7 through all real consumer drain",
@@ -88,10 +99,12 @@
     "installed": false
   },
   "holds": [
-    "Claude-owned canonical TP96 global ordered gather/final selection: no host sorting/no419-cycle credit",
-    "Actual downstream frame-preserving adapter, flow control, publication/read-drain and candidate_drained source",
-    "Current SU b7r8 query producer/installed VM+CDC binding; retained component operands came from older calibration",
-    "Protected SRAM macros/slot/channel/loaded SS60 FF25 context"
+    "Sagan actual checked sourceformatter for separate existing W15 score and ID words; no rawlayout reinterpretation",
+    "Existing VM/gather owner: exclusive393216-byte extent and all source writers drained, matched checked read responses",
+    "Real merger_load_permit and command owner; ordered_loaded only after6144 accepted score/ID loadwords",
+    "Actual pre-reserved512-ID/2048-byte result sink, matched frame release after merger_done AND publication AND positive reverse",
+    "Globalcandidate mask feedback and masked localtop producer; component raw/unmasked top does not qualify fullindex",
+    "Live-owner reset/rearm and complete mutable-control protection; loaded SS60/FF25 and Claude slot/link correction"
   ],
   "SS_FF_admitted": false,
   "full_token_measured": false
