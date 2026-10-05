@@ -21,7 +21,7 @@ python3 tools/run_abi3_physical_persistent.py \
  --step-tcl POST_PDN=physical/dsrom_static_provider_context/regions.tcl \
  --step-tcl PRE_CTS=physical/dsrom_static_provider_context/clock.tcl \
  --step-tcl POST_CTS=physical/dsrom_static_provider_context/clock.tcl \
- --orfs-var ADDER_MAP_FILE= --orfs-var MIN_CLK_ROUTING_LAYER=M8 \
+ --orfs-var ADDER_MAP_FILE= --orfs-var MIN_CLK_ROUTING_LAYER=M7 \
  --orfs-var FASTROUTE_TCL=/src/physical/dsrom_static_provider_context/fastroute.tcl \
  --orfs-var PDN_TCL=/src/physical/dsrom_static_provider_context/pdn.tcl \
  --nickname-tag epicurus_static_context_r1 --keep-heavy-artifacts --output "$TASK_ROOT/physical.json" \

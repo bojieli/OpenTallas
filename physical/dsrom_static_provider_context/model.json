@@ -96,12 +96,12 @@
   },
   "source_context_sha256": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
   "construction_files_sha256": {
-    "physical/dsrom_static_provider_context/fastroute.tcl": "e0c3259f19f3ff7546015e087f1a9d116a93ac38759c0055e60df7074d33f6de",
+    "physical/dsrom_static_provider_context/fastroute.tcl": "ffe3000a93a017eec69a757a185126f46396f3a76bf223f80db5341c88aae124",
     "physical/dsrom_static_provider_context/ot_v41_static_provider_context.sv": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
     "physical/dsrom_static_provider_context/pdn.tcl": "4f4fbdfd8a93af90c935cdad9efcb75a54de8a944869f19ee2b6c5cce2ad1dcd",
     "physical/dsrom_static_provider_context/regions.tcl": "6f4863263a0aa465f33596630302ef9d7adc40810e28e62200c1b2fed79c4a4d",
-    "physical/dsrom_static_provider_context/clock.tcl": "1edf752df7698d71b49a471bec05cf6b9e743b76c7a462f0eda519ce3085e93f",
-    "physical/dsrom_static_provider_context/run.sh": "ea507e8544e25e22ea199426f5ce4cb1e710d7a2d4691d089991c22473adfacb"
+    "physical/dsrom_static_provider_context/clock.tcl": "eac3c22c882dc42036252528eef2c27a38056b4fe254708471133e87d52169ee",
+    "physical/dsrom_static_provider_context/run.sh": "4f02fc5d5785b6db123f48d6eecdee9da83200f0024979b3f5ff59e92be2fed4"
   },
   "route_policy": {
     "synthesis_host_lib": "TT host pre-layout screen only; no TT closure credit",
@@ -121,5 +121,16 @@
     "clock_layer_limit": "M8-M8 in pinned fastroute",
     "unchanged_logical_or_physical_design": true,
     "attempt_r2": "FAIL_FLOW_CONFIGURATION_BEFORE_PLACEMENT"
+  },
+  "installed_clock_access": {
+    "trunk": "M8",
+    "vertical_leaf_access": "M7",
+    "proof": "static_context_attempt_r3/routing-binding-two-layer.log",
+    "reason": "Actual installed grt refuses M8-only layer range; permits source M8 trunk with M7 leaf access. Existing M7 power stripe/via/spacing retained, no free clock/PG overlap.",
+    "additional_registers_or_cycles": 0,
+    "additional_RTL_or_provider": false,
+    "clock_grid_unchanged": true,
+    "physical_admitted_context_only": true,
+    "physical_closed": false
   }
 }
