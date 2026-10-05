@@ -1,0 +1,82 @@
+{
+  "schema": "hbm.index.w15.plane_major.component.v1",
+  "source_commit": "97a1548ea9e6f649eeca9687cf78571778c4619b",
+  "pre_RTL_model_commit": "593baf8aa",
+  "host": "ot-epyc1tb",
+  "job": "/srv/opentallas/jobs-overflow/sagan-index-w15-planemajor-r2",
+  "supervisor_pid": 882323,
+  "terminal_exit": 0,
+  "verdict": "PASS_PLANE_MAJOR_FORMATTER_ORDERED_ADAPTER_UNCHANGED_W15_COMPONENT_ONLY",
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_w15_planemajor_formatter.sv": "a094761b1f8a4c794e0217f465e25016aa19d1485ea942635c30d3675623ec96",
+    "rtl/test/hbm_accel/tb_hbm_index_w15_planemajor_formatter.sv": "b6fa30ba9cdac7dde800e7fbb65672d0952a11bc12f9b35d5141c50c74ba9ccd",
+    "tools/hbm_index_w15_planemajor_model.py": "7ca020c7080f46dc95aa5b580a800f329bf196d68a7b77094490621ff1c17066",
+    "results/uarch/hbm_index_w15_formatter_20261005/plane_major/model.json": "b30123e8261d0d2e507da487f3644fb8aae28b07c74e5a63d0f93c8edcafb170"
+  },
+  "artifact_sha256": {
+    "runtime.log": "8251a0cb536b803305d729f04ab1576fc0d19a872924e53cdbf23b33797de72f",
+    "runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "run.sh": "adfbd22103e427508e0707d64aa780e263ffc3bfdcf069b640e625896f09291d"
+  },
+  "selected_source_layout": "Rawls 2026-10-05T14:52:27 literal ABI, two normal gathers SAME393216B arena",
+  "target_addresses": {
+    "unit": "512b VM words",
+    "source_base": "actual installer Bbyte aligned64, checked Bbyte>>6",
+    "score": "BASEword+rank*32+(j>>1)",
+    "ID": "BASEword+3072+rank*32+(j>>1)",
+    "score_byte": "Bbyte+rank*2048+64*(j>>1)",
+    "ID_byte": "Bbyte+196608+rank*2048+64*(j>>1)",
+    "half": "j[0]"
+  },
+  "scope": {
+    "gate_N": 2,
+    "gate_NPER": 16,
+    "source_stripe": 96,
+    "target_N": 96,
+    "target_NPER": 512,
+    "actual_installer_bound": false,
+    "source_inputs": "component fixture separate512b score/ID planes, no checkpoint/inference/golden provider"
+  },
+  "actual_checks": [
+    "eight matchedchecked single-port plane reads/four actualW15loads per case",
+    "low/high8-lane half selection through same512sourceword (no cache)",
+    "k1 tie chooses8 over768",
+    "k2 emits8,768 ascending using unchangedW15",
+    "provider/load bubbles and matchedheldreply",
+    "foreign rawgeneration NOT ACKed, both source debts retained",
+    "no release before actual publication+reverse"
+  ],
+  "cost": {
+    "protected_FF_allowance": 2160,
+    "actual_staging_FF": 2088,
+    "checked_reads512": 12288,
+    "extra_reads": 6144,
+    "serialized256b_provider_sectors": 24576,
+    "read_traffic_bytes": 786432,
+    "formatter_serial_edges_under_candidate9edge_service": 147456,
+    "composed_serial_planning_edges": 546816,
+    "conditional_us_at_target1p2": 455.68,
+    "positive_provider_latency_CDC_and_waits_unbound": true,
+    "no_rate_credit": true
+  },
+  "enclosing_requirements": [
+    "Rawls pinned installer reserve_extent/compile_normal_gather book, both normalgather writeACK/drain beforestart",
+    "actual exclusive sharedVM/MREQ256 borrowed port with fulltuple/address/readkind checked response",
+    "byte->word exactalignment, word->byte extendedrangecheck beforesector+32",
+    "normal W15 WA default12 cannot hold6144words: select installer-derived WA>=13 and reject truncation",
+    "prepaid512-ID sink; release only matchedpublication/reverse",
+    "sourcecoldreset/completeN96 hardening and SS60FF25 context remainOPEN"
+  ],
+  "historical_rank_major_original_source_and_result_unchanged": true,
+  "simultaneous_gate": false,
+  "full_index_replayed": false,
+  "adopted": false,
+  "physical_build_admitted": false,
+  "full_target_qualified": false
+}

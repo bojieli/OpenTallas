@@ -128,5 +128,26 @@
   "headline_clock_qualified": false,
   "combined_receipt": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
   "actual_joined_cycles": 3864,
-  "actual_joined_saving_cycles": 184
+  "actual_joined_saving_cycles": 184,
+  "production_binding_scope": {
+    "selection": "DS20 singleSM0 LSU correctness-only",
+    "owner": "Erdos",
+    "combined_top_owner": "Rawls",
+    "source_model": "tools/dshbm_wavepack_model.py::w2_parent_source_model",
+    "rate_binding": "REJECTED_SINGLE_MREQ_RATE_BINDING",
+    "total_source_bytes": 94592,
+    "bytes_per_edge": 32,
+    "provider_edge_ps": 1000,
+    "minimum_edges": 2956,
+    "minimum_service_us": 2.956,
+    "includes": "weight5-sector packing +55296 activation bytes +896 result write/readback bytes; excludes CDC/latency/arbitration",
+    "production_rate_credit": false,
+    "historical_184_cycle_component_delta_unchanged": true,
+    "actual_linked_images_spans_and_producer_publication_pending": true,
+    "model_record": {
+      "path": "results/rtl/dshbm_hbm_opt_20261005/opt2/parent_source_binding/model.json",
+      "commit": "1d2d4eb43ffeaafb582d4c4069dfd9e031cb6f5b",
+      "sha256": "f526d637a8cddda01b33534dff24d21701612ff5c5e4c7a64b5dfd06cf5ba625"
+    }
+  }
 }

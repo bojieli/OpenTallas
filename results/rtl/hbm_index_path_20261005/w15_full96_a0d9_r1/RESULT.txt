@@ -1,0 +1,7 @@
+PASS: actual N96/n512 plane-major formatter -> order adapter -> unchanged W15 selector component.
+Bench source a0d9fa9eca2ccf9dc3e1f5a75bf0dd11234c47f3; existing RTL unchanged/default OFF.
+12,288 checked source reads; 6,144 accepted loads; 49,152 exact ordered IDs; rank95 128 reads.
+512 actual selected IDs, 999424..999935, exact; selector 9,278 cycles.
+Stalled source/load handshakes, full32 job/tag identity, generation/rank foreign noACK, actual selector done, publication/reverse retention PASS.
+EPYC1 sole build75.124s, runtime547.660s, compile/runtime exit0.
+Scope: SECDED-checked component fixture, NOT production provider/full token/SSFF or 419-cycle credit.

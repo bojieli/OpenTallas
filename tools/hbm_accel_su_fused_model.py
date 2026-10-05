@@ -8,6 +8,84 @@ transaction counters and a reservation handshake with the real VM writer.
 import json
 
 
+def finite_native_parent_model():
+    """Minimum installed DS20 borrower, with positive finite service pricing.
+
+    Area is a conservative source construction, not installed slot credit.
+    Timing ranges are exclusive/drained provider planning budgets, not measured
+    successful-service guarantees or a new frequency claim.
+    """
+    import hashlib, math
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    codec_record = 'results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json'
+    cm = json.loads((root/codec_record).read_text())['SRAM_protection_candidate']
+    stage_bits = 893952
+    auxiliary = dict(control=144, scalar=720, program=704*8,
+                     held_MREQ_response=720, prior_tag_kind_valid=2592, sector_caches=1656)
+    ff = stage_bits+sum(auxiliary.values())
+    # Parallel capture encoders are required by the native wide strobes.
+    # Balanced encoder/decoder pairs deliberately overprice unused decoders.
+    codec_pairs = 5120+2176+8+5+3
+    mux_bits = 5*72*1023 + 72*2175
+    clock_buffers = math.ceil((ff-1)/7)
+    body = ff*.2916 + codec_pairs*cm['pair_cell_body_um2'] + mux_bits*.2 + ff*.2 + clock_buffers*.10206
+    control_logic_allowance = .02*body
+    placement = 2*(body+control_logic_allowance)/1e6
+    pins = ['rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv',
+            'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv',
+            'rtl/gpu_sys/ot_gpu_mreq_cdc.sv', 'rtl/gpu_sys/ot_gpu_memsys.sv',
+            'rtl/gpu_sys/ot_gpu_hbm_partition.sv', 'rtl/hdc/kv/ot_hdc_hbm_model.sv',
+            'rtl/hdc/ot_hdc_cg.sv', 'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv', codec_record]
+    return dict(schema='hbm.su.finite-native-parent.minimum.v1', default_enabled=False,
+        selected_parent=pins[0], selected_issuer=pins[1], namespace='cluster20_su / su_parent; Einstein sole RTL owner',
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in pins},
+        command='original scheduled four-word L0.hc_post.attn; no rescheduling, new opcode or public completion ABI',
+        N=1024, M=256, D=5120, native_ML=6, native_AL=5, fused_ML=5, fused_AL=4,
+        program_capacity_words=8, scalar_capacity_words=20, frame_capacity=1,
+        protected_stage_FF=stage_bits, auxiliary_FF=auxiliary, total_FF=ff,
+        native_read_seats=5120, native_write_seats=2176,
+        outstanding_provider_requests=1, existing_prior_tag_slots_per_client=32, installed_clients=4,
+        provider=dict(request_bits=337,response_bits=273,sector_bytes=32,byte_address_bits=32,tag_bits=16,
+            CDC_depth=8,NS=2,NPC=2,MEM_WORDS=2097152,USE_W2=0,
+            memory_clock_ns=1,source_target_clock_ns=1/1.2,
+            new_ports=0,borrow='SM0 only after actual accepted prior request/response drain and allSM/launch exclusion; Rawls arbitrates SU/W2, no simultaneous borrower'),
+        namespace_bytes=dict(VM=0,KV=0x100000,CRlo=0x300000,CRhi=0x320000,WR=0x340000),
+        minimum_component_address_coverage_bytes=4*1024*1024,
+        engine_clock='ot_hdc_cg existing latch/ICG; hold native/fused engine AND scheduled issuer/read-response/write strobes together; backend/CDC remains live',
+        codec=dict(source='rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',balanced_pairs=codec_pairs,
+            body_mm2=codec_pairs*cm['pair_cell_body_um2']/1e6,
+            encode_held_edges=2,decode_held_edges=3,select_edges=1,
+            basis='source W6 construction plus retained minimum-group cone: encode905.013ps/decode1633.328ps incl60unc; assumed extra250ps local loading, no contextual qualification',
+            encode_estimated_loaded_ps=1155.013,decode_estimated_loaded_ps=1883.328,
+            UE_CE='hold/quarantine owned debt until repair; never release partial corrupted state'),
+        protocol=dict(initial_snapshot_encode_edges=2, launch_capture_edges=1,
+            selected_head_decode_edges=3, request_select_register_edges=2,
+            response_capture_edges=1,response_encode_edges=2,matched_publication_release_edges=2,
+            per_transaction_local_edges_estimate=10,
+            provider_roundtrip_ns_planning_range=[45,500],
+            range_basis='exclusive/drained source, CL12.5+REQ10+RSP10ns, ACT/PRE/turnaround/one350ns refresh plus positive CDC/controller allowance; not a guarantee under competing traffic or refused sinks',
+            read_before_write='all owned frame reads before VM/KV/reducer writes, original priority retained',
+            publication='actual tag/kind write ACK then same-address ordered readback; no engine done or request acceptance substitutes visibility'),
+        worst_frame_service=dict(cache_hits_credited=0, read_MREQ=5120,write_MREQ=2176,publication_MREQ=2176,
+            MREQ_transactions=9472,partial_write_internal_old_reads=2176,physical_sector_actions=11648,
+            note='source maxima planning envelope, not actual simultaneous command traffic. Cache/address coalescing must be measured; internal partial-write RMW counted once, not extra public MREQ.',
+            serialized_planning_us_range=[(11648*45+9472*10/1.2)/1000,(11648*500+9472*10/1.2)/1000]),
+        area=dict(FF_body_mm2=ff*.2916/1e6,codec_body_mm2=codec_pairs*cm['pair_cell_body_um2']/1e6,
+            mux_bits=mux_bits,mux_um2_per_bit_assumed=.2,feedback_mux_bits=ff,
+            fanout8_clock_buffers_estimate=clock_buffers,buffer_um2_assumed=.10206,
+            control_logic_allowance_mm2=control_logic_allowance/1e6,placement_at50pct_mm2=placement,
+            required_minimum_component_outline_um=[2800,2400],component_envelope_mm2=6.72,
+            estimate_fits_component_envelope=placement<=6.72,
+            parent_home_reserved=False,slot_scope='required standalone minimum component envelope; NOT free space in Claude die floorplan',
+            excludes='actual codec cut FF/hold repair beyond allowance, clock/PG/loaded long wires and installed parent placement'),
+        boundary_payload_tracks_lower_bound=337+273,loaded_channel_fit=False,
+        implementation_model_selected=True,component_RTL_implementation_permitted=True,
+        physical_route_admitted=False,physical_clock_qualified=False,
+        composed_token_gain_us=None,adopted=False,
+        implementation_gate='retain finite capacities and positive cuts; real CP launch/borrower/publication, same original scheduled program and existing input image; contextual SS60/FF25 later, not a prerequisite to write opt-in candidate RTL')
+
+
 def model():
     rows = []
     for kind, n, d, rd, core, baseline in (

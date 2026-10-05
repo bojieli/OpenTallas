@@ -26,7 +26,9 @@
       "slot_macro_channel_binding": null,
       "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
       "joint_measurement": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
-      "combined_PQ_PACK_XMAP_measured": true
+      "combined_PQ_PACK_XMAP_measured": true,
+      "production_rate_credit": false,
+      "production_provider_scope": "DS20 singleSM0 LSU correctness-only; 94592B/32B*1000ps=2.956us lowerbound before CDC/arbitration/latency. Retained184-cycle component delta does not transfer."
     },
     {
       "lever": "format_masked_activation",
@@ -50,7 +52,9 @@
       "qwen_opt3_enabled": false,
       "qwen_source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json",
       "joint_measurement": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
-      "combined_PQ_PACK_XMAP_measured": true
+      "combined_PQ_PACK_XMAP_measured": true,
+      "production_rate_credit": false,
+      "production_provider_scope": "DS20 singleSM0 LSU correctness-only; 94592B/32B*1000ps=2.956us lowerbound before CDC/arbitration/latency. Retained184-cycle component delta does not transfer."
     },
     {
       "lever": "partial_wave_packing",
@@ -76,7 +80,9 @@
       "slot_macro_channel_binding": null,
       "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
       "joint_measurement": "results/rtl/hbm_opt_integrated_20261005/pack_xmap_L20_p1_r1/summary.json",
-      "combined_PQ_PACK_XMAP_measured": true
+      "combined_PQ_PACK_XMAP_measured": true,
+      "production_rate_credit": false,
+      "production_provider_scope": "DS20 singleSM0 LSU correctness-only; 94592B/32B*1000ps=2.956us lowerbound before CDC/arbitration/latency. Retained184-cycle component delta does not transfer."
     },
     {
       "lever": "expert_workgroup",
@@ -101,65 +107,102 @@
         "physical binding absent"
       ],
       "implementation_holds": [
-        "Hubble owns the existing coupled GU numerical gate; no duplicated bench.",
-        "Actual W2 cfg_lines, 136-entry cfg_lut, released payload ordering and W2 exact result remain unbound.",
-        "Mandatory eight-sector W2 interleave is not established: current dispatcher uses a 17-sector W2 tail (j0=32,n=17) per expert after the eight-sector GU schedule.",
-        "Combined PQ/XMAP response-tag credit and destination publication join has no measured interaction result.",
-        "Loaded SS60/FF25 clock, provider, macro, slot and channel bindings remain open.",
-        "Await actual Hubble corrected 8/8/1 dispatcher source/hash plus literal cfg_lut and actual W2 golden gate; no deadline waiver."
+        "Actual postweighted BF16 SwiGLU input or exact unbiased router scores/routeweights unavailable; biased NPZ subtraction prohibited",
+        "Connected GU/SM arithmetic and combined PQ/PACK/XMAP/provider publication interaction unmeasured",
+        "Loaded SS60/FF25 provider/slot/channel context unbound"
       ],
       "source_replacements": {},
       "slot_macro_channel_binding": null,
       "source_candidates": {
         "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "0b0cfbd03b715f1d3b318911f1fc8d9a8aa7036a147377aec61a3fd6071eeaf1"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "647285ec7bdcd6edcc4ce13a9e6807733b1e7a27b660250019513ecf8b13d6dc"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "1ad53dd9d2245fea0cabadcd13d2613d6ec6964e26500b90b61c829da03e89f0"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "4972eb2f66858181c1ad33a6b701e7e555c6aab5e923c9cb9da2c7993071491a"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "574b617644d4eaf00714ca6b74adb485538c753da2b3dbf08b8d1002a23a941c"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "080350f39cef5c0de39431d1368b06aadcbf1e1d40bb73366bbdf86380ec149b"
         },
         "tools/dshbm_expert_workgroup_interleave.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "e423065ff214f5c2250adbe6f2d6e8e2e9dabc307594ad1abae7a0086478fc66"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "b84356315a935796bb48afe4ebc26e82a0c4ef7aa7fa2238df1b8fbdf8f6402e"
         },
         "tools/dshbm_expert_interleave_descriptor.py": {
-          "commit": "7658dbdc5df3f6922bfd5dee5cc76f194bf1b659",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "d736dfcaba6f4a390e31ae4ac8368fde382779b094559cb141ebf8a986aa3c8e"
         },
         "tools/dshbm_expert_workgroup_descriptor.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "366f7f56e29053e7ddc487451d27b6eb1bb0538ebfd444275f8e952b5046c97c"
         },
         "tools/dshbm_expert_interleave_native.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "6811620851458f941295a971526fbc00bb8699190287c517c2a62e71da64de4c"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "98c03b4ff9b8cb11df2e9fca66acc1de7158d82d2b419a0c1c704eed354323bb"
         }
       },
       "eligible_workloads": [
         "ds_1m"
       ],
-      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json"
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json",
+      "current_candidate_commit": "81f77dcbe808db885e24d786bea083babead3485",
+      "W2_sector_schedule": [
+        8,
+        8,
+        1
+      ],
+      "service_binding": {
+        "receipt": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/record.json",
+        "receipt_sha256": "84cf006e27b10436665760f4ee9c1ea050cdfdb027776e09f144db64d5641ab4",
+        "source_commit": "81f77dcbe808db885e24d786bea083babead3485",
+        "counts": [
+          10,
+          10,
+          0,
+          0,
+          29,
+          29,
+          29,
+          29
+        ],
+        "transport_lines_per_expert": 136,
+        "source_callable": "tools/dshbm_expert_workgroup_interleave.py::w2_stream",
+        "integration_callable": "tools/hbm_opt_integrated_20261005.py::expert_w2_service_inputs",
+        "cli": "w2-service --layer {3,20} --service-dir EXISTING_OWNER_SERVICE_DIR",
+        "scope": "PASS_SERVICE_BYTES_ONLY: L20/L3 die2 stack0, 9408 sectors per case; no arithmetic or installed-provider qualification",
+        "arithmetic_qualified": false,
+        "rate_credit": false,
+        "corrupted_sector_controls": {
+          "L20": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L20/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          },
+          "L3": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L3/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          }
+        }
+      },
+      "service_byte_delivery_qualified": true,
+      "W2_arithmetic_qualified": false
     },
     {
       "lever": "fused_su",
@@ -239,10 +282,12 @@
         "selected loaded SS/FF context unbound"
       ],
       "implementation_holds": [
-        "Claude-owned canonical TP96 global ordered gather/final selection: no host sorting/no419-cycle credit",
-        "Actual downstream frame-preserving adapter, flow control, publication/read-drain and candidate_drained source",
-        "Current SU b7r8 query producer/installed VM+CDC binding; retained component operands came from older calibration",
-        "Protected SRAM macros/slot/channel/loaded SS60 FF25 context"
+        "Sagan actual checked sourceformatter for separate existing W15 score and ID words; no rawlayout reinterpretation",
+        "Existing VM/gather owner: exclusive393216-byte extent and all source writers drained, matched checked read responses",
+        "Real merger_load_permit and command owner; ordered_loaded only after6144 accepted score/ID loadwords",
+        "Actual pre-reserved512-ID/2048-byte result sink, matched frame release after merger_done AND publication AND positive reverse",
+        "Globalcandidate mask feedback and masked localtop producer; component raw/unmasked top does not qualify fullindex",
+        "Live-owner reset/rearm and complete mutable-control protection; loaded SS60/FF25 and Claude slot/link correction"
       ],
       "source_replacements": {},
       "slot_macro_channel_binding": null,
@@ -269,6 +314,22 @@
         "index_to_transport_adapter": null,
         "source_matched_index_transport_parameters": null,
         "installed": false
+      },
+      "ordered_adapter_source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json",
+      "ordered_adapter_source_paths": [
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+        "rtl/chip/ot_coll_topk_merge.sv"
+      ],
+      "ordered_adapter_component_exact": true,
+      "ordered_adapter_target_enable": 0,
+      "ordered_adapter_planning": {
+        "existing_model_edges": 448512,
+        "additional_explicit_output_load_edges": 6144,
+        "serial_floor_edges_at_priced_checked_service": 454656,
+        "conditional_us_at_1p2": 378.88,
+        "model_delta_writer": "Maxwell",
+        "no_rate_credit": true
       }
     },
     {

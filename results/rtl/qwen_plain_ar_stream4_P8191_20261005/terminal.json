@@ -1,0 +1,392 @@
+{
+  "status": "PASS",
+  "host": "ot-epyc2",
+  "job_root": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1",
+  "position": 8191,
+  "input_token": 24,
+  "scope": "Original-AR full36 decoder plus RTL HEAD; native STREAM4 tagged memory, actual per-layer operands/history and output carry, final current-KV readback after ACK retirement",
+  "process_exit": 0,
+  "mode": {
+    "real_mem": true,
+    "stream4": true,
+    "ar256": true,
+    "writeback_width": 4,
+    "near_hbm_compute": false,
+    "dspark": false,
+    "accept": false,
+    "kv_ideal": false,
+    "early_go": true,
+    "posted_wb": true
+  },
+  "total_cycles": 193955,
+  "total_edges": 193955,
+  "stages": [
+    {
+      "stage": "L0",
+      "cycles": 6044,
+      "start_cycle": 7,
+      "end_cycle": 6051,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L1",
+      "cycles": 5282,
+      "start_cycle": 6052,
+      "end_cycle": 11334,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L2",
+      "cycles": 5282,
+      "start_cycle": 11335,
+      "end_cycle": 16617,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L3",
+      "cycles": 5282,
+      "start_cycle": 16618,
+      "end_cycle": 21900,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L4",
+      "cycles": 5282,
+      "start_cycle": 21901,
+      "end_cycle": 27183,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L5",
+      "cycles": 5282,
+      "start_cycle": 27184,
+      "end_cycle": 32466,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L6",
+      "cycles": 5282,
+      "start_cycle": 32467,
+      "end_cycle": 37749,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L7",
+      "cycles": 5282,
+      "start_cycle": 37750,
+      "end_cycle": 43032,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L8",
+      "cycles": 5282,
+      "start_cycle": 43033,
+      "end_cycle": 48315,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L9",
+      "cycles": 5282,
+      "start_cycle": 48316,
+      "end_cycle": 53598,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L10",
+      "cycles": 5282,
+      "start_cycle": 53599,
+      "end_cycle": 58881,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L11",
+      "cycles": 5282,
+      "start_cycle": 58882,
+      "end_cycle": 64164,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L12",
+      "cycles": 5282,
+      "start_cycle": 64165,
+      "end_cycle": 69447,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L13",
+      "cycles": 5282,
+      "start_cycle": 69448,
+      "end_cycle": 74730,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L14",
+      "cycles": 5282,
+      "start_cycle": 74731,
+      "end_cycle": 80013,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L15",
+      "cycles": 5282,
+      "start_cycle": 80014,
+      "end_cycle": 85296,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L16",
+      "cycles": 5282,
+      "start_cycle": 85297,
+      "end_cycle": 90579,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L17",
+      "cycles": 5282,
+      "start_cycle": 90580,
+      "end_cycle": 95862,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L18",
+      "cycles": 5282,
+      "start_cycle": 95863,
+      "end_cycle": 101145,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L19",
+      "cycles": 5282,
+      "start_cycle": 101146,
+      "end_cycle": 106428,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L20",
+      "cycles": 5282,
+      "start_cycle": 106429,
+      "end_cycle": 111711,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L21",
+      "cycles": 5282,
+      "start_cycle": 111712,
+      "end_cycle": 116994,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L22",
+      "cycles": 5282,
+      "start_cycle": 116995,
+      "end_cycle": 122277,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L23",
+      "cycles": 5282,
+      "start_cycle": 122278,
+      "end_cycle": 127560,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L24",
+      "cycles": 5282,
+      "start_cycle": 127561,
+      "end_cycle": 132843,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L25",
+      "cycles": 5282,
+      "start_cycle": 132844,
+      "end_cycle": 138126,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L26",
+      "cycles": 5282,
+      "start_cycle": 138127,
+      "end_cycle": 143409,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L27",
+      "cycles": 5282,
+      "start_cycle": 143410,
+      "end_cycle": 148692,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L28",
+      "cycles": 5282,
+      "start_cycle": 148693,
+      "end_cycle": 153975,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L29",
+      "cycles": 5282,
+      "start_cycle": 153976,
+      "end_cycle": 159258,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L30",
+      "cycles": 5282,
+      "start_cycle": 159259,
+      "end_cycle": 164541,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L31",
+      "cycles": 5282,
+      "start_cycle": 164542,
+      "end_cycle": 169824,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L32",
+      "cycles": 5282,
+      "start_cycle": 169825,
+      "end_cycle": 175107,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L33",
+      "cycles": 5282,
+      "start_cycle": 175108,
+      "end_cycle": 180390,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L34",
+      "cycles": 5282,
+      "start_cycle": 180391,
+      "end_cycle": 185673,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "L35",
+      "cycles": 5282,
+      "start_cycle": 185674,
+      "end_cycle": 190956,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    },
+    {
+      "stage": "head",
+      "cycles": 2998,
+      "start_cycle": 190957,
+      "end_cycle": 193955,
+      "sequencer_fault": 0,
+      "core_fault": 0,
+      "collective_fault": 0
+    }
+  ],
+  "layer_x": {
+    "checks": 144,
+    "fp32_words": 589824,
+    "mismatches": 0
+  },
+  "current_kv": {
+    "checks": 144,
+    "e4m3_codes": 73728,
+    "mismatches": 0
+  },
+  "head": {
+    "ranks": 4,
+    "next_token": 18,
+    "winning_logit_bits": "42282b99",
+    "exact_all_ranks": true,
+    "xnorm_fp32_words": 16384,
+    "xnorm_mismatches": 0,
+    "scope": "RTL argmax token/winning logit and Xnorm; full vocabulary logits are not dumped"
+  },
+  "writeback": {
+    "drained": true,
+    "cycles_after_head": 0,
+    "readback_requires_all_rank_kv_wb_busy_low": true
+  },
+  "executable_sha256": "c6ee0e862ac07b4b6dfd93fc43c5b460b76f84d0e8efe0753cf8c8ccad5e9280",
+  "source_record": "source.json",
+  "evidence_sha256": {
+    "numerical_comparison.json": "6712a01df3d7ba49c6d4013c8626b944e5a1e2506563707915052f7288456a45",
+    "runtime.log": "1e40fecfaea0cda6333ddd70ffcc848e725466ccad68065f496d019a2bc6011f",
+    "runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "runtime.command.json": "035d9861c11631917ef22f80b815bdf0e6f9ac3b8c6829fcc1db60137f3fd1f4"
+  },
+  "physical_qualification": false,
+  "limitations": "Numerical and cycle result only. No SS/FF closure, full-system frequency or per-user-rate adoption claim. Prior failures remain preserved."
+}

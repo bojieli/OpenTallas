@@ -198,62 +198,95 @@
       "hooks": [
         "Fetch s_valid/s_ready/s_data[1024] -> gearbox in_valid/in_ready/in_data.",
         "Native gearbox out_valid/out_ready/out_data[1088] -> reserved SM response using the original accepted request tag; coupled benchmark has behavioural bookkeeping, not an installed provider.",
-        "cfg_lines is W2-only; cfg_lut maps W2 source lines, supplied by Hubble, never synthesized from A8 GU metadata.",
         "tools/dshbm_expert_interleave_descriptor.py::compile_descriptors_a8(ids, *, layer, die, input_job, interleave8=False)",
-        "Mandatory W2 eight-sector interleave remains a required owner dependency."
+        "w2_stream returns complete W2 bytes, literal cfg_lut and counts TOGETHER: 10,10,0,0,29,29,29,29 for released die2/stack0.",
+        "expert_w2_service_inputs binds existing w2.hex/cfg_lines.hex/cfg_lut.hex by actual measured hashes; no activation synthesis.",
+        "Mandatory 8/8/1 W2 dispatch byte service passed; arithmetic/installed provider remains unqualified."
       ],
       "binding": null,
-      "missing": "OFF: owner coupled slot0 timeout; old e96 source historical, corrected8/8/1 source pins and literal W2 cfg_lut/golden gate pending.",
+      "missing": "OFF: 81f77 complete W2 byte service passed; exact postweighted BF16 SwiGLU/unbiased router input, actual connected SM/provider and numerical gate missing.",
       "source_candidates": {
         "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "0b0cfbd03b715f1d3b318911f1fc8d9a8aa7036a147377aec61a3fd6071eeaf1"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "647285ec7bdcd6edcc4ce13a9e6807733b1e7a27b660250019513ecf8b13d6dc"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "1ad53dd9d2245fea0cabadcd13d2613d6ec6964e26500b90b61c829da03e89f0"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "4972eb2f66858181c1ad33a6b701e7e555c6aab5e923c9cb9da2c7993071491a"
         },
         "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "574b617644d4eaf00714ca6b74adb485538c753da2b3dbf08b8d1002a23a941c"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "080350f39cef5c0de39431d1368b06aadcbf1e1d40bb73366bbdf86380ec149b"
         },
         "tools/dshbm_expert_workgroup_interleave.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "e423065ff214f5c2250adbe6f2d6e8e2e9dabc307594ad1abae7a0086478fc66"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "b84356315a935796bb48afe4ebc26e82a0c4ef7aa7fa2238df1b8fbdf8f6402e"
         },
         "tools/dshbm_expert_interleave_descriptor.py": {
-          "commit": "7658dbdc5df3f6922bfd5dee5cc76f194bf1b659",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "d736dfcaba6f4a390e31ae4ac8368fde382779b094559cb141ebf8a986aa3c8e"
         },
         "tools/dshbm_expert_workgroup_descriptor.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
           "sha256": "366f7f56e29053e7ddc487451d27b6eb1bb0538ebfd444275f8e952b5046c97c"
         },
         "tools/dshbm_expert_interleave_native.py": {
-          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
-          "sha256": "6811620851458f941295a971526fbc00bb8699190287c517c2a62e71da64de4c"
+          "commit": "81f77dcbe808db885e24d786bea083babead3485",
+          "sha256": "98c03b4ff9b8cb11df2e9fca66acc1de7158d82d2b419a0c1c704eed354323bb"
         }
       },
       "eligible_workloads": [
         "ds_1m"
       ],
-      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json"
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json",
+      "service_binding": {
+        "receipt": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/record.json",
+        "receipt_sha256": "84cf006e27b10436665760f4ee9c1ea050cdfdb027776e09f144db64d5641ab4",
+        "source_commit": "81f77dcbe808db885e24d786bea083babead3485",
+        "counts": [
+          10,
+          10,
+          0,
+          0,
+          29,
+          29,
+          29,
+          29
+        ],
+        "transport_lines_per_expert": 136,
+        "source_callable": "tools/dshbm_expert_workgroup_interleave.py::w2_stream",
+        "integration_callable": "tools/hbm_opt_integrated_20261005.py::expert_w2_service_inputs",
+        "cli": "w2-service --layer {3,20} --service-dir EXISTING_OWNER_SERVICE_DIR",
+        "scope": "PASS_SERVICE_BYTES_ONLY: L20/L3 die2 stack0, 9408 sectors per case; no arithmetic or installed-provider qualification",
+        "arithmetic_qualified": false,
+        "rate_credit": false,
+        "corrupted_sector_controls": {
+          "L20": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L20/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          },
+          "L3": {
+            "path": "results/rtl/dshbm_expert_interleave_20261005/w2_r2/service/L3/corrupted_FAIL.log",
+            "sha256": "589024da26ea1c460c31e3a5596178d22cd94f1d1c178e74a050b1b5aa1c5fe8"
+          }
+        }
+      }
     },
     "fused_su": {
       "owner": "Einstein",
@@ -324,7 +357,10 @@
         "out_v/out_r/out_last per4quarters, each16 lanes score16/ID20/ninf; actual local selection only",
         "cand_out_v/r/last per4quarters, each2 lanes BF16 score16/globalblock17; actual selected maxima/IDs",
         "candidate_drained input; active release additionally requires both accepted last paths and no candidate/topk busy/fault",
-        "4x256x592 topk +4x1024x68 candidate external synchronous1R1W interfaces; protected installed realization unbound"
+        "4x256x592 topk +4x1024x68 candidate external synchronous1R1W interfaces; protected installed realization unbound",
+        "Sagan ot_hbm_accel_index_order_adapter sourceclosure via index_order_source_files; N2/n16 exact component only",
+        "Actual separate W15 score/ID words require checked sourceformatter; formatter remains unbound, not reinterpreted",
+        "Exclusive gather/writer drain +512ID sink reservation retained until matched publication and positive reverse"
       ],
       "binding": {
         "source_sha256": {
@@ -390,7 +426,8 @@
         "ds_1m"
       ],
       "global_ordered_gather_qualified": false,
-      "constant_ready_or_drained_ties_allowed": false
+      "constant_ready_or_drained_ties_allowed": false,
+      "ordered_adapter_source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json"
     },
     "endpoint_sm": {
       "owner": "Goodall",
@@ -467,5 +504,93 @@
       "role": "Completed Qwen final TP4 baseline, compatible unchanged templates only. Does not contain DS PQ/XMAP switches.",
       "source_identity": "results/rtl/qwen_hbm_final_tp4_20261005/source_identity.json"
     }
-  ]
+  ],
+  "index_order_adapter": {
+    "owner": "Sagan",
+    "combined_top_owner": "Rawls",
+    "selector_owner": "Confucius",
+    "source_paths": [
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+      "rtl/chip/ot_coll_topk_merge.sv"
+    ],
+    "source_candidates": {
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+        "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+      },
+      "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": {
+        "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+        "sha256": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007"
+      },
+      "rtl/chip/ot_coll_topk_merge.sv": {
+        "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+        "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+      }
+    },
+    "component_binding": {
+      "source_sha256": {
+        "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007",
+        "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+      },
+      "parameters": {
+        "ENABLE": 1,
+        "N": 2,
+        "NPER": 16
+      },
+      "exact_receipts": [
+        {
+          "path": "results/rtl/hbm_index_path_20261005/ordered_adapter_8d816_r1/result.json",
+          "sha256": "716bbb17c3f7b9ca1e59927229d28b66cf832891ea8685b6c936ed8ba0913a06",
+          "pass_path": [
+            "verdict"
+          ],
+          "pass_value": "PASS_ORDER_ADAPTER_WITH_UNCHANGED_W15_COMPONENT_ONLY",
+          "source_pins_path": [
+            "source_sha256"
+          ]
+        }
+      ],
+      "physical": null
+    },
+    "default_enabled": false,
+    "formatter": null,
+    "formatter_owner": "Sagan",
+    "formatter_delegated_direct": true,
+    "enclosing_holds": [
+      "Sagan actual checked sourceformatter for separate existing W15 score and ID words; no rawlayout reinterpretation",
+      "Existing VM/gather owner: exclusive393216-byte extent and all source writers drained, matched checked read responses",
+      "Real merger_load_permit and command owner; ordered_loaded only after6144 accepted score/ID loadwords",
+      "Actual pre-reserved512-ID/2048-byte result sink, matched frame release after merger_done AND publication AND positive reverse",
+      "Globalcandidate mask feedback and masked localtop producer; component raw/unmasked top does not qualify fullindex",
+      "Live-owner reset/rearm and complete mutable-control protection; loaded SS60/FF25 and Claude slot/link correction"
+    ],
+    "planning": {
+      "existing_model_edges": 448512,
+      "additional_explicit_output_load_edges": 6144,
+      "serial_floor_edges_at_priced_checked_service": 454656,
+      "conditional_us_at_1p2": 378.88,
+      "model_delta_writer": "Maxwell",
+      "no_rate_credit": true
+    },
+    "source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json",
+    "formatter_source_claim": {
+      "owner": "Sagan",
+      "path": "rtl/hbm_accel/index/ot_hbm_accel_index_w15_source_formatter.sv",
+      "implementation_commit": null,
+      "sha256": null,
+      "physical_gather_binding": null,
+      "existing_TOPK_mode_installs_gathered_VM_copy": false,
+      "normal_gather_address_source": "ot_w15_coll_dma.gather_addr = dst_r + n_r*o_rank + wr_k/N",
+      "selected_normal_gather_command": null,
+      "selected_held_VM_extent": null,
+      "proposed_source_reads": 12288,
+      "pair_ready_adapter_model_reads": 6144,
+      "proposed_additional_read_service_edges": 55296,
+      "extra_assembly_and_publication_edges": null,
+      "model_delta_owner": "Maxwell",
+      "default_enabled": false
+    }
+  }
 }
