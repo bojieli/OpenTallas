@@ -167,10 +167,13 @@ def windows(m):
         f = m['frames'][r]
         w['field_hd'] = tuple(round(v, 3) for v in (f['x'] - 1000.0, f['y'] - 300.0, f['x'] + S.COL_W + 1000.0,
                                                     f['y'] + 2600.0))
-    if die in ('rec_layer', 'rec_draft'):
-        sel = m['hub']['seltree']
-        w['spine_sel'] = tuple(round(v, 3) for v in (m['geo']['x_sp'] - 400.0, sel.y - 1400.0,
-                                                     m['geo']['x_fe'] + 400.0, sel.y + 1400.0))
+    if die in ('rec_layer', 'rec_draft', 'rec_s81'):
+        # the window centred on the select tree; on the unmodified S81 layer die (s81) the same rectangle is the
+        # control (where the slab would sit)
+        sel = m['hub'].get('seltree')
+        y = sel.y if sel else _seltree_y(m)
+        w['spine_sel'] = tuple(round(v, 3) for v in (m['geo']['x_sp'] - 400.0, y - 1400.0,
+                                                     m['geo']['x_fe'] + 400.0, y + 1400.0))
     return w
 
 
@@ -194,20 +197,20 @@ def build(die):
         S.DIE_KIND = 'rec_head'
     else:
         S.configure('layer')
-        S.DIE_KIND = 'rec_layer' if die == 'layer' else 'rec_draft'
+        S.DIE_KIND = dict(layer='rec_layer', draft='rec_draft', s81='rec_s81')[die]
     m = _stub_build()
     m['variant']['die'] = S.DIE_KIND
     extra = []
     if die == 'head':
         extra = add_head(m)
-    else:
+    elif die != 's81':
         add_seltree(m)
         if die == 'draft':
             add_links(m)
     m['buses'] = _orig['buses'](m) + extra
     if die == 'head':
         widen_trunks(m)
-    if die != 'head':
+    if die in ('layer', 'draft'):
         m['buses'] += seltree_buses(m)
     if die == 'draft':
         m['buses'] += link_buses(m)
@@ -288,14 +291,23 @@ def widen_trunks(m):
     m['buses'] = out
 
 
+def _seltree_hw(m):
+    cw = S.dn((S.SPINE_W - S.VCH) / 2, GX)
+    mm2 = json.loads((ROOT / ROUTER).read_text())['cell_area_um2'] / SEL_DENSITY / 1e6
+    return cw, S.up(mm2 * 1e6 / cw, GY), mm2
+
+
+def _seltree_y(m):
+    cw, h, _ = _seltree_hw(m)
+    return S.dn(m['hub']['gather'].y - S.SPINE_GAP - h, GY)
+
+
 def add_seltree(m):
     """ot_hdc_select_tree slab between the gather (above) and su_s (below); su_s moves down."""
     hub = m['hub']
     ga, su = hub['gather'], hub['su_s']
-    cw = S.dn((S.SPINE_W - S.VCH) / 2, GX)
-    mm2 = json.loads((ROOT / ROUTER).read_text())['cell_area_um2'] / SEL_DENSITY / 1e6
-    h = S.up(mm2 * 1e6 / cw, GY)
-    y = S.dn(ga.y - S.SPINE_GAP - h, GY)
+    cw, h, mm2 = _seltree_hw(m)
+    y = _seltree_y(m)
     su.y = S.dn(y - S.SPINE_GAP - (su.h + SHAVE), GY)
     assert su.y >= m['geo']['y_f'] - 1e-6, (su.y, m['geo']['y_f'])
     it = S.Inst('sp_seltree', 'dsfd_sp_seltree', ga.x, y, cw - SHAVE, h - SHAVE, kind='hub', region='spine')
@@ -471,10 +483,195 @@ def record(work, out):
     out.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
 
 
+# ------------------------------------------------------------------------------------------------ lever records
+LEVERS = 'results/rtl/dsrom_recovery_20261004/levers'
+S81_REC = 'results/rtl/dsrom_s81_fulldie_20261004'
+KEYS = ('area_um2_per_element', 'area_mm2_per_die', 'area_mm2_total', 'dies_added', 'ss_wns_ps', 'ff_hold_wns_ps',
+        'slack_basis', 'grt_overflow', 'worst_window_use_cap', 'congestion_basis', 's81_rerun_needed',
+        's81_rerun_why')
+
+
+def _j(rel):
+    p = ROOT / rel
+    return json.loads(p.read_text()) if p.is_file() else None
+
+
+def grt_summary(feas, tag):
+    """overflow / worst baseline-subtracted 4 x 4 window (M2-M9) of case <tag>_b_k16_i50, or None while it runs."""
+    c = (feas or {}).get('cases', {}).get(f'{tag}_b_k16_i50')
+    if not c or 'grt' not in c or not c['grt'].get('total'):
+        return None
+    w = c.get('windows_baseline_subtracted') or c.get('windows') or {}
+    pl = w.get('per_layer', {})
+    return dict(overflow=c['grt']['total']['overflow_total'],
+                worst=max((e['max_use_over_cap'] for e in pl.values()), default=None),
+                over_1=sum(e['over_1'] for e in pl.values()), baseline_subtracted=w.get('baseline_subtracted'),
+                worst_where=(w.get('worst') or [None])[0], grt_s=c.get('grt_s'), case=f'{tag}_b_k16_i50')
+
+
+def grt_pair(feas, tags):
+    """overflow / worst window over the cases that exist (the worst of them), with each case listed."""
+    gs = [g for g in (grt_summary(feas, t) for t in tags) if g]
+    if not gs:
+        return None, None, {}
+    return (max(g['overflow'] for g in gs), max(g['worst'] for g in gs), {g['case']: g for g in gs})
+
+
+def real_summary(feas, tag):
+    c = (feas or {}).get('cases', {}).get(f'{tag}_a_real')
+    if not c or 'legality' not in c:
+        return None
+    return dict(legality=c['legality'], track_assert=c['track_assert']['verdict'],
+                pins_checked=c['track_assert']['pins_checked'], pin_access=c['pin_access']['status'],
+                pin_access_examples=c['pin_access'].get('examples', [])[:3], case=f'{tag}_a_real')
+
+
+def ir_summary(feas, tag):
+    out = {}
+    for name, c in sorted((feas or {}).get('cases', {}).items()):
+        if name.startswith(f'{tag}_c_') and 'rail_to_rail_interior_mv' in c:
+            out[name] = dict(rail_to_rail_interior_mv=c['rail_to_rail_interior_mv'], pass_interior=c['pass_interior'],
+                             budget_mv=c['budget_mv'])
+    return out or None
+
+
+def physcost():
+    feas = _j(OUT + '/feasibility.json')
+    fp = {d: _j(f'{OUT}/{d}/floorplan.json') for d in ('head', 'layer', 'draft')}
+    s81h, s81l = _j(S81_REC + '/head_die/floorplan.json'), _j(S81_REC + '/floorplan.json')
+    rec = {}
+    # ---- head
+    ph = {v: json.loads((ROOT / HEAD_PHYS.format(v)).read_text())['place_and_route']['metrics'] for v in 'AB'}
+    ah, kh = s81h['area_mm2_by_kind'], s81h['instances']
+    cfg_um2 = ah['cfg'] / kh['cfg'] * 1e6
+    node_um2 = ah['node'] / kh['node'] * 1e6
+    old_pair = ah['bf_nv'] / kh['bf_nv'] * 1e6 + ah['nvx'] / kh['nvx'] * 1e6 + 7 * cfg_um2 + 2 * node_um2
+    old_die = ah['bf_nv'] + ah['nvx'] + kh['bf_nv'] * (7 * cfg_um2 + 2 * node_um2) / 1e6
+    nh = fp['head']['area_mm2_by_kind']
+    new_die = nh['hd_a'] + nh['hd_b'] + nh['hcmp']
+    ov, ww, gl = grt_pair(feas, ('rh88',))
+    r_, ir = real_summary(feas, 'rh'), ir_summary(feas, 'rh')
+    rec['head'] = dict(
+        area_um2_per_element=dict(A=ph['A']['die_area_um2'], B=ph['B']['die_area_um2'],
+                                  A_std_cell=ph['A']['standard_cell_area_um2'],
+                                  B_std_cell=ph['B']['standard_cell_area_um2'],
+                                  macros='2 x ot_rom_4096x274_m8 (7,881.4 um2 each) per element',
+                                  per_ROM4096_new=round(ph['A']['die_area_um2'] / 2, 1),
+                                  per_ROM4096_old_S81_lm_head_pair=round(old_pair / 4, 1),
+                                  old_element='S81 head-die lm-head pair: dsfd_bf (BF pair, 1,002.9 x 157.7) + NV5 '
+                                              'extension dsfd_nvx + 7 cfg ROM (ot_rom_4096x72_m8) + 2 return nodes, '
+                                              f'{old_pair:,.0f} um2 for 4 x ot_rom_4096x274_m8 (the same ROM macro as the '
+                                              'S81 q pair, 4 a pair)'),
+        area_mm2_per_die=round(new_die - old_die, 2),
+        area_mm2_per_die_detail=dict(new=round(new_die, 2), old=round(old_die, 2),
+                                     new_elements=fp['head']['head']['elements'], old_pairs=kh['bf_nv'],
+                                     head_die_placed_footprint_mm2=[s81h['placed_footprint_mm2'],
+                                                                    fp['head']['placed_footprint_mm2']],
+                                     note='per head die (1 of 12): 85 bundles = 340 A + 85 B elements replace 211 '
+                                          'NV5 lm-head pairs; the head die also loses the DSpark drafter pairs '
+                                          '(moved to the draft dies, priced in the draft lever) -- placed footprint '
+                                          f"{s81h['placed_footprint_mm2']} -> {fp['head']['placed_footprint_mm2']} mm2"),
+        area_mm2_total=round(HEAD_DIES * (new_die - old_die), 1),
+        dies_added=0,
+        elements=dict(per_rank_ROM4096=2525, per_rank_elements=1262.5, per_rank_bundles=252.5,
+                      per_head_die_elements=f'{RANKS * 1262.5 / HEAD_DIES:.1f} (85 bundles = 425 placed)',
+                      x_port='256-bit skewed x per element (xa to the 4 A, xb to the B of a bundle) fanned out at '
+                             'the region FIFO from the trunk lane-x channels; the S81 head pair took a 266-bit '
+                             'chained x per lane (2 lanes) plus the 1,064-bit NV handoff'),
+        ss_wns_ps=dict(A=round(ph['A']['setup_wns_ns'] * 1e3, 1), B=round(ph['B']['setup_wns_ns'] * 1e3, 1)),
+        ff_hold_wns_ps=dict(A=round(ph['A']['hold_wns_ns'] * 1e3, 1), B=round(ph['B']['hold_wns_ns'] * 1e3, 1)),
+        slack_basis='routed element (ORFS WC=SS setup at 60 ps, WC+BC=FF hold at 25 ps, 833 ps), '
+                    'r4_A / r4_B physical.json; 0 DRC / slew / cap / fanout / antenna',
+        grt_overflow=ov if gl else 0, worst_window_use_cap=ww,
+        congestion_basis=('in context: ' + ', '.join(gl)) if gl else
+                         'BLOCK level only: the element routes clean (detail route, 0 DRC, 0 antenna) in its own '
+                         '275 x 275 um outline; IN CONTEXT pending: the head-die rerun is Codex item 10 (inputs: '
+                         'floorplan head/ with the real abstracts in physcost/abstracts/)',
+        grt_cases=gl, real=r_, ir_mv=ir,
+        s81_rerun_needed=True,
+        s81_rerun_why='new element abstract (ot_dsrom_head_elem A/B, 2 x ot_rom_4096x274_m8, 256-bit x port) replaces '
+                      'the NV5 lm-head pairs; NV5 extension and the DSpark drafter leave the head die (draft moved to '
+                      'DP1-EP5): SCHEDULED (Codex item 10)')
+    # ---- router
+    scr = _j(ROUTER)
+    sel = fp['layer']['area_mm2_by_kind']['hub'] - s81l['area_mm2_by_kind']['hub']
+    ov, ww, gl = grt_pair(feas, ('rl', 'rl88'))
+    r_, ir = real_summary(feas, 'rl'), dict(ir_summary(feas, 'rl') or {}, **(ir_summary(feas, 'rs') or {}))
+    rec['router'] = dict(
+        area_um2_per_element=dict(cells=scr['cell_area_um2'], placed=round(scr['cell_area_um2'] / SEL_DENSITY, 1),
+                                  placed_basis=f'cell area / {SEL_DENSITY} logic density (head-die sizing rule)'),
+        area_mm2_per_die=round(sel, 4),
+        area_mm2_total=round(324 * sel, 2),
+        area_total_basis='one select tree on each of the 324 S81 layer dies (+0.06 mm2 on each layer-class draft die); '
+                         'the replaced ot_hdc_select is not credited',
+        dies_added=0,
+        ss_wns_ps=scr['ss_setup_wns_ps'], ff_hold_wns_ps=scr['ff_hold_wns_ps'],
+        slack_basis='pre-layout (ORFS yosys/abc WC, OpenSTA SS setup 60 ps / FF hold 25 ps, ideal clock), '
+                    'router/screen.json; not routed',
+        grt_overflow=ov, worst_window_use_cap=ww,
+        congestion_basis='S81 full-die method in context: layer die + select_tree slab between gather and SU '
+                         '(2,113-bit score bus from the gather, 64-bit ids to the SU), GRT k16 i50, 4 x 4 GCell '
+                         'windows M2-M9 baseline-subtracted, at the S81 r7 PG coverage (rl: hub 0.044) and at hub '
+                         '0.088 (rl88, the coverage the SU-south IR window needs) -- ' + (', '.join(gl) or 'RUNNING'),
+        grt_cases=gl, real=r_, ir_mv=ir,
+        ir_note='rs_c_spine_sel is the unmodified S81 layer die on the same window (control): the select tree adds '
+                'no IR; the S81 die itself exceeds 35 mV there at hub coverage 0.044 and passes at 0.088',
+        s81_rerun_needed=True,
+        s81_rerun_why='new spine slab and a 2,113-bit bus in the hub (the S81 hub-congestion region); the in-context '
+                      'GRT/IR evidence here passes (IR needs hub PG 0.088, a baseline finding); the sign-off rerun '
+                      'with field/hop is SCHEDULED (Codex item 10)')
+    # ---- draft
+    dr = _j(DRAFT)
+    ad, al = fp['draft']['area_mm2_by_kind'], fp['layer']['area_mm2_by_kind']
+    ep = sum(ad[k] - al.get(k, 0) for k in ('link', 'hub_fifo', 'waypoint'))
+    ov, ww, gl = grt_pair(feas, ('rd', 'rd88'))
+    r_ = real_summary(feas, 'rd')
+    rec['draft'] = dict(
+        area_um2_per_element=dict(serdes_endpoint=round(S.real_lef(S.SERDES_LEF)['w'] * S.real_lef(S.SERDES_LEF)['h'], 1),
+                                  note='per replica link endpoint at the S81 footprint (ot_pdie_serdes) + one hub FIFO '
+                                       'slot + channel waypoints; the endpoint logic (ot_dsrom_link_rt) is the hop '
+                                       "lever's"),
+        area_mm2_per_die=round(ep, 2),
+        area_mm2_per_die_basis='primary draft die: 15 extra SerDes + hub FIFO slots + waypoints (placed footprint '
+                               f"{fp['layer']['placed_footprint_mm2']} -> {fp['draft']['placed_footprint_mm2']} mm2); "
+                               'expert-replica dies: 0 (one link, inside the S81 set)',
+        area_mm2_total=round(dr['dies_added'] * dr['placement']['dies']['die_mm2'] + 4 * ep, 1),
+        area_total_basis=f"{dr['dies_added']} added layer-class dies x {dr['placement']['dies']['die_mm2']} mm2 + "
+                         '4 primary dies x the extra endpoints',
+        dies_added=dr['dies_added'],
+        ss_wns_ps=None, ff_hold_wns_ps=None,
+        slack_basis='no new RTL (as-built units); the link endpoint closure is the hop lever (hop.json REJECT: '
+                    'ot_dsrom_link_ct SS -500.4 ps; hop_closed pending)',
+        grt_overflow=ov, worst_window_use_cap=ww,
+        congestion_basis='S81 full-die method in context: primary draft die = layer die + select tree + 15 SerDes '
+                         '(11 a side incl. the S81 four, 1 SW corner), 1,024-bit buses through hub FIFO slots and '
+                         'channel waypoints, GRT k16 i50 at hub 0.044 (rd) and 0.088 (rd88) -- '
+                         + (', '.join(gl) or 'RUNNING'),
+        grt_cases=gl, real=r_,
+        ir_note='no IR case: SerDes/UCIe sit on their own supplies (no core-grid load); the 15 hub FIFO slots add '
+                '0.12 W in the VCH',
+        edge_fit='the S81 edge column holds at most UCIe + 10 SerDes in 26 mm: 15 extra need 7 + 7 in the '
+                 'columns and 1 in a corner',
+        s81_rerun_needed=True,
+        s81_rerun_why='15 extra link endpoints and their 1,024-bit buses on the 4 primary draft dies (a die variant: '
+                      'the S81 edge column holds at most UCIe + 10 SerDes); in-context GRT here passes at the S81 '
+                      'SerDes footprint; the sign-off rerun with the hop_closed endpoint is SCHEDULED (Codex item 10)')
+    return rec
+
+
+def write_levers(rec):
+    for name, pc in rec.items():
+        p = ROOT / LEVERS / f'{name}.json'
+        d = json.loads(p.read_text())
+        d['physical_cost'] = dict(pc, source='tools/dsrom_recovery_physcost.py levers')
+        p.write_text(json.dumps(d, indent=1) + '\n')
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'check', 'real', 'grt', 'ir', 'record'])
-    ap.add_argument('--die', default='head', choices=['head', 'layer', 'draft'])
+    ap.add_argument('mode', choices=['plan', 'check', 'real', 'grt', 'ir', 'record', 'levers'])
+    ap.add_argument('--die', default='head', choices=['head', 'layer', 'draft', 's81'],
+                    help='s81: the unmodified S81 layer die (control windows)')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--iters', type=int, default=5)
@@ -489,6 +686,11 @@ def main(argv=None):
         cov[k_] = float(v)
     if a.mode == 'record':
         record(a.work, a.out or ROOT / OUT / 'feasibility.json')
+        return 0
+    if a.mode == 'levers':
+        rec = physcost()
+        write_levers(rec)
+        print(json.dumps(rec, indent=1))
         return 0
     m = build(a.die)
     if a.mode == 'check':
