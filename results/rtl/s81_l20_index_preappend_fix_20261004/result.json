@@ -1,0 +1,86 @@
+{
+  "status": "PASS_IDENTIFIED_PRELOAD_DEFECT_CORRECTION",
+  "implementation_commits": [
+    "04b5307285f373b204b06774063a02570d29b817",
+    "021fb89b11cae698dbb453dc29ee4f65678da3c8"
+  ],
+  "scope": "Native rank3 L20 preappend state, actual writer/backend migration, and minimum native scorer subset; seeded20260930 history and actual SIM_ONLY boundary inputs retained from R5.",
+  "cause": {
+    "prior_key_count_rank3": 262143,
+    "failed_placement_count": 262144,
+    "preappend_quarter_length": 65528,
+    "postappend_quarter_length": 65536,
+    "affected_local_ranges": [
+      [
+        65528,
+        65535
+      ],
+      [
+        131056,
+        131071
+      ],
+      [
+        196584,
+        196607
+      ]
+    ],
+    "affected_keys": 48,
+    "old_migration_source_sectors_zero": 102,
+    "old_destination_sectors_nonzero": 102
+  },
+  "correction": "Relocate only the six retained eight-key groups to preappend owners. Actual native I36 appends local262143 and performs its original migration. Ranks0..2 retain count262144; no current-key preload, encoding or arithmetic change.",
+  "native_append": {
+    "result": "PASS_NATIVE_APPEND_48_BOUNDARY_KEY_PAYLOADS",
+    "append_end_cycle": 1046,
+    "total_with_readback_cycles": 6888,
+    "records": 1,
+    "migrations": 1,
+    "copied_sectors": 102,
+    "exact_readback_sectors": 102,
+    "input_boundary": "Actual I35 raw128 BF16 words, low halves all zero; unchanged I36 IND store boundary into native encoder. Native SU was not reexecuted in this minimum check.",
+    "terminal": "PASS final output and PID745944 absent; separate exit status was not retained."
+  },
+  "native_score_subset": {
+    "result": "PASS_SAVED_NATIVE_OUTPUTS_FP32_COMPARISON",
+    "cycles": 1519,
+    "key_count": 64,
+    "affected_keys": 48,
+    "controls": 16,
+    "mismatches": 0,
+    "unchanged": "I44 actual I41 query, I43 weights, k128, hg2, native rounding and reduction tree",
+    "changed_scope": "Key count64 and raw-key placement for the minimum independent-key operator reproducer; not canonical full262144 scan.",
+    "comparison_correction": "Initial harness viewed cached float64 reference as rawU32 without FP32 conversion and exited1. Original log retained. Corrected comparison converted retained reference to FP32 before rawU32 comparison and checked the SAME saved outputs; no DUT rerun.",
+    "reference": "/home/ubuntu/w17work/isa/scratch_s20260930/ctx1048576_L20.npz:L20.index_scores",
+    "reference_sha256": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45",
+    "expected_used": "Comparison only, loaded after all native outputs; never DUT payloads."
+  },
+  "ready_input_bundle": "ot-agidock128:/home/ubuntu/sagan-index-preappend-fix-20261004-r1/corrected-index-inputs",
+  "caller": "Existing DSROM_S81_NATIVE_L20_INDEX_INPUT selects this bundle; coldpreload uses ring_prior_r3 within it.",
+  "remote_results": "ot-agidock128:/home/ubuntu/sagan-index-preappend-fix-20261004-r1",
+  "source_sha256": {
+    "tools/prepare_dsrom_L20_ring_preappend_rank3.py": "7d9a7a5452b9d46ef250c4acae86308b0f9515b76d9c2c704bd78a63f445c93b",
+    "tools/w11_idx_ring_place.py": "00d0e774c683c467fee88d15397d20771697e59f346144d6454b87366383b9d5",
+    "tools/runtime/dsrom/s81_minimum_source_factory.cpp": "52a356737306d75e23ce63ddb491fe39db46935d466273550d63c1a3cef198ff"
+  },
+  "native_archive_sha256": {
+    "/tmp/dsrom-s81-l20-index-writer-r1/obj/VDsromS81IndexWriter__ALL.a": "4bf67da5113f2d8c5786d5e8ac6e3e62307fe33382de6bb85a054c71f2f152d0",
+    "/tmp/dsrom-s81-index-hbm-native-r1/obj/VDsromS81IndexHbm__ALL.a": "00beccd304fc841417f54d4a46f32535de37a0650c9975864b96c4624c9ae744",
+    "/tmp/dsrom-s81-native-index-sagan-r1/scorer/obj/VDsromS81IndexScorer__ALL.a": "35d10cb01968b27df2dc8aa77b9bfbd0337f76a3b1a2f00c59effe30cfd6e5e5"
+  },
+  "actual_input_sha256": {
+    "I35.IKQ.u32": "51ffd3350aa0228e600d5820b76791b7c1d3cc6833be0f71abbcb8bd74d9749e",
+    "I41.IQQ.u32": "78afe3a369216fd693c754c820dd8e1f8a5580060e329d38fb1f2d6b25570c61",
+    "I43.WTS.u32": "e6564e055e0b2c85d74d0c98c745b30ae2dc1369228cc08e0ce089afb1b58695"
+  },
+  "artifacts_sha256": {
+    "scores.cpp": "c4d70a341c4f5e9dfe99b8ce386bf5d2c14f43e8968a84c41bbdd816358b1f01",
+    "check.cpp": "4390b4cb482cf0baa2c703a28bfa7cf4d7e3c487fd2d5901bbf54eaff4149481",
+    "scores.log": "3be9152a00c7980b5033fee51a95ba5f527d805c1d8e4e74fbe26607966dba1e",
+    "scores-comparison-fixed.txt": "ed8c15cd5209b3084c358fe194ed73d7802a1da7a85414a41fc98a3a7671c7de",
+    "append-check.log": "a95f0e7d60b3f9df643363f1a40e9cb693bb9a66a6947140d3eba32b11d097b9"
+  },
+  "full_scan_rerun": false,
+  "full_token_qualified": false,
+  "physical_timing_qualified": false,
+  "preservation": "Original failed input images, R5 results, first comparison failure, live jobs and remote ready images/results preserved."
+}

@@ -24,6 +24,7 @@ def main(argv=None):
     ap.add_argument("--param", action="append", default=[])
     ap.add_argument("--period-ps", type=float, default=833.0)
     ap.add_argument("--work", required=True, type=Path)
+    ap.add_argument("--synth-timeout-s", type=int, default=7200)
     a = ap.parse_args(argv)
     params = dict(p.split("=", 1) for p in a.param)
     work = a.work.resolve()
@@ -34,7 +35,7 @@ def main(argv=None):
     cs.write_case(work, spec)
     net = orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"
     if not net.is_file():
-        p = orfs.docker_make(work, f"/work/results/asap7/{spec.nickname}/base/1_2_yosys.v", "synth.log", 7200)
+        p = orfs.docker_make(work, f"/work/results/asap7/{spec.nickname}/base/1_2_yosys.v", "synth.log", a.synth_timeout_s)
         if p.returncode != 0:
             sys.exit(f"synthesis failed: {work}/synth.log")
     orfs.normalise_netlist(net)

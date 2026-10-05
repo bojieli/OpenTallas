@@ -90,6 +90,7 @@ public:
                     o.identity==plan.groups[i].ranks[0].offer.identity&&
                     o.token==plan.groups[i].ranks[0].offer.token&&
                     o.identity==plan.groups[0].ranks[0].offer.identity&&
+                    o.token==plan.groups[0].ranks[0].offer.token&&
                     o.user==plan.groups[0].ranks[0].offer.user&&
                     o.position==plan.groups[0].ranks[0].offer.position,
                     "full-stage TP4 source owner/order mismatch");
@@ -180,3 +181,124 @@ public:
     void warm_quarantine(){stopped=true;ledger.warm_quarantine();}
     bool fault()const{return stopped;}
 };
+
+// Typed caller composition BEFORE DieBase erasure. Borrow the existing source
+// runtime and accepted-context ledger; do not create context, clock or credit
+// authorities. The owner binds COMPLETE native source plan/node order and
+// native ReadResult/RESULT-origin callbacks, not FIELD+END component coverage.
+// Enclosing order: before_edge -> settle native model -> sample_before_edge ->
+// ONE caller-owned rising edge/settle -> after_edge. Other native observers
+// (including ReadResult producer/END sampling) keep their existing edge hooks.
+// These callbacks never eval/tick/reset a model or infer a visibility fence.
+template<class Top> struct DsromS81WaveStagePollerBinding {
+    std::shared_ptr<DsromS81WaveC8PortJoin<Top>> join;
+    std::function<void()> before_edge,sample_before_edge,after_edge,warm_quarantine;
+};
+
+template<class Top>
+DsromS81WaveStagePollerBinding<Top> dsrom_s81_bind_wave_stage_poller(
+    Top& top,DsromS81Runtime& runtime,DsromS81WaveResultLedger& accepted_ledger,
+    typename DsromS81WaveC8PortJoin<Top>::Resolve resolve,
+    std::function<DsromS81SourcePlan(const DsromS81WaveRequest&,const DsromC8SourceOffer&)> source_plan,
+    std::function<DsromS81WaveStagePoller::NodeOrder(const DsromS81WaveRequest&,const DsromC8SourceOffer&)> source_nodes,
+    DsromS81WaveStagePoller::Visibility kv_visible,
+    DsromS81WaveStagePoller::Visibility index_visible,
+    DsromS81WaveStagePoller::Visibility remote_visible,
+    DsromS81WaveStagePoller::Visibility allcopy_visible,
+    std::function<DsromS81WaveStagePoller::ReadResult(const DsromS81WaveRequest&,const DsromC8SourceOffer&)> native_read_result,
+    typename DsromS81WaveC8PortJoin<Top>::ResultOrigin native_result_origin,
+    typename DsromS81WaveC8PortJoin<Top>::Squash native_invalidate,
+    typename DsromS81WaveC8PortJoin<Top>::Retire native_stage_consumed,
+    bool enabled=false) {
+    using Join=DsromS81WaveC8PortJoin<Top>;
+    if(!resolve||!source_plan||!source_nodes||!kv_visible||!index_visible||
+       !remote_visible||!allcopy_visible||!native_read_result||!native_result_origin||
+       !native_invalidate||!native_stage_consumed)
+        throw std::runtime_error("complete native WAVE source/result/fence callbacks required");
+    struct State {
+        std::unique_ptr<DsromS81WaveStagePoller> poller;
+        bool before=false,sampled=false,poller_edge_pending=false,result_polled=false,stopped=false;
+    };
+    auto state=std::make_shared<State>();
+    auto quarantine=[state,&accepted_ledger](){
+        state->stopped=true;
+        if(state->poller)state->poller->warm_quarantine();
+        else accepted_ledger.warm_quarantine();
+    };
+    auto start=[state,&runtime,&accepted_ledger,source_plan,source_nodes,native_read_result,
+                kv_visible,index_visible,remote_visible,allcopy_visible]
+        (const DsromS81WaveRequest& request,const DsromC8SourceOffer& offer){
+        if(state->stopped||state->poller)
+            throw std::runtime_error("WAVE request overwrites retained native stage");
+        auto plan=source_plan(request,offer);
+        auto nodes=source_nodes(request,offer);
+        auto read=native_read_result(request,offer);
+        if(plan.groups.empty()||!read)
+            throw std::runtime_error("actual full-stage plan/native result reader missing");
+        const auto first=dsrom_s81_resolve_source_offer(plan,request);
+        if(first.die_id!=offer.die_id||first.identity!=offer.identity||first.token!=offer.token||
+           first.position!=offer.position||first.user!=offer.user||first.epoch!=offer.epoch||
+           first.entry!=offer.entry)
+            throw std::runtime_error("complete stage plan differs from accepted WAVE source offer");
+        state->poller.reset(new DsromS81WaveStagePoller(runtime,accepted_ledger,std::move(plan),
+            nodes,request.sequence,kv_visible,index_visible,remote_visible,allcopy_visible,std::move(read)));
+    };
+    // Existing Join invokes this only from drive(), before native settling and
+    // the shared edge. No result/read callback can recursively clock a stage.
+    auto result=[state](const DsromS81WaveRequest&,const DsromC8SourceOffer&)
+        ->std::optional<DsromS81WaveStageResult>{
+        if(state->stopped||!state->before||state->sampled||state->result_polled||!state->poller)
+            throw std::runtime_error("WAVE stage progress lacks one enclosing pre-edge");
+        state->result_polled=true;
+        state->poller_edge_pending=state->poller->before_edge();
+        return state->poller->result();
+    };
+    auto retire=[state,native_stage_consumed](const DsromS81WaveStageResult& value){
+        if(state->stopped||!state->poller)
+            throw std::runtime_error("WAVE stage acceptance lacks retained poller");
+        state->poller->accepted(value); // exact existing HELD sequence/ID/token/value check
+        native_stage_consumed(value); // real winner/output owner, never an invented ACK
+        state->poller.reset(); // source generation remains in EXTERNAL ledger
+    };
+    // EXACT existing old-final-RESULT consumption, distinct from stage result
+    // acceptance. Ledger release still requires its real fabric/allcopy hooks.
+    auto received=[&accepted_ledger](const DsromS81WaveResultOrigin& owner){
+        accepted_ledger.result_received(owner);
+    };
+    auto join=std::make_shared<Join>(top,std::move(resolve),std::move(start),std::move(result),
+        std::move(retire),std::move(native_result_origin),std::move(native_invalidate),enabled,std::move(received));
+    auto stop=[join,quarantine](){quarantine();join->warm_quarantine();};
+    auto before=[state,join,stop,enabled](){
+        if(!enabled)return;
+        try {
+            if(state->stopped||state->before||state->sampled||state->poller_edge_pending)
+                throw std::runtime_error("WAVE composition pre-edge reused/quarantined");
+            state->before=true;state->result_polled=false;
+            join->drive();
+        }catch(...){stop();throw;}
+    };
+    auto sample=[state,join,stop,enabled](){
+        if(!enabled)return;
+        try {
+            if(state->stopped||!state->before||state->sampled)
+                throw std::runtime_error("WAVE composition lacks settled pre-edge");
+            join->sample_before_edge();state->sampled=true;
+        }catch(...){stop();throw;}
+    };
+    auto after=[state,join,stop,enabled](){
+        if(!enabled)return;
+        try {
+            if(state->stopped||!state->before||!state->sampled)
+                throw std::runtime_error("WAVE composition shared edge not sampled");
+            // Finish old C8 accepted/restored bookkeeping BEFORE processing
+            // old RESULT and a simultaneous NEW request in the native join.
+            if(state->poller_edge_pending) {
+                if(!state->poller)throw std::runtime_error("sampled stage poller disappeared");
+                state->poller->after_edge();state->poller_edge_pending=false;
+            }
+            join->after_edge();
+            state->before=state->sampled=false;
+        }catch(...){stop();throw;}
+    };
+    return {std::move(join),std::move(before),std::move(sample),std::move(after),std::move(stop)};
+}

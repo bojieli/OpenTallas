@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Exactness and cycle gate of the 1.2 GHz DS HBM SM successor (rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv).
+"""Exactness and cycle gate of the target-1.2 GHz DS HBM SM candidate (rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv).
 
 Runs W13's own SM benches with the successor as the DUT (rtl/test/tb_hbm_accel_sm_v.sv, ENABLE = 0 is the original
 ot_gpu_sm_v, ENABLE = 1 the successor), on the same vectors, and reports per case: bit-exact vs golden for both,
 result rows identical between them, and the cycle delta (start -> done, first / last result).
+The bench clock is 1 ns; these are simulation cycles, not contextual SS/FF closure.
+Verilator uses the identical timed bench and native arithmetic without substitution.
+Do not start this backend alongside the preserved live Icarus gate.
 
     python3 tools/hbm_accel_sm_v_gate.py synth --out R.json [--cols 1 2 8]          # rtl_gpu_sm_exact smv vectors
+    python3 tools/hbm_accel_sm_v_gate.py synth --simulator verilator --cols 8 --out R.json
+    python3 tools/hbm_accel_sm_v_gate.py shapes --out R.json                         # every measured DS token shape
+    python3 tools/hbm_accel_sm_v_gate.py edges --out R.json                          # FP edge operands
     python3 tools/hbm_accel_sm_v_gate.py real --dump sm_dump.pkl --out R.json       # w19_sm_real_ops real operands
 """
 from __future__ import annotations
@@ -36,6 +42,45 @@ SRC = ["rtl/hdc/ot_hdc_prefix.sv"] + [s for s in S.SMV_SRC if s != "rtl/test/tb_
 TB = "tb_hbm_accel_sm_v"
 _lock = __import__("threading").RLock()
 _exe = {}
+_build_commands = {}
+_icarus_run_sim = S.run_sim
+
+
+def run_sim(exe, d, gap):
+    if ARGS.simulator == "iverilog":
+        return _icarus_run_sim(exe, d, gap)
+    # Same DIR/GAP protocol and out.txt decoder as rtl_gpu_sm_exact.run_sim.
+    with (Path(d) / "runtime.log").open("x") as log:
+        subprocess.run([str(exe), f"+DIR={d}", f"+GAP={gap}"], check=True,
+                       cwd=d, stdout=log, stderr=subprocess.STDOUT)
+    res, meta = {}, {}
+    for line in (Path(d) / "out.txt").read_text().splitlines():
+        if line.startswith("#"):
+            toks = line[1:].split()
+            for i in range(0, len(toks) - 1, 2):
+                meta[toks[i]] = int(toks[i + 1]) if toks[i + 1].lstrip("-").isdigit() else toks[i + 1]
+            if "TIMEOUT" in line:
+                meta["timeout"] = True
+            continue
+        r, h = line.split()
+        res[int(r)] = h
+    return res, meta
+
+
+def compile_verilator(en, params, outdir):
+    outdir = Path(outdir).resolve()
+    effective = dict(params, ENABLE=en)
+    command = [ARGS.verilator, "--binary", "--timing", "-Wno-fatal",
+               "--top-module", TB, "--Mdir", str(outdir), "-j", str(ARGS.build_jobs),
+               *[f"-G{k}={v}" for k, v in effective.items()],
+               *[str(ROOT / src) for src in SRC]]
+    # Retain compiler errors/progress; no timeout/FSIZE/AS/memory cap or retry.
+    with (outdir / "build.log").open("x") as log:
+        subprocess.run(command, check=True, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
+    exe = outdir / ("V" + TB)
+    if not exe.is_file():
+        raise RuntimeError("Verilator exited without the actual bench executable")
+    return exe, command
 
 
 def sha(p):
@@ -44,8 +89,7 @@ def sha(p):
 
 def runner(enable, workdir):
     def run(params, d):
-        key = (enable,) + tuple(sorted(params.items()))
-        return S.run_sim(_compile(enable, params), d, 0)
+        return run_sim(_compile(enable, params), d, 0)
     return run
 
 
@@ -66,7 +110,7 @@ def cmd_synth(a):
     same vectors (same seeds) for the lockstep comparison."""
     import hdc_golden_v41 as V
     V.set_arith("chunk8")
-    list(ThreadPoolExecutor(8).map(lambda k: _cache_for(*k), [(en, NC) for NC in a.cols for en in (0, 1)]))
+    list(ThreadPoolExecutor(min(a.jobs, 2*len(a.cols))).map(lambda k: _cache_for(*k), [(en, NC) for NC in a.cols for en in (0, 1)]))
     out = []
     for NC in a.cols:
         specs = [("smv_fp8_k5120_gs_r1", "v41_fp8", 1, 5120, dict(gs=True)),
@@ -106,8 +150,11 @@ def _compile(en, params):
         kl = _klocks.setdefault(key, __import__("threading").Lock())
     with kl:
         if key not in _exe:
-            _exe[key] = S.compile_tb(SRC, TB, dict(params, ENABLE=en),
-                                     tempfile.mkdtemp(prefix=f"b{en}_", dir=ARGS.workdir))
+            directory = tempfile.mkdtemp(prefix=f"b{en}_", dir=ARGS.workdir)
+            if ARGS.simulator == "verilator":
+                _exe[key], _build_commands[repr(key)] = compile_verilator(en, params, directory)
+            else:
+                _exe[key] = S.compile_tb(SRC, TB, dict(params, ENABLE=en), directory)
     return _exe[key]
 
 
@@ -241,20 +288,30 @@ def cmd_real(a):
 ARGS = None
 
 
-def main():
+def main(argv=None):
     global ARGS
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("mode", choices=["synth", "real", "shapes", "edges"])
     ap.add_argument("--record", default="results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json")
     ap.add_argument("--dump")
+    ap.add_argument("--simulator", choices=("iverilog", "verilator"), default="iverilog")
+    ap.add_argument("--verilator", default="verilator")
+    ap.add_argument("--build-jobs", type=int, default=1,
+                    help="CXX workers per compile; account for simultaneous parameter keys")
     ap.add_argument("--cols", type=int, nargs="+", default=[1, 2])
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--workdir", default=None)
     ap.add_argument("--jobs", type=int, default=8)
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
     a.workdir = a.workdir or tempfile.mkdtemp(prefix="smv_gate_")
     os.makedirs(a.workdir, exist_ok=True)
     ARGS = a
+    if a.jobs < 1 or a.build_jobs < 1 or any(n < 1 for n in a.cols):
+        ap.error("jobs/build-jobs/column counts must be positive")
+    if a.mode == "real" and not a.dump:
+        ap.error("real mode requires the retained actual operand dump")
+    if a.simulator == "verilator":
+        S.run_sim = run_sim  # smv_case consumes the SAME native result protocol.
     cases = {"synth": cmd_synth, "real": cmd_real, "shapes": cmd_shapes, "edges": cmd_edges}[a.mode](a)
     for c in cases:
         print(f"{c['case']:34s} exact {c['exact_original']}/{c['exact_successor']} done {c['cycles_start_to_done']} "
@@ -263,8 +320,11 @@ def main():
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     rec = dict(schema="opentallas.hbm_accel.sm_v_gate.v1", mode=a.mode, status="pass" if ok else "fail",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-               source_commit=head, simulator=subprocess.run(["iverilog", "-V"], capture_output=True,
-                                                            text=True).stdout.splitlines()[0],
+               source_commit=head, simulator=subprocess.run(
+                   [a.verilator, "--version"] if a.simulator == "verilator" else ["iverilog", "-V"],
+                   capture_output=True, text=True).stdout.splitlines()[0],
+               simulator_backend=a.simulator, build_commands=_build_commands,
+               benchmark_clock_ns=1.0, contextual_SS_FF_qualified=False,
                dump=dict(path=a.dump, sha256=hashlib.sha256(Path(a.dump).read_bytes()).hexdigest()) if a.dump else None,
                cases=len(cases), mismatching_cases=sum(1 for c in cases if not (c["exact_original"] and c["exact_successor"])),
                delta_done_set=sorted({c["delta_done"] for c in cases}),

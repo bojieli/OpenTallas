@@ -1,0 +1,117 @@
+{
+ "schema": "opentallas.rtl.rom_stage_spine_exact.v1",
+ "element_params": {
+  "NB": 2,
+  "BF16": 0,
+  "MTP": 1,
+  "EARLY": 1,
+  "FAST": 1,
+  "PP": 1,
+  "FRONT_PAR": 0
+ },
+ "domain_state": {
+  "registers": 1464,
+  "register_bits": 33962,
+  "memories": 0,
+  "memory_bits": 0
+ },
+ "sources": {
+  "rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+  "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+  "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+  "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+  "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+  "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+  "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+  "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+  "rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+  "rtl/v41rom/ot_v41_rom_elem_pg_sp_w10.sv": "41fc7c29ef59e693b8ed68500b17e750709ea5ac300a2bb46cae1dea9266900b",
+  "rtl/v41rom/ot_v41_rom_pg_ao_sp.sv": "5008abb676263feb6a2f8bfa6915d88405aa9152e84b78296d8ad0cbdc1636bc",
+  "rtl/v41rom/ot_v41_stage_pg_sched.sv": "ce2a8d5f73d616c620843daeb646a0f3eb9b03a4e982a1873ccd46380c8ac3a5",
+  "rtl/chip/ot_chip_v41_pg_ctrl.sv": "e2efddf0f5f4203ba9b0d079805b3242898e92acf2d9c0172b1f24263cf21018",
+  "rtl/test/tb_v41_rom_elem_pg_sp.sv": "f489d2f1045342863fc0c3a04a37caac53fe776c029c4f5d2def33a59c58b3d5",
+  "tools/rom_stage_spine_sim.py": "aa4dadcedf21428836c326bb62dc6ebe26d429be2028afcf319ec8e9288541d3",
+  "tools/rom_stage_pg_sim.py": "0c6d6353bf619fbbb661d021f6cf6980ce6225f217a4baa2e43aff2fbb1190ae"
+ },
+ "spine": 1,
+ "runs": [
+  {
+   "mutant": null,
+   "pass_": true,
+   "returncode": 0,
+   "seconds": 218.5,
+   "tail": [
+    "TOKEN 0 mode=0 go_cycle=3000 dut_ready=1",
+    "TOKEN 1 mode=0 go_cycle=9895 dut_ready=1",
+    "TOKEN 2 mode=1 go_cycle=25895 dut_ready=1",
+    "TOKEN 3 mode=1 go_cycle=41895 dut_ready=1",
+    "TOKEN 4 mode=0 go_cycle=57895 dut_ready=1",
+    "TOKEN 5 mode=1 go_cycle=73895 dut_ready=1",
+    "TOKEN 6 mode=1 go_cycle=89895 dut_ready=1",
+    "TOKEN 7 mode=1 go_cycle=91540 dut_ready=1",
+    "TOKEN 8 mode=0 go_cycle=107540 dut_ready=1",
+    "TOKEN 9 mode=0 go_cycle=123540 dut_ready=1",
+    "TOKEN 10 mode=0 go_cycle=130437 dut_ready=1",
+    "TOKEN 11 mode=1 go_cycle=146437 dut_ready=1",
+    "SPINE stopped_cycles=96964 unpowered_cycles=96937",
+    "WAKE min=90 max=92 cycles (req_on -> ready); restore max=27 cycles; lead=200",
+    "PASS cycles=148333 rows=192 nonzero=82 sleeps=13 wakes=13 restores=325 aborts=3 off_cycles=96937 on_cycles=51396"
+   ]
+  },
+  {
+   "mutant": "spine_late",
+   "pass_": false,
+   "returncode": 1,
+   "seconds": 2.0,
+   "tail": [
+    "FATAL: /srv/opentallas-scratch/claude/spine-gate/wt-407f3ebbd/rtl/test/tb_v41_rom_elem_pg_sp.sv:99: FATAL public control mismatch cycle=2800 ref=0000 dut=1111"
+   ]
+  },
+  {
+   "mutant": "no_restore",
+   "pass_": false,
+   "returncode": 1,
+   "seconds": 8.1,
+   "tail": [
+    "TOKEN 0 mode=0 go_cycle=3000 dut_ready=1",
+    "FATAL: /srv/opentallas-scratch/claude/spine-gate/wt-407f3ebbd/rtl/test/tb_v41_rom_elem_pg_sp.sv:99: FATAL public control mismatch cycle=5002 ref=1110 dut=0010"
+   ]
+  },
+  {
+   "mutant": "no_iso",
+   "pass_": false,
+   "returncode": 1,
+   "seconds": 1.6,
+   "tail": [
+    "FATAL: /srv/opentallas-scratch/claude/spine-gate/wt-407f3ebbd/rtl/test/tb_v41_rom_elem_pg_sp.sv:99: FATAL public control mismatch cycle=1 ref=0000 dut=xxxx"
+   ]
+  },
+  {
+   "mutant": "short_lead",
+   "pass_": false,
+   "returncode": 1,
+   "seconds": 2.5,
+   "tail": [
+    "TOKEN 0 mode=0 go_cycle=3000 dut_ready=0",
+    "FATAL: /srv/opentallas-scratch/claude/spine-gate/wt-407f3ebbd/rtl/test/tb_v41_rom_elem_pg_sp.sv:99: FATAL public control mismatch cycle=3001 ref=0000 dut=0001"
+   ]
+  }
+ ],
+ "verdict": {
+  "exact_with_gating": true,
+  "mutants_detected": {
+   "spine_late": true,
+   "no_restore": true,
+   "no_iso": true,
+   "short_lead": true
+  }
+ }
+}

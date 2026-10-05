@@ -1,0 +1,128 @@
+{
+  "PDN_changed": false,
+  "analysis_completed": true,
+  "assumed_screen_basis": "existing tools/signoff_analysis.py uses assumed1mA/um; ASAP7 publishes no EM limit",
+  "authority": "Qwen mainf1df64409 b3r16B40 closure inherits completed b3r13c_ir_spine_hub peak power/PDN windows; not current item7 grownslab recipe",
+  "current_recovery_die_qualified": false,
+  "em_rule_authority": null,
+  "exit_code": 0,
+  "foundry_violation_count": null,
+  "input_receipt_sha256": "78edd65fa9fb141f7e78be923c8df7f52aa081a1bc8e8a6b764cb66f053fe9cd",
+  "log_sha256": "08d806dba049f720f38b633eeb91b7490137815ac9f03777c28f32e86c4ee42c",
+  "power_w": 5.50732,
+  "qualification": "MEASURED_PSM_CURRENTS_ONLY_EM_LIMIT_NOT_AVAILABLE",
+  "rails": {
+    "VDD": {
+      "analysis_completed": true,
+      "layers_above_existing_assumed_1ma_per_um": [
+        "M8",
+        "M9"
+      ],
+      "per_layer": {
+        "M8": {
+          "location": [
+            "M8",
+            "2968.3420",
+            "2250.1220",
+            "M8",
+            "2970.0000",
+            "2250.1220"
+          ],
+          "max_current_a": 0.0007931,
+          "max_ma_per_um": 1.6522916666666667,
+          "segments": 88788,
+          "width_um_from_original_manifest": 0.48
+        },
+        "M8-M9": {
+          "location": [
+            "M8",
+            "2386.5000",
+            "2386.5000",
+            "M9",
+            "2386.5000",
+            "2386.5000"
+          ],
+          "max_current_a": 0.0007586,
+          "segments": 72364
+        },
+        "M9": {
+          "location": [
+            "M9",
+            "2386.5000",
+            "2270.8000",
+            "M9",
+            "2386.5000",
+            "2271.6000"
+          ],
+          "max_current_a": 0.0009997,
+          "max_ma_per_um": 2.0827083333333336,
+          "segments": 935712,
+          "width_um_from_original_manifest": 0.48
+        }
+      },
+      "report_sha256": "3517ec232ecf5ceb8d70a38cb9a46f40f540cfc51d9b096c635f7ea95aeb3f31",
+      "segments_above_existing_assumed_limit": null,
+      "terminal_check_errors": [
+        "PSM-0025"
+      ],
+      "terminal_check_passed": false
+    },
+    "VSS": {
+      "analysis_completed": true,
+      "layers_above_existing_assumed_1ma_per_um": [
+        "M8",
+        "M9"
+      ],
+      "per_layer": {
+        "M8": {
+          "location": [
+            "M8",
+            "50.0000",
+            "72.7310",
+            "M8",
+            "54.5490",
+            "72.7310"
+          ],
+          "max_current_a": 0.001387,
+          "max_ma_per_um": 2.8895833333333334,
+          "segments": 92076,
+          "width_um_from_original_manifest": 0.48
+        },
+        "M8-M9": {
+          "location": [
+            "M8",
+            "54.5490",
+            "72.7310",
+            "M9",
+            "54.5490",
+            "72.4000"
+          ],
+          "max_current_a": 0.00102,
+          "segments": 72402
+        },
+        "M9": {
+          "location": [
+            "M9",
+            "54.5490",
+            "53.2000",
+            "M9",
+            "54.5490",
+            "54.0000"
+          ],
+          "max_current_a": 0.001706,
+          "max_ma_per_um": 3.5541666666666667,
+          "segments": 938961,
+          "width_um_from_original_manifest": 0.48
+        }
+      },
+      "report_sha256": "20073adce54792cae2c7bea657d57a2b4944fc9ebb8214d9eebf5e29acec332b",
+      "segments_above_existing_assumed_limit": null,
+      "terminal_check_errors": [
+        "PSM-0025"
+      ],
+      "terminal_check_passed": false
+    }
+  },
+  "schema": "opentallas.die_window_em.actual.v1",
+  "terminal_checks_passed": false
+}

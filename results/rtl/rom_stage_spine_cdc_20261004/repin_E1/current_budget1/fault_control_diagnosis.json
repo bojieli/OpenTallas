@@ -1,0 +1,77 @@
+{
+  "verdict": "BLOCKED_NO_FAULT_RETIMING_OR_FALSE_PATH",
+  "source_commit": "39c3000980824007e1c48309dc7a8fabfb54523e",
+  "timing_scope": "Corrected-source CTS placement-estimated SS/FF under unchanged declared vehicle IO contract; no global route/SPEF/signoff/power",
+  "setup_path": {
+    "startpoint": "g_el[0].u_elem.g_mac[1].g_tr2.u_tree.fault",
+    "endpoint": "fault[0]",
+    "clock_insertion_ps": 754.32,
+    "clock_to_q_ps": 80.63,
+    "post_q_logic_wire_ps": 333.52,
+    "arrival_ps": 1168.47,
+    "required_ps": 966,
+    "slack_ps": -202.47,
+    "post_q_available_ps": 131.05
+  },
+  "hold_path": {
+    "startpoint": "u_ao.u_ctl.late",
+    "launch_clock": "aon_clk",
+    "endpoint": "fault[0]",
+    "capture_reference": "core_clk",
+    "arrival_ps": 348.02,
+    "required_ps": 347,
+    "slack_ps": 1.02
+  },
+  "source_semantics": {
+    "tree_fault": "Sticky until reset: queue overflow or non-final root at maximum tree depth; not the arithmetic oerr/perr flag.",
+    "element_fault": "ffault OR every bank compute/tree fault",
+    "publication": "fault[g] = (e_fault[g] & iso_q) | late | ctl_fault; isolation applies only to element fault, AO late/control errors stay visible.",
+    "result": "pv and payload are independently published; top-level RTL does not suppress pv or busy on fault.",
+    "exact_contract": "Existing bench compares pv, busy and fault together every cycle, and payload on valid; no delayed-fault contract.",
+    "production_parent": "No instantiation found in rtl other than test/signoff benches; synchronous quarantine sampler/acceptance contract is absent."
+  },
+  "model_before_candidate": {
+    "fault_only_register": {
+      "fault_visibility_added_cycles": 1,
+      "normal_result_added_cycles": 0,
+      "added_cycle_ns": 0.833,
+      "verdict": "NOT_ADMISSIBLE: adds a fault-blind acceptance cycle; cannot claim synchronous quarantine preservation"
+    },
+    "paired_output_register": {
+      "bank_output_bits": 63,
+      "NB": 2,
+      "K1_output_register_bits": 128,
+      "includes": "Both bank pv/payload/error plus busy and fault",
+      "minimum_result_added_cycles": 1,
+      "minimum_result_added_ns": 0.833,
+      "per_stage_minimum_live_debt_cycles": 1,
+      "element_count": 2417,
+      "replicated_register_bits": 309376,
+      "area_mm2": null,
+      "clock_energy_w": null,
+      "publication_quarantine": "Requires actual parent acceptance barrier, fault-stop policy and retained ownership; retiming alone is not a quarantine implementation.",
+      "verdict": "NOT_ADMITTED: parent behavior, local capture timing and physical FF/mux cost not bound"
+    },
+    "combinational_repair": {
+      "required_setup_recovery_ps": 202.47,
+      "existing_hold_headroom_ps": 1.02,
+      "area_mm2": null,
+      "delay_gain_ps": null,
+      "verdict": "No source-sized implementation prescribed; do not assume 202.47ps free recovery or preserve hold by assertion"
+    }
+  },
+  "required_parent_fields": [
+    "actual parent instance/source SHA and fault consumer endpoint",
+    "fault capture reference clock and SS latest / FF earliest arrival budget",
+    "same-edge pv acceptance vs fault quarantine priority",
+    "whether outstanding publications are poisoned/discarded on sticky tree fault",
+    "maximum permitted fault-stop latency and drain/reset/isolation ownership"
+  ],
+  "ownership": {
+    "parent_clock_source": "Maxwell",
+    "spine_fault_output": "Noether",
+    "structural_or_exactness_redesign": "CLAUDE"
+  },
+  "next_step": "Obtain actual fault publication/quarantine contract. Escalate semantic retiming beyond source-safe physical repair to CLAUDE. No new RTL, route or falsepath.",
+  "energy_credit": false
+}
