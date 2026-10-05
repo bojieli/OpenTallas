@@ -1154,6 +1154,11 @@ def dsrom_reindex_kc7_model():
         admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
 
 
+def dsrom_reindex_production_parent_model():
+    from dsrom_reindex_parent_model import model
+    return model()
+
+
 def dsrom_reindex_kc8_model():
     """Claude's cycle-identical structural repair, priced before its sole route."""
     # 6 kept WB128 copies plus 8 grouped room flags. No removed-cell credit:
@@ -1282,6 +1287,7 @@ DEDICATED = dict(
         reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
         reindex_parallel_closure=dsrom_reindex_kc7_parallel_model(),
         reindex_grouped_room_write_enable_successor=dsrom_reindex_kc8_model(),
+        reindex_production_parent=dsrom_reindex_production_parent_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
