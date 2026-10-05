@@ -16,9 +16,9 @@
 //   * RESULT_PARTS must be 1 (one chained-argmax RESULT per step).
 // Common to SOURCE 0 / 1: registered mirrors of the RX / SIDE / TX word
 // addresses (no adder before the word-free compares or on vm_*addr), and a
-// HIDDEN header's position check + upos update two cycles after the header
-// (registered one-hot user): a position fault latches proto_fault TWO cycles
-// later than the reference; and a registered reset root (release one cycle
+// HIDDEN header's position check + upos update three cycles after the header
+// (32-user groups, registered): a position fault latches proto_fault THREE cycles
+// later than the reference (RXWORDS >= 2); and a registered reset root (release one cycle
 // after rst_n_in).  With the reference's reset released one cycle later,
 // every other output is cycle-identical.
 // WAVE = 0 is not implemented here (use ot_rom_pkg_ctrl_wf).
@@ -243,16 +243,17 @@ module ot_rom_pkg_ctrl_wfc #(
     wire [NW-1:0] in_pos  = in_data[HDR_POS +: NW];
 
     // -- per-user context --------------------------------------------------------------
-    reg [NW-1:0] upos [0:MAXU-1];      // next expected position (SOURCE: in-flight step)
-    reg [MAXU-1:0] uval;                // (closed) upos[u] written (else 0): the only per-user reset
+    // (closed) the per-user expected position lives in groups of 32 users (ot_rom_pkg_ctrl_wfc_upos)
     // (closed) internal reset: asserted asynchronously, released one cycle after rst_n on the clock
     // (a registered root for the reset tree; every flop below sees release one cycle later)
     (* keep *) reg rst_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
-    reg          uchk, uchk2;           // (closed) a HIDDEN header's position check: read / compare+write
-    reg [NW-1:0] upos_hr, hdr_pos1;     // registered read and hdr_pos + 1
-    reg [MAXU-1:0] hdr_oh;              // its user, one-hot
-    reg [NW-1:0] upos_h;                // upos of that user (AND-OR read)
+    // A HIDDEN header's position check, pipelined (header at t; hdr_user / hdr_pos hold until the next
+    // header, >= t + RXW + 1): t+1 each group reads its user's entry (registered), t+2 the group is
+    // selected (registered) and hdr_pos + 1 formed, t+3 compare -> proto_fault and write.  The next
+    // header's read (>= t + RXW + 2) sees the write when RXW >= 2.
+    reg          uchk, uchk2, uchk3;
+    reg [NW-1:0] upos_hr, hdr_pos1;
 
     // -- core -------------------------------------------------------------------------
     reg          running;              // from the start edge until the job is handed to TX
@@ -453,16 +454,18 @@ module ot_rom_pkg_ctrl_wfc #(
         fb_tok = ((res_p + 1'b1) < cfg_prompt_len) ? ptok[res_u[UB-1:0]] : fb_idx;
     end
 
-    // upos of the checked header's user
-    integer ub, uu;
-    reg [MAXU-1:0] uv;
-    always @(posedge clk) if (uchk2) for (uu = 0; uu < MAXU; uu = uu + 1) if (hdr_oh[uu]) upos[uu] <= hdr_pos1;
-    always @(*) begin
-        for (ub = 0; ub < NW; ub = ub + 1) begin
-            for (uu = 0; uu < MAXU; uu = uu + 1) uv[uu] = hdr_oh[uu] && uval[uu] && upos[uu][ub];
-            upos_h[ub] = |uv;
-        end
-    end
+    // upos groups
+    localparam integer UGS = 32, UNG = (MAXU + UGS - 1) / UGS;
+    initial if (RXW < 2) $fatal(1, "ot_rom_pkg_ctrl_wfc: the pipelined position check needs RXWORDS >= 2");
+    wire [NW-1:0] ug_part [0:UNG-1];
+    genvar ugi;
+    generate for (ugi = 0; ugi < UNG; ugi = ugi + 1) begin : g_upos
+        (* keep_hierarchy *)
+        ot_rom_pkg_ctrl_wfc_upos #(.NW(NW), .N((MAXU - ugi * UGS) < UGS ? (MAXU - ugi * UGS) : UGS)) ug (
+            .clk(clk), .rst_n(rst_q), .lo(hdr_user[4:0]), .rd(uchk),
+            .wr(uchk3 && (hdr_user >> 5) == ugi), .wdata(hdr_pos1), .part(ug_part[ugi]));
+    end endgenerate
+    wire [NW-1:0] upos_sel = ug_part[hdr_user >> 5];
 
     // -- combinational port control -------------------------------------------------------
     reg rx_hdr, rx_res, rx_last_word, rx_side, rx_side_last;
@@ -526,7 +529,7 @@ module ot_rom_pkg_ctrl_wfc #(
             tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
-            uval <= 0; rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; hdr_oh <= 0;
+            rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0;
             res_v <= 1'b0; res_u <= 0; res_p <= 0; res_i <= 0; res_val <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0;
             pr_t0 <= 0; pr_t1 <= 0; pr_u0 <= 0; pr_u1 <= 0;
@@ -576,7 +579,6 @@ module ot_rom_pkg_ctrl_wfc #(
                 // (closed) the position check and the upos update run on the next cycle, from the
                 // registered header and its one-hot user (a header is followed by >= 1 payload flit)
                 uchk <= !(in_last || in_user >= MAXU);
-                hdr_oh <= in_dec;
                 rx_j <= 0; rxw <= RXB; rx_st <= R_DATA;
             end
             if (rx_st == R_DATA && vm_we) begin
@@ -603,15 +605,10 @@ module ot_rom_pkg_ctrl_wfc #(
             end
             // header at t: read at t+1 (registered), compare and write at t+2 (the next header of a
             // user is >= 2 cycles later: it carries >= 1 payload flit; its read at >= t+3 sees the write)
-            uchk2 <= uchk;
-            if (uchk) begin
-                uchk <= 1'b0;
-                upos_hr <= upos_h; hdr_pos1 <= hdr_pos + 1'b1;
-            end
-            if (uchk2) begin
-                if (hdr_pos > upos_hr || hdr_pos + WIN < upos_hr) proto_fault <= 1'b1;   // hdr_pos holds until the next header
-                uval <= uval | hdr_oh;
-            end
+            if (uchk) uchk <= 1'b0;
+            uchk2 <= uchk; uchk3 <= uchk2;
+            if (uchk2) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos + 1'b1; end
+            if (uchk3 && (hdr_pos > upos_hr || hdr_pos + WIN < upos_hr)) proto_fault <= 1'b1;
             res_v <= 1'b0;
             if (rx_res) begin
                 if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
@@ -824,5 +821,27 @@ module ot_rom_pkg_ctrl_wfc_user #(
     always @(posedge clk) begin
         if (isn) ring[0] <= nu_tok;
         if (isw) ring[wnp[2:0]] <= wkt;
+    end
+endmodule
+
+// ---------------------------------------------------------------------------
+// 32 users' expected HIDDEN positions (ot_rom_pkg_ctrl_wfc): a registered read
+// of entry `lo` (0 until written) and a write of entry `lo`; its own reset copy.
+// ---------------------------------------------------------------------------
+module ot_rom_pkg_ctrl_wfc_upos #(parameter integer NW = 16, parameter integer N = 32) (
+    input  wire          clk, rst_n,
+    input  wire [4:0]    lo,
+    input  wire          rd, wr,
+    input  wire [NW-1:0] wdata,
+    output reg  [NW-1:0] part
+);
+    reg          rq;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+    reg [NW-1:0] upos [0:N-1];
+    reg [N-1:0]  uval;
+    always @(posedge clk or negedge rq) if (!rq) uval <= 0; else if (wr && lo < N) uval[lo] <= 1'b1;
+    always @(posedge clk) begin
+        if (wr && lo < N) upos[lo] <= wdata;
+        if (rd) part <= (lo < N && uval[lo]) ? upos[lo] : {NW{1'b0}};
     end
 endmodule
