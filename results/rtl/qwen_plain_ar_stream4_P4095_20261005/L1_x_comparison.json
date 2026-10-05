@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "scope": "completed L1 X only; full36/head/final KV drain pending",
+  "position": 4095,
+  "token": 1165,
+  "stage": "STAGE L1 done cycles=4666 start_cyc=4800 end_cyc=9466 me_busy=2637/2637 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=2143s",
+  "comparison_source": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P4095-r1/completed_layer_comparison.json",
+  "reference": "/srv/opentallas-scratch/codex/qwen-P4095-full36-reference-r1/P4095",
+  "reference_sha256": "84c27b17c9179e3250eed0cea82babee99d3bfbda075339c891191234851049a",
+  "dies": [
+    {
+      "rank": 0,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95",
+      "expected_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95"
+    },
+    {
+      "rank": 1,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95",
+      "expected_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95"
+    },
+    {
+      "rank": 2,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95",
+      "expected_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95"
+    },
+    {
+      "rank": 3,
+      "words": 4096,
+      "mismatches": 0,
+      "actual_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95",
+      "expected_sha256": "fc53b3398220ea09a995b7201888705feba96e55b6efdebb59f55e11fd559f95"
+    }
+  ]
+}
