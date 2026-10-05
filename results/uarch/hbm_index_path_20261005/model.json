@@ -13,7 +13,7 @@
     "quarter_max_keys": 2736,
     "quarter_max_score_lines": 171,
     "quarter_max_candidate_lines": 171,
-    "logical_partition_bound_instantiated": true,
+    "logical_partition_bound_implemented": true,
     "fullshape_partition_numerical_qualified": false
   },
   "datapath": {
@@ -110,7 +110,7 @@
     "full_target_not_built": true
   },
   "source_pins": {
-    "tools/uarch_model.py": "76a2594f245b03d583cb0126a9bb3632eb92a37e1047c861d71340b81489bfa2",
+    "tools/uarch_model.py": "0d99e22ae42cab6e07f2e105d75965c10be85f358208e03c2be274cbf9de4a9c",
     "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "44c844d08bb11dbf5ed89f810c7f5f80d7db8208dbab90d4e658f1ee2451abbe",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",

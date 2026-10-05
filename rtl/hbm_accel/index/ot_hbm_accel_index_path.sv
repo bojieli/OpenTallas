@@ -149,6 +149,10 @@ end else begin:on
    // This is an actual ingress bound, not an assumed balanced host array.
    if(((k_idx[l*IW+:IW]>>3)/96)/342 != l/W)invalid_ids=1;
    if(k_idx[l*IW+:IW]>position||((k_idx[l*IW+:IW]>>3)%96)!=rank)invalid_ids=1;
+   // Candidate max consumes blocks8. A partial final block cannot be
+   // continued as another block on a later beat, nor paired with another ID.
+   if((k_idx[l*IW+:IW]&20'd7)!=(l%8))invalid_ids=1;
+   if((l%8)!=0 && (!k_lv[(l/8)*8] || k_idx[l*IW+:IW]!=k_idx[((l/8)*8)*IW+:IW]+(l%8)))invalid_ids=1;
    if((l%NK)!=0 && (!k_lv[(l/NK)*NK] || k_idx[l*IW+:IW]!=k_idx[((l/NK)*NK)*IW+:IW]+(l%NK)))invalid_ids=1;
    if((l%W)==0 && seen_input[l/W] && k_idx[l*IW+:IW]<=previous_id[l/W])invalid_ids=1;
    if((l%W)!=0 && (!k_lv[l-1] || k_idx[l*IW+:IW]<=k_idx[(l-1)*IW+:IW]))invalid_ids=1;
