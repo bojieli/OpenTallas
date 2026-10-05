@@ -42,10 +42,11 @@ DIE_SV = RR / "ot_qwen_hbmacc_rt_die_w12.sv"
 HOST = RR / "qwen_hbmacc_rt_w12.cpp"
 WST_RTL = [ROOT / "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv", ROOT / "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv"]
 DIE_RTL = [p for p in BASE.DIE_RTL if p.name != "ot_qwen_rom_rt_die_w12.sv"] + [DIE_SV]
+SPINE_H = ROOT / "rtl/hdc/ot_qwen_me_spine_h_w12.sv"   # --spine-h: the hierarchical spine successor
 SOURCES = sorted(set([*DIE_RTL, *BASE.TILE_RTL, *BASE.COLL_RTL, *WST_RTL, C.ISA_SVH, ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv",
                       HOST, BASE.RT / "qwen_rt_matvec.hpp", BASE.RT / "qwen_rt_memory.hpp", Path(__file__),
                       ROOT / "tools/qwen_rom_rt_token_w12.py", ROOT / "tools/qwen_rom_rt_core_emit_w12.py",
-                      ROOT / "tools/qwen_rom_arithmetic_contract_w12.py"]))
+                      ROOT / "tools/qwen_rom_arithmetic_contract_w12.py", SPINE_H]))
 WORD_BYTES = 6144 * 16          # one engine code word = one stream word
 MIB = 1 << 20
 
@@ -117,7 +118,7 @@ def make_plan(stage_names, layout, head_words, kv_words, sram_words, preroll_wor
 def build(args, out: Path, steps: list):
     G, NW = args.groups, args.count_width
     vroot = re.search(r"VERILATOR_ROOT\s*=\s*(\S+)", subprocess.check_output([args.verilator, "-V"], text=True)).group(1)
-    arithmetic = arithmetic_flags(False)
+    arithmetic = arithmetic_flags(args.arith_target)
 
     def run(name, cmd):
         t0 = time.monotonic()
@@ -131,7 +132,12 @@ def build(args, out: Path, steps: list):
     gen = out / "gen"
     gen.mkdir(exist_ok=True)
     core_sv = gen / "ot_qwen_rom_core.sv"
-    core_sv.write_text(qwen_rom_rt_core_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text()))
+    core_text = qwen_rom_rt_core_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text())
+    if args.spine_h:
+        if core_text.count("ot_qwen_me_spine_w12 #(") != 1:
+            raise SystemExit("spine instance anchor")
+        core_text = core_text.replace("ot_qwen_me_spine_w12 #(", f"ot_qwen_me_spine_h_w12 #(.SCALE_LAT({args.scale_lat}), ")
+    core_sv.write_text(core_text)
     vs_sv = gen / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))
     hier = gen / "hier.vlt"
@@ -140,10 +146,12 @@ def build(args, out: Path, steps: list):
     spine = [f"-GSMIN={args.smin}", f"-GSMAX={args.smax}", f"-GTCUT={args.tcut}", f"-GBD={args.bd}",
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     models = [
-        ("die", "ot_qwen_hbmacc_rt_die_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
+        ("die", "ot_qwen_hbmacc_rt_die_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL),
+                                              *([str(SPINE_H), str(ROOT / "rtl/hdc/ot_hdc_fp32_mul_lat.sv")] if args.spine_h else [])],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}",
-          f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GLAGW={args.lagw}", *spine, *arithmetic]),
+          f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GLAGW={args.lagw}", *spine, *arithmetic,
+          *([f"-DOT_SPINE_H_SCALE_LAT={args.scale_lat}"] if args.spine_h else [])]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, BASE.COLL_RTL), *map(str, C.PIPES), *map(str, BASE.TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic_w12", [*map(str, BASE.TILE_RTL)],
@@ -209,6 +217,13 @@ def main() -> None:
     ap.add_argument("--coll-lat", type=int, default=11)
     ap.add_argument("--coll-depth", type=int, default=16)
     ap.add_argument("--enable-ar256", action="store_true")
+    ap.add_argument("--arith-target", action="store_true",
+                    help="1.2 GHz ME arithmetic (tools/qwen_rom_arithmetic_contract_w12.py TARGET: ACC/TREE_LAT 7, MUL_LAT 6, "
+                         "FAST_ISSUE 1, KV_PREP 3) on the die and tile models; default off")
+    ap.add_argument("--spine-h", action="store_true",
+                    help="the die core's ME spine is ot_qwen_me_spine_h_w12 (hierarchical successor); default off")
+    ap.add_argument("--scale-lat", type=int, choices=(5, 6), default=6,
+                    help="--spine-h post-scale multiplier latency (6: ot_hdc_fp32_mul_lat, closes at SS)")
     # HA8 memory system
     ap.add_argument("--stacks", type=int, default=4, help="HBM stacks per die")
     ap.add_argument("--ref-mode", type=int, choices=(0, 1), default=1)
@@ -304,7 +319,8 @@ def main() -> None:
                          "smin": args.smin, "smax": args.smax, "tcut": args.tcut, "bd": args.bd, "xvm": args.xvm,
                          "nws": args.nws, "tws": args.tws, "ord": args.ord, "mem_extra": args.mem_extra,
                          "code_banks": args.code_banks, "coll_lat": args.coll_lat, "coll_depth": args.coll_depth,
-                         "ar256": bool(args.enable_ar256)},
+                         "ar256": bool(args.enable_ar256), "arith_target": bool(args.arith_target),
+                         "spine_h": bool(args.spine_h), "scale_lat": args.scale_lat if args.spine_h else 5},
         "memory_system": {"stacks_per_die": args.stacks, "ref_mode": args.ref_mode, "window_words": args.winw,
                           "window_mib": round(args.winw * WORD_BYTES / MIB, 2), "lag_words": args.lagw, "cred": args.cred,
                           "sram_mib_per_die": sram_mib, "sram_code_words_beyond_head": sram_words, "sram_spread": args.sram_spread, "head_words": head_words,
