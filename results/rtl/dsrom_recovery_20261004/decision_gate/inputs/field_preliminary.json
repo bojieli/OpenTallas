@@ -1,0 +1,1090 @@
+{
+ "schema": "opentallas.dsrom-recovery.lever.v1",
+ "lever": "field",
+ "verdict": "ADOPT",
+ "exact": true,
+ "ss_ff": null,
+ "nodes": {
+  "E1.wkv": {
+   "us": 0.558333,
+   "cls": "measured",
+   "source": "E1.wkv: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6400 rows exact, + S81 floorplan wire once (as-built 0.8383 us, model 0.4417 us)"
+  },
+  "L0.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L0.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L0.ffn.experts_gu": {
+   "us": 0.888333,
+   "cls": "measured",
+   "source": "L0.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.5883 us, model 0.3242 us)"
+  },
+  "L0.ffn.down": {
+   "us": 0.7575,
+   "cls": "measured",
+   "source": "L0.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.5025 us, model 0.275 us)"
+  },
+  "L1.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L1.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L1.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L1.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L1.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L1.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L2.attn.a_proj": {
+   "us": 1.0825,
+   "cls": "measured",
+   "source": "L2.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 736 rows exact, + S81 floorplan wire once (as-built 1.8933 us, model 0.3242 us)"
+  },
+  "L2.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L2.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L2.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L2.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L2.ffn.experts_gu": {
+   "us": 0.545,
+   "cls": "measured",
+   "source": "L2.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 0.7933 us, model 0.3242 us)"
+  },
+  "L2.ffn.down": {
+   "us": 0.505,
+   "cls": "measured",
+   "source": "L2.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.8908 us, model 0.275 us)"
+  },
+  "L3.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L3.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L3.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L4.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L4.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L4.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L5.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L5.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L5.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L6.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L6.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L6.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L7.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L7.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L7.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L8.attn.a_proj": {
+   "us": 1.0825,
+   "cls": "measured",
+   "source": "L2.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 736 rows exact, + S81 floorplan wire once (as-built 1.8933 us, model 0.3242 us)"
+  },
+  "L8.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L2.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L8.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L2.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L8.ffn.experts_gu": {
+   "us": 0.545,
+   "cls": "measured",
+   "source": "L2.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 0.7933 us, model 0.3242 us)"
+  },
+  "L8.ffn.down": {
+   "us": 0.505,
+   "cls": "measured",
+   "source": "L2.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.8908 us, model 0.275 us)"
+  },
+  "L9.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L9.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L9.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L10.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L10.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L10.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L11.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L11.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L11.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L12.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L12.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L12.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L13.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L13.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L13.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L14.attn.a_proj": {
+   "us": 1.0825,
+   "cls": "measured",
+   "source": "L2.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 736 rows exact, + S81 floorplan wire once (as-built 1.8933 us, model 0.3242 us)"
+  },
+  "L14.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L2.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L14.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L2.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L14.ffn.experts_gu": {
+   "us": 0.545,
+   "cls": "measured",
+   "source": "L2.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 0.7933 us, model 0.3242 us)"
+  },
+  "L14.ffn.down": {
+   "us": 0.505,
+   "cls": "measured",
+   "source": "L2.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.8908 us, model 0.275 us)"
+  },
+  "L15.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L15.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L15.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L16.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L16.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L16.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L17.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L17.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L17.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L18.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L18.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L18.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L19.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L3.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L19.ffn.experts_gu": {
+   "us": 1.231667,
+   "cls": "measured",
+   "source": "L3.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 2.3833 us, model 0.3242 us)"
+  },
+  "L19.ffn.down": {
+   "us": 0.898333,
+   "cls": "measured",
+   "source": "L3.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.8333 us, model 0.275 us)"
+  },
+  "L20.attn.a_proj": {
+   "us": 0.8575,
+   "cls": "measured",
+   "source": "L20.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 608 rows exact, + S81 floorplan wire once (as-built 1.3958 us, model 0.2842 us)"
+  },
+  "L20.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L20.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L20.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L20.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L20.ffn.experts_gu": {
+   "us": 0.888333,
+   "cls": "measured",
+   "source": "L20.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.5883 us, model 0.3242 us)"
+  },
+  "L20.ffn.down": {
+   "us": 0.7575,
+   "cls": "measured",
+   "source": "L20.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.5025 us, model 0.275 us)"
+  },
+  "L21.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L21.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L21.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L22.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L22.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L22.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L23.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L23.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L23.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L24.attn.a_proj": {
+   "us": 0.6325,
+   "cls": "measured",
+   "source": "L24.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 480 rows exact, + S81 floorplan wire once (as-built 0.8983 us, model 0.2908 us)"
+  },
+  "L24.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L24.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L24.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L24.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L24.ffn.experts_gu": {
+   "us": 1.06,
+   "cls": "measured",
+   "source": "L24.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.9858 us, model 0.3242 us)"
+  },
+  "L24.ffn.down": {
+   "us": 0.786667,
+   "cls": "measured",
+   "source": "L24.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.5275 us, model 0.275 us)"
+  },
+  "L25.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L25.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L25.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L26.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L26.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L26.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L27.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L27.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L27.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L28.attn.a_proj": {
+   "us": 0.6325,
+   "cls": "measured",
+   "source": "L24.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 480 rows exact, + S81 floorplan wire once (as-built 0.8983 us, model 0.2908 us)"
+  },
+  "L28.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L24.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L28.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L24.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L28.ffn.experts_gu": {
+   "us": 1.06,
+   "cls": "measured",
+   "source": "L24.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.9858 us, model 0.3242 us)"
+  },
+  "L28.ffn.down": {
+   "us": 0.786667,
+   "cls": "measured",
+   "source": "L24.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.5275 us, model 0.275 us)"
+  },
+  "L29.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L29.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L29.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L30.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L30.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L30.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L31.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L31.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L31.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L32.attn.a_proj": {
+   "us": 0.6325,
+   "cls": "measured",
+   "source": "L24.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 480 rows exact, + S81 floorplan wire once (as-built 0.8983 us, model 0.2908 us)"
+  },
+  "L32.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L24.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L32.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L24.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L32.ffn.experts_gu": {
+   "us": 1.06,
+   "cls": "measured",
+   "source": "L24.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.9858 us, model 0.3242 us)"
+  },
+  "L32.ffn.down": {
+   "us": 0.786667,
+   "cls": "measured",
+   "source": "L24.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.5275 us, model 0.275 us)"
+  },
+  "L33.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L33.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L33.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L34.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L34.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L34.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L35.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L35.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L35.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L36.attn.a_proj": {
+   "us": 0.6325,
+   "cls": "measured",
+   "source": "L24.attn.a_proj: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 480 rows exact, + S81 floorplan wire once (as-built 0.8983 us, model 0.2908 us)"
+  },
+  "L36.attn.wq_b": {
+   "us": 0.409167,
+   "cls": "measured",
+   "source": "L24.attn.wq_b: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 12288 rows exact, + S81 floorplan wire once (as-built 0.6492 us, model 0.2575 us)"
+  },
+  "L36.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L24.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L36.ffn.experts_gu": {
+   "us": 1.06,
+   "cls": "measured",
+   "source": "L24.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.9858 us, model 0.3242 us)"
+  },
+  "L36.ffn.down": {
+   "us": 0.786667,
+   "cls": "measured",
+   "source": "L24.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 1.5275 us, model 0.275 us)"
+  },
+  "L37.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L37.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L37.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L38.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L38.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L38.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  },
+  "L39.attn.wo_a": {
+   "us": 0.6525,
+   "cls": "measured",
+   "source": "L21.attn.wo_a: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 2048 rows exact, + S81 floorplan wire once (as-built 1.7283 us, model 0.9717 us)"
+  },
+  "L39.ffn.experts_gu": {
+   "us": 0.716667,
+   "cls": "measured",
+   "source": "L21.ffn.experts_gu: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 6912 rows exact, + S81 floorplan wire once (as-built 1.1908 us, model 0.3242 us)"
+  },
+  "L39.ffn.down": {
+   "us": 0.534167,
+   "cls": "measured",
+   "source": "L21.ffn.down: PQ pipelined-phase ROM field RTL (S81+R93 placement), one region at full shape, every region, 8960 rows exact, + S81 floorplan wire once (as-built 0.9158 us, model 0.275 us)"
+  }
+ },
+ "measurement": {
+  "record": "results/rtl/dsrom_recovery_20261004/field_pq.json",
+  "record_sha256": "87e79370f1987df98e122474920e9e42192874758019ae6ebbb2ecdf0e03df9f",
+  "node_summary": [
+   {
+    "node": "L0.attn.wo_a",
+    "dies": [
+     0
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L0.ffn.down",
+    "dies": [
+     0,
+     1
+    ],
+    "total_cycles": 909,
+    "us": 0.7575,
+    "asbuilt_us": 1.5025,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L0.ffn.experts_gu",
+    "dies": [
+     0,
+     1
+    ],
+    "total_cycles": 1066,
+    "us": 0.8883333333333333,
+    "asbuilt_us": 1.5883333333333334,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "E1.wkv",
+    "dies": [
+     1
+    ],
+    "total_cycles": 670,
+    "us": 0.5583333333333333,
+    "asbuilt_us": 0.8383333333333333,
+    "model_us": 0.4416666666666667,
+    "rows_checked": 6400,
+    "exact": true
+   },
+   {
+    "node": "L1.attn.wo_a",
+    "dies": [
+     1
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L1.ffn.down",
+    "dies": [
+     1,
+     2,
+     3
+    ],
+    "total_cycles": 641,
+    "us": 0.5341666666666667,
+    "asbuilt_us": 0.9158333333333333,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L1.ffn.experts_gu",
+    "dies": [
+     1,
+     2,
+     3
+    ],
+    "total_cycles": 860,
+    "us": 0.7166666666666667,
+    "asbuilt_us": 1.1908333333333332,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.a_proj",
+    "dies": [
+     3
+    ],
+    "total_cycles": 1299,
+    "us": 1.0825,
+    "asbuilt_us": 1.8933333333333333,
+    "model_us": 0.3241666666666667,
+    "rows_checked": 736,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.wo_a",
+    "dies": [
+     3
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L2.attn.wq_b",
+    "dies": [
+     3
+    ],
+    "total_cycles": 491,
+    "us": 0.4091666666666667,
+    "asbuilt_us": 0.6491666666666667,
+    "model_us": 0.2575,
+    "rows_checked": 12288,
+    "exact": true
+   },
+   {
+    "node": "L2.ffn.down",
+    "dies": [
+     3,
+     4,
+     5
+    ],
+    "total_cycles": 606,
+    "us": 0.505,
+    "asbuilt_us": 0.8908333333333333,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L2.ffn.experts_gu",
+    "dies": [
+     3,
+     4,
+     5
+    ],
+    "total_cycles": 654,
+    "us": 0.5449999999999999,
+    "asbuilt_us": 0.7933333333333333,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L3.attn.wo_a",
+    "dies": [
+     5
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L3.ffn.down",
+    "dies": [
+     5,
+     6
+    ],
+    "total_cycles": 1078,
+    "us": 0.8983333333333333,
+    "asbuilt_us": 1.8333333333333333,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L3.ffn.experts_gu",
+    "dies": [
+     6
+    ],
+    "total_cycles": 1478,
+    "us": 1.2316666666666667,
+    "asbuilt_us": 2.3833333333333333,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.a_proj",
+    "dies": [
+     37
+    ],
+    "total_cycles": 1029,
+    "us": 0.8575,
+    "asbuilt_us": 1.3958333333333333,
+    "model_us": 0.2841666666666667,
+    "rows_checked": 608,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.wo_a",
+    "dies": [
+     37
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L20.attn.wq_b",
+    "dies": [
+     37
+    ],
+    "total_cycles": 491,
+    "us": 0.4091666666666667,
+    "asbuilt_us": 0.6491666666666667,
+    "model_us": 0.2575,
+    "rows_checked": 12288,
+    "exact": true
+   },
+   {
+    "node": "L20.ffn.down",
+    "dies": [
+     37,
+     38
+    ],
+    "total_cycles": 909,
+    "us": 0.7575,
+    "asbuilt_us": 1.5025,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L20.ffn.experts_gu",
+    "dies": [
+     37,
+     38
+    ],
+    "total_cycles": 1066,
+    "us": 0.8883333333333333,
+    "asbuilt_us": 1.5883333333333334,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L21.attn.wo_a",
+    "dies": [
+     38
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L21.ffn.down",
+    "dies": [
+     38,
+     39,
+     40
+    ],
+    "total_cycles": 641,
+    "us": 0.5341666666666667,
+    "asbuilt_us": 0.9158333333333333,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L21.ffn.experts_gu",
+    "dies": [
+     38,
+     39,
+     40
+    ],
+    "total_cycles": 860,
+    "us": 0.7166666666666667,
+    "asbuilt_us": 1.1908333333333332,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.a_proj",
+    "dies": [
+     44
+    ],
+    "total_cycles": 759,
+    "us": 0.6325,
+    "asbuilt_us": 0.8983333333333333,
+    "model_us": 0.2908333333333334,
+    "rows_checked": 480,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.wo_a",
+    "dies": [
+     44
+    ],
+    "total_cycles": 783,
+    "us": 0.6525,
+    "asbuilt_us": 1.7283333333333333,
+    "model_us": 0.9716666666666668,
+    "rows_checked": 2048,
+    "exact": true
+   },
+   {
+    "node": "L24.attn.wq_b",
+    "dies": [
+     44
+    ],
+    "total_cycles": 491,
+    "us": 0.4091666666666667,
+    "asbuilt_us": 0.6491666666666667,
+    "model_us": 0.2575,
+    "rows_checked": 12288,
+    "exact": true
+   },
+   {
+    "node": "L24.ffn.down",
+    "dies": [
+     44,
+     45
+    ],
+    "total_cycles": 944,
+    "us": 0.7866666666666666,
+    "asbuilt_us": 1.5275,
+    "model_us": 0.275,
+    "rows_checked": 8960,
+    "exact": true
+   },
+   {
+    "node": "L24.ffn.experts_gu",
+    "dies": [
+     44,
+     45
+    ],
+    "total_cycles": 1272,
+    "us": 1.06,
+    "asbuilt_us": 1.9858333333333336,
+    "model_us": 0.32416666666666666,
+    "rows_checked": 6912,
+    "exact": true
+   }
+  ],
+  "vehicle": "ot_v41_fieldtop_pq_w17w10 (PQ=1, flat)",
+  "placement": "S81 canonical + R93 re-placement (one more BF16-capable pair in region 93; each wo_a group one phase)",
+  "rtl": [
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+   "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+   "rtl/common/ot_prefix.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/test/dsrom_sys/tb_dsrom_recovery_field_pq.cpp",
+   "rtl/v41die/ot_v41_field_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_fieldtop_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_pair_pq_ld.sv",
+   "rtl/v41die/ot_v41_pair_pq_w17w10.sv",
+   "rtl/v41die/ot_v41_retn_w17w10.sv",
+   "rtl/v41die/ot_v41_spine_pq_w17w10.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "rtl/v41rom/ot_v41_bmul2.sv",
+   "rtl/v41rom/ot_v41_bterm.sv",
+   "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_chain.sv",
+   "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+   "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/v41rom/ot_v41_ret.sv",
+   "rtl/v41rom/ot_v41_rom_elem_pq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "rtl/v41rom/ot_v41_segtree.sv",
+   "rtl/v41rom/ot_v41_segtree2.sv"
+  ]
+ },
+ "note": ""
+}

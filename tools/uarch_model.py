@@ -48,6 +48,25 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_recovery_decision_gate():
+    """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
+
+    The timing authority is dsrom_1m_allmeasured.compose. Missing measured SU
+    costs remain missing rather than becoming zero or inheriting fusion floors.
+    """
+    path = ROOT / "results/rtl/dsrom_recovery_20261004/decision_gate/model.json"
+    record = json.loads(path.read_text())
+    return dict(schema=record["schema"], record=str(path.relative_to(ROOT)),
+                scenarios={k:dict(verdict=v["verdict"], adoption=v["adoption"],
+                    composition_complete=v["composition_complete"],
+                    conditional_cost=v["conditional_cost"], missing=v["missing"])
+                    for k,v in record["scenarios"].items()},
+                historical_contrast=record["historical_contrast"],
+                comparison=record["comparison"],
+                hardware_build_admitted=record["hardware_build_admitted"],
+                full_die_trigger=record["full_die_trigger"])
+
+
 def mbist_bira_pipeline_cost(dmax=256, entries=6, sram_banks=2, clock_ns=0.833):
     """Item8(b) repair-search pipeline; deterministic cycle/bit pricing, no closure claim."""
     chunks = (dmax + 15) // 16
@@ -7967,3 +7986,47 @@ def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
                 interface_and_tags='unchanged accepted push/pop; no payload/visibility or grant changes',
                 SSFF_closed=False, adopted=False,
                 source_basis='svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv')
+
+
+def hbm_loader_crc_literal_matrix_price(*, state_masks, word_masks, dies=2):
+    """Source-bound recipe only; keep the installed loop until final route selects.
+
+    Four existing folds/die: LOAD host/readback and STORE host/readback.
+    Literal masks implement the same LSB-first CRC32 over one 256-bit sector.
+    XOR inventory is an unshared structural ESTIMATE, not mapped area/timing.
+    """
+    import math
+    if len(state_masks)!=32 or len(word_masks)!=32 or dies<1:
+        raise ValueError('32 exact CRC masks and positive die count required')
+    sp=[m.bit_count() for m in state_masks]
+    wp=[m.bit_count() for m in word_masks]
+    depth=max(max(math.ceil(math.log2(max(1,a))),
+                  math.ceil(math.log2(max(1,b))))+1 for a,b in zip(sp,wp))
+    xors=sum(max(0,a-1)+max(0,b-1)+1 for a,b in zip(sp,wp))
+    sf=max(sum((m>>j)&1 for m in state_masks) for j in range(32))
+    wf=max(sum((m>>j)&1 for m in word_masks) for j in range(256))
+    return dict(recipe_selected=False, adopted=False, default_enabled=False,
+                MACs_per_cycle=0, dies=dies, folds_per_die=4,
+                host_folds_per_die=2, memory_folds_per_die=2,
+                existing_CRC_state_bits_per_die=128, added_state_bits=0,
+                sector_bytes_per_fold=32, initiation_interval_edges=1,
+                added_fold_edges=0, added_memory_ports=0,
+                added_bytes_per_memory_edge=0, new_boundary_bits=0,
+                local_word_bits=256, local_state_bits=32,
+                literal_constant_bits_per_fold=32*(256+32),
+                literal_constants_are_storage=False,
+                unshared_XOR2_equivalents_per_fold_ESTIMATE=xors,
+                unshared_XOR2_equivalents_all_folds_ESTIMATE=xors*4*dies,
+                maximum_balanced_parity_tree_levels_ESTIMATE=depth,
+                maximum_state_bit_output_fanout=sf,
+                maximum_word_bit_output_fanout=wf,
+                mux_demux_delta='no new port mux; CRC function substitution only',
+                acceptance_edge_and_CRC_order='unchanged real LOAD beat/readback retirement and STORE W/data retirement',
+                composed_latency_delta_cycles=0,
+                host_target_period_ns=1.0, memory_target_period_ns=0.833,
+                setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                area_um2=None, area_status='UNKNOWN until synthesis; unshared XOR count is not area',
+                routing_tracks=None, routing_status='UNKNOWN local CRC fanout/wire cost; no new external boundary',
+                floorplan_fit=None, routed_SS_FF=None,
+                composed_gain_percent=None,
+                select_only_if='current installed route final critical path implicates CRC; never infer selection from preliminary floorplan repair')
