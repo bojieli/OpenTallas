@@ -10523,6 +10523,8 @@ def hbm_attn_m6h1_replication_model():
     corner_path = leaf_path.with_name('corner_sta.json')
     die_path = leaf_path.with_name('die_inventory.py')
     macro_path = root / 'physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef'
+    context_path = root / 'results/uarch/hbm_attn_h16_context_20261005/model.json'
+    parent_context = json.loads(context_path.read_text()) if context_path.exists() else None
     width, height = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', macro_path.read_text()).groups())
     leaf = json.loads(leaf_path.read_text())
     corner = json.loads(corner_path.read_text())
@@ -10539,6 +10541,7 @@ def hbm_attn_m6h1_replication_model():
     tile_macro_halo_floor_mm2 = groups * (width + 10) * (height + 10) / 1e6
     fits = tile_macro_halo_floor_mm2 <= slot_mm2
     return dict(schema='opentallas.hbm-attn-m6h1-replication.v1', selected=False,
+                source_faithful_parent_context=parent_context,
                 leaf_evidence_origin='b32d59700 results/rtl/hbm_accel_fmax_inventory_20261004/attn/routes/claude_r1_m6h1_u30',
                 existing_composition='DEDICATED.attention; tools/hbm_accel_die_fp.py BLOCKS.attn_tile',
                 source_configuration='ot_attn_hgrp_m6h1 H16/HG1/TD32/NBANK5/PWORDS2/FPL6/FML8/F121',
