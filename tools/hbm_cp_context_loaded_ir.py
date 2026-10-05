@@ -47,6 +47,11 @@ def context_decision(output):
         workload_peak_qualified=False, adopted=False, required_next_actions=actions,
         clock_relaxation=False, region_waiver=False, source_job_restart=False)
     (output/'context_decision.json').write_text(json.dumps(record,indent=2)+'\n')
+    # The existing terminal collector reads loaded_ir.json for its direct
+    # owner notification. Include the decision there before its exit marker.
+    loaded['context_decision'] = {k: record[k] for k in (
+        'disposition', 'checks', 'required_next_actions')}
+    (output/'loaded_ir.json').write_text(json.dumps(loaded,indent=2)+'\n')
 
 
 def main():
