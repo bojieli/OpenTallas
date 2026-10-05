@@ -8611,6 +8611,62 @@ def dsrom_wfc_parent_cut_price():
         scope='source-faithful minimum parent cut; completion/config/VM/prompt caller still require actual timing binding; no S81 native wiring or authority change')
 
 
+def dsrom_wfc_routed_parent_cut_budget(source=1):
+    """Dedicated controller context reservation, not a selected-parent slot.
+
+    Price the retained source/stage body, decoded reads, and actual native
+    router/reset/visibility cut before characterization. No removal credit.
+    A positive local rectangle permits measurement of this real routed cut;
+    it does not allocate space in Copernicus's separately owned field frame.
+    External callers retain the existing 20%-period timing contract until
+    actual source-pinned producer arrivals replace it. Neither their clocks
+    nor a whole-field qualification is inferred from the rectangle.
+    """
+    decoded = dsrom_wfc_decoded_read_price()
+    context = dsrom_wfc_parent_cut_price()
+    baseline = 173250 if source else 15985
+    growth = decoded['total_growth_budget_um2'] if source else 0
+    body = baseline + growth + context['total_context_growth_budget_um2']
+    side = 880 if source else 312
+    usable = (side-4)**2
+    # Five signal layers M2..M6, conservatively priced at the M4/M5 pitch
+    # already used in the unified model. Reserve half for PG/obstructions.
+    # Full MAXU866 port inventory: 1688 inputs + 1894 outputs; round up.
+    boundary_bits = 3600
+    internal_bits = 28*(81+21+32+5) if source else 28*(21+21+5+2)
+    tracks = boundary_bits + internal_bits
+    capacity = int((side-4)/0.048*5*0.5)
+    return dict(schema='opentallas.dsrom.wfc.routed_parent_cut_budget.v1',
+        SOURCE=int(bool(source)), MAXU=866, USER_W=10,NW=21,FLIT=512,
+        baseline_cell_area_um2=baseline, decoded_growth_budget_um2=growth,
+        native_parent_context_growth_budget_um2=context['total_context_growth_budget_um2'],
+        total_cell_budget_um2=body,old_cell_removal_credit_um2=0,
+        die_area_um=[0,0,side,side],core_area_um=[2,2,side-2,side-2],
+        core_area_um2=usable,target_placement_fraction=0.4,
+        cell_budget_fraction=body/usable,local_characterization_slot_fit=body<=usable*0.4,
+        measured_area_or_routed_fit=False,selected_parent_slot=None,
+        selected_parent_slot_fit=False,field_slot_consumed=False,
+        boundary_signal_track_reservation=boundary_bits,
+        internal_replica_bus_track_reservation=internal_bits,
+        routing_track_demand=tracks,routing_track_capacity=capacity,
+        routing_pitch_um=0.048,routing_layers=['M2','M3','M4','M5','M6'],
+        PG_and_obstruction_track_reservation_fraction=0.5,
+        analytical_tracks_fit=tracks<=capacity,
+        actual_parent_clock_insertion_or_pin_loads_bound=False,
+        clock_root='clk; native router/controller share this master',
+        external_delay_fraction=0.2,external_clock_scope='retained caller-port contract, not measured producer arrivals',
+        actual_caller_or_configuration_producer=None,
+        MACs_per_cycle=0,replicas=1,new_memory_ports=0,
+        new_boundary_bits_per_edge=0,new_pipeline_edges=0,single_user_latency_delta_cycles=0,
+        existing_router_empty_header_edges=3,existing_reset_release_edges=2,
+        full_shape_exact_gate='results/rtl/dsrom_wfc_decoded_read_20261005/full_shape/record.json',
+        minimum_context_functional_gate='results/rtl/dsrom_wfc_decoded_read_20261005/parent_cut/record.json',
+        target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+        physical_characterization_ready=True,actual_parent_context_qualified=False,
+        adopted=False,SS_FF_closed=False,
+        scope='full MAXU866 native controller/router/visibility cut, timed external ports; real caller/config/VM/prompt capture plus selected parent slot still required for adoption')
+
+
 def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
                                    measured_stage_cycles=73670):
     """Unselected one-edge completion alternatives, priced on a retained trace.
