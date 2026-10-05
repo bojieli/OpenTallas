@@ -105,7 +105,11 @@
 `ifndef OT_WFC_LOCAL_CONTROL
 `define OT_WFC_LOCAL_CONTROL 0
 `endif
+`ifndef OT_WFC_DECODED_READ
+`define OT_WFC_DECODED_READ 0
+`endif
 module ot_rom_pkg_ctrl_wfc #(
+    parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer LOCAL_CONTROL = `OT_WFC_LOCAL_CONTROL, // opt-in same-edge control locality
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
@@ -655,7 +659,7 @@ module ot_rom_pkg_ctrl_wfc #(
     end
 
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_src #(.NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+        ot_rom_pkg_ctrl_wfc_src #(.DECODED_READ(DECODED_READ), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
             .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len),
             .cfg_gen_len(cfg_gen_len), .core_free(src_free),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
@@ -729,6 +733,7 @@ endmodule
 // RESULT messages queue (4 deep; in_ready drops at 3 queued).
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_src #(
+    parameter integer DECODED_READ = 0,
     parameter integer NW = 16, parameter integer USER_W = 8, parameter integer UCW = 8,
     parameter integer MAXU = 16, parameter integer WIN = 6
 ) (
@@ -805,7 +810,7 @@ module ot_rom_pkg_ctrl_wfc_src #(
     genvar gi;
     generate for (gi = 0; gi < NG; gi = gi + 1) begin : g
         (* keep_hierarchy *)
-        ot_rom_pkg_ctrl_wfc_grp #(.RW(RW), .NW(NW), .N((MAXU - gi * GS) < GS ? (MAXU - gi * GS) : GS)) grp (
+        ot_rom_pkg_ctrl_wfc_grp #(.DECODED_READ(DECODED_READ), .RW(RW), .NW(NW), .N((MAXU - gi * GS) < GS ? (MAXU - gi * GS) : GS)) grp (
             .clk(clk), .rst_n(rst_n), .rd_lo(ou[4:0]), .rd_slot(oslot), .rec_q(g_rec[gi]), .ring_q(g_ring[gi]),
             .we(b_en && b_oh[gi]), .wlo(b_lo), .wrec(b_rec), .wek(b_ek), .wef(b_ef),
             .rwe(b_ren && b_oh[gi]), .rslot(b_slot), .rdata(b_data),
@@ -964,7 +969,7 @@ endmodule
 // the started / eligibility bits are cleared (own reset copy, synchronous); a
 // record is written whole when its user starts and read only after.
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_grp #(parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
+module ot_rom_pkg_ctrl_wfc_grp #(parameter integer DECODED_READ = 0, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
     input  wire [4:0]    rd_lo,
     input  wire [2:0]    rd_slot,
@@ -992,9 +997,53 @@ module ot_rom_pkg_ctrl_wfc_grp #(parameter integer RW = 64, parameter integer NW
         else if (we && wlo < N) begin stv[wlo] <= wrec[0]; ek[wlo] <= wek; ef[wlo] <= wef; end
         if (we && wlo < N) recm[wlo] <= wrec[RW-1:1];
         if (rwe && wlo < N) ringm[{wlo, rslot}] <= rdata;
-        rec_q <= (lo_r < N) ? {recm[lo_r], stv[lo_r]} : {RW{1'b0}};
-        ring_q <= (lo_r < N) ? ringm[{lo_r, slot_r}] : {NW{1'b0}};
     end
+    generate if (DECODED_READ) begin : g_decoded_read
+        // Decode on the existing address-latch edge. The data is read on
+        // the original following edge, including read-before-write behavior.
+        reg [N-1:0] user_sel;
+        reg [7:0] slot_sel;
+        localparam integer LEAVES = 1 << $clog2(N);
+        wire [RW-1:0] rec_tree [1:2*LEAVES-1];
+        wire [NW-1:0] ring_tree [1:16*LEAVES-1];
+        genvar u, s, t;
+        for (u=0; u<N; u=u+1) begin : g_user
+            always @(posedge clk) user_sel[u] <= rd_lo == u;
+        end
+        for (u=0; u<LEAVES; u=u+1) begin : g_leaf
+            if (u<N) begin : g_live
+                assign rec_tree[LEAVES+u] =
+                    {RW{user_sel[u]}} & {recm[u],stv[u]};
+                for (s=0; s<8; s=s+1) begin : g_slot
+                    assign ring_tree[8*LEAVES+u*8+s] =
+                        {NW{user_sel[u] && slot_sel[s]}} & ringm[u*8+s];
+                end
+            end else begin : g_padding
+                assign rec_tree[LEAVES+u] = 0;
+                for (s=0; s<8; s=s+1) begin : g_slot
+                    assign ring_tree[8*LEAVES+u*8+s] = 0;
+                end
+            end
+        end
+        for (t=1; t<LEAVES; t=t+1) begin : g_rec_reduce
+            assign rec_tree[t] = rec_tree[2*t] | rec_tree[2*t+1];
+        end
+        for (t=1; t<8*LEAVES; t=t+1) begin : g_ring_reduce
+            assign ring_tree[t] = ring_tree[2*t] | ring_tree[2*t+1];
+        end
+        for (s=0; s<8; s=s+1) begin : g_slot_select
+            always @(posedge clk) slot_sel[s] <= rd_slot == s;
+        end
+        always @(posedge clk) begin
+            rec_q <= rec_tree[1];
+            ring_q <= ring_tree[1];
+        end
+    end else begin : g_binary_read
+        always @(posedge clk) begin
+            rec_q <= (lo_r < N) ? {recm[lo_r], stv[lo_r]} : {RW{1'b0}};
+            ring_q <= (lo_r < N) ? ringm[{lo_r, slot_r}] : {NW{1'b0}};
+        end
+    end endgenerate
     integer k;
     always @(posedge clk) begin
         k_any <= |ek; f_any <= |ef; k_lo <= 0; f_lo <= 0;
