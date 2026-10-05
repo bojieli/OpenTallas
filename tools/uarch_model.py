@@ -9028,3 +9028,65 @@ def hbm_w2_publication_model():
         engine_RTL_admitted=True,
         source_permission='Owner explicitly authorizes bounded component pipeline/gate while actual parent slot remains unbound; no physical fit or route admission',
         physical_launch_admitted=False, adopted=False)
+
+
+def hbm_attn_m6h1_replication_model():
+    """Price the measured F12/LA6 one-head successor in the existing HBM tile slot.
+
+    Core area alone is a lower bound on a macro footprint: a failed lower-bound
+    fit blocks contextual P&R without inventing routing or halo capacity.
+    Existing composed attention work and arithmetic order are unchanged.
+    """
+    import ast
+    import hashlib
+    import json
+    root = Path(__file__).resolve().parents[1]
+    leaf_path = root / 'results/uarch/hbm_attn_m6h1_replication_20261005/inputs/physical.json'
+    corner_path = leaf_path.with_name('corner_sta.json')
+    die_path = leaf_path.with_name('die_inventory.py')
+    leaf = json.loads(leaf_path.read_text())
+    corner = json.loads(corner_path.read_text())
+    # Read the existing die composition's literal inventory; importing its CLI
+    # or substituting a new die/floorplan would be an unrelated design study.
+    blocks = next(n.value for n in ast.parse(die_path.read_text()).body
+                  if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'BLOCKS'
+                                                     for t in n.targets))
+    slot_mm2 = ast.literal_eval(next(k.value for k in blocks.keywords if k.arg == 'attn_tile'))[0]
+    groups, tiles = 16, 64
+    tile_core_floor_mm2 = groups * leaf['design']['core_area_um2'] / 1e6
+    fits = tile_core_floor_mm2 <= slot_mm2
+    return dict(schema='opentallas.hbm-attn-m6h1-replication.v1', selected=False,
+                leaf_evidence_origin='b32d59700 results/rtl/hbm_accel_fmax_inventory_20261004/attn/routes/claude_r1_m6h1_u30',
+                existing_composition='DEDICATED.attention; tools/hbm_accel_die_fp.py BLOCKS.attn_tile',
+                source_configuration='ot_attn_hgrp_m6h1 H16/HG1/TD32/NBANK5/PWORDS2/FPL6/FML8/F121',
+                replicas=dict(head_groups_per_tile=groups, engine_tiles=tiles, engine_groups=groups*tiles,
+                              products_per_cycle_per_group=32, products_per_cycle_per_tile=512),
+                boundaries=dict(input_bits=1618, input_replica_fanout=groups,
+                                leaf_input_branches=1618*groups, output_bits=529,
+                                load_word_bytes_per_cycle=128, packed_ib_bytes_per_cycle=72,
+                                wrapper_mux_bits=0, wrapper_ff_bits=0, wrapper_added_cycles=0,
+                                physical_buffer_area_um2=None, routing_capacity_tracks=None),
+                latency=dict(core_cycles=8+7*6+6*2, core_cycles_m4=6+7*4+4*2,
+                             delta_cycles_vs_m4=20, wrapper_delta_cycles=0,
+                             serial_job_composition='existing ot_hdc_v41x_attn_s FPL6/FML8 depth model',
+                             full_job_cycles=None, full_engine_closed=False),
+                floorplan=dict(existing_slot_mm2=slot_mm2,
+                               leaf_core_area_um2=leaf['design']['core_area_um2'],
+                               leaf_cell_area_um2=leaf['design']['area_um2'],
+                               tile_core_area_lower_bound_mm2=tile_core_floor_mm2,
+                               tile_cell_area_mm2=groups*leaf['design']['area_um2']/1e6,
+                               required_over_slot_lower_bound=tile_core_floor_mm2/slot_mm2,
+                               engine_core_area_lower_bound_mm2=tiles*tile_core_floor_mm2,
+                               existing_engine_slot_mm2=tiles*slot_mm2,
+                               halo_and_wiring_area_mm2=None, slot_fit=fits),
+                leaf_signoff=dict(SS_setup_ps=corner['setup_ss']['worst_reg_to_reg_slack_ps'],
+                                  FF_hold_ps=corner['hold_ff']['worst_slack_ps'],
+                                  closes_signoff=corner['closes_signoff'],
+                                  false_path_io=leaf['design']['false_path_io'],
+                                  period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25),
+                contextual_pnr_admitted=False,
+                blocker='Measured core-area lower bound exceeds existing composed tile slot' if not fits
+                        else 'Actual macro footprint, routing capacity and parent interface closure required',
+                adopted=False, gain_claim=None,
+                source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                               for p in (leaf_path, corner_path, die_path)})
