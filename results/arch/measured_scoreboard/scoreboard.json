@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "03b719944",
+ "generated_from_commit": "6617b9607",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -820,7 +820,7 @@
    "value": "DROP",
    "resolved": true,
    "blob": "8a89546f2e1271e7eea1e7c5d68c68d55b4d135a",
-   "last_commit": null
+   "last_commit": "c8d7ab368 2026-10-04"
   },
   "qwen_rom.energy_per_token_mj_stale": {
    "target": "qwen_rom",
@@ -1268,8 +1268,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 1612.7,
    "resolved": true,
-   "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "42cf43125 2026-10-04"
+   "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
+   "last_commit": "b3735abe8 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1313,8 +1313,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 4462.1,
    "resolved": true,
-   "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "42cf43125 2026-10-04"
+   "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
+   "last_commit": "b3735abe8 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1388,8 +1388,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 620.078,
    "resolved": true,
-   "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "42cf43125 2026-10-04"
+   "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
+   "last_commit": "b3735abe8 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1418,8 +1418,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 748.887,
    "resolved": true,
-   "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "42cf43125 2026-10-04"
+   "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
+   "last_commit": "b3735abe8 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1447,8 +1447,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 25.762,
    "resolved": true,
-   "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "42cf43125 2026-10-04"
+   "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
+   "last_commit": "b3735abe8 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -2046,8 +2046,8 @@
    "note": "ASSUMED; scenario C had 420; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 452,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.total_silicon_mm2": {
    "target": "ds_rom",
@@ -2061,8 +2061,8 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 801068.0,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.j_per_token_ar_b1_pg": {
    "target": "ds_rom",
@@ -2074,10 +2074,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.J_per_token",
    "note": "Uses model AR 2,466.2, not 2,532.2; PG residual 10% ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 6.8214,
+   "value": 5.9471,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.j_per_token_ar_b1_icg": {
    "target": "ds_rom",
@@ -2089,10 +2089,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_icg.J_per_token",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 16.8334,
+   "value": 14.6527,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.j_per_token_mtp_b1_pg": {
    "target": "ds_rom",
@@ -2104,10 +2104,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.mtp_b1_pg_measured.J_per_token",
    "note": "At 6,733.7 tok/s (older draft basis); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 4.4046,
+   "value": 2.4917,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.tok_s_per_kw_ar_b1_pg": {
    "target": "ds_rom",
@@ -2119,10 +2119,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.rom.power.ar_b1_pg_measured.tok_s_per_kW",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 146.6,
+   "value": 168.15,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.static_w_icg": {
    "target": "ds_rom",
@@ -2136,8 +2136,8 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 23439.2,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "ds_rom.sat_ar_tok_s": {
    "target": "ds_rom",
@@ -2820,10 +2820,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.hbm_accel.power.ar_b1.J_per_token",
    "note": "uses model rate 2,624.4, not the measured 2,225.7; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 5.8063,
+   "value": 5.771,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_ds.accel_ar_system_w": {
    "target": "hbm_ds",
@@ -2835,10 +2835,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.hbm_accel.power.ar_b1.system_w",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 12518.5,
+   "value": 12544.3,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_ds.accel_mtp_J_per_token": {
    "target": "hbm_ds",
@@ -2850,10 +2850,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_1m.hbm_accel.power.mtp_b1.J_per_token",
    "note": "note says pending measured draft (6,351.9 rate); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 3.101,
+   "value": 3.0299,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_ds.ablation_ar_J_per_token": {
    "target": "hbm_ds",
@@ -2882,8 +2882,8 @@
    "note": "96 x 340.5 mm2 + 384 stacks (Micron bound) + 8 switch chips ASSUMED; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 457264.0,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_ds.accel_logic_mm2": {
    "target": "hbm_ds",
@@ -2897,8 +2897,8 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 32688.0,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_ds.bulk_copy_ss_slack_ps": {
    "target": "hbm_ds",
@@ -4318,8 +4318,8 @@
    "note": "16x800 (ASSUMED) + 64 stacks x 1,089 + 2 switches (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 84096.0,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4333,8 +4333,8 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 6.1596,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.rom_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4346,10 +4346,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_compare.iso_silicon.rows.rom_mtp.per_user_tok_s_per_1000mm2",
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 3.0735,
+   "value": 5.5702,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.hbm_accel_mtp_per_1000mm2": {
    "target": "gpu_ds",
@@ -4361,10 +4361,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "deepseek_compare.iso_silicon.rows.hbm_mtp.per_user_tok_s_per_1000mm2",
    "note": "MTP pending measured draft; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
-   "value": 9.5334,
+   "value": 9.5741,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_iso_rom_replicas": {
    "target": "gpu_ds",
@@ -4378,8 +4378,8 @@
    "note": "iso-total-silicon; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 9.526,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_iso_rom_agg_b1_ar": {
    "target": "gpu_ds",
@@ -4393,8 +4393,8 @@
    "note": "vs ROM 2,466.2; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 2402.1,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_iso_power_sat_ar": {
    "target": "gpu_ds",
@@ -4438,8 +4438,8 @@
    "note": "8x689 W measured draw / modelled rate; tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 24.3987,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_mtp_b1_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4453,8 +4453,8 @@
    "note": "tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 12.5714,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_system_w": {
    "target": "gpu_ds",
@@ -4468,8 +4468,8 @@
    "note": "8x689 W measured decode draw + 2 NVSwitch (ASSUMED); tools/energy_silicon_measured.py (measured scoreboard rates + gate-level element power)",
    "value": 6512.0,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "gpu_ds.b200x8_ar_b1_tdp_J_per_token_1m": {
    "target": "gpu_ds",
@@ -4541,8 +4541,8 @@
    "note": "rest listed in still_modelled",
    "value": 0.9999,
    "resolved": true,
-   "blob": "72099bc76fcd697245ae1f090d163f1db91edf21",
-   "last_commit": "42cf43125 2026-10-04"
+   "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
+   "last_commit": "b3735abe8 2026-10-04"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",
@@ -4686,10 +4686,10 @@
    "path": "results/arch/energy_silicon_measured/energy_silicon.json",
    "pointer": "qwen_8k.rom.power.ar.J_per_token",
    "note": "tools/energy_silicon_measured.py; no Qwen tile gate-level power",
-   "value": 0.1645,
+   "value": 0.109,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_qwen.j_per_token_ar_p8191_tp4": {
    "target": "hbm_qwen",
@@ -4703,8 +4703,8 @@
    "note": "tools/energy_silicon_measured.py",
    "value": 0.7611,
    "resolved": true,
-   "blob": "d4aaec34c944d4033b4a943f5535b0ed865e6a38",
-   "last_commit": "0bc89506e 2026-10-04"
+   "blob": "5a034b6c86c17d95e326ae4a1f012f3258fecd36",
+   "last_commit": "bb5c240e5 2026-10-04"
   },
   "hbm_ds.ar_tok_s": {
    "target": "hbm_ds",
