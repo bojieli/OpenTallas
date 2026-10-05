@@ -22,11 +22,11 @@ def model():
     ctrl_ff=64+7+4+4*21+32+4+1
     query_logic_nand2=32*544*4+128*6+1024
     # Positive allowance for constant96 ownership and per-quarter source order checks.
-    source_checks_nand2=64*2048+64*20*6
+    source_checks_nand2=2*64*2048+64*20*12
     rows=dict(local_topk=4*256*16*37,candidate=4*1024*2*34)
     return dict(schema='opentallas.hbm_index_path_prebuild.v1',default_ENABLE=0,
       canonical_source=dict(TP=96,block_keys=8,global_ID='8*(96*local_block+rank)+offset',global_context=1048576,local_keys_rank0=10928,local_keys_max=10928,
-        quarter_partition='Split OWNED BLOCKS, not arbitrary individual keys; quarters in global-ID order, block8 aligned, final partial block only.'),
+        quarter_partition='Hardware requires quarter=floor(owned_block_ordinal/342), owned_block_ordinal=floor(global_ID/8/96); globally ordered block8 ranges. Reject malformed assignment before ingress acceptance. Native reader still must supply those source-selected ranges.',quarter_max_blocks=342,quarter_max_keys=2736,quarter_max_score_lines=171,quarter_max_candidate_lines=171,logical_partition_bound_instantiated=True,fullshape_partition_numerical_qualified=False),
       datapath=dict(scorer='ot_hdc_v41x_idx_array_l',selector='ot_hdc_v41x_sel',query_quantiser='ot_hdc_actquant',heads=heads,head_dim=dim,slices=slices,keys_per_slice=nk,MACs_per_cycle=keys*heads*dim,FPL=fpl,FML=fml,QL=ql,metadata_depth=depth,source_score_latency_formula_cycles=late,exact_rounding='Unchanged FP4 block dots/BF16 score/relu*weight/chunk8 head sum; only existing latency parameters.',source_keep_and_refusal_preserved=True),
       ports=dict(key_B_per_edge=keys*68,key_bits_per_edge=keys*544,query_FP32_block_B_per_edge=128,query_load_bits_per_head=560,score_and_globalID_bits_per_edge=keys*36,metadata_valid_keep_ref_bits_per_edge=keys*3,selector_memory=rows,local_topk_memory_words_per_quarter=256,local_topk_memory_word_bits=592,local_topk_1R1W_ports=4,candidate_memory_owner='Confucius source48d9512f6; consume existing prebuild_maxima_export.json exactly once, no local repricing' ,physical_macro_instances_and_LEF=None),
       area=dict(unified_base_scorer_cell_estimate_um2=base_area,extra_pipeline_FF_allowance=extra_ff,extra_pipeline_FF_um2=extra_ff*dff,query_assembly_FF=q_ff,metadata_and_engine_fifo_FF=metadata,control_FF=ctrl_ff,source_checks_NAND2_allowance=source_checks_nand2,source_checks_area_um2=source_checks_nand2*.08748,query_logic_NAND2_allowance=query_logic_nand2,query_logic_um2=query_logic_nand2*.08748,

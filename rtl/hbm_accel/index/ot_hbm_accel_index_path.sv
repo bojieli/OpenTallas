@@ -103,10 +103,10 @@ end else begin:on
  wire sv,sr,sp;wire[NS-1:0] slast;wire[NS*NK-1:0] slv,sfault;
  wire[NS*NK*16-1:0] sval;wire[NS*NK*IW-1:0] sidx;
  wire input_ready;
- assign k_r=input_ready&&active&&query_ready&&!fault;
+ assign k_r=input_ready&&active&&query_ready&&!fault&&!invalid_ids;
  ot_hdc_v41x_idx_array_l #(.NS(NS),.NK(NK),.NB(4),.IH(32),.IW(IW),.MD(64),.FPL(FPL),.FML(FML),.QL(QL)) u_index_scores(
  .clk(clk),.rst_n(por_n),.ql_v(ql_v),.ql_ready(ql_r),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
- .i_valid(k_v&&active&&query_ready&&!fault),.i_ready(input_ready),.i_last({NS{k_last}}),
+ .i_valid(k_v&&active&&query_ready&&!fault&&!invalid_ids),.i_ready(input_ready),.i_last({NS{k_last}}),
  .i_kv(k_lv),.i_ref(k_ref),.i_keep(k_keep),.i_index(k_idx),.i_key(k_data),
  .o_valid(sv),.o_ready(sr),.o_last(slast),.o_kv(slv),.o_fault(sfault),.o_score(sval),.o_index(sidx),.protocol_fault(sp));
  wire[Q-1:0] select_ready,select_out_v;
@@ -145,6 +145,9 @@ end else begin:on
  always @*begin
   invalid_ids=0;
   for(l=0;l<NS*NK;l=l+1)if(k_lv[l])begin
+   // Four source-owned block ranges, each <=342 blocks at full 1M TP96.
+   // This is an actual ingress bound, not an assumed balanced host array.
+   if(((k_idx[l*IW+:IW]>>3)/96)/342 != l/W)invalid_ids=1;
    if(k_idx[l*IW+:IW]>position||((k_idx[l*IW+:IW]>>3)%96)!=rank)invalid_ids=1;
    if((l%NK)!=0 && (!k_lv[(l/NK)*NK] || k_idx[l*IW+:IW]!=k_idx[((l/NK)*NK)*IW+:IW]+(l%NK)))invalid_ids=1;
    if((l%W)==0 && seen_input[l/W] && k_idx[l*IW+:IW]<=previous_id[l/W])invalid_ids=1;
@@ -162,7 +165,7 @@ end else begin:on
    if(k_v&&k_r)for(j=0;j<NS*NK;j=j+1)if(k_lv[j])begin
     previous_id[j/W]<=k_idx[j*IW+:IW];seen_input[j/W]<=1;
    end
-   if(qs_fault||source_fault||sp||(sv&&sr&&|(sfault&slv))||(k_v&&k_r&&invalid_ids)||replay_required||overflow||cand_replay_required||cand_overflow)fault<=1;
+   if(qs_fault||source_fault||sp||(sv&&sr&&|(sfault&slv))||(k_v&&active&&query_ready&&invalid_ids)||replay_required||overflow||cand_replay_required||cand_overflow)fault<=1;
    if(!begin_frame)begin
     emitted_last<=emitted_last|(out_v&out_r&out_last);
     emitted_cand_last<=emitted_cand_last|(cand_out_v&cand_out_r&cand_out_last);
