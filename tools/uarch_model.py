@@ -48,6 +48,25 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_source_program_inventory(words_by_home, *, tp=4, instruction_bits=2048, address_bits=14):
+    """Finite compiler inventory; active content does not shrink physical ROM."""
+    if tp != 4 or instruction_bits != 2048 or address_bits != 14:
+        raise ValueError('selected native S81 instruction/entry/TP aperture required')
+    if any(type(n) is not int or not 0 < n <= 1<<address_bits for n in words_by_home.values()):
+        raise ValueError('actual native program capacity exceeded')
+    return dict(words_per_rank_by_home=words_by_home,
+        active_bytes_per_rank=sum(words_by_home.values())*instruction_bits//8,
+        active_bytes_TP4=sum(words_by_home.values())*instruction_bits//8*tp,
+        declared_address_capacity_words_per_home=1<<address_bits,
+        instruction_bits_per_fetch=instruction_bits,
+        declared_capacity_is_not_active_word_count=True,
+        physical_ROM_area_and_port_cost=None,
+        physical_storage_slot_bound=False,
+        runtime_END_prefetch_restore_ACK_and_drain_cycles=None,
+        compiler_added_hardware_FF=0,added_global_port_width_bits=0,
+        new_hardware=False,adoption=False)
+
+
 def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
     """Price a compiler's finite source order; missing service costs stay unknown.
 
