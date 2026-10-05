@@ -475,7 +475,7 @@ def rom_stage_context_price():
     boundary_ff = 3*549 + 86 + 3 + 126 + 65 + 1
     return_ff = 2*64*65 + 4*6 + 2*7 + 2*5 + 5 + 5 + 2 + 64 + 5*66
     source_control = 86+126+3
-    comparison_gates = 4*(ao+source_control)
+    comparison_gates = 4*(ao+source_control)+4
     logic_floor = (33962 + 2*ao + source_control + 4 + boundary_ff + return_ff)*.37908
     return dict(schema='opentallas.uarch.W5.context.v1', fullshape='NB2 PP1 NSEG8 K1',
                 compute_macs_per_cycle=128, FP8_macs_per_cycle=64, weight_macro_count=4,

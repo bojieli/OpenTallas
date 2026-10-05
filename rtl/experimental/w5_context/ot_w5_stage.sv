@@ -579,7 +579,7 @@ wire ao_clk, bad, quarantine;
 (* keep, dont_touch *) reg sticky=0, sticky_inverse=1;
 generate if (PROTECT!=0) begin:g_checked
     assign bad=|(snap_p^snap_r);
-    assign quarantine=bad|sticky|~sticky_inverse|external_quarantine;
+    assign quarantine=bad|sticky|~sticky_inverse|external_quarantine|(|fault_p);
     always @(posedge aon_clk or negedge rst_n)
         if(!rst_n) begin sticky<=0;sticky_inverse<=1;end
         else if(quarantine) begin sticky<=1;sticky_inverse<=0;end
