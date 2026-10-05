@@ -234,17 +234,47 @@ def _route(d):
         return None
     ph = json.loads((d / "physical.json").read_text())
     de, pr = ph.get("design", {}), ph.get("place_and_route", {})
+    metrics = pr.get("metrics", {})
     sta = json.loads((d / "wf_sta.json").read_text()) if (d / "wf_sta.json").is_file() else {}
-    return dict(route_args=json.loads((d / "route_args.json").read_text()) if (d / "route_args.json").is_file() else None,
+    args = json.loads((d / "route_args.json").read_text()) if (d / "route_args.json").is_file() else {}
+    current_sha = sha(ROOT / SRC)
+    corners = sta.get("corners", {})
+    ss, ff = corners.get("SS", {}), corners.get("FF", {})
+    def nonnegative(corner, mode, field):
+        value = corner.get(mode, {}).get(field)
+        return isinstance(value, (int, float)) and value >= 0
+    timing_met = bool(ss.get("done") and ff.get("done") and
+                      ss.get("exit") == 0 and ff.get("exit") == 0 and
+                      all(nonnegative(ss, mode, "setup_wns_ps") for mode in ("incontext", "reg2reg")) and
+                      all(nonnegative(ff, mode, "hold_wns_ps") for mode in ("block", "incontext", "reg2reg")))
+    drc = metrics.get("drc_errors", de.get("drc"))
+    antenna = metrics.get("antenna_violating_nets", de.get("antenna"))
+    integrity = {key: metrics.get(key) for key in
+                 ("max_slew_violations", "max_cap_violations", "max_fanout_violations")}
+    integrity_met = all(value == 0 for value in integrity.values())
+    source_matches = bool(args.get("source_sha256") == current_sha)
+    return dict(route_args=args or None,
+                route_source_sha256=args.get("source_sha256"), current_source_sha256=current_sha,
+                current_source_matches=source_matches,
                 flow_completed=ph.get("flow_completed"), driver_status=ph.get("status"),
-                area_um2=de.get("area_um2"), core_area_um2=de.get("core_area_um2"), cells=de.get("cells"),
-                utilization=de.get("utilization_fraction"), drc=de.get("drc"), antenna=de.get("antenna"),
-                signal_integrity_clean=de.get("signal_integrity_clean"),
-                orfs_setup_wns_ns=de.get("setup_wns_ns"), orfs_hold_wns_ns=de.get("hold_wns_ns"),
+                area_um2=metrics.get("standard_cell_area_um2", de.get("area_um2")),
+                core_area_um2=metrics.get("core_area_um2", de.get("core_area_um2")),
+                cells=metrics.get("standard_cell_count", de.get("cells")),
+                utilization=metrics.get("utilization_fraction", de.get("utilization_fraction")),
+                drc=drc, antenna=antenna, signal_integrity=integrity,
+                signal_integrity_clean=integrity_met,
+                orfs_setup_wns_ns=metrics.get("setup_wns_ns", de.get("setup_wns_ns")),
+                orfs_hold_wns_ns=metrics.get("hold_wns_ns", de.get("hold_wns_ns")),
                 synth=dict((k, ph.get("synthesis", {}).get(k)) for k in ("cell_area_um2", "cell_count",
                                                                          "sequential_cell_count")),
                 elapsed_s=ph.get("elapsed_seconds"),
-                signoff_sta=sta, closed_incontext=sta.get("signoff", {}).get("incontext"))
+                signoff_sta=sta, closed_incontext=sta.get("signoff", {}).get("incontext"),
+                routed_surrogate_timing_met=timing_met,
+                routed_surrogate_physical_met=bool(ph.get("flow_completed") and timing_met and
+                                                  drc == 0 and antenna == 0 and integrity_met),
+                actual_parent_completion_binding=None,
+                actual_parent_context_qualified=False,
+                current_controller_adoptable=False)
 
 
 def cmd_record(a):

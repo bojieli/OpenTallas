@@ -1,6 +1,7 @@
 """Software codec/golden checks, not RTL or selected-cluster qualification."""
 import json
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -66,6 +67,36 @@ class VectorsTest(unittest.TestCase):
                             self.assertEqual(sc,int(payload['scales'][r,start//32]) if start<k else 127)
                 self.assertFalse(set(m['checker_only'])&set(m['runtime_inputs']))
         self.assertEqual(seen,{5120,2304,1280,4096,8192})
+
+    def test_wo_a_grouped_owner_conservation_and_distinct_inputs(self):
+        import hbrom_gate as gate
+        with tempfile.TemporaryDirectory() as d:
+            out=Path(d)/'vectors'
+            subprocess.run([sys.executable,str(ROOT/'tools/hbrom_vectors.py'),'--tensor',
+                            'layers.0.attn.wo_a.weight','--owners','416','--out',str(out)],check=True)
+            campaign=json.loads((out/'campaign.json').read_text());cases=campaign['cases']
+            self.assertEqual(len(cases),8)
+            self.assertEqual([c['activation_group'] for c in cases],list(range(8)))
+            self.assertEqual(sorted(r for c in cases for r in c['source_rows']),list(range(0,8192,416)))
+            self.assertEqual(len({c['files_sha256']['activation.npy'] for c in cases}),8)
+            for c in cases:
+                g=c['activation_group']
+                self.assertTrue(all(g*1024<=r<(g+1)*1024 for r in c['source_rows']))
+            runtime=Path(d)/'runtime';prep=gate.prepare(out/'campaign.json',runtime,4)
+            self.assertEqual(prep['operations'],8)
+            config=[int(v,16) for v in (runtime/'config.hex').read_text().split()]
+            self.assertEqual([config[8*g+6] for g in range(8)],
+                             [c['physical_base_record'] for c in cases])
+            # Eight disjoint jobs are merged into the same immutable physical
+            # bank group; each record still matches its original source image.
+            for i,c in enumerate(cases):
+                for record in range(c['physical_base_record'],c['physical_base_record']+c['physical_records']):
+                    par=(record//8)%2;row=(record//16)*8+record%8
+                    for stream in range(4):
+                        name=f'rom_g0_s{stream}_p{par}.hex'
+                        source=(out/f'op{i:02d}'/name).read_text().split()
+                        merged=(runtime/name).read_text().split()
+                        self.assertEqual(source[row],merged[row])
 
     def test_reject_bounds_and_bad_activation(self):
         with self.assertRaises(ValueError):H.checkpoint_rows(self.source,'head.weight',[-1])

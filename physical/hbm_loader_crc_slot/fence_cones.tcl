@@ -56,7 +56,8 @@ foreach spec $lc_specs {
 foreach spec $lc_specs {
   lassign $spec name prefix x0 y0 x1 y1
   set region [odb::dbRegion_create $lc_block "loader_crc_$name"]
-  $region setRegionType FENCE
+  # OpenDB EXCLUSIVE is the DEF FENCE region type.
+  $region setRegionType EXCLUSIVE
   odb::dbBox_create $region [expr {round($x0*$lc_dbu)}] [expr {round($y0*$lc_dbu)}] [expr {round($x1*$lc_dbu)}] [expr {round($y1*$lc_dbu)}]
   set group [odb::dbGroup_create $lc_block "loader_crc_$name"]
   $group setRegion $region
