@@ -1,0 +1,113 @@
+{
+ "schema": "opentallas.dsrom-reindex-close.groups.v1",
+ "workdir": "/srv/opentallas-scratch/codex/russell-dsrom-reindex-kc8-20261005/route_r1/work",
+ "nickname": "opentallas_ot_hdc_v41x_idx_kgctl_kc7_ctx_asap7_kc8",
+ "block": "kgctl",
+ "period_ps": 833.0,
+ "neighbour_budget_fraction": 0.2,
+ "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clocks, routed SDC uncertainties (60 ps setup / 25 ps hold)",
+ "artifacts_sha256": {
+  "6_final.odb": "73011d27122414f4956eec4b8d70fa532776067e94ac4aa08e090d724997caaa",
+  "6_final.sdc": "f06646cfe4e866ad6665b6fe5a307352b7e8b9af680d5035271551ef96c41fdb",
+  "6_final.spef": "6e39c19782076544f92073fcd1164dc3b9bef4c111d43a951e36845eb0c05c4f"
+ },
+ "corners": {
+  "ss": {
+   "exit": 0,
+   "setup_wns_ps": -45.79,
+   "hold_wns_ps": 40.75,
+   "failing_setup_endpoints": 132,
+   "failing_hold_endpoints": 0,
+   "endpoints": 54597,
+   "groups": {
+    "dr_ready_in": {
+     "setup_slack_ps": 127.98,
+     "hold_slack_ps": 92.76,
+     "start": "u_l.q[0]$_DFF_P_",
+     "end": "u_dut.hoh[47]$_SDFFE_PP0P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": false
+    },
+    "req_rdy_in": {
+     "setup_slack_ps": 163.46,
+     "hold_slack_ps": 84.16,
+     "start": "u_l.q[692]$_DFF_P_",
+     "end": "u_dut.fq_rp[51][2]$_SDFFE_PN0P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": false
+    },
+    "lr_data_in": {
+     "setup_slack_ps": 610.2,
+     "hold_slack_ps": 50.13,
+     "start": "u_l.q[772]$_DFF_P_",
+     "end": "u_dut.e1_blk[0][10]$_DFF_P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": true
+    },
+    "lr_port_out": {
+     "setup_slack_ps": 229.28,
+     "hold_slack_ps": 210.17,
+     "start": "u_dut.run$_SDFF_PN0_",
+     "end": "u_c.q[1683]$_DFF_P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": true
+    }
+   }
+  },
+  "ff": {
+   "exit": 0,
+   "setup_wns_ps": 287.09,
+   "hold_wns_ps": 1.68,
+   "failing_setup_endpoints": 0,
+   "failing_hold_endpoints": 0,
+   "endpoints": 54597,
+   "groups": {
+    "dr_ready_in": {
+     "setup_slack_ps": 381.34,
+     "hold_slack_ps": 28.12,
+     "start": "u_l.q[0]$_DFF_P_",
+     "end": "u_dut.hoh[47]$_SDFFE_PP0P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": true
+    },
+    "req_rdy_in": {
+     "setup_slack_ps": 472.7,
+     "hold_slack_ps": 23.3,
+     "start": "u_l.q[692]$_DFF_P_",
+     "end": "u_dut.fq_rp[51][2]$_SDFFE_PN0P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": true
+    },
+    "lr_data_in": {
+     "setup_slack_ps": 696.03,
+     "hold_slack_ps": 8.73,
+     "start": "u_l.q[772]$_DFF_P_",
+     "end": "u_dut.e1_blk[0][10]$_DFF_P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": true
+    },
+    "lr_port_out": {
+     "setup_slack_ps": 507.47,
+     "hold_slack_ps": 84.8,
+     "start": "u_dut.run$_SDFF_PN0_",
+     "end": "u_c.q[1683]$_DFF_P_",
+     "external_sides": 1,
+     "budget_needed_ps": 166.60000000000002,
+     "budget_met": true
+    }
+   }
+  }
+ },
+ "signoff": {
+  "ss_setup_met": false,
+  "ff_hold_met": true,
+  "ss_boundary_budget_met": false
+ }
+}
