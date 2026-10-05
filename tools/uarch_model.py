@@ -7791,3 +7791,29 @@ def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, ins
                 source='rtl/hdc/ot_hdc_core_vector_weight.sv',
                 area_obligation='All held word, 11 DYN operands, position, shifted position, rounds, invalid and phase flops; map before slot fit',
                 physical_obligation='Register /ODD alone still requires SS/FF measurement; no clock relaxation')
+
+
+def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
+    """Port of the adopted zero-edge ROM-VP LA controls to combined VP.
+
+    Queues, ports, descriptors, tags, near service and arithmetic unchanged.
+    This sizes source additions; routed ROM-VP closure is not combined closure.
+    """
+    cw = 13
+    bits = fw + vwa + ntok + 2*cw + 7 + 32
+    return dict(default_enabled=False, added_register_bits_per_die=bits,
+                replicas=replicas, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='enable muxes, prefix logic, key trees, clock/reset/routing',
+                MACs_per_cycle=0, extra_memory_ports=0,
+                existing_VM_read_bytes_per_edge=fw//8,
+                existing_collective_payload_bits_per_edge=fw,
+                existing_collective_tag_bits=44, new_boundary_bits=0,
+                added_instruction_or_collective_edges=0,
+                composed_token_latency_delta_cycles=0,
+                queue_depth_unchanged=4, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                combined_context_clock_closed=False, floorplan_fit=False,
+                adopted=False,
+                source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
+                physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
