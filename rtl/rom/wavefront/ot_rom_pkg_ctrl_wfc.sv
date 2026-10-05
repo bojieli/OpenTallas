@@ -459,6 +459,12 @@ module ot_rom_pkg_ctrl_wfc #(
         if (st_q)   begin core_token = jq_t[jq_r]; core_pos = jq_p[jq_r]; st_user = jq_u[jq_r]; end
         if (st_fb)  begin core_token = fb_tok; core_pos = res_p + 1'b1; st_user = res_u; end
         if (st_wk)  begin core_token = e_tok; core_pos = e_pos; st_user = e_user; end
+        // the registered reset root releases one cycle after rst_n: take nothing from the link and start
+        // nothing until then (the reference releases with rst_n; a flit offered in that cycle must wait)
+        if (!rst_q) begin
+            in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0; vm_we = 1'b0;
+            st_rx = 1'b0; st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0; core_start = 1'b0;
+        end
     end
 
     // -- sequential ---------------------------------------------------------------------

@@ -1,0 +1,163 @@
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+QASTA setup
+worst slack max 323.9326
+QASTA hold
+worst slack min 1.6666
+QASTA tns
+tns max 0.0000
+QASTA failing setup 0 hold 0 of 53822
+QASTA path worst_setup
+Startpoint: u_dut.w_oh0[48]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.m_j[48][4]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  39.3074   39.3074 ^ wire31043/Y (BUFx16f_ASAP7_75t_R)
+  45.4457   84.7531 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.0858  107.8389 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.2957  132.1346 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.2377  154.3723 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.7179  179.0902 ^ clkbuf_3_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.2665  202.3566 ^ clkbuf_4_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  27.4192  229.7758 ^ clkbuf_5_9_0_clk/Y (BUFx24_ASAP7_75t_R)
+  33.5519  263.3278 ^ clkbuf_8_78_0_clk/Y (BUFx24_ASAP7_75t_R)
+  34.2904  297.6181 ^ clkbuf_leaf_442_clk/Y (BUFx24_ASAP7_75t_R)
+   2.2174  299.8355 ^ u_dut.w_oh0[48]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+  39.4576  339.2931 ^ u_dut.w_oh0[48]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+  25.9096  365.2027 ^ place28204/Y (BUFx2_ASAP7_75t_R)
+  26.8826  392.0852 v _249553_/Y (INVx3_ASAP7_75t_R)
+  17.2821  409.3673 v place25485/Y (BUFx6f_ASAP7_75t_R)
+ 181.4218  590.7891 v place25484/Y (BUFx3_ASAP7_75t_R)
+  65.4750  656.2640 v place25483/Y (BUFx5_ASAP7_75t_R)
+  58.4979  714.7620 ^ _252248_/Y (NAND2x1_ASAP7_75t_R)
+  11.1189  725.8809 v _252249_/Y (OAI21x1_ASAP7_75t_R)
+   0.0616  725.9424 v u_dut.m_j[48][4]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+           725.9424   data arrival time
+
+ 833.0000  833.0000   clock core_clk (rise edge)
+   0.0000  833.0000   clock source latency
+   0.0000  833.0000 ^ clk (in)
+  37.9369  870.9369 ^ wire31043/Y (BUFx16f_ASAP7_75t_R)
+  43.9698  914.9067 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.7627  936.6694 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.1699  959.8393 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.5642  981.4035 ^ clkbuf_2_3_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.6801 1005.0836 ^ clkbuf_3_7_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.1785 1027.2621 ^ clkbuf_4_15_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.3315 1052.5936 ^ clkbuf_5_31_0_clk/Y (BUFx24_ASAP7_75t_R)
+  28.6663 1081.2599 ^ clkbuf_8_254_0_clk/Y (BUFx24_ASAP7_75t_R)
+  27.5548 1108.8147 ^ clkbuf_leaf_1604_clk/Y (BUFx24_ASAP7_75t_R)
+   0.2801 1109.0948 ^ u_dut.m_j[48][4]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.0000 1049.0948   clock uncertainty
+   2.8464 1051.9412   clock reconvergence pessimism
+  -2.0661 1049.8751   library setup time
+          1049.8751   data required time
+-------------------------------------------------------------
+          1049.8751   data required time
+          -725.9424   data arrival time
+-------------------------------------------------------------
+           323.9326   slack (MET)
+
+
+QASTA path worst_hold
+Startpoint: u_dut.rr_oh[29][15]$_SDFF_PP0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.cntc[3727][0]$_SDFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  37.9369   37.9369 ^ wire31043/Y (BUFx16f_ASAP7_75t_R)
+  43.9698   81.9067 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.3254  104.2321 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.1297  127.3618 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  21.5287  148.8905 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  23.7276  172.6181 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.5731  195.1912 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.6660  220.8572 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  29.3066  250.1638 ^ clkbuf_8_102_0_clk/Y (BUFx24_ASAP7_75t_R)
+  27.7616  277.9255 ^ clkbuf_leaf_1121_clk/Y (BUFx24_ASAP7_75t_R)
+   1.8656  279.7911 ^ u_dut.rr_oh[29][15]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+  43.1071  322.8982 ^ u_dut.rr_oh[29][15]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)
+   8.8730  331.7713 v _276379_/Y (OAI21x1_ASAP7_75t_R)
+  11.9625  343.7338 v _276380_/Y (AND3x1_ASAP7_75t_R)
+   0.0463  343.7801 v u_dut.cntc[3727][0]$_SDFFE_PN0P_/D (DFFHQNx1_ASAP7_75t_R)
+           343.7801   data arrival time
+
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ clk (in)
+  39.3074   39.3074 ^ wire31043/Y (BUFx16f_ASAP7_75t_R)
+  45.4457   84.7531 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.0858  107.8389 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.2957  132.1346 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  22.2377  154.3723 ^ clkbuf_2_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  24.7717  179.1440 ^ clkbuf_3_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.5320  202.6759 ^ clkbuf_4_6_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.9371  229.6130 ^ clkbuf_5_12_0_clk/Y (BUFx24_ASAP7_75t_R)
+  30.7353  260.3484 ^ clkbuf_8_101_0_clk/Y (BUFx24_ASAP7_75t_R)
+  51.8858  312.2342 ^ clkbuf_leaf_1117_clk/Y (BUFx24_ASAP7_75t_R)
+   1.5053  313.7395 ^ u_dut.cntc[3727][0]$_SDFFE_PN0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.0000  338.7395   clock uncertainty
+  -8.7558  329.9837   clock reconvergence pessimism
+  12.1299  342.1136   library hold time
+           342.1136   data required time
+-------------------------------------------------------------
+           342.1136   data required time
+          -343.7801   data arrival time
+-------------------------------------------------------------
+             1.6666   slack (MET)
+
+
+QASTA tap_sources 0
+QASTA lw_cells 0
+QASTA end
