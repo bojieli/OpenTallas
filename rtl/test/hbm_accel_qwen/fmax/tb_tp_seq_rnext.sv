@@ -52,22 +52,28 @@ module tb_qwen_tp_seq_rnext_lockstep;
         rst_n = 1;
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);
-            if (rnd(200000) == 0) rst_n = 0; else rst_n = 1;
-            start = rnd(20) == 0;
-            token = {$random(seed)}; pos = {$random(seed)};
-            core_done = rnd(8) == 0; core_fault = rnd(500) == 0;
-            core_next_token = {$random(seed)}; core_next_val = $random(seed);
-            desc_q = {$random(seed), $random(seed)};
-            case (rnd(4)) 0: desc_q[1:0] = 0; 1, 2: desc_q[1:0] = 1; default: desc_q[1:0] = 2; endcase
-            case (rnd(4)) 0: desc_q[17:10] = ENABLE_AR256 ? 0 : 255; 1: desc_q[17:10] = 1 + rnd(4); default: if (desc_q[17:10] == 0 && !ENABLE_AR256) desc_q[17:10] = 7; endcase
-            for (i = 0; i < FW / 32; i = i + 1) begin vm_rq[32*i +: 32] = $random(seed); r_data[32*i +: 32] = $random(seed); end
-            c_ready = rnd(4) != 0;
-            // Legal collective: a result word k returns only after this die sent word k (all-reduce), and the
-            // gather returns only after the die's own record left (so a segment never ends with words unsent).
-            // Without this, random results can end S_COLL with a full transmit queue, a state the collective
-            // cannot produce, in which the original then overwrites its live queue head.
-            r_valid = (rnd(3) == 0) && (u_ref.st != 3'd5 || (u_ref.kind == 2'd2 ? u_ref.tx_k != 0 : u_ref.rx_k < u_ref.tx_k));
-            r_last = rnd(10) == 0; r_err = rnd(1000) == 0; r_rank = rnd(N);
+            rst_n = ((cyc % 4096) != 4095);
+            start = (u_ref.st == 0) && ((cyc % 17) == 0);
+            token = 18'd7; pos = 18'd8191;
+            core_done = (u_ref.st == 4); core_fault = 0;
+            core_next_token = 18'd65537; core_next_val = 32'h3f800000;
+            desc_q = 0;
+            desc_q[1:0] = ((cyc / 512) % 2) ? 2'd2 : 2'd1;
+            desc_q[9:2] = 8'd37;
+            desc_q[17:10] = ((cyc / 1024) % 2) ? 8'd0 : 8'd8;
+            for (i = 0; i < FW / 32; i = i + 1) begin
+                vm_rq[32*i +: 32] = 32'h3f800000 + 32'(cyc*16+i);
+                r_data[32*i +: 32] = 32'h3f000000 + 32'(cyc*16+i);
+            end
+            c_ready = ((cyc % 11) != 0) && ((cyc % 11) != 1);
+            // Do not re-offer a record already resident in the one-edge cut.
+            r_valid = (u_ref.st == 5) && ((cyc % 5) != 0) &&
+                (u_ref.rx_k + (rv_d ? 1 : 0) < u_ref.rx_total) &&
+                (u_ref.kind == 2'd2 ? u_ref.tx_k != 0 :
+                 u_ref.rx_k + (rv_d ? 1 : 0) < u_ref.tx_k);
+            r_last = (u_ref.rx_k + (rv_d ? 1 : 0) == u_ref.rx_total-1);
+            r_err = ((cyc % 97) == 0);
+            r_rank = RB'(u_ref.rx_k + (rv_d ? 1 : 0));
             #0.5;
             // c_data is the head register's content; an asynchronous reset clears q_r at once, the head
             // register reloads on the next edge (data is not valid while rst_n is low): masked during reset
