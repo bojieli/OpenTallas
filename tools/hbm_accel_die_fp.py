@@ -282,8 +282,10 @@ def build(variant=None):
     xw, xe = quarters('sfu', BLOCKS['sfu'][0], xw, xe)
     xw, xe = quarters('hc', BLOCKS['hc'][0], xw, xe)
     regions.append(dict(name='centre', kind='hub', rect=[hub['hc_SW'].x, hy0, hub['hc_SE'].x + hub['hc_SE'].w, hy1]))
-    tw = up(math.sqrt(BLOCKS['attn_tile'][0] * 1e6), GX)
-    th = up(BLOCKS['attn_tile'][0] * 1e6 / tw, GY)
+    # Historical r14b remains replayable. Measured-macro revisions must supply
+    # both dimensions: an area-only square can lose the required halo/grid fit.
+    tw = up(variant.get('attn_tile_w_um', math.sqrt(BLOCKS['attn_tile'][0] * 1e6)), GX)
+    th = up(variant.get('attn_tile_h_um', BLOCKS['attn_tile'][0] * 1e6 / tw), GY)
     tg = 43.2
     assert 4 * th + 3 * tg <= qh + 1e-6, ('attention tiles do not fit the quadrant', 4 * th + 3 * tg, qh)
     iw = up(BLOCKS['index'][0] / 4 * 1e6 / qh, GX)
@@ -361,6 +363,9 @@ def build(variant=None):
     m = dict(geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, scan=scan, links=links, host=host_mac,
              notes=notes, variant=variant, stn_faces={})
     m['buses'], m['paths'] = buses(m)
+    if variant.get('child_contract'):
+        from hbm_die_child_contract import allocations
+        m['child_reservations'] = allocations(m)
     return m
 
 
@@ -706,16 +711,24 @@ def buses(m):
         # scan quadrant internals: tile row chains (outer -> inner), row end -> index quarter -> SU; KV down the
         # columns; index quarter -> VM (local top-k for the merge)
         grid = sc['tiles']
+        actual_attn = 'attn_tile_w_um' in m['variant']
+        if actual_attn:
+            # 576 operand bits + 18 controls. LD data remains the 1024-bit
+            # service path. These are reservations, not a new RTL broadcaster.
+            B.append((f'qi_{st}', 'attn_operand', 594,
+                      [(vm.name, f'q{st}'), (rowt[0 if half == 'W' else -1].name, 'q')]))
         for r in range(4):
             row = grid[r] if half == 'W' else grid[r][::-1]
             for a_, b_ in zip(row, row[1:]):
-                B.append((f'ta_{a_.name}', 'attn_chain', 512, [(a_.name, 'o'), (b_.name, 'i')]))
-            B.append((f'tr_{st}{r}', 'attn_root', 512, [(row[-1].name, 'o'), (sc['index'].name, f'a{r}')]))
+                B.append((f'ta_{a_.name}', 'attn_chain', 529 if actual_attn else 512, [(a_.name, 'o'), (b_.name, 'i')]))
+                if actual_attn:
+                    B.append((f'ti_{a_.name}', 'attn_input', 1618, [(a_.name, 'iu'), (b_.name, 'id')]))
+            B.append((f'tr_{st}{r}', 'attn_root', 529 if actual_attn else 512, [(row[-1].name, 'o'), (sc['index'].name, f'a{r}')]))
         for c in range(4):
             for r in range(3):
                 lo, hi_ = (grid[r][c], grid[r + 1][c]) if side == 'S' else (grid[3 - r][c], grid[2 - r][c])
-                B.append((f'tk_{st}{r}{c}', 'attn_kv', 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
-        B.append((f'ao_{st}', 'attn_out', 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
+                B.append((f'tk_{st}{r}{c}', 'attn_kv', 1618 if actual_attn else 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
+        B.append((f'ao_{st}', 'attn_out', 1058 if actual_attn else 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
         B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = [f'tr_{st}0', f'ao_{st}']
     # ---- hub internal (adjacent slabs across one channel, or vertical in the spine column): direct nets; their
@@ -1210,6 +1223,13 @@ def plan_record(m):
     g = m['geo']
     mp = manhattan_paths(m)
     ledger = {k: dict(mm2=round(v[0], 4), grade=v[1], source=v[2]) for k, v in BLOCKS.items()}
+    if 'attn_tile_w_um' in m['variant']:
+        ledger['attn_tile'] = dict(mm2=area['attn_tile']/len(m['tiles']),
+                                  grade='measured macro plus analytical route reservation',
+                                  source='results/rtl/hbm_child_contract_20261005/model.json')
+    else:
+        ledger['attn_tile']['physical_fit'] = False
+        ledger['attn_tile']['note'] = 'Historical 0.5mm2 slots fail measured m6h1 footprint; not current fit evidence.'
     placed = sum(area.values())
     return dict(
         schema='opentallas.hbm-accel-die-floorplan.v1', tool='tools/hbm_accel_die_fp.py', tool_sha256=sha('tools/hbm_accel_die_fp.py'),
@@ -1220,6 +1240,7 @@ def plan_record(m):
         census=dict(sm=32, sm_per_stack=8, stacks=4, pcs_per_stack=32, attention_tiles=len(m['tiles']),
                     serdes_macros=len(m['links']), tu_ports=TU_PORTS, tu_flit_bits=TU_FLIT - 1),
         block_ledger=ledger, instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
+        child_reservations=m.get('child_reservations'),
         placed_footprint_mm2=round(placed, 2), utilisation_of_die=round(placed / (g['W'] * g['H'] / 1e6), 3),
         geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items()},
         clock_domains=dict(stream_1p2='SM array, attention, index, collective endpoint, VM, cmdproc, router, waypoints '
@@ -1496,6 +1517,9 @@ def case_ir(m, work, window, cov):
 
 
 def variant_arg(v):
+    if v == 'service-attn-r1':
+        return dict(ADOPTED, hub_h=12355.2, attn_tile_w_um=1349.136,
+                    attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     """'' -> the adopted default; 'r8' -> the r1-r8 geometry; a JSON dict -> those keys (absent keys = r8 behaviour)."""
     if not v:
         return None

@@ -1,0 +1,38 @@
+{
+  "checks": {
+    "historical_DS_geometry_preserved": true,
+    "Qwen_geometry_preserved": true,
+    "attention_abstract_pin_containment_k1": 9148,
+    "attention_abstract_pin_containment_k16": 578,
+    "new_CP_association_model_bound": true,
+    "W2_actual_source_and_size_bound": true,
+    "child_pin_coordinates_on_actual_native_grid": true,
+    "existing_die_revision_legal": true,
+    "python_syntax": true
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "d730b8d560ac04b9080e404f22b22d08c475ee1121bf6d342b4e7e2135b964bf",
+    "tools/hbm_accel_die_fp.py": "ecc7ec7c940592a978d71a10f60a112432e9d54454be7930e5b8e40fdfd32c54",
+    "tools/uarch_model.py": "15a7ffc4e36d93907ddb5e9a382c3f9df2d1976adbb83efdedbcc4cf0bb94156",
+    "tools/hbm_die_child_contract.py": "1abd8d94cb7a1901c8a34ecd7f2074c7644a677ba07d7206601a89feeba8dfee",
+    "tools/chip_assembly/v41_die.py": "c2e45b6502db022904dd1db0e270f1da72ca56cd5ec1f3acca945d538a34339b",
+    "results/uarch/hbm_cp_balanced_veto_20261005/protected_clock_context_r1.json": "08470650cb9cc16969c28730eef9b2501826f6b41e2fb48bca53b4eea9b0d312",
+    "results/uarch/hbm_cp_balanced_veto_20261005/parent_functional_r1.json": "b32e022871736965c777d27367abfd91c9e8aa168c9c32539158b218becd4283",
+    "results/uarch/hbm_w2_publication_20261005/model.json": "a755935d1f8237f7975bf05e8fe05823c41fe6fde5d608aa20df3862eafa4526",
+    "results/uarch/hbm_attn_m6h1_replication_20261005/model.json": "d758d8000f9d65a6c36f89a84240df0c14b6c411be94c9edfeff0601e3b0d8d4",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv": "13dfe762acd2c4daa5f05f9d405e01b12d2e07790789725fbf1b78ab8a964975",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv": "8cc04214294746cbee51ff68d1356ab5680302b5f0aff3354c5887cb9c5bceef",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/test/qwen_rom_runtime/ot_qwen_hbmacc_rt_die_w12.sv": "761799736039b1345140b7d2da2634829baf3adfe4be49477c04af3e815f4618",
+    "results/rtl/hbm_child_contract_20261005/inputs/platform_boundary_constants.json": "1510d28a7f15a6982d433b0e87caf0825dbe23714352f7759d72ea94c0551ddf",
+    "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/retained_export.json": "95958aacfe6c6bb34dd46aae9716f9945594f2dc2cd5ea29938188c79e882584",
+    "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib": "484934cafcc02bde4d1041c98ddd828784f45c5ee463048d3a523fb589e90df6",
+    "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/abstract.json": "9931907f16e686aca391e1791dc183f7789047a26799a8d183c4c225ad554093",
+    "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb",
+    "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib": "710a7b69676e9e088d6f87661def6a4584732dfd199da0774caa1c128d52c2b5"
+  },
+  "limitations": "Analytical reservation and abstract pin containment; no contextual route/CTS/IR/SSFF or input-hold qualification."
+}
