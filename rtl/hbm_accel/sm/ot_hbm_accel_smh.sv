@@ -818,7 +818,8 @@ module ot_hbm_accel_smh_be #(
     parameter integer RMAX = 4096,
     parameter integer LEV  = 4,
     parameter integer TAGW = 16,
-    parameter integer NH   = 4
+    parameter integer NH   = 4,
+    parameter integer STK  = 1              // 1: ot_hbm_accel_stack (pending lookup registered, +1 cycle); 0: ot_gpu_stack
 ) (
     input  wire                              clk,
     input  wire                              rst_n,
@@ -861,9 +862,15 @@ module ot_hbm_accel_smh_be #(
     wire kv, kf;
     wire [31:0] ky;
     wire [RW-1:0] krow;
-    ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
-        .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
-        .itag(tt[TAGW-1:SW+1]), .ov(kv), .y(ky), .otag(krow), .fault(kf));
+    generate if (STK != 0) begin : g_hs
+        ot_hbm_accel_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
+            .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
+            .itag(tt[TAGW-1:SW+1]), .ov(kv), .y(ky), .otag(krow), .fault(kf));
+    end else begin : g_gs
+        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
+            .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
+            .itag(tt[TAGW-1:SW+1]), .ov(kv), .y(ky), .otag(krow), .fault(kf));
+    end endgenerate
     reg cf_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) cf_q <= 1'b0;

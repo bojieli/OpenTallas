@@ -36,7 +36,7 @@ TB = "tb_hbm_accel_sm_pq_seq"
 SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
     "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv",
     "rtl/test/tb_hbm_accel_sm_pq_seq.sv"]
-SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
+SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 

@@ -41,7 +41,8 @@ RTL = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_
        "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
        "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv", "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
        "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
-       "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
        SRAM_X + "/ot_sram_1r1w_128x256_m1_r2c2_bb.v", SRAM_R + "/ot_sram_1r1w_512x256_m1_r2c2_bb.v"]
 GRID = 8.64          # macro / die quantum: a multiple of every routing pitch (0.048 0.064 0.08) and the 0.27 row
 PITCH = 0.096        # abutting pin slot (two M4 / M5 tracks)
@@ -61,6 +62,10 @@ P["A1B"], P["A2B"] = 9, 7
 
 def q(v):
     return round(math.ceil(v / GRID - 1e-9) * GRID, 3)
+
+
+def qd(v):
+    return round(math.floor(v / GRID + 1e-9) * GRID, 3)
 
 
 def bits(name, n):
@@ -230,7 +235,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
           "set_input_delay -max 300 -clock nbr_clk $nbr_in",
           "set_input_delay -min 30 -clock nbr_clk $nbr_in",
           "set_output_delay -max 300 -clock nbr_clk $nbr_out",
-          "set_output_delay -min 0 -clock nbr_clk $nbr_out",
+          "set_output_delay -min 50 -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
           "set_max_fanout 32 [current_design]"]
     if ring:
@@ -250,7 +255,7 @@ def config_mk(name, nick, die, macros, extra):
              f"export DIE_AREA = 0 0 {die[0]} {die[1]}", f"export CORE_AREA = 1.08 1.08 {round(die[0]-1.08,3)} {round(die[1]-1.08,3)}",
              "export SYNTH_REPEATABLE_BUILD = 1", "export SYNTH_HIERARCHICAL = 0", "export SYNTH_MEMORY_MAX_BITS = 65536",
              "export LEC_CHECK = 0", "export TNS_END_PERCENT = 100", "export SETUP_SLACK_MARGIN = 0",
-             "export HOLD_SLACK_MARGIN = 10", "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
+             "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
              "export CORNER = WC", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
              "export CORNERS = WC BC", f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}",
              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {lib_ff}",
@@ -318,7 +323,7 @@ def run_sh(work: Path, label, src, need, cores, macros):
     # two abstract sessions (SS and FF)
     txt = txt.replace('"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl"',
                       '"mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
-                      'openroad -no_init -exit /work/abstract_$c.tcl || exit 1; done"')
+                      'openroad -no_init -exit /work/abstract_\\$c.tcl || exit 1; done"')
     (work / "run.sh").write_text(txt)
     (work / "run.sh").chmod(0o755)
 
@@ -327,7 +332,7 @@ def cmd_block(a):
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM
-    extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M6",
+    extra = {"PLACE_DENSITY": a.pd, "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M6", "HOLD_SLACK_MARGIN": a.hold_margin,
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_block.tcl", "MACRO_PLACE_HALO": "3 3"}
     if a.piece == "tile":
         w, h = g["tile_w"], g["tile_h"]
@@ -337,12 +342,15 @@ def cmd_block(a):
         # the 2 x 4 x-store macros: leaf 0 upper half, leaf 1 lower half, a 2 x 2 block each, centred
         mw, mh = 94.824, 41.04
         xs = [round(w / 2 - mw - 2.16, 3), round(w / 2 + 2.16, 3)]
+        # a leaf's 4 x-store macros stacked in one column (their pins are on the left / right edges, kept free),
+        # leaf 0 in the upper half, leaf 1 in the lower half, centred
         xy = {}
+        x0 = qd((w - mw) / 2)
         for j in range(P["RPT"]):
             yc = h * (0.75 if j == 0 else 0.25)
-            ys = [round(yc - mh - 2.16, 3), round(yc + 2.16, 3)]
+            y0 = qd(yc - 2 * mh - 1.5 * 4.32)
             for mi in range(4):
-                xy[(j, mi)] = (q(xs[mi % 2]), q(ys[mi // 2]))
+                xy[(j, mi)] = (x0, round(y0 + mi * (mh + 4.32), 3))
         tcl = ["set ot_n 0", "array set ot_xy {"] + [f"  {{{j}:{mi}}} {{{x} {y}}}" for (j, mi), (x, y) in xy.items()] + [
                "}", "foreach ot_inst [[ord::get_db_block] getInsts] {",
                "  if {![[$ot_inst getMaster] isBlock]} { continue }",
@@ -371,8 +379,8 @@ def cmd_block(a):
                "  if {![[$ot_inst getMaster] isBlock]} { continue }",
                "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
                "  if {![regexp {g_grp\\[(\\d+)\\]\\.g_mb\\[(\\d+)\\]\\.u_ring} $n -> gg mb]} { error \"no slot for $n\" }",
-               f"  set x [expr {{$gg == 0 ? {q(w / 2 - mw - 2.16)} : {q(w / 2 + 2.16)}}}]",
-               f"  set y [expr {{{q(h / 2 - 2.5 * (mh + 4.32))} + $mb * {q(mh + 4.32)}}}]",
+               f"  set x {qd((w - mw) / 2)}",
+               f"  set y [expr {{{qd(h / 2 - 5 * (mh + 4.32))} + ($gg * 5 + $mb) * {q(mh + 4.32)}}}]",
                "  place_macro -macro_name [$ot_inst getName] -location [list $x $y] -orientation R0",
                "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_block(a.lat, element_io=True, ring=True)
@@ -442,7 +450,7 @@ def cmd_top(a):
     sdc += (ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_sm_v_die_budget.sdc").read_text().splitlines()
     (work / "constraint.sdc").write_text("\n".join(sdc) + "\n")
     views = [f"{VIEWS}/{n}" for n in PIECES]
-    extra = {"PLACE_DENSITY": "0.30", "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M9",
+    extra = {"PLACE_DENSITY": "0.30", "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M9", "HOLD_SLACK_MARGIN": "20",
              "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_smh_top.tcl", "MACRO_PLACE_HALO": "0.5 0.5",
              "CTS_ARGS": "-sink_clustering_enable -repair_clock_nets -macro_clustering_size 1 "
                          "-macro_clustering_max_diameter 20",
@@ -476,6 +484,7 @@ def main(argv=None):
     b.add_argument("--lat", default="250", help="neighbour clock insertion carried by the virtual clock (ps)")
     b.add_argument("--src", required=True, help="host path of the source tree mounted at /src")
     b.add_argument("--need", default="40")
+    b.add_argument("--hold-margin", default="10", help="ORFS hold repair margin (ps); sign-off stays 25 ps at FF")
     b.add_argument("--cores", default="16")
     t = sub.add_parser("top")
     t.add_argument("--label", required=True)
