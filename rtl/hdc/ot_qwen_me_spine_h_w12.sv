@@ -832,8 +832,14 @@ end endgenerate
             for (e = 0; e < (AN >> al); e = e + 1) begin : g_node
                 wire [CW-1:0] x0 = alv[al-1][CW*(2*e) +: CW];
                 wire [CW-1:0] x1 = alv[al-1][CW*(2*e+1) +: CW];
-                wire          x0_wins = x0[CW-1] && (!x1[CW-1] || x0[CW-2 -: 32] > x1[CW-2 -: 32] ||
-                                        (x0[CW-2 -: 32] == x1[CW-2 -: 32] && x0[NW-1:0] < x1[NW-1:0]));
+                //: key0 > key1, or equal keys and row0 < row1  <=>  {key0, ~row0} > {key1, ~row1}: one kept
+                //: prefix carry (A > B <=> carry out of A + ~B), not Yosys's rippled > / == / <
+                wire          gt, gt_c;
+                wire [32+NW-1:0] gt_s;
+                ot_qwen_w12_ksa #(.W(32 + NW)) u_gt (.a({x0[CW-2 -: 32], ~x0[NW-1:0]}), .b(~{x1[CW-2 -: 32], ~x1[NW-1:0]}),
+                    .cin(1'b0), .s(gt_s), .cout(gt_c));
+                assign gt = gt_c;
+                wire          x0_wins = x0[CW-1] && (!x1[CW-1] || gt);
                 reg  [CW-1:0] c;
                 always @(posedge clk) c <= x0_wins ? x0 : x1;
                 assign alv[al][CW*e +: CW] = c;
@@ -847,13 +853,17 @@ end endgenerate
     wire [31:0]   top_val = top_key[31] ? {1'b0, top_key[30:0]} : ~top_key;
     wire [NW-1:0] top_idx = top[NW-1:0];
     reg [31:0] best_key;
+    //: top > best (key, then the lower index): the same kept carry as the tree nodes
+    wire best_gt;
+    wire [32+NW-1:0] best_s;
+    ot_qwen_w12_ksa #(.W(32 + NW)) u_bgt (.a({top_key, ~top_idx}), .b(~{best_key, ~am_idx}), .cin(1'b0), .s(best_s),
+        .cout(best_gt));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             am_any <= 1'b0; am_idx <= 0; am_val <= 0; best_key <= 0;
         end else begin
             if (go && ready && i_amax) am_any <= 1'b0;
-            else if (tv[LV] && !t_rmax && top_v && (!am_any || top_key > best_key ||
-                                         (top_key == best_key && top_idx < am_idx))) begin
+            else if (tv[LV] && !t_rmax && top_v && (!am_any || best_gt)) begin
                 am_any <= 1'b1; best_key <= top_key; am_idx <= top_idx; am_val <= top_val;
             end
         end
@@ -861,7 +871,13 @@ end endgenerate
     reg [31:0] rk [0:IL-1];
     reg [IL-1:0] rseen;
     integer rj;
-    wire [31:0] nk = (!top_v || (rseen[t_j] && top_key <= rk[t_j])) ? rk[t_j] : top_key;
+    wire [31:0] rk_j = rk[t_j];
+    wire        rk_ge, rk_c;
+    wire [31:0] rk_s;
+    //: rk_j >= top_key (carry out of rk_j + ~top_key + 1), kept prefix
+    ot_qwen_w12_ksa #(.W(32)) u_rge (.a(rk_j), .b(~top_key), .cin(1'b1), .s(rk_s), .cout(rk_c));
+    assign rk_ge = rk_c;
+    wire [31:0] nk = (!top_v || (rseen[t_j] && rk_ge)) ? rk_j : top_key;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rseen <= 0; mx_we <= 1'b0; end
         else begin
@@ -1209,8 +1225,14 @@ module ot_qwen_me_spport_w12 #(
             for (e = 0; e < (NL >> al); e = e + 1) begin : g_node
                 wire [CW-1:0] x0 = alv[(al-1)*CW*NL + CW*(2*e) +: CW];
                 wire [CW-1:0] x1 = alv[(al-1)*CW*NL + CW*(2*e+1) +: CW];
-                wire          x0_wins = x0[CW-1] && (!x1[CW-1] || x0[CW-2 -: 32] > x1[CW-2 -: 32] ||
-                                        (x0[CW-2 -: 32] == x1[CW-2 -: 32] && x0[NW-1:0] < x1[NW-1:0]));
+                //: key0 > key1, or equal keys and row0 < row1  <=>  {key0, ~row0} > {key1, ~row1}: one kept
+                //: prefix carry (A > B <=> carry out of A + ~B), not Yosys's rippled > / == / <
+                wire          gt, gt_c;
+                wire [32+NW-1:0] gt_s;
+                ot_qwen_w12_ksa #(.W(32 + NW)) u_gt (.a({x0[CW-2 -: 32], ~x0[NW-1:0]}), .b(~{x1[CW-2 -: 32], ~x1[NW-1:0]}),
+                    .cin(1'b0), .s(gt_s), .cout(gt_c));
+                assign gt = gt_c;
+                wire          x0_wins = x0[CW-1] && (!x1[CW-1] || gt);
                 reg  [CW-1:0] c;
                 always @(posedge clk) c <= x0_wins ? x0 : x1;
                 assign alv[al*CW*NL + CW*e +: CW] = c;
