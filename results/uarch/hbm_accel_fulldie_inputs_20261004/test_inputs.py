@@ -43,7 +43,7 @@ def fixture(root):
                           orientation="R0", macs_per_cycle=0, communication_intensity=0,
                           mux_demux_fanout_area_um2=0, latency_cycles=1)
     selection = save("selection.json", dict(design_kind="hbm_accelerator", target="deepseek", adopted=True,
-                      census_complete=True, top="parser_fixture", top_parameters={}, source_pins=[rtl],
+                      census_complete=True, top="parser_fixture", top_source=rtl, top_parameters={}, source_pins=[rtl],
                       instances=instances))
     model = dict(design_kind="hbm_accelerator", target="deepseek", slot_latency_route_ready=True,
                  selection_sha256=selection["sha256"], uarch_source=uarch, technology_source=tech,

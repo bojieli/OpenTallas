@@ -1,15 +1,15 @@
 {
   "schema": "hbm_accel_fulldie_bindings.v1",
-  "source_commit": "30abaac2e71730b5f3adc58d33357ec1a68cf4b7",
+  "source_commit": "fdd0202f217befbf5df3642c8f2111abf9b30a5c",
   "status": "BLOCKED",
   "uarch_source": {
     "path": "tools/uarch_model.py",
-    "sha256": "e1d2ed9c0b81d4156ca38bb81ecfca2cea485f3bc3f1538c395f834d6359c37b"
+    "sha256": "f56faa82eebcc045dd83ebe5b30c4c6c16eb471ea9c64dcafd9500eb63519f9c"
   },
   "inputs": [
     {
       "path": "tools/uarch_model.py",
-      "sha256": "e1d2ed9c0b81d4156ca38bb81ecfca2cea485f3bc3f1538c395f834d6359c37b"
+      "sha256": "f56faa82eebcc045dd83ebe5b30c4c6c16eb471ea9c64dcafd9500eb63519f9c"
     },
     {
       "path": "tools/dshbm_1m_allmeasured.py",
@@ -142,6 +142,10 @@
     {
       "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
       "sha256": "8287b3865cb7626f4015246d5949110aa22f1d02d84812218ebc0513344304d0"
+    },
+    {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/current_components.json",
+      "sha256": "16ba9a5874bcd72576447d631df8662216ce51c42f9a7bfa1927699f23465782"
     }
   ],
   "forbidden_substitutes": [
@@ -183,7 +187,7 @@
         },
         {
           "binding": "unified_model",
-          "owner": "Claude/model authority",
+          "owner": "Kant joined physical model / Sagan component authority",
           "required": "Same selected census and all per-die replica counts; actual slot/reservation rectangles; MACs, per-port bytes/bits, mux/fanout cost, routing layers/channel tracks, clock/CDC/credit/wire cycles, composed token latency; technology pin; no historical ablation geometry transfer."
         },
         {
@@ -275,6 +279,18 @@
             "path": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json",
             "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
           }
+        },
+        {
+          "binding": "service.loader allocation and corridor",
+          "owner": "Kant physical join / Sagan source hierarchy / Turing component",
+          "required": "Named service.loader within existing service budget, each-die rectangle x/y/width/height, blockages, usable area, host/memory fold split, port coordinates, layer pitch/available tracks, CDC/wire/credit costs and repair headroom. No fixture core transferred; one load/store shared MREQ client/die, one DMA64 per selected host hierarchy.",
+          "region_um": null,
+          "corridor": null,
+          "repair_budget_um2": null,
+          "geometry_price": {
+            "path": "results/rtl/tapeout_hbm_loader_20261004/installed_roundtrip/crc_matrix_geometry_bound_before_build.json",
+            "sha256": "c44e5af86c07da4a90d23b5e4f1e9a8785b3167473aad6f57a04163d8b718d76"
+          }
         }
       ]
     },
@@ -310,7 +326,7 @@
         },
         {
           "binding": "unified_model",
-          "owner": "Claude/model authority",
+          "owner": "Kant joined physical model / Sagan component authority",
           "required": "Same selected census and all per-die replica counts; actual slot/reservation rectangles; MACs, per-port bytes/bits, mux/fanout cost, routing layers/channel tracks, clock/CDC/credit/wire cycles, composed token latency; technology pin; no historical ablation geometry transfer."
         },
         {
@@ -344,6 +360,18 @@
             "path": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json",
             "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
           }
+        },
+        {
+          "binding": "service.loader allocation and corridor",
+          "owner": "Kant physical join / Sagan source hierarchy / Turing component",
+          "required": "Named service.loader within existing service budget, each-die rectangle x/y/width/height, blockages, usable area, host/memory fold split, port coordinates, layer pitch/available tracks, CDC/wire/credit costs and repair headroom. No fixture core transferred; one load/store shared MREQ client/die, one DMA64 per selected host hierarchy.",
+          "region_um": null,
+          "corridor": null,
+          "repair_budget_um2": null,
+          "geometry_price": {
+            "path": "results/rtl/tapeout_hbm_loader_20261004/installed_roundtrip/crc_matrix_geometry_bound_before_build.json",
+            "sha256": "c44e5af86c07da4a90d23b5e4f1e9a8785b3167473aad6f57a04163d8b718d76"
+          }
         }
       ]
     }
@@ -352,5 +380,64 @@
     "deepseek": "Sagan03:55:20: measured currentDS composition TP96/32SM intent+SU/DU/service/collective; physical joinedtop/census remainsmissing",
     "qwen": "Sagan03:55:20: measured HA8 W12 die/tile/collective/wstream, current f12 variants; no32SMtransfer",
     "sizing_geometry_selection": "NONE; source-linked existing footprints retained, no placement invented"
+  },
+  "physical_join": {
+    "component_authority": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/current_components.json",
+      "sha256": "16ba9a5874bcd72576447d631df8662216ce51c42f9a7bfa1927699f23465782"
+    },
+    "sm_context": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp/floorplan.json",
+      "sha256": "a9d4b1df8a19704cde000d0fad7a04a415062528fa71ffc750074783f41e78c7"
+    },
+    "sm_capture": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/capture.json",
+      "sha256": "7603e4f1dcbcd640c33f171f35d2b59fe303661b1dfb620e3b8ac504bc6dd76c"
+    },
+    "phy": {
+      "path": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json",
+      "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
+    },
+    "loader_geometry": {
+      "path": "results/rtl/tapeout_hbm_loader_20261004/installed_roundtrip/crc_matrix_geometry_bound_before_build.json",
+      "sha256": "c44e5af86c07da4a90d23b5e4f1e9a8785b3167473aad6f57a04163d8b718d76"
+    },
+    "qwen_measured": {
+      "path": "results/rtl/hbm_accel_ha8_20261004/b_tp4_p1023/L0/token_result.json",
+      "sha256": "11123b56d25783340c18f48d6559bcbec50fed2e9afccbeb0ee99b5fac27540c"
+    },
+    "ds_measured": {
+      "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+      "sha256": "8287b3865cb7626f4015246d5949110aa22f1d02d84812218ebc0513344304d0"
+    },
+    "allocation": null,
+    "budget_authorities": {
+      "historical_ds": {
+        "path": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+        "sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67"
+      },
+      "historical_qwen": {
+        "path": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+        "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+      },
+      "ds_service_r11": {
+        "path": "results/uarch/qwen_hbm_interface_geometry_20261002/deepseek_floorplan_r11.json",
+        "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca"
+      },
+      "qwen_service_r11": {
+        "path": "results/uarch/qwen_hbm_interface_geometry_20261002/qwen_floorplan_r11.json",
+        "sha256": "97a6d79ee1ba22fbc89f70f90745d3799a64b3e45ed651312da540e91539e3ab"
+      },
+      "uarch": {
+        "path": "tools/uarch_model.py",
+        "sha256": "f56faa82eebcc045dd83ebe5b30c4c6c16eb471ea9c64dcafd9500eb63519f9c",
+        "git_commit": "6ceeb4d02310720b93a06e85c0100e9294048ab2"
+      }
+    },
+    "current_die_core_service_budget": null,
+    "current_portmap": {
+      "path": "results/uarch/hbm_current_target_portmap_20261005/model_portmap.json",
+      "sha256": "89f86a1a126c7da0154b428ccfd07975068d0b018af59927b05900940758c59b"
+    }
   }
 }

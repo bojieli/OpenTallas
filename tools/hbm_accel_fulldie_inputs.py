@@ -78,6 +78,45 @@ def atom(value):
     return "{" + value + "}"
 
 
+def parameters(raw, module):
+    # Public parameters of this exact module header only. Never infer a chosen
+    # value from an RTL default or include parameters of another module in file.
+    clean = re.sub(r"/\*.*?\*/|//[^\n]*", "", raw, flags=re.S)
+    header = re.search(r"\bmodule\s+"+re.escape(module)+r"\b(.*?);", clean, re.S)
+    require(header, "missing RTL module: " + module)
+    start = re.search(r"#\s*\(", header[1])
+    if start is None:
+        return set()
+    # Split only top-level commas; defaults may contain nested function calls,
+    # concatenations or strings. Also cover `parameter int A=1, B=2`.
+    pieces, part, level, quoted, escaped, ended = [], [], 1, False, False, False
+    for char in header[1][start.end():]:
+        if quoted:
+            part.append(char)
+            if escaped: escaped = False
+            elif char == "\\": escaped = True
+            elif char == '"': quoted = False
+            continue
+        if char == '"': quoted = True
+        elif char in "([{": level += 1
+        elif char in ")]}":
+            level -= 1
+            if level == 0:
+                pieces.append("".join(part)); ended = True; break
+        elif char == "," and level == 1:
+            pieces.append("".join(part)); part = []; continue
+        part.append(char)
+    require(ended and not quoted, "unsupported/truncated parameter header: " + module)
+    names = []
+    for piece in pieces:
+        require("=" in piece, "parameter without explicit source default: " + module)
+        match = re.search(r"\b([A-Za-z_]\w*)\s*$", piece.split("=", 1)[0])
+        require(match, "unsupported public parameter declaration: " + module)
+        names.append(match[1])
+    require(len(names) == len(set(names)), "duplicate public parameter: " + module)
+    return set(names)
+
+
 def compile_inputs(root, manifest):
     require(manifest.get("schema") == "hbm_accel_fulldie_bindings.v1", "wrong binding schema")
     for ref in manifest["inputs"]:
@@ -96,6 +135,9 @@ def compile_inputs(root, manifest):
     pinned(root, model["uarch_source"])
     for ref in selected["source_pins"]:
         pinned(root, ref)
+    top_rtl = pinned(root, selected["top_source"]).decode()
+    require(set(selected["top_parameters"]) == parameters(top_rtl, selected["top"]),
+            "all top parameters must be explicit; no RTL defaults")
     pinned(root, model["technology_source"])
     require(selected["top_parameters"] == model["top_parameters"], "full-shape parameter mismatch")
     atom(selected["top"])
@@ -134,6 +176,8 @@ def compile_inputs(root, manifest):
         raw = pinned(root, ref).decode()
         require(re.search(r"\bmodule\s+"+re.escape(instance["module"])+r"\b", raw), "wrong RTL module: " + name)
         require(isinstance(instance["parameters"], dict), "unknown instance parameters: " + name)
+        require(set(instance["parameters"]) == parameters(raw, instance["module"]),
+                "all instance parameters must be explicit: " + name)
         slot = model["instances"][name]
         require(slot["parameters"] == instance["parameters"], "instance/model parameters differ: " + name)
         view = views[name]

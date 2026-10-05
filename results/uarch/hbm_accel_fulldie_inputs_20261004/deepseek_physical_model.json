@@ -1,0 +1,600 @@
+{
+  "target": "deepseek",
+  "component_demands": {
+    "stacks_per_die": 4,
+    "pseudo_channels_per_stack": 32,
+    "pseudo_channels_per_die": 128,
+    "phy_count": 4,
+    "phy_outline_grade": "assumed",
+    "phy_area_um2": 40007840.060159996,
+    "phy_min_shoreline_um_per_stack": 12000.096,
+    "phy_pins_per_stack": 9209,
+    "phy_min_period_ps": 1000.0,
+    "service_loader": {
+      "name": "service.loader",
+      "contained_in": "service",
+      "memory_clients_per_die": 1,
+      "request_bits": 337,
+      "response_bits": 273,
+      "payload_bytes_per_accepted_memory_edge": 32,
+      "host_dma_payload_bits": 64,
+      "host_dma_instances": "per selected host hierarchy",
+      "local_crc_data_bits": 256,
+      "local_crc_state_bits": 32,
+      "gross_cell_bound_um2": 25118.59216,
+      "required_slot_before_repair_um2": 45670.16756363636,
+      "conservative_crc_cut_tracks": 35520,
+      "default_enabled": false,
+      "crc_recipe_selected": false,
+      "allocation": null,
+      "additional_service_area_um2": null,
+      "added_corridor_area_um2": null,
+      "added_composed_latency_ns": null,
+      "loader_geometric_bound_pass": false
+    },
+    "dies": 96,
+    "sm_per_die": 32,
+    "sm_module": "ot_hbm_accel_sm_v",
+    "network": "TU96",
+    "measured_AR_us": 460.053,
+    "AR_price_terms_us": {
+      "hbm": 10.757,
+      "su": 93.614,
+      "quant": 19.192,
+      "sm": 70.116,
+      "barrier": 22.295,
+      "coll": 167.257,
+      "tail": 39.75,
+      "attn": 19.669,
+      "hcp": 0.0,
+      "du": 8.735,
+      "swiglu": 5.92,
+      "select": 2.792
+    },
+    "physical_clock_price": {
+      "clocks": {
+        "sm": {
+          "mhz": 1030.9,
+          "evidence": "SM element: min(ot_gpu_tc_col routed -102.66 ps 1,068.8 MHz, ot_gpu_stack screen 1,042.4, ot_gpu_tc16 routed 1,157.3, ot_hbm_accel_issue output ports -136.7 ps 1,031); bulk copy r12 closes 1,220; the whole SM element was never routed"
+        },
+        "su": {
+          "mhz": 638.6,
+          "evidence": "SU light lane MLAT4/ALAT3 one-lane placed+repaired screen r2r 638.6 MHz (results/rtl/dshbm_local_chains_20261004/record.json timing_screen lane_k0_kr0; SFU lane 520.9)"
+        },
+        "su_sfu": {
+          "mhz": 520.9,
+          "evidence": "SU SFU lane k1 screen 520.9 MHz (same record)"
+        },
+        "attn": {
+          "mhz": 881.0,
+          "evidence": "attention tile as built on ot_hdc_fastfp LAT3: the multiplier routes 881 MHz at SS (add 975); the tile itself never routed)"
+        },
+        "coll": {
+          "mhz": 394.5,
+          "evidence": "collective endpoint clk_sm side: routed ot_gpu_coll_endpoint (HA3=0 baseline, in context, 540 um) SS setup -1.70125 ns on the RX CDC -> asmb path (results/rtl/hbm_accel_ha3_20261004/verdict.json, main 53ebc1219)"
+        },
+        "hbm": {
+          "mhz": 1209.6,
+          "evidence": "HBM stream PC r8b routed SS +6.28 ps"
+        },
+        "router": {
+          "mhz": 621.5,
+          "evidence": "ot_gpu_router_topk screen 621.5 MHz"
+        }
+      },
+      "AR_us": 603.754,
+      "AR_tok_s": 1656.3,
+      "AR": {
+        "total_us": 603.754,
+        "tok_s": 1656.3,
+        "us_by_class": {
+          "measured": 326.974,
+          "measured_tu_budget": 237.03,
+          "modelled": 39.75
+        },
+        "tu_budget_us": 115.168,
+        "modelled_us": 39.75,
+        "measured_share_incl_tu_budget": 0.9342,
+        "measured_share_excl_tu_budget": 0.7434,
+        "modelled_by_family": {
+          "tail:x_projections_gather": 6.0,
+          "tail:o-group": 6.0,
+          "tail:attn_out_gather": 6.0,
+          "tail:router_gather": 6.0,
+          "tail:expert_intermediate_gather": 6.0,
+          "tail:ffn_out_gather": 6.0,
+          "tail:indexer.q_gather": 1.2,
+          "tail:96": 1.2,
+          "tail:selected": 1.2,
+          "tail:argmax": 0.15
+        }
+      },
+      "AR_by_term": {
+        "hbm": 10.757,
+        "su": 131.942,
+        "quant": 27.071,
+        "sm": 81.642,
+        "barrier": 26.068,
+        "coll": 237.054,
+        "tail": 39.75,
+        "attn": 26.768,
+        "hcp": 0.0,
+        "du": 11.844,
+        "swiglu": 8.32,
+        "select": 2.792
+      },
+      "MTP_tok_s": 3436.1,
+      "MTP": {
+        "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.by_draft_tokens.5 (published: vLLM PR #57432 TP4 (acc:VLLM_57432))",
+        "verify_p6_us": 1082.633,
+        "walk_p6_us": 1006.4428,
+        "union_model_us": {
+          "sm": 47.74,
+          "fetch": 28.45
+        },
+        "draft_us": 45.28,
+        "seed_commit_us": 3.567,
+        "step_us": 1131.48,
+        "tau": 3.8879,
+        "mtp_tok_s": 3436.1,
+        "verify_summary": {
+          "total_us": 1082.633,
+          "tok_s": 923.7,
+          "us_by_class": {
+            "measured": 577.693,
+            "measured_tu_budget": 389.0,
+            "modelled": 39.75
+          },
+          "tu_budget_us": 115.168,
+          "modelled_us": 115.94,
+          "measured_share_incl_tu_budget": 0.8929,
+          "measured_share_excl_tu_budget": 0.7865,
+          "modelled_by_family": {
+            "tail:x_projections_gather": 6.0,
+            "tail:o-group": 6.0,
+            "tail:attn_out_gather": 6.0,
+            "tail:router_gather": 6.0,
+            "tail:expert_intermediate_gather": 6.0,
+            "tail:ffn_out_gather": 6.0,
+            "tail:indexer.q_gather": 1.2,
+            "tail:96": 1.2,
+            "tail:selected": 1.2,
+            "tail:argmax": 0.15
+          }
+        },
+        "verify_by_term": {
+          "hbm": 10.757,
+          "su": 198.916,
+          "quant": 52.283,
+          "sm": 81.642,
+          "barrier": 26.068,
+          "coll": 388.986,
+          "tail": 39.75,
+          "attn": 160.688,
+          "hcp": 0.0,
+          "du": 20.8,
+          "swiglu": 9.88,
+          "select": 16.76
+        }
+      }
+    },
+    "sm_candidate_context": {
+      "source_sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+      "parameters": {
+        "NC": 8,
+        "SUB": 4,
+        "LBS": 2,
+        "LSB": 16,
+        "XD": 128,
+        "RMAX": 4096,
+        "MAX_OUT": 512,
+        "DS": 3,
+        "DG": 3,
+        "DW": 4,
+        "PIO": 2
+      },
+      "macros_per_sm": 202,
+      "macros_for_32_sm": 6464,
+      "area_um2_for_32_sm": 146108016.0,
+      "macro_area_um2_for_32_sm": 74526944.0,
+      "source_matches_current": false,
+      "charged_as_adopted": false
+    },
+    "source_portmap": {
+      "target": "DS_CURRENT_MEASURED_TP96",
+      "ranks": 96,
+      "rank_bits": 7,
+      "position_bits": 20,
+      "SM_per_die": 32,
+      "SM_local_bits": 5,
+      "stacks_per_die": 4,
+      "stack_bits": 2,
+      "SM_per_stack": 8,
+      "stack_local_SM_bits": 3,
+      "PCs_per_stack": 32,
+      "PC_local_bits": 5,
+      "PCs_per_die": 128,
+      "selected_SM": "ot_hbm_accel_sm_v",
+      "SM_parameters": {
+        "ENABLE": 1,
+        "SUB": 4,
+        "LBS": 2,
+        "LSB": 16,
+        "NC": 8,
+        "RMAX": 4096,
+        "XD": 128,
+        "MAX_OUT": 512
+      },
+      "final_pipeline_selection": "Use Popper actual frozen sm_r2 source/DS,DW,DG,PIO,STK parameters; source defaults are not routed selection authority.",
+      "parent_hooks": {
+        "DS_ISSUE": "existing static fullprogram op -> selected SM start/op_rows13/op_c16/op_g8/op_gs1/op_fmt2; do not use SIMT cmdproc instruction reinterpretation",
+        "DS_X": "actual acquired operand -> xw_en/xw_addr7/xw_grp7/xw_data2048; shared publication/broadcast admission must precede start",
+        "DS_FETCH": "four stack groups, ot_hbm_accel_expert_fetch NSM8/NPC32 -> eight1024bit streams each; descriptor->SM bulkcopy LINE1088/tag10 binding requires existing owner/format adapter, not zero padding or tag truncation",
+        "DS_RESULTS": "32 SM rv/rrow12/rdata256 -> actual shared/DU owner publication before arrive/release_in/released; no done=publication shortcut",
+        "DS_DU": "existing N1024 SU il+dr+ov, index/attention/mHC/quantise/select service hooks consume actual published operands in static order; exact per-die replica census beyond measured components not fixed by a fullparent",
+        "DS_HBM": "four32PC stack groups with actual read/write arbitration, owned identity/beat returns and positive ACK; expert_service is read-only, causal provider owns write lifecycle, do not instantiate duplicate unarbitrated controllers",
+        "DS_TU": "hub actual ordered fragments -> inj_rd/inj_idx16/inj_data512; del_valid/del_flit545 -> checked published consumer slots; preserve rank8/flit-index16 and return credits",
+        "DS_HOST": "globalrank7, localSM5 and position20 source context; enclosing existing host hierarchy must retain these through launch/completion, not inherited4/4/16",
+        "DS_LOAD": "per-die existing load/store port -> selected actual stack-service client; full byte aperture and client allocation must precede corridor sizing"
+      },
+      "port_prices": {
+        "SM_ingest_payload_bits_per_edge": 34816,
+        "SM_results_payload_bits_per_edge": 8192,
+        "SM_ingest_byte_upper_bound_per_fast_edge": 4096,
+        "per_stack_SM_ingest_byte_upper_bound": 1024,
+        "stack_column_payload_B_per_service_edge": 1024,
+        "die_column_payload_B_per_service_edge": 4096,
+        "clock_target_fast_Hz": 1200000000.0,
+        "measured_service_period_ps": 1024,
+        "die_column_peak_Bps": 4000000000000.0,
+        "joint_ingest_vs_service": "32SM peak4915.2GB/s > fourstack4000GB/s; actual measured schedule must stall/prices HBM stretch, no free compute/HBM overlap"
+      },
+      "TU": {
+        "NPT": 8,
+        "LANES": 16,
+        "FW": 512,
+        "PWT": 545,
+        "PFMAX": 384,
+        "INJ": 2,
+        "DEL": 4,
+        "HUBW": 35,
+        "WSTG": 14,
+        "all_reduce": {
+          "NC": 8,
+          "NOG": 8,
+          "BF16": 1,
+          "contributors": 64
+        },
+        "all_gather": {
+          "NC": 1,
+          "NOG": 96,
+          "BF16": 0,
+          "contributors": 96
+        },
+        "external_TX_wires": 4368,
+        "external_RX_wires": 4368,
+        "credit_wires_each_direction": 8,
+        "payload_peak_Bps": 720000000000.0,
+        "fixed_external_budget_ns_per_crossing": 377.6,
+        "conservative_tail_us_per_collective": 0.15,
+        "topology": "existing switched TU tier, no proposed direct-link/NVLS/in-switch reduction",
+        "owner_decision": "Measured AR/gather are two separately elaborated NC/NOG/BF16 configurations. Select existing dual-configuration parent with priced shared eight-port arbitration, or provide existing compatible mode-capable source. Cannot silently share one parameter-fixed endpoint or allocate16 free ports.",
+        "hardware_endpoint_instance_count": null,
+        "PHY_switch_realization": "vendor budget; physical PHY/FEC/switch binding absent"
+      }
+    },
+    "loader_source_portmap": {
+      "source": "ot_hbm_accel_loader_host",
+      "enabled": true,
+      "per_die": {
+        "ot_hbm_accel_loader": 1,
+        "ot_hbm_accel_store": 1,
+        "shared_service_clients": 1
+      },
+      "existing_host_group_limit": 8,
+      "DS96_host_group_selection": null,
+      "Qwen4_single_existing_host_group_legal": true,
+      "ports": {
+        "request_payload_bits": 256,
+        "address_bits": 32,
+        "strobe_bits": 32,
+        "tag_bits": 16,
+        "physical_host_DMA_bits": 64
+      },
+      "load_parameters": {
+        "BURST": 16,
+        "MAXOUT": 8,
+        "OUTW": 96,
+        "VOUT": 16,
+        "TW": 16,
+        "CDC_AW": 5
+      },
+      "store_parameters": {
+        "BURST": 16,
+        "MAXOUT": 32,
+        "VOUT": 16,
+        "TW": 16,
+        "CDC_AW": 5
+      },
+      "address_check": {
+        "existing_DADDR_is_byte_address": true,
+        "existing_byte_aperture": 4294967296,
+        "pkg_sectors_per_stack": 703125000,
+        "bytes_per_stack": 22500000000,
+        "minimum_full_stack_byte_bits": 35,
+        "minimum_four_stack_flat_byte_bits": 37,
+        "source_sector_field_bits": 34,
+        "source_stack_bits": 2,
+        "owner_hook": "Bind existing checked fullsector+stack translator to loader page/aperture or supply selected widened loader source.32bitDADDR is not wholefourstack address. No unchecked narrowing."
+      },
+      "service_client_check": "identity_t.client6 cannot encode64SMclients+loader+DU globally. Existing8SM/stack partition has16 SM clients/stack; actual DU+loader enrollment must fit<=64, source census required.",
+      "identity_check": "identity_t.die1 is local namespace. Across die boundaries preserve immutable rank7 DS/rank2 Qwen context; no casts of rank96 to1bit. Decide contained per-die namespace vs width-selected successor explicitly.",
+      "corridor": {
+        "host64_payload": true,
+        "service256_payload": true,
+        "positive_completion": "RLAST/B + actual writeACK/readback order",
+        "clock_crossings": "existing load/store forward/reverse CDC retained",
+        "slot_rectangle": null,
+        "track_capacity": null,
+        "CTS_PG_allowance": null,
+        "protected_control_source_qualification": false
+      }
+    },
+    "required_stream_rate_to_service_ratio": 1.2288,
+    "HBM_stretch_added_to_measured_AR": false,
+    "HBM_stretch_basis": "peak ratio1.2288 is a calendar constraint, not extra measured latency; retain actual HBM term once"
+  },
+  "current_frame": {
+    "reticle_um": [
+      33000,
+      26000
+    ],
+    "maximum_area_um2": 858000000.0,
+    "sizing_authority": "actual four ot_hbm3e_phy outlines; 340.5mm2 estimate superseded",
+    "bare_phy_long_edge_min_um": 24000.192,
+    "bare_phy_total_depth_um": 1666.98,
+    "die_um": null,
+    "core_um": null,
+    "service_um": null,
+    "loader_region_um": null,
+    "minimum_feasible_area_um2": null,
+    "actual_component_bounds_complete": false,
+    "edge_keepout_um": null,
+    "signal_corridor_area_um2": null,
+    "clock_repair_area_um2": null,
+    "IR_PG_area_um2": null,
+    "equation": "W>=2*PHYwidth+edge/escape/corridor; H>=2*PHYheight+service+compute+dedicated/collective+channels+PG/clock; W<=33000,H<=26000,W*H<=858e6",
+    "no_die_count_pivot": true,
+    "compute_group_count": 4,
+    "SM_per_group": 8,
+    "candidate_group_array": [
+      4,
+      2
+    ],
+    "bare_group_um": [
+      8811.072,
+      4145.58
+    ],
+    "bare_two_group_width_um": 17622.144,
+    "bare_two_group_depth_um": 8291.16,
+    "candidate_SM_source_sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "candidate_source_compatibility_required": true,
+    "conditional_known_area_um2": 186161526.22772363,
+    "conditional_known_area_excludes": [
+      "SM source compatibility/halo",
+      "all service except loader bound",
+      "SU/index/attention/mHC/quantise/select/DSpark",
+      "TU PHY/arbitration and host hierarchy",
+      "shared storage",
+      "signal corridors",
+      "clock/IR/PG repair"
+    ]
+  },
+  "budget_join": {
+    "current_die_core_service_budget": null,
+    "historical_die_um": [
+      31800.0,
+      25628.930817610064
+    ],
+    "historical_core_um": {
+      "x0": 913.3,
+      "y0": 1554.7,
+      "x1": 30220.0,
+      "y1": 24078.0,
+      "area_mm2": 660.08
+    },
+    "historical_sm_module": "ot_gpu_sm_v",
+    "historical_sm_view": "pending: harden die 1400 x 1640 um",
+    "inherited_as_current": false,
+    "right_size_edge_um": 19000.0,
+    "actual_phy_required_edge_um": 26000.192,
+    "missing_edge_um": 7000.191999999999,
+    "DS_service_provider_area_fit": false,
+    "decision_required": "Bind current accelerator die/core/service rectangle; existing right-size edge uses8.5mm/PHY but actual LEF is12.000096mm. Historical GPU slots are not current component slots."
+  },
+  "source_bindings": {
+    "component_authority": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/current_components.json",
+      "sha256": "16ba9a5874bcd72576447d631df8662216ce51c42f9a7bfa1927699f23465782"
+    },
+    "sm_context": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp/floorplan.json",
+      "sha256": "a9d4b1df8a19704cde000d0fad7a04a415062528fa71ffc750074783f41e78c7"
+    },
+    "sm_capture": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/capture.json",
+      "sha256": "7603e4f1dcbcd640c33f171f35d2b59fe303661b1dfb620e3b8ac504bc6dd76c"
+    },
+    "phy": {
+      "path": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json",
+      "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
+    },
+    "loader_geometry": {
+      "path": "results/rtl/tapeout_hbm_loader_20261004/installed_roundtrip/crc_matrix_geometry_bound_before_build.json",
+      "sha256": "c44e5af86c07da4a90d23b5e4f1e9a8785b3167473aad6f57a04163d8b718d76"
+    },
+    "qwen_measured": {
+      "path": "results/rtl/hbm_accel_ha8_20261004/b_tp4_p1023/L0/token_result.json",
+      "sha256": "11123b56d25783340c18f48d6559bcbec50fed2e9afccbeb0ee99b5fac27540c"
+    },
+    "ds_measured": {
+      "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+      "sha256": "8287b3865cb7626f4015246d5949110aa22f1d02d84812218ebc0513344304d0"
+    },
+    "allocation": null,
+    "budget_authorities": {
+      "historical_ds": {
+        "path": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+        "sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67"
+      },
+      "historical_qwen": {
+        "path": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+        "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+      },
+      "ds_service_r11": {
+        "path": "results/uarch/qwen_hbm_interface_geometry_20261002/deepseek_floorplan_r11.json",
+        "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca"
+      },
+      "qwen_service_r11": {
+        "path": "results/uarch/qwen_hbm_interface_geometry_20261002/qwen_floorplan_r11.json",
+        "sha256": "97a6d79ee1ba22fbc89f70f90745d3799a64b3e45ed651312da540e91539e3ab"
+      },
+      "uarch": {
+        "path": "tools/uarch_model.py",
+        "sha256": "f56faa82eebcc045dd83ebe5b30c4c6c16eb471ea9c64dcafd9500eb63519f9c",
+        "git_commit": "6ceeb4d02310720b93a06e85c0100e9294048ab2"
+      }
+    },
+    "current_die_core_service_budget": null,
+    "current_portmap": {
+      "path": "results/uarch/hbm_current_target_portmap_20261005/model_portmap.json",
+      "sha256": "89f86a1a126c7da0154b428ccfd07975068d0b018af59927b05900940758c59b"
+    }
+  },
+  "integration": {
+    "parent_hooks": {
+      "DS_ISSUE": "existing static fullprogram op -> selected SM start/op_rows13/op_c16/op_g8/op_gs1/op_fmt2; do not use SIMT cmdproc instruction reinterpretation",
+      "DS_X": "actual acquired operand -> xw_en/xw_addr7/xw_grp7/xw_data2048; shared publication/broadcast admission must precede start",
+      "DS_FETCH": "four stack groups, ot_hbm_accel_expert_fetch NSM8/NPC32 -> eight1024bit streams each; descriptor->SM bulkcopy LINE1088/tag10 binding requires existing owner/format adapter, not zero padding or tag truncation",
+      "DS_RESULTS": "32 SM rv/rrow12/rdata256 -> actual shared/DU owner publication before arrive/release_in/released; no done=publication shortcut",
+      "DS_DU": "existing N1024 SU il+dr+ov, index/attention/mHC/quantise/select service hooks consume actual published operands in static order; exact per-die replica census beyond measured components not fixed by a fullparent",
+      "DS_HBM": "four32PC stack groups with actual read/write arbitration, owned identity/beat returns and positive ACK; expert_service is read-only, causal provider owns write lifecycle, do not instantiate duplicate unarbitrated controllers",
+      "DS_TU": "hub actual ordered fragments -> inj_rd/inj_idx16/inj_data512; del_valid/del_flit545 -> checked published consumer slots; preserve rank8/flit-index16 and return credits",
+      "DS_HOST": "globalrank7, localSM5 and position20 source context; enclosing existing host hierarchy must retain these through launch/completion, not inherited4/4/16",
+      "DS_LOAD": "per-die existing load/store port -> selected actual stack-service client; full byte aperture and client allocation must precede corridor sizing"
+    },
+    "port_calendar": {
+      "SM_ingest_payload_bits_per_edge": 34816,
+      "SM_results_payload_bits_per_edge": 8192,
+      "SM_ingest_byte_upper_bound_per_fast_edge": 4096,
+      "per_stack_SM_ingest_byte_upper_bound": 1024,
+      "stack_column_payload_B_per_service_edge": 1024,
+      "die_column_payload_B_per_service_edge": 4096,
+      "clock_target_fast_Hz": 1200000000.0,
+      "measured_service_period_ps": 1024,
+      "die_column_peak_Bps": 4000000000000.0,
+      "joint_ingest_vs_service": "32SM peak4915.2GB/s > fourstack4000GB/s; actual measured schedule must stall/prices HBM stretch, no free compute/HBM overlap"
+    },
+    "slots": {
+      "service": null,
+      "service.loader": null,
+      "compute": null,
+      "storage": null,
+      "collective": null
+    },
+    "layer_reservations": null,
+    "mux_fanout_area_um2": null,
+    "exposed_wire_cdc_credit_latency_ns": null,
+    "loader_address_check": {
+      "existing_DADDR_is_byte_address": true,
+      "existing_byte_aperture": 4294967296,
+      "pkg_sectors_per_stack": 703125000,
+      "bytes_per_stack": 22500000000,
+      "minimum_full_stack_byte_bits": 35,
+      "minimum_four_stack_flat_byte_bits": 37,
+      "source_sector_field_bits": 34,
+      "source_stack_bits": 2,
+      "owner_hook": "Bind existing checked fullsector+stack translator to loader page/aperture or supply selected widened loader source.32bitDADDR is not wholefourstack address. No unchecked narrowing."
+    },
+    "unpriced_terms": [
+      "parent issue/DU/publication mux",
+      "TU AR/gather mode arbitration and installed endpoint count",
+      "actual loader page translator and request merge",
+      "Qwen real sector/window/code/KV publication",
+      "native staged capture and VM write arbitration",
+      "loaded physical route/CDC/mux/codec/CTS/PG in exact slots"
+    ],
+    "compute_replica_count": 32,
+    "collective_port_demands": {
+      "NPT": 8,
+      "LANES": 16,
+      "FW": 512,
+      "PWT": 545,
+      "PFMAX": 384,
+      "INJ": 2,
+      "DEL": 4,
+      "HUBW": 35,
+      "WSTG": 14,
+      "all_reduce": {
+        "NC": 8,
+        "NOG": 8,
+        "BF16": 1,
+        "contributors": 64
+      },
+      "all_gather": {
+        "NC": 1,
+        "NOG": 96,
+        "BF16": 0,
+        "contributors": 96
+      },
+      "external_TX_wires": 4368,
+      "external_RX_wires": 4368,
+      "credit_wires_each_direction": 8,
+      "payload_peak_Bps": 720000000000.0,
+      "fixed_external_budget_ns_per_crossing": 377.6,
+      "conservative_tail_us_per_collective": 0.15,
+      "topology": "existing switched TU tier, no proposed direct-link/NVLS/in-switch reduction",
+      "owner_decision": "Measured AR/gather are two separately elaborated NC/NOG/BF16 configurations. Select existing dual-configuration parent with priced shared eight-port arbitration, or provide existing compatible mode-capable source. Cannot silently share one parameter-fixed endpoint or allocate16 free ports.",
+      "hardware_endpoint_instance_count": null,
+      "PHY_switch_realization": "vendor budget; physical PHY/FEC/switch binding absent"
+    }
+  },
+  "contradictions": [
+    {
+      "id": "DS_SM_INTERFACE",
+      "actual": "generic HA3 g_die/g_sm instantiates ot_hbm_accel_simt_sm; measured model uses ot_hbm_accel_sm_v plus dedicated units",
+      "needed_owner_selection": "existing actual SM-cluster enclosing source binding including SU/attention/index/mHC/DSpark interfaces; selecting NSM32 does not replace SM type"
+    },
+    {
+      "id": "DS_NETWORK",
+      "actual": "generic HA3 top uses ot_gpu_coll_system/fabric; current measured walk uses switched-tier TU endpoint; no proven selector join",
+      "needed_owner_selection": "pin adopted TU endpoint/physical fabric and its instance/port counts; do not auto-enable rejected HA3 cut-through/direct-link hypotheses"
+    },
+    {
+      "id": "DS_IDENTITY_AND_POSITION",
+      "actual": "generic loader top has ld_die4, ld_sm4, eng_pos16; loader_host explicitly rejects ND>8",
+      "needed_owner_selection": "existing fullrank hierarchy vs per-die replicated host/loader selection and fullposition transport source; cannot choose ND96/NSM32/MAXPOS1M by override"
+    },
+    {
+      "id": "QWEN_TOP_RESIDENCE",
+      "actual": "HA8 die/tile/coll/wst are separately instantiated/connected by runtime, not a hardware full-die parent containing selected components; SRAM resident421MiB/421.5MiB is model input, not joined macro placement",
+      "needed_owner_selection": "selected W12/fmax parent hardware sources plus tile/VM/code-window residence census and loader port binding"
+    },
+    {
+      "id": "MODEL_JOIN",
+      "actual": "HA0 integration record is unvalidated, adoptedfalse; old HA composition revision2 adoptedrungs[]; current measured DS/HA8 performance records supersede it but do not publish die slot/port/route model",
+      "needed_owner_selection": "join current target selection to per-die slots, mux/fanout, clocks/CDC, service and loader protected-port corridor; no old GPU geometry fallback"
+    },
+    {
+      "id": "CLOCK_BINDING",
+      "actual": "ot_gpu_memsys_adapter hardcodes CLK_PS1000; measured HA8 controller period1024ps, compute833.333ps",
+      "needed_owner_selection": "actual current source-selected clock-domain mapping; no1p2 fullmemory clock inference"
+    }
+  ],
+  "physical_fit": false,
+  "signoff": false,
+  "adopted": false,
+  "total_die_area_um2": null,
+  "composed_physical_token_latency_ns": null,
+  "next_binding": "Sagan component census/ports/clocks; existing core/service rectangles and all component slot/route costs"
+}
