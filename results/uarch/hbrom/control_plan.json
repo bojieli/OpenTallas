@@ -1,0 +1,361 @@
+{
+  "schema": "opentallas.hbrom.control-plan.v1",
+  "status": "PRICED_PROPOSAL_NOT_IMPLEMENTED_OR_TIMING_QUALIFIED",
+  "shape": {
+    "NC": 1,
+    "ring_depth": 1024,
+    "max_out": 512,
+    "network_latency": 17,
+    "rows": 4096,
+    "descriptor_depth": 8,
+    "activation_words": 128,
+    "activation_beats": 2,
+    "activation_contexts": 1
+  },
+  "inventory": [
+    {
+      "name": "operation_descriptor_queue",
+      "entries": 8,
+      "bits_per_entry": 512,
+      "raw_bits": 4096,
+      "purpose": "Complete descriptor, including identity, extents, formats, dependency mask",
+      "protected_storage_bits": 8192,
+      "compare_xor2_count": 4096,
+      "compare_or2_count": 4088
+    },
+    {
+      "name": "active_and_lookahead_descriptor",
+      "entries": 2,
+      "bits_per_entry": 512,
+      "raw_bits": 1024,
+      "purpose": "One active and one prepared descriptor; immutable while outstanding",
+      "protected_storage_bits": 2048,
+      "compare_xor2_count": 1024,
+      "compare_or2_count": 1022
+    },
+    {
+      "name": "descriptor_pointers_and_count",
+      "entries": 2,
+      "bits_per_entry": 3,
+      "raw_bits": 6,
+      "purpose": "Read and write pointers",
+      "protected_storage_bits": 12,
+      "compare_xor2_count": 6,
+      "compare_or2_count": 4
+    },
+    {
+      "name": "descriptor_count",
+      "entries": 1,
+      "bits_per_entry": 4,
+      "raw_bits": 4,
+      "purpose": "Full/empty discrimination",
+      "protected_storage_bits": 8,
+      "compare_xor2_count": 4,
+      "compare_or2_count": 3
+    },
+    {
+      "name": "transaction_epoch_and_operation_sequence",
+      "entries": 2,
+      "bits_per_entry": 32,
+      "raw_bits": 64,
+      "purpose": "No reuse or wrap until quiescence",
+      "protected_storage_bits": 128,
+      "compare_xor2_count": 64,
+      "compare_or2_count": 62
+    },
+    {
+      "name": "ring_alloc_cons_used",
+      "entries": 3,
+      "bits_per_entry": 11,
+      "raw_bits": 33,
+      "purpose": "Phase-bit pointers and occupancy",
+      "protected_storage_bits": 66,
+      "compare_xor2_count": 33,
+      "compare_or2_count": 30
+    },
+    {
+      "name": "ring_outstanding",
+      "entries": 1,
+      "bits_per_entry": 10,
+      "raw_bits": 10,
+      "purpose": "Issued responses not yet committed",
+      "protected_storage_bits": 20,
+      "compare_xor2_count": 10,
+      "compare_or2_count": 9
+    },
+    {
+      "name": "ring_allocated_full_bits",
+      "entries": 1024,
+      "bits_per_entry": 2,
+      "raw_bits": 2048,
+      "purpose": "Allocated and returned/complete, separate bit-local checks",
+      "protected_storage_bits": 4096,
+      "compare_xor2_count": 2048,
+      "compare_or2_count": 1024
+    },
+    {
+      "name": "ring_slot_identity",
+      "entries": 1024,
+      "bits_per_entry": 64,
+      "raw_bits": 65536,
+      "purpose": "Epoch32 and operation sequence32 bound at allocation",
+      "protected_storage_bits": 131072,
+      "compare_xor2_count": 65536,
+      "compare_or2_count": 64512
+    },
+    {
+      "name": "active_line_address_and_remaining",
+      "entries": 1,
+      "bits_per_entry": 56,
+      "raw_bits": 56,
+      "purpose": "32-bit address plus 24-bit remaining lines",
+      "protected_storage_bits": 112,
+      "compare_xor2_count": 56,
+      "compare_or2_count": 55
+    },
+    {
+      "name": "activation_write_valid_bits",
+      "entries": 256,
+      "bits_per_entry": 1,
+      "raw_bits": 256,
+      "purpose": "One existing NC1 context; every independently written 2048-bit beat has valid state",
+      "protected_storage_bits": 512,
+      "compare_xor2_count": 256,
+      "compare_or2_count": 0
+    },
+    {
+      "name": "activation_slot_owner",
+      "entries": 1,
+      "bits_per_entry": 99,
+      "raw_bits": 99,
+      "purpose": "State, identity, extent, accepted-beat count",
+      "protected_storage_bits": 198,
+      "compare_xor2_count": 99,
+      "compare_or2_count": 98
+    },
+    {
+      "name": "scale_slot_owner",
+      "entries": 2,
+      "bits_per_entry": 99,
+      "raw_bits": 198,
+      "purpose": "Separate ownership for non-inline scale material; inline scales remain weight data",
+      "protected_storage_bits": 396,
+      "compare_xor2_count": 198,
+      "compare_or2_count": 196
+    },
+    {
+      "name": "output_valid_and_reserved_bits",
+      "entries": 4096,
+      "bits_per_entry": 2,
+      "raw_bits": 8192,
+      "purpose": "Reserve all rows before unbackpressured sm_v launch",
+      "protected_storage_bits": 16384,
+      "compare_xor2_count": 8192,
+      "compare_or2_count": 4096
+    },
+    {
+      "name": "output_slot_identity",
+      "entries": 1,
+      "bits_per_entry": 64,
+      "raw_bits": 64,
+      "purpose": "Entire row array leased to one operation; no next owner until full retirement",
+      "protected_storage_bits": 128,
+      "compare_xor2_count": 64,
+      "compare_or2_count": 63
+    },
+    {
+      "name": "output_write_read_count",
+      "entries": 3,
+      "bits_per_entry": 13,
+      "raw_bits": 39,
+      "purpose": "Writes, consumer cursor and count; row range checked",
+      "protected_storage_bits": 78,
+      "compare_xor2_count": 39,
+      "compare_or2_count": 36
+    },
+    {
+      "name": "completion_records",
+      "entries": 8,
+      "bits_per_entry": 128,
+      "raw_bits": 1024,
+      "purpose": "Epoch, operation, status, output count and retirement metadata",
+      "protected_storage_bits": 2048,
+      "compare_xor2_count": 1024,
+      "compare_or2_count": 1016
+    },
+    {
+      "name": "completion_reserved_valid_bits",
+      "entries": 8,
+      "bits_per_entry": 2,
+      "raw_bits": 16,
+      "purpose": "Completion capacity reserved at admission",
+      "protected_storage_bits": 32,
+      "compare_xor2_count": 16,
+      "compare_or2_count": 8
+    },
+    {
+      "name": "completion_pointers",
+      "entries": 2,
+      "bits_per_entry": 3,
+      "raw_bits": 6,
+      "purpose": "Read and write pointers",
+      "protected_storage_bits": 12,
+      "compare_xor2_count": 6,
+      "compare_or2_count": 4
+    },
+    {
+      "name": "completion_occupancy_reservations",
+      "entries": 2,
+      "bits_per_entry": 4,
+      "raw_bits": 8,
+      "purpose": "Queued plus reserved completions",
+      "protected_storage_bits": 16,
+      "compare_xor2_count": 8,
+      "compare_or2_count": 6
+    },
+    {
+      "name": "rom_feed_request_response_identity",
+      "entries": 19,
+      "bits_per_entry": 76,
+      "raw_bits": 1444,
+      "purpose": "All irreversible-read pipeline stages plus two seal stages",
+      "protected_storage_bits": 2888,
+      "compare_xor2_count": 1444,
+      "compare_or2_count": 1425
+    },
+    {
+      "name": "codec_weight_identity",
+      "entries": 4,
+      "bits_per_entry": 76,
+      "raw_bits": 304,
+      "purpose": "Two SRAM encode and two decode stages",
+      "protected_storage_bits": 608,
+      "compare_xor2_count": 304,
+      "compare_or2_count": 300
+    },
+    {
+      "name": "result_identity_pipeline",
+      "entries": 2,
+      "bits_per_entry": 78,
+      "raw_bits": 156,
+      "purpose": "Two output boundary stages; row and validity remain protected",
+      "protected_storage_bits": 312,
+      "compare_xor2_count": 156,
+      "compare_or2_count": 154
+    },
+    {
+      "name": "owner_control_flags",
+      "entries": 32,
+      "bits_per_entry": 1,
+      "raw_bits": 32,
+      "purpose": "Admission, active, draining, cancel, fault and sticky publication controls",
+      "protected_storage_bits": 64,
+      "compare_xor2_count": 32,
+      "compare_or2_count": 0
+    },
+    {
+      "name": "rom_address_walk_counters",
+      "entries": 4,
+      "bits_per_entry": 32,
+      "raw_bits": 128,
+      "purpose": "Four bank stripes, independent address progression",
+      "protected_storage_bits": 256,
+      "compare_xor2_count": 128,
+      "compare_or2_count": 124
+    },
+    {
+      "name": "rom_feed_config_image",
+      "entries": 1,
+      "bits_per_entry": 136,
+      "raw_bits": 136,
+      "purpose": "Feed epoch16, rows13, groups8, fmt2, gs1 and physicalbase/region/virtualbase32",
+      "protected_storage_bits": 272,
+      "compare_xor2_count": 136,
+      "compare_or2_count": 135
+    },
+    {
+      "name": "rom_feed_slot_bases",
+      "entries": 8,
+      "bits_per_entry": 32,
+      "raw_bits": 256,
+      "purpose": "Eight IL slot base addresses checked before read",
+      "protected_storage_bits": 512,
+      "compare_xor2_count": 256,
+      "compare_or2_count": 248
+    },
+    {
+      "name": "rom_feed_live_tag_bitmap",
+      "entries": 1024,
+      "bits_per_entry": 1,
+      "raw_bits": 1024,
+      "purpose": "Reject unallocated or duplicate incoming tag",
+      "protected_storage_bits": 2048,
+      "compare_xor2_count": 1024,
+      "compare_or2_count": 0
+    },
+    {
+      "name": "sm_operation_image",
+      "entries": 2,
+      "bits_per_entry": 40,
+      "raw_bits": 80,
+      "purpose": "Duplicate checked launch envelopes before two PIO stages",
+      "protected_storage_bits": 160,
+      "compare_xor2_count": 80,
+      "compare_or2_count": 78
+    }
+  ],
+  "protection": {
+    "scheme": "Dual modular redundant mutable control, independent next-state cones and fail-stop command comparison",
+    "correction": "None. A mismatch poisons the operation; no output may be published, retire outstanding reads then require software recovery/reset.",
+    "covered_fault_model": "Any single stored control bit flip in either replica; single divergence of one independently generated command. Common-mode or equal changes in both replicas are outside DMR guarantee.",
+    "compare": "Every state entry read is compared locally; commands, including enable/address/slot/epoch, are independently generated and checked before irreversible side effect. Large maps compare addressed bits, not full-map reduction.",
+    "seal": "512-bit descriptor comparison split into eight64-bit groups, registered local partial seals then registered final decision. No state mutation of sealed descriptor until release. Mutable fast command checks run at every side effect and cannot rely on an old descriptor seal.",
+    "sticky_fault": "Duplicated fail-stop latch; disagreement itself denies permission. Reset clears fault only at externally established quiescence.",
+    "no_rom_ecc": true,
+    "payload": "SRAM payload ECC and result data ECC are separate protection_plan costs; this file protects metadata only."
+  },
+  "cycles": {
+    "descriptor_admission_extra": 2,
+    "rom_issue_extra": 1,
+    "response_commit_extra": 1,
+    "activation_publish_extra": 1,
+    "output_publish_extra": 1,
+    "completion_extra": 1,
+    "peak_lines_per_cycle": 1,
+    "protected_credit_depth_min": 40,
+    "note": "Pipeline latency allowance, not measured timing. Counter reservation occurs before command-check stage; pipeline slots count against credits. Guard checks must accept one per cycle. Existing timing must add these stages explicitly."
+  },
+  "area": {
+    "raw_state_bits": 86339,
+    "duplicated_raw_bits": 172678,
+    "seal_bits": 15302,
+    "protected_state_bits": 187980,
+    "xor2_count": 86339,
+    "or2_count": 78796,
+    "dff_um2": 0.2916,
+    "gate_allowance_um2": 0.3,
+    "storage_cell_mm2": 0.054814968000000006,
+    "compare_logic_allowance_mm2": 0.0541311,
+    "packed_total_allowance_mm2": 0.21789213600000001,
+    "packed_increment_over_unprotected_mm2": 0.16753923120000003,
+    "basis": "DFF area existing floorplan coefficient; logic .3um2/gate explicit allowance. 50% utilization. Independent NEXT-STATE arithmetic cones, CTS, hold fixing and compare distribution require synthesis; not a bound or signoff claim."
+  },
+  "scope": {
+    "included": "New descriptor-owner, ROM feed, ring metadata, activation validity, result and completion wrapper state at full NC1 shape.",
+    "additional_required": "Existing sm_v internal arithmetic pipeline tags, issuer/stack counters and bulk-copy retiming duplicates need independent control-cone inventory and protection integration before claiming full-tile protection. Existing duplicate fanout registers are NOT DMR without independent next-state cones and compare.",
+    "template": "Immutable descriptor templates are ROM: no ECC required. Mutable fetched copies appear in inventory. Template address/bounds controlled by protected descriptor state."
+  },
+  "mandatory_checks": [
+    "Exhaustive single-bit mutation of protected descriptors, epochs, pointers and validity bits denies unauthorized commits.",
+    "Late response carries allocated slot generation and cannot publish into next operation.",
+    "Fault during request-check pipeline cannot issue unchecked read.",
+    "No result leak on control mismatch; irrevocable old reads drain without freeing active lease.",
+    "Full contextual SS60ps/FF25ps measurement of added guard stages and duplicated fanout."
+  ],
+  "sources_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/abi3/ot_a3_operand_bank_owner.sv": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+    "results/floorplan/qwen_o4_unit_areas.json": "3805d42b5eaf79491eb8d72879d4e5deae717bd4c815284a807af2439b3bdf41"
+  }
+}

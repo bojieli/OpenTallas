@@ -389,6 +389,12 @@ Some losses on the three targets came from process, not architecture. Five habit
 - **Ceremony displaced completion.** Review, freeze, seal and receipt commits, proof re-runs and broad test sweeps took a large share of the commits. Meanwhile no full-shape token had been measured on any of the three targets. The habit now: finish the build, integration and measurement first.
 - **Ideas went unvalidated after hand-off.** Optimisations were handed off and then sat unmeasured, or were judged on the wrong vehicle. The asynchronous collective was rejected on the reduced core, although at full shape it measured a seven-percent per-layer saving. The direct-link all-reduce was excluded although its build had failed, so it was never measured at all. The habit now: whoever proposes a lever measures it at full shape, and every rejection is checked for the right vehicle.
 - **Effort drifted to the ablation.** Most integration effort went into the GPU-organised HBM design after it had become an ablation. The habit now: re-check effort against the targets whenever the positioning changes.
+- **Speculation was judged off the target context or off the final datapath, and the verdict flipped twice.**
+  1. At P255 the Qwen ROM verify layer cost 2.89× an AR layer, and DSpark was rejected (0.83×).
+  2. At 8K on the one-stack REAL_MEM KV path it was adopted (1.57×). The verify layer there shared a 9,893-cycle KV-fill stall across four positions.
+  3. The full-bandwidth STREAM4 path removed that stall. The AR layer fell to its compute-only bound (5,282 cycles), the verify layer stayed at 3.26× it, and DSpark fell below plain decoding. The Qwen ROM now runs in AR mode at 8K.
+
+  Each verdict was correct for its vehicle, and only the last vehicle is the product. Speculation pays only for a resource that sits idle in plain decoding. A memory stall that a later lever removes is such a resource, so the verdict moves whenever the memory path changes. The habit now: measure speculation at the target context, on the final datapath, after the memory-path levers have landed. Record the verify ÷ AR layer ratio beside the rate, because that ratio is what moves. Records: `results/rtl/qwen_dspark_system_20261004/step_composed.json`, `results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json`, `results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json`; derivation in [ANALYTICAL_REPORT.md](ANALYTICAL_REPORT.md).
 
 ---
 

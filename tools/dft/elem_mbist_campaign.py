@@ -127,6 +127,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--bira-pop-pipe", action="store_true", help="Select default-off BIRA search pipeline")
     ap.add_argument("--seeds", type=int, default=2)
     ap.add_argument("--jobs", type=int, default=12)
     ap.add_argument("--verilator", default=str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
@@ -147,6 +148,14 @@ def main() -> int:
         sigs.append(s)
         rows.append(rom_gen.via_map(spec, words))
     die_sig = rom_gen.die_signature(recs)
+
+    if a.bira_pop_pipe:
+        selected = a.work / "ot_mbist_ctrl.sv"
+        text = (ROOT / "rtl/dft/ot_mbist_ctrl_bira_pipe.sv").read_text()
+        selected.write_text(text.replace("module ot_mbist_ctrl_bira_pipe #(", "module ot_mbist_ctrl #(", 1)
+                           .replace("parameter integer POP_PIPE = 0", "parameter integer POP_PIPE = 1", 1))
+        RTL[RTL.index("rtl/dft/ot_mbist_ctrl.sv")] = str(selected)
+        RTL[RTL.index("rtl/dft/ot_mbist_bira.sv")] = "rtl/dft/ot_mbist_bira_pipe.sv"
 
     build = a.work / "obj"
     cmd = [a.verilator, "--binary", "--timing", "-j", "16", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-PINMISSING",

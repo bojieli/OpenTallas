@@ -60,7 +60,8 @@ module tb_hdc_fsqrt_equiv (input wire clk);
             if (quiet > 40) begin
                 $display("SQRTEQ checked=%0d refused=%0d mismatches=%0d", checked, refused, bad);
                 if (bad == 0 && checked == n) $display("PASS"); else $display("FAIL");
-                $finish;
+                if (!(bad == 0 && checked == n)) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+        $finish;
             end
         end
     end

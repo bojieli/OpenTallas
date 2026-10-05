@@ -1,0 +1,101 @@
+{
+  "PDN_changed": false,
+  "added_token_cycles": 0,
+  "current_authority": "Qwen mainf1df64409 b3r16B40 closure inherits completed b3r13c_ir_spine_hub peak power/PDN windows; not current item7 grownslab recipe",
+  "current_recovery_die_qualified": false,
+  "delta": "only -enable_em and -em_outfile",
+  "em_rule_authority": null,
+  "foundry_violation_count": null,
+  "load_or_supply_changed": false,
+  "new_MACs": 0,
+  "new_hardware_area_mm2": 0,
+  "new_memory_ports": 0,
+  "original_manifest": {
+    "align": true,
+    "b3r2": {
+      "band": false,
+      "die": {
+        "budget_mm2": 858,
+        "h": 32801.76,
+        "margin_mm2": 46.237,
+        "mm2": 811.763,
+        "w": 24747.552
+      },
+      "producer": "/home/ubuntu/wt-qwen-die-pdn/tools/qwen_rom_fulldie_b3r2.py"
+    },
+    "budget_mv": 35.0,
+    "bump_pad": false,
+    "bump_sites": 1968,
+    "bumps": {
+      "array_pitch_um": 45.0,
+      "basis": "tools/v41_die_assembly.py CONST (bump pitch published 25-55 um; power fraction and contact assumed)",
+      "power_fraction": 0.25,
+      "size_um": 20.0,
+      "vdd_pitch_um": 63.64
+    },
+    "case": "c",
+    "cell_um": 20.0,
+    "cells_without_both_rails": 520,
+    "cov_scale": 1.0,
+    "loads": 19370,
+    "peak": true,
+    "power_w": 5.5073,
+    "power_w_by_region": {
+      "channel": 0.6552,
+      "corridor": 0.546,
+      "hub": 1.5215,
+      "tile_field": 2.7846
+    },
+    "signal_bumps_phy": false,
+    "size_um": [
+      3069.792,
+      2600.32
+    ],
+    "stripes": {
+      "M8": 2529,
+      "M9": 577,
+      "pitch_by_region": {
+        "channel": 9.0914,
+        "corridor": 9.0914,
+        "ctrl": 1.8183,
+        "hub": 12.728,
+        "io": 12.728,
+        "strip": 1.8183,
+        "tile_field": 9.0914
+      },
+      "vias": 144766,
+      "width_um": 0.48
+    },
+    "vdd_v": 0.7,
+    "window": "spine_hub",
+    "window_um": [
+      10838.88,
+      14318.64,
+      13908.672,
+      16918.96
+    ]
+  },
+  "power_w_from_original_commands": 5.50732,
+  "prepared_sha256": {
+    "loads.lef": "5b3b6b563fb9f90e355758d4775bfdb8ce59ba2c01552d7f1ce450ef32dd938a",
+    "manifest.json": "121d5603ec0ece6828cbab9dad93f765ad37bf547279295166f243ec2d7b653d",
+    "run.tcl": "ab00304e4253f963ddb3b71be364995123d909c4702002612dcf8782433a9af1",
+    "top.def": "e4209ec6ded4ae3054af560ef761f5a3602989736de913b734af20fcd6a32ee0",
+    "vsrc_VDD.loc": "007253c5e595138c0b2605a4e024da0c8e734b91ee01d0079b296fc2c87a453e",
+    "vsrc_VSS.loc": "baeda76508f61d5a86c370d91a513ab87b2e2f31654777fecd7bcbdaf2e63aa3"
+  },
+  "rails": [
+    "VDD",
+    "VSS"
+  ],
+  "schema": "opentallas.die_window_em.input.v1",
+  "source": "/mnt/epyc1-scratch/claude/qwen-fulldie/cases/b3r13c_ir_spine_hub",
+  "source_sha256": {
+    "loads.lef": "5b3b6b563fb9f90e355758d4775bfdb8ce59ba2c01552d7f1ce450ef32dd938a",
+    "manifest.json": "121d5603ec0ece6828cbab9dad93f765ad37bf547279295166f243ec2d7b653d",
+    "run.tcl": "a085e0d7d93871c283efb7867d354f4d717bb1efecba47156f104ea4d73d4d42",
+    "top.def": "e4209ec6ded4ae3054af560ef761f5a3602989736de913b734af20fcd6a32ee0",
+    "vsrc_VDD.loc": "007253c5e595138c0b2605a4e024da0c8e734b91ee01d0079b296fc2c87a453e",
+    "vsrc_VSS.loc": "baeda76508f61d5a86c370d91a513ab87b2e2f31654777fecd7bcbdaf2e63aa3"
+  }
+}

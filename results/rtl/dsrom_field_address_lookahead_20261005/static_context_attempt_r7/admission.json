@@ -1,0 +1,38 @@
+{
+  "source_commit": "SOURCE_SHA_REPLACED_BELOW",
+  "resume_from": "r6 completed placed artifacts, hook-only correction; no source/hardware variant",
+  "retained_artifact_sha256": {
+    "orfs/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/3_place.odb": "85909d50122e1f923559c14de757aa9575fce396c0f224ec3ba6fa79c15f38d0",
+    "orfs/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/3_place.sdc": "16b3531d83a1b7f79a4c53af6541d3c639e5d4d6c06a161dd53a3eb1a25f998a",
+    "orfs/config.mk": "d45b995c3436dec9252240726b91da61ebdf749a06226926038d35cf3fb3257e",
+    "orfs/constraint.sdc": "97f4a9c6164372a5cc372b2da049b1e04d520b929268498ab3209d9d991bab57"
+  },
+  "time_ns": 1791179589611008408,
+  "host_cpu_count": 128,
+  "loadavg": [
+    10.69970703125,
+    16.88330078125,
+    22.86279296875
+  ],
+  "MemAvailable_B": 1136235462656,
+  "disk_free_B": 383492165632,
+  "declared_peak_GiB": 16,
+  "fleet_memory_reserve_GiB": 100,
+  "placement_CTS_workers": 4,
+  "wall_cpu_file_AS_limits": "unlimited",
+  "source_sha256": {
+    "reuse/1_2_yosys.v": "49a68171252f7455fc59cfdfceb9643f2673dfc97fc40770bb13fed9f17186bb",
+    "rtl/v41die/static_controls/ot_v41_stage37_control_rom.sv": "4c5dc06a06489c6f857fc7a84c59352054196f554908731304b8b57c873a84fc",
+    "rtl/v41die/static_controls/ot_v41_stage38_control_rom.sv": "6e944a7e92ddccad9e0ebc4d6881f5fa227bd352054e324b4a3e39763990766b",
+    "physical/dsrom_static_provider_context/ot_v41_static_provider_context.sv": "76535c2cf5a1239dc74525eab17d29c4aeb0221d99f6489285def05a63edbac4",
+    "physical/dsrom_static_provider_context/clock.tcl": "5d275f354548fec4d7b39a585af79f7aa68fa6b9b3ab73aef7c355c581511619",
+    "physical/dsrom_static_provider_context/fastroute.tcl": "ffe3000a93a017eec69a757a185126f46396f3a76bf223f80db5341c88aae124",
+    "physical/dsrom_static_provider_context/model.json": "b16388892d9fc381327c9bb884fea34b7e213c353bfb11f607265c22640de62b",
+    "physical/dsrom_static_provider_context/run.sh": "ebc44e8a09ac59e0a38df0f561bc30ee283640f39d5ff970d955d3eb9702b18a",
+    "physical/dsrom_static_provider_context/regions.tcl": "3f75bc15514ed12cec58a109abeab10cd40b51fb2fdbb57fa17aa103726cebf7",
+    "physical/dsrom_static_provider_context/pdn.tcl": "4f4fbdfd8a93af90c935cdad9efcb75a54de8a944869f19ee2b6c5cce2ad1dcd",
+    "physical/dsrom_static_provider_context/resume_cts.sh": "89bd6d35ee6b1503e30cb8e5bbf6732c25fe31819c9c93555746b7f0278bd2d1",
+    "physical/dsrom_static_provider_context/threads.tcl": "91a9fa1a2931aa3859bd3c649e25bb61c6d02418d3db28c6d16379e8c97ebf42",
+    "tools/w18/corner_sta.py": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29"
+  }
+}

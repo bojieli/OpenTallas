@@ -205,6 +205,7 @@ module tb_a3_shared_divider_equiv;
                      cases, checks);
         else
             $display("FAIL: %0d mismatch(es)", mismatch);
+        if (mismatch != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 

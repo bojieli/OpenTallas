@@ -1,0 +1,110 @@
+{
+  "schema": "opentallas.hbrom.global-headroom.v1",
+  "status": "ARCHITECTURE_ONLY_NOT_AN_ADMISSION_OR_PERFORMANCE_CLAIM",
+  "current_rom_reference_us": 725.057,
+  "global_rank_count": 96,
+  "raw_matrix_jobs": 1103,
+  "matrix_flush_groups": 343,
+  "memory_path_inventory": {
+    "hbm:embedding_row": {
+      "count": 1,
+      "listed_us": 0.3168
+    },
+    "hbm:window_rows": {
+      "count": 40,
+      "listed_us": 2.309599999999998
+    },
+    "hbm:expert_fetch": {
+      "count": 40,
+      "listed_us": 5.212399999999999
+    },
+    "hbm:ckv_source_rows": {
+      "count": 8,
+      "listed_us": 2.91656
+    }
+  },
+  "scenarios": [
+    {
+      "reference": "nominal_composition",
+      "matrix_service_multiplier": 1,
+      "reference_us": 460.053,
+      "matrix_service_us": 70.116,
+      "hypothetical_total_before_new_costs_us": 460.053,
+      "allowed_total_new_exposed_cost_us": 265.004,
+      "allowed_mean_new_cost_per_raw_matrix_job_ns": 240.25747960108794,
+      "candidate_tpot_us": null,
+      "qualification": "Conditional budget only; compute, memory and physical fit unproved"
+    },
+    {
+      "reference": "nominal_composition",
+      "matrix_service_multiplier": 2,
+      "reference_us": 460.053,
+      "matrix_service_us": 70.116,
+      "hypothetical_total_before_new_costs_us": 530.169,
+      "allowed_total_new_exposed_cost_us": 194.88800000000003,
+      "allowed_mean_new_cost_per_raw_matrix_job_ns": 176.68902991840437,
+      "candidate_tpot_us": null,
+      "qualification": "Conditional budget only; compute, memory and physical fit unproved"
+    },
+    {
+      "reference": "historical_component_clock_sensitivity",
+      "matrix_service_multiplier": 1,
+      "reference_us": 603.754,
+      "matrix_service_us": 81.642,
+      "hypothetical_total_before_new_costs_us": 603.754,
+      "allowed_total_new_exposed_cost_us": 121.303,
+      "allowed_mean_new_cost_per_raw_matrix_job_ns": 109.97552130553038,
+      "candidate_tpot_us": null,
+      "qualification": "Conditional budget only; compute, memory and physical fit unproved"
+    },
+    {
+      "reference": "historical_component_clock_sensitivity",
+      "matrix_service_multiplier": 2,
+      "reference_us": 603.754,
+      "matrix_service_us": 81.642,
+      "hypothetical_total_before_new_costs_us": 685.396,
+      "allowed_total_new_exposed_cost_us": 39.66100000000006,
+      "allowed_mean_new_cost_per_raw_matrix_job_ns": 35.957388939256624,
+      "candidate_tpot_us": null,
+      "qualification": "Conditional budget only; compute, memory and physical fit unproved"
+    }
+  ],
+  "startup_sensitivities": [
+    {
+      "assumed_added_cycles_per_raw_matrix_job": 24,
+      "assumed_clock_GHz": 1.2,
+      "all_jobs_unhidden_extra_us": 22.06
+    },
+    {
+      "assumed_added_cycles_per_raw_matrix_job": 30,
+      "assumed_clock_GHz": 1.2,
+      "all_jobs_unhidden_extra_us": 27.575
+    },
+    {
+      "assumed_added_cycles_per_raw_matrix_job": 64,
+      "assumed_clock_GHz": 1.2,
+      "all_jobs_unhidden_extra_us": 58.82666666666667
+    },
+    {
+      "assumed_added_cycles_per_raw_matrix_job": 128,
+      "assumed_clock_GHz": 1.2,
+      "all_jobs_unhidden_extra_us": 117.65333333333334
+    }
+  ],
+  "restrictions": [
+    "Preserve authoritative per-operation rank ownership, exact reductions, and collective schedule.",
+    "3072 installed row engines are not simultaneously useful for every matrix.",
+    "Only expert-fetch and immutable-lookup service can potentially change; do not remove mutable KV service.",
+    "Dense HBM weight supply already overlaps compute; no per-matrix HBM-latency subtraction.",
+    "Register-file sharing, activation delivery, protection and routing changes need explicit service costs.",
+    "Capacity must cover the busiest physical pool, all source archives and auxiliary lookup service.",
+    "Neither reference composition establishes contextual physical timing closure.",
+    "No RTL, synthesis, simulation or place-and-route is authorized by this screen."
+  ],
+  "source_sha256": {
+    "results/rtl/dshbm_1m_allmeasured_20261004/composition.json": "8287b3865cb7626f4015246d5949110aa22f1d02d84812218ebc0513344304d0",
+    "results/rtl/dsrom_1m_allmeasured_20261004/composition.json": "42d48c45c84668326de6ee154694889000730d412037de91d89ae26fb5ae0062",
+    "results/rtl/dshbm_baseline_measured_20261004/program.json": "a6218d2da6578bc36d510ba925091fc19272a33211a03f10efedd1b72a799491",
+    "tools/hbrom_global_headroom.py": "b7bfc22a5ea2eb5ca78af5c3dea089f888e5d44555632889fe7d62ca6b139e8a"
+  }
+}

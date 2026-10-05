@@ -1,0 +1,123 @@
+{
+  "core_fs": 833333,
+  "ctl_average_fs": 1024000,
+  "eligibility": {
+    "tCCD_S": {
+      "existing_counter_edges": 1,
+      "min_actual_elapsed_fs": 833333,
+      "required_fs": 1024000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 2,
+      "additional_wait_edges": 1
+    },
+    "tRCD": {
+      "existing_counter_edges": 19,
+      "min_actual_elapsed_fs": 19166659,
+      "required_fs": 19375000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 20,
+      "additional_wait_edges": 1
+    },
+    "tRCDWR": {
+      "existing_counter_edges": 10,
+      "min_actual_elapsed_fs": 9999996,
+      "required_fs": 9375000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 10,
+      "additional_wait_edges": 0
+    },
+    "tRP": {
+      "existing_counter_edges": 16,
+      "min_actual_elapsed_fs": 15833327,
+      "required_fs": 16250000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 17,
+      "additional_wait_edges": 1
+    },
+    "tRAS": {
+      "existing_counter_edges": 28,
+      "min_actual_elapsed_fs": 28333322,
+      "required_fs": 28125000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 28,
+      "additional_wait_edges": 0
+    },
+    "tRTP": {
+      "existing_counter_edges": 6,
+      "min_actual_elapsed_fs": 5833331,
+      "required_fs": 5625000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 6,
+      "additional_wait_edges": 0
+    },
+    "tRRD_S": {
+      "existing_counter_edges": 3,
+      "min_actual_elapsed_fs": 2499999,
+      "required_fs": 2500000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 4,
+      "additional_wait_edges": 1
+    },
+    "tRRD_L": {
+      "existing_counter_edges": 4,
+      "min_actual_elapsed_fs": 3333332,
+      "required_fs": 3125000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 4,
+      "additional_wait_edges": 0
+    },
+    "tFAW": {
+      "existing_counter_edges": 15,
+      "min_actual_elapsed_fs": 14999994,
+      "required_fs": 15000000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 16,
+      "additional_wait_edges": 1
+    },
+    "tRFC": {
+      "existing_counter_edges": 342,
+      "min_actual_elapsed_fs": 349999860,
+      "required_fs": 350000000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 343,
+      "additional_wait_edges": 1
+    },
+    "tRFCpb": {
+      "existing_counter_edges": 196,
+      "min_actual_elapsed_fs": 199999920,
+      "required_fs": 200000000,
+      "guaranteed_at_existing_count": false,
+      "minimum_guaranteeing_edges": 197,
+      "additional_wait_edges": 1
+    },
+    "tRTW": {
+      "existing_counter_edges": 10,
+      "min_actual_elapsed_fs": 9999996,
+      "required_fs": 9948000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 10,
+      "additional_wait_edges": 0
+    },
+    "tWTR_L_with_CWL_BL8": {
+      "existing_counter_edges": 14,
+      "min_actual_elapsed_fs": 14166661,
+      "required_fs": 13524000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 14,
+      "additional_wait_edges": 0
+    },
+    "tWR_with_CWL_BL8": {
+      "existing_counter_edges": 28,
+      "min_actual_elapsed_fs": 28333322,
+      "required_fs": 27899000,
+      "guaranteed_at_existing_count": true,
+      "minimum_guaranteeing_edges": 28,
+      "additional_wait_edges": 0
+    }
+  },
+  "scope": "phase-universal edge lower bounds; actual command witness required, not a full DRAM proof",
+  "clock_gate_and_loaded_SSFF": "unqualified",
+  "fix_selected": false,
+  "candidate_model": "new minimum one additional-edge column eligibility guard/PC would add state and reduce service rate; not zero-cycle",
+  "worst_sustained_column_service": "at most one column per two service edges if conservative guard selected; model actual token exposure before RTL"
+}
