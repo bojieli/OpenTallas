@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/rom_stage_cdc_power.py", line 48, in <module>
+    sys.exit(base.main())
+             ~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/rom_stage_pg_power.py", line 206, in main
+    return dict(activity=activity, power=power, inst=inst)[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/rom_stage_pg_power.py", line 79, in activity
+    netlist = so.find_results_dir(a.routed) / "6_final.v"
+              ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/spine-cdc/wt-2696c9de2/tools/signoff_analysis.py", line 614, in find_results_dir
+    raise FileNotFoundError(f"no {odb} under {path}")
+FileNotFoundError: no 6_final.odb under /srv/opentallas-scratch/claude/spine-cdc/jobs/E1/work

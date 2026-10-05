@@ -1,0 +1,5 @@
+PASS seed=8 cycles=1794829 gated_edges=1779204 closed_cycles=15807 hits=146577 issues=206945 rows=5211 nonzero=4440 classes=255 wraps=4104 qadv=458 restarts=279 rejected=13561 go_closed=146 go_drain=186 go_open=131 resets=22
+- /srv/opentallas/repos/noether-fixedleaf-7957cd35b/rtl/test/tb_dsrom_qtiming_exact.sv:175: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 17.410 s; speed 103.095 us/s
+- Verilator: cpu 17.390 s on 1 threads; allocated 8 MB

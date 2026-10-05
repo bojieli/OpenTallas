@@ -34,6 +34,59 @@ def next_edge_after(t: int, per: int, off: int = 0) -> int:
     return off + k * per
 
 
+def schedule_transfers(release_ticks, *, wper, rper, depth=4,
+                       reader_busy_cycles=1, reader_blocked_ticks=()):
+    """Finite-credit calendar for the existing related-clock FIFO, once live.
+
+    Input words are held in their original order from release until acceptance.
+    Ticks use the existing 3.6-GHz grid; coincident edges sample OLD peer state.
+    A word retires only on reader acceptance, not pointer/shadow capture. Both
+    data storage and returned credits are finite. This API lets a parent model
+    compose actual command/data/status dependencies without substituting a
+    constant CDC surcharge or pricing delayed publication as immediate.
+
+    Payload widths, bank service, reset recovery and the enclosing instruction
+    schedule remain the parent's explicit costs. This is not token timing or a
+    replacement for the selected W12 tag/valid enrollment.
+    """
+    release = list(release_ticks)
+    blocked = set(reader_blocked_ticks)
+    if (wper, rper) not in ((FAST, SLOW), (SLOW, FAST)):
+        raise ValueError("clock periods must be the existing related 3:4 pair")
+    if depth < 2 or depth & (depth - 1) or reader_busy_cycles < 1:
+        raise ValueError("power-of-two depth >=2 and positive reader service required")
+    if any(type(t) is not int or t < 0 for t in release + list(blocked)):
+        raise ValueError("release and blocked times must be nonnegative integer ticks")
+    if release != sorted(release):
+        raise ValueError("producer release order must be preserved")
+    wp = rp = wp_r = rp_w = 0
+    last_wp = last_rp = 0
+    next_reader = 0
+    rows = []
+    tick = 0
+    while rp < len(release):
+        we, re = tick % wper == 0, tick % rper == 0
+        # last_* deliberately excludes writes/retirements at this same edge.
+        if we:
+            if wp < len(release) and release[wp] <= tick and wp - rp_w < depth:
+                rows.append(dict(word=wp, release_tick=release[wp],
+                                 accepted_tick=tick))
+                wp += 1
+            rp_w = last_rp
+        if re:
+            if (wp_r != rp and tick >= next_reader and tick not in blocked):
+                rows[rp]["retired_tick"] = tick
+                rows[rp]["credit_wait_ticks"] = rows[rp]["accepted_tick"] - release[rp]
+                rows[rp]["crossing_and_reader_wait_ticks"] = tick - rows[rp]["accepted_tick"]
+                rp += 1
+                next_reader = tick + reader_busy_cycles * rper
+            wp_r = last_wp
+        # At the next event edge this tick's publications become visible.
+        last_wp, last_rp = wp, rp
+        tick = min(next_edge_after(tick, wper), next_edge_after(tick, rper))
+    return rows
+
+
 def latency_table(wper: int, rper: int) -> list[dict]:
     """Accept edge t_w (writer) -> the reader's accept edge.  The entry, its write pointer and the writer state are
     launched at t_w; the first reader edge strictly after t_w captures them into the shadow/pointer samplers, r_v

@@ -47,6 +47,177 @@ FP8_MAC_UM2 = 78.466875       # arch_budget_v41 unit_areas (ot_hdc_blockdot / 32
 BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pipe)
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
+
+def dsrom_field_spine_route_price(r=16, pq=0):
+    """Immutable a721 spine, physical-only hold/slew repair budget.
+
+    Rates and replicas come from the actual screen ports/kept source loops.
+    The registered die wires and quantiser are outside this local screen.
+    Physical buffering changes no architectural state, port or cycle edge.
+    """
+    if r not in (16, 128) or pq not in (0, 1):
+        raise ValueError('Only the four handed-off source-bound screens')
+    bw = sum([1,6,3,1,1,2,1,8,3,2,256,10,256,10,3,3,1,3,4,32,1024])
+    r16_area = 39039.0 if pq == 0 else 39226.3
+    return dict(schema='opentallas.dsrom.field_spine.route_price.v1',
+        source_commit='a721a0448', RTL_immutable=True, new_RTL=False,
+        source_sha256='1b1ca9190db389c4e93addbb5f73e2179cb914d51c649de19225683fd822baa7',
+        replicas=1, regions=r, PQ=pq, MACs_per_cycle=0,
+        memory_bytes_per_cycle=dict(VM_read=64*4, VM_write=r*4,
+                                   stream_ROM=6, phase_ROM_two_ports=16),
+        boundary_bits_per_cycle=dict(VM_read_payload=2048,
+            return_payload_and_identity=69*r, VM_write_data_address_enable=52*r,
+            broadcast=bw),
+        required_logical_boundary_tracks=2048+69*r+52*r+bw,
+        actual_channel_capacity_tracks=None,
+        routing_capacity_proven=False,
+        kept_instances=dict(g_ixb=32, g_ixq=8, g_sel=4*r,
+            u_oh0=r, u_oh1=r, u_oh2=r, u_oh3=r, u_oh4=r,
+            u_rsfm=r, u_cc=1, g_aqi=4, g_bwb=4, g_grp=r//16),
+        kept_state_and_mux_cost='Existing source onehot/read/select/return replicas retained; no removed-state or mux credit',
+        existing_R16_measured_screen_cell_area_um2=r16_area,
+        actual_R128_screen_cell_area_um2=None,
+        fixed_R128_core_area_um2=(477.84-2.16)**2 if r == 128 else None,
+        repair_buffer_reservation_cells=1024,
+        repair_buffer_cell_area_budget_um2=1024*0.10206,
+        buffer_budget_is_not_measured_growth=True,
+        slot_fit_after_repair='Require actual routed screen area/geometry and retained replicas; no full-die slot claim',
+        new_architectural_FF_bits=0, new_memory_ports=0,
+        added_pipeline_edges=0, added_single_user_token_cycles=0,
+        inherited_measured_cycle_cost=dict(go=2, broadcast=1, return_stages=3,
+            last_row_write=6, node=6, stream_length_delta=0, op_pair_spacing_delta=0),
+        cycle_cost_source='results/rtl/dsrom_field_spine_20261004/DESIGN_NOTE.md and field_baseline/field_pq.json',
+        inherited_registered_field_crossing_cycles=80,
+        target_period_ns=0.833333, SS_setup_uncertainty_ps=60,
+        FF_hold_uncertainty_ps=25, hold_corners=['WC','BC'],
+        admission_GB=32 if r == 16 else 64, NUM_CORES=16,
+        physical_adopted=False, actual_repair_gain_measured=False,
+        screen_scope='Registered neighbours, two-cycle ROM models; quantiser stub and full die routes not qualified',
+        adoption_requirement='Both baseline screens and both PQ screens require nonnegative SS/FF, zero SI/DRC/antenna, exact source and kept replicas; no tiny-negative tolerance')
+
+
+def dsrom_source_program_inventory(words_by_home, *, tp=4, instruction_bits=2048, address_bits=14):
+    """Finite compiler inventory; active content does not shrink physical ROM."""
+    if tp != 4 or instruction_bits != 2048 or address_bits != 14:
+        raise ValueError('selected native S81 instruction/entry/TP aperture required')
+    if any(type(n) is not int or not 0 < n <= 1<<address_bits for n in words_by_home.values()):
+        raise ValueError('actual native program capacity exceeded')
+    return dict(words_per_rank_by_home=words_by_home,
+        active_bytes_per_rank=sum(words_by_home.values())*instruction_bits//8,
+        active_bytes_TP4=sum(words_by_home.values())*instruction_bits//8*tp,
+        declared_address_capacity_words_per_home=1<<address_bits,
+        instruction_bits_per_fetch=instruction_bits,
+        declared_capacity_is_not_active_word_count=True,
+        physical_ROM_area_and_port_cost=None,
+        physical_storage_slot_bound=False,
+        runtime_END_prefetch_restore_ACK_and_drain_cycles=None,
+        compiler_added_hardware_FF=0,added_global_port_width_bits=0,
+        new_hardware=False,adoption=False)
+
+
+def dsrom_source_selection_restore_inventory():
+    """Existing native SU BYP: exact L19.A0 restore, no physical credit.
+
+    s81_minimum_su256.cpp::inputs interns identical A/B/C/D addresses before
+    issuing scalar SourceIo requests. Four operands alias one 512-word span.
+    The actual owner still owes native transport, writes, ACK and reverse drain.
+    """
+    return dict(added_instruction_words_per_rank=2,added_active_program_bytes_TP4=2048,
+        copied_bytes_per_rank=2048,copied_bytes_TP4=8192,
+        native_operand_references_per_rank=4*512,
+        native_prefetch_scalar_reads_per_rank=512,
+        native_prefetch_scalar_port_parallelism=1,
+        native_publication_writes_per_rank=512,native_target_ACKs_per_rank=512,
+        added_FF=0,added_global_port_bits=0,added_response_edges=None,
+        SU_serial_clock_GHz=0.9,loaded_clock_binding_qualified=False,
+        copy_cycles=None,transport_cycles=None,source_lease_hold_cycles=None,
+        fence_drain_cycles=None,physical_area=None,physical_slots=None,adopted=False)
+
+
+def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
+    """Price a compiler's finite source order; missing service costs stay unknown.
+
+    This is a sequential candidate calendar, not a FIELD phase census or a
+    claim that operand movement is free. TP4 service is maximum, never sum.
+    Cost rows, when supplied by an actual owner, include prefetch, arithmetic,
+    publication/ACK, context restore, collective and fragment drain cycles.
+    """
+    costs = {} if measured_service_cycles is None else measured_service_cycles
+    rows = []
+    finish = 0.0
+    for ordinal, e in enumerate(events):
+        if e['ordinal'] != ordinal or e['depends_on'] != ([] if ordinal==0 else [ordinal-1]):
+            raise ValueError('literal sequential source calendar/order required')
+        cost = costs.get(e['node'])
+        seconds = None
+        if cost is not None:
+            if len(cost) != 4:
+                raise ValueError('actual TP4 per-rank service costs required')
+            values=[]
+            for r in cost:
+                if r['cycles'] < 0 or r['clock_hz'] <= 0:
+                    raise ValueError('service cycle/clock price bounds')
+                values.append(r['cycles']/r['clock_hz'])
+            seconds=max(values)
+        start=finish
+        finish=None if start is None or seconds is None else start+seconds
+        rows.append(dict(node=e['node'],depends_on=e['depends_on'],start_s=start,
+                         service_s=seconds,finish_s=finish,
+                         missing=e['missing']+([] if cost is not None else ['actual composed per-rank service cycles/clock'])))
+    return dict(order='literal source order, sequential dependencies; no overlap credit',
+                rank_composition='TP4 maximum',rows=rows,composed_seconds=finish,
+                composition_complete=all(not r['missing'] for r in rows),
+                unknown_costs_are_zero=False,added_hardware_area_um2=0,
+                hardware_change='compiler-only candidate; existing physical capacity/homes unresolved',
+                adoption=False)
+
+
+def dsrom_recovery_decision_gate():
+    """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
+
+    The timing authority is dsrom_1m_allmeasured.compose. Missing measured SU
+    costs remain missing rather than becoming zero or inheriting fusion floors.
+    """
+    path = ROOT / "results/rtl/dsrom_recovery_20261004/decision_gate/model.json"
+    record = json.loads(path.read_text())
+    return dict(schema=record["schema"], record=str(path.relative_to(ROOT)),
+                scenarios={k:dict(verdict=v["verdict"], adoption=v["adoption"],
+                    composition_complete=v["composition_complete"],
+                    conditional_cost=v["conditional_cost"], missing=v["missing"])
+                    for k,v in record["scenarios"].items()},
+                historical_contrast=record["historical_contrast"],
+                comparison=record["comparison"],
+                hardware_build_admitted=record["hardware_build_admitted"],
+                full_die_trigger=record["full_die_trigger"])
+
+
+def mbist_bira_pipeline_cost(dmax=256, entries=6, sram_banks=2, clock_ns=0.833):
+    """Item8(b) repair-search pipeline; deterministic cycle/bit pricing, no closure claim."""
+    chunks = (dmax + 15) // 16
+    groups = (chunks + 3) // 4
+    partial_bits = chunks * 5 + groups * 7
+    extra_cycles_per_subset = 2
+    extra_cycles_per_analysis = extra_cycles_per_subset * (1 << entries)
+    return dict(schema="opentallas.uarch.mbist-bira-pipeline.v1", enabled_default=False,
+        source="rtl/dft/ot_mbist_bira.sv S_SRCH/S_SRCH2/S_SRCH3; item8(b) prescribed pipeline",
+        geometry=dict(dmax=dmax, entries=entries, sram_banks=sram_banks),
+        search_cycles_per_subset=dict(baseline=3, successor=5),
+        added_cycles_per_analysis=extra_cycles_per_analysis,
+        worst_added_bist_cycles=sram_banks * extra_cycles_per_analysis,
+        worst_added_bist_ns=clock_ns * sram_banks * extra_cycles_per_analysis,
+        clean_bist_added_cycles=0, single_user_token_added_cycles=0,
+        memory_port_bytes_per_cycle_delta=0, external_boundary_bits_per_cycle_delta=0,
+        macs_per_cycle=0, replicas=1, shared_controller=True,
+        pipeline_register_bits=partial_bits, added_state_bits=1,
+        registered_boundaries_bits=[chunks * 5, groups * 7],
+        fanin=dict(chunk_bits=16, group_chunks=4, final_groups=groups),
+        fanout="each cm_r bit to one chunk; each chunk count to one group; no new external fanout",
+        area_estimate_um2=(partial_bits + 1) * DFF_UM2,
+        area_status="ESTIMATE flop-only; adder/mux/clock/routing delta requires measured shell",
+        routing_tracks_status="ESTIMATE internal local tree, no added shell ports; actual route required",
+        floorplan_status="existing shell vehicle; slot fit requires measured total area",
+        clock_status="UNVALIDATED: require routed SS60/FF25 at 0.833ns, DRC/antenna/electrical zero")
+
 # weights delivered by one ROM word, by the node's format (W1 bank map: FP4 two 136-bit 32-blocks per
 # 274-bit word, FP8 one 264-bit block, BF16 16 x 16 bit, FP32 8 x 32 bit)
 WEIGHTS_PER_WORD = {"fp4": 64, "fp8": 32, "bf16": 16, "fp32": 8}
@@ -157,6 +328,93 @@ def wire_cycles(um: float, clock_hz: float, ps_per_um: float = WIRE_PS_PER_UM) -
     seg = (period_ps - UNCERTAINTY_PS - WIRE_OVERHEAD_PS) / ps_per_um
     regs = max(0, math.ceil(um / seg) - 1)
     return regs + 1 if regs > 0 else (1 if um > 0 else 0)
+
+
+def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
+    """One paired publication edge; alternatives, never two free pipe stages.
+
+    Selected enclosing bus: each root {valid,row16,pos3,fp32,bf16,error}.
+    E1 component bus: each bank {valid,value32,row16,seg5,nseg5,error,pos3}
+    plus per-element busy/fault. Actual parent capture owns phase identity and
+    remains live until real VM acceptance/drain; no new identity ledger here.
+    Liberty SS DFFASRHQNx1: area .37908 um2, CLK .433982 fF.
+    All bits conservatively cold-reset; clock buffers/wire and fault steering
+    are additional unknown positive costs, not free energy or closure.
+    """
+    if min(roots, elements, phases) < 1:
+        raise ValueError("positive actual source geometry required")
+    root_bits = 69 * roots + 1
+    element_bits = 63 * 2 + 2
+    def cost(bits):
+        return dict(ff_bits=bits, ff_cell_body_um2=bits * .37908,
+                    placement_floor_um2_at50pct=bits * .37908 * 2,
+                    clock_pin_capacitance_ff=bits * .433982,
+                    clock_buffers_wire_energy_w=None,
+                    fault_fanout_buffers_mux_area_um2=None)
+    return dict(selected_root_boundary=cost(root_bits),
+                E1_component_alternative=cost(element_bits),
+                E1_replicated_alternative=cost(element_bits * elements),
+                boundary_payload_bits_per_cycle=69 * roots,
+                boundary_payload_bytes_per_cycle=69 * roots / 8,
+                compute_macs_per_cycle=0,
+                VM_commit_payload_bytes_per_cycle=4 * roots,
+                added_external_boundary_bits_per_cycle=0,
+                added_buffered_net_bits=root_bits,
+                root_publication_replica_count=roots,
+                E1_publication_replica_count=elements,
+                result_added_edges_per_phase=1,
+                fault_added_edges=1, issue_interval_edges=1,
+                phase_chain_added_edges=phases,
+                phase_chain_added_ns=phases * (1 / 1.2),
+                parent_busy="Existing phase/capture ownership through positive VM commit and capture_drained; never a delayed idle credit",
+                fault_policy="Aligned fault drives existing warm-quarantine request, inhibits writes, retains accepted debt; prior writes not rolled back",
+                root_fault_quarantine_fanout=roots,
+                publication_visibility_guard=dict(
+                    purpose="Existing capture_live/drained exports include the actual pending publication copy before consumer/retirement",
+                    added_FF=0, added_edges=0,
+                    quiet_OR2_count=2 * roots + 1, quiet_INV_count=1,
+                    quarantine_AND2_count=roots, quarantine_OR2_count=roots,
+                    export_OR3_count=1, export_AND3_count=1,
+                    export_INV_count_no_CSE=2,
+                    cell_body_um2_no_CSE=(4 * roots + 3) * .08748 + 3 * .04374,
+                    OR2_AND2_OR3_AND3_cell_area_um2=.08748,
+                    INV_cell_area_um2=.04374,
+                    basis="ASAP7 RVT SS SIMPLE211120/INVBUF220122 Liberty; explicit Boolean construction, not synthesis/loaded delay",
+                    raw_fault_timing="Still timed through source publication_quiet to actual phase live/drained/C8 guards; no free fault-blind edge or falsepath",
+                    quiet_control_sink_count=4,
+                    loaded_clock_wire_fault_fanout_cost=None,
+                    paired_register_timing_gain_guaranteed=False),
+                E1_fault_bank_fanout=2,
+                tracks_slot_fit=None, gate_power_w=None,
+                source_exactness_pass=False, connected_consumer_gate_pass=False,
+                SSFF_closed=False, physical_admission=False)
+
+
+def rom_spine_repin_price(displacements_um, setup_slack_ps, hold_slack_ps):
+    """Same-frame pin-only recipe: bound both shorter and longer Manhattan wires.
+
+    Charge the upper 0.81 ps/um of W3's measured loaded-channel range, rather
+    than the unloaded express-link proxy. Margins are from the unchanged CTS
+    snapshot, including SS60/FF25. This is an analytical admission bound, not
+    routed timing or a guarantee that cell placement and buffering stay fixed.
+    """
+    upper_loaded_ps_per_um = 0.81
+    longest = max(displacements_um, default=0.0)
+    delta = longest * upper_loaded_ps_per_um
+    setup_left = setup_slack_ps - delta
+    hold_left = hold_slack_ps - delta
+    fits = setup_left > 0 and hold_left > 0
+    return dict(max_pin_displacement_um=round(longest, 6),
+                total_pin_displacement_um=round(sum(displacements_um), 6),
+                wire_ps_per_um=upper_loaded_ps_per_um,
+                wire_basis="W3 loaded-channel measured range 0.72-0.81 ps/um; upper endpoint",
+                incremental_wire_delay_bound_ps=round(delta, 6),
+                estimated_setup_remaining_ps=round(setup_left, 6),
+                estimated_hold_remaining_ps=round(hold_left, 6),
+                analytical_budget_fits=fits, area_delta_mm2=0,
+                protocol_cycle_delta=0 if fits else None,
+                power_delta_w=None, routed_closure=False,
+                assumption="Same endpoints and buffering; displacement bounds incremental Manhattan wire only")
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -751,6 +1009,220 @@ def network_ledger(d: dict, clock: float):
 # of the L20 (busiest scanning layer) ops at the design's context, which is what evaluate() prices.
 # Shared by the V4.1 ROM and V4.1 HBM dies (the hub region of the W1 floorplan).
 # ---------------------------------------------------------------------------------------------------------
+def dsrom_reindex_kc6_model():
+    """Default-off, zero-edge repair of the source-pinned kc5 baseline control.
+
+    Footprint allowance is conservative NAND2-equivalent construction, not
+    mapped timing/area. The slot is the retained kc5 context core, not a die
+    reservation. Unknown buffers/route occupancy must satisfy explicit bounds.
+    """
+    # Charge all three local head muxes, even though the old body already
+    # contains rotation/hold muxes: no speculative baseline subtraction.
+    nand2 = 768 * 9 + 768 * 4 + 3 * 128 * 4 + 8 * 12
+    gross = round(nand2 * 0.08748, 8)
+    core, cells = 93630.5, 34438.8
+    cell_cap = 0.40 * core
+    return dict(
+        schema="opentallas.dsrom-reindex.kc6-model.v1",
+        selected=False, default_enabled=False, mandatory_baseline_repair=True,
+        parent_source="2d3057fb8", parent_source_sha256=
+        "88864591d588add3b2f23578e778557ece9f53f9bfe7abd698aa15b60938d89d",
+        mechanism=["free-running derived cpart; reset-cleared adm_q/cmp retained",
+                   "FIFO count alternatives with actual late pop selection",
+                   "ready-last head rotation with eight local 16-bit slices"],
+        dimensions=dict(NPC=32, WB=128, DF=8, AW=28, TAGW=16, GS=8),
+        compute=dict(new_macs_per_cycle=0, new_arithmetic_rounding_points=0),
+        ports=dict(list_read_bits=28, list_address_bits=10, list_read_enable_bits=1,
+                   request_bits_per_pc=1+28+4+16, request_ready_bits_per_pc=1,
+                   response_control_bits_per_pc=1+16+4, response_ready_bits_per_pc=1,
+                   unchanged_payload_bytes_per_response_pc=32,
+                   control_only_payload_ports=True,
+                   drain_bits=2+7+14+10+10+28, drain_ready_bits=1,
+                   new_boundary_bits_per_cycle=0, new_memory_bytes_per_cycle=0),
+        replicas=dict(control_per_stack=1, stacks_per_rank=4, ranks=4,
+                      local_head_slices=8, bits_per_slice=16,
+                      new_clock_sinks=0, gross_mux_selectors=768+3*128),
+        state=dict(new_ff_bits=0, retained_cpart_bits=1024,
+                   reset_enable_loads_removed=1024, reset_switching_increases=True,
+                   accepted_debt_reset_policy="unchanged source policy; no new drain proof"),
+        area=dict(gross_nand2_equivalents=nand2, nand2_um2=0.08748,
+                  nand2_basis="TT cell footprint ONLY, not timing",
+                  library_sha256="fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+                  gross_logic_allowance_um2=gross, net_mapped_delta_um2=None,
+                  removed_enable_credit_um2=0, mapped_buffers_um2=None),
+        slot=dict(scope="kc5 register-to-register context core, not parent die",
+                  baseline_core_um2=core, baseline_standard_cells_um2=cells,
+                  max_standard_cell_fraction=0.40,
+                  max_standard_cells_um2=cell_cap,
+                  gross_plus_baseline_um2=round(cells+gross, 8),
+                  remaining_buffer_and_mapping_budget_um2=round(cell_cap-cells-gross, 8),
+                  fit_verified=False,
+                  admission="mapped cells including repair/CTS <= cap; explicit unchanged-core route required"),
+        routing=dict(new_count_alternative_nets_max=768, candidate_head_nets=128,
+                     extra_track_capacity=None, channel_occupancy_measured=False,
+                     acceptance="same slot; zero DRC/antenna/slew/cap/fanout violations"),
+        timing=dict(period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    external_side_budget_ps=166.6, new_registered_edges=0,
+                    new_cdc=0, predicted_token_latency_delta_cycles=0,
+                    same_program_cycles_measured=False, ss_ff_closed=False),
+        adoption=False,
+        blockers=["actual mapped area/buffers must satisfy slot cap",
+                  "unchanged-core routing capacity and SS60/FF25/boundary closure",
+                  "original component exactness and measured cycle reconciliation"])
+
+
+def dsrom_reindex_kc7_model():
+    """Same-edge ready-last successor; sizing precedes additive RTL emission."""
+    # Three QW=12 state vectors. Four +/- alternatives for seq/left,
+    # inuse dispatch base + two drain alternatives; no ready-fed carry chain.
+    arithmetic_bits = 7 * 12
+    drain_mux_bits = 3 * 12 * 3 + 3
+    rob_comparator_bits = 3 * 12
+    payload_mux_bits = 32 * (28 + 4 + 16) * 3
+    local_predicates = 32 * 6 + 10
+    nand2 = (arithmetic_bits * 9 + drain_mux_bits * 4 +
+             rob_comparator_bits * 12 + payload_mux_bits * 4 + local_predicates * 12)
+    gross = round(nand2 * 0.08748, 8)
+    cap, baseline = 37452.2, 34279.5
+    return dict(
+        schema="opentallas.dsrom-reindex.kc7-model.v1", selected=False,
+        default_enabled=False, parent="kc6 OPT_KC6=1; actual route FAIL",
+        parent_source_sha256="8db9e624bfb3155205b55a7c08b0a600f8c8dac0489b33d4643fa3663d573483",
+        mechanism=["precomputed drain seq/left/inuse and rob_ok alternatives",
+                   "independent scale/code payload then eligible/ready final hold mux",
+                   "kc6 free-running derived cpart and reset-valid mask retained"],
+        dimensions=dict(NPC=32, WB=128, DF=8, AW=28, TAGW=16, LENW=4, QW=12, GS=8),
+        compute=dict(new_macs_per_cycle=0, new_rounding_points=0),
+        state=dict(added_ff_bits=0, added_clock_sinks=0, accepted_debt_reset_semantics="unchanged"),
+        timing=dict(new_edges=0, new_cdc=0, token_latency_delta_cycles=0,
+                    period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    ready_external_side_budget_ps=166.6, boundary_checks="original max AND min groups",
+                    ready_sampled=False, ss_ff_closed=False, actual_gate_required=True),
+        ports=dict(new_bits_per_cycle=0, new_bytes_per_cycle=0,
+                   request_per_pc_bits=49, request_ready_per_pc_bits=1,
+                   response_control_per_pc_bits=21, response_ready_per_pc_bits=1,
+                   response_payload_bytes_per_pc=32, drain_bits=71, drain_ready_bits=1,
+                   list_data_bits=28, list_address_bits=10, list_enable_bits=1),
+        replicas=dict(control_per_stack=1, stacks_per_rank=4, ranks=4,
+                      request_slices_per_pc=6, payload_bits_per_slice=8,
+                      drain_state_slices=9, drain_bits_per_slice=4, rob_predicate_slices=1),
+        construction=dict(arithmetic_bits=arithmetic_bits, drain_mux_bits=drain_mux_bits,
+                          rob_comparator_bits=rob_comparator_bits, payload_mux_bits=payload_mux_bits,
+                          local_predicate_allowance=local_predicates,
+                          gross_nand2_equivalents=nand2, gross_um2=gross,
+                          footprint_basis="same kc6 NAND2 footprint 0.08748um2; no TT timing transfer",
+                          removed_logic_credit_um2=0, mapped_buffers_and_net_delta_um2=None),
+        slot=dict(core_um2=93630.5, max_cell_fraction=0.40, max_cells_um2=cap,
+                  measured_kc6_cells_um2=baseline, gross_plus_baseline_um2=round(baseline+gross,8),
+                  remaining_cts_buffer_mapping_budget_um2=round(cap-baseline-gross,8),
+                  fit_verified=False, parent_die_reservation=False),
+        routing=dict(new_arithmetic_candidate_nets=84, new_payload_candidate_nets=1536,
+                     request_ready_final_mux_loads_per_pc=48, drain_ready_mux_loads=37,
+                     required_added_tracks=None, available_tracks=None,
+                     acceptance="same core/budgets; zero DRC antenna slew cap fanout; actual channel fit"),
+        admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
+
+
+def dsrom_reindex_kc8_model():
+    """Claude's cycle-identical structural repair, priced before its sole route."""
+    # 6 kept WB128 copies plus 8 grouped room flags. No removed-cell credit:
+    # the old room_all flop may disappear, but mapping determines that debit.
+    copies, room = 6 * 128, 8
+    ff = copies + room
+    nand2 = copies * 4 + room * 4 + (8 * 7 + 7) * 2 + 64
+    gross = round(ff * 0.37908 + nand2 * 0.08748, 8)
+    parent, cap = 35166.3, 37452.2
+    return dict(
+        schema="opentallas.dsrom-reindex.kc8-model.v1", selected=False,
+        default_enabled=False, source_commit="0b598c6dbf8136463dc11b65373b5f84039fe4c0",
+        parent="kc7 terminal FAIL; measured same-context cells, not a die net debit",
+        dimensions=dsrom_reindex_kc7_model()["dimensions"],
+        mechanism=["8 registered local AND8 room groups; AND8 dispatch join at same edge",
+                   "3 kept write-enable copies per lane: metadata31/code32/scale32 loads"],
+        compute=dict(new_macs_per_cycle=0, new_rounding_points=0),
+        state=dict(gross_added_ff=ff, kept_copy_ff=copies, grouped_room_ff=room,
+                   gross_added_clock_sinks=ff, removed_room_all_credit=0,
+                   room_reset_set_loads=8, copied_enable_reset="rst_n in synchronous D predicate",
+                   accepted_debt_reset_semantics="unchanged"),
+        timing=dict(new_edges=0, new_cdc=0, per_user_latency_delta_cycles=0,
+                    actual_existing_gate_cases=20, actual_worst_cycles=738,
+                    conditional_833ps_us=0.614754, period_ps=833,
+                    SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+                    ready_external_budget_ps=166.6, original_max_and_min_groups_required=True,
+                    dispatch_added_combinational_AND_inputs=8, SS_FF_closed=False,
+                    slew_margin_percent=20, acceptance_slew_limit_ps=320, hold_margin_ps=8),
+        ports=dsrom_reindex_kc7_model()["ports"],
+        replicas=dict(controls_per_stack=1, stacks_per_rank=4, ranks=4,
+                      kept_enable_copies_per_lane=3, lanes=2, room_groups=8,
+                      FIFOs_per_room_group=8, no_new_memory_ports=True),
+        construction=dict(gross_ff_um2=round(ff*0.37908,8),
+                          decode_D_reset_allowance_nand2=copies*4+room*4+64,
+                          local_AND_and_join_nand2=(8*7+7)*2,
+                          gross_nand2_equivalents=nand2, gross_extra_um2=gross,
+                          footprint_basis="0.37908um2 FF and 0.08748um2 NAND2; footprint only, no TT delay transfer",
+                          conservative_decode_allowance="4 NAND2 per copied bit, no shared-decode or removed-logic credit",
+                          mapped_buffers_clock_tree_and_net_delta_um2=None),
+        slot=dict(core_um2=93630.5, max_cell_fraction=0.40, max_cells_um2=cap,
+                  measured_kc7_cells_um2=parent, construction_total_um2=round(parent+gross,8),
+                  remaining_mapping_CTS_repair_budget_um2=round(cap-parent-gross,8),
+                  fit_verified=False, parent_die_reservation=False),
+        routing=dict(new_internal_copy_Q_nets=copies, new_room_Q_nets=room,
+                     copy_Q_select_loads=[31,32,32], same_D_copy_loads=3,
+                     clock_reset_wire_sites_and_loaded_delay_unknown=True,
+                     additional_tracks=None, available_tracks=None,
+                     acceptance="same fixed core; mapped occupancy within cap and zero DRC/antenna/slew/cap/fanout"),
+        admission="consume completed20case gate; one OPT_KC8=1 route with slew margin20; new failing cone escalates to Claude, no blind rescue")
+
+
+def dsrom_reindex_kc7_parallel_model():
+    """Owner-directed named fanout; contexts are measured, never die admission."""
+    lib = "SEQ_RVT_TT_nldm_220123.lib footprint only, no TT timing transfer"
+    extra_ff, extra_reset_mux, extra_and = 128, 128, 256
+    split_gross = round(extra_ff * 0.37908 + extra_reset_mux * 4 * 0.08748 + extra_and * 2 * 0.08748, 8)
+    # Construction utilization uses the identical synthesized body: baseline
+    # context was nominal u35. Actual cell/core occupancy is a route output.
+    variants = []
+    for u in (40, 45):
+        core = round(93630.5 * 35 / u, 6)
+        gross_cells = 34279.5 + dsrom_reindex_kc7_model()["construction"]["gross_um2"]
+        variants.append(dict(name="kc7_u"+str(u), source="cc5ef9f82", rtl_changed=False,
+            nominal_core_utilization_percent=u, expected_core_um2=core,
+            floorplan="ORFS CORE_UTILIZATION; remove explicit kc7 core/die override",
+            expected_core_basis="same source; prior nominal35 context scaling, actual mapped area may differ",
+            construction_max_cell_fraction=0.50,
+            gross_cells_um2=round(gross_cells,8),
+            expected_remaining_buffer_budget_um2=round(0.50*core-gross_cells,8),
+            actual_core_and_fit_unknown=True, parent_die_reservation=False,
+            new_ff=0, new_edges=0, new_ports=0))
+    return dict(schema="opentallas.dsrom-reindex.kc7-parallel.v1", selected=False,
+        directive="CODEX_DIRECTIVE_20261005_parallel_fanout.md Russell item3",
+        unchanged_live_variant="kc7 cc5ef9f82 EPYC2; do not mutate/restart",
+        utilization_variants=variants,
+        split=dict(name="kc7_split2", default_enabled=False,
+            mechanism="two kept parallel registered partial comparisons, combinational AND join",
+            equations="lo'=adm_q & (&cpart[3:0]); hi'=adm_q & (&cpart[7:4]); cmp=lo&hi",
+            exactness="both reset0; conjunction equals prior registered adm_q & (&cpart[7:0]) at same edge",
+            new_ff_bits=extra_ff, new_clock_sinks=extra_ff, new_reset_clear_loads=extra_ff,
+            new_adm_q_predicate_loads=128, new_combinational_cmp_join_bits=128,
+            new_registered_edges=0, new_cdc=0, per_user_latency_delta_cycles=0,
+            reference_cycles=738, actual_cycles_required=True,
+            existing_ports_and_memory_bytes_unchanged=True, gross_extra_um2=split_gross,
+            footprint_basis=lib, ff_allowance_um2=0.37908,
+            reset_mux_nand2_equivalents=extra_reset_mux*4, extra_and_nand2_equivalents=extra_and*2,
+            baseline_core_um2=93630.5, baseline_cap_um2=37452.2,
+            kc7_gross_cells_plus_split_um2=round(34279.5+dsrom_reindex_kc7_model()["construction"]["gross_um2"]+split_gross,8),
+            remaining_buffer_budget_um2=round(37452.2-34279.5-dsrom_reindex_kc7_model()["construction"]["gross_um2"]-split_gross,8),
+            clock_reset_wire_site_tracks_and_loaded_delay_unknown=True,
+            fit_verified=False, physical_closed=False),
+        common=dict(period_ps=833, SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+            ready_external_budget_ps=166.6, original_min_and_max_groups_required=True,
+            port_boundaries=dsrom_reindex_kc7_model()["ports"],
+            no_new_bandwidth_or_replica_credit=True, context_only=True,
+            cells_include_actual_cts_and_repair=True,
+            drc_antenna_slew_cap_fanout_must_be_zero=True),
+        admission="u40/u45 measured occupancy <= explicitly priced50% construction cap; split <= old40% cap; no headline adoption")
+
+
 HBM_PC_SECTORS_PER_CYCLE = (1e12 / 1.0339e9) / 1024.0
                                                 # one 32-B burst per 1,024 ps per pseudo-channel (HBM3E 1 TB/s over
                                                 # 32 PCs; rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv) at 967.2 ps/cycle
@@ -775,6 +1247,10 @@ DEDICATED = dict(
         hardened_scale=16,                      # 16 chunks per NK=4 slice (+ 4 tails, 1% of a chunk)
     ),
     idx_reader=dict(
+        reindex_control_closure_successor=dsrom_reindex_kc6_model(),
+        reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
+        reindex_parallel_closure=dsrom_reindex_kc7_parallel_model(),
+        reindex_grouped_room_write_enable_successor=dsrom_reindex_kc8_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
@@ -1017,6 +1493,91 @@ def vm_banking(read_elems):
     macros = ports * rows
     return dict(read_elems=read_elems, macros=macros, area_mm2=round(macros * VM_MACRO["um2"] / 1e6, 3),
                 capacity_elems=macros * VM_MACRO["words"] * VM_MACRO["elems_per_read"])
+
+
+def qwen_hbm_registered_admission_model(tp=2, engine_advances=None, replicas=None):
+    """Held current-command, two registered decision cuts; default-off candidate.
+
+    No next-address signal exists in the selected spine ABI. A grant therefore
+    expires on the engine edge, and a new request must be sampled before regrant.
+    These extra clocks are mandatory, not hidden as unchanged throughput.
+    """
+    if tp not in (2, 4):
+        raise ValueError("tp must be 2 or 4")
+    for value in (engine_advances, replicas):
+        if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+            raise ValueError("counts must be nonnegative integers or None")
+    nseg, width, groups = 8, 24, 96 if tp == 2 else 48
+    ff = 2*nseg + 4  # match/availability, no-read, phase[1:0], grant
+    return dict(schema="opentallas.qwen.hbm.registered_admission.v1",
+                parameter="ADMISSION_PIPE", default=0, tp=tp,
+                macs_per_active_engine_edge="unchanged selected W12 geometry",
+                engine_advance_ii=3, added_cycles_per_engine_advance=2,
+                # This is an engine service charge, not a measured token delta.
+                # Current-source layer counts and causal overlap are not enrolled.
+                added_token_cycles=None, added_token_ns=None,
+                gross_added_engine_service_cycles=None if engine_advances is None else 2*engine_advances,
+                gross_added_engine_service_ns=None if engine_advances is None else 2*engine_advances*0.833,
+                engine_service_duration_ratio=3,
+                service_charge_condition="same logical engine-edge sequence; external service/calendar unchanged",
+                current_source_layer_advance_counts=None,
+                current_source_layer_slowdown_upper_bound=None,
+                current_source_full_token_slowdown_upper_bound=None,
+                candidate_verdict="REJECTED_AS_SPEED_OPTIMIZATION",
+                physical_run_role="single priced mandatory-clock feasibility measurement only",
+                engine_advance_count=engine_advances, replicas=replicas,
+                added_ff_bits_per_die=ff, ff_area_floor_um2=ff*DFF_UM2,
+                combinational_cost="existing segment comparators; registered-match priority/reduce + phase decode",
+                mapped_cell_area_um2=None, slot_fit=None, physical_closed=False,
+                added_memory_ports=0, added_memory_bytes_per_cycle=0,
+                added_external_boundary_bits=0, retained_request_address_bits=width,
+                result_enable_fanout=groups, result_packet_pipeline_bits=0,
+                clock_reset_load_added_pins=ff,
+                local_registered_decision_tracks=2*nseg+4,
+                routing_track_capacity=None,
+                accepted_contract="one matching held request per one-edge grant; retire only on me_clk_en",
+                command_issue="me_go requires that same registered engine grant",
+                held_output_contract="address/data/mask held in existing spine; no delayed strobe-only packet",
+                prerequisite="segment table stable across held phase, monotonic same-token arrivals; reset cancels grant",
+                token_rate=None, token_speedup=None, adoption=False,
+                context_control_measurement=dict(commands=16, engine_advances=7650,
+                    baseline_cycles=8055, candidate_cycles=23342, added_cycles=15287,
+                    geometry="G6144/SW64/LV7; TP2 and TP4 actual route cuts",
+                    arithmetic_qualified=False),
+                baseline_clock_sensitivity=dict(
+                    policy="same extracted delays only; NOT a routed operating point",
+                    io_delay_fraction=0.2, setup_uncertainty_ps=60,
+                    required_period_ps=((1341.06 if tp == 2 else 1338.91)+60)/0.8,
+                    measured_ss_worst_ps=-734.66 if tp == 2 else -732.51,
+                    candidate_clock_qualified=False))
+
+
+def qwen_hbm_collective_return_cut_model(tp=2):
+    """One held same-clock receive packet cut at the actual TP sequencer input.
+
+    No ready is invented: the current collective return is unstallable. All
+    payload/control fields travel together, reset cancels the packet valid.
+    """
+    if tp not in (2, 4):
+        raise ValueError("tp must be 2 or 4")
+    rank_bits = 1 if tp == 2 else 2
+    bits = 512 + rank_bits + 3  # data, rank, valid, last, err
+    return dict(parameter="R_NEXT", default=0, ranks=tp,
+        captured_packet_bits_per_rank=bits, replicated_capture_bits=bits*tp,
+        added_latency_edges_per_collective=1, added_edges_per_record=0,
+        accepted_return_ii=1, native_return_ready_present=False,
+        arithmetic="unchanged native rank-order FP32 add and original argmax tie rules",
+        macs_added=0, new_memory_ports=0, memory_bytes_per_cycle_added=0,
+        return_bytes_per_cycle=64, packet_boundary_bits=bits,
+        capture_ff_area_floor_um2=(bits-1)*DFF_UM2+0.37908,
+        payload_hold_mux_count=bits-1, clock_pins_per_rank=bits,
+        added_clock_domains=0, added_cdc=0, mapped_area_um2=None,
+        routing_tracks_needed=bits, routing_capacity=None,
+        placement_utilizations=[0.25,0.30,0.35], slot_fit=None,
+        compose_rule="one exposed edge per completed collective; actual command count required, no free overlap",
+        actual_layer_collective_counts=None, actual_token_delta_ns=None,
+        SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25, clock_ps=833,
+        physical_closed=False, adoption=False, token_rate=None)
 
 
 def qwen_x_read_stall(G, su_width, ctx, read_elems):
@@ -7039,6 +7600,7 @@ def hbm_accel_rows():
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--hbrom-inputs", help="default-off ROM-fed reusable-compute cluster model input JSON")
     ap.add_argument("--ctx", type=int, default=1048576)
     ap.add_argument("--v41-rom-draft", choices=("as_built", "l1", "assumed"), default="as_built",
                     help="V4.1 ROM MTP draft time: MEASURED DSpark step (as_built, or l1 fused head) or the legacy "
@@ -7083,6 +7645,16 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.hbrom_inputs:
+        import hbrom_model
+        inputs = json.loads(Path(a.hbrom_inputs).read_text())
+        result = hbrom_model.sweep(inputs)
+        payload = json.dumps(result, indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     global V41_ROM_DRAFT
     V41_ROM_DRAFT = a.v41_rom_draft
     global _HBM_SWITCH, _HBM_FEC
@@ -7765,6 +8337,287 @@ def hbm_dspark_ctl_fast_prefix_candidate():
                 SS_FF_closed=False, measured_gain=False)
 
 
+def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
+    """Same-edge control locality repair for the measured reset-corrected WFC.
+
+    Copies uchk2 inside each existing upos group, fed from uchk on the same
+    edge. A one-hot write-bank mirror advances with the existing queue pointer.
+    No reset-root replication, valid-mask removal, or pipeline edge is added.
+    Cell footprints come from the pinned ASAP7 SS/FF cell-price record.
+    This reservation is a prebuild estimate, not mapped area or timing credit.
+    """
+    groups = (maxu + 31) // 32
+    ff = groups + txq
+    # Three buffers per new FF (clock/reset/input), plus one per 32 queue bits.
+    buffers = 3 * ff + txq * ((flit + 31) // 32)
+    # Four NAND2 equivalents per bank-enable mux, one common inversion, and
+    # eight per bank for local pointer/priority qualification. No removal credit.
+    nand2 = 4 * txq + 1 + 8 * txq
+    gross = ff * 0.37908 + buffers * 0.10206 + nand2 * 0.08748
+    return dict(source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv',
+                baseline_controller_sha256='26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba',
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                default_enabled=False, adopted=False, MACs_per_cycle=0,
+                replicas=1, maxu=maxu, nw=nw, flit=flit, txq=txq,
+                groups=groups, new_FF_bits=ff, read_control_FF_bits=groups,
+                write_bank_FF_bits=txq, buffer_reservation_cells=buffers,
+                NAND2_equivalent_reservation=nand2,
+                gross_cell_reservation_um2=gross,
+                additional_implementation_reservation_um2=gross,
+                total_cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+                SS_new_clock_pin_cap_fF=ff*0.433982,
+                SS_new_reset_pin_cap_fF=ff*0.704025,
+                SS_read_control_input_pin_cap_fF=groups*0.527811,
+                new_external_boundary_bits_per_cycle=0, new_memory_ports=0,
+                new_memory_bytes_per_cycle=0, new_pipeline_edges=0,
+                single_user_token_latency_delta_cycles=0, issue_interval_delta_cycles=0,
+                reset_root_copies=0, valid_mask_bits_removed=0,
+                local_group_read_control_sink_bound=nw,
+                write_bank_control_sink_bound=flit,
+                write_bank_buffer_leaf_sink_reservation=32,
+                additional_narrow_control_connections_bound=2*groups+3*txq,
+                existing_stage_core_area_um2=37498,
+                existing_stage_routed_cell_area_um2=15990.6,
+                projected_cell_fraction_with_growth_budget=(15990.6+2*gross)/37498,
+                existing_floorplan_retained=True, routing_capacity_proven=False,
+                mapped_area_proven=False, SS_FF_closed=False,
+                target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                obligations='Keep each group copy local; preserve queue priority/debt and reset edges; measure the same fullshape context and routed channel/area limits. Reservation is not guaranteed physical fit.')
+
+
+
+
+def dsrom_wfc_reset_release_gate_price():
+    """Owner-supplied reset-release qualifiers, not a clock-domain change.
+
+    The existing rst_q register still releases one edge after rst_n. Suppress
+    all link admission/write and core-start terms during that existing edge;
+    no new state or steady-state response edge is added.
+    """
+    signals = ['in_ready', 'rx_hdr', 'rx_res', 'rx_side', 'vm_we',
+               'st_rx', 'st_new', 'st_q', 'st_fb', 'st_wk', 'core_start']
+    nand2, buffers = 2*len(signals), 3*len(signals)
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(new_FF_bits=0, new_clock_pin_cap_fF_SS=0, new_memory_ports=0,
+                new_memory_bytes_per_cycle=0, MACs_per_cycle=0, replicas=1,
+                reset_qualified_terms=signals, added_pipeline_edges=0,
+                reset_release_edges_after_rst_n=1, steady_state_cycle_delta=0,
+                model_reference_cycle_contract='Existing registered-root +1 reset edge; SOURCE1 serial engine +3.7 cycles/issue historical until remeasured. Golden rounding and reductions unchanged.',
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                original_clock_and_reset_register_unchanged=True,
+                full_shape=dict(WIN=6,FLIT=512,NW=21,AW=30,VWA=15,USER_W=10,MAXU=866,KVW=32768),
+                target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+                utilizations=[0.40,0.45,0.50], actual_route_fit_unknown=True,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                prior_r12_source_sha256='26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba',
+                physical_adopted=False)
+
+
+def dsrom_wfc_typed_completion_price(idw=47, paw=14, nw=21):
+    """Add one retained terminal kind to the finite END/result join.
+
+    STAGE_HANDOFF never asserts token validity; token result still requires
+    fresh native argmax. No reset/clock/cycle or arithmetic change.
+    """
+    base = dsrom_wfc_stage_completion_join_price(idw, paw, nw)
+    nand2, buffers = 32, 3
+    gross = 0.37908 + nand2*0.08748 + buffers*0.10206
+    return dict(base=base, kind_bits=1, new_FF_bits=base['new_FF_bits']+1,
+                kind_increment_NAND2_reservation=nand2,
+                kind_increment_buffer_cells=buffers,
+                kind_increment_gross_um2=gross,
+                kind_increment_budget_um2=2*gross,
+                total_cell_growth_budget_um2=base['total_cell_growth_budget_um2']+2*gross,
+                added_response_edges=0, new_memory_ports=0,
+                new_clock_pin_cap_fF_SS=0.433982,
+                kinds={'TOKEN_RESULT': 0, 'STAGE_HANDOFF': 1},
+                stage_handoff='Real bound END/context plus entire ordered coverage and real final fence/visibility; no argmax required and token_result_valid is always false.',
+                token_result='Original fresh bound native argmax producer and END required.',
+                physical_context_ready=False, SS_FF_closed=False)
+
+
+def dsrom_wfc_stage_completion_parent_interface_price(idw=47, paw=14, nw=21):
+    """Wire-only native source edge exports, before source overlay generation.
+
+    Actual observed pins gain load; routing is not free even without new FFs.
+    Buffer reservation is a model budget, not enrollment of a real consumer.
+    """
+    bits = 8 + 3*idw + 3*paw + nw + 32
+    nand2 = 18  # qualifier AND gates, including three-input admission/launch
+    buffers = 3*bits
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(replicas=1, new_FF_bits=0, new_clock_pin_cap_fF_SS=0,
+                new_memory_ports=0, new_memory_bytes_per_cycle=0, MACs_per_cycle=0,
+                new_output_boundary_bits=bits, added_response_edges=0,
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                parent_source_clock='selected clk unchanged',
+                actual_consumer_loads=None, routing_capacity_proven=False,
+                physical_context_ready=False, SS_FF_closed=False,
+                note='Actual descriptor admission, FIFO launch, registered engine start and retirement are distinct edges; exports do not assert wholeplan coverage.')
+
+
+def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
+    """One finite retained stage result, qualified by real source-owned pins.
+
+    Complete plan coverage and five visibility predicates are REQUIRED inputs;
+    this join never counts a fragment END as whole-plan coverage. The selected
+    native END/result and C8/capture/collective health bind inside the overlay.
+    Functional implementation needs that contract, not prior STA arrival data.
+    """
+    metadata_bits = idw + 3*paw
+    result_bits = nw + 32
+    flags = 5  # active, fresh producer, END pending, result held, quarantine
+    ff = metadata_bits + result_bits + flags
+    compare_bits = 3*idw + 3*paw
+    comparison_nand2 = 7*compare_bits + 8*paw
+    control_nand2 = 128
+    mux_nand2 = 4*ff
+    buffers = 3*ff
+    nand2 = comparison_nand2 + control_nand2 + mux_nand2
+    gross = ff*0.37908 + buffers*0.10206 + nand2*0.08748
+    return dict(default_enabled=False, adopted=False, replicas=1,
+                retained_slots=1, new_FF_bits=ff, saved_metadata_bits=metadata_bits,
+                retained_result_bits=result_bits, control_flags=flags,
+                equality_compare_bits=compare_bits,
+                comparison_NAND2_reservation=comparison_nand2,
+                control_NAND2_reservation=control_nand2, mux_NAND2_reservation=mux_nand2,
+                buffer_reservation_cells=buffers, NAND2_equivalent_reservation=nand2,
+                gross_cell_reservation_um2=gross,
+                additional_implementation_reservation_um2=gross,
+                total_cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+                MACs_per_cycle=0, new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                required_source_authority_input_bits=(2+metadata_bits)+(2+idw)+(2+idw+5),
+                producer_data_bits_per_edge=result_bits, native_result_capture_words=1,
+                added_response_edges_when_all_authorities_visible=0,
+                response_basis='END is sampled on its native edge; following-cycle native done/data may bypass retention on the original response edge. Held data waits for real coverage/visibility/quiet, never a fixed timer.',
+                coverage_counters_added=0, coverage_authority='Required identity-matched wholeplan coverage pin; actual owner hook remains unbound',
+                warm_reset='Preserve retained metadata/data/debt and quarantine any active request; no reset retirement',
+                clock='same selected native clk', new_clock_pin_cap_fF_SS=ff*0.433982,
+                mapped_area_proven=False, routing_capacity_proven=False,
+                source_contract_for_component_ready=True, physical_context_ready=False,
+                actual_SS_FF_arrivals=None, SS_FF_closed=False,
+                target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
+
+
+def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
+                                   measured_stage_cycles=73670):
+    """Unselected one-edge completion alternatives, priced on a retained trace.
+
+    This is a conditional calendar charge, not a changed RTL measurement.
+    A one-bit hop requires source-held data and identity through the new edge.
+    A finite capture holds the actual producer's token/value plus validity;
+    neither alternative licenses new work to overwrite its request context.
+    """
+    payload = nw + 32
+    choices = {}
+    for name, data_bits in [('parent_held_data_hop', 0),
+                            ('finite_result_capture', payload)]:
+        ff = data_bits + 1
+        # Payload uses unreset FFs, validity uses the existing reset cell type.
+        nand2 = 4*data_bits + 32  # hold mux plus bounded local valid control
+        buffers = 3*ff + 16      # clock/D/reset and distributed local control
+        gross = data_bits*0.2916 + 0.37908 + nand2*0.08748 + buffers*0.10206
+        choices[name] = dict(new_FF_bits=ff, retained_payload_bits=data_bits,
+                            NAND2_reservation=nand2, buffer_reservation_cells=buffers,
+                            gross_cell_reservation_um2=gross,
+                            total_growth_budget_um2=2*gross,
+                            old_cell_removal_credit_um2=0,
+                            new_clock_pin_cap_fF_SS=data_bits*0.446638 + 0.433982,
+                            new_reset_pin_cap_fF_SS=0.704025,
+                            parent_result_hold_required=(data_bits == 0),
+                            request_context_retention_required=True,
+                            new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                            new_external_payload_bits_per_edge=0,
+                            producer_payload_bits_per_capture=payload,
+                            capture_data_local_wire_bits=data_bits,
+                            local_valid_control_bits=1,
+                            routing_capacity_proven=False,
+                            actual_parent_loads=None,
+                            budget_fraction_of_smallest_failed_cell_area=2*gross/15787.9,
+                            actual_parent_slot_fit_proven=False,
+                            excludes_separate_internal_control_repair=True,
+                            added_completion_edges=1)
+    return dict(schema='opentallas.dsrom.wfc.completion_edge_price.v1',
+                model_only=True, implementation_selected=False, adopted=False,
+                source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv',
+                baseline_controller_sha256='601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099',
+                source_terms=['core_done/core_next_token/core_next_val',
+                              'job_done and TXQ payload capture',
+                              'core_free/tx_reading/VM arbitration and request context'],
+                choices=choices, MACs_per_cycle=0,
+                target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, SS_FF_closed=False,
+                calendar=dict(vehicle='original L20 stage9_w1 dependency retry PASS',
+                              measured_stage_cycles=measured_stage_cycles,
+                              actual_completion_events=exposed_completions,
+                              added_edges_if_every_event_exposed=exposed_completions,
+                              target_period_scale_only_added_ns=exposed_completions*0.833,
+                              fractional_calendar_charge=exposed_completions/measured_stage_cycles,
+                              rate_loss_if_other_edges_unchanged=exposed_completions/(measured_stage_cycles+exposed_completions),
+                              whole_token_exposed_events=None,
+                              whole_token_latency_delta_ns=None,
+                              composition='deltaT=sum(exposed completion hops * actual controller period) + changed service/phase/credit waits; no free overlap or token extrapolation'),
+                physical_gain_measured=False, actual_parent_launch_clock=None,
+                actual_parent_result_hold_contract=None, mapped_area_proven=False,
+                internal_user_position_path_repaired=False,
+                reset_recovery_failure=False,
+                owner_decision='CLAUDE chooses the actual completion/capture contract and separate internal-control repair. No RTL/campaign authorized by this model.',
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json')
+
+
+def dsrom_wfc_completion_ready_price(nw=21, txq=4):
+    """Conditional same-edge completion-ready lookahead, not an adopted repair.
+
+    A registered predicate must equal F(current state), computed from the
+    exact next running/TX state/read-inflight/queue count on the preceding edge.
+    Registering F(current state) instead adds an edge and is not this recipe.
+    Actual parent completion/data launch clocks and arrivals remain required.
+    """
+    qb = max(1, (txq - 1).bit_length())
+    count_bits = qb + 1
+    arithmetic_nand2 = 2 * count_bits * 9
+    state_mux_nand2 = 5 * 3 * 4
+    running_mux_nand2 = 8
+    predicate_nand2 = 24
+    nand2 = arithmetic_nand2 + state_mux_nand2 + running_mux_nand2 + predicate_nand2
+    ff = 1
+    buffers = 3 + 16  # new CLK/reset/D plus distributed completion control.
+    gross = ff*0.37908 + buffers*0.10206 + nand2*0.08748
+    return dict(adopted=False, implementation_selected=False,
+                source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv',
+                baseline_controller_sha256='d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790',
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                replicas=1, MACs_per_cycle=0, new_FF_bits=ff,
+                new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                new_external_boundary_bits_per_cycle=0,
+                new_pipeline_edges=0, single_user_token_latency_delta_cycles=0,
+                queue_depth_delta=0, accepted_debt_delta=0, reset_root_copies=0,
+                arithmetic_NAND2_reservation=arithmetic_nand2,
+                TX_state_mux_NAND2_reservation=state_mux_nand2,
+                running_mux_NAND2_reservation=running_mux_nand2,
+                predicate_NAND2_reservation=predicate_nand2,
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross,
+                additional_implementation_reservation_um2=gross,
+                total_cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+                new_clock_pin_cap_fF_SS=0.433982, new_reset_pin_cap_fF_SS=0.704025,
+                new_predicate_D_pin_cap_fF_SS=0.527811,
+                additional_state_control_connections_bound=1+3+1+count_bits+1+1,
+                completion_control_buffer_leaf_sink_reservation=32,
+                actual_parent_launch_clock=None, actual_parent_completion_max_arrival_ps=None,
+                actual_parent_completion_min_arrival_ps=None,
+                actual_parent_result_data_arrival_ps=None, actual_parent_routed_record=None,
+                measured_gain_ps=None, routed_area_fit=False, routing_capacity_proven=False,
+                component_exactness=False, SS_FF_closed=False, build_ready=False,
+                blocker='Selected native parent completion/data launch-clock and min/max arrival binding absent. No uncontrolled capture edge or IO policy change.',
+                semantics='ready_q(t)=running(t)&&TX_IDLE(t)&&!rd_inflight(t)&&(txq_n(t)+2<=TXQ); compute ready_q(t+1) from EXACT original next state including q_push/tx_pop and ordered assignments, clear with rst_q; job_done(t)=core_done(t)&&ready_q(t).')
+
+
 def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, instructions=1, replicas=1):
     """Held FIFO word -> position -> selectors/shift -> /ODD -> NEXT.
 
@@ -7877,7 +8730,10 @@ def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
                    additional_return_credit_and_edge_guard_reservations=None,
                    full_rate_flight_payload_bits_lower_bound=flight*beat,
                    full_rate_flight_storage_ff_delta=None,
-                   alternative_common_advance_requires_all_tiles_and_IL8_feedback_phase=True,
+                   selected_common_advance_requires_all_tiles_and_IL8_feedback_phase=True,
+                   full_flight_alternate_selected=False,
+                   ungated_service_capture_partition_required=True,
+                   existing_tile_me_or_kv_active_enable_safe=False,
                    reservation_state_bits=None, accepted_tag_alignment_ff_delta=None),
         reset=dict(peer_down_wait_existing=True, producer_pipeline_quiescence_required=True,
                    discard_old_inflight_payload_and_tag_together=True,
@@ -7891,9 +8747,9 @@ def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
         token=dict(selected_program_schedule=None, upper_tree_serial_edges_per_beat=(tree_lat+1)*((gt-1).bit_length()-tcut),
                    crossing_entries=None, credit_stall_ns=None, final_write_ack_ns=None,
                    composed_latency_delta_ns=None, headline_rate_credit=False),
-        implementation_dependencies=["match actual selected top.args to retained parameter census",
+        implementation_dependencies=["selected top.args verified; retain source-bound flight148",
                                      "Maxwell complete landing/credit/alignment/reset/mux/wire and literal schedule price",
-                                     "source-common issue admission across PART1 tiles and PART2 tags",
+                                     "owner-selected COMMON logical advance across PART1 tiles and PART2 tags",
                                      "actual serial result/scale grants and consumed write ACK",
                                      "source-sized slot and related-clock loaded SS/FF gate"],
         wrapper_rtl_admitted=False, physical_launch_admitted=False)

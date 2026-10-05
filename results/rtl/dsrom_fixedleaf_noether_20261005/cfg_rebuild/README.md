@@ -1,0 +1,7 @@
+Pending configuration-copy rebuild
+
+Noether owns the existing dsrom_elem_cfg_rw.py run/record on pinned 7957cd35b, including b9e873649 corrected row decode. Epicurus is the field-source integration consumer. The pending output is 14 configuration-test binaries: 13 existing variants plus the historical pre-fix control. The four completed frontend/QTIMING/PG/PG_CDC gates and Rawls QZ are not rerun.
+
+inputs.json pins the actual primitive/variant/bench/tool source list. The configuration bench supplies 4096/8192 ROM stubs with clk, ce_in, addr_in and rd_out, matching the selected leaf and aligned macro interfaces. It checks configuration decode/readback only; the stubs carry no payload or macro-timing qualification. These objects are not production pair/field archives. The exact production pair/field object consumer manifest remains requested directly from Epicurus; no new spine/PQ/full-die physical variant is authorized.
+
+launch.sh is ready for one explicit EPYC2 launch after fresh load <=150. It refuses existing output and a changed/dirty source snapshot, preserves the unchanged admission script, uses eight concurrent copies with make -j2 each and unlimited CPU/address-space/file limits, and records terminal status. There is no automatic queue/restart watcher. Latest observed EPYC2 load 291.66 and EPYC1 185.75 prevent dispatch; CFG remains unlaunched with no PID. Inspect current headroom before invoking this recipe. Real completion and immutable raw records will be published after the run, not inferred from preparation.

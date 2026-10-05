@@ -1,0 +1,28 @@
+{
+  "source_snapshot": "c46d7b076",
+  "launcher_pid": 1259486,
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch/codex/qwen-rom-core-counter1-20261005",
+  "registry": "qcd-rom-core-counter1",
+  "model_before_RTL": "247618f8c",
+  "component": "four AR/VPOS8187/262135 casesPASS; everyedgecycles equality, cache invariant, coherent carry8/16/24+uint32wrap probes; decoded878/argmaxENDprotocol sameedge",
+  "added_edges": 0,
+  "additional_state_bits": 3,
+  "clock_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "admit_GB": 12,
+  "j": 16,
+  "timeouts": "unlimited",
+  "driver": "1e5+a78 argv-only fix",
+  "default_DEC_LA_COUNT_LA": 0,
+  "selected_parameters": {
+    "DEC_LA": 1,
+    "DEC_LA_BOUND": 1,
+    "DEC_LA_CHASE_Q": 1,
+    "DEC_LA_COUNT_LA": 1
+  },
+  "repeat_JSON_cell_graph_proof": false,
+  "physical_verdict": null,
+  "adopted": false
+}

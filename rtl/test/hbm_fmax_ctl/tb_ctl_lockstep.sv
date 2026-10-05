@@ -63,7 +63,8 @@ module tb_ctl_lockstep;
             repeat (3) @(negedge clk);
         end
         $display("LOCKSTEP ctl runs=%0d cycles=%0d steps=%0d emits=%0d mismatches=%0d", NRUN, cyc, steps_tot, emits, bad);
+        if (bad != 0) $fatal(1, "LOCKSTEP_TERMINAL_FAIL");
         $finish;
     end
-    initial begin #500000000; $display("TIMEOUT run %0d s=%0d busy=%0d amq=%0d delay=%0d", r, u0.s, busy, amq, delay); $finish; end
+    initial begin #500000000; $display("TIMEOUT run %0d s=%0d busy=%0d amq=%0d delay=%0d", r, u0.s, busy, amq, delay); $fatal(1, "LOCKSTEP_TERMINAL_TIMEOUT"); end
 endmodule

@@ -47,7 +47,7 @@
 //     the others (JESD238 Table 93: tRFCpb 200 ns for 16 Gb dies, tREFIpb =
 //     tREFI / banks per pseudo-channel -- 32 for 16 Gb 8-high, 2 SIDs x 16
 //     banks -- as encoded by Ramulator 2 72427a1).  tRFCpb > tREFIpb, so ~1.6
-//     banks are refreshing at any time; there is no postpone/pull-in;
+//     banks are refreshing at any time; no postpone; pull-in only with PULLIN > 0;
 //   * a controller/PHY latency on the request path and on the response path;
 //   * a reordering scheduler per pseudo-channel over the RW oldest queued
 //     bursts: the burst whose column command can issue earliest goes next
@@ -139,6 +139,9 @@ module ot_hdc_v41x_idx_hbm_trace #(  // TRACE
     parameter integer RFCPB_PS = 200000,      // tRFCpb, JESD238 Table 93 (16 Gb/die), via Ramulator 2 72427a1
     parameter integer RREFD_PS = 8000,        // tRREFD: REFpb <-> ACT / REFpb (other bank), JESD238
     parameter integer REF_LEGACY = 0,         // 1: the pre-2026-10-04 REFpb placement (comparison only)
+    parameter integer PULLIN = 0,             // >0: idle REFpb pull-in, at most PULLIN tREFIpb ahead (opt-in)
+    parameter integer PULLIN_LRU = 0,         // 1: a pulled-in REFpb takes the least recently activated bank
+    parameter integer PULLIN_BATCH = 0,       // >0: pull REFpb in clusters of this many (<= PULLIN)
     // Opt-in experimental shared K/W sector reservation. Tag MSB is W.
     // Clients must occupy disjoint regions; legacy scheduling unchanged at zero.
     parameter integer SHARE_W_NUM = 0,
@@ -222,6 +225,8 @@ module ot_hdc_v41x_idx_hbm_trace #(  // TRACE
     // statistics (public)
     longint st_rd [0:NPC-1], st_wr [0:NPC-1], st_act [0:NPC-1], st_hit [0:NPC-1], st_conf [0:NPC-1];
     longint st_ref [0:NPC-1], st_bp_cycles, st_rd_lat_sum, st_rd_lat_max;
+    longint st_pullin [0:NPC-1];
+    reg     pi_batch [0:NPC-1];
     longint cyc;
 
     function automatic integer pc_of(input [AW-1:0] s);
@@ -379,6 +384,45 @@ module ot_hdc_v41x_idx_hbm_trace #(  // TRACE
                 for (h = 0; h < 4; h = h + 1)
                     if (faw[p][h] > t - RRDL_PS && faw[p][h] < t + RREFD_PS) t = faw[p][h] + RRDL_PS;
             ref_slot = t;
+        end
+    endfunction
+
+    // REFpb pull-in (PULLIN > 0, opt-in, REFPB >= 2, REF_LEGACY = 0; claude/dsrom-s81-window-bind-20261004): an
+    // idle pseudo-channel (no queued beat) issues its next REFpb now, up to PULLIN tREFIpb intervals ahead of its
+    // due time (JEDEC refresh pull-in; the due schedule itself is unchanged), so a short burst that follows finds
+    // no REFpb due.  Same bank choice and the same placement rules as a due REFpb (bank tRP / tRC / tRFCpb, a
+    // slot clear of committed ACTs, tRREFD after the last REFpb).
+    function automatic longint pull_ref(input integer p, input longint t);
+        longint tr;
+        integer b2, bi;
+        begin
+            for (bi = 0; bi < NB; bi = bi + 1) ref_cnt[bi] = 0;
+            for (bi = 0; bi < NB; bi = bi + 1)
+                if (b_refend[p][bi] > t) ref_cnt[bi] += 4 * (QD + 1);
+            b2 = -1;
+            for (bi = 0; bi < NB; bi = bi + 1)
+                if (!ref_done[p][bi] && (b2 < 0 || ref_cnt[bi] < ref_cnt[b2] ||
+                                         (REFPB == 2 && ref_cnt[bi] == ref_cnt[b2] && b_open[p][b2] && !b_open[p][bi]) ||
+                                         (REFPB == 3 && PULLIN_LRU == 0 && ref_cnt[bi] == ref_cnt[b2] && b_act[p][bi] > b_act[p][b2]) ||
+                                         (PULLIN_LRU != 0 && ref_cnt[bi] == ref_cnt[b2] && b_act[p][bi] < b_act[p][b2])))
+                    b2 = bi;
+            ref_done[p][b2] = 1'b1;
+            if (&ref_done[p]) ref_done[p] = '0;
+            tr = t;
+            if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2] + RP_PS);
+            tr = ref_slot(p, max2(tr, b_actok[p][b2]));
+            if (b_open[p][b2]) tr_ev(p, 1, tr - RP_PS, b2, 0);  // TRACE
+            b_open[p][b2] = 1'b0;
+            b_actok[p][b2] = max2(b_actok[p][b2], tr + RFCPB_PS);
+            b_refend[p][b2] = tr + RFCPB_PS;
+            ref_hist[p][0] = ref_hist[p][1]; ref_hist[p][1] = ref_hist[p][2];
+            ref_hist[p][2] = ref_hist[p][3]; ref_hist[p][3] = tr;
+            tr_ev(p, 2, tr, b2, 0);  // TRACE
+            ref_bank[p] = (b2 + 1) % NB;
+            next_ref[p] = next_ref[p] + REFI_PS / NB;
+            st_ref[p] = st_ref[p] + 1;
+            st_pullin[p] = st_pullin[p] + 1;
+            pull_ref = tr;
         end
     endfunction
 
@@ -551,13 +595,30 @@ module ot_hdc_v41x_idx_hbm_trace #(  // TRACE
                     b_open[p][k] = 1'b0; b_actok[p][k] = 0; b_preok[p][k] = 0; b_act[p][k] = 0; b_row[p][k] = 0;
                     b_refend[p][k] = -1000000;
                 end
-                st_rd[p] = 0; st_wr[p] = 0; st_act[p] = 0; st_hit[p] = 0; st_conf[p] = 0; st_ref[p] = 0;
+                st_rd[p] = 0; st_wr[p] = 0; st_act[p] = 0; st_hit[p] = 0; st_conf[p] = 0; st_ref[p] = 0; st_pullin[p] = 0; pi_batch[p] = 1'b0;
             end
             st_bp_cycles = 0; st_rd_lat_sum = 0; st_rd_lat_max = 0;
         end else begin
             cyc <= cyc + 1;
             wr_done <= 0;
             now = cyc * CLK_PS;
+            // REFpb pull-in on idle pseudo-channels (PULLIN > 0)
+            // PULLIN_BATCH > 0: an idle channel waits until PULLIN_BATCH REFpb can be pulled in, then issues them
+            // back to back (tRREFD apart), so its refreshes cluster and a short burst between clusters meets none
+            if (PULLIN != 0 && REFPB >= 2 && REF_LEGACY == 0)
+                for (p = 0; p < NPC; p = p + 1)
+                    if (q_n[p] == 0 && ref_hist[p][3] + RREFD_PS <= now) begin   // one pulled REFpb in the future at most
+                        if (PULLIN_BATCH == 0) begin
+                            if (next_ref[p] <= now + longint'(PULLIN) * (REFI_PS / NB)) void'(pull_ref(p, now));
+                        end else begin
+                            if (!pi_batch[p] && next_ref[p] <= now + longint'(PULLIN - PULLIN_BATCH) * (REFI_PS / NB))
+                                pi_batch[p] = 1'b1;
+                            if (pi_batch[p]) begin
+                                if (next_ref[p] <= now + longint'(PULLIN) * (REFI_PS / NB)) void'(pull_ref(p, now));
+                                else pi_batch[p] = 1'b0;
+                            end
+                        end
+                    end
             // responses taken this cycle (rsp_v is the registered offer)
             for (p = 0; p < NPC; p = p + 1)
                 if (rsp_v[p] && rsp_rdy[p]) begin

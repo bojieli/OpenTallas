@@ -1,0 +1,4459 @@
+{
+  "schema": "hbrom.global.transport.audit.v1",
+  "architecture_only": true,
+  "source_pins": {
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/w19_hbm_token_compose.py": "532e750860030c2142cc514da714582083a70519f28dff0fc49cdd7d46ca936a",
+    "tools/uarch_model.py": "d97982d88554cf74763c90ffaffd683d04e4a9a15e21f1ef90f7efdec094302b",
+    "tools/hbm_gpu_floorplan.py": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/rtl/w19_hbm_tp96_isa.json": "7a25fd0927fb9ea399d32a24bb7c8d19a442bf1e0ef704af0baeb93c2d759492",
+    "results/rtl/w15_hbm_nvls.json": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+    "results/uarch/w19_hbm_token_ar.json": "ab41e0ad471686a602162980e16d4e48d83764088049cbaf2419373fb6fd1ca2",
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "results/rtl/hbm_accel_ha2_ar_20261004/composition.json": "10f7f12c9358f3240b0b0ae9fe835921520fb6cc1a8d0fb69775122c56b88584",
+    "results/uarch/hbm_switch_latency_range_20261004/switch_latency_research.md": "f57572999fa38c6b192f2bd09b544965a375b75df90f74d1df21b336cb472819"
+  },
+  "answer": "Pure rank-local replacement of HBM immutable-weight supply with ROM, preserving existing TP96 W19 ownership/order, introduces zero extra activation gathers and zero layer-stage hops. Reuse existing collectives exactly. ROM row/source placement or insufficient per-rank capacity may force architecture changes that require separate accounting.",
+  "machine": {
+    "ranks": 96,
+    "SM_per_rank": 32,
+    "installed_SM": 3072,
+    "packages": 48,
+    "dies_per_package": 2,
+    "layer_ownership": "all40 layers resident as local output-row shards on every rank; global reuse same SMs each layer",
+    "head_owner": "head h on rank h for h<64; ranks64..95 idle for head-aligned query/attention/wo_a",
+    "compressed_state_owner": "sequence block of8 rows owned by (position//8)%96 across same global ranks; selections reused locally across layers",
+    "window": "each layer window replicated; all ranks form new window row from gathered wkv; no owner20 remote layer-stage transport"
+  },
+  "mapping": [
+    {
+      "tag": "wq_a",
+      "n": 1280,
+      "k": 5120,
+      "format": "fp8",
+      "active_ranks": 96,
+      "busiest_rank_rows": 14,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 1280
+    },
+    {
+      "tag": "wkv",
+      "n": 512,
+      "k": 5120,
+      "format": "fp8",
+      "active_ranks": 96,
+      "busiest_rank_rows": 6,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 512
+    },
+    {
+      "tag": "wq_b (head-aligned: head h on die h)",
+      "n": 32768,
+      "k": 1280,
+      "format": "fp8",
+      "active_ranks": 64,
+      "busiest_rank_rows": 512,
+      "busiest_SM_rows": 16,
+      "nonempty_SM_upper_bound": 2048
+    },
+    {
+      "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+      "n": 8192,
+      "k": 512,
+      "format": "bf16",
+      "active_ranks": 64,
+      "busiest_rank_rows": 1024,
+      "busiest_SM_rows": 32,
+      "nonempty_SM_upper_bound": 2048
+    },
+    {
+      "tag": "wo_b",
+      "n": 5120,
+      "k": 8192,
+      "format": "fp8",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "router gate",
+      "n": 384,
+      "k": 5120,
+      "format": "bf16",
+      "active_ranks": 96,
+      "busiest_rank_rows": 4,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 384
+    },
+    {
+      "tag": "expert slot 0 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 0 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 1 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 1 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 2 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 2 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 3 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 3 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 4 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 4 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 5 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 5 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 6 w1",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp8",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 6 w3",
+      "n": 2304,
+      "k": 5120,
+      "format": "fp8",
+      "active_ranks": 96,
+      "busiest_rank_rows": 24,
+      "busiest_SM_rows": 1,
+      "nonempty_SM_upper_bound": 2304
+    },
+    {
+      "tag": "expert slot 0 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "expert slot 1 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "expert slot 2 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "expert slot 3 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "expert slot 4 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "expert slot 5 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp4",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    },
+    {
+      "tag": "expert slot 6 w2",
+      "n": 5120,
+      "k": 2304,
+      "format": "fp8",
+      "active_ranks": 96,
+      "busiest_rank_rows": 54,
+      "busiest_SM_rows": 2,
+      "nonempty_SM_upper_bound": 3072
+    }
+  ],
+  "collective_counts": {
+    "all": 270,
+    "on_path": 265,
+    "by_kind": {
+      "all_gather": 212,
+      "all_reduce": 40,
+      "topk_merge": 10,
+      "kv_gather": 8
+    }
+  },
+  "collective_families": {
+    "x_projections_gather": {
+      "count": 40,
+      "payloads": [
+        3584,
+        7744,
+        4672,
+        3648
+      ],
+      "kind": "all_gather",
+      "off_path": false
+    },
+    "o-group tree reduce (8 contributors) + multicast": {
+      "count": 40,
+      "payloads": [
+        32768
+      ],
+      "kind": "all_reduce",
+      "off_path": false
+    },
+    "attn_out_gather": {
+      "count": 40,
+      "payloads": [
+        10240
+      ],
+      "kind": "all_gather",
+      "off_path": false
+    },
+    "router_gather": {
+      "count": 40,
+      "payloads": [
+        1536
+      ],
+      "kind": "all_gather",
+      "off_path": false
+    },
+    "expert_intermediate_gather": {
+      "count": 40,
+      "payloads": [
+        32256
+      ],
+      "kind": "all_gather",
+      "off_path": false
+    },
+    "ffn_out_gather": {
+      "count": 40,
+      "payloads": [
+        10240
+      ],
+      "kind": "all_gather",
+      "off_path": false
+    },
+    "engram.rows_gather": {
+      "count": 2,
+      "payloads": [
+        12288
+      ],
+      "kind": "all_gather",
+      "off_path": true
+    },
+    "engram.kv_gather": {
+      "count": 2,
+      "payloads": [
+        51200
+      ],
+      "kind": "all_gather",
+      "off_path": true
+    },
+    "indexer.q_gather": {
+      "count": 8,
+      "payloads": [
+        8192
+      ],
+      "kind": "all_gather",
+      "off_path": false
+    },
+    "96 x 512 index merge": {
+      "count": 8,
+      "payloads": [
+        393216
+      ],
+      "kind": "topk_merge",
+      "off_path": false
+    },
+    "selected compressed-KV rows to the head dies": {
+      "count": 8,
+      "payloads": [
+        147456
+      ],
+      "kind": "kv_gather",
+      "off_path": false
+    },
+    "candidate merge": {
+      "count": 1,
+      "payloads": [
+        1572864
+      ],
+      "kind": "topk_merge",
+      "off_path": true
+    },
+    "argmax merge": {
+      "count": 1,
+      "payloads": [
+        768
+      ],
+      "kind": "topk_merge",
+      "off_path": false
+    }
+  },
+  "captured_collective_edges": [
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 0,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 0,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 0,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 0,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 0,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 0,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "eg_rows"
+      ],
+      "elems": 6144,
+      "bytes": 12288,
+      "dest": "all",
+      "tag": "engram.rows_gather",
+      "id": 1,
+      "composer_off_path": true
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "eg_kv"
+      ],
+      "elems": 25600,
+      "bytes": 51200,
+      "dest": "all",
+      "tag": "engram.kv_gather",
+      "id": 3,
+      "composer_off_path": true
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 9,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 1,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 15,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 17,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 23,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 47,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 1,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 56,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "cmp",
+        "iwr"
+      ],
+      "elems": 2848,
+      "bytes": 7744,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 6,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 2,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 16,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "src": 2,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 17,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 2,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 20,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 22,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 28,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 52,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 2,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 61,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 3,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 3,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 3,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 3,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 3,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 3,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 4,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 4,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 4,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 4,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 4,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 4,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 5,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 5,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 5,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 5,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 5,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 5,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 6,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 6,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 6,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 6,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 6,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 6,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 7,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 7,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 7,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 7,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 7,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 7,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "cmp",
+        "iwr"
+      ],
+      "elems": 2848,
+      "bytes": 7744,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 6,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 8,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 16,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "src": 8,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 17,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 8,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 20,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 22,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 28,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 52,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 8,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 61,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 9,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 9,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 9,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 9,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 9,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 9,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 10,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 10,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 10,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 10,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 10,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 10,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 11,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 11,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 11,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 11,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 11,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 11,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 12,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 12,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 12,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 12,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 12,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 12,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 13,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 13,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 13,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 13,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 13,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 13,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "eg_rows"
+      ],
+      "elems": 6144,
+      "bytes": 12288,
+      "dest": "all",
+      "tag": "engram.rows_gather",
+      "id": 1,
+      "composer_off_path": true
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "eg_kv"
+      ],
+      "elems": 25600,
+      "bytes": 51200,
+      "dest": "all",
+      "tag": "engram.kv_gather",
+      "id": 3,
+      "composer_off_path": true
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "cmp",
+        "iwr"
+      ],
+      "elems": 2848,
+      "bytes": 7744,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 11,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 17,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 14,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 21,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "src": 14,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 22,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 14,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 25,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 27,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 33,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 57,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 14,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 66,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 15,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 15,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 15,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 15,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 15,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 15,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 16,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 16,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 16,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 16,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 16,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 16,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 17,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 17,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 17,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 17,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 17,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 17,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 18,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 18,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 18,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 18,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 18,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 18,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 19,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 19,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 19,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 19,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 19,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 19,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "cmp",
+        "iwr"
+      ],
+      "elems": 2336,
+      "bytes": 4672,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 6,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 20,
+      "what": "cand",
+      "k": 2048,
+      "elems": 196608,
+      "bytes": 1572864,
+      "tag": "candidate merge",
+      "id": 16,
+      "composer_off_path": true
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 20,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 19,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "src": 20,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 20,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 20,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 23,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 25,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 31,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 55,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 20,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 64,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 21,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 21,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 21,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 21,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 21,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 21,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 22,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 22,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 22,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 22,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 22,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 22,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 23,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 23,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 23,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 23,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 23,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 23,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "iwr"
+      ],
+      "elems": 1824,
+      "bytes": 3648,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 5,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 24,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 15,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "src": 20,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 16,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 24,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 19,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 21,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 27,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 24,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 60,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 25,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 25,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 25,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 25,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 25,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 25,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 26,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 26,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 26,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 26,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 26,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 26,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 27,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 27,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 27,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 27,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 27,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 27,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "iwr"
+      ],
+      "elems": 1824,
+      "bytes": 3648,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 5,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 28,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 15,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "src": 20,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 16,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 28,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 19,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 21,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 27,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 28,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 60,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 29,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 29,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 29,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 29,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 29,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 29,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 30,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 30,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 30,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 30,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 30,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 30,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 31,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 31,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 31,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 31,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 31,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 31,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "iwr"
+      ],
+      "elems": 1824,
+      "bytes": 3648,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 5,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 32,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 15,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "src": 20,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 16,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 32,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 19,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 21,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 27,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 32,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 60,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 33,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 33,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 33,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 33,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 33,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 33,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 34,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 34,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 34,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 34,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 34,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 34,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 35,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 35,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 35,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 35,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 35,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 35,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "bufs": [
+        "qa",
+        "kvraw",
+        "iwr"
+      ],
+      "elems": 1824,
+      "bytes": 3648,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 5,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "bufs": [
+        "iq"
+      ],
+      "elems": 4096,
+      "bytes": 8192,
+      "dest": "all",
+      "tag": "indexer.q_gather",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": 36,
+      "what": "sel",
+      "k": 512,
+      "elems": 49152,
+      "bytes": 393216,
+      "tag": "96 x 512 index merge",
+      "id": 15,
+      "composer_off_path": false
+    },
+    {
+      "kind": "kv_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "src": 20,
+      "elems": 262144,
+      "bytes": 147456,
+      "dest": "heads",
+      "tag": "selected compressed-KV rows to the head dies",
+      "id": 16,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 36,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 19,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 21,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 27,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 36,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 60,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 37,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 37,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 37,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 37,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 37,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 37,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 38,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 38,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 38,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 38,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 38,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 38,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 39,
+      "bufs": [
+        "qa",
+        "kvraw"
+      ],
+      "elems": 1792,
+      "bytes": 3584,
+      "dest": "all",
+      "tag": "x_projections_gather",
+      "id": 4,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_reduce",
+      "unit": "COLL",
+      "layer": 39,
+      "buf": "zpart",
+      "out": "z",
+      "groups": 8,
+      "per_group": 8,
+      "elems": 8192,
+      "bytes": 32768,
+      "dest": "all",
+      "round": "bf16",
+      "tag": "o-group tree reduce (8 contributors) + multicast",
+      "id": 10,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 39,
+      "bufs": [
+        "y"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "attn_out_gather",
+      "id": 12,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 39,
+      "bufs": [
+        "gsc"
+      ],
+      "elems": 384,
+      "bytes": 1536,
+      "dest": "all",
+      "tag": "router_gather",
+      "id": 18,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 39,
+      "bufs": [
+        "ea"
+      ],
+      "elems": 16128,
+      "bytes": 32256,
+      "dest": "all",
+      "tag": "expert_intermediate_gather",
+      "id": 42,
+      "composer_off_path": false
+    },
+    {
+      "kind": "all_gather",
+      "unit": "COLL",
+      "layer": 39,
+      "bufs": [
+        "yf"
+      ],
+      "elems": 5120,
+      "bytes": 10240,
+      "dest": "all",
+      "tag": "ffn_out_gather",
+      "id": 51,
+      "composer_off_path": false
+    },
+    {
+      "kind": "topk_merge",
+      "unit": "COLL",
+      "layer": -1,
+      "what": "argmax",
+      "k": 1,
+      "elems": 96,
+      "bytes": 768,
+      "tag": "argmax merge",
+      "id": 3,
+      "composer_off_path": false
+    }
+  ],
+  "exactness": {
+    "isa_status": "pass",
+    "runs": [
+      {
+        "name": "gather:L0-39:head",
+        "status": "pass",
+        "source_commit": "f364f8847ee6091b2f5591650c406d7b657f4856",
+        "arith": "chunk8"
+      }
+    ],
+    "scope": "ISA-level (op-program) execution of the TP-96 V4.1 HBM-comparator decode token on 96 ranks against the released-checkpoint golden (W17 reference state, seed 20260930 at 1M). Matvec arithmetic is the golden's on each rank's own output rows; dataflow, ownership, collectives and merges are the program's. No RTL, cycle, or physical verdict.",
+    "woa": "oreduce:8 input heads/group, each512K=64 chunk8 leaves canonical subtree; pairwise ((p0+p1)+(p2+p3))+((p4+p5)+(p6+p7)); BF16 once after tree; multicast completed8192outputs. Preserve this exception to full-K.",
+    "expert": "all expert w1/w3 intermediate rows gathered once; w2 completeK output rows; sum six experts in ascending selectedID then shared at same row owner; completed BF16 output gathered",
+    "topk": "local(value,globalindex) candidates merged descending value/lowerindex first; original96way count/order"
+  },
+  "source_independent": [
+    "All existing projection/activation/router/expert/intermediate/output gathers",
+    "All local HC/norm/SFU/attention/index arithmetic and golden ordering",
+    "Distributed mutableKV/index ownership, selected-row gather to64head ranks, local selection reuse",
+    "Barrier and X-broadcast costs on actual dependent SM boundaries unless separately validated removal",
+    "Engram hash/row ownership and gather semantic boundaries (memory access source changes if tables move to ROM)",
+    "Globalhead argmax merge768B; no final-stage-to-first-stage ring needed"
+  ],
+  "source_changed": [
+    "Immutableweight address lookup ROMbank/row mapping, macros/capture/readlatency, physical supply ports and finite return arbitration",
+    "HBMweight bulk-copy/prefetch and router-dependent expert_fetch replaced by actual finite ROM first-access/supply; not zero cost",
+    "ROMcapacity/area displaces compute/SRAM/PHY service; rank96 not automatically feasible",
+    "On-die routes between ROM/matrix/localactivation/collective root change; measured original geometry cannot be transplanted as physical signoff",
+    "If ranklocal weights fit, no weight traffic on global switch; if remote ROM needed, explicit weight transport is new and must be charged"
+  ],
+  "transport_profiles": {
+    "captured_w15": {
+      "topology": "48packages of2dies; each package pairedUCIe plus deterministic switched fabric; P48 fixture",
+      "collective_model": {
+        "kind": "w15_prod",
+        "hz": 1200480192.0768306,
+        "slot": 749.7,
+        "ag": {
+          "cycles_per_word": 89.7,
+          "fixed_cycles": 932.8,
+          "points": [
+            [
+              1,
+              996
+            ],
+            [
+              6,
+              1471
+            ],
+            [
+              1,
+              1049
+            ],
+            [
+              6,
+              1471
+            ],
+            [
+              6,
+              1471
+            ]
+          ]
+        },
+        "ar": {
+          "cycles_per_word": 6.0696,
+          "fixed_cycles": 988.74,
+          "points": [
+            [
+              1,
+              969
+            ],
+            [
+              2,
+              1023
+            ],
+            [
+              4,
+              1025
+            ],
+            [
+              8,
+              1029
+            ]
+          ]
+        },
+        "source": "results/rtl/w15_hbm_nvls.json configs.hbm_p48_ss_prod (gathers) / hbm_p48_ss (all-reduce fit)"
+      },
+      "qualified_scope": "cycle-exact synthetic64B-record fixtures with analog PHY timing models. Product749.7Bslot at0.9TB/s package port is width extrapolation, not fullwidth endpoint RTL.",
+      "default_status": "superseded fabric latency profile, retained source evidence"
+    },
+    "current_hbm_accelerator": {
+      "name": "tomahawk_ultra_protocol",
+      "topology": "48two-die packages,8 parallel800Gports/package, one to each of8 switchchips;48ports/switch; one tier, no switch-to-switch traversal",
+      "endpoint_ports_total": 384,
+      "switches": 8,
+      "switch_ports_used_each": 48,
+      "raw_Bps_per_package": 800000000000.0,
+      "payload_efficiency_assumed": 0.9,
+      "payload_Bps_per_package": 720000000000.0,
+      "per_die_fair_share_Bps": 360000000000.0,
+      "one_crossing_ns": 477.6,
+      "tail_assumed_ns": 150,
+      "allgather_formula_ns": "477.6 + total_gather_payload_B/720e9*1e9 +150",
+      "allreduce_formula_ns": "2*477.6 +22/1.2 +2*completed_group_payload_B/720e9*1e9 +150",
+      "ar_owner_reduce": "golden endpoint8way tree,22cycles; in-switch arbitraryreduce excluded",
+      "qualification": "Vendor/protocol analytical budgets; no full800Gport endpoint/board physical closure. Per-package shared injection must not be counted independently at720GB/s per die."
+    }
+  },
+  "area_ports": {
+    "existing_floorplan": {
+      "ucie_mm2_per_die": 10,
+      "fabric_serdes_mm2_per_die": 18,
+      "fabric_note": "Legacy18NVL-classlinks reservation; not a characterized8x800Gpackage port layout",
+      "HBM_PHY_count_per_die": 4,
+      "HBM_PHY_area_mm2_per_die": 40.00784006016,
+      "HBM_shoreline_mm_per_die": 48
+    },
+    "ha2_measured_endpoint": {
+      "endpoint_register_bits": {
+        "rx_buffers": 343680,
+        "tx_queues": 945120,
+        "delivery_queues": 34368,
+        "cdc_afifos": 687360,
+        "port_wire_stages": 300720,
+        "hub_wire_stages": 112140,
+        "operand_slots": 32768
+      },
+      "endpoint_register_bits_total": 2456156,
+      "endpoint_cell_mm2": 0.774,
+      "endpoint_floorplan_mm2_at_70pct": 1.106,
+      "fp32_adders": 112,
+      "serdes": {
+        "lanes": 40,
+        "mm2_at_0p4": 16.0,
+        "mm2_codex_18_over_42": 17.14,
+        "ledger_reservation_mm2": 18.0,
+        "fits": true,
+        "always_on_w": 29.12,
+        "always_on_w_band": [
+          25.09,
+          33.6
+        ],
+        "codex_w": 31.43,
+        "budget_w": 33.0,
+        "grade": "ESTIMATE (no PHY view; transferred per-lane constants)"
+      },
+      "die_core_mm2": 660.08,
+      "die_used_before_mm2": "sm 74.2 + l2 4.96 + hub 112.7 + io 28 (v41_hbm_die.json)",
+      "note": "queues as flops are an upper bound (SRAM macros would hold the 32-deep FIFOs); the endpoint replaces the NVLS port logic, whose area is not credited"
+    },
+    "counting": "96 endpoint engines;48 peerUCIe pairs/96 PHY endpoints;384 package800Gports/384 switch facing ports;8 switches area/power separate. Endpoint controller1.106mm\u00b2/rank fromHA2 proxy is additional without oldlogic credit. 18mm\u00b2PHY reserve is assumed perrank, must prove mapping to4shared800Gports/rank and actual shoreline.",
+    "warning": "Do not import G0 13-lane neighbor/ring PHY count or stage endpoint resources. HA2 40SerDeslanes/rank at16mm\u00b2 proxy is a different capturedtransport implementation; it cannot prove TU port fit."
+  },
+  "screen_requirements": [
+    "Use exact existing TP96 operation list and row intervals for ROM allocation; no reconstructed G0 wholelayer graph",
+    "3072installedSMs not allactive: 2304rows perexpertGU leaves atmost2304SMs active, headalignment restricts64ranks",
+    "Prove perrank ROM payload incl releasedmetadata/Engram/MTP/vision, localexecutionexpansions and uneven mapping",
+    "Carry source-independent service graph unchanged, replace only fetchedweight service edges and price geometric deltas",
+    "TP64/128 require regenerated rowbounds/selectarity/packagecounts and exact alignedwoa mapping; no direct TP96 timing transplant",
+    "Report modeled transport separately from measured width fixture and physicalqualification; no new TPOT claim"
+  ]
+}

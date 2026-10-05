@@ -1,0 +1,248 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T05:14:44.682742+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 49434.349,
+    "block": "noc_tw_coll_ctx_f12_txmask",
+    "cells": 327126,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "TX_MASK_LA": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/link/ot_link_afifo.sv",
+        "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+        "size_bytes": 4344
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+        "sha256": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+        "size_bytes": 9119
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+        "sha256": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+        "size_bytes": 4276
+      },
+      {
+        "path": "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv",
+        "sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+        "size_bytes": 18595
+      },
+      {
+        "path": "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_ctx_f12_txmask.sv",
+        "sha256": "5f36c7613a6fe4ec5ca654a2910a73ef74506d9a6c2453f5058136e344024282",
+        "size_bytes": 2266
+      }
+    ],
+    "top": "noc_tw_coll_ctx_f12_txmask"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 1:\n\npermission denied while trying to connect to the docker API at unix:///var/run/docker.sock\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T05:14:02.882237+00:00",
+  "git": {
+    "commit": "0b545b7b9f63277fa43d99172a6013c382390026",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "noc_tw_coll_ctx_f12_txmask",
+      "--param",
+      "TX_MASK_LA=1",
+      "--source",
+      "rtl/link/ot_link_afifo.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv",
+      "--source",
+      "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv",
+      "--source",
+      "results/rtl/hbm_accel_fmax_inventory_20261004/noc/wrappers/noc_tw_coll_ctx_f12_txmask.sv",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--die-area",
+      "0",
+      "0",
+      "540",
+      "540",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "538.84",
+      "538.84",
+      "--stages",
+      "synth,pnr",
+      "--core-utilization",
+      "30",
+      "--place-density",
+      "0.55",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "goodall_coll_txmask_r1",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r1/route/work",
+      "--output",
+      "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r1/route/physical.json",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl"
+    ],
+    "driver": {
+      "commit": "0b545b7b9f63277fa43d99172a6013c382390026",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas/repos/goodall-collective-txmask-0b545b7b9/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas/repos/goodall-collective-txmask-0b545b7b9"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.10.22",
+    "source_root": "/srv/opentallas/repos/goodall-collective-txmask-0b545b7b9"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 49434.349,
+    "cell_count": 327126,
+    "cell_types_used": 44,
+    "chip_area_um2": 216.48384,
+    "combinational_cell_count": 122404,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 164155,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "fd8e5280f15d59c04ab98f3e5f64a09a664984e2a098547046e911dc836a28c3",
+      "raw_netlist_sha256": "fd8e5280f15d59c04ab98f3e5f64a09a664984e2a098547046e911dc836a28c3",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 12639.91,
+    "sequential_cell_count": 40567,
+    "unmapped_cell_types": [
+      "$paramod$ae8ce2d512a9ba6bf6fbb0b7d55b3d589ba1d55b\\ot_gpu_kreg_oh",
+      "$paramod$b198b19a1a4231cfa3fca2675055e2e37ded4778\\ot_gpu_kreg_oh",
+      "$paramod\\ot_gpu_kreg_oh\\W=s32'00000000000000000000000000000001\\RV=1'0",
+      "$paramod\\ot_gpu_kreg_oh\\W=s32'00000000000000000000000000000001\\RV=1'1",
+      "$paramod\\ot_gpu_kreg_oh\\W=s32'00000000000000000000000000000010\\RV=2'00",
+      "$paramod\\ot_gpu_kreg_oh\\W=s32'00000000000000000000000000000011\\RV=3'000",
+      "$paramod\\ot_gpu_kreg_oh\\W=s32'00000000000000000000000000001000\\RV=8'00000001",
+      "noc_tw_coll_ctx_f12_txmask",
+      "submodules"
+    ]
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

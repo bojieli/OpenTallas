@@ -1,0 +1,19 @@
+{
+  "status": "FAIL_SS_SETUP_REDESIGN_STOP_NOT_ADOPTED",
+  "pre_RTL_price": "model.json",
+  "source_commit": "2b05908b2d9fd50447513e4a8ee11d428cbd5940",
+  "actual_measured_pcs": 2,
+  "modeled_pcs": 128,
+  "measured_cells_um2": 3990.39,
+  "actual_added_cached_ff": 2,
+  "actual_corner_SS_ps": -21.277424,
+  "actual_corner_FF_ps": 7.988277,
+  "no_adoption": true,
+  "no_speedup_credit": true,
+  "no_full128_area_timing_transfer": true,
+  "composed_token_delta_cycles": 0,
+  "zero_edge_semantic_gate": "200kPASS + directedfinalclearoverride1/warmdebtreset1; no command/ACK edge added",
+  "clock_target_closed": false,
+  "required_followup": "report actual refwin->wab_oh cone to owner; no further implementation or route under this decision",
+  "route_record": "results/rtl/svc_aq_block_nonempty_cut_20261005/route_r1/terminal.json"
+}

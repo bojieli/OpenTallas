@@ -1,0 +1,55 @@
+{
+ "per_layer": {
+  "M2": {
+   "windows": 625,
+   "max_use_over_cap": 0.7288,
+   "over_0p9": 0,
+   "over_1": 0
+  },
+  "M3": {
+   "windows": 625,
+   "max_use_over_cap": 0.6865,
+   "over_0p9": 0,
+   "over_1": 0
+  },
+  "M4": {
+   "windows": 625,
+   "max_use_over_cap": 0.4167,
+   "over_0p9": 0,
+   "over_1": 0
+  },
+  "M5": {
+   "windows": 625,
+   "max_use_over_cap": 0.4323,
+   "over_0p9": 0,
+   "over_1": 0
+  },
+  "M6": {
+   "windows": 625,
+   "max_use_over_cap": 0.5278,
+   "over_0p9": 0,
+   "over_1": 0
+  },
+  "M7": {
+   "windows": 625,
+   "max_use_over_cap": 0.3333,
+   "over_0p9": 0,
+   "over_1": 0
+  }
+ },
+ "worst_window_use_cap": 0.7288,
+ "grt_log": [
+  "M5         Vertical       105916         78687          25.71%",
+  "M6         Horizontal      74046         50394          31.94%",
+  "M7         Vertical        83136         56064          32.56%",
+  "[INFO GRT-0096] Final congestion report:",
+  "M1                   0             0            0.00%             0 /  0 /  0",
+  "M2               87424         18239           20.86%             0 /  0 /  0",
+  "M3              106248         17220           16.21%             0 /  0 /  0",
+  "M4               81366          3206            3.94%             0 /  0 /  0",
+  "M5               78687          2514            3.19%             0 /  0 /  0",
+  "M6               50394             0            0.00%             0 /  0 /  0",
+  "M7               56064             0            0.00%             0 /  0 /  0",
+  "Total           460183         41179            8.95%             0 /  0 /  0"
+ ]
+}

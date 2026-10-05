@@ -1,0 +1,46 @@
+{
+ "ss": {
+  "exit": 0,
+  "setup_wns_ns": 0.00764,
+  "hold_wns_ns": 0.04472,
+  "setup_tns_ns": 0.0,
+  "failing_setup_endpoints": 0,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53822,
+  "tap_source_cells": 0,
+  "lw_cells": 0,
+  "worst_setup_slack_ns": 0.00764,
+  "worst_setup_path": {
+   "start": "u_dut.g_cp[0].g_l[0].u_c/q[2]$_DFF_P_",
+   "end": "u_dut.room_all$_SDFFE_PN1P_"
+  },
+  "worst_hold_slack_ns": 0.04472,
+  "worst_hold_path": {
+   "start": "u_dut.dr_f0[6]$_DFFE_PP_",
+   "end": "u_c.q[34]$_DFF_P_"
+  }
+ },
+ "ff": {
+  "exit": 0,
+  "setup_wns_ns": 0.29167,
+  "hold_wns_ns": 0.00346,
+  "setup_tns_ns": 0.0,
+  "failing_setup_endpoints": 0,
+  "failing_hold_endpoints": 0,
+  "endpoints": 53822,
+  "tap_source_cells": 0,
+  "lw_cells": 0,
+  "worst_setup_slack_ns": 0.29167,
+  "worst_setup_path": {
+   "start": "rst_q$_DFF_P_",
+   "end": "u_dut.rr_oh[10][33]$_SDFF_PP0_"
+  },
+  "worst_hold_slack_ns": 0.00346,
+  "worst_hold_path": {
+   "start": "u_dut.req_tag[312]$_DFF_P_",
+   "end": "u_c.q[415]$_DFF_P_"
+  }
+ },
+ "ss_setup_met": true,
+ "ff_hold_met": true
+}

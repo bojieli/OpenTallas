@@ -176,6 +176,7 @@ module tb_a3_mac_lane_scale_index_equiv;
         else
             $display("FAIL tb_a3_mac_lane_scale_index_equiv %0d of %0d addresses",
                      errors, checked);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

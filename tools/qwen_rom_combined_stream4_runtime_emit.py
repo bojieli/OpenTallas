@@ -76,6 +76,34 @@ def emit(root=ROOT, *, dspark=False, full_decoder=False):
         for(int d=0;d<D;++d)die[d]->eval();''')
     replace('QWEN_DSPARK_NEAR_COMPONENT_DONE stages=%zu' if dspark else 'QWEN_ROM_NEARBASELINE PASS stages=%zu',
             'QWEN_DSPARK_STREAM4_COMPONENT_DONE stages=%zu' if dspark else 'QWEN_ROM_STREAM4_COMBINED PASS stages=%zu')
+    # Enroll Peirce's actual output-directory repair after all slot/HEAD
+    # transformations; the immutable W12 base and selected RTL stay unchanged.
+    donor=(root/'tools/runtime/qwen_combined/qwen_p8191_sim_only.cpp').read_text()
+    begin='    // Output ownership belongs to this invocation.'
+    end='    qwen_combined::ClockSpec core_clock'
+    if donor.count(begin)!=1 or donor.count(end)!=1:
+        raise ValueError('released host output-directory repair missing')
+    guard=donor[donor.index(begin):donor.index(end)]
+    if 'std::filesystem::create_directories(dir, output_error);' not in guard:
+        raise ValueError('released output-directory guard changed')
+    replace('    const std::string dir = argv[3], preload = argv[4];',
+            '    const std::string dir = argv[3], preload = argv[4];\n'+guard.rstrip())
+    replace('#include "stream4_clock_driver.hpp"',
+            '#include "stream4_clock_driver.hpp"\n#include <filesystem>\n#include <cerrno>\n#include <cstring>')
+    # The final generated host also adds slot X/KV writes. Guard every write
+    # open rather than only the predecessor's first X/KV pair. Read opens keep
+    # their existing failure policy. Flush actual stage diagnostics before IO.
+    if 'std::fopen(' in src or src.count('fopen(')<4:
+        raise ValueError('actual final host file-open anchors changed')
+    src=src.replace('fopen(', 'qwen_output_checked_fopen(')
+    replace('int main(int argc, char** argv) {', r'''static FILE* qwen_output_checked_fopen(const char* path, const char* mode) {
+    if(mode[0]=='w')fflush(stdout);
+    FILE* fp=fopen(path,mode);
+    if(mode[0]=='w' && !fp)
+        fatal((std::string("output file ")+path+": "+std::strerror(errno)).c_str());
+    return fp;
+}
+int main(int argc, char** argv) {''')
     return '// STREAM4_RUNTIME_ABI '+ABI+'; actual selected top '+top+'\n'+src
 
 

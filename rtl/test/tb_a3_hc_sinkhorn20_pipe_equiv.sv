@@ -224,6 +224,7 @@ module tb_a3_hc_sinkhorn20_pipe_equiv #(
             $display("EQUIVALENT");
         else
             $display("NOT_EQUIVALENT");
+        if (failures != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

@@ -111,6 +111,7 @@ module tb_qwen_kv_mp_commit;
         end
         $display("%s cycles=%0d starts=%0d commits=%0d bad_lanes=%0d faults=%h mismatches=%0d",
                  bad == 0 ? "MP_COMMIT_LOCKSTEP PASS" : "MP_COMMIT_LOCKSTEP FAIL", N, nstart, ncommit, nbad, rF, bad);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

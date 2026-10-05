@@ -1,17 +1,59 @@
-# Qwen3-8B ROM full die: b3r3..b3r12 global-route closure (2026-10-04)
+# Qwen3-8B ROM full die: b3r3..b3r16 global-route closure (2026-10-04)
 
-Tool: `tools/qwen_rom_fulldie_b3r2.py` (default off). The final floorplan is b3r12:
+Tool: `tools/qwen_rom_fulldie_b3r2.py` (default off). The final floorplan is b3r16B40:
 
 ```
-python3 tools/qwen_rom_fulldie_b3r2.py {plan|grt|real|ir} --enable-b3r2 --b3r3 --b3r6 --tree-cols 6 \
-    --bw-align --bw-edge --io-faces --bw-edge-inner [--iters 50] [--window tile_field|spine_hub|shoreline_w]
+python3 tools/qwen_rom_fulldie_b3r2.py {plan|grt|real|ir|pdn|wire8k} --enable-b3r2 --b3r3 --b3r6 --tree-cols 6 \
+    --bw-align --bw-edge --io-faces --bw-edge-inner --bw-sp 200 --m6-strip 40 [--iters 50] [--pdn-rev r5]
 ```
 
-The GRT, legality and IR runs used the ORFS `openroad/orfs:asap7lock` image on the local host (`/home/ubuntu/qfd-local/<case>`, runner `run_grt.sh`).
+The b3r3–b3r14 GRT, legality and IR runs used the ORFS `openroad/orfs:asap7lock` image on the local host (`/home/ubuntu/qfd-local/<case>`, runner `run_grt.sh`).
 The runner launches each case with `openroad -threads 20` (GRT) or `-threads 8` (real, IR).
+After the owner's localhost rule, the b3r13 50-iteration runs went to ot-epyc1tb, and the b3r15/b3r16 runs to ot-pve1 and ot-agidock128 (`/home/ubuntu/claude-qwen-fulldie/cases`). Every job went through admit.sh and is registered.
 
-## Verdict
+## Verdict: CLOSED with Option B (b3r16B40). The 50-iteration final GRT reaches 0 overflow on every layer.
 
+The final floorplan is b3r16B40: the b3r13 block-word pins (`--bw-sp 200`) plus a 40 µm M6 entry strip (`--m6-strip 40`).
+- The strip runs inside the array-facing face of every band port/scale slab.
+- Under the strip the slab keeps OBS M1–M5 only; elsewhere the slab still blocks M1–M7.
+- The block-word pins sit on M6 inside the strip. Edge-entry words are stacked 100 µm apart into the slab.
+- Option B closed first, so it is adopted.
+
+**50-iteration final GRT** (k = 16; ot-pve1, image `openroad/orfs:latest` = sha 16470cea, identical to EPYC asap7lock):
+
+| case | total overflow | M2–M9 overflow | worst 4 × 4 window, every layer | iterations used | wall / RSS |
+|---|---:|---|---|---:|---|
+| **b3r16B40_k16_banded_i50 (final)** | **0** | 0 on every layer | **≤ 1.000** (M2–M9), 0 windows over | 31 of 50 | 3:01 h / 12.3 GB |
+| b3r16B80_k16_banded_i50 (80 µm strip) | 0 | 0 on every layer | ≤ 1.000, 0 windows over | 27 of 50 | 2:34 h / 12.3 GB |
+
+GRT stopped its extra iterations early because overflow reached 0. Final congestion report: Total 127,977,517 resource, 14,950,946 demand (11.68 %), Max H/V 0/0, Total Congestion 0.
+
+The 5-iteration runs before the 50-iteration finals:
+- b3r16B40 i5: 4,199 overflow, all windows ≤ 1.000.
+- b3r16B80 i5: 3,859 overflow, M9 window 1.035 (1 window).
+- In both, the 50-iteration run then cleared the remaining gcell overflow. That contrasts with every M8-only-entry floorplan, where the 50-iteration run regressed.
+
+**Option A was not adopted** (slab routed M1–M5, `--slab-obs-top 5`):
+- b3r15A i5: 16,187 overflow, M8 1.47, M9 1.60. This is worse because freeing M6/M7 over the whole slab pulled through-traffic onto the slab faces.
+- The port-group element P&R in its slab share fails with M5 routing, and also with the M7 control (`results/rtl/qwen_slab_m5_20261004/README.md`).
+- b3r15B i5 (first B attempt) had a mis-sided strip: the face was taken from the mean pin x, so the edge-entry slabs got their strip on the wrong face. It is fixed in b3r16.
+
+**Physical checks at the final floorplan.** The b3r16B40 die has the same instance placement as b3r12 and b3r13; only the slab abstracts differ.
+- **Legality** (`real_b3r16B40/`): 0 overlaps, 0 outside, track assert PASS (5,792,788 pins), macroNoAp 0, stdCellPinNoAp 0. Wall 9:24, 11.4 GB.
+- **Full-die PDN** (`pdn_fix/`, b3r13c placement, `--pdn-rev r5`):
+  - The old b3r2b run had executed the r3 script. The r4 grids also matched several instances per `-instances` regexp (PDN-0182).
+  - r5 anchors every instance pattern (`^name$`) and groups the macro grids by stripe phase.
+  - Result: OT_PDN PASS (27,742,379 special shapes), **check_power_grid VDD PASS and VSS PASS** ("All shapes on net VDD/VSS are connected"), 0 PDN-0182 conflicts; 69 PDN-0195 via-removal warnings remain.
+  - Wall 2:27 h, 109 GB.
+- **IR** (`pdn_fix/ir_record.json`, b3r13c floorplan, same recipe), interior rail to rail: tile field 21.03 mV, spine/hub 26.46 mV, shoreline W 20.26 mV. All pass the 35 mV budget.
+- **Area:** 811.763 mm², under the 858 mm² limit. The M6 strip adds no area.
+- **Latency:** see below; the floorplan is unchanged, so the numbers hold. The bound is applied to the 8K composition in `wire_bound_8k.json`.
+
+**Open items:**
+- The slab element itself (port group + 16 scale ROM banks) does not route in its 0.2666 mm² share even at M7. The slab area needs to grow, or its content needs a re-split (`results/rtl/qwen_slab_m5_20261004/`). This is independent of the die route.
+- Detailed routing and a routed-path STA of the die-level nets have not been run.
+
+### History: why M8-only entry could not close
 **Congestion is NOT closed under the owner's final criterion.**
 - The 5-iteration route meets the window rule. At b3r12 (k = 16, 5 iterations) every layer's worst 4 × 4 window is at or below 1.000, with 0 windows over.
 - The 50-iteration final GRT misses it. It regresses on every floorplan tried:
@@ -115,7 +157,7 @@ Legality at b3r13c (`real_b3r13c/`): 0 overlaps, track assert PASS (5,792,788 pi
 | spine/hub | 26.46 mV | 35 mV PASS | 28.47 |
 | shoreline W | 20.26 mV | 35 mV PASS | 20.26 |
 
-## Open items (not route closure)
+## Open items recorded at b3r12 (the PDN item is fixed: see the verdict)
 
 **The full-die pdngen at b3r2b produces shapes but fails connectivity** (ot-epyc1tb `cases/b3r2b_pdn/run_pdn_r2.log`, 2:57:46, 75 GB):
 - `run_pdn_r2` gives OT_PDN PASS with 26.7 M special shapes.

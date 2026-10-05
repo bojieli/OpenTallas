@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.dsrom-s81-window-bind.bind.v1",
+ "die": "rtl/dsrom_sys/s81_capture_parent/ot_chip_v41x_die_owner_safe_c8.sv",
+ "die_sha256": "5b1184b81b23ae5078afb0ea3680665a06ba92a0d5b58feb7f9a97f3c9799ecd",
+ "patched_sha256": "a2a3369707ee75aea9e68e92c871fd5a6a106df70702f9642700543b9e0e20b2",
+ "new_rtl": {
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv": "d5635cc7b5cda58bdaca68b9a5c16691c809fb8f9e3eb3384f583d4ec665be2d",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv": "8cd6fd564279a672d3648b8444387adf951a909c38173d3719432bbb23871ce0",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv": "acb0239e7efe013a8b7de891abcf200963a83d8d997fa4cf950a521fb94d378f",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv": "5c2d9b8f9166ac25d8682239059edf4f37f7aedc019a5296a03c71de2ff9fa61"
+ },
+ "installer": "tools/dsrom_s81_window_la.py install_die()",
+ "full_shape": 0,
+ "lint": {
+  "la0_kg0": {
+   "returncode": 0,
+   "errors": [],
+   "wall_s": 366.6
+  },
+  "la1_kg0": {
+   "returncode": 0,
+   "errors": [],
+   "wall_s": 365.0
+  },
+  "la1_kg1": {
+   "returncode": 0,
+   "errors": [],
+   "wall_s": 365.0
+  }
+ },
+ "status": "pass"
+}

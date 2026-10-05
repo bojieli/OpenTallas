@@ -856,9 +856,24 @@ def _slab_entry(v, obs_top=7, strip=0.0):
                 continue
             b.obs_top = obs_top
             if strip:
-                xs = [spec[2] for p, spec in b.ports.items() if p.startswith('bw') and spec[0] == 'area']
-                west = (sum(xs) / len(xs) < b.w / 2) if xs else True
+                # the column decides the array-facing face (an edge-entry slab's bw pins sit across its width)
+                xv = model['geo']['x_vch']
+                west = next(it.x < xv for it in model['insts'] if it.master == name)
                 b.m6_strip = (0.0, strip) if west else (b.w - strip, b.w)
+                # edge-entry words (b3r10) share one y at the slab edge: stack them into the slab, 100 um apart
+                yy = {}
+                for p_, spec in b.ports.items():
+                    if p_.startswith('bw') and spec[0] == 'area':
+                        yy.setdefault(round(spec[3], 1), []).append(p_)
+                b.m6_y = {}
+                for y0, ps in yy.items():
+                    if len(ps) == 1:
+                        b.m6_y[ps[0]] = y0
+                        continue
+                    up = y0 < b.h / 2
+                    for q, p_ in enumerate(sorted(ps, key=lambda z: int(z[2:]))):
+                        d = 60.0 + 100.0 * q
+                        b.m6_y[p_] = (y0 - 70.0 + d) if up else (y0 + 70.0 - d)
         return out
 
     def pin_rects(mst, k, wmap):
@@ -878,7 +893,7 @@ def _slab_entry(v, obs_top=7, strip=0.0):
                 continue
             n = wmap.get(port, spec[1])
             i = int(nm.split('[')[1].rstrip(']'))
-            yc = spec[3]
+            yc = getattr(mst, 'm6_y', {}).get(port, spec[3])
             y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k + i * step
             x0 = sx[0] + 0.25 * (sx[1] - sx[0])
             out.append((nm, 'M6', (x0, y - hw, x0 + 0.4 * k, y + hw)))
@@ -1247,7 +1262,42 @@ def write_pdn_r4(v, m, path, bump_um):
     return dict(core_pitch_um=cp, grids=len(meta), meta=meta)
 
 
-def case_pdn(v, m, work, bump_um):
+def write_pdn_r5(v, m, path, bump_um):
+    """r5 = r4 stripes/connects with unambiguous grid ownership.  pdngen `-instances` is a Tcl regexp over every
+    instance name (pdn::get_insts), so r4's bare names claimed several instances each (sp_port_tiles_0 matched
+    sp_port_tiles_0_f1, s_1_1 matched s_1_10; >1000 PDN-0182 on b3r2b).  r5 anchors every name (^name$) and puts all
+    instances whose stripe offset to the die lattice is equal into one grid (pdngen builds one instance grid per
+    matched instance, offsets stay instance-relative), so ~3,200 grids become a few dozen and no instance is matched
+    by two grids."""
+    r4 = write_pdn_r4(v, m, path, bump_um)
+    cp = r4['core_pitch_um']
+    head = Path(path).read_text().split('\n')[:9]
+    head[0] = '# r5 full-die PDN: r4 grids, anchored instance patterns, one macro grid per stripe phase'
+    byname = {it.name: it for it in m['insts']}
+    groups = {}
+    for e in r4['meta']:
+        it = byname[e['instance']]
+        if not re.fullmatch(r'[A-Za-z0-9_]+', it.name):
+            raise ValueError(f'instance name needs escaping: {it.name}')
+        key = ('M5', round((-it.x) % cp, 3)) if e['layer'] == 'M5' else ('M8', round((-it.y) % cp, 3))
+        groups.setdefault(key, []).append(it.name)
+    L = list(head)
+    for j, ((layer, off), names) in enumerate(sorted(groups.items())):
+        g = f'pg_{layer.lower()}_{j}'
+        pats = ' '.join(f'^{n}$' for n in sorted(names))
+        L.append(f'define_pdn_grid -macro -instances {{{pats}}} -voltage_domains CORE -name {g} -starts_with GROUND '
+                 '-grid_over_boundary')
+        if layer == 'M5':
+            L += [f'add_pdn_stripe -grid {g} -layer M5 -width .504 -pitch {cp:.3f} -offset {off:.3f}',
+                  f'add_pdn_connect -grid {g} -layers {{M4 M5}}', f'add_pdn_connect -grid {g} -layers {{M5 M8}}']
+        else:
+            L += [f'add_pdn_stripe -grid {g} -layer M8 -width .48 -pitch {cp:.3f} -offset {off:.3f}',
+                  f'add_pdn_connect -grid {g} -layers {{M7 M8}}', f'add_pdn_connect -grid {g} -layers {{M8 M9}}']
+    Path(path).write_text('\n'.join(L) + '\n')
+    return dict(core_pitch_um=cp, grids=len(groups), instances=len(r4['meta']), meta=r4['meta'])
+
+
+def case_pdn(v, m, work, bump_um, rev='r4'):
     """Real-technology die (legality, track assert, pin access) with power abstracts (VDD/VSS M7 + M8 rails on every
     element, tools/qwen_rom_fulldie_pg_r3.powered_lef) and the connected r4 full-die pdn.tcl (write_pdn_r4);
     run_pdn.tcl runs pdngen + check_power_grid."""
@@ -1255,12 +1305,20 @@ def case_pdn(v, m, work, bump_um):
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
     parts = []
-    for name, mst in M.items():
-        text, _ = PG.powered_lef(mst, 1, {q: pw.get((name, q), 0) for q in mst.order})
-        parts.append(text)
+    # r5: the power abstracts take the selected module's pin geometry (tree-column / edge-entry pin_rects live on v,
+    # PG.powered_lef reads F, which raised on the b3r7+ 6-field pin specs); r4 keeps its F geometry byte-identical
+    pg_f = PG.F
+    if rev == 'r5':
+        PG.F = v
+    try:
+        for name, mst in M.items():
+            text, _ = PG.powered_lef(mst, 1, {q: pw.get((name, q), 0) for q in mst.order})
+            parts.append(text)
+    finally:
+        PG.F = pg_f
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
-    meta = write_pdn_r4(v, m, work / 'pdn.tcl', bump_um)['meta']
+    meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
@@ -1277,6 +1335,7 @@ mem check
 write_db /work/floorplan_pdn.odb
 """)
     man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
+               **({'pdn_rev': rev} if rev != 'r4' else {}),
                execution_order=['run.tcl', 'run_pdn.tcl'])
     (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
     return man
@@ -1311,6 +1370,8 @@ def main(argv=None):
     ap.add_argument('--m6-strip', type=float, default=0.0, help='b3r15 option B: width (um) of an OBS-M1-M5 entry '
                     'channel inside the array-facing slab face; block-word pins on M6 in it')
     ap.add_argument('--east-mirror', action='store_true', help='b3r9: east-array block trees mirrored (root spine-side)')
+    ap.add_argument('--pdn-rev', default='r4', choices=['r4', 'r5'], help='pdn mode: r5 = anchored, phase-grouped '
+                    'macro grids (no PDN-0182 grid-ownership conflicts)')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--k', type=int, default=16)
@@ -1360,7 +1421,7 @@ def main(argv=None):
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('window', 'power_w', 'bump_sites')}))
     elif a.mode == 'pdn':
-        print(json.dumps(case_pdn(v, m, work, a.vdd_pitch)))
+        print(json.dumps(case_pdn(v, m, work, a.vdd_pitch, a.pdn_rev)))
     else:
         man = v.case_real(m, work)
         print(json.dumps(man))

@@ -90,6 +90,7 @@ public:
                     o.identity==plan.groups[i].ranks[0].offer.identity&&
                     o.token==plan.groups[i].ranks[0].offer.token&&
                     o.identity==plan.groups[0].ranks[0].offer.identity&&
+                    o.token==plan.groups[0].ranks[0].offer.token&&
                     o.user==plan.groups[0].ranks[0].offer.user&&
                     o.position==plan.groups[0].ranks[0].offer.position,
                     "full-stage TP4 source owner/order mismatch");
@@ -234,7 +235,7 @@ DsromS81WaveStagePollerBinding<Top> dsrom_s81_bind_wave_stage_poller(
         auto read=native_read_result(request,offer);
         if(plan.groups.empty()||!read)
             throw std::runtime_error("actual full-stage plan/native result reader missing");
-        const auto& first=plan.groups.front().ranks[0].offer;
+        const auto first=dsrom_s81_resolve_source_offer(plan,request);
         if(first.die_id!=offer.die_id||first.identity!=offer.identity||first.token!=offer.token||
            first.position!=offer.position||first.user!=offer.user||first.epoch!=offer.epoch||
            first.entry!=offer.entry)

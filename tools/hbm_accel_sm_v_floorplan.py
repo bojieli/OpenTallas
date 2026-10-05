@@ -44,7 +44,7 @@ def main():
     ap.add_argument("--margin", type=float, default=30.0)
     a = ap.parse_args()
     tw, th = lef_size(a.views / "ot_hbm_accel_tc16/ot_hbm_accel_tc16.lef")
-    bw, bh = lef_size(a.views / "ot_gpu_bd_col/ot_gpu_bd_col.lef")
+    bw, bh = lef_size(a.views / "ot_hbm_accel_bd_col/ot_hbm_accel_bd_col.lef")
     xw, xh = lef_size(SRAM_X)
     rw, rh = lef_size(SRAM_R)
     g = a.gap
@@ -121,7 +121,7 @@ def main():
             "puts \"ot macro_place: $ot_n macros placed\""]
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / "macro_place.tcl").write_text("\n".join(tcl) + "\n")
-    mid = lambda L: (round(L * 0.15, 1), round(L * 0.85, 1))  # noqa: E731
+    mid = lambda L: (round(L * 0.25, 1), round(L * 0.75, 1))  # noqa: E731
     fp = dict(die=[0, 0, die_w, die_h], core=[snap(m / 2, 0.432), snap(m / 2, 0.27), snap(die_w - m / 2, 0.432),
                                              snap(die_h - m / 2, 0.27)],
               tile=dict(w=round(tile_w, 3), h=round(tile_h, 3)), quad=dict(w=round(quad_w, 3), h=round(quad_h, 3)),

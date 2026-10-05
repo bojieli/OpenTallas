@@ -34,9 +34,11 @@ module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) 
     end
     reg [63:0] nchk = 0, nerr = 0, nfault = 0;
     reg        done = 1'b0;
+    wire unit_mismatch;
 
     generate
     if (UNIT == 0) begin : g_sp
+        assign unit_mismatch = 1'b0;
         wire [31:0] s0, r0, s1, r1, s1d, r1d;
         wire v0, v1, f0, f1, v1d, f1d;
         ot_hdc_v41x_softplus   u_old (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .sp(s0), .r(r0), .vo(v0), .fault(f0));
@@ -55,6 +57,7 @@ module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) 
             if (v1d && !v0) nerr = nerr + 1;
         end
     end else if (UNIT == 1) begin : g_exp
+        assign unit_mismatch = 1'b0;
         wire [31:0] y0, y1, y1d;
         wire v0, v1, f0, f1, v1d, f1d;
         ot_hdc_v41x_exp   u_old (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y0), .vo(v0), .fault(f0));
@@ -72,6 +75,7 @@ module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) 
             if (v1d && !v0) nerr = nerr + 1;
         end
     end else if (UNIT == 2) begin : g_sq
+        assign unit_mismatch = 1'b0;
         wire [31:0] y0, y1, y1d;
         wire v0, v1, f0, f1, v1d, f1d;
         ot_hdc_fsqrt  u_old (.clk(clk), .rst_n(rst_n), .v(v), .a(x), .y(y0), .vo(v0), .fault(f0));
@@ -99,6 +103,8 @@ module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) 
         reg [63:0] href [0:NK-1];
         reg [63:0] hunj [0:NK-1];
         integer q;
+        wire [NK-1:0] hbad;
+        assign unit_mismatch = (|hbad) || xerr != 0 || x0err != 0 || aerr != 0;
         initial for (q = 0; q < NK; q = q + 1) begin hchk[q] = 0; herr[q] = 0; href[q] = 0; hunj[q] = 0; end
         //: a biased word: exponent e, a mantissa that is random or has long runs
         function automatic [31:0] word(input s, input [7:0] e, input [31:0] r, input [2:0] pat);
@@ -117,6 +123,7 @@ module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) 
         endfunction
         genvar gk;
         for (gk = 0; gk < NK; gk = gk + 1) begin : g_k
+            assign hbad[gk] = herr[gk] != 0 || hunj[gk] != 0;
             localparam [31:0] K = KS[32*(NK-1-gk) +: 32];
             localparam integer KF = K[30:23];
             reg [31:0] a, b;
@@ -239,6 +246,7 @@ module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) 
         if (fed == n && !v && cyc > n + 400 && !done) done <= 1'b1;
         if (done) begin
             $display("W11SP unit=%0d lo=%08h n=%0d err=%0d fault=%0d", UNIT, lo, nchk, nerr, nfault);
+            if (nerr != 0 || unit_mismatch) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
             $finish;
         end
     end
