@@ -1,0 +1,524 @@
+{
+  "absolute_HBM_timer_budgets": {
+    "T_CCDL": {
+      "budget_margin_ps": 512,
+      "periodic_budget_ps": 3072,
+      "selected_edges": 3,
+      "source_checker_minimum_ps": 2560
+    },
+    "T_FAW": {
+      "budget_margin_ps": 360,
+      "periodic_budget_ps": 15360,
+      "selected_edges": 15,
+      "source_checker_minimum_ps": 15000
+    },
+    "T_RAS": {
+      "budget_margin_ps": 547,
+      "periodic_budget_ps": 28672,
+      "selected_edges": 28,
+      "source_checker_minimum_ps": 28125
+    },
+    "T_RCD": {
+      "budget_margin_ps": 81,
+      "periodic_budget_ps": 19456,
+      "selected_edges": 19,
+      "source_checker_minimum_ps": 19375
+    },
+    "T_RCDW": {
+      "budget_margin_ps": 865,
+      "periodic_budget_ps": 10240,
+      "selected_edges": 10,
+      "source_checker_minimum_ps": 9375
+    },
+    "T_RFC": {
+      "budget_margin_ps": 208,
+      "periodic_budget_ps": 350208,
+      "selected_edges": 342,
+      "source_checker_minimum_ps": 350000
+    },
+    "T_RFCPB": {
+      "budget_margin_ps": 704,
+      "periodic_budget_ps": 200704,
+      "selected_edges": 196,
+      "source_checker_minimum_ps": 200000
+    },
+    "T_RP": {
+      "budget_margin_ps": 134,
+      "periodic_budget_ps": 16384,
+      "selected_edges": 16,
+      "source_checker_minimum_ps": 16250
+    },
+    "T_RRDL": {
+      "budget_margin_ps": 971,
+      "periodic_budget_ps": 4096,
+      "selected_edges": 4,
+      "source_checker_minimum_ps": 3125
+    },
+    "T_RRDS": {
+      "budget_margin_ps": 572,
+      "periodic_budget_ps": 3072,
+      "selected_edges": 3,
+      "source_checker_minimum_ps": 2500
+    },
+    "T_RREFD": {
+      "budget_margin_ps": 192,
+      "periodic_budget_ps": 8192,
+      "selected_edges": 8,
+      "source_checker_minimum_ps": 8000
+    },
+    "T_RTP": {
+      "budget_margin_ps": 519,
+      "periodic_budget_ps": 6144,
+      "selected_edges": 6,
+      "source_checker_minimum_ps": 5625
+    },
+    "T_RTW": {
+      "budget_margin_ps": 292,
+      "periodic_budget_ps": 10240,
+      "selected_edges": 10,
+      "source_checker_minimum_ps": 9948
+    },
+    "T_WRR": {
+      "budget_margin_ps": 773,
+      "periodic_budget_ps": 28672,
+      "selected_edges": 28,
+      "source_checker_minimum_ps": 27899
+    },
+    "T_WTR": {
+      "budget_margin_ps": 812,
+      "periodic_budget_ps": 14336,
+      "selected_edges": 14,
+      "source_checker_minimum_ps": 13524
+    }
+  },
+  "absolute_PHY_arrival_contract": {
+    "actual_receiver_arrival_variation_ps": null,
+    "clock_endpoint_jitter_plus_CA_path_variation_budget": "each timer row margin; RCD only81ps, never treat as zero",
+    "extra_timer_guard_edges_added": 0,
+    "failure_action": "fail same-source plan if margin exceeded; no silent timer/controller revision",
+    "inequality": "arrival(next command at PHY) - arrival(previous command at PHY) >= source_checker_minimum_ps",
+    "tightest_nominal_timer_margin_ps": 81,
+    "tightest_timer": "T_RCD"
+  },
+  "area": {
+    "CDC_control_FF_floor_area_um2": 7059.927600000001,
+    "FIFO_pointer_online_reset_bits": 24064,
+    "existing_CORE_presentation_FF_area_um2": 10973.4912,
+    "existing_CORE_presentation_FF_bits": 37632,
+    "existing_rings_replaced_once_not_added_again": true,
+    "fault_CDC_bits": 49,
+    "global_HCLK_reset_FF_bits": 2,
+    "mailbox_bits": 96,
+    "mapped_area_mux_decode_clock_wire_protection": null,
+    "parent_accumulator_33bits_removed_only_in_selected_external_clock_cut": true,
+    "payload_storage_bits": 2967552,
+    "physical_slot_fit": null,
+    "storage_FF_realization_area_um2": 865338.1632000001
+  },
+  "clock_ports": {
+    "controller_hclk": {
+      "duty_cycle": 0.5,
+      "loaded_insertion_skew_slew_ps": null,
+      "period_ps": 1024,
+      "provider": "Goodall/Laplace external clock root/PHY contract"
+    },
+    "core_clk": {
+      "period_ps": 833.333
+    },
+    "resets": "CORE/HCLK independently synchronized release after source clock stable; shared abort/epoch flush, no live-reset replay outside common controller reset",
+    "tagged_clk": {
+      "independent_domain": false,
+      "period_ps": 833.333,
+      "source": "selected parent u_hbm.t_clk=clk; tagged requests all zero"
+    }
+  },
+  "constraints": {
+    "FF_hold_uncertainty_ps": 25,
+    "Gray_bus_max_delay": "source period to first synchronizer pins; source-period bus skew bound, exact instance scoped",
+    "HCLK_min_pulse_high_low_ps": [
+      512,
+      512
+    ],
+    "SS_setup_uncertainty_ps": 60,
+    "binary_counter_or_payload_false_paths_allowed": false,
+    "blanket_async_clock_groups_allowed": false,
+    "payload_constraints": "stable owner slot through synchronized pointer; actual read mux/output capture timed; macro loaded SS/FF arcs and reset recovery/removal required",
+    "sync_exceptions": "only actual metastability stage1 D; stage1->stage2 timed in receiving domain; no payload exception"
+  },
+  "controller_logic_changed": false,
+  "descriptor_GO_mailboxes": {
+    "GO_ACK_width": 1,
+    "GO_no_new_frontend_ready_alias": "retain pulse port; capture one outstanding, overflow is source protocol fault",
+    "GO_width": 1,
+    "descriptor_ACK_width": 1,
+    "descriptor_READY": "both CDC owner slot and all128 controller desc_r; acceptance ACK remains causal",
+    "descriptor_width": 30,
+    "primitive": "rtl/lib/ot_cdc_mailbox.sv",
+    "state_bits": 96
+  },
+  "fanout": {
+    "CORE_FIFO_domains": 384,
+    "HCLK_FIFO_domains": 384,
+    "HCLK_PC_replicas": 128,
+    "HCLK_descriptor_GO_fault_mailboxes": 3,
+    "TCLK_FIFO_domains": 0,
+    "actual_pin_cap_and_wire_distributed_buffers": null,
+    "descriptor_ready_reduction": "4x32PC plus global4-way AND; retain loaded cuts",
+    "descriptor_row19_n11_and_GO_leaf_fanout": 128
+  },
+  "fault_CDC": {
+    "HCLK_code_ACK_width": 1,
+    "HCLK_code_mailbox_width": 16,
+    "delivery": "held sticky source fault/code through mailbox, same common reset epoch; tagged source ports constant zero in CORE, no unsynchronized code bus",
+    "raw_h_fault_h_code_or_CORE_fault_to_TCLK_connections_allowed": false,
+    "selected_tagged_fault_crossing_FF": 0,
+    "state_bits": 49
+  },
+  "frontend_fifos": [
+    {
+      "aggregate_payload_bits_per_destination_edge": 35968,
+      "control_state_bits": 8704,
+      "credit_return_source_edges": [
+        2,
+        3
+      ],
+      "depth": 64,
+      "destination_domain": "CORE",
+      "first_consumption_destination_edges": [
+        3,
+        4
+      ],
+      "frontend_pins": [
+        "l_v",
+        "l_sec",
+        "l_row",
+        "l_data",
+        "l_pop"
+      ],
+      "implemented_at_selected_frontend": false,
+      "latency_basis": "two pointer synchronizer FFs plus registered empty/full; phase-dependent, no metastability tail bound",
+      "mutable_storage_protection": "required and not supplied by bare FIFO; source-compatible SRAM/protection hook pending",
+      "name": "stream_landing",
+      "payload_bits": 281,
+      "payload_read_bytes_per_destination_edge": 35.125,
+      "payload_write_bytes_per_source_edge": 35.125,
+      "pointer_bits": 7,
+      "primitive": "rtl/lib/ot_async_fifo.sv",
+      "replicas": 128,
+      "reset_online": "both resets flush; two-stage local release plus online rendezvous before valid/ready",
+      "semantics": "publish only actual completed RD; pop only l_v&&l_pop; reserve against CRED32 before RD",
+      "source_domain": "HCLK",
+      "storage_bits": 2301952,
+      "storage_role": "realization of existing logical ring; no duplicate backing ring",
+      "visibility_destination_edges": [
+        2,
+        3
+      ]
+    },
+    {
+      "aggregate_payload_bits_per_destination_edge": 36992,
+      "control_state_bits": 6656,
+      "credit_return_source_edges": [
+        2,
+        3
+      ],
+      "depth": 16,
+      "destination_domain": "HCLK",
+      "first_consumption_destination_edges": [
+        3,
+        4
+      ],
+      "frontend_pins": [
+        "w_v",
+        "w_sec",
+        "w_data",
+        "w_tag",
+        "w_room"
+      ],
+      "implemented_at_selected_frontend": false,
+      "latency_basis": "two pointer synchronizer FFs plus registered empty/full; phase-dependent, no metastability tail bound",
+      "mutable_storage_protection": "required and not supplied by bare FIFO; source-compatible SRAM/protection hook pending",
+      "name": "token_write",
+      "payload_bits": 289,
+      "payload_read_bytes_per_destination_edge": 36.125,
+      "payload_write_bytes_per_source_edge": 36.125,
+      "pointer_bits": 5,
+      "primitive": "rtl/lib/ot_async_fifo.sv",
+      "replicas": 128,
+      "reset_online": "both resets flush; two-stage local release plus online rendezvous before valid/ready",
+      "semantics": "w_room preserves >=3 slots; held payload until AQ handoff; one owner tag until real WR completion",
+      "source_domain": "CORE",
+      "storage_bits": 591872,
+      "storage_role": "realization of existing logical ring; no duplicate backing ring",
+      "visibility_destination_edges": [
+        2,
+        3
+      ]
+    },
+    {
+      "aggregate_payload_bits_per_destination_edge": 1152,
+      "control_state_bits": 8704,
+      "credit_return_source_edges": [
+        2,
+        3
+      ],
+      "depth": 64,
+      "destination_domain": "CORE",
+      "first_consumption_destination_edges": [
+        3,
+        4
+      ],
+      "frontend_pins": [
+        "wd_v",
+        "wd_tag"
+      ],
+      "implemented_at_selected_frontend": false,
+      "latency_basis": "two pointer synchronizer FFs plus registered empty/full; phase-dependent, no metastability tail bound",
+      "mutable_storage_protection": "required and not supplied by bare FIFO; source-compatible SRAM/protection hook pending",
+      "name": "write_done",
+      "payload_bits": 9,
+      "payload_read_bytes_per_destination_edge": 1.125,
+      "payload_write_bytes_per_source_edge": 1.125,
+      "pointer_bits": 7,
+      "primitive": "rtl/lib/ot_async_fifo.sv",
+      "replicas": 128,
+      "reset_online": "both resets flush; two-stage local release plus online rendezvous before valid/ready",
+      "semantics": "tag publication only after actual WR latency; implicit consume wd_v each core edge, never first unrelated ACK",
+      "source_domain": "HCLK",
+      "storage_bits": 73728,
+      "storage_role": "realization of existing logical ring; no duplicate backing ring",
+      "visibility_destination_edges": [
+        2,
+        3
+      ]
+    }
+  ],
+  "full_frontend_CDC_implementation_ready": false,
+  "model_owner": "Maxwell; additive price submitted before new context source",
+  "physical_controller_cut_source_ready": true,
+  "preserved_gate_failure": {
+    "PHY_absolute_time_vs_logical_CTL_FS_checker_join": null,
+    "SS_FF_closed": false,
+    "continuous_1p024ns_clock_is_NOT_source_equivalent": true,
+    "controller_average_period_fs": 1024000,
+    "controller_high_pulse_ps": 416.6665,
+    "hardware_clock_gating_and_phase_initialization": null,
+    "hold_uncertainty_ps": 25,
+    "minimum_controller_setup_interval_ps": 833.333,
+    "observed_source_interval_fs": [
+      833333,
+      1666666
+    ],
+    "root_period_fs": 833333,
+    "setup_uncertainty_ps": 60,
+    "source": "32-bit accumulator; hclk=~clk & tick_q",
+    "source_acc_tick_initializers_have_no_reset": true
+  },
+  "refresh": {
+    "PULLIN": 16,
+    "REFIPB_edges": 118,
+    "REFIPB_periodic_ps": 120832,
+    "REFI_edges": 3808,
+    "REFI_periodic_ps": 3899392,
+    "maximum_REFI_ps": 3900000,
+    "refresh_AQ_stall_bound_edges": 64,
+    "same_bank_ref_round_and_phase": "unchanged source logic; no inferred refresh-free bandwidth"
+  },
+  "remaining_implementation": [
+    "bind clock provider and reset/RDC with Goodall/Laplace",
+    "install protected finite ring CDC using actual SRAM/load/slot models",
+    "bind PHY returns/reservations to same controller and source clocks",
+    "Maxwell compose per-event causal costs without repeat token run"
+  ],
+  "runtime_backend_changed": false,
+  "schema": "qwen_rom_stream4_periodic_clock_plan_r1",
+  "selected_clock": "external periodic HCLK,1024ps; new explicit physical input",
+  "selected_controller_sha256": "2dcbec64d86ae8a3288a1cf150080c31a70ca423b5f2f8f73138ca51663c0883",
+  "selected_stack_sha256": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+  "source_latency_paths": {
+    "GO_to_stack_sample": {
+      "charge": "4 HCLK mailbox edges + 1 HCLK registered go_q edge, plus busy wait",
+      "hold": "one pending GO captured from source pulse; destination waits busy_all, ACK after consumption",
+      "max_phase_only_ps": 5120
+    },
+    "descriptor_to_accept": {
+      "charge": "4 HCLK edges + 3 CORE edges, no queue/receiver stall",
+      "hold": "row19/n11 held until acceptance ACK; one pending descriptor",
+      "max_phase_only_ps": 6595.999
+    },
+    "stream_RD_to_core_consume": {
+      "charge": "ceil((CL+BURST+RSP)/1024) HCLK edges + 5 CORE edges; reservation before RD",
+      "hclk_read_return_edges": 23,
+      "max_phase_only_ps": 27718.665,
+      "native_CORE_presentation_edges": 1
+    },
+    "write_to_done": {
+      "charge": "4 HCLK ingress edges + AQ/refresh wait + ceil((CWL+BURST+RSP)/1024) HCLK edges + 5 CORE edges",
+      "hclk_write_return_edges": 17,
+      "max_phase_only_ps_excluding_AQ_wait": 25670.665,
+      "native_CORE_presentation_edges": 1
+    }
+  },
+  "source_pins": [
+    {
+      "path": "tools/runtime/qwen_combined/stream4_memory_binding.hpp",
+      "sha256": "68063aec39914dad179f10e1d51ae2f72dc711c8277e991c789af56cc7131c50"
+    },
+    {
+      "path": "tools/runtime/qwen_combined/stream4_tagged_rows_hook.cpp",
+      "sha256": "cb779e8b239164b8a61556c5c729e14d78740d6afefd89b68228ffcba46c21ee"
+    },
+    {
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "sha256": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5"
+    },
+    {
+      "path": "rtl/lib/ot_cdc_mailbox.sv",
+      "sha256": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76"
+    },
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    {
+      "path": "rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv",
+      "sha256": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81"
+    }
+  ],
+  "startup": {
+    "CORE_writer_HCLK_reader_ready_upper_ps": 4738.666,
+    "FIFO_write_ready_phase_upper": "max(3*source_period,3*destination_period)+2*source_period after common reset release and both clocks stable",
+    "HCLK_reset_release_edges": 2,
+    "HCLK_writer_CORE_reader_ready_upper_ps": 5120,
+    "external_clock_lock_latency_ps": null,
+    "mailbox_local_online": "one receiving edge then two opposite-domain online sync edges",
+    "no_payload_visible_until_actual_pointer_and_data_capture": true,
+    "startup_paid_once_per_common_epoch_not_per_PC_or_ME": true
+  },
+  "tagged_storage_charged_to_selected_P0": false,
+  "timer_budget_is_NOT_state_machine_or_PHY_timing_proof": true,
+  "token_composition": {
+    "additional_token_latency_ps": null,
+    "critical_event_counts_or_overlap_from_retained_source_schedule": null,
+    "no_new_P8191_run": true,
+    "old_baseline_crossings_are_not_zero_or_automatically_additive": true,
+    "per_event_service_costs": {
+      "GO_to_stack_sample": {
+        "charge": "4 HCLK mailbox edges + 1 HCLK registered go_q edge, plus busy wait",
+        "hold": "one pending GO captured from source pulse; destination waits busy_all, ACK after consumption",
+        "max_phase_only_ps": 5120
+      },
+      "descriptor_to_accept": {
+        "charge": "4 HCLK edges + 3 CORE edges, no queue/receiver stall",
+        "hold": "row19/n11 held until acceptance ACK; one pending descriptor",
+        "max_phase_only_ps": 6595.999
+      },
+      "stream_RD_to_core_consume": {
+        "charge": "ceil((CL+BURST+RSP)/1024) HCLK edges + 5 CORE edges; reservation before RD",
+        "hclk_read_return_edges": 23,
+        "max_phase_only_ps": 27718.665,
+        "native_CORE_presentation_edges": 1
+      },
+      "write_to_done": {
+        "charge": "4 HCLK ingress edges + AQ/refresh wait + ceil((CWL+BURST+RSP)/1024) HCLK edges + 5 CORE edges",
+        "hclk_write_return_edges": 17,
+        "max_phase_only_ps_excluding_AQ_wait": 25670.665,
+        "native_CORE_presentation_edges": 1
+      }
+    }
+  },
+  "transport": {
+    "actual_PHY_request_return_completion_provider": null,
+    "no_simulation_shared_arrays_as_hardware_credit": true,
+    "shared_memory_controller_owner": "same4stack128PC, same source sector map and AQ write-before-read order",
+    "stream_binding": "selected_top.u_kv stream ports via hd_*/hl_*/hw_*/hwd_* internal wires to selected_top.u_hbm; generic stream_* helper is provenance only",
+    "tagged_binding": "literal selected parent t_clk=clk,t_req_*=0,t_rsp_ready=0,outputs unused; no tagged service adoption"
+  },
+  "unselected_generic_tagged_fifos": [
+    {
+      "aggregate_payload_bits_per_destination_edge": 168,
+      "control_state_bits": 144,
+      "credit_return_source_edges": [
+        2,
+        3
+      ],
+      "depth": 4,
+      "destination_domain": "HCLK",
+      "first_consumption_destination_edges": [
+        3,
+        4
+      ],
+      "frontend_pins": [
+        "t_req_v",
+        "t_req_ready",
+        "t_req_addr",
+        "t_req_len",
+        "t_req_tag",
+        "t_req_we",
+        "t_req_wdata"
+      ],
+      "implemented_at_selected_frontend": false,
+      "latency_basis": "two pointer synchronizer FFs plus registered empty/full; phase-dependent, no metastability tail bound",
+      "mutable_storage_protection": "required and not supplied by bare FIFO; source-compatible SRAM/protection hook pending",
+      "name": "tagged_request",
+      "payload_bits": 42,
+      "payload_read_bytes_per_destination_edge": 5.25,
+      "payload_write_bytes_per_source_edge": 5.25,
+      "pointer_bits": 3,
+      "primitive": "rtl/lib/ot_async_fifo.sv",
+      "replicas": 4,
+      "reset_online": "both resets flush; two-stage local release plus online rendezvous before valid/ready",
+      "semantics": "read-only: t_req_we faults/drops; wdata not stored; len1..16, same splitter/map/AQ order",
+      "source_domain": "CORE",
+      "storage_bits": 672,
+      "storage_role": "realization of existing logical ring; no duplicate backing ring",
+      "visibility_destination_edges": [
+        2,
+        3
+      ]
+    },
+    {
+      "aggregate_payload_bits_per_destination_edge": 34944,
+      "control_state_bits": 7680,
+      "credit_return_source_edges": [
+        2,
+        3
+      ],
+      "depth": 32,
+      "destination_domain": "CORE",
+      "first_consumption_destination_edges": [
+        3,
+        4
+      ],
+      "frontend_pins": [
+        "t_rsp_v",
+        "t_rsp_ready",
+        "t_rsp_tag",
+        "t_rsp_beat",
+        "t_rsp_data",
+        "t_rsp_wr",
+        "t_pc_room"
+      ],
+      "implemented_at_selected_frontend": false,
+      "latency_basis": "two pointer synchronizer FFs plus registered empty/full; phase-dependent, no metastability tail bound",
+      "mutable_storage_protection": "required and not supplied by bare FIFO; source-compatible SRAM/protection hook pending",
+      "name": "tagged_response",
+      "payload_bits": 273,
+      "payload_read_bytes_per_destination_edge": 34.125,
+      "payload_write_bytes_per_source_edge": 34.125,
+      "pointer_bits": 6,
+      "primitive": "rtl/lib/ot_async_fifo.sv",
+      "replicas": 128,
+      "reset_online": "both resets flush; two-stage local release plus online rendezvous before valid/ready",
+      "semantics": "reserve before AQ push; publish due CL+BURST+RSP in port order; preserve advisory >=8 slots, never credit it as exact reservation",
+      "source_domain": "HCLK",
+      "storage_bits": 1118208,
+      "storage_role": "realization of existing logical ring; no duplicate backing ring",
+      "visibility_destination_edges": [
+        2,
+        3
+      ]
+    }
+  ],
+  "whole_context_build_admitted": false
+}
