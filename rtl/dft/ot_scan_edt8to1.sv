@@ -1,13 +1,16 @@
 // Additive opt-in linear scan decompressor and space compactor.
-// Tester sets pattern_reset with scan_en=0 once before loading each pattern.
+// Tester sets pattern_reset with scan_en=1 on the first unload/load edge.
+// That edge shifts zero into every chain and observes its OLD output; it
+// clears only the codec state. Follow it by L encoded load edges. Never use
+// an extra functional capture edge to seed/reset the codec.
 // chain_in and edt_out are PREEDGE combinational values. The caller owns
 // actual scan clock/ICG/test-mode binding and capture; this module adds none.
 // Unknown responses propagate through XOR; the encoder's expected-known mask
 // cannot credit an aliased or unknown signature as fault detection.
-module ot_scan_edt_codec #(
+module ot_scan_edt8to1 #(
     parameter bit ENABLE = 1'b0,
-    parameter integer CHAIN_COUNT = 64,
-    parameter integer CHANNELS = 8
+    parameter integer CHAIN_COUNT = 32,
+    parameter integer CHANNELS = 4
 ) (
     input wire clk,
     input wire rst_n,
@@ -32,7 +35,7 @@ module ot_scan_edt_codec #(
             else if (scan_en) state_q <= {state_q[63-CHANNELS:0], feedback};
         end
         for (genvar c=0; c<CHAIN_COUNT; c=c+1) begin : p
-            assign chain_in[c] = scan_en &&
+            assign chain_in[c] = scan_en && !pattern_reset &&
                 (state_q[(7*c)%64] ^ state_q[(7*c+19)%64] ^
                  state_q[(7*c+43)%64] ^ edt_in[c%CHANNELS]);
         end

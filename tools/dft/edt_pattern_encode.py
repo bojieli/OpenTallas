@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GF(2) encoder and exact response checker for ot_scan_edt_codec.
+"""GF(2) encoder and exact response checker for ot_scan_edt8to1.
 
 Input JSON: chains, channels, load[cycle][chain] (0/1/null care cube),
 optional good_response[cycle][chain] and fault_responses {fault: response}.
@@ -78,7 +78,8 @@ def encode(load, channels):
         raise RuntimeError('encoder replay mismatch')
     return {'encodable':True,'words':words,'care_bits':care,'rank':len(basis),
             'care_mismatches':mismatch,'shift_edges':len(load),
-            'reset_edges':1,'channel_ratio':chains/channels}
+            'reset_edges':1,'total_shift_edges':len(load)+1,
+            'reset_shift_word':0,'channel_ratio':chains/channels}
 
 
 def compact(response, channels):
@@ -140,7 +141,7 @@ def main():
     ap.add_argument('--gate-dir',type=Path)
     ap.add_argument('--scan',type=Path)
     ap.add_argument('--pattern',type=int,default=0)
-    ap.add_argument('--channels',type=int,default=8)
+    ap.add_argument('--channels',type=int,default=4)
     ap.add_argument('--output',type=Path,required=True)
     args=ap.parse_args()
     if bool(args.input)==bool(args.gate_dir):
@@ -161,6 +162,7 @@ def main():
         if result['faults']:
             result['coverage_status']='PASS_SUPPLIED_RESPONSE_SET' if all(x['raw_detected'] and x['compact_detected'] for x in result['faults'].values()) else 'FAIL_SUPPLIED_RESPONSE_SET'
     result['integrated_atpg_coverage']='UNVALIDATED'
+    result['edge_protocol']='scan_en1 pattern_reset1 first shift: zero chain inputs and observe captured OLD outputs; clear codec. Then pattern_reset0 and L encoded shifts. Responses begin on the first reset-shift edge; never extra functional capture.'
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2)+'\n')
     return 0 if result['encodable'] and not result['coverage_status'].startswith('FAIL') else 1
