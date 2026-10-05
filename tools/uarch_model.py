@@ -8734,6 +8734,49 @@ def hbm_stream_aq_last_bound_predicate_cut(*, pcs=128):
                 build_condition='Only if current head-ready route final verdict requires remaining bounddecode repair')
 
 
+def hbm_collective_tx_mask_lookahead(*, nl=128, lanes=16, rdup=8, endpoints_per_die=1):
+    """Default-off local cut of the routed f12 XREG TX mask cone; not a TU replacement."""
+    if nl != 128 or lanes != 16 or rdup != 8:
+        raise ValueError('selected f12 context is NL128/LANES16/RDUP8')
+    nw=(nl+lanes-1)//lanes
+    copies_per_lane=4
+    added=nl*copies_per_lane
+    area=added*(0.2916+0.2+0.2)  # FF floor + AND + hold/accept selection proxy
+    tracks=added+nl+nw*rdup+9
+    capacity=int(64/0.08)*4
+    return dict(default_enabled=False, adopted=False, MACs_per_cycle=0,
+        endpoints_per_die=endpoints_per_die, added_state_bits_per_endpoint=added,
+        original_mask_state_bits=nl, original_word_select_copies_bits=nw*rdup,
+        original_state_removed_bits=0, added_capture_ANDs=added,
+        added_hold_accept_mux_bit_equivalents=added,
+        qualified_mask_data_fanout_bits=8, original_combined_mask_data_fanout_bits=32,
+        original_mask_to_new_control_fanout=copies_per_lane,
+        ingress_payload_bytes_per_accept=nl*4, ingress_count_bits=8,
+        TX_payload_bytes_per_edge=lanes*4, TX_record_bits_per_edge=lanes*32+34,
+        RX_record_bits_per_edge=lanes*32+34, response_payload_bytes=nl*4,
+        added_external_ports=0, added_external_boundary_bits_per_edge=0,
+        added_local_control_wires=tracks, assumed_local_channel_tracks=capacity,
+        prospective_tracks_fit=tracks<=capacity,
+        channel_basis='64um local channel, 80nm pitch, four signal layers; assumption, not placement proof',
+        cell_area_proxy_um2_per_endpoint=area, footprint_proxy_um2_at_50pct=2*area,
+        area_basis='0.2916um2 FF + 0.2um2 AND + 0.2um2 mux bit proxy; CTS/reset/wire displaced cells unmeasured',
+        existing_context_die_um=[540,540], actual_slot_fit=False,
+        measured_context_core_um2=287908, measured_context_cell_um2=29965.5,
+        prospective_body_area_with_proxy_um2=29965.5+area,
+        prospective_body_fit_at_50pct=(29965.5+area)<287908*0.5,
+        existing_XREG_state_bits=539, XREG_state_paid_once=True,
+        added_cycles_per_record=0, added_cycles_per_collective=0,
+        added_token_latency_cycles=0, existing_XREG_added_collective_cycles=2,
+        prospective_clock_hz=1200000000, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+        clock_closed=False,
+        physical_failure='r6 XREG SS -4.23ps dmask24 -> TX FIFO mem2 bit265; FF +4.13ps',
+        retained_owner_credit_CDC=True,
+        parent_consumer='HA3=0 ot_hbm_accel_hbm_system.g_mux -> ot_gpu_coll_system.g_r.u_ep; not installed',
+        DS_measured_consumer='dshbm_1m_coll.py -> ot_hbm_accel_tu_endpoint NC8/NOG8 or NC1/NOG96; separate',
+        Qwen_measured_consumer='qwen_hbmacc_rt_token_w12.py -> ot_rom_oneshot_allreduce; separate',
+        installed_parent_or_rate_credit=False)
+
+
 def hbm_stream_aq_slot_ready_cut(*, pcs=128, queue_depth=4):
     """Mandatory exact slot-readiness alternative after head-ready input failure.
 

@@ -41,7 +41,10 @@ foreach spec $lc_specs {
   lassign $spec name prefix x0 y0 x1 y1
   set registers {}
   foreach inst [$lc_block getInsts] {
-    if {[string first $prefix [$inst getName]] == 0 && [[$inst getMaster] isSequential]} {
+    # OpenDB stores Yosys bus names with escaped brackets. Normalize only
+    # their representation; retain the complete die/engine/state identity.
+    set actual_name [string map [list "\\" ""] [$inst getName]]
+    if {[string first $prefix $actual_name] == 0 && [[$inst getMaster] isSequential]} {
       lappend registers $inst
     }
   }
