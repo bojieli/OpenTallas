@@ -161,6 +161,8 @@ def run(a):
                 assert c['measured_cycles'] == n['measured_cycles']
                 assert abs(c['us']-n['total_us_s81_floorplan_wire']) < 1e-12
                 baseline.append(dict(node=n['node'],stage=n['die_stage'],**c))
+        shared_phases=[p for p in plan["phases"] if p["layer"]==L and p["group"]=="shared.w2"]
+        shared=serial(shared_phases,measured,wire)
         candidates, catalogues = [], {}
         for index, groups in enumerate(partitions(exps)):
             groups=sorted(groups,key=lambda g:exps.index(g[0]))
@@ -180,8 +182,9 @@ def run(a):
                           for n in ('ffn.experts_gu','ffn.down'))
             for c in (catalogues[g['ROM_catalogue']] for g in placed):
                 assert c['capacity_fit']
-            # Exact-size draft endpoint measurements are reusable *terms*, not a
-            # proof that concurrent endpoints, intermediate hops or ACKs are bound.
+            # Native VM transports raw32 scalars. Draft x_row is packed BF16,
+            # not a bound transport for this field's raw32 input. Keep it only
+            # as a conditional reference. ret_row matches 1280 raw32 words.
             x,ret=links['hops']['x_row'],links['hops']['ret_row']
             assert x['payload_B']==5120*2 and ret['payload_B']==1280*4
             candidates.append(dict(id=index, groups=placed, group_count=len(groups),
@@ -192,17 +195,24 @@ def run(a):
                 longest_die_phases_per_node=max(len(g['experts']) for g in placed),
                 field_node_barrier_calendar_cycles=field_cyc,
                 field_node_barrier_calendar_us=field_cyc/1200,
-                shared_down_unchanged=[b for b in baseline if any('shared.w2' in p for p in b['phases'])],
+                shared_down_unchanged=shared,
+                node_barrier_policy='all expert GU phases complete before dependent SU/quant and down node; '
+                                    'consumer costs retained but unbound; no invented overlap',
                 total_source_bound_latency_us=None, physical_admission=False,
                 network=dict(primary_bidirectional_ports_per_rank=len(groups),
                     fresh_group_ports_per_rank=1, total_new_bidirectional_endpoints=8*len(groups),
                     source_provider_stage=stage['provider_homes'][str(L)],
-                    x_input=dict(bytes_per_rank=10240, multicast_copies=len(groups),
-                        measured_isolated_hop_cycles=x['total_cycles'], includes_vendor_and_loaded_wire=True),
+                    x_input=dict(raw_VM_bytes_per_rank=20480, multicast_copies=len(groups),
+                        source_bound_hop_cycles=None, packed_BF16_reference_bytes=10240,
+                        conditional_reference_hop_cycles=x['total_cycles'],
+                        conditional_reference='requires actual source-owned exact BF16 pack/unpack; absent',
+                        reference_wire_cycles=x['wire_stage_cycles'], placement_loaded_wire_cycles=None),
                     returned_down=dict(bytes_per_expert_per_rank=5120, copies=6,
-                        measured_isolated_hop_cycles=ret['total_cycles'], includes_vendor_and_loaded_wire=True),
-                    GU_return=dict(bytes_per_expert_per_rank=2304, copies=6, cycles=None),
-                    W2_input=dict(bytes_per_expert_per_rank=4608, copies=6, cycles=None),
+                        measured_isolated_hop_cycles=ret['total_cycles'],
+                        representation='1280 raw32 VM scalars with BF16-lifted field results',
+                        reference_wire_cycles=ret['wire_stage_cycles'], placement_loaded_wire_cycles=None),
+                    GU_return=dict(raw_VM_bytes_per_expert_per_rank=4608, copies=6, cycles=None),
+                    W2_input=dict(raw_VM_bytes_per_expert_per_rank=9216, copies=6, cycles=None),
                     identities=dict(expert_ids=exps, route_weight_bytes=24,
                         packet_framing_cycles=None, producer_PC='retained per-matrix ISA PC where present'),
                     credit_and_visibility='existing field go->last row write includes isolated VM visibility; '
@@ -210,7 +220,8 @@ def run(a):
                     port_serialization_calendar_cycles=None, shared_down_combine_cycles=None,
                     endpoint_area_and_loaded_fanout_mm2=None),
                 unbound=['actual multi-endpoint fanout/port calendar and loaded wire for this placement',
-                         '2304B GU return and 4608B W2 input to/from canonical SU provider',
+                         '20480B raw32 x input (draft packed BF16 10240B is conditional only)',
+                         '4608B raw32 GU return and 9216B raw32 W2 input to/from canonical SU provider',
                          'actual input leases, VM writer/publication/ACK and reverse-credit caller binding',
                          'route IDs/weights packet identity and exclusion',
                          'shared down, ordered combine/allreduce and source-dependency calendar',
@@ -224,15 +235,29 @@ def run(a):
                 best_field_only_us=best['field_node_barrier_calendar_us'],
                 max_phases_per_node=best['longest_die_phases_per_node'],added_dies=best['added_dies'],
                 added_die_body_mm2=best['added_die_body_mm2'],whole_chain_us=None))
+        # Catalogue translations reference one shared literal rank-slice table;
+        # avoid repeating four rank slices for every run of every subset.
+        for cat in catalogues.values():
+            for span in cat['translation']:
+                del span['rank_slices']
+                span['rank_slice_binding']='source_entries[tensor].rank_slices; all four original slices'
         out['layers'].append(dict(layer=L,experts=exps,canonical_baseline=baseline,
-            canonical_routed_field_node_sum_us=sum(max(b['us'] for b in baseline if b['node']==n)
+            calibration_source_identity={p['phase']:dict(x_source=p['x_source'],x_sha256=plan['x_sha256'][p['phase']],
+                 matrices=p['mats']) for p in phases},
+            measured_field_scope=field['not_measured'],
+            workload_scope='selected six-expert source workload only; other experts remain on canonical dies',
+            canonical_full_field_node_barrier_sum_us=sum(max(b['us'] for b in baseline if b['node']==n)
                  for n in (f'L{L}.ffn.experts_gu',f'L{L}.ffn.down')),
             disjoint_subregion_candidate=dict(feasible_without_relocation=False,
                 reason='Each selected expert occupies all128 source regions; no disjoint canonical subregions.'),
             source_entries=entries,ROM_catalogues=catalogues,candidates=candidates,summary=summary))
         print(json.dumps(dict(layer=L,canonical=baseline,summary=summary)),flush=True)
     a.output.parent.mkdir(parents=True,exist_ok=True)
-    a.output.write_text(json.dumps(out,indent=1)+'\n')
+    raw=(json.dumps(out,indent=1)+'\n').encode()
+    if str(a.output).endswith('.gz'):
+        a.output.write_bytes(gzip.compress(raw,mtime=0))
+    else:
+        a.output.write_bytes(raw)
     return 0
 
 
