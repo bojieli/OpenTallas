@@ -1,0 +1,83 @@
+{
+  "schema": "hbm.cp.parent-context.exact.v1",
+  "verdict": "PASS_CONTEXT_CONNECTED_PROTOCOL_ONLY",
+  "checks": 266,
+  "foreign_cases": 15,
+  "healthy_transactions": 2,
+  "warm_rearm": 1,
+  "accepted_debt_drained": 17,
+  "added_executor_start_edges": 1,
+  "join_extra_pipeline_edges": 0,
+  "CP_core_added_edges": 0,
+  "expected_CP_prelease_edges": 5,
+  "expected_CP_grant_edges": 1,
+  "expected_CP_extra_rearm_edges": 1,
+  "compile_exit": 0,
+  "runtime_exit": 0,
+  "elapsed_seconds": 14.59,
+  "peak_RSS_KiB": 8192,
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv": "07e56df9b2c84627ae1c6ddf23ca9bcf7f5ee114bb5891962a8a4e810209f82a",
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": "d730b8d560ac04b9080e404f22b22d08c475ee1121bf6d342b4e7e2135b964bf",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv": "01799fa336832464849944731114b27ecd22483a6514f36d8929fa8af5de6ef6"
+  },
+  "preserved_parent_source": {
+    "path": "results/rtl/hbm_opt_integrated_20261005/w2_parent_on_elaboration/r3/source/ot_ds_hbm_cluster20_integrated.sv",
+    "sha256": "343cbdc61d8ee2bd72c6e12551e82a535018a51da01c1cc5e61eed04a6c9ee75"
+  },
+  "parent_successor_basis": "Restored actual r3 retained source to canonical RTL path, with CP-only default-off parameter/association wiring; immutable source snapshot unchanged",
+  "default_enabled": false,
+  "parameters": {
+    "ENABLE": 1,
+    "REGISTERED_OUTPUTS": 1,
+    "REGISTERED_STATUS": 1,
+    "REGISTERED_BOUNDARY": 1,
+    "GROUPED_OWNER_BOUNDARY": 0,
+    "BALANCED_OWNER_BOUNDARY": 1,
+    "ASSOCIATION_ENABLE": 1
+  },
+  "command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_su_cp_parent_association",
+    "-Ptb_su_cp_parent_association.PARENT_CONTEXT_TEST=1",
+    "-o",
+    "<own scratch>/gate.vvp",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv",
+    "rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_parent_association.sv",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv"
+  ],
+  "runtime_command": [
+    "vvp",
+    "<own scratch>/gate.vvp"
+  ],
+  "coverage": "Actual cmdproc LAUNCH/END + unchanged balanced CP + actual common sm0_borrow debt engine + new association + transaction consumer. Five live fields at three captured-request/provider-request/held-response stages; paired valid/ready new acceptance denied; captured request and exact tag/kind/data response drain once; no foreign release/CPL. Two healthy grant/release/CPL cycles, warm rearm, default-off passthrough.",
+  "parent_parse": "Context top and all actual CP/association/borrower sources compiled; no unresolved RTL children in this small gate",
+  "limitations": [
+    "No SU arithmetic engine execution in this protocol cut",
+    "No full-token or rate claim",
+    "New association rails are source inventory; no measured mapped FF count or independent mirror credit",
+    "Parent physical clock/slot/channel context pending Turing; no physical launch or adoption"
+  ],
+  "physical_build_admitted": false,
+  "adopted": false,
+  "context_top": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+  "context_test_parameter": "PARENT_CONTEXT_TEST=1",
+  "parent_context_contract": "results/rtl/hbm_child_contract_20261005/child_reservations.json",
+  "joint_parent_W2_repeat": false,
+  "parent_physical_qualified": false
+}

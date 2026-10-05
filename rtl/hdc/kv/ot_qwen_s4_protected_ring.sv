@@ -15,6 +15,8 @@ module ot_qwen_s4_protected_ring #(
     input wire wr_valid, output wire wr_ready,
     input wire [WIDTH-1:0] wr_data,
     output wire [P-1:0] wr_occupancy,
+    output wire [P-1:0] retired_source,
+    output wire retired_source_valid,
     output wire wr_fault,
     output wire rd_valid, input wire rd_ready,
     output wire [WIDTH-1:0] rd_data,
@@ -64,6 +66,8 @@ module ot_qwen_s4_protected_ring #(
     // not a fresh inverter on a potentially corrupted primary pointer.
     // Access to each kept state's inverse also appears in the state census.
     wire [P-1:0] released_w=gray_to_bin(rr1), published_r=gray_to_bin(ww1);
+    assign retired_source=released_w;
+    assign retired_source_valid=rr_ok;
     assign wr_occupancy=accept_bin-released_w;
     wire [E1W-1:0] e1;
     wire e1_bad,d0_bad,d1_bad,d2_bad,d3_bad;

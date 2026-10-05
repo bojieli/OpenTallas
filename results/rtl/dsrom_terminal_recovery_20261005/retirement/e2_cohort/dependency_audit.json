@@ -1,0 +1,48 @@
+{
+  "observed_utc": "2026-10-05T21:23:34.812681+00:00",
+  "parent_authorization": "Dependency-safe obsolete cleanup of remaining three; keep any concrete selected/downstream consumer; do not wait solely on historical PENDING wording",
+  "names": [
+    "c0r128_h30s50",
+    "c1r128_h20s40",
+    "c1r128_h30s50"
+  ],
+  "owner_request": "e2_dependency_request.txt",
+  "selected_v9_source_sha256": "d3d0e1bae83fad943d3d4ff570fe499f37a9feea0eeb1cb8ecce00a8be87b7c9",
+  "selected_v9_model_path": "/home/ubuntu/wt-codex-fspine-v9/results/uarch/dsrom_v9_field_boundary_20261005/model.json",
+  "selected_v9_model_sha256": "555f72b7ac6283635da8b3faaecfba4d05b178cddf2ce2005eb47fbc509548e5",
+  "selected_model_old_output_references": [],
+  "active_ledger_references": {
+    "c0r128_h30s50": [
+      {
+        "name": "dsrom-field-spine-route/a721/c0r128_h30s50",
+        "host": "ot-epyc2",
+        "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+        "owner": "Codex:dsrom-field-spine-route",
+        "purpose": "Full physical hold/slew c0r128_h30s50 PID1686759; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+        "status": "running"
+      }
+    ],
+    "c1r128_h20s40": [
+      {
+        "name": "dsrom-field-spine-route/a721/c1r128_h20s40",
+        "host": "ot-epyc2",
+        "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+        "owner": "Codex:dsrom-field-spine-route",
+        "purpose": "Full physical hold/slew c1r128_h20s40 PID1686761; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+        "status": "running"
+      }
+    ],
+    "c1r128_h30s50": [
+      {
+        "name": "dsrom-field-spine-route/a721/c1r128_h30s50",
+        "host": "ot-epyc2",
+        "worktree": "/srv/opentallas-scratch2/codex/dsrom-field-spine-route/wt-87841884f",
+        "owner": "Codex:dsrom-field-spine-route",
+        "purpose": "Full physical hold/slew c1r128_h30s50 PID1686763; completed mapped netlist reused; NUM16; SS60FF25 unchanged",
+        "status": "running"
+      }
+    ]
+  },
+  "baseline_evidence": "Existing complete a721 R128 PQ0 SS-6.87/FF-1.65 and PQ1 SS-11.27/FF-3.81 failures retained; new partial margins do not add a required baseline record",
+  "decision": "Each old route purpose superseded by current v9 R128 PQ0/PQ1 successor source; no concrete output consumer found. Verify exact live identity and no foreign output mount again before individual stop; preserve all source/dependencies/artifacts in place."
+}

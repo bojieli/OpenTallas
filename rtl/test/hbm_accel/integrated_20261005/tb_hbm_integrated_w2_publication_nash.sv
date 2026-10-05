@@ -148,9 +148,15 @@ module tb_hbm_integrated_w2_publication_nash;
    end
   end
  end
+ wire callback_seat_available;
+ generate if(PROTECTED_TRANSACTION_PIPELINE)begin:callback_reservation
+  assign callback_seat_available=retained&&grants[2]&&!sink_fault&&sink.transaction_pipeline.u_pipe.have_free;
+ end else begin:callback_legacy
+  assign callback_seat_available=source_permit;
+ end endgenerate
  task automatic issue_row(input integer s);
   @(negedge clk);
-  if(!source_permit)$fatal(1,"no preGO reservation for no-ready result slot%0d",s);
+  if(!callback_seat_available)$fatal(1,"no retained owner/free preGO seat for no-ready result slot%0d",s);
   result_v=1;result_op=s<2?OPA:OPB;result_row=12'(s%2);result_data=literal_row(s);
  endtask
  generate if(PROTECTED_TRANSACTION_PIPELINE)begin:inject_pipeline
