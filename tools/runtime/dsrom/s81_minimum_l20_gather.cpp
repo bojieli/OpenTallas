@@ -1,4 +1,4 @@
-// Minimum I9 continuation: four produced native I7 boundaries, fresh real
+// Minimum I9/I10 continuation: four produced native I7/I8 boundaries, fresh real
 // import ACKs, then the unchanged native TP4 gather and real destination ACKs.
 // No field, pair, expected activation, or head is executed by this vehicle.
 #include "s81_minimum_l20_bank.hpp"
@@ -11,27 +11,43 @@
 
 namespace {
 void require(bool ok,const char* why) {if(!ok)throw std::runtime_error(why);}
-constexpr unsigned source_writer=2478, gather_writer=2480;
-constexpr unsigned source_address=419776, destination_address=51648;
-constexpr unsigned source_words=320, destination_words=1280;
 }
 
 int main(int argc,char** argv) try {
-    require(argc==7,"usage: minimum_gather OUTPUT ACTUAL_ID47 I7_RANK0 I7_RANK1 I7_RANK2 I7_RANK3");
+    require(argc==7,"usage: minimum_gather OUTPUT ACTUAL_ID47 SOURCE_RANK0 SOURCE_RANK1 SOURCE_RANK2 SOURCE_RANK3");
+    const char* selected=std::getenv("DSROM_S81_L20_GATHER_PC");
+    require(!selected||std::string(selected)=="9"||std::string(selected)=="10",
+            "only canonical L20.I9 or I10 gather may be selected");
+    const unsigned selected_pc=selected&&std::string(selected)=="10"?10:9;
+    const auto& literal=dsrom_s81_l20_collective_literals().at(selected_pc-9);
+    const auto operation=literal.operation;
+    const unsigned source_writer=selected_pc==9?2478:2479;
+    const unsigned gather_writer=selected_pc==9?2480:2481;
+    const unsigned source_address=selected_pc==9?419776:420096;
+    const unsigned destination_address=selected_pc==9?51648:54208;
+    const unsigned source_words=selected_pc==9?320:128;
+    const unsigned destination_words=4*source_words;
+    const char* template_sha=selected_pc==9?
+        "71936363a5862e0eee46beb9bc7b365611e47ef7dc983204e86e2351c03e1f16":
+        "ffbfb9c687822720845951b78ad0718c4bcc9556032ac16eb33427e932a4b4c8";
+    require(operation.index==selected_pc&&operation.unit==6&&operation.template_sha256&&
+            std::string(operation.template_sha256)==template_sha&&literal.mode==1&&
+            literal.src==source_address&&literal.dst==destination_address&&literal.n==source_words,
+            "gather literal differs from canonical I9/I10 source extent");
     std::size_t used=0;
     const uint64_t identity=std::stoull(argv[2],&used,0);
     require(used==std::string(argv[2]).size()&&identity==(1ull<<31),
             "gather requires the frozen native field component identity, not a fabricated source context");
-    std::array<std::array<uint32_t,source_words>,4> input{};
+    std::array<std::array<uint32_t,320>,4> input{};
     for(unsigned rank=0;rank<4;++rank) {
         for(unsigned prior=0;prior<rank;++prior)
             require(!std::filesystem::equivalent(argv[3+rank],argv[3+prior]),
                     "gather requires distinct produced rank files");
         std::ifstream file(argv[3+rank],std::ios::binary);
-        require(bool(file),"produced native I7 input missing");
-        file.read(reinterpret_cast<char*>(input[rank].data()),sizeof(input[rank]));
-        require(file.gcount()==sizeof(input[rank])&&file.peek()==EOF,
-                "produced native I7 must contain exactly 320 raw32 words");
+        require(bool(file),"produced native field input missing");
+        file.read(reinterpret_cast<char*>(input[rank].data()),4*source_words);
+        require(file.gcount()==4*source_words&&file.peek()==EOF,
+                "produced native field input must match the selected full raw32 extent");
     }
     const std::filesystem::path output(argv[1]);
     require(!std::filesystem::exists(output)||std::filesystem::is_empty(output),
@@ -59,10 +75,6 @@ int main(int argc,char** argv) try {
         banks[rank]->publication().enroll_literal(gather_writer,{{destination_address,destination_words}});
         participants.push_back(banks[rank]->bank_participant());
     }
-    const auto operation=dsrom_s81_l20_collective_literals().front().operation;
-    require(operation.index==9&&operation.unit==6&&operation.template_sha256&&
-            std::string(operation.template_sha256)=="71936363a5862e0eee46beb9bc7b365611e47ef7dc983204e86e2351c03e1f16",
-            "gather requires canonical L20.I9 literal");
     bool accepted=false;
     auto source_ready=[&](){
         for(unsigned rank=0;rank<4;++rank)
@@ -73,13 +85,13 @@ int main(int argc,char** argv) try {
     };
     auto engine=dsrom_s81_bind_native_l20_collective(ranks[0],identity,io,
         [&](unsigned rank,unsigned pc){
-            require(pc==9&&rank<4&&source_ready(),"I9 acceptance lacks four actual wait31 source publications");
+            require(pc==selected_pc&&rank<4&&source_ready(),"gather acceptance lacks four actual source publications");
             banks[rank]->publication().begin(identity,gather_writer);
-            std::cout<<"GATHER_ACCEPT rank="<<rank<<" pc=9 producer=2480 cycle="<<cycle<<'\n';
+            std::cout<<"GATHER_ACCEPT rank="<<rank<<" pc="<<selected_pc<<" producer="<<gather_writer<<" cycle="<<cycle<<'\n';
             accepted=true;
         },
         [&](unsigned rank,unsigned pc,const S81EmbeddingOutput& out){
-            require(accepted&&pc==9&&rank<4,"gather output lacks accepted PC9 association");
+            require(accepted&&pc==selected_pc&&rank<4,"gather output lacks accepted literal PC association");
             for(unsigned lane=0;lane<16;++lane)
                 dsrom_s81_capture_minimum_prefix_scalar(ranks[rank],banks[rank]->publication(),
                     gather_writer,out,lane,true);
@@ -110,22 +122,22 @@ int main(int argc,char** argv) try {
             while(!io[rank].visible(batch,16))tick(true);
         }
         require(pub.complete(identity,source_writer)&&io[rank].span_lease(identity,source_address,source_words),
-                "rank I7 import lacks actual full matched ACK lease");
-        std::cout<<"IMPORT_ACK rank="<<rank<<" producer=2478 words=320 cycle="<<cycle<<'\n';
+                "rank field import lacks actual full matched ACK lease");
+        std::cout<<"IMPORT_ACK rank="<<rank<<" producer="<<source_writer<<" words="<<source_words<<" cycle="<<cycle<<'\n';
     }
-    require(source_ready(),"I9 wait31 unavailable");
+    require(source_ready(),"gather source publication unavailable");
     while(!engine.inputs_ready(operation)||!engine.ready())tick(true);
     engine.drive(operation,true);tick(true);engine.drive(operation,false);
-    require(accepted,"native I9 did not accept GO");
+    require(accepted,"native gather did not accept GO");
     while(!engine.idle())tick(true);
     const long drain_cycle=cycle;
     for(unsigned rank=0;rank<4;++rank)
         require(banks[rank]->publication().complete(identity,gather_writer)&&
                 io[rank].span_lease(identity,destination_address,destination_words),
-                "I9 terminal lacks all-rank native gather ACKs");
+                "terminal lacks all-rank native gather ACKs");
     unsigned mismatches=0;
     for(unsigned rank=0;rank<4;++rank) {
-        std::ofstream file(output/("native_L20_I9_rank"+std::to_string(rank)+".u32"),std::ios::binary);
+        std::ofstream file(output/("native_L20_I"+std::to_string(selected_pc)+"_rank"+std::to_string(rank)+".u32"),std::ios::binary);
         require(bool(file),"gather readback open");
         for(unsigned index=0;index<destination_words;++index) {
             std::optional<uint32_t> word;
@@ -137,8 +149,8 @@ int main(int argc,char** argv) try {
         require(bool(file),"gather readback write");
     }
     std::cout<<"GATHER_COMPLETE native_drain_cycle="<<drain_cycle<<" readback_terminal_cycle="<<cycle
-             <<" rank_words=1280 mismatches="<<mismatches
-             <<" scope=native_I9_native_produced_boundary_imports_NO_fulltoken_or_physical_timing\n";
+             <<" pc="<<selected_pc<<" rank_words="<<destination_words<<" mismatches="<<mismatches
+             <<" scope=native_gather_native_produced_boundary_imports_NO_fulltoken_or_physical_timing\n";
     require(mismatches==0,"native gather differs from actual four rank source words");
     return 0;
 }catch(const std::exception& e){std::cerr<<"GATHER_ERROR "<<e.what()<<'\n';return 1;}
