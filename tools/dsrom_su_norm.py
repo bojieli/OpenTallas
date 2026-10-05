@@ -48,6 +48,7 @@ COMMON = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fp
           "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
           "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41x/ot_dsrom_aq12.sv",
           "rtl/hdc/v41x/ot_dsrom_divc.sv"]
+FP_L6 = dict(rtl="rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv", dpi="rtl/test/sim_dsrom_fp32_add_l6_dpi.sv")
 FP_SRC = dict(
     rtl=["rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
          "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv"],
@@ -218,7 +219,7 @@ def build(out: Path, variant, fp, n, rxs=0, la=4):
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_dsrom_su_norm"
     if not exe.exists():
-        srcs = [ROOT / s for s in COMMON + FP_SRC[fp]] + [RTL, TB]
+        srcs = [ROOT / s for s in COMMON + FP_SRC[fp] + [FP_L6[fp]]] + [RTL, TB]
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_dsrom_su_norm",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg",
                *[f"-G{k}={v}" for k, v in p.items()], f"-GRW={RW}", f"-GBW={BW}", f"-GHUB_IN={HUB_IN}",
@@ -252,7 +253,7 @@ def cmd_run(a):
                params=dict(p, RW=RW, BW=BW, HUB_IN=HUB_IN, HUB_OUT=HUB_OUT), rows=rows,
                status="pass" if rows and all(r["ok"] for r in rows) else "fail",
                simulator=subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip(),
-               source_sha256={str(Path(s)): sha(ROOT / s) for s in COMMON + FP_SRC[a.fp] +
+               source_sha256={str(Path(s)): sha(ROOT / s) for s in COMMON + FP_SRC[a.fp] + [FP_L6[a.fp]] +
                               [str(RTL.relative_to(ROOT)), str(TB.relative_to(ROOT))]})
     (out / f"run_{tag}.json").write_text(json.dumps(res, indent=1) + "\n")
     print("RUN", tag, res["status"])
@@ -349,7 +350,7 @@ def cmd_record(a):
 
 # ---------------------------------------------------------------------------------------------------------------------
 KEEP = "ot_hdc_fp32_add_f12_l4 ot_hdc_fp32_add_f12_l5x ot_hdc_fp32_mul_f12_l5 ot_hdc_fp32_mul_f12_l6"
-SCREEN_SRC = [s for s in COMMON + FP_SRC["rtl"]] + [str(RTL.relative_to(ROOT))]
+SCREEN_SRC = [s for s in COMMON + FP_SRC["rtl"]] + [FP_L6["rtl"], str(RTL.relative_to(ROOT))]
 
 
 def cmd_screen(a):
@@ -414,7 +415,7 @@ def cmd_lever(a):
     su_norm/route/ (corner_sta_<unit>.json, routed) and su_norm/screen/ (screen_<unit>.json, pre-layout)."""
     base = ROOT / "results/rtl/dsrom_recovery_20261004"
     m = json.loads((base / "su_norm/measure.json").read_text())
-    assert m.get("add_latency") == 5, "lever uses the LA5 (input-cut adder) measurement"
+    assert m.get("add_latency") == 6, "lever uses the LA6 (ot_dsrom_fp32_add_f12_l6) measurement"
     V = m["variants"]
     us = lambda c: round(c / FAST * 1e6, 5)                                             # noqa: E731
     src = ("ot_dsrom_su_norm {v} (N {N}, D {D}): {what} {c} cycles at 1.2 GHz from the vector-memory read to the last "
