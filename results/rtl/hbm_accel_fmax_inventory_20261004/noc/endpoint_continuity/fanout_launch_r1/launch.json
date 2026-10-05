@@ -15,10 +15,18 @@
       "unit": "hbm-coll-txmask-ctx-u15-20261005-r1.service",
       "main_pid": 386450,
       "driver_pid": 386511
+    },
+    {
+      "variant": "die-u12",
+      "unit": "hbm-coll-txmask-die-u12-20261005-r1.service",
+      "main_pid": 657540,
+      "invocation_id": "11c9dfc67b3f4b7c81db9388b38a214a",
+      "output": "/srv/opentallas-scratch/jobs/boole-collective-txmask-die-u12-12f63a664-r1",
+      "owner": "Goodall"
     }
   ],
   "third_context": "existing EPYC2 r2 actualfloorplanutil .0872915, retained",
-  "standalone": "die-u12 exclusively transferred Boole, exactsource/recipe ready sharedWT; no Goodall standalone launch",
+  "standalone": "Reclaimed Goodall and actually launched once: hbm-coll-txmask-die-u12-20261005-r1.service; original boole-named output retained; no Boole duplicate",
   "source_semantics": "all endpoint/mux/CDC/context RTL matches frozen0b exactness source; no rerun",
   "constraints": "SS833/60ps FF25ps IO20pct alltimed; unlimited timeCPUASfileRAMswap; threads16",
   "terminal_verdict": null,
@@ -30,6 +38,10 @@
     "ctx-u12/service-start.txt": "391fac96365b5f94c04477dd3096c80516ee0303438e17be3891a7e59ad8a946",
     "ctx-u12/launch.txt": "1ff26a45cf28ab3579623edb4a7d8856385644729f2a30f8d93cdb1987211226",
     "ctx-u12/headroom.txt": "c53fa3bcd52b923b8758b1d4f26cbe00d0b199834718dbe7e6f1b4b230446636",
-    "ctx-u12/run.sh": "419a330e96c171744f755ff374e1151d5aa72faed325035b7da7d4105f78a847"
+    "ctx-u12/run.sh": "419a330e96c171744f755ff374e1151d5aa72faed325035b7da7d4105f78a847",
+    "die-u12/service-start.txt": "76d0fdc407638dfa0c8536f8dc6e6232a1cda90bcc41ad8828446fa26cd2bac7",
+    "die-u12/launch.txt": "7d59afbc375e158d4d3fcb609cb2082f54c3da6278d6b4a3d45d9bba65c8a4a6",
+    "die-u12/headroom.txt": "61c133f1bbe42c389bd23e19b13311336d2a9ec115b32a87d84639f21e20f049",
+    "die-u12/run.sh": "1fff4893e214611eb8b56e728aac4cb7abca44870fcdafe7074730abd06eb4cf"
   }
 }

@@ -102,6 +102,7 @@ module tb_qwen_kv_land_merge;
         end
         $display("%s cycles=%0d grants=%0d multi_grant_cycles=%0d refusals=%0d mismatches=%0d",
                  bad == 0 ? "LAND_MERGE_LOCKSTEP PASS" : "LAND_MERGE_LOCKSTEP FAIL", N, grants, combines, refusals, bad);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
