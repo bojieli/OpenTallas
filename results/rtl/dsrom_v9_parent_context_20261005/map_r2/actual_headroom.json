@@ -1,0 +1,15 @@
+{
+  "time_ns": 1791237391630089514,
+  "idle_cores": 96.73200979625867,
+  "MemAvailable_bytes": 807613358080,
+  "disk_free_bytes": 2422803763200,
+  "load1": 29.8,
+  "load_required_below": 128,
+  "host": "EPYC2",
+  "required_cores": 4,
+  "expected_peak_GiB": 8,
+  "guard_headroom_GiB": 100,
+  "disk_required_GiB": 4,
+  "disk_basis": "full source already materialized; projected <20k FF parent ODB/netlist/route inventory plus incremental SPEF/logs, multiple stages retained",
+  "fit": true
+}
