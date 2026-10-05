@@ -118,6 +118,89 @@ def transport_join(result, baseline, source_root, cached_manifest):
                 gate="component functional/transport PASS; credits/VM lease/area/corridor/SSFF HOLD")
 
 
+def hcpost_join(run, metadata, baseline, pins, source_root):
+    """Only accept the actual NG256 terminal, never extrapolate reduced cases."""
+    require(run["ng"] == metadata["ng"] == 256, "HC-post full NG256 required")
+    require(run["win"] == 33 and run["wout"] == 23, "HC-post wire geometry")
+    require(run.get("ml", 5) == 5 and run.get("al", 4) == 4, "HC-post arithmetic stages")
+    require(metadata["cases_pkl_sha256"] == baseline["cases_sha256"], "HC-post operands differ")
+    for path, digest in pins["source_sha256"].items():
+        require(sha(source_root / path) == digest, "HC-post source drift: " + path)
+    require(run["rows"] and all(r["pass_"] is True and r["errors"] == r["fault"] == 0
+            and r["words"] == 20480 for r in run["rows"]), "HC-post exactness/coverage")
+    require({r["name"] for r in run["rows"]} == {r["name"] for r in metadata["cases"]},
+            "missing HC-post terminal cases")
+    chains = {c["chain"]: c for c in baseline["chains"]}
+    rows = []
+    for r in run["rows"]:
+        if r["kind"] != "golden_1m":
+            continue
+        require(r["name"] in chains and chains[r["name"]]["exact"] is True, "HC-post baseline mismatch")
+        require(r["beats"] == 20 and r["cycles"] == r["last_out"] + 1 and
+                r["last_out"] - r["first_out"] == 19, "HC-post stream/endpoints")
+        c = chains[r["name"]]
+        b = completion(c)
+        rows.append(dict(chain=r["name"], baseline_wired_cycles=b, baseline_component_us=b / 900,
+                         candidate_registered_landing_cycles=r["cycles"], candidate_component_us=r["cycles"] / 1200,
+                         conditional_component_delta_us=b / 900 - r["cycles"] / 1200,
+                         golden_exact_words=r["words"], sumsq_result_included=False,
+                         physical_verdict=pins["model"].get("selected_physical_verdict", "UNKNOWN"),
+                         retained_dependencies=["final VM publication/credits/consumer lease",
+                            "next HC mix sumsq reducer remains its own graph branch"],
+                         cdc="outside component; graph edge charging once by Maxwell", adoption=False))
+    require(len(rows) == 8, "missing representative HC-post chain")
+    return dict(full_shape_exact=True, rows=rows, cases=len(run["rows"]),
+                verdict="UNVALIDATED_COMPONENT_COMPARISON",
+                cost=pins["model"], gate=pins["model"].get("selected_physical_verdict", "UNKNOWN") +
+                "; functional component only; no area/corridor/SSFF/composed-rate adoption")
+
+
+def swiglu_join(directory, baseline, quant, source_root):
+    metadata = read(directory / "cases.json")
+    require(metadata["su_cases_sha256"] == baseline["cases_sha256"], "SwiGLU operands differ")
+    runs = [read(p) for p in directory.glob("run*.json")]
+    full, = [r for r in runs if r["W"] == 1024 and r["fp"] == "dpi_beh"]
+    rtl, = [r for r in runs if r["W"] == 64 and r["fp"] == "rtl"]
+    for run in (full, rtl):
+        require(run["status"] == "pass" and run["NIN"] == 33 and run["NOUT"] == 23,
+                "SwiGLU run/wire failure")
+        require(run["clock_hz"] == 1200000000, "SwiGLU clock drift")
+        for path, digest in run["source_sha256"].items():
+            require(sha(source_root / path) == digest, "SwiGLU source drift: " + path)
+        require(all(r["exact"] is True and r["a_errors"] == r["q_errors"] == 0 and
+                r["blocks_checked"] * 32 == r["elements"] for r in run["rows"]), "SwiGLU exactness")
+    small = {r["case"]: r for r in rtl["rows"]}
+    chains = {c["chain"]: c for c in baseline["chains"]}
+    rows = []
+    for r in full["rows"]:
+        require(r["case"] in small and small[r["case"]]["elements"] == r["elements"], "SwiGLU coverage")
+        if r["case"].startswith("random."):
+            continue
+        layer, fn = r["case"].split(".", 1)
+        name = f"{layer}.ffn.{fn}"
+        require(name in chains and chains[name]["exact"] is True, "SwiGLU baseline")
+        require(r["elements"] == (3456 if r["routed"] else 576), "SwiGLU TP4 shape")
+        q = quant["nodes"][f"{layer}.ffn." + ("quant2" if r["routed"] else "shared_quant")]
+        require(q["exact"] is True and q["blocks"] == r["blocks_checked"], "SwiGLU quant baseline")
+        require(r["cycles"] == r["last_out"] - r["first_in"] + 1, "SwiGLU interval convention")
+        c = chains[name]
+        b = completion(c) + q["qdq_wired_cycles"]
+        rows.append(dict(chain=name, golden_exact_elements=r["elements"],
+                         baseline_component_cycles=b, baseline_component_us=b / 900,
+                         candidate_component_cycles=r["cycles"], candidate_component_us=r["cycles"] / 1200,
+                         candidate_activation_cycles=r["act_last"] - r["first_in"] + 1,
+                         candidate_quant_transport_cycles=r["last_out"] - r["act_last"],
+                         conditional_component_delta_us=b / 900 - r["cycles"] / 1200,
+                         baseline_route_weight_already_fused_as_E2=r["routed"],
+                         extra_route_w_latency_added=False,
+                         graph_warning="baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+                         remaining_dependencies=["silu FP32 dependency chain", "32-lane quantiser reduction",
+                                                  "finite final VM/consumer credits and graph CDC"], adoption=False))
+    require(len(rows) == 8, "missing SwiGLU representative chains")
+    return dict(rows=rows, full_shape_exact=True, token_gain=None, ss_ff=None,
+                verdict="UNVALIDATED_COMPONENT_COMPARISON")
+
+
 def join(baseline, quant, anatomy, comp, norm_dir, source_root):
     require(baseline["status"] == "pass", "baseline failed")
     require(baseline["config"] == dict(baseline["config"], N=1024, M=256,
@@ -216,6 +299,10 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--transport", type=Path)
     ap.add_argument("--cached-manifest", type=Path)
+    ap.add_argument("--hcpost-run", type=Path)
+    ap.add_argument("--hcpost-cases", type=Path)
+    ap.add_argument("--hcpost-pins", type=Path)
+    ap.add_argument("--swiglu-dir", type=Path)
     a = ap.parse_args()
     base = a.root / "results/rtl/dsrom_1m_allmeasured_20261004"
     rec = a.root / "results/rtl/dsrom_recovery_20261004"
@@ -231,6 +318,14 @@ def main():
         result["actual_registered_transport"] = transport_join(
             read(a.transport), read(inputs[0]), a.root, read(a.cached_manifest))
         result["inputs_sha256"].update({str(p): sha(p) for p in (a.transport, a.cached_manifest)})
+    if a.hcpost_run:
+        require(a.hcpost_cases is not None and a.hcpost_pins is not None, "HC-post provenance required")
+        result["hcpost"] = hcpost_join(read(a.hcpost_run), read(a.hcpost_cases), read(inputs[0]),
+                                        read(a.hcpost_pins), a.root)
+        result["inputs_sha256"].update({str(p): sha(p) for p in (a.hcpost_run, a.hcpost_cases, a.hcpost_pins)})
+    if a.swiglu_dir:
+        result["swiglu"] = swiglu_join(a.swiglu_dir, read(inputs[0]), read(inputs[1]), a.root)
+        result["inputs_sha256"].update({str(p): sha(p) for p in a.swiglu_dir.glob("*.json")})
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(result, indent=2) + "\n")
     print(result["verdict"], len(result["rows"]), "source-bound chains; adoption=false")
