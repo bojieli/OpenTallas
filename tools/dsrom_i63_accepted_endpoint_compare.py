@@ -151,15 +151,17 @@ def compare(a, b):
     return {"compared": int(a.size), "mismatches": int(mismatch.size), "first": first}
 
 
-def run(root, out):
+def run(root, out, closed=False):
     started = time.monotonic()
     out.mkdir(exist_ok=False)
     cap = root / "captured"
     required = {"accepted_p.u32": 20480, "accepted_kv.u32": 339200,
                 "old_pv_bus.u32": 32768, "adapter_PV.u32": 32768}
+    names = ({"accepted_p.u32": "PV_accepted_p.u32", "accepted_kv.u32": "PV_accepted_kv.u32",
+              "old_pv_bus.u32": "PV_old_pv.u32", "adapter_PV.u32": "PV.u32"} if closed else {})
     arrays = {}
     for name, size in required.items():
-        p = cap / name
+        p = cap / names.get(name, name)
         if p.stat().st_size != size:
             raise ValueError(f"exact capture extent {name}")
         arrays[name] = np.fromfile(p, dtype="<u4")
@@ -210,9 +212,11 @@ def run(root, out):
     integer.astype("<u4").tofile(out / "integer_PV.u32")
     golden.astype("<u4").tofile(out / "golden_PV.u32")
     pins = {}
-    for rel in ["terminal.json", "inputs/frozen_inputs.json", "captured/events.tsv"] + ["captured/" + n for n in required] + ["source/capture.cpp", "source/s81_sim_only_attention_endpoint.hpp", "source/s81_minimum_attention_cut.hpp", "source/adapter_config.hpp"]:
-        pins[rel] = sha(root / rel)
-    record = {"schema": "dsrom-i63-same-accepted-bytes-r1", "scope": "ONE controlled-source rank0 I63 PV; SIM_ONLY endpoint/native adapter; no original-run input attribution or hardware timing",
+    for rel in ["terminal.json", "frozen_inputs.json" if closed else "inputs/frozen_inputs.json", "captured/events.tsv"] + ["captured/" + names.get(n, n) for n in required] + ["source/capture.cpp", "source/s81_sim_only_attention_endpoint.hpp", "source/s81_minimum_attention_cut.hpp", "source/adapter_config.hpp"]:
+        actual_rel = ("headers/tools/runtime/dsrom/" + Path(rel).name
+                      if closed and rel in ("source/s81_sim_only_attention_endpoint.hpp", "source/s81_minimum_attention_cut.hpp") else rel)
+        pins[actual_rel] = sha(root / actual_rel)
+    record = {"schema": "dsrom-i63-same-accepted-bytes-r1", "scope": ("Connected controlled-source rank0 QK -> native SU I61/I62 -> PV; SIM_ONLY endpoint/native adapter/VM ACK; no full token or hardware timing" if closed else "ONE controlled-source rank0 I63 PV; SIM_ONLY endpoint/native adapter; no original-run input attribution or hardware timing"),
               "source_commit": terminal["source_commit"], "capture_root": str(root), "python": platform.python_version(), "numpy": np.__version__,
               "tool_sha256": sha(Path(__file__)), "capture_pins": pins, "geometry": {"heads": 16, "dimensions": 512, "rows": 640, "row_bits": 4240, "products": 5242880, "chunk_size": 8, "chunks": 80, "padded_chunks": 128},
               "fp4_rows_by_group": formats, "checks": checks, "stage_checks": stage_checks,
@@ -228,5 +232,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--capture-root", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--closed-chain", action="store_true", help="Consume the existing connected QK/SU/PV capture filenames")
     args = ap.parse_args()
-    raise SystemExit(run(args.capture_root, args.out))
+    raise SystemExit(run(args.capture_root, args.out, args.closed_chain))

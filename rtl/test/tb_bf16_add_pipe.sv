@@ -140,6 +140,7 @@ module tb_bf16_add_pipe;
                      checked, issued, retired);
         else
             $display("FAIL bf16_add_pipe: %0d bad of %0d checked", bad, checked);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
