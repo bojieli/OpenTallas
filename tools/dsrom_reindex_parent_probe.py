@@ -83,13 +83,24 @@ foreach {name pins direction} [list read $mq from address $ma to write $mw to] {
 }
 # List every surviving protection-state register's output net. This inventory
 # exposes lost/aliased rails; counting names alone is not an integrity proof.
+set corrector {}
 foreach pin [all_registers -output_pins] {
     foreach net [get_nets -of_objects $pin] {
         set name [get_full_name $net]
         if {[regexp {u_list|g_req|u_command|u_drain|pending_.*check|metadata_check|cntc} $name]} {
             puts "PARENT_STATE_REGISTER [get_full_name $pin] NET $name"
         }
+        if {[regexp {u_control[./]u_list[./](se|so|pe|po|checked_word|echo|masks)(\[|_|$)} $name]} {
+            lappend corrector $pin
+        }
     }
+}
+if {![llength $corrector]} {error "Missing actual SRAM corrector/check control registers"}
+foreach delay {max min} {
+    puts "PARENT_CORRECTOR_CONTROL_PATH $delay"
+    report_checks -from $corrector -to $endpoints -path_delay $delay \
+        -group_path_count 16 -format full_clock_expanded \
+        -fields {slew capacitance input_pin net fanout} -digits 6
 }
 foreach kind {max_slew max_capacitance max_fanout min_period min_pulse_width} {
     puts "PARENT_CHECK $kind"
