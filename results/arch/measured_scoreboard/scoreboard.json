@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "9d79e4e54",
+ "generated_from_commit": "6043ed794",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1268,8 +1268,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 1710.8,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1313,8 +1313,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 5005.9,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
    "target": "ds_rom",
@@ -1328,8 +1328,8 @@
    "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4679.6,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
    "target": "ds_rom",
@@ -1343,8 +1343,8 @@
    "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4128.4,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
    "target": "ds_rom",
@@ -1358,8 +1358,8 @@
    "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 5196.6,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1433,8 +1433,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 584.512,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1463,8 +1463,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 708.393,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1492,8 +1492,8 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 24.776,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -1712,8 +1712,8 @@
    "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4.159,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.tau_published_sensitivity": {
    "target": "ds_rom",
@@ -4601,8 +4601,8 @@
    "note": "rest listed in still_modelled",
    "value": 0.9998,
    "resolved": true,
-   "blob": "2ec494dee9ecf23c9a8a52d2ef60a6055154d6f5",
-   "last_commit": "778272203 2026-10-05"
+   "blob": "543a2138b974d3b4f138df04d09adda6b0fc1a83",
+   "last_commit": "46c34a6b1 2026-10-05"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",

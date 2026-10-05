@@ -1657,7 +1657,7 @@
  },
  "measurement": {
   "record": "results/rtl/dsrom_field_spine_20261004/field_pq.json",
-  "record_sha256": "70dd94325c6dd2fcdc82da2d13d16338ad39b0576a92e9edbc13485685dbaa35",
+  "record_sha256": "8888faba2fe29aa6d946ab3218600aa23eddd855067c68d4b533bf169adca37e",
   "config": "pq",
   "vehicle": "ot_v41_fieldtop_pqc_w17w10 (PQ=1, flat)",
   "placement": "S81 canonical + R93 re-placement (tools/dsrom_recovery_field.py variant)",
@@ -2375,5 +2375,5 @@
   "MTP_gain_pct": 16.3,
   "note": "tools/dsrom_1m_allmeasured.py on main levers (draft, field_spine, head, router, su_hcpost, su_routeract) with this record set to ADOPT; not applied"
  },
- "physical_cost_note": "pair/element cost unchanged from levers/field.json physical_cost (+1.979 mm2/die, 0 dies); spine std-cell area per screen in results/rtl/dsrom_field_spine_20261004/DESIGN_NOTE.md"
+ "physical_cost_note": "pair/element cost unchanged from levers/field.json physical_cost (+1.979 mm2/die, 0 dies); spine screen area in results/rtl/dsrom_field_spine_20261004/DESIGN_NOTE.md"
 }
