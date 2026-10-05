@@ -8774,7 +8774,93 @@ def hbm_stream_aq_slot_ready_cut(*, pcs=128, queue_depth=4):
                 period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
 
 
+def hbm_loader_crc_reserved_slot_price(price):
+    """Kant05:12:22 corrected provisional four-cone allocation; estimates, not full fit.
+
+    No original-loop removal credit. One ND1 facade per physical die. All four
+    parity folds remain on their original acceptance edges and clock domains.
+    """
+    core=[8.64,8.64,567.648,567.648]
+    regions={'load_host':[8.64,298.944,273.024,563.328],
+             'store_host':[298.944,298.944,563.328,563.328],
+             'load_mem':[8.64,8.64,273.024,273.024],
+             'store_mem':[298.944,8.64,563.328,273.024]}
+    costs={'retained_final_route':23294.1,'four_matrix_folds_no_removal_credit':3096.09216,
+           'wide_address_state63':18.3708,'wide_guard_operator_proxy':944.43408,
+           'fanout_1152_BUF24':503.8848,'twice_actual_route_repair_delta':2543.2}
+    capacity=(core[2]-core[0])*(core[3]-core[1])*.55
+    tracks=2*price['unshared_XOR2_equivalents_per_fold_ESTIMATE']+32+576+256+96
+    assert price['folds_per_die']==4 and price['dies']==1
+    return dict(schema='opentallas.loader.crc.reserved-slot.v1',
+        binding='Kant codex_notes 2026-10-05T05:12:22.604282+00:00; provisional local slot',
+        die_area_um=[0,0,576.288,576.288],core_area_um=core,regions_um=regions,
+        ND=1,folds_per_die=4,added_MACs_per_cycle=0,added_state_bits=0,
+        added_memory_ports=0,added_memory_bytes_per_cycle=0,added_boundary_bits=0,
+        existing_internal_request_bits=342,existing_service_request_bits=341,response_bits=273,
+        initiation_interval_edges=1,added_fold_edges=0,composed_latency_delta_cycles=0,
+        exact_feedback='same polynomial04c11db7/LSB-first256bits/initFFFFFFFF/no finalxor; unchanged acceptance and retirement',
+        per_cone_word_bits=256,per_cone_state_bits=32,
+        parity_depth_ESTIMATE=price['maximum_balanced_parity_tree_levels_ESTIMATE'],
+        state_fanout=price['maximum_state_bit_output_fanout'],word_fanout=price['maximum_word_bit_output_fanout'],
+        tracks_per_cone_bound=tracks,track_components=dict(xor_edges=2*price['unshared_XOR2_equivalents_per_fold_ESTIMATE']+32,input_buffers=576,state_hold=256,clock_reset_enable=96),
+        horizontal_signal_tracks_per_cone=9897,vertical_signal_tracks_per_cone=10143,
+        layer_pitch_um=dict(M2=.27,M3=.036,M4=.048,M5=.048,M6=.064,M7=.064,M8=.080,M9=.080),
+        signal_track_fraction=.5,locality_required=True,
+        cell_costs_um2_ESTIMATE=costs,total_cell_budget_um2_ESTIMATE=sum(costs.values()),
+        slot_cell_capacity_um2_ESTIMATE=capacity,maximum_slot_cell_utilization=.55,
+        positive_remaining_cell_budget_um2_ESTIMATE=capacity-sum(costs.values()),
+        component_build_admitted=sum(costs.values())<capacity and tracks<=min(9897,10143),
+        recipe_selected_for_component=True,default_enabled=False,adopted=False,
+        host_period_ns=1.0,mem_period_ns=.833,setup_uncertainty_ps=60,hold_uncertainty_ps=25,
+        mapped_wide_guard_area_um2=None,PDN_IR_qualified=False,full_parent_fit=False,
+        routed_locality_qualified=False,SS_FF_qualified=False,composed_gain_percent=None,
+        route_requires='source-pinned Kant quadrant placement and exact real port pins Tcl; one actual candidate route after component PASS')
+
+
 def dsrom_field_static_provider_price(image_directory):
     """Current canonical immutable provider plus issuer reservation; no physical credit."""
     from dsrom_field_static_provider import model
     return model(image_directory)
+
+
+def hbm_stream_aq_block_nonempty_choice(*, pcs=128):
+    """Unselected zero-edge source choice after THREE failed AQ routes.
+
+    Mirror OR(blk) with exactly the existing set/clear/hold priority, then
+    substitute only ep_start's !OR(blk). No fourth RTL/route admission.
+    Retain all bank-indexed blk consumers and the blk&open cancellation.
+    """
+    if pcs < 1:
+        raise ValueError('positive PC inventory required')
+    return dict(default_enabled=False, candidate_selected=False,
+                implementation_started=False, route_admitted=False,
+                selection_owner='CLAUDE at three-attempt boundary',
+                pcs=pcs, added_state_bits_per_pc=1,
+                total_added_state_bits=pcs,
+                FF_cell_area_floor_um2=pcs*DFF_UM2,
+                capture_priority_muxes_per_pc_max=3,
+                gross_logic_gate_equivalent_allowance_per_pc=16,
+                gross_logic_area_proxy_per_pc_um2=16*0.2,
+                gross_FF_plus_logic_area_proxy_um2=pcs*(DFF_UM2+16*0.2),
+                extra_clock_sinks_per_pc=1, extra_reset_sinks_per_pc=1,
+                predicate_consumers_per_pc=1,
+                set_clear_control_extra_sinks_per_pc_max=3,
+                existing_bank_indexed_blk_and_cancel_reduction_retained=True,
+                removed_gate_area_credit_um2=0,
+                MACs_per_cycle=0, output_bytes_per_cycle_max_per_pc=32,
+                added_memory_bytes_per_cycle=0, added_memory_ports=0,
+                added_boundary_bits_per_cycle=0, added_external_tracks=0,
+                added_command_cycles=0, added_grant_cycles=0,
+                added_ACK_cycles=0, composed_token_delta_cycles=0,
+                zero_edge_price_conditional_on_exact_same_edge_invariant=True,
+                invariant='blk_nonempty_q == OR(blk) after reset and every edge; ep_start and all actual grants unchanged',
+                next_state_priority='REFPB accepted clear wins; otherwise same original LEAD/set, ep_start/set, cancellation/clear, hold',
+                extra_edge_alternative=dict(selected=False,
+                    minimum_added_readiness_edges=1,
+                    composed_token_delta_cycles=None,
+                    eligibility='must revalidate current block/open/timers; stale ready cannot grant',
+                    exactness='unpriced latency-changing alternative; not zero-edge class-A admission'),
+                local_wire_buffer_clock_reset_area_um2=None,
+                loaded_delay_ps=None, full_slot_fit_qualified=False,
+                period_ns=.833, setup_uncertainty_ps=60,
+                hold_uncertainty_ps=25, SSFF_closed=False, adopted=False)

@@ -440,8 +440,12 @@
       "sha256": "89f86a1a126c7da0154b428ccfd07975068d0b018af59927b05900940758c59b"
     },
     "loader_width_successor": {
-      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/loader_width/price_before_rtl.json",
-      "sha256": "a2d570c43e766ae74bb5267b9287b55a1d61d0a6faa5cb4d68def78518ff0a1e"
+      "path": "results/rtl/tapeout_hbm_loader_20261004/high_address/price_before_rtl.json",
+      "sha256": "384d2963e23d70e873b44e8b260007a064039dc779a5ae71bcfc43360b60ec41"
+    },
+    "isolated_loader_slot": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/loader_slot/model.json",
+      "sha256": "0afc70285e6e60143c844f249f2fbccdd3ef9d1a2c3f475cef0fb8d24c498f67"
     }
   }
 }
