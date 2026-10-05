@@ -982,7 +982,7 @@
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -993,7 +993,7 @@
    "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05"
+   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1004,7 +1004,7 @@
    "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": ""
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1015,7 +1015,7 @@
    "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": ""
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1037,7 +1037,7 @@
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "as-built S81 microarchitecture, before the recovery levers"
+   "note": "as-built S81 microarchitecture, before the recovery levers; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1092,7 +1092,7 @@
    "pointer": "MTP.verify_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1114,7 +1114,7 @@
    "pointer": "MTP.II_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1279,7 +1279,7 @@
    "pointer": "MTP.tau",
    "unit": "tokens/step",
    "status": "partial",
-   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows"
+   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
