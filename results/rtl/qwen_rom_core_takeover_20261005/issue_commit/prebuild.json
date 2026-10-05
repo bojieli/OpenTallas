@@ -40,7 +40,12 @@
     "gross_at30pct_um2": 135.8602666666667,
     "actual_controller_core_um2": 19970.8,
     "retained_slot_um2": 20671.2,
-    "physical_fit_qualified": false
+    "physical_fit_qualified": false,
+    "fold_input_mux_allowance_um2": 22.3074,
+    "second_preserved_32bit_key_compare_allowance_um2": 19.200000000000003,
+    "complete_conservative_um2": 82.26548000000001,
+    "complete_gross_at30pct_um2": 274.2182666666667,
+    "comparator_basis": "Existing END helper remains exact; second same key_gt helper for held snapshot fold,96gate-equivalent proxy unmeasured"
   },
   "ports": {
     "MACs_added": 0,
