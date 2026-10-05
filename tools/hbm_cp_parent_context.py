@@ -19,6 +19,8 @@ def prepare():
     # Network estimates are replaced by propagated CTS in routed corner STA.
     sdc=(ROOT/'results/rtl/hbm_child_contract_20261005/cp_parent_clk_sm.sdc').read_text()
     sdc=sdc.replace('clk_sm','core_clk')
+    sdc=sdc.replace('set_clock_latency -early 90', 'set_clock_latency -min 90')
+    sdc=sdc.replace('set_clock_latency -late 100', 'set_clock_latency -max 100')
     sdc+='\n# Context exports held execution and new-request permit from the real join.\n'
     sdc+='set ot_association_outputs [get_ports {exec_owned new_request_permit association_fault}]\n'
     sdc+='set_output_delay -clock core_clk -max 166.666666667 $ot_association_outputs\n'
