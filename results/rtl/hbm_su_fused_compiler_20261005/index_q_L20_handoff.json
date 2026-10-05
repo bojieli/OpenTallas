@@ -1,0 +1,115 @@
+{
+  "scope": "Literal software descriptor export of saved L20.index_q case2/op13 only; no inference, numerical computation or new hardware measurement",
+  "descriptor_path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20.json",
+  "descriptor_sha256": "e6d0e1daad0eee58a04fbb0ca5737d4f4191a24faad8635ac2644fc59fb06151",
+  "saved_pickle_origin": "ot-epyc2:/srv/opentallas-scratch/codex/dewey-index-q-existing-L20-20261005/su/su_cases_local.pkl",
+  "saved_pickle_sha256": "75dd4d02a5403b04f96528ad9d75df43cb01c4c0983cea3ea4aae2bb1fc6fa80",
+  "original_case_index": 2,
+  "original_op_id": 13,
+  "original_op_indexes": [
+    0,
+    1
+  ],
+  "export": {
+    "heads": 32,
+    "head_width": 128,
+    "rotated_tail_words": 64,
+    "original_Q_VM_word_address": 64,
+    "rotated_tail_VM_word_address": 4224,
+    "table_CR_word_address": 0,
+    "weight_VM_word_address": 8256,
+    "scaled_weight_VM_word_address": 8288,
+    "weights": 32,
+    "weight_scale_u32": 1015021568,
+    "quantization": "not lowered in saved ops",
+    "per_head_quant_input": {
+      "untouched_head": {
+        "source": "original Q",
+        "base": 64,
+        "count": 64,
+        "head_stride": 128
+      },
+      "rotated_tail": {
+        "source": "saved RoPE output",
+        "base": 4224,
+        "count": 64,
+        "head_stride": 128
+      }
+    },
+    "weight_rounding": "saved rnd=1 BF16; do not quantize weights"
+  },
+  "producer_inputs_and_native_landings": {
+    "entering_IWR.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/entering_IWR.u32",
+      "bytes": 128,
+      "sha256": "f383f4d2848d6f7921d887824d63ed4a40971e5c60cea9027f8e30281668c867",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    },
+    "entering_Q.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/entering_Q.u32",
+      "bytes": 16384,
+      "sha256": "aa076db17946fc1b946d1dc0e60f96a7d785380d1f3aaaf5e4a7b982b4616b64",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    },
+    "entering_cos.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/entering_cos.u32",
+      "bytes": 128,
+      "sha256": "c56b1153ca2ce1a1903bd18f2355473b7e64fba3a60dd47f2f20371f5dcdb5b7",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    },
+    "entering_sin.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/entering_sin.u32",
+      "bytes": 128,
+      "sha256": "ca00677d7e33556b975b800c2293d0238bd318a8f924ea19dc68af7eba5a7c98",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    },
+    "index_w_scale.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/index_w_scale.u32",
+      "bytes": 4,
+      "sha256": "4efb856a85ce3cd60020d80d64475630ab731c6b6a31198ed4417c6dfd1829c2",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    },
+    "native_IWo.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/native_IWo.u32",
+      "bytes": 128,
+      "sha256": "e6564e055e0b2c85d74d0c98c745b30ae2dc1369228cc08e0ce089afb1b58695",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    },
+    "native_O_tails.u32": {
+      "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_inputs/native_O_tails.u32",
+      "bytes": 8192,
+      "sha256": "cca3b78ab5b6c3f4d65c6e9ed3ceb5c556db76e03a071f1d5604a5bb51527327",
+      "encoding": "raw uint32 little-endian bits, existing saved/native bytes"
+    }
+  },
+  "producer_contract": [
+    "32 heads of 128 words. Untouched 64-word prefix per head comes from original Q at64+128*h.",
+    "Rotated 64-word tail per head comes from native SU O at4224+128*h; O prefixes were not written.",
+    "Native IWo at8288 supplies 32 scaled, BF16-rounded weights; do not quantize IWR or IWo.",
+    "CR cosine/sine at table0 and original scale bits0x3c800000 are saved operands; no regeneration.",
+    "Descriptor checks are comparator-only; they must never become DUT producers."
+  ],
+  "archived_RTL": {
+    "path": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20_archived_rtl.json",
+    "sha256": "07014669cd597264ebd88077487e3b8e50bd85c996502d85bf5f67047fc79bfe",
+    "config": {
+      "N": 64,
+      "M": 16,
+      "BCAST": 4,
+      "RET": 5,
+      "MLAT": 4,
+      "ALAT": 3,
+      "build_s": 376.9,
+      "fp": "rtl",
+      "fp_note": "every FP unit is the bit-level RTL"
+    },
+    "cycles_end": 87,
+    "exact": true,
+    "vm_out_sha256": "8b43e5f4b698c0d6a28afa21f9516c892d93082fc0ed4f0bfc071710255e0792",
+    "scope": "Historical N64/M16 BCAST4/RET5 MLAT4/ALAT3 only. 87 cycles is not current BCAST7/RET8 performance credit."
+  },
+  "current_clock_or_BCAST_RET_performance_credit": false,
+  "arithmetic_executed": false,
+  "native_ISA_words_emitted": false,
+  "adopted": false
+}
