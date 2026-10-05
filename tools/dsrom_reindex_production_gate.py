@@ -9,7 +9,7 @@ P='rtl/dsrom_sys/reindex_parent/'
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--gold',type=Path,required=True);a=p.parse_args()
  if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip():raise SystemExit('pinned clean source required')
- gate.KG_SRC=['rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv']+[P+n for n in ['ot_dsrom_reindex_gather_parent.sv','ot_dsrom_reindex_kgctl_parent.sv','ot_dsrom_reindex_kgdata_parent.sv','ot_dsrom_reindex_list_macro.sv','ot_dsrom_reindex_request_cut.sv','tb_dsrom_reindex_gather_parent.sv']]+['physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v','rtl/test/hdc_v41x_idx_kgather.cpp']
+ gate.KG_SRC=['rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv']+[P+n for n in ['ot_dsrom_reindex_gather_parent.sv','ot_dsrom_reindex_kgctl_parent.sv','ot_dsrom_reindex_kgdata_parent.sv','ot_dsrom_reindex_drain_queue.sv','ot_dsrom_reindex_list_macro.sv','ot_dsrom_reindex_request_cut.sv','tb_dsrom_reindex_gather_parent.sv']]+['physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v','rtl/test/hdc_v41x_idx_kgather.cpp']
  a.out.mkdir(parents=True,exist_ok=False)
  pins=gate.KG_SRC+['tools/dsrom_reindex_production_gate.py','tools/dsrom_reindex_candidates.py','tools/dsrom_reindex_parent_model.py','tools/uarch_model.py','tools/run_abi3_physical.py','tools/orfs_allcorner_spef.py']
  (a.out/'source.json').write_text(json.dumps(dict(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins}),indent=2)+'\n')

@@ -21,7 +21,7 @@ module ot_dsrom_reindex_kgdata_parent #(
     input  wire [2*5-1:0]       dr_f0,
     input  wire [2*LBW-1:0]     dr_blk,
     output wire                 dr_ready,
-    output reg                  o_valid,
+    output wire                 o_valid,
     input  wire                 o_ready,
     output reg  [15:0]          o_kv,
     output reg  [16*544-1:0]    o_key,
@@ -39,30 +39,17 @@ module ot_dsrom_reindex_kgdata_parent #(
                 else
                     code_mem[(p * WB + rsp_tag[p*TAGW +: SW]) * 4 + rsp_beat[p*BEATW +: 2]] <= rsp_data[p*DW +: DW];
             end
-    // output: a 4-entry FIFO; the control decides a drain two cycles before it lands here, so it
-    // drains only while at most one entry is held (this one + two in flight fit)
-    reg [15:0]       f_kv  [0:3];
-    reg [16*544-1:0] f_key [0:3];
-    reg [2*LBW-1:0]  f_blk [0:3];
-    reg [1:0]        f_wp, f_rp;
-    reg [2:0]        f_n;
-    reg [2:0] reserved,reserved_n;reg ready_q;
-    wire state_ok=(reserved==~reserved_n)&&(reserved<=4);
-    wire pop=o_valid&&o_ready;
-    wire [3:0] next_reserved={1'b0,reserved}+(reserve?4'd1:4'd0)-(pop?4'd1:4'd0);
-    reg reservation_fault;
-    assign fault=reservation_fault;
-    assign dr_ready=ready_q&&state_ok&&!reservation_fault;
-    always @(posedge clk)begin
-        if(!rst_n)begin reserved<=0;reserved_n<=3'b111;ready_q<=1;reservation_fault<=0;end
-        else begin
-            if(!state_ok||next_reserved>4||(pop&&reserved==0))reservation_fault<=1;
-            else begin reserved<=next_reserved[2:0];reserved_n<=~next_reserved[2:0];ready_q<=(next_reserved<4);end
-        end
-    end
-    always @* begin
-        o_valid = (f_n != 0);
-        o_kv = f_kv[f_rp]; o_key = f_key[f_rp]; o_blk = f_blk[f_rp];
+    reg [16*544-1:0] f_key[0:3];
+    wire [1:0] f_wp,f_rp;
+    wire [70:0] header;
+    ot_dsrom_reindex_drain_queue u_queue(
+        .clk(clk),.rst_n(rst_n),.reserve(reserve),.in_valid(|dr_v),
+        .in_data({dr_v,dr_slot,dr_j,dr_fc,dr_f0,dr_blk}),
+        .write_address(f_wp),.read_address(f_rp),.ready(dr_ready),
+        .out_valid(o_valid),.out_ready(o_ready),.out_data(header),.fault(fault));
+    always @*begin
+        o_kv={{8{header[70]}},{8{header[69]}}};
+        o_key=f_key[f_rp];o_blk=header[27:0];
     end
     reg [15:0]     g_kv;
     reg [16*544-1:0] g_key;
@@ -84,14 +71,5 @@ module ot_dsrom_reindex_kgdata_parent #(
             end
         end
     end
-    always @(posedge clk) begin
-        if (!rst_n) begin f_wp <= 0; f_rp <= 0; f_n <= 0; end
-        else begin
-            if (dr_v != 2'b00) begin
-                f_kv[f_wp] <= g_kv; f_key[f_wp] <= g_key; f_blk[f_wp] <= dr_blk; f_wp <= f_wp + 1'b1;
-            end
-            if (o_valid && o_ready) f_rp <= f_rp + 1'b1;
-            f_n <= f_n + ((dr_v != 2'b00) ? 3'd1 : 3'd0) - ((o_valid && o_ready) ? 3'd1 : 3'd0);
-        end
-    end
+    always @(posedge clk) if(rst_n && dr_v!=0 && !fault) f_key[f_wp]<=g_key;
 endmodule
