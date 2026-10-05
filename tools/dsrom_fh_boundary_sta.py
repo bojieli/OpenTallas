@@ -25,7 +25,7 @@ def digest(path):
 def boundary_sdc(original):
     replacements = {
         "set_false_path -to [all_outputs]":
-        "set_false_path -to [remove_from_collection [all_outputs] [get_ports {ra_re[*] ra_addr[*]}]]",
+        "set_false_path -to [get_ports {r_tag[*] r_v leaf[*] o_we[*] o_addr[*] o_mask[*] o_data[*] fault}]",
         "set_false_path -hold -from [get_ports {ra_q[*]}]":
         "# SRAM input hold is checked in this child measurement.",
     }
