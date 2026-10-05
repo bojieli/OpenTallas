@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_su_cp_grouped_owner;
+module tb_su_cp_grouped_owner #(parameter integer BALANCED_OWNER_BOUNDARY_TEST=0);
  reg clk=0;always #5 clk=~clk;
  reg por_n=0;reg[1:0] launch_v=0;reg[31:0] launch_pc=0,cp_job=0;
  reg[3:0] cp_gen=0;reg[16:0] launch_token=0;reg[19:0] launch_pos=0;
@@ -44,9 +44,9 @@ module tb_su_cp_grouped_owner;
  cp_cpl_count=cp_cpl_count+1;
  end
  end
- ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(1)) dut(.*);
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST)) dut(.*);
  wire[1:0] off_native;wire off_done,off_fault;
- ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(1)) baseline(
+ ot_hbm_integrated_su_cp_bind #(.ENABLE(0),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.GROUPED_OWNER_BOUNDARY(!BALANCED_OWNER_BOUNDARY_TEST),.BALANCED_OWNER_BOUNDARY(BALANCED_OWNER_BOUNDARY_TEST)) baseline(
  .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(launch_pc),.cp_job(cp_job),.cp_gen(cp_gen),
  .launch_token(launch_token),.launch_pos(launch_pos),.lease_granted(lease_granted),
  .release_r(release_r),.exec_done(exec_done),.exec_fault(exec_fault),

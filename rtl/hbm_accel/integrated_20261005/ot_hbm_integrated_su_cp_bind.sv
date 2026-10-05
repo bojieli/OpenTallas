@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Existing CP LAUNCH -> actual shared SU lease. No second borrower/GO authority.
 // Original W6 header/control rows; opt-in boundary control uses protected phase rails.
-module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0)(
+module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTPUTS=0,REGISTERED_STATUS=0,REGISTERED_BOUNDARY=0,GROUPED_OWNER_BOUNDARY=0,BALANCED_OWNER_BOUNDARY=0)(
  input wire clk,por_n,input wire [1:0] launch_v,input wire [31:0] launch_pc,
  input wire [31:0] cp_job,input wire [3:0] cp_gen,
  input wire [16:0] launch_token,input wire [19:0] launch_pos,
@@ -69,6 +69,8 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  reg decoder_start_q;
  initial if(REGISTERED_BOUNDARY&&!REGISTERED_STATUS)
   $fatal(1,"registered boundary requires registered status");
+ initial if(BALANCED_OWNER_BOUNDARY&&(!REGISTERED_BOUNDARY||GROUPED_OWNER_BOUNDARY))
+  $fatal(1,"balanced owner boundary requires serial registered boundary, not rejected grouped candidate");
  initial if(GROUPED_OWNER_BOUNDARY&&!REGISTERED_BOUNDARY)
   $fatal(1,"grouped owner boundary requires registered boundary");
  initial if(REGISTERED_STATUS&&!REGISTERED_OUTPUTS)
@@ -113,6 +115,9 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  wire checked_phase=!is_idle&&!is_predecode&&!is_qualify;
  wire checked_fault=REGISTERED_OUTPUTS&&checked_phase&&(!checked_valid_q||!checked_frame_match);
  wire qualified_fault,recurrence_fault;
+ wire balanced_release_accept;
+ wire release_accept=BALANCED_OWNER_BOUNDARY?balanced_release_accept:(release_v&&release_r);
+ if(!BALANCED_OWNER_BOUNDARY)assign balanced_release_accept=0;
  if(REGISTERED_STATUS)begin:registered_status
  // Owner checks are independently registered before protected-state update.
  // Current exact-match veto is retained at every external handshake: a
@@ -138,7 +143,44 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  wire current_owner_ok=checked_valid_q&&checked_frame_match&&checked_shape;
  wire permit_ok=REGISTERED_BOUNDARY?(boundary_ok&&current_owner_ok):!fault;
  wire idle_ok=REGISTERED_BOUNDARY?(boundary_ok&&(!checked_valid_q||is_idle||current_owner_ok)):!fault;
- if(GROUPED_OWNER_BOUNDARY)begin:grouped_owner_boundary
+ if(BALANCED_OWNER_BOUNDARY)begin:balanced_owner_boundary
+  // Complete current PC/frame/padding, not a hash or a registered permission.
+  // 192 bits ->48 four-bit matches ->12 mismatch groups ->3 equal64 roots.
+  // Keep alternating NOR/NAND boundaries to prevent positive permit chaining.
+  wire [191:0] live_header={55'd0,launch_pos,launch_token,cp_gen,cp_job,32'd0,launch_pc};
+  wire [47:0] match4;
+  wire [11:0] mismatch16;
+  wire [2:0] equal64;
+  for(genvar k=0;k<48;k=k+1)begin:owner_leaves
+   ot_hbm_integrated_cp_match4 leaf(
+    .held(decoded_header[k*4+:4]),.live(live_header[k*4+:4]),.equal(match4[k]));
+  end
+  for(genvar k=0;k<12;k=k+1)begin:owner_middle
+   ot_hbm_integrated_cp_nand4 middle(.bits(match4[k*4+:4]),.result(mismatch16[k]));
+  end
+  for(genvar k=0;k<3;k=k+1)begin:owner_roots
+   ot_hbm_integrated_cp_nor4 root(.bits(mismatch16[k*4+:4]),.result(equal64[k]));
+  end
+  wire [4:0] local_ok;
+  assign local_ok[0]=boundary_ok&&checked_valid_q&&checked_status[0]&&!lease_granted;
+  assign local_ok[1]=boundary_ok&&checked_valid_q&&checked_status[1]&&!lease_granted;
+  assign local_ok[2]=boundary_ok&&checked_valid_q&&checked_status[2]&&lease_granted;
+  assign local_ok[3]=boundary_ok&&checked_valid_q&&checked_status[4]&&lease_granted&&exec_done&&retired_original_ops==4;
+  assign local_ok[4]=boundary_ok&&checked_valid_q&&checked_status[5]&&!lease_granted&&!exec_done;
+  ot_hbm_integrated_cp_and4 pending_gate(.bits({equal64,local_ok[0]}),.result(pending));
+  ot_hbm_integrated_cp_and4 lease_gate(.bits({equal64,local_ok[1]}),.result(lease_v));
+  ot_hbm_integrated_cp_and4 owned_gate(.bits({equal64,local_ok[2]}),.result(owned));
+  ot_hbm_integrated_cp_and4 release_gate(.bits({equal64,local_ok[3]}),.result(release_v));
+  ot_hbm_integrated_cp_and4 done_gate(.bits({equal64,local_ok[4]}),.result(done));
+  // Independent acceptance cone includes every release predicate and real r.
+  // It never uses the external output gate as next-phase logic input.
+  wire accept_local=local_ok[3]&&release_r;
+  ot_hbm_integrated_cp_and4 accept_gate(.bits({equal64,accept_local}),.result(balanced_release_accept));
+  wire live_owner_bad=!(&equal64);
+  assign fault=!boundary_ok||(!is_idle&&checked_valid_q&&live_owner_bad);
+  assign quiet=boundary_ok&&checked_status[3]&&!lease_granted&&
+               (is_idle||!checked_valid_q||!live_owner_bad);
+ end else if(GROUPED_OWNER_BOUNDARY)begin:grouped_owner_boundary
   // Complete PC64/frame128 comparison includes every zero padding bit.
   // Byte groups are independent combinational frontiers, not registered
   // owner permission. A changed live tuple denies on the original edge.
@@ -193,7 +235,7 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
    checked_valid_q&&(&owner_match_q)&&shape_q;
   // Drop the held release permit on its actual accepted edge, not on an
   // inferred executor completion. Keep the debt alive through cleanup.
-  if(release_v&&release_r)next_status[4]=0;
+  if(release_accept)next_status[4]=0;
   next_status[5]=is_cleanup&&!lease_granted&&!exec_done&&checked_valid_q&&(&owner_match_q)&&shape_q;
   if(qualified_sticky||exec_fault||shared_fault||ecc_fault_q||control_bad||rails_bad)next_status[5:0]=0;
  end
@@ -238,7 +280,29 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
  reg [8:0] next_phase;
  always @*begin
   next_phase=phase;
-  if(recurrence_fault||phase_bad||(!is_idle&&!is_done&&|launch_v))next_phase=9'b010000000;
+  if(BALANCED_OWNER_BOUNDARY)begin
+   // Parallel protected one-hot transitions, same priority and accepted edge.
+   // No release output -> priority case -> all phase D feedback chain.
+   next_phase=0;
+   next_phase[IDLE]=(is_idle&&!(|launch_v&&entry))||is_done;
+   next_phase[PREDECODE]=(is_idle&&|launch_v&&entry&&launch_v==2'b01)||
+                         (is_predecode&&!decode_v);
+   next_phase[QUALIFY]=is_predecode&&decode_v&&!decode_bad;
+   next_phase[PENDING]=is_qualify||(is_pending&&!lease_granted);
+   next_phase[ACTIVE]=(is_pending&&lease_granted)||
+                     (is_active&&lease_granted&&!exec_done);
+   next_phase[RELEASE]=(is_active&&lease_granted&&exec_done&&retired_original_ops==4)||
+                      (is_release&&lease_granted&&!release_accept);
+   next_phase[CLEANUP]=(is_release&&release_accept)||
+                      (is_cleanup&&(lease_granted||exec_done));
+   next_phase[DONE]=is_cleanup&&!lease_granted&&!exec_done;
+   next_phase[FAIL]=is_fail||(is_idle&&|launch_v&&entry&&launch_v!=2'b01)||
+                    (is_predecode&&decode_v&&decode_bad)||
+                    (is_active&&(!lease_granted||(exec_done&&retired_original_ops!=4)))||
+                    (is_release&&!lease_granted);
+   if(recurrence_fault||phase_bad||(!is_idle&&!is_done&&|launch_v))
+    next_phase=9'b010000000;
+  end else if(recurrence_fault||phase_bad||(!is_idle&&!is_done&&|launch_v))next_phase=9'b010000000;
   else case(1'b1)
    phase[IDLE]:if(|launch_v&&entry)next_phase=launch_v==2'b01 ? 9'b001000000 : 9'b010000000;
    phase[PREDECODE]:if(decode_v)next_phase=decode_bad ? 9'b010000000 : 9'b100000000;
@@ -316,4 +380,22 @@ module ot_hbm_integrated_cp_owner_byte(
  input wire [7:0] held,live,output wire mismatch
 );
  assign mismatch=|(held^live);
+endmodule
+
+// Small retained gates form a balanced NOR/NAND owner tree. No storage.
+(* keep_hierarchy = "yes" *)
+module ot_hbm_integrated_cp_match4(input wire [3:0] held,live,output wire equal);
+ assign equal=~|(held^live);
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_integrated_cp_nand4(input wire [3:0] bits,output wire result);
+ assign result=~&bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_integrated_cp_nor4(input wire [3:0] bits,output wire result);
+ assign result=~|bits;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_integrated_cp_and4(input wire [3:0] bits,output wire result);
+ assign result=&bits;
 endmodule
