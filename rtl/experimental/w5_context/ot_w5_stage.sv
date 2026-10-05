@@ -579,7 +579,10 @@ wire ao_clk, bad, quarantine;
 (* keep, dont_touch *) reg sticky=0, sticky_inverse=1;
 generate if (PROTECT!=0) begin:g_checked
     assign bad=|(snap_p^snap_r);
-    assign quarantine=bad|sticky|~sticky_inverse|external_quarantine|(|fault_p);
+    wire settled_alarm;
+    ot_w5_fault_low u_qualify(.clk(aon_clk),.rst_n(rst_n),
+        .alarm(bad|external_quarantine|(|fault_p)),.settled(settled_alarm));
+    assign quarantine=settled_alarm|sticky|~sticky_inverse;
     always @(posedge aon_clk or negedge rst_n)
         if(!rst_n) begin sticky<=0;sticky_inverse<=1;end
         else if(quarantine) begin sticky<=1;sticky_inverse<=0;end

@@ -52,7 +52,7 @@ module ot_w5_context #(parameter integer ENABLE=0)(
  // Actual first queue capture, not a disconnected output-delay constraint.
  // Current return ABI has k=3 bits from the physical element's segment field.
  wire rf;
- ot_v41_retn_w17w10 #(.RD(64),.RST(1),.BYPASS(1)) u_return(
+ ot_w5_retn #(.RD(64),.RST(1),.BYPASS(1)) u_return(
  .clk(clk),.rst_n(por_n),.a_v(pv[0]),.a_t({pp[2:0],pr[15:0],ps[4:0],3'b0,pn[4:0]}),.a_d(pd[31:0]),.a_e(pe[0]),
  .b_v(pv[1]),.b_t({pp[5:3],pr[31:16],ps[9:5],3'b0,pn[9:5]}),.b_d(pd[63:32]),.b_e(pe[1]),
  .o_v(o_v),.o_t(o_t),.o_d(o_d),.o_e(o_e),.fault(rf));
