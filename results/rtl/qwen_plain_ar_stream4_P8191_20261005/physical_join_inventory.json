@@ -1,0 +1,165 @@
+{
+  "scope": "Source-matched physical joins for exact successful P8191 plain-AR STREAM4 full36+HEAD; no new experiment or RTL change.",
+  "functional_authority": "d1768e28e / terminal.json",
+  "position": 8191,
+  "input_token": 24,
+  "cycles": 193955,
+  "executable_sha256": "c6ee0e862ac07b4b6dfd93fc43c5b460b76f84d0e8efe0753cf8c8ccad5e9280",
+  "mode": {
+    "real_mem": true,
+    "stream4": true,
+    "ar256": true,
+    "writeback_width": 4,
+    "near_hbm_compute": false,
+    "dspark": false,
+    "accept": false,
+    "kv_ideal": false,
+    "early_go": true,
+    "posted_wb": true
+  },
+  "selection_sha256": "210cafa9afab3db0103748cbeb1b87881720e8b2478287ec775edb28dcd94937",
+  "pin_basis": "Literal retained top.args.f and generated core, not source-template identity. Relative leaf paths are from retained src4/native backend trees in the runtime closure.",
+  "source_pins": {
+    "selected_top": {
+      "path": "rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv",
+      "sha256": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81"
+    },
+    "compiled_generated_core": {
+      "path": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/reuse/gen/ot_qwen_rom_core.sv",
+      "sha256": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e"
+    },
+    "sequencer": {
+      "path": "rtl/rom/ot_qwen_tp_seq_w12.sv",
+      "sha256": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055"
+    },
+    "stream4_service": {
+      "path": "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv",
+      "sha256": "843ef0ea8934e9fb3da94c54bb24c75c2e3c8b4b59263148f9e6c4d18aa16e2f"
+    },
+    "matvec": {
+      "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+      "sha256": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb"
+    },
+    "array": {
+      "path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+      "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+    },
+    "tagged_backend": {
+      "path": "rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv",
+      "sha256": "f97ab5593d26b2861a5816774e50194b82ff7d4a4d1bdf528a187a9a321ad64e"
+    },
+    "pc": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "sha256": "2dcbec64d86ae8a3288a1cf150080c31a70ca423b5f2f8f73138ca51663c0883"
+    },
+    "stack": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv",
+      "sha256": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c"
+    },
+    "host": {
+      "path": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/qwen_plain_ar_fulltoken_guarded_v2.cpp",
+      "sha256": "a10ea144c1dfb7534b8a173405450a389aaab15580e24451d40f9378895e69c7"
+    }
+  },
+  "constraints": {
+    "stream_ns": 0.833,
+    "serial_ns": 1.111,
+    "controller_ns": 1.024,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "physical_qualification": false,
+  "joins": [
+    {
+      "id": "pc_source_and_stack_context",
+      "owners": [
+        "Claude STREAM4",
+        "Ampere physical"
+      ],
+      "selected": "Four stacks, NCH16 per stack, 128 PCs; PC sha256 2dcbec64; stack matches retained route.",
+      "evidence": "results/rtl/qwen_rom_kv_fullbw_20261004/physical/pc_aq3_p16_1024.json",
+      "physical": "NCH1 two-PC slice, PC sha256 a2cfb09b7868936ca886c9e92b68f08ecffdd1e8236ee1313f8ffce9d2b33dcf; WC setup +13.9758 ps, BC hold +2.76536 ps at 1.024 ns, SS60/FF25.",
+      "source_delta": {
+        "route_wr_bank_rdy": "wq_ne && |(hb_oh & open & ~stale & (AQ ? rcd_z : rcdw_z) & ~blk)",
+        "runtime_wr_bank_rdy": "wq_ne && |(hb_oh & open & ~stale & ((AQ && hr) ? rcd_z : rcdw_z) & ~blk & (AQ ? open_nx : 32'hffffffff))"
+      },
+      "required_join": "Owner chooses literal PC revision and qualifies loaded full-stack command/return fanout and physical memory/PHY boundary. Existing route cannot certify successful runtime PC. No silent controller swap or cycle transfer."
+    },
+    {
+      "id": "core_receiver_candidate",
+      "owners": [
+        "Beauvoir",
+        "Hubble",
+        "Goodall"
+      ],
+      "selected": "Generated core 59492b0f: ACC_LAT5 TREE_LAT3 MUL_LAT5 FAST_ISSUE0 KV_PREP0, no DEC_LA parameters. PART2 ROM matrix spine; original AR256 sequencer.",
+      "physical": "Existing Hubble map /srv/opentallas-scratch/jobs/hubble-qcore-real-receivers-map-r2, source handoff 8170f5132; core 3a85cd3ccc69c7026be4e9e278edf67e8fbfef228e0f558e71f1e9c6c32b890d, matvec 458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e; DEC_LA/BOUND/CHASE_Q/COUNT_LA/AM_COMMIT all1.",
+      "required_join": "Map candidate is not source-matched baseline closure. Preserve existing map and Beauvoir fault fix 276fec98c; join actual macro/service arrivals, ICG receiver clock/load/reset and slot into selected ROM parent. Candidate latency/exact enrollment must precede baseline credit.",
+      "missing_numeric_contracts": [
+        "program/config/scale arrivals",
+        "tile-result arrival",
+        "fab_fault/kv_ok/w_ok/me_mem_ok arrivals",
+        "propagated core-to-ME clock and receiver load"
+      ]
+    },
+    {
+      "id": "clock_domains",
+      "owners": [
+        "Claude",
+        "Goodall",
+        "Beauvoir",
+        "Ampere"
+      ],
+      "selected": "Core, sequencer, SU and collective share logical clk; ME uses ICG. Backend schedules controller ticks at CORE_FS833333/CTL_FS1024000 with hclk=~clk & tick_q. Tagged client request ports idle; STREAM4 frontdoor serves tile attention.",
+      "evidence": "results/rtl/qwen_rom_fulldie_20261003/domains.sdc",
+      "physical": "0.833 ns stream, 1.111 ns serial, 1.024 ns HBM; planned stream/serial 3:4 crossings and async groups.",
+      "required_join": "Actual source-level serial domain and crossing enrollment, or explicit owner clock-plan decision with model pricing, is missing. Do not convert 193955 logical cycles into a closed token rate or false-path synchronous nets."
+    },
+    {
+      "id": "activation_vm",
+      "owners": [
+        "Claude",
+        "Maxwell",
+        "Arendt"
+      ],
+      "selected": "Synchronous behavioral VM177808x32; 2048 VX read addresses, SU reads and 48 ME writes with NBA priority. me_mem_ok_svc reflects scale_ready, not VM capacity.",
+      "evidence": "results/rtl/qwen_hbm_activation_vm_realization_20261005/rom_provider_comparison.json",
+      "physical": "Historical vector_memory slot 0.725 mm2 at serial0.9 is a reservation, not a mapped source-matched finite provider.",
+      "required_join": "ROM-specific finite macro/bank port, arbitration, collision/ACK and latency binding priced against actual PART2 ports. Arendt HBM finite-provider work and af266 H-spine are separate; no cross-credit."
+    },
+    {
+      "id": "landing_merge",
+      "owners": [
+        "Claude design",
+        "Kepler owner assignment"
+      ],
+      "selected": "STREAM4 service performs arbitration inline; no ot_qwen_kv_land_merge instance. FILL_LAT8.",
+      "physical": "Retained /srv/opentallas-scratch/claude/fullbw-hbm/routes/s4_200: NSRC12 landing screen at833 ps SS60/FF25, setup -18.4986 ps, hold -5.28846 ps; I/O false-pathed. Two-stage standalone leaf is not enrolled in selected service.",
+      "required_join": "Assign existing landing closure handoff to an active owner; choose exact service-to-leaf wiring with pipeline latency and real tile SRAM loading/slot. Preserve failed leaf route; no rescue loop or unpriced substitution."
+    },
+    {
+      "id": "matrix_slab_macro_binding",
+      "owners": [
+        "Claude",
+        "Ampere",
+        "Goodall"
+      ],
+      "selected": "MUL_LAT5 original matvec2918fc95; 1536 tiles, CODE_BANKS5, SCALE_BANKS13, 48 result ports.",
+      "physical": "Slab candidate ot_qwen_slab_port_group defaults MUL_LAT6/BW_FIFO1; structural S1-S4 handoff 9f661fc45. Historical capture model MUL7 and 96 port groups differ from selected wiring.",
+      "evidence": "results/rtl/qwen_slab_share_20261005/capture_recipe_r1/model_parent_current_r2.json",
+      "required_join": "Provide literal result-port-to-group map, source-matched macro capture timing/load and clock arrivals; price MUL5 to MUL6/7 latency and current slot geometry before enrollment. Existing failed capture routes preserved. Corridor link-span closure is not arithmetic tile closure."
+    },
+    {
+      "id": "full_die_slots_and_global_route",
+      "owners": [
+        "Claude full-die",
+        "Ampere",
+        "Rawls IR/EM"
+      ],
+      "evidence": "results/rtl/qwen_rom_fulldie_20261003/b3r3/grt/b3r16B40_k16_banded_i50/summary.json",
+      "physical": "Zero-overflow abstract global route, 3225 instances /144520 nets, 811.763 mm2. Near-rowengine/hub strip reservations remain in old composition; vector_memory and serial slots are abstract. Rawls IR donor is b3r13c, distinct from current b3r16 geometry.",
+      "required_join": "Map actual NEAR0 STREAM4 controller/landing/tile-fill nets and slots into retained die geometry, with macro/provider source pins and actual clock/load contracts. Release obsolete near-compute reservations only through owner source/model choice. Reuse zero-overflow route as abstract feasibility; it is not selected-top SS/FF closure or current IR/EM qualification."
+    }
+  ],
+  "disposition": "No causal arithmetic/caller defect established by this comparison. Preserve successful binary and existing physical jobs/failures. Owners must resolve concrete source/domain/provider joins before physical credit; no token replay, route launch or candidate adoption."
+}

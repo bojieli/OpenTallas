@@ -1,0 +1,33 @@
+{
+  "controller_choice": "literal 2dcbec; periodic external HCLK1024ps successor; no silent main PC file swap",
+  "earlier_records": "retained intermediate sizing provenance; r1/r2/r3 generic tagged port costs are unselected by actual P0 parent; r4 corrected active scope; r5 is sole current choice",
+  "new_heavy_job": false,
+  "physical_source": "actual4stack128PC wrapper, protected ingress contract required; no syntheticPHY or installedfrontendCDC claim",
+  "runtime_backend_changed": false,
+  "selected_model": "selected_P0_clock_boundary_r5.json",
+  "selected_top_source": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81",
+  "source_pins": [
+    {
+      "path": "tools/qwen_rom_stream4_clock_plan.py",
+      "sha256": "32d961ee36a8cac2d317b75dd1d9bb52cd55cbddb4d20abe9e36d3325519b231"
+    },
+    {
+      "path": "tools/test_qwen_rom_stream4_clock_plan.py",
+      "sha256": "c01f1fe982fc45ecd189fbc8347fb57c1bd954e7a3c7668f333e75fdaddee993"
+    },
+    {
+      "path": "results/rtl/qwen_rom_stream4_clock_plan_20261005/ot_qwen_stream4_periodic_controller_context.sv",
+      "sha256": "5f9c91d8359123b5fd639c0b3b71a683705f3d6271f06b6e486579217a909944"
+    },
+    {
+      "path": "results/rtl/qwen_rom_stream4_clock_plan_20261005/boundary_interface.json",
+      "sha256": "74e733a8eda212ce8325d901456e970ff5cea5a560bbc82aa28025ad3b085530"
+    },
+    {
+      "path": "results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json",
+      "sha256": "efcc0bb0fc2a5f0f902950c42fbe5233ba5e2ca7925959ec261aecccdbfa11fe"
+    }
+  ],
+  "tests": "8 focused metadata/source/refusal checks PASS; selected model cold equal",
+  "whole_P8191_rerun": false
+}

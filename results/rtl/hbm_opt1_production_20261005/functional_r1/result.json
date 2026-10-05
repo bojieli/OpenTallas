@@ -1,0 +1,130 @@
+{
+  "scope": "12 production component sequences and preserved RESULT_SELECT negative; no full token/physical/performance adoption",
+  "numerical_gate": "PASS_12_SEQUENCES_ZERO_MISMATCHES",
+  "negative_gate": "PASS_EXPECTED_G1ASB_FAILURE",
+  "source_commit": "fa7e4539578130cfe83949dd9c411c86d6d2e947",
+  "supervisor_pid": 98019,
+  "supervisor_exit": 1,
+  "supervisor_error_class": "COMPOSITION_SOURCE_HYDRATION_FAIL",
+  "supervisor_error": "Later composition callback missing results/rtl/dshbm_baseline_measured_20261004/program.json; does not invalidate preceding sequence gates",
+  "table": [
+    {
+      "record": "ar_l20_f1.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 4352,
+      "serial": false,
+      "active_columns": 1,
+      "ops": 31
+    },
+    {
+      "record": "ar_l20_f1s.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 6360,
+      "serial": true,
+      "active_columns": 1,
+      "ops": 31
+    },
+    {
+      "record": "other_f1.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 4932,
+      "serial": false,
+      "active_columns": 1,
+      "ops": 4
+    },
+    {
+      "record": "p6_l20_f6.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 8240,
+      "serial": false,
+      "active_columns": 6,
+      "ops": 31
+    },
+    {
+      "record": "p6_l20_f6s.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 10776,
+      "serial": true,
+      "active_columns": 6,
+      "ops": 31
+    },
+    {
+      "record": "p6_other_f6.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 6724,
+      "serial": false,
+      "active_columns": 6,
+      "ops": 4
+    },
+    {
+      "record": "p6_stress_f6.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 5778,
+      "serial": false,
+      "active_columns": 6,
+      "ops": 13
+    },
+    {
+      "record": "p6_wg_f6.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 1910,
+      "serial": false,
+      "active_columns": 6,
+      "ops": 4
+    },
+    {
+      "record": "p6_wg_f6s.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 2390,
+      "serial": true,
+      "active_columns": 6,
+      "ops": 4
+    },
+    {
+      "record": "stress_f1.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 2746,
+      "serial": false,
+      "active_columns": 1,
+      "ops": 13
+    },
+    {
+      "record": "wg_f1.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 1006,
+      "serial": false,
+      "active_columns": 1,
+      "ops": 4
+    },
+    {
+      "record": "wg_f1s.json",
+      "status": "pass",
+      "mismatching_ops": 0,
+      "total_cycles": 1238,
+      "serial": true,
+      "active_columns": 1,
+      "ops": 4
+    }
+  ],
+  "negative": {
+    "mismatching_ops": 13,
+    "watchdog": "TIMEOUT stall at cyc 22843: op 13 ndone 12 cur 12 nres 30 start 0 start_ready 1 busy 1 | issue on 1 issuing 0 init 0 start_v 0 hv 0 since 255 need 0 launch 0 w_valid 0"
+  },
+  "bench_clock_ns": 1,
+  "SS_FF_qualified": false,
+  "composed_rate": null,
+  "composition_owner": "Maxwell",
+  "joint_run_owner": "Rawls",
+  "replayed_P1": false
+}

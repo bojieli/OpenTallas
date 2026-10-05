@@ -1,0 +1,49 @@
+{
+  "source_change": "External PP ROM word issue-order mapping only; no quant/matrix/arithmetic changes",
+  "provider_commit": "80ef8fda4703ea427ba5612b27c7c8071a9dde44",
+  "library_change": "R4 used stale affected57e3 pair archives. R5 explicitly replaces them with completed repaired be155 strictO2 pair libraries. Full successor numerical result cannot be credited to unchanged compiled RTL.",
+  "model_generation": "NONE in R5; reused existing archives and all driver/field/control/cut/VM/return objects",
+  "pairs": [
+    {
+      "part": "pq",
+      "R4_archive": "/srv/opentallas-scratch2/jobs/arch-s81-I14-fragment-caller-r2/closure/home/ubuntu/cicero-s81-l20-attention-remote-r1/staged/tmp/arch-s81-pair-header-check/pq/libVpq.a",
+      "R4_sha256": "f53d97feeb5c824222276ec0a16cae2d83b145f3f60849c21ebb6e37a7195520",
+      "R5_archive": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r5/pairs/pq/libVpq.a",
+      "R5_sha256": "c0d7d335b2d040a07d369d7faadbde1d2a71c3a4488158349ffb55b0bd72c8d0",
+      "public_header_sha256": "40b1e463b7c1d9627dd54ded5896229db8aa77b4dbf0d91e4c35b55f48b1664e",
+      "fix_commit": "be155754b5edbf51b780c0db1afcee0f949d6580"
+    },
+    {
+      "part": "pb",
+      "R4_archive": "/srv/opentallas-scratch2/jobs/arch-s81-I14-fragment-caller-r2/closure/home/ubuntu/cicero-s81-l20-attention-remote-r1/staged/tmp/arch-s81-pair-header-check/pb/libVpb.a",
+      "R4_sha256": "bb809388d54e9f2dc65340da5ce11ac9d50761d696a0489fc2a31e7db9778dd1",
+      "R5_archive": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r5/pairs/pb/libVpb.a",
+      "R5_sha256": "9112994c046dedb8a1bf1877badd0662d39531c5ad297af1a6137e97d3b981f8",
+      "public_header_sha256": "784db2b9e98ec74e521012f43dd23c1649949a0fdaf4895c4ebc654a9834225d",
+      "fix_commit": "be155754b5edbf51b780c0db1afcee0f949d6580"
+    }
+  ],
+  "python": [
+    {
+      "name": "dsrom_s81_qe_native_word_bridge.py",
+      "R4_path": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r2/model/source/tools/dsrom_s81_qe_native_word_bridge.py",
+      "R4_sha256": "c001fe6d3d2965f0ce0cb6820e5274d6d845e7a781f1ea925addb2192e17a6ab",
+      "R5_path": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r5/source/tools/dsrom_s81_qe_native_word_bridge.py",
+      "R5_sha256": "0795fed806cfc15230650e54ef33eccf2995453670e67cdb1a3af2e33c28490d"
+    },
+    {
+      "name": "dsrom_s81_l20_source_words.py",
+      "R4_path": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r2/model/source/tools/dsrom_s81_l20_source_words.py",
+      "R4_sha256": "04811734330b8d87129814da3cd788363686330e2aa165570b28fb7f907ee7f5",
+      "R5_path": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r5/source/tools/dsrom_s81_l20_source_words.py",
+      "R5_sha256": "62eda422a2210c77dfb81a23af221b79c2d2303ae3d7bf56cdcfe038c8a7f516"
+    },
+    {
+      "name": "dsrom_s81_l20_qfield_run.py",
+      "R4_path": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r2/model/launch/dsrom_s81_l20_qfield_run.py",
+      "R4_sha256": "92bd6e4cab0d80c5d348199bc7aba926d6c74ef0be4ab37da7684b5163f0cb86",
+      "R5_path": "/srv/opentallas/jobs-overflow/cicero-s81-I14-native-r5/source/tools/dsrom_s81_l20_qfield_run.py",
+      "R5_sha256": "75c589936bfe4b5048df68aedc96c8db0d709b9218f4542af70fca367989aaf3"
+    }
+  ]
+}

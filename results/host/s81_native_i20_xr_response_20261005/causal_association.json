@@ -1,0 +1,27 @@
+{
+  "scope": "Existing failed I20 output block association diagnostic, comparator-only, no DUT replay or arithmetic change",
+  "failed_run": "ot-agidock128:/home/ubuntu/cicero-s81-L20-native-I20-kquant-r1",
+  "input_sha256": "69433bf75164a23d6548b981cd5d73b274b0a70231b43f10f048115160eca39c",
+  "actual_output_sha256": "2bbbbb56e09aa8ec454d65b5db4d12d1a66bef1436d63349d97c6b2e83723f3d",
+  "identity_mismatches": 475,
+  "actual_blocks_0_14_vs_reference_blocks_1_15_mismatches": 0,
+  "compared_shifted_words": 480,
+  "actual_last_block_vs_reference_last_block_mismatches": 0,
+  "cause": "xr_q updated before rising eval while RTL x_v delays xr_re; next input block substitutes for previous response",
+  "fix": "Capture OLD xr_re/address/read data at prepare; rising evaluates with previous xr_q; install requested response after rising eval",
+  "rtl_changed": false,
+  "rounding_changed": false,
+  "native_archives_rebuilt": false,
+  "numerical_repair_runtime_pass": null,
+  "original_639236": {
+    "linked_wrapper": "/home/ubuntu/arch-s81-window-la-caller-baaf611bb-r1/obj/s81_minimum_qe_quantizer.o",
+    "linked_wrapper_sha256": "64281b2e2a1a788357bcf86e7a1552b47f96e49bcb14f53957d7b69ced122554",
+    "retained_source": "/home/ubuntu/arch-s81-window-la-caller-baaf611bb-r1/src/tools/runtime/dsrom/s81_minimum_qe_quantizer.cpp",
+    "retained_source_sha256": "760d57ed9c7fbc44216be3a6120e737fed8214fa670cd84a5d81e86cc734f88a",
+    "same_early_read_response_assignment": true,
+    "reason_for_retirement": "Concrete native current-KV input block timing defect; not age/CPU/progress",
+    "signal_sent_by_arch": false,
+    "runtime_owner": "Cicero",
+    "old_upstream_sim_only_inputs_not_shown_wrong_by_i14_80ef": true
+  }
+}

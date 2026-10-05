@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_sm_pq #(
     parameter integer ENABLE = 0, PQ_ENABLE = 0,
+    parameter integer PACK_W2 = 0,       // Erdos finite FP4 pair address hook
     parameter integer XMAP = 0,         // Pauli static layout; original leaf remains selected by default
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
@@ -52,6 +53,8 @@ module ot_hbm_accel_sm_pq #(
     input  wire [7:0]              op_g,
     input  wire                    op_gs,
     input  wire [1:0]              op_fmt,
+    input  wire                    op_pack_w2,    // same posted op tuple, not source ownership
+    input  wire [6:0]              op_pack_delta_x,
     input  wire [$clog2(XD)-1:0]   op_xb,         // PQ: x-store base of the op
     output wire                    busy,
     input  wire                    d_valid,
@@ -102,11 +105,21 @@ module ot_hbm_accel_sm_pq #(
     // ---------------- boundary: pins <-> hub ----------------
     // PQ: start / op as a credit channel (in-order op queue at the hub side)
     localparam integer OPX = OPW + XW;
+    localparam integer OPQW = OPX + ((PACK_W2 != 0) ? 8 : 0);
     wire          h_start, h_pop;
-    wire [OPX-1:0] h_opx;
-    ot_hbm_accel_smv_chan #(.W(OPX), .P(PIO), .DEPTH(CHD)) u_sch (.clk(clk), .rst_n(rst_n),
-        .s_valid(start), .s_ready(start_ready), .s_data({op_rows, op_c, op_g, op_gs, op_fmt, op_xb}),
-        .m_valid(h_start), .m_ready(h_pop), .m_data(h_opx));
+    wire [OPQW-1:0] op_payload, h_payload;
+    wire [OPX-1:0] h_opx = h_payload[OPX-1:0];
+    wire [7:0] h_pack;
+    if (PACK_W2 != 0) begin : g_pack_payload
+        assign op_payload = {op_pack_w2, op_pack_delta_x, op_rows, op_c, op_g, op_gs, op_fmt, op_xb};
+        assign h_pack = h_payload[OPX +: 8];
+    end else begin : g_plain_payload
+        assign op_payload = {op_rows, op_c, op_g, op_gs, op_fmt, op_xb};
+        assign h_pack = 8'b0;
+    end
+    ot_hbm_accel_smv_chan #(.W(OPQW), .P(PIO), .DEPTH(CHD)) u_sch (.clk(clk), .rst_n(rst_n),
+        .s_valid(start), .s_ready(start_ready), .s_data(op_payload),
+        .m_valid(h_start), .m_ready(h_pop), .m_data(h_payload));
     wire [OPW-1:0] h_op = h_opx[XW +: OPW];
     wire [XW-1:0]  h_xb = h_opx[XW-1:0];
     wire [RW:0] h_rows = h_op[OPW-1 -: RW+1];
@@ -160,6 +173,32 @@ module ot_hbm_accel_sm_pq #(
     ot_hbm_accel_smv_chain #(.W(3), .D(PIO), .RST(1)) u_pbz (.clk(clk), .rst_n(rst_n),
         .d({h_busy, h_arrive, h_released}), .q({busy, arrive, released}));
 
+    // Capture pair metadata at actual issue launch; later queue heads cannot change it.
+    // Active proves the finite instruction shape only, never input-span ownership.
+    wire [XW-1:0] selected_xa;
+    wire pack_bad_head, pack_xa_fault;
+    if (PACK_W2 != 0) begin : g_pack_address
+        if (XD != 128 || IL != 8) begin : g_bad_shape
+            initial $fatal(1, "PACK_W2 requires XD128/IL8");
+        end
+        wire head_shape = h_rows == 4 && h_c == 8 && h_g == 2 && h_fmt == 2'd2 && h_gs;
+        reg pair_active;
+        reg [6:0] pair_delta;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) pair_active <= 1'b0;
+            else if (h_pop) pair_active <= h_pack[7] && head_shape;
+        always @(posedge clk) if (h_pop) pair_delta <= h_pack[6:0];
+        assign pack_bad_head = h_pop && h_pack[7] && !head_shape;
+        ot_hbm_accel_w2_address_hook #(.ENABLE(PACK_W2), .RW(RW)) u_address (
+            .pair_active(pair_active), .pair_shape_bound(pair_active), .pair_delta(pair_delta),
+            .issue_v(adv), .issue_row_ok(row_ok), .virtual_row(row_now),
+            .absolute_xa(xa), .selected_xa(selected_xa), .fault(pack_xa_fault));
+    end else begin : g_plain_address
+        assign selected_xa = xa;
+        assign pack_bad_head = 1'b0;
+        assign pack_xa_fault = 1'b0;
+    end
+
     // ---------------- stage s1: the issue's outputs and the line, registered ----------------
     reg              s1_v, s1_first, s1_last;
     reg [TAGW-1:0]   s1_tag;
@@ -172,7 +211,7 @@ module ot_hbm_accel_sm_pq #(
     always @(posedge clk) begin
         s1_tag <= {row_now[RW-1:0], i_glast, si};
         s1_w <= w_data;
-        s1_xa <= xa; // production: absolute base already folded into registered issue cursors
+        s1_xa <= selected_xa; // absolute issue address; optional pair delta before existing s1 capture
     end
 
     // ---------------- x-write beat, registered at the pins ----------------
@@ -302,7 +341,7 @@ module ot_hbm_accel_sm_pq #(
     reg [NC*32-1:0]  rdata_q;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rv_q <= 1'b0; fault_q <= 1'b0; end
-        else begin rv_q <= cv[0]; fault_q <= fault_q | (|cf); end
+        else begin rv_q <= cv[0]; fault_q <= fault_q | (|cf) | pack_bad_head | pack_xa_fault; end
     end
     always @(posedge clk) begin rrow_q <= crow[RW-1:0]; rdata_q <= cy; end
     ot_hbm_accel_smv_chain #(.W(2), .D(PIO), .RST(1)) u_prv_o (.clk(clk), .rst_n(rst_n), .d({rv_q, fault_q}),

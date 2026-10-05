@@ -1,0 +1,128 @@
+Qwen HBM selected activation VM realization — additive, DEFAULT OFF, NOT ADOPTED
+
+Maxwell/Ampere/Claude: consume tools/qwen_hbm_activation_vm_realization.py::
+build_proposal(root, position=8191, token=24), or proposal.json / summary.json.
+No authority-model edits. No RTL, inference, activation/oracle read, simulation,
+compile, or P&R. Existing af266 spine/top761799/caller1f35 unchanged.
+
+SOURCE AND COVERAGE
+Pinned actual cached L5/L20/head program.hex, segments.hex, program_sw.json for
+all four ranks, EPYC1 /home/ubuntu/w12/st_tp4_sw64/sw/{stage}-d{rank}; source_pins
+bind exact bytes. Generated selected core/SU and actual selected build params
+are cached. implementation_pins binds ISA, spine, SU/lane, TP sequencer, RF,
+DS bank4/masked-visible-r2, macro LEF/SS and unified-model estimate source.
+NW18/AW24/G6144/SW64/SMIN6/SMAX11/XVM1/D4, ENABLE_AR256=0, pos8191/token24.
+Descriptor program bases select actual finite segments; each ends at UNIT_END.
+Descriptor kind0 ends dispatch. Unexecuted next-layer tail PCs28/29 excluded.
+220 executed non-END instructions, 12 programs. No FIELD phase substitution.
+
+FINITE MAPPING
+Retain all 177808 FP32 words: 711232 bytes/die. Scalar a maps to word=a>>4,
+lane=a&15, bank=(a>>4)&3, row=(a>>6)&511, group=a>>15,
+128-bit column=(a>>2)&3. Every scalar inverse checked, no aliases or zero OOR.
+The full existing DS implementation is 16 groups /256 512x128 1R1W macros,
+2MiB physical, 1.325473874mm2 predictive aligned-v2 macro-body floor/die.
+Six groups/96 macros suffice for capacity alone (786432B, .497052703mm2 body),
+but that geometry is NOT adopted: masked-r2 explicitly requires full16 groups.
+One read returns FOUR CONSECUTIVE 512b words, never four arbitrary bank rows.
+The compiler greedily covers exact requested words by legal four-word windows.
+Writes are packed per 16-scalar masked word, retaining raw FP32 and lane masks.
+Same-word read/write collision remains guarded; host reads precede writes.
+Host last-writer order: ME, MX, SU, reducer, collective. No input or ACK faked.
+
+ACTUAL DEMAND AND LOWER BOUNDS
+All VX ports are enabled here, but x_addr=xc+(port mod 2^split)*xcs.
+Layer split9 has512 distinct words/4x broadcast; split7 has128/16x.
+Head split11/xcs2 has2048 distinct FP32 words/edge (8192 useful bytes).
+QKV and W1 still require64 windows, head64, W2 48, projection16,
+attention score2, weighted-sum8 in this existing bank/row binding. Window reads
+include unrequested neighbors; e.g. head fetch16384B/edge without reuse.
+These are emitted affine requests, including reads bypassed by arithmetic.
+No credit for eliding such requests or assuming an address cache.
+
+Peak W1 writes48 different 512b words to ONE bank in one native result edge:
+(obase+t*ports*ots+j*ojs+g*ots), ots8; bank=(obase+j)%4.
+It requires48 write beats with the existing port. Read replication cannot
+supply48 write ports or free coherence; actual masked native retirement needed.
+Other ME write demand / real MX8-scalar rowmax/reducer/collective addresses
+are in the compiler output. Each layer has four128-vector collective descriptors
+covering scalar[0,2047] /[2048,4095], 16 scalars per read/write event.
+SU emits all VM *_src==0 reads even on bypass modes: maximum three legal windows
+per SU edge. SU64 contiguous writes require up to two rows in a bank where
+unaligned. Potential in-place word overlaps are explicit, not same-edge claims.
+No active-op variable-latency SU ready input exists. One provider cannot meet
+this unmodified source rate. ME_STALL/me_mem_ok/me_clk_en DO exist; activation
+response pipeline/tag/XVM state must use precisely the same admitted ME edges.
+Currently me_mem_ok is hb_me_ok for weights, not a VM service admission binding.
+
+Per rank isolated no-reuse ME read issue workload (all ranks identical):
+             native loop edges   DS read beats   extra issues   extra issue us
+L5/L20       728                 29360           28632          23.86
+head         1584                101376          99792          83.16
+This is useful-loop affine workload, not an RTL trace including fill/drain
+requests. B-1 extra issue edges at1.2GHz before result latency, writes, read/write
+collisions and other clients; no composed stage/token delta or throughput claim.
+A general snapshot frame needs at least max(B,W) issue edges; separate old-read
+then masked-write service B+W plus real capture/visibility tails. SU has no such
+freeze, so this is an unimplemented model recipe, not a runnable clock policy.
+Nonpipe accepts N, result N+1, consumer earliest N+2. Masked-r2 result N+4,
+consumer earliest N+5; write commits N+2 and ACK N+3. Existing XVM1 cannot be
+silently changed to accommodate masked-r2 latency. SS/FF60/25 unchanged.
+
+Reference full-rate read replication under this exact DS mapping needs64 read
+images (84.830327931mm2 macro bodies/die, 128MiB physical/die) and 64-way coherent
+writes; STILL no solution to multi-row write demand. Not a global minimum or a
+recommended topology. Existing RF alternative retains65536 words/instance,
+needs3 for capacity alone (1.49436555264mm2 bodies), serves two128-word vectors
+at best II3, and has no scalar mask. Its actual per-command vector demand and
+RMW/coherence limitations are priced separately; it is not selected hardware.
+
+BOUNDED SOURCE REUSE PROPOSAL, NO CREDIT
+Head PC2 alone writes[8192,12287]; subsequent ME PCs3..6 have OEN0 and consume
+the same4096-word region; descriptor is argmax, not a VM writer. Native-source
+staging after REAL PC2 write visibility can fill this16KiB region in64 DS beats.
+All2048 local reads then select staged[2*port+k], k0/1, while j/t repeat; no FP
+reordering or widened global face. 131072 register bits ->38220.5952um2 DFF
+floor plus65536 2:1 mux bits ->13107.2um2 ASSUMED .2um2/bit model cost.
+Full macro bodies+these local data/mux terms =1.376801669mm2/die BEFORE control,
+clock, fanout, protection, loaded routes and slot placement. No free local RF.
+Head chase_n64 covers all64 source SU vector retirements. Those counters
+track native strobes, not physical SRAM ACKs; require physical visibility
+binding rather than a new invented source-progress wait. Producer wait and actual
+loaded local selector/ready integration remain NULL, so total latency and rate
+remain NULL and credited reuse is ZERO. This is the concrete source-owned reuse
+hook for Maxwell to compose before RTL, not an independent architecture stream.
+
+MODEL JOIN / EXACT REMAINING IMPLEMENTATION
+Use proposal.ports/mapping/peak/finite_service/records/collectives and
+head_source_reuse_proposal in qwen_hbm_selected_activation_provider_model().
+Realize the existing selected VM namespace; do not import uninstantiated RF/DS
+area as prior design credit. Price SRAM-state protection, finite request/result
+seats and clock/mux/corridor. One aggregate native-edge staging frame needs72192
+response bits and93081 masked-write-seat bits (data32/address24/enable1); area
+DFF floors are emitted, queue depths/metadata/protection and service calendar
+are NOT claimed complete. Need source-matched SU admission/operand reservation,
+ME captured-response/real masked-write ACK visibility, collective/reducer lease
+arbitration. Exact SS macro clkq524.072474ps leaves249.260526ps after SS60 at
+833.333ps, before loaded mux/wire/capture setup. No physical fit/clock adoption.
+
+Only source-algebra/hash/range/finite-segment checks, no numerical campaign.
+Failed records, retained body costs, archived actual native build untouched.
+
+Additional r2 hazard: read macro access accept+1 vs write accept+2; source admission must compare physical macro edges across commands, not rely on same-command rw_collision_fault alone. Head staging region/strides/producer ownership checks cover all four ranks, independently; no cross-rank data identity assumed.
+
+SELECTED ROM STREAM4 SCOPE COMPARISON (source-only, no transferred counts)
+rom_provider_comparison.json + rom_comparison_source.json + rom_selected_source.json
+bind Laplace plainAR top1d44/3d5c, coreabc8, arraycba4, controller2918, actual
+caller a10e and selected source book. VX face2048/AW24/FP32 and affine
+xc+((gb+port) mod S)*xcs match algebra, but ROM core.u_me.u_top is the older
+ot_qwen_w12_matvec_part PART2; HBM uses ot_qwen_me_spctl_w12 u_ctl.
+ROM provider is its OWN RTL behavioral reg vm[177808] (top line289); loops
+309/325/331 serve VX/ME/SU. ROM host rm_vm only preloads/readback: it is NOT
+HBM m.vm callback. No finite SRAM/bank/controller namespace is on these selected
+VM accesses. Actual code/scale/KV macros and STREAM4 HBM are separate.
+Source-selected ROM SMIN7 =>48 ME vectors, not HBM96; BD41/NWS5/TWS38/ORD7/AR2561
+and collective339 differ. Reuse physical_address/demand helpers only; do not
+run HBM-specialized whole-program cost on ROM or transfer HBM timings/commands.
+ROM physical VM realization cost remains unbound from its independently checked
+behavioral provider; no numerical result invalidation or physical adoption.
