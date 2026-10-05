@@ -31,6 +31,10 @@ module ot_hbm_accel_smpq_xmap_leaf #(
     output reg  [TAGW-1:0]          gt,
     output reg                      gf
 );
+    // The released writer's 3152-bit fragment is the selected SUB4/LBS2/LSB16 shape.
+    generate if (XMAP && (SUB != 4 || LBS != 2 || LSB != 16)) begin : g_bad_xmap_shape
+        initial $fatal(1, "Unsupported activation XMAP shape");
+    end endgenerate
     localparam integer LB  = SUB * LBS;
     localparam integer XC  = LB * 266 + SUB * LSB * 16;
     localparam integer SLW = LBS * 266 + LSB * 16;

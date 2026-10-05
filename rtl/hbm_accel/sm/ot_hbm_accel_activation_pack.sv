@@ -9,6 +9,9 @@ module ot_hbm_accel_activation_pack #(
     input wire [NC*3152-1:0] source_fragment,
     output wire [NC*3152-1:0] packed_fragment
 );
+    generate if (FORMAT < 0 || FORMAT > 2) begin : g_bad_format
+        initial $fatal(1, "Unsupported activation packing format");
+    end endgenerate
     genvar bit_index;
     generate for (bit_index=0; bit_index<NC*3152; bit_index=bit_index+1) begin : g_bit
         if (!XMAP) begin : g_original
