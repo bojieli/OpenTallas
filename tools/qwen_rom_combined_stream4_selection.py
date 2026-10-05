@@ -28,6 +28,11 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
     require(link['generated_runtime_sha256']==hashlib.sha256(runtime.emit(root,dspark=dspark,full_decoder=link.get("full_decoder",False)).encode()).hexdigest(),
             'actual initialized STREAM4 runtime differs')
     params=link['resolved_parameters']
+    for key in ('SEQ_LA','MP_COMMIT_NATIVE'):
+        require(params['die'].get(key,0)==model['parameters'].get(key,0),
+                'compiled adopted source flag differs: '+key)
+    adopted=all(params['die'].get(k)==1 for k in ('SEQ_LA','MP_COMMIT_NATIVE'))
+    if link.get('adopted_required'):require(adopted,'required adopted source flags absent')
     if dspark:
         require(all(params['die'].get(k)==v for k,v in dict(DSPARK=1,ACCEPT_COMMIT=1,VPMAX=4,VWA=16,
                     VM_ELEMS=1048576,NPROG=1024,NDESC=64).items()), 'actual ACCEPT_COMMIT1 compiled model required')
@@ -43,17 +48,31 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
         if p.is_relative_to(compiled.resolve()):
             relative=str(p.relative_to(compiled.resolve()))
             require(sha(root/relative)==h,'selected runtime/model source differs: '+relative);pins[relative]=h
-        else:external[str(p)]=h
+        else:
+            external[str(p)]=h
+            reuse=Path(model.get('stream4_source_root',str(compiled))).resolve()
+            if p.is_relative_to(reuse):
+                relative=str(p.relative_to(reuse));equivalent=root/relative
+                if equivalent.is_file() and sha(equivalent)==h:pins[relative]=h
+    if model['parameters'].get('SEQ_LA')==1:
+        require('rtl/qwen_sys/combined/ot_qwen_tp_seq_combined_vp_la.sv' in pins,'actual LA successor source missing')
+    if model['parameters'].get('MP_COMMIT_NATIVE')==1:
+        require(all(path in pins for path in ('rtl/hdc/kv/ot_qwen_kv_mp_commit.sv',
+                    'rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')),'actual canonical MP join source missing')
     required=[top_source,'rtl/qwen_sys/combined/ot_qwen_combined_stream4_rows.sv',base.SUBSYSTEM,
               'rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv']
     if dspark:required.append('rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_service.sv')
     for pinfile in (base.PIN_SOURCE,'rtl/qwen_sys/combined/stream4_tagged_source_pin.json'):
-        source=json.loads((root/pinfile).read_text())
+        pin_root=Path(model.get('stream4_source_root',str(root))) if pinfile.endswith('stream4_tagged_source_pin.json') else root
+        source=json.loads((pin_root/pinfile).read_text())
         for path,h in source['sources'].items():
             if dspark and path=='rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv':continue
             if not dspark and path=='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_service.sv':continue
-            require(pins.get(path)==h,'required native stream/near engine source absent/changed: '+path)
-        pins[pinfile]=sha(root/pinfile)
+            selected_hashes=[value for selected_path,value in model['source_sha256'].items()
+                             if Path(selected_path)==pin_root/path]
+            require(selected_hashes==[h],'required native stream/near engine source absent/changed: '+path)
+        if pin_root==root:pins[pinfile]=sha(root/pinfile)
+        else:external[str(pin_root/pinfile)]=sha(pin_root/pinfile)
     require(all(p in pins for p in required),'actual stream row/subsystem/top pins required')
     for p in ('tools/qwen_rom_combined_stream4_runtime_emit.py','tools/qwen_rom_combined_stream4_access.py',
               'tools/qwen_rom_combined_nearbaseline_runtime_emit.py','tools/qwen_rom_combined_runtime_emit.py',
@@ -72,7 +91,7 @@ def create(source_root,compiled_source_root,model_sources,link_dir,clocks,output
     require(clocks['core']['period_fs']==params['hbm']['CORE_FS'],'STREAM4 actual core period mismatch')
     exe=link_dir/'qwen_rom_combined';require(sha(exe)==link['executable_sha256'],'linked binary changed')
     book=dict(geometry=dict(tp=4,groups=6144,sw=64,nw=18),real_mem=True,near_hbm_enabled=True,
-              stream4_enabled=True,dspark_enabled=dspark,top_source=top_source,runtime_abi=runtime.ABI,
+              stream4_enabled=True,dspark_enabled=dspark,adopted_joins_enabled=adopted,top_source=top_source,runtime_abi=runtime.ABI,
               full_decoder=link.get("full_decoder",False),maximum_stages=37 if link.get("full_decoder",False) else (2 if dspark else 1),maximum_position=8191,
               source_sha256=pins,external_generated_source_sha256=external,clocks=clocks,
               stream4_core_fs=params['hbm']['CORE_FS'],stream4_controller_fs=params['hbm']['CTL_FS'],
