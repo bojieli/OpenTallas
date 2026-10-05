@@ -8,12 +8,13 @@
 // readable only after all 16 block transactions have completed.  A 128-entry
 // absolute-position tag prevents a stale ring slot from being read after wrap.
 //
-// The HBM port is the K side of one per-stack arbiter.  This version has one
-// outstanding read or write by default. Opt-in REFILL_CREDITS allows bounded
-// code-sector reads within one row; scales publish only after code completion.
-// Epochs advance only after the previous row drains (reset also requires drain).
-// The functional result does not
-// establish the bandwidth/rate of the 640-row mixed attention path.
+// The connected successor uses only prime and block-write commands on the
+// K port; the original refill/read interface is retained but must remain idle.
+// Captured metadata, poison/order/bounds checks and address decode are split
+// across registers. Each issue checks the captured region against the live
+// region. Once accepted, write debt drains before publication even if that
+// region changes. The functional result does not establish the bandwidth/rate
+// of the 640-row mixed attention path.
 module ot_dsrom_window_writer_pipeline #(
     parameter bit REFILL_OWNER_SAFE = 0,
     parameter integer POS_W = 21,
