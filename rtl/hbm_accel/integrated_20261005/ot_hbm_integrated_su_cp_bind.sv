@@ -206,12 +206,12 @@ module ot_hbm_integrated_su_cp_bind #(parameter integer ENABLE=0,REGISTERED_OUTP
   next_phase=phase;
   if(recurrence_fault||phase_bad||(!is_idle&&!is_done&&|launch_v))next_phase=9'b010000000;
   else case(1'b1)
-   phase[IDLE]:if(|launch_v&&entry)next_phase=launch_v==2'b01?9'b001000000:9'b010000000;
-   phase[PREDECODE]:if(decode_v)next_phase=decode_bad?9'b010000000:9'b100000000;
+   phase[IDLE]:if(|launch_v&&entry)next_phase=launch_v==2'b01 ? 9'b001000000 : 9'b010000000;
+   phase[PREDECODE]:if(decode_v)next_phase=decode_bad ? 9'b010000000 : 9'b100000000;
    phase[QUALIFY]:next_phase=9'b000000010;
    phase[PENDING]:if(lease_granted)next_phase=9'b000000100;
    phase[ACTIVE]:if(!lease_granted)next_phase=9'b010000000;
-    else if(exec_done)next_phase=retired_original_ops==4?9'b000001000:9'b010000000;
+    else if(exec_done)next_phase=retired_original_ops==4 ? 9'b000001000 : 9'b010000000;
    phase[RELEASE]:if(!lease_granted)next_phase=9'b010000000;
     else if(release_v&&release_r)next_phase=9'b000010000;
    phase[CLEANUP]:if(!lease_granted&&!exec_done)next_phase=9'b000100000;
