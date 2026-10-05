@@ -932,6 +932,58 @@ def dsrom_reindex_kc6_model():
                   "original component exactness and measured cycle reconciliation"])
 
 
+def dsrom_reindex_kc7_model():
+    """Same-edge ready-last successor; sizing precedes additive RTL emission."""
+    # Three QW=12 state vectors. Four +/- alternatives for seq/left,
+    # inuse dispatch base + two drain alternatives; no ready-fed carry chain.
+    arithmetic_bits = 7 * 12
+    drain_mux_bits = 3 * 12 * 3 + 3
+    rob_comparator_bits = 3 * 12
+    payload_mux_bits = 32 * (28 + 4 + 16) * 3
+    local_predicates = 32 * 6 + 10
+    nand2 = (arithmetic_bits * 9 + drain_mux_bits * 4 +
+             rob_comparator_bits * 12 + payload_mux_bits * 4 + local_predicates * 12)
+    gross = round(nand2 * 0.08748, 8)
+    cap, baseline = 37452.2, 34279.5
+    return dict(
+        schema="opentallas.dsrom-reindex.kc7-model.v1", selected=False,
+        default_enabled=False, parent="kc6 OPT_KC6=1; actual route FAIL",
+        parent_source_sha256="8db9e624bfb3155205b55a7c08b0a600f8c8dac0489b33d4643fa3663d573483",
+        mechanism=["precomputed drain seq/left/inuse and rob_ok alternatives",
+                   "independent scale/code payload then eligible/ready final hold mux",
+                   "kc6 free-running derived cpart and reset-valid mask retained"],
+        dimensions=dict(NPC=32, WB=128, DF=8, AW=28, TAGW=16, LENW=4, QW=12, GS=8),
+        compute=dict(new_macs_per_cycle=0, new_rounding_points=0),
+        state=dict(added_ff_bits=0, added_clock_sinks=0, accepted_debt_reset_semantics="unchanged"),
+        timing=dict(new_edges=0, new_cdc=0, token_latency_delta_cycles=0,
+                    period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    ready_external_side_budget_ps=166.6, boundary_checks="original max AND min groups",
+                    ready_sampled=False, ss_ff_closed=False, actual_gate_required=True),
+        ports=dict(new_bits_per_cycle=0, new_bytes_per_cycle=0,
+                   request_per_pc_bits=49, request_ready_per_pc_bits=1,
+                   response_control_per_pc_bits=21, response_ready_per_pc_bits=1,
+                   response_payload_bytes_per_pc=32, drain_bits=71, drain_ready_bits=1,
+                   list_data_bits=28, list_address_bits=10, list_enable_bits=1),
+        replicas=dict(control_per_stack=1, stacks_per_rank=4, ranks=4,
+                      request_slices_per_pc=6, payload_bits_per_slice=8,
+                      drain_state_slices=9, drain_bits_per_slice=4, rob_predicate_slices=1),
+        construction=dict(arithmetic_bits=arithmetic_bits, drain_mux_bits=drain_mux_bits,
+                          rob_comparator_bits=rob_comparator_bits, payload_mux_bits=payload_mux_bits,
+                          local_predicate_allowance=local_predicates,
+                          gross_nand2_equivalents=nand2, gross_um2=gross,
+                          footprint_basis="same kc6 NAND2 footprint 0.08748um2; no TT timing transfer",
+                          removed_logic_credit_um2=0, mapped_buffers_and_net_delta_um2=None),
+        slot=dict(core_um2=93630.5, max_cell_fraction=0.40, max_cells_um2=cap,
+                  measured_kc6_cells_um2=baseline, gross_plus_baseline_um2=round(baseline+gross,8),
+                  remaining_cts_buffer_mapping_budget_um2=round(cap-baseline-gross,8),
+                  fit_verified=False, parent_die_reservation=False),
+        routing=dict(new_arithmetic_candidate_nets=84, new_payload_candidate_nets=1536,
+                     request_ready_final_mux_loads_per_pc=48, drain_ready_mux_loads=37,
+                     required_added_tracks=None, available_tracks=None,
+                     acceptance="same core/budgets; zero DRC antenna slew cap fanout; actual channel fit"),
+        admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
+
+
 HBM_PC_SECTORS_PER_CYCLE = (1e12 / 1.0339e9) / 1024.0
                                                 # one 32-B burst per 1,024 ps per pseudo-channel (HBM3E 1 TB/s over
                                                 # 32 PCs; rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv) at 967.2 ps/cycle
@@ -957,6 +1009,7 @@ DEDICATED = dict(
     ),
     idx_reader=dict(
         reindex_control_closure_successor=dsrom_reindex_kc6_model(),
+        reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
