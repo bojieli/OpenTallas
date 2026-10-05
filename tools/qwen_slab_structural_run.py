@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Route the Qwen slab port group with the S1-S4 structural fix (handoff qwen_slab_structural_claude_to_codex_ampere.md).
 
-S1: boundary delays re-referenced to the block's propagated tree after CTS (physical/qwen_slab_structural hooks;
-    setup max 0.2 T, hold min 0 -- stricter than the old 166.667 ps min, nothing relaxed).
+S1: boundary delays re-referenced to the block's propagated tree after CTS (physical/qwen_slab_structural hooks,
+    io_wc.sdc in the flow, io_lat.sdc per corner at sign-off; setup max 0.2 T, hold min 0 -- nothing relaxed).
+    io_ref.sdc (-reference_pin) is not used: OpenSTA drops every input-port path under it and GRT crashes.
 S2: BW_FIFO=0 -- the block-word meso FIFO is its own closed element (meso_d4_v7), not routed here.
 S3: per-lane multiplier tag copies (already in rtl/physical/ot_qwen_slab_port_group.sv).
 S4: res_in / outputs / control on the right (spine) face in separate ranges; bw_/tw_ parked on the left face.
 
     python3 tools/qwen_slab_structural_run.py --height 455.76 --mul-lat 6 [--diamond] [--td-only] \
         --root /srv/.../qwen-slab-route --name qssr_a --cores 20
-Signoff: tools/w18/corner_sta.py with --post-sdc io_ref.sdc (SS 60 ps setup, FF 25 ps hold).
+Signoff: tools/w18/corner_sta.py with --post-sdc io_lat.sdc (SS 60 ps setup, FF 25 ps hold).
 """
 import argparse
 import json
@@ -47,6 +48,7 @@ def command(a, out):
     for s in SOURCES:
         argv += ["--source", s]
     argv += ["--param", f"MUL_LAT={a.mul_lat}", "--param", "BW_FIFO=0",
+             *[x for kv in a.param for x in ("--param", kv)],
              "--macro-view", f"ot_rom_4096x266_m8={MACRO}", "--macro-place-halo", "2.16", "2.16",
              "--die-area", "0", "0", f"{share.W}", f"{h:g}",
              "--core-area", f"{share.EDGE}", f"{share.EDGE}", f"{share.W - share.EDGE:.3f}", f"{h - share.EDGE:.3f}",
@@ -57,8 +59,10 @@ def command(a, out):
              "--synth-timeout-seconds", "unlimited", "--flow-timeout-seconds", "unlimited",
              "--orfs-var", "ADDER_MAP_FILE=", "--orfs-var", f"NUM_CORES={a.cores}",
              "--orfs-var", f"SDC_FILE=/src/{S}/port_group_s2.sdc", "--orfs-var", f"QSS_SDC_DIR=/src/{S}",
+             "--orfs-var", f"QSS_IO_HOLD_EXTRA={a.io_hold_extra:g}",
              "--orfs-var", "PDN_TCL=/src/physical/qwen_slab_m5/pdn_m5.tcl",
              "--orfs-var", f"MACRO_PLACEMENT_TCL=/src/physical/qwen_slab_share/macro_place_h{h:g}.tcl",
+             "--orfs-var", "GLOBAL_ROUTE_ARGS=-congestion_report_iter_step 5 -verbose -critical_nets_percentage 0",
              "--step-tcl", f"PRE_CTS={S}/pre_cts.tcl", "--step-tcl", f"POST_CTS={S}/post_plain.tcl"]
     for st in ("GLOBAL_ROUTE", "DETAIL_ROUTE", "FILLCELL"):
         argv += ["--step-tcl", f"PRE_{st}={S}/pre_ref.tcl", "--step-tcl", f"POST_{st}={S}/post_plain.tcl"]
@@ -79,6 +83,9 @@ def main():
     p.add_argument("--diamond", action="store_true")
     p.add_argument("--td-only", action="store_true")
     p.add_argument("--orfs-var", action="append", default=[])
+    p.add_argument("--param", action="append", default=[], help="extra RTL parameter NAME=VALUE (IN_STAGE, AM_SPLIT, S5_CTL)")
+    p.add_argument("--io-hold-extra", type=float, default=60.0,
+                   help="flow-only extra boundary hold requirement, ps (io_wc.sdc; stricter only)")
     p.add_argument("--cores", type=int, default=20)
     p.add_argument("--root", type=Path, required=True)
     p.add_argument("--name", required=True)
@@ -99,7 +106,7 @@ def main():
     if list((out / "work/orfs/results/asap7").glob("*/base/6_final.odb")):
         with (out / "corner.log").open("w") as log:
             c = subprocess.run([sys.executable, "tools/w18/corner_sta.py", "--orfs-dir", str(out / "work/orfs"),
-                                "--macro", MACRO, "--post-sdc", f"{S}/io_ref.sdc",
+                                "--macro", MACRO, "--post-sdc", f"{S}/io_lat.sdc",
                                 "--output", str(out / "corner_sta.json")], env=env, stdout=log, stderr=subprocess.STDOUT)
         (out / "corner.exit").write_text(f"{c.returncode}\n")
     return rc
