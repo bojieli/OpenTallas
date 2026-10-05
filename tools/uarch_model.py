@@ -1174,8 +1174,18 @@ def qwen_hbm_registered_admission_model(tp=2, engine_advances=None, replicas=Non
                 parameter="ADMISSION_PIPE", default=0, tp=tp,
                 macs_per_active_engine_edge="unchanged selected W12 geometry",
                 engine_advance_ii=3, added_cycles_per_engine_advance=2,
-                added_token_cycles=None if engine_advances is None else 2*engine_advances,
-                added_token_ns=None if engine_advances is None else 2*engine_advances*0.833,
+                # This is an engine service charge, not a measured token delta.
+                # Current-source layer counts and causal overlap are not enrolled.
+                added_token_cycles=None, added_token_ns=None,
+                gross_added_engine_service_cycles=None if engine_advances is None else 2*engine_advances,
+                gross_added_engine_service_ns=None if engine_advances is None else 2*engine_advances*0.833,
+                engine_service_duration_ratio=3,
+                service_charge_condition="same logical engine-edge sequence; external service/calendar unchanged",
+                current_source_layer_advance_counts=None,
+                current_source_layer_slowdown_upper_bound=None,
+                current_source_full_token_slowdown_upper_bound=None,
+                candidate_verdict="REJECTED_AS_SPEED_OPTIMIZATION",
+                physical_run_role="single priced mandatory-clock feasibility measurement only",
                 engine_advance_count=engine_advances, replicas=replicas,
                 added_ff_bits_per_die=ff, ff_area_floor_um2=ff*DFF_UM2,
                 combinational_cost="existing segment comparators; registered-match priority/reduce + phase decode",
@@ -1190,7 +1200,17 @@ def qwen_hbm_registered_admission_model(tp=2, engine_advances=None, replicas=Non
                 command_issue="me_go requires that same registered engine grant",
                 held_output_contract="address/data/mask held in existing spine; no delayed strobe-only packet",
                 prerequisite="segment table stable across held phase, monotonic same-token arrivals; reset cancels grant",
-                token_rate=None, adoption=False)
+                token_rate=None, token_speedup=None, adoption=False,
+                context_control_measurement=dict(commands=16, engine_advances=7650,
+                    baseline_cycles=8055, candidate_cycles=23342, added_cycles=15287,
+                    geometry="G6144/SW64/LV7; TP2 and TP4 actual route cuts",
+                    arithmetic_qualified=False),
+                baseline_clock_sensitivity=dict(
+                    policy="same extracted delays only; NOT a routed operating point",
+                    io_delay_fraction=0.2, setup_uncertainty_ps=60,
+                    required_period_ps=((1341.06 if tp == 2 else 1338.91)+60)/0.8,
+                    measured_ss_worst_ps=-734.66 if tp == 2 else -732.51,
+                    candidate_clock_qualified=False))
 
 
 def qwen_x_read_stall(G, su_width, ctx, read_elems):
