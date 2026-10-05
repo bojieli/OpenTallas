@@ -53,6 +53,47 @@ def field_widths(root: Path):
     raise ValueError('No literal PFIELDS contract')
 
 
+def _encode_instruction(op, widths):
+    offsets = {}
+    offset = 0
+    for name, width in widths.items():
+        offsets[name] = (offset, width)
+        offset += width
+    word = 0
+    for name, value in op.items():
+        if name.startswith('_'):
+            continue
+        if name not in offsets:
+            raise ValueError(f'Unknown saved instruction field: {name}')
+        start, width = offsets[name]
+        if not isinstance(value, (int, np.integer)) or not 0 <= int(value) < (1 << width):
+            raise ValueError(f'Invalid saved instruction field: {name}={value!r}')
+        word |= int(value) << start
+    return word
+
+
+def encode_instruction(op, root: Path):
+    """Pack literal fields using root's PFIELDS; preserve supplied waits unchanged.
+
+    This is the integer-only equivalent of campaign.encode, with explicit integer
+    validation. It does not schedule operations or infer dependencies/credit waits.
+    Pass the selected executable's retained source root, not an unrelated checkout.
+    """
+    return _encode_instruction(op, field_widths(root))
+
+
+def serialize_program(ops, root: Path):
+    """Return prog.hex text equivalent to write_case, without importing its oracle.
+
+    The caller owns ordering, wait fields, nprog and VM/CR images. An empty program
+    has the bench's zero-word placeholder; its nprog must still be zero.
+    """
+    widths = field_widths(root)
+    digits = (sum(widths.values()) + 3) // 4
+    words = [_encode_instruction(op, widths) for op in ops] or [0]
+    return ''.join(f'{word:0{digits}x}\n' for word in words)
+
+
 def words_record(values):
     array = np.asarray(values)
     if array.dtype not in (np.dtype('float32'), np.dtype('uint32')) or array.ndim != 1:

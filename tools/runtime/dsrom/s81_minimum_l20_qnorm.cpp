@@ -54,7 +54,9 @@ int main(int argc,char** argv) try {
         models[rank]=std::make_shared<Vnative_vm>(&context,("qnorm_vm_rank"+std::to_string(rank)).c_str());
         banks[rank]=std::make_shared<DsromS81MinimumL20Bank>(r,id,models[rank],dsrom_s81_bind_minimum_source_tags(r,id));
         auto& pub=banks[rank]->publication();pub.enroll_literal(2480,{{51648,1280}});
-        pub.enroll_literal(2482,{{51584,8}});pub.enroll_literal(2483,{{51616,1}});pub.enroll_literal(2484,{{52928,1280}});
+        // I11 red_tree reduces all nout*nin=1280 values to ONE r_base scalar;
+        // nout=8 describes source grouping, not eight result addresses.
+        pub.enroll_literal(2482,{{51584,1}});pub.enroll_literal(2483,{{51616,1}});pub.enroll_literal(2484,{{52928,1280}});
         participants.push_back(banks[rank]->bank_participant());
         engines[rank]=dsrom_s81_bind_minimum_su256(r,id,pub,banks[rank]->io(),banks[rank]->tags());
         participants.push_back(engines[rank].participant);
@@ -85,7 +87,7 @@ int main(int argc,char** argv) try {
         require(pub.complete(id,2480)&&io.span_lease(id,51648,1280),"actual QA import publication incomplete");
         std::cout<<"QA_IMPORT_ACK rank="<<rank<<" cycle="<<cycle<<'\n';
     }
-    const std::array<unsigned,3> addresses{51584,51616,52928},counts{8,1,1280};
+    const std::array<unsigned,3> addresses{51584,51616,52928},counts{1,1,1280};
     for(unsigned stage=0;stage<3;++stage){
         std::array<bool,4> admitted{};
         while(!std::all_of(admitted.begin(),admitted.end(),[](bool v){return v;})){
@@ -99,8 +101,13 @@ int main(int argc,char** argv) try {
         while(!std::all_of(engines.begin(),engines.end(),[](const auto& e){return e.idle();}))tick(true);
         const long drain_cycle=cycle;
         for(unsigned rank=0;rank<4;++rank){
-            auto& bank=*banks[rank];require(bank.publication().complete(id,operations[stage].index)&&
-                bank.io().span_lease(id,addresses[stage],counts[stage]),"native SU boundary lacks full matched write ACK");
+            auto& bank=*banks[rank];
+            const bool published=bank.publication().complete(id,operations[stage].index);
+            const bool leased=bank.io().span_lease(id,addresses[stage],counts[stage]);
+            if(!published||!leased)std::cerr<<"SU_BOUNDARY_MISSING I"<<11+stage<<" rank="<<rank
+                <<" cycle="<<cycle<<" published="<<published<<" span_lease="<<leased
+                <<" base="<<addresses[stage]<<" words="<<counts[stage]<<'\n';
+            require(published&&leased,"native SU boundary lacks full matched write ACK");
             std::ofstream file(output/("native_L20_I"+std::to_string(11+stage)+"_rank"+std::to_string(rank)+".u32"),std::ios::binary);
             require(bool(file),"native SU readback open");
             for(unsigned word=0;word<counts[stage];++word){
