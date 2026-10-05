@@ -590,7 +590,7 @@ exact; `dspark_verify_P8187/optrace`). The excess is 10,718 cycles a layer.
 
 | Component | Excess (cycles a layer) | Why it scales with p |
 |---|---:|---|
-| Attention K/V passes | +3,490 <!-- figure: 3490 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.attention_kv_passes.excess" tol="exact" name="verify attention excess" --> | One QK/PV pass over the 8K keys per position (4 × about 1,161) |
+| Attention | +3,490 <!-- figure: 3490 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.attention_kv_passes.excess" tol="exact" name="verify attention excess" --> | The softmax stream op is issued once per position: 8 heads × 8,188 scores ÷ 64 stream-unit lanes = 1,023 cycles of work (measured about 1,161) |
 | All-reduces | +1,295 <!-- figure: 1295 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.all_reduces.excess" tol="exact" name="verify all-reduce excess" --> | Four times the payload on the same link |
 | Other per-position work | +5,933 <!-- figure: 5933 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json#verify_op_breakdown.remaining_excess" tol="exact" name="verify other excess" --> | Stream-unit ops issued once per position, latency-bound; weight matvecs re-streamed once per position |
 
@@ -651,8 +651,8 @@ would otherwise sit idle.
   wavefront of six positions fills idle stages: verify = AR + 5 × the initiation
   interval, 1.21× one token. MTP gives 2.77×.
 - **Qwen ROM at 8K: nothing is shared.** The ROM read rate equals the MAC rate,
-  so a weight word read once can feed only one position's MACs. Attention
-  passes, all-reduce payload and stream-unit work all scale with p, and with
+  so a weight word read once can feed only one position's MACs. The softmax,
+  the all-reduce payload and stream-unit work all scale with p, and with
   STREAM4 hiding the KV fill there is no stall left for the extra positions to
   fill. Verify costs 3.26× and DSpark loses.
 
@@ -679,12 +679,20 @@ or is an area estimate where it is marked as one (`dspark_verdict.json`).
 | Baseline verify program | 17,197 | 4 (3.1445) | 868,200 | 0.704× | AR wins |
 | Per-position work reduction: stream-unit ops merged across positions (MERGE_SU) | 15,971 <!-- figure: 15971 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np4.verify_layer" tol="exact" name="MERGE_SU np4 verify" --> | 4 (3.1445) | 824,064 | 0.742× <!-- figure: 0.742 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np4.speedup_vs_ar_upper" name="MERGE_SU np4 vs AR" --> | AR wins |
 | Shorter draft, with MERGE_SU | 13,104 <!-- figure: 13104 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np3.verify_layer" tol="exact" name="MERGE_SU np3 verify" --> | 3 (2.5441) | 665,179–716,198 | 0.691–0.744× <!-- figure: 0.744 src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#variants.merge_su_np3.speedup_vs_ar_lower" name="MERGE_SU np3 vs AR lower draft" --> | AR wins |
+| Sharing K/V passes between positions (analysed, not built) | no change | 4 | — | — | no gain |
 | MAC area for single-pass weight reuse (estimate, not built) | removes at most 2,144 a layer | 4 | — | — | does not fit |
 
-- **Per-position work reduction.** Merging the stream-unit ops of the four
-  positions into one op removes 1,226 cycles a layer. That is 7% of the verify
-  layer, and the layer needs a 41% cut. The attention passes and the all-reduce
-  payload stay per-position.
+- **Per-position work reduction.** The stream ops with no position-dependent
+  term (norms, rsqrt, reciprocal, residuals, SiLU scale) are issued once for
+  all four positions. That cuts the SU ops from 74 to 47 and removes 1,226
+  cycles a layer. That is 7% of the verify layer, and the layer needs a 41%
+  cut. The softmax and the all-reduce payload stay per-position.
+- **Sharing K/V passes.** This gives no gain. The KV-sourced matvec puts
+  context positions on the lanes and the query heads on the 8 interleave slots,
+  so its time is slots × K steps whatever the KV reads. One position's scores
+  already fill all 8 slots, and two positions in one op take the time of two
+  ops. The attention excess is the per-position softmax, and it scales with the
+  stream-unit width (`dspark_levers.json`).
 - **Shorter draft.** At p = 3 the verify layer is 13,104 cycles, but τ falls to
   2.5441. The break-even layer falls with it, to 6,955–8,372 cycles (13,410
   with a free draft). The drafter layers were measured only at S = 3, so the
@@ -699,7 +707,10 @@ or is an area estimate where it is marked as one (`dspark_verdict.json`).
   of the excess, at most 2,144 cycles a layer (measured ME-busy bound). Without
   the attention and all-reduce terms it cannot reach `V*`.
 
-No variant reaches break-even, and break-even would not be a gain. The
+No variant reaches break-even with the measured draft. The best exact p = 4
+verify layer (15,971) is below the free-draft break-even (16,654), so it would
+pay only if the 237,050-cycle draft cost nothing. Break-even would not be a
+gain in any case. The
 verdict is **AR_MODE**. <!-- figure: "AR_MODE" src="results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json#verdict" name="Qwen ROM 8K mode verdict" -->
 
 #### Decision and scope
