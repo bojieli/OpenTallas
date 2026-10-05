@@ -152,6 +152,10 @@ public:
         // writer, with its unchanged source/destination association.
         std::function<bool(const DsromC8SourceOffer&,unsigned,
                            const S81EmbeddingOutput&,unsigned)> transfer_accepted;
+        // Selected SU256 M1_BYP already captures native vm_we and publishes
+        // its own scalars. Observe that SAME emitted PC's completion; never
+        // reread/reinject its output or allocate another tag/native writer.
+        std::function<bool(const DsromC8SourceOffer&,unsigned)> native_copy_visible;
     };
 private:
     DsromC8SourceOffer owner;
@@ -204,7 +208,7 @@ public:
                uint64_t(s.destination_address)+s.words>(1u<<19)||
                !b.source.read_word||!b.source.span_lease||!b.destination.span_lease||
                !b.publication||!b.enrolled_writer||*b.enrolled_writer>=(1u<<14)||
-               !b.writer_admitted||!b.transfer_accepted)
+               !b.writer_admitted||(!b.native_copy_visible&&!b.transfer_accepted))
                 throw std::runtime_error("SourceIo transfer lacks emitted source/destination/writer tuple");
             for(size_t j=0;j<i;++j) {
                 const auto& p=bindings[j].span;
@@ -212,7 +216,8 @@ public:
                    uint64_t(p.destination_address)<uint64_t(s.destination_address)+s.words)
                     throw std::runtime_error("SourceIo transfer destination ranges overlap");
             }
-            batches.emplace_back(new DsromS81MinimumPrefixOutputBatch(
+            if(b.native_copy_visible)batches.emplace_back(nullptr);
+            else batches.emplace_back(new DsromS81MinimumPrefixOutputBatch(
                 runtime,owner.identity,*b.publication,b.destination,tags));
         }
     }
@@ -224,8 +229,17 @@ public:
             if(stopped)throw std::runtime_error("SourceIo transfer quarantined");
             if(!sources_retained()||!context(owner))return false;
             if(selected==bindings.size())return published()&&input_visible(owner);
-            auto& b=bindings[selected];auto& batch=*batches[selected];
+            auto& b=bindings[selected];
             if(!b.writer_admitted(owner,*b.enrolled_writer))return false;
+            if(b.native_copy_visible) {
+                if(!b.native_copy_visible(owner,*b.enrolled_writer)||
+                   !b.publication->complete(owner.identity,*b.enrolled_writer)||
+                   !b.destination.span_lease(owner.identity,b.span.destination_address,
+                                              unsigned(b.span.words)))return false;
+                ++selected;
+                return selected==bindings.size()&&published()&&input_visible(owner);
+            }
+            auto& batch=*batches[selected];
             if(captured) {
                 if(!batch.progress())return false;
                 offset+=count;read=count=0;captured=false;
