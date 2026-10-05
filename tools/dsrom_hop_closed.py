@@ -129,7 +129,7 @@ def cmd_route(a):
     for k, v in params(rc["credits"], rc["seqw"], rc["mem"]).items():
         args += ["--param", f"{k}={v}"]
     if rc["mem"]:
-        args += ["--macro-view", f"ot_sram_1r1w_256x256_m2_r2c2={MACRO}", "--macro-place-halo", "5", "5"]
+        args += ["--macro-view", f"ot_sram_1r1w_256x256_m2_r2c2={MACRO}", "--macro-place-halo", str(a.halo), str(a.halo)]
     args += ["--orfs-var", f"SDC_FILE=/src/{CONTEXT_SDC}",
              "--clock-period-ns", "0.833333", "--clock-uncertainty-ns", "0.06", "--clock-uncertainty-hold-ns", "0.025",
              "--orfs-corner", "WC", "--hold-corners", "WC,BC", "--io-delay-fraction", "0.2",
@@ -261,6 +261,7 @@ def main():
     ap.add_argument("--util", type=float, default=30)
     ap.add_argument("--density", type=float, default=0.55)
     ap.add_argument("--tag", default="r1")
+    ap.add_argument("--halo", type=float, default=5, help="macro placement halo (um)")
     ap.add_argument("--config", default="hard", choices=sorted(ROUTES))
     a = ap.parse_args()
     {"sim": cmd_sim, "screen": cmd_screen, "route": cmd_route, "record": cmd_record}[a.cmd](a)
