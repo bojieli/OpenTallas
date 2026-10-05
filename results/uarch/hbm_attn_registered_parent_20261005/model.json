@@ -1,0 +1,125 @@
+{
+  "schema": "opentallas.h16.registered-parent.v1",
+  "default_parameter": {
+    "REGISTER_PARENT": 0
+  },
+  "adopted": false,
+  "cause": "deaaf2865 all-endpoint baseline: ideal external reference versus real SS2.00455ns/FF1.41003ns macro port clock",
+  "canonical_macro": "ot_attn_hgrp_m6h1 NBANK5, PCOLP0; original LEF and real SS/FF ETMs byte-identical",
+  "shape": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NBANK": 5,
+    "tiles": 64,
+    "heads": 1024
+  },
+  "MACs_per_cycle": 32768,
+  "memory_input_bytes_per_cycle": 200,
+  "input_payload_bits": 1618,
+  "head_payload_branch_bits": 25888,
+  "output_payload_bits": 529,
+  "output_receiver_register_bits": 544,
+  "added_memory_ports": 0,
+  "added_CDCs": 0,
+  "phase_windows": {
+    "root_to_row_ps": 833.333333,
+    "row_to_local_launch_ps": 416.666667,
+    "local_launch_to_macro_ps": 416.666667,
+    "macro_to_receiver_ps": 833.333333,
+    "qualification": "real propagated insertion/CRPR and SS/FF ETM setup/hold, none yet qualified"
+  },
+  "branch_load": {
+    "ib348_macro_pin_SS_fF": 13.243,
+    "old_shared_16head_fF": 211.888,
+    "head_clock_pin_SS_fF": 16.3802,
+    "head_clock_pins_total_SS_fF": 262.0832,
+    "receiver": "one actual mapped FF D per macro output, keep all16 valid captures"
+  },
+  "dataflow": "real positive-edge launch bank ->4 positive-edge row banks ->16 falling-edge local macro launch banks ->real positive-edge receivers",
+  "input_extra_positive_edges": 2,
+  "output_extra_positive_edges": 1,
+  "total_extra_positive_edges": 3,
+  "initiation_interval_edges": 1,
+  "half_cycle_last_launch_window_ps": 416.6666665,
+  "source_and_capture_clock": "all real clk_sm branches from the same source; actual propagated WC/BC insertion and CPPR, no ideal latency substitution",
+  "macro_clock_accounting": "ETM617ps SS clkQ retains child internal CTS; parent port insertion added exactly once",
+  "source_receiver_association": "literal per-head gid/LD/IB/control beat, per-head34bit output register; concatenate oy/oflt, ov=head0",
+  "root_reset": "POR asynchronous assertion, 2-edge synchronous release then local falling-edge release; CP warm reset does not clear accepted beats",
+  "extra_startup_positive_edges": 2,
+  "added_FF_bits": 34540,
+  "FF_body_upper_um2": 13093.4232,
+  "clock_buffer_reserve": 2048,
+  "clock_buffer_area_upper_um2": 895.7952,
+  "added_clock_pin_capacitance_upper_fF": 14989.73828,
+  "register_and_clock_area_upper_um2": 13989.2184,
+  "placement_area_at_half_utilization_um2": 27978.4368,
+  "retained_outline_um": [
+    1349.112,
+    1349.976
+  ],
+  "macro_replicas": 16,
+  "new_macro_replicas": 0,
+  "finite_cell_space": {
+    "core_um": [
+      1349.082,
+      1349.73
+    ],
+    "macro_with_halo_um": 304.782,
+    "free_area_um2": 334623.36747600045,
+    "half_utilization_cell_capacity_um2": 167311.68373800023,
+    "required_cell_area_upper_um2": 14608.635119999999,
+    "fit_is_analytical_only": true
+  },
+  "qualified_PG_hook": {
+    "commit": "d1775001d",
+    "sha256": "5d659c098dfb4eb53594637df8ca071141ea561d1b225ec012bdcd41fd765786",
+    "VDD_connected": true,
+    "VSS_connected": true,
+    "IR_qualified": false,
+    "added_M2_M3_area_um2": 0.2268,
+    "added_M6_M9_tracks": 0,
+    "added_FF": 0,
+    "added_cycles": 0
+  },
+  "row_capacity_tracks": 3304,
+  "row_demand_tracks": 1754,
+  "whole_tile_capacity_tracks": 12995,
+  "clock_tracks_per_row": 64,
+  "body_clock_layers": [
+    "M8",
+    "M9"
+  ],
+  "local_LEF_pin_escape_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+  ],
+  "local_clock_body_and_phase_inverter_fit_qualified": false,
+  "physical_only_source_fixture": {
+    "register_bits": 1634,
+    "body_upper_um2": 619.4167199999999,
+    "role": "actual registered producer endpoint for minimum parent physical vehicle, not production engine or full die proof"
+  },
+  "composed": {
+    "existing": "results/rtl/hbm_child_contract_20261005/model.json",
+    "attention_steps_per_matched_token": 40,
+    "increment_us": 0.1,
+    "total_increment_over_old_m4_upper_us": 11.285666666666668,
+    "no_overlap_or_old_uninstalled_wire_stage_credit": true,
+    "startup_not_per_token": true
+  },
+  "input_IO_policy": "minimum registered parent paths have actual launch FFs; no external ideal-clock arrival credited",
+  "output_IO_policy": "receiver FF D pins carry real load; no generic 20% output deadline or output-port launch-reference fiction",
+  "baseline_failures_preserved": true,
+  "finite_PG_owner": "Turing",
+  "exact_gate": false,
+  "SS_FF_qualified": false,
+  "parent_die_qualified": false,
+  "route_ready": false,
+  "gain_credit": null
+}
