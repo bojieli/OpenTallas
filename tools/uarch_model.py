@@ -9528,14 +9528,6 @@ def hbm_existing_cp_local_pg_model():
     return cp_local_pg_model()
 
 
-def hbm_existing_cp_cts_allocation_model():
-    """Measured inserted-cell census and finite ancestry-based CP CTS allocation."""
-    import json
-    from pathlib import Path
-    return json.loads((Path(__file__).resolve().parents[1] /
-        'results/physical/hbm_cp_cts_allocation_20261005/model.json').read_text())
-
-
 def hbm_existing_attention_source_cut_model():
     """Actual after-E/mux boundary of the selected DS engine, not proxy tile chains."""
     allocation = hbm_existing_attention_allocation_model()
@@ -9961,6 +9953,28 @@ def hbm_r5a_protected_pipeline_model():
             parent_context=False,adopted=False))
 
 
+def hbm_smh_local_grt_price(boxes):
+    """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
+    area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
+    die_area=319.68*509.76
+    for x1,y1,x2,y2 in boxes:
+        if not (0<=x1<x2<=319.68 and 0<=y1<y2<=509.76):
+            raise ValueError('Repair outside actual tile allocation')
+    return dict(schema='opentallas.hbm.smh.local_grt.price.v1',
+        basis='results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json',
+        added_pipeline_edges=0,added_register_bits=0,added_memory_ports=0,
+        added_boundary_bits_per_cycle=0,added_physical_tracks=0,added_replicas=0,
+        new_logic_area_um2=0,tile_die_um=[319.68,509.76],density=0.55,
+        repair_boxes_um=boxes,repair_area_um2=area,repair_area_fraction=area/die_area,
+        baseline_global_capacity_reservation=0.25,local_capacity_reservation=0.5,
+        layers=['M2','M3','M4','M5','M6'],
+        track_impact='Locally withhold capacity from existing allocated tracks; no obstruction or track budget credit.',
+        latency_delta='Zero architectural cycles; actual routed wire/repair buffer delta pending and must be priced.',
+        composed_AR_us=441.505,composed_MTP_step_us=1002.401,
+        physical_adopted=False,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25)
+
+
+
 def dsrom_window_pipeline_measured_latency_price(root=None):
     """Compose the pinned matched WINDOW leaf; physical clock credit stays zero.
 
@@ -9987,23 +10001,3 @@ def dsrom_window_pipeline_measured_latency_price(root=None):
         source_priced=True, parent_clock_load_slot_qualified=False,
         physical_adoption=False, headline_changed=False)
 
-
-def hbm_smh_local_grt_price(boxes):
-    """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
-    area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
-    die_area=319.68*509.76
-    for x1,y1,x2,y2 in boxes:
-        if not (0<=x1<x2<=319.68 and 0<=y1<y2<=509.76):
-            raise ValueError('Repair outside actual tile allocation')
-    return dict(schema='opentallas.hbm.smh.local_grt.price.v1',
-        basis='results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json',
-        added_pipeline_edges=0,added_register_bits=0,added_memory_ports=0,
-        added_boundary_bits_per_cycle=0,added_physical_tracks=0,added_replicas=0,
-        new_logic_area_um2=0,tile_die_um=[319.68,509.76],density=0.55,
-        repair_boxes_um=boxes,repair_area_um2=area,repair_area_fraction=area/die_area,
-        baseline_global_capacity_reservation=0.25,local_capacity_reservation=0.5,
-        layers=['M2','M3','M4','M5','M6'],
-        track_impact='Locally withhold capacity from existing allocated tracks; no obstruction or track budget credit.',
-        latency_delta='Zero architectural cycles; actual routed wire/repair buffer delta pending and must be priced.',
-        composed_AR_us=441.505,composed_MTP_step_us=1002.401,
-        physical_adopted=False,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25)
