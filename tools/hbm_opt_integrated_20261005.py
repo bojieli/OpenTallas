@@ -104,14 +104,40 @@ def workload_parameters(config, workload, enabled):
             if workload in config['levers'][name].get('eligible_workloads', config['workloads'])}
 
 
+def source_inventory(item, root):
+    """Resolve owner candidate objects for inventory; never grant exact enable."""
+    sources, origins, holds = {}, {}, []
+    for name in item['source_paths']:
+        candidate = item.get('source_candidates', {}).get(name)
+        path = root / name
+        if path.is_file():
+            digest = sha(path)
+            origins[name] = 'worktree'
+        elif candidate:
+            try:
+                data = subprocess.check_output(
+                    ['git', 'show', candidate['commit'] + ':' + name],
+                    cwd=root, stderr=subprocess.DEVNULL)
+                digest = hashlib.sha256(data).hexdigest()
+                origins[name] = candidate['commit']
+            except subprocess.CalledProcessError:
+                digest = None
+        else:
+            digest = None
+        sources[name] = digest
+        if digest is None or (candidate and digest != candidate['sha256']):
+            holds.append('missing/changed owner candidate source: ' + name)
+    return sources, origins, holds
+
+
 def prepare(config, root, profile):
     requested = config['profiles'][profile]
     levers, enabled = {}, {}
     for name, item in config['levers'].items():
-        sources = {s: sha(root / s) if (root / s).is_file() else None
-                   for s in item['source_paths']}
+        sources, origins, source_holds = source_inventory(item, root)
         binding = item['binding']
         errors = exact_errors(binding, root) if binding else [item['missing']]
+        errors.extend(source_holds)
         if binding and any(s not in binding['source_sha256'] for s in item['source_paths']):
             errors.append('binding omits a required source')
         closure = physical_errors(binding, root) if binding else ['physical binding absent']
@@ -122,6 +148,7 @@ def prepare(config, root, profile):
             enabled[name] = binding['parameters']
         levers[name] = dict(owner=item['owner'], requested=name in requested,
                             selected=selected, source_sha256=sources,
+                            source_origins=origins, source_holds=source_holds,
                             exact_holds=errors, physical_holds=closure)
     workloads = {}
     for name, item in config['workloads'].items():
