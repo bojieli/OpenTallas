@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.qwen_slab_recipe_failure.v1",
+  "source_commit": "bc22a84ef71374b32dfc2ed1c09729a5029c4755",
+  "host": "ot-epyc2",
+  "original_root": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-20261004/runs/s570_l6_splitface_m7",
+  "raw_sha256": {
+    "driver.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "physical.json": "422c788c572ab5368dd1761d5a6c30e9968d5abd32a3661435e0b2b6f3d1162f",
+    "launch.json": "4a9aa37823654ceea1adba137817eaf2f96533e44dd5fd64c63cc8c7284970f1",
+    "model.json": "82649ddc6dfe2a40e28d4af3d28cf42b7780d7ebfc828c56fe5cea9c86e8bcd5",
+    "source_commit.txt": "03b203d174eae114dc85d3d5934e01a6acc500bf0b48acfa275b2476d880e5d2",
+    "work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_asap7_codex_item7_s570_l6_splitface_m7/base/4_1_cts.log": "ae25bd97bd09fc19b1fc87f0e5f5b6a68ab23e0f9211608512eaf721f008a335"
+  },
+  "verdict": "FAIL_CTS_RSZ-0060",
+  "hold_buffers": 33614,
+  "additional_recipe_failures": 1,
+  "next_prescribed_case": "s570_l7_splitface_m7",
+  "timing_closed": false
+}
