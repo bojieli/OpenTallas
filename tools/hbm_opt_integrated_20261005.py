@@ -98,6 +98,12 @@ def physical_errors(binding, root):
     return errors
 
 
+def workload_parameters(config, workload, enabled):
+    """Apply only levers eligible for the actual selected target implementation."""
+    return {name: parameters for name, parameters in enabled.items()
+            if workload in config['levers'][name].get('eligible_workloads', config['workloads'])}
+
+
 def prepare(config, root, profile):
     requested = config['profiles'][profile]
     levers, enabled = {}, {}
@@ -120,17 +126,20 @@ def prepare(config, root, profile):
     workloads = {}
     for name, item in config['workloads'].items():
         binding = item['binding']
+        target_enabled = workload_parameters(config, name, enabled)
         errors = []
         if not binding:
             errors = ['selected combined minimum-component executable/recipe unbound']
         else:
             for key in ('source_sha256', 'input_sha256', 'executable_sha256'):
                 errors.extend(pin_errors(binding.get(key), root))
-            if binding.get('applied_levers') != enabled:
+            if binding.get('applied_levers') != target_enabled:
                 errors.append('recipe flags differ from the selected combined configuration')
             if not binding.get('argv') or not binding.get('result_contract'):
                 errors.append('missing callable argv/result contract')
-        workloads[name] = dict(holds=errors, binding=binding)
+        workloads[name] = dict(holds=errors, binding=binding, enabled=target_enabled,
+                              inapplicable=[n for n in requested if name not in
+                                  config['levers'][n].get('eligible_workloads', config['workloads'])])
     return dict(schema='opentallas.hbm-opt-integrated-plan.v1', profile=profile,
                 enabled=enabled, levers=levers, workloads=workloads,
                 first_two_exact=len(enabled) >= 2,

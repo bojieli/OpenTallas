@@ -96,3 +96,48 @@ def w2_tag16_model(nout=4):
                             mapper_additional_clock_sinks=0,
                             loaded_clock_capacitance=None),
                 component_source_admitted=True, physical_build_admitted=False, adoption=False)
+
+
+def request_join_model(dq=4, pio=2):
+    # Physical bases A/B32, line count24, PAIR+bound2; queue pointers/count;
+    # request offset6 and remaining24. Response ring/tag logic is unchanged.
+    entry = 32+32+24+2
+    queue = dq*entry + 2*(dq-1).bit_length() + dq.bit_length()
+    request = 24+6+32+32+1+1+1+1  # active A/B bases, PAIR/bound/active/fault
+    op_hook = 8*(pio+(2*pio+3))+8
+    ff = queue+request+op_hook
+    logic = 1100  # two32b address adders +32b mux +FIFO selectors/bounds/control
+    return dict(schema='opentallas.dshbm.wavepack.request_join_model.v1',
+                default_enabled=False, inherited_caller_ff=491,
+                added_ff=ff, queue_ff=queue, request_cursor_ff=request,
+                same_credit_op_hook_ff=op_hook, total_caller_and_join_ff=491+ff,
+                ff_allowance_um2=ff*0.37908,
+                nand2_equivalent_allowance=logic, buffer_allowance=8,
+                combinational_allowance_um2=logic*0.08748+8*0.10206,
+                reservation_um2=2*(ff*0.37908+logic*0.08748+8*0.10206),
+                added_memory_ports=0, added_column_tag_bits=0, added_arithmetic_edges=0,
+                pair_request_index='physical index={accepted_offset[5:3],accepted_offset[1:0]}; segment=offset[2]',
+                reqs_per_cycle=1, response_tag_bits=10, response_payload_bits=1088,
+                line_address_bits=32, descriptor_fifo_depth=dq,
+                clock_period_ps=833.333333, ss_uncertainty_ps=60, ff_uncertainty_ps=25,
+                clock_sinks=ff, loaded_clock_capacitance=None,
+                selector_fanout=32, boundary_added_descriptor_bits=34,
+                route_tracks_lower_bound=34, channel_capacity=None, slot_fit=None,
+                component_source_admitted=True, physical_build_admitted=False,
+                composed_gain=None, adoption=False)
+
+
+def result_join_model(nctx=11, rw=12):
+    # Public start acceptance can enqueue CHD7 posted +NOUT4 outstanding.
+    bits = nctx*(32+32+rw+1+1+1) + 2*(nctx-1).bit_length() + nctx.bit_length() + rw+1+4+1
+    extra = max(0,bits-491)
+    return dict(schema='opentallas.dshbm.wavepack.result_join_model.v1',
+                default_enabled=False, posted_contexts=7, outstanding_contexts=4,
+                queue_depth=nctx, actual_ff=bits, inherited_reservation_ff=491,
+                additional_ff=extra, additional_ff_allowance_um2=extra*0.37908,
+                nand2_equivalent_allowance=600, buffer_allowance=6,
+                boundary_op_identity_bits=32, payload_registers_added=0,
+                extra_memory_ports=0, extra_column_tag_bits=0, added_edges=0,
+                physical_build_admitted=False, component_source_admitted=True,
+                closure_policy='SS60/FF25, unchanged 833.333333ps',
+                measured_gain=None, adoption=False)
