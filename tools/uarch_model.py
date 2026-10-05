@@ -396,6 +396,31 @@ def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
                 SSFF_closed=False, physical_admission=False)
 
 
+def rom_stage_retention_edge_price(elements=2417):
+    """Mandatory write preservation on the PG falling edge, NB2 full25 map.
+
+    Reuse the existing address decode/valid/dirty/shadow bits. Added override
+    enters only the existing power-loss branch; no new port, FF or cycle.
+    Conservative per-entry decode-qualified AND+OR bound, before synthesis.
+    Clock/loading/placement/power remain unqualified, not zero-cost credit.
+    """
+    if elements < 1:
+        raise ValueError("positive element count required")
+    return dict(retention_entries=25, retained_payload_bits=8*43+8*23+20+8*16,
+                compute_macs_per_cycle=0, host_bits_per_cycle=54,
+                host_bytes_per_cycle=6.75, replay_bits_per_cycle=54,
+                added_boundary_bits_per_cycle=0, added_ff_bits=0,
+                added_latency_cycles=0, added_token_latency_ns=0,
+                replica_count=elements, decode_fanout_sinks_per_entry=2,
+                conservative_override_gates_per_element=100,
+                conservative_cell_body_um2_per_element=100*.08748,
+                conservative_placement_um2_per_element_at50pct=200*.08748,
+                replicated_cell_body_mm2=elements*100*.08748/1e6,
+                default_enabled=False, mandatory_protection_fix=True,
+                channel_tracks_delta=0, slot_fit=None, residual_power_w=None,
+                SSFF_context_closed=False, adopted=False)
+
+
 def rom_spine_repin_price(displacements_um, setup_slack_ps, hold_slack_ps):
     """Same-frame pin-only recipe: bound both shorter and longer Manhattan wires.
 
@@ -8509,6 +8534,49 @@ def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
                 physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
 
 
+def dsrom_wfc_decoded_read_price(maxu=866, nw=21, group_size=32):
+    """Same-edge decoded record/ring reads; mandatory controller candidate.
+
+    Decode the existing RD0 address into registered user and slot selects.
+    RD1 still reads, RD2 still selects the group, EX still consumes it.
+    This changes address fanout, not event ordering, storage or memory ports.
+    Reservations include the decode and full AND/OR read network without
+    credit for removal of the previous binary mux. Parent fit is unproven.
+    """
+    groups = (maxu + group_size - 1) // group_size
+    rw = 18 + 3*nw
+    select_ff = maxu + 8*groups
+    record_terms = maxu*rw
+    ring_terms = maxu*8*nw
+    decode_terms = 5*maxu + 3*8*groups
+    nand2 = 2*(record_terms + ring_terms) + decode_terms
+    buffers = 3*select_ff + maxu*((rw+31)//32) + groups*8*((group_size*nw+31)//32)
+    gross = select_ff*0.2916 + nand2*0.08748 + buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.decoded_read.v1',
+        baseline_controller_sha256='601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099',
+        default_enabled=False, adopted=False, mandatory_controller=True,
+        full_shape=dict(MAXU=maxu,NW=nw,FLIT=512,AW=30,VWA=15,USER_W=10,KVW=32768,WIN=6),
+        groups=groups, replicas=1, MACs_per_cycle=0,
+        record_bits_per_user=rw, ring_bits_per_user=8*nw,
+        retained_user_storage_bits=maxu*(rw+8*nw+2),
+        additional_select_FF_bits=select_ff, NAND2_reservation=nand2,
+        buffer_reservation_cells=buffers, gross_cell_reservation_um2=gross,
+        total_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+        new_memory_ports=0, new_external_boundary_bits_per_cycle=0,
+        record_read_bits_per_edge=rw, ring_read_bits_per_edge=nw,
+        record_read_bytes_per_edge=rw/8, ring_read_bytes_per_edge=nw/8,
+        ring_selector_prebuffer_fanout=group_size*nw,
+        record_selector_prebuffer_fanout=rw,
+        routing_tracks_required=None, channel_capacity=None, floorplan_slot=None,
+        routing_capacity_proven=False, parent_slot_fit_proven=False,
+        area_requires_mapping=True, added_pipeline_edges=0,
+        single_user_latency_delta_cycles=0, reset_or_fault_policy_change=False,
+        target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+        source_exact=False, stage_exact=False, contextual_SS_FF_closed=False,
+        missing_boundary='actual selected caller completion/config producer launch and capture pins',
+        scope='RD0 decoded selects -> same RD1 old-data read -> same RD2 group capture -> same EX; invalid user returns zero; same-edge writes retain read-before-write semantics')
+
+
 def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
                                    measured_stage_cycles=73670):
     """Unselected one-edge completion alternatives, priced on a retained trace.
@@ -9320,6 +9388,34 @@ def hbm_existing_attention_allocation_model():
                 adopted=False,gain_claim=None)
 
 
+
+def hbm_existing_attention_source_cut_model():
+    """Actual after-E/mux boundary of the selected DS engine, not proxy tile chains."""
+    allocation = hbm_existing_attention_allocation_model()
+    p = allocation['selected_parameters']
+    assert (p['H'], p['D'], p['TD'], p['NL']) == (16, 512, 32, 4)
+    slots = p['D'] // p['TD']
+    tiles = p['NL'] * slots
+    return dict(
+        source='rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:g_t/g_ln',
+        selected_parameters=p,
+        cut='after existing E registers and per-SL ld_mode mux; before golden q.k reduction',
+        load_buses=slots, load_bits_per_bus=1024, load_fanout_per_bit=p['NL']*p['H'],
+        operand_buses=tiles, operand_bits_per_bus=576, operand_fanout_per_bit=p['H'],
+        shared_control_bits=18, shared_control_fanout=tiles*p['H'],
+        distinct_data_control_ingress_bits=slots*1024+tiles*576+18,
+        load_data_bytes_per_cycle=slots*128, operand_data_bytes_per_cycle=tiles*72,
+        control_bits_per_cycle=18,
+        clock_reset_nets=2, clock_reset_sink_count_each=tiles*p['H'],
+        tile_outputs_bits=tiles*529, leaf_output_bits=tiles*p['H']*34,
+        unused_leaf_valid_bits=tiles*(p['H']-1),
+        before_cut_mux_bits=slots*1024,
+        before_cut_mux_source='e_p_w[1023:0] or zero-extended 512-bit e_q_w slice; one SL shared across four NL',
+        after_cut_mux_bits=0, added_RTL_cycles=0,
+        golden_reduction='NL*H independent S-leaf trees outside head macros; no neighbour i/iu/id port',
+        measured_port_loads=False, contextual_setup_hold_qualified=False,
+        Qwen=allocation['Qwen'])
+
 def hbm_cp_validate_allocated_sources(root, cp):
     """Bind unchanged CP wiring across the two explicit default-off Jason W2 hooks."""
     import hashlib
@@ -9554,3 +9650,9 @@ def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None,parent_c
             physical_characterization_admitted=result['parent_association_join']['measured'],
             adoption=False)
     return result
+
+
+def dsrom_v9_parent_context_model():
+    """Full-slot source register/clock cut, with actual loaded QX10 ports."""
+    from dsrom_v9_parent_context import model
+    return model(Path(__file__).resolve().parents[1])

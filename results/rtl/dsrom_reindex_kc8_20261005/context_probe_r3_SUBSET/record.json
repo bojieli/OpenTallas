@@ -1,0 +1,32 @@
+{
+  "artifacts_sha256": {
+    "6_final.odb": "73011d27122414f4956eec4b8d70fa532776067e94ac4aa08e090d724997caaa",
+    "6_final.sdc": "f06646cfe4e866ad6665b6fe5a307352b7e8b9af680d5035271551ef96c41fdb",
+    "6_final.spef": "6e39c19782076544f92073fcd1164dc3b9bef4c111d43a951e36845eb0c05c4f"
+  },
+  "source_sha256": {
+    "tools/dsrom_reindex_context_probe.py": "4f27ae87b0b7ab37ef55cde9d053af479e55506a684c7c020c106b2e9b0f831c",
+    "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+    "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+    "rtl/experimental/dsrom_reindex_kc7_20261005/ot_hdc_v41x_idx_kgather_kc7.sv": "9b1340bddfb16feea1b77b414e796603e14db1ef612edc9bc8e5bf397cfd82f9",
+    "rtl/experimental/dsrom_reindex_kc7_20261005/ot_hdc_v41x_idx_kgctl_kc7_ctx.sv": "353376b0b4dfba7948af4d3fb5b31ba46ede20cc5abebc8d861591a8898e2ffc",
+    "rtl/dsrom_sys/integration/ot_hdc_v41x_idx_kgather_ps.sv": "d4e4fffd0a40130ca6b57af1c5eb2a898895375edb0f011260009b01b8406c2a",
+    "rtl/dsrom_sys/integration/ot_dsrom_reindex_chain.sv": "25775633ae0b1b2ab6c87913fc61e90dfea94aaf41648fb855d8f59542e9f923",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_mdrop.sv": "5e74932ad866aa491eea0ce0c1a7038bd29e648ec4c004d7e06fdcfb5faa5e2e"
+  },
+  "parent_qualified": false,
+  "new_route": false,
+  "corners": {
+    "ss": {
+      "exit": 0,
+      "sha256": "521beff56976dc64a370edd035a5b5f39a993cdcf845fb16d80bc88206000506",
+      "complete": true
+    },
+    "ff": {
+      "exit": 0,
+      "sha256": "0e99bdd64f628d6fc31638e5551c71403558e58201b22816288371fbecc78847",
+      "complete": true
+    }
+  },
+  "artifacts_unchanged": true
+}

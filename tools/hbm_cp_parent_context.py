@@ -19,6 +19,8 @@ def prepare():
     # Network estimates are replaced by propagated CTS in routed corner STA.
     sdc=(ROOT/'results/rtl/hbm_child_contract_20261005/cp_parent_clk_sm.sdc').read_text()
     sdc=sdc.replace('clk_sm','core_clk')
+    sdc=sdc.replace('set_clock_latency -early 90', 'set_clock_latency -min 90')
+    sdc=sdc.replace('set_clock_latency -late 100', 'set_clock_latency -max 100')
     sdc+='\n# Context exports held execution and new-request permit from the real join.\n'
     sdc+='set ot_association_outputs [get_ports {exec_owned new_request_permit association_fault}]\n'
     sdc+='set_output_delay -clock core_clk -max 166.666666667 $ot_association_outputs\n'
@@ -123,6 +125,10 @@ def corner_sta(orfs, output):
     original=base.script
     def script(corner,relative,macros):
         text=original(corner,relative,macros)
+        # Remove the ideal network budget only; actual CTS propagation supplies it.
+        # Source phase remains the original zero and SS60/FF25 stay unchanged.
+        text=text.replace('set_propagated_clock [all_clocks]',
+            'set_clock_latency 0 [all_clocks]\nset_propagated_clock [all_clocks]')
         text=text.replace('foreach p [get_pins -hierarchical */D]', 'foreach p [all_registers -data_pins]')
         check='max' if corner=='ss' else 'min'
         extra = """

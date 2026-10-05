@@ -1,0 +1,22 @@
+04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e  work/orfs/1_2_yosys.raw.v
+b204cccfaa6db2147fc621bdb6399b1571b1a2bb9afccd55358a58f4544a3de5  work/orfs/constraint.sdc
+04d83d3a9abf671531ed746ed0dce017a6f9042b2a7b773d74df9f6904d0f01e  work/orfs/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.v
+b8097fbdc7428de9b3b01a06e5a26101d7a1217f7934caf070aaa5016d8f7e4c  work/orfs/reports/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/synth_stat.txt
+       11    0.962       11    0.962   OR2x2_ASAP7_75t_R
+       51    4.461       51    4.461   OR3x1_ASAP7_75t_R
+       31    3.164       28    2.858   OR4x1_ASAP7_75t_R
+       13    1.516       13    1.516   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+      206   36.042       14    2.449   XNOR2x1_ASAP7_75t_R
+      392   62.869      392   62.869   XNOR2x2_ASAP7_75t_R
+      203   32.557      203   32.557   XOR2x2_ASAP7_75t_R
+       69   42.297       69        - submodules
+        6      0.7        6        -   ot_hbm_integrated_cp_and4
+       48   39.191       48        -   ot_hbm_integrated_cp_match4
+       12    1.925       12        -   ot_hbm_integrated_cp_nand4
+        3    0.481        3        -   ot_hbm_integrated_cp_nor4
+
+   Chip area for top module '\ot_hbm_integrated_su_cp_context': 469.884240
+     of which used for sequential elements: 186.128280 (39.61%)
+

@@ -98,9 +98,9 @@ def record(m, root, out=None, only=''):
             elif man.get('case') == 'c':
                 cases[key] = Q.record_c(d)
                 cases[key]['group'] = d.parent.name
-                if man.get('power_w', 1.0) == 0.0 and man.get('bump_sites', 1) == 0:
-                    cases[key]['no_core_load'] = ('window lies wholly in a link / host strip: no core-grid load and '
-                                                     'no core power bumps (the macros are on their own supplies)')
+                if man.get('power_w', 1.0) == 0.0:
+                    cases[key]['no_core_load'] = ('Window has zero modeled core power. Grid/load sites and power '
+                                                 'bumps may remain, but a zero-current solve is not loaded IR evidence.')
         except Exception as e:  # noqa: BLE001
             cases[key] = dict(error=repr(e))
     ir = defaultdict(list)
