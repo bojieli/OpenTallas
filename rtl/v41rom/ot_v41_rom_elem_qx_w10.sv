@@ -1153,11 +1153,14 @@ module ot_v41_rom_elem_qx_w10 #(
         $display("QY_CHECK FAIL: w_cl register %b != %b at %t", w_cl_r, w_cl0, $time); $fatal(1);
     end
 `endif
-    // QX = 6: w_sf_r holds s_x[w_s] for the w_s after each edge.  It is a free-clock register: the configuration is
-    // written on the free clock, also while a walk runs, so besides the walker's loads (go: s0_first; on an issue
+    // QX = 6: w_sf_r holds s_x[w_s] for the w_s after each edge.  It is on the gated clock with the walker registers
+    // (on the free clock it captured ~68 ps early against them, route Z10d).  The configuration is written on the free
+    // clock, also while a walk runs, so besides the walker's loads (go: s0_first; on an issue
     // with the segment's last word: s + 1 within the class, s0_live at an MTP restart, else the next class's first
     // segment, an AND-OR select by the one-hot next class) a segment write to the index w_s holds next overrides it
-    // with the written flags.  The walker loads only on gclk edges (go_e and issue both hold the gate open).
+    // with the written flags.  The walker loads only on gclk edges (go_e and issue both hold the gate open).  A write
+    // while the gate is closed is missed, but then the walker is idle (walk_busy holds the gate open while w_run) and
+    // reloads at go_e; the flags reach an output only through an issue (i1_v), so the outputs are unchanged.
     function automatic [3:0] qx_sfl(input [SW-1:0] i);
         qx_sfl = {s_fp4[i], s_bf[i], s_hi[i], s_lo[i]};
     endfunction
@@ -1183,11 +1186,11 @@ module ot_v41_rom_elem_qx_w10 #(
     wire qx_sw_ld = go_e ? qx_sa == s0_first : !w_cl ? qx_sa == s_next : w_restart ? qx_sa == s0_live : qx_sw_nx;
     wire qx_sw_hit = qx_swr && (qx_sld ? qx_sw_ld : qx_sa == w_s);
     // in reset w_s holds (the walker does not load) but the configuration may still be written
-    always @(posedge clk)
+    always @(posedge gclk)
         if (rst_n) w_sf_r <= qx_sw_hit ? qx_swd : qx_sld ? qx_sf_ld : w_sf_r;
         else if (qx_swr && qx_sa == w_s) w_sf_r <= qx_swd;
 `ifdef QP_CHECK
-    always @(negedge clk) if (QX >= 6 && rst_n && qy_seen && w_sf_r !== {s_fp4[w_s], s_bf[w_s], s_hi[w_s], s_lo[w_s]}) begin
+    always @(negedge clk) if (QX >= 6 && rst_n && qy_seen && w_run && w_sf_r !== {s_fp4[w_s], s_bf[w_s], s_hi[w_s], s_lo[w_s]}) begin
         $display("QX_CHECK FAIL: segment flags %b for w_s %0d at %t", w_sf_r, w_s, $time); $fatal(1);
     end
 `endif
