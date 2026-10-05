@@ -31,7 +31,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/arch/energy_silicon_measured"
 SB_PATH = "results/arch/measured_scoreboard/scoreboard.json"
 PG_PATH = "results/rtl/rom_stage_power_gating_20261004/verdict.json"
-SPINE_PATH = "results/rtl/rom_stage_spine_gate_20261004/verdict.json"
+SPINE_PATH = "results/rtl/rom_stage_spine_gate_20261004/verdict.json"         # rejected (no CDC), history
+CDC_PATH = "results/rtl/rom_stage_spine_cdc_20261004/verdict.json"            # successor: synchronised crossings
 REG_PATH = "results/external/registry.json"
 INTEG_PATH = "results/uarch/hbm_accelerator_integration_20261004/model.json"
 RECHECK_PATH = "results/uarch/dsrom_c_recheck_20261004/model.json"
@@ -85,8 +86,25 @@ def element_power():
                residual=Term(pw["residual"], "measured", f"{PG_PATH} power_w.residual"),
                wake_ns=Term(v["wake"]["wake_ns"], "measured", f"{PG_PATH} wake.wake_ns"),
                exact=v["exactness"]["pass_"])
+    cp = ROOT / CDC_PATH
     sp = ROOT / SPINE_PATH
-    if sp.exists():
+    if cp.exists():
+        c = json.loads(cp.read_text())
+        ok = c.get("verdict", "").startswith("ADOPT")
+        st = "measured" if ok else "unvalidated"
+        k1 = c["power_w"]["stage_k1"]
+        n = c["power_w"]["decomposition"]["per_element_at_n"]["2417"]
+        out["spine"] = dict(
+            pg_idle=Term(k1["pg_idle"], st, f"{CDC_PATH} power_w.stage_k1.pg_idle (one-element stage, routed, gate level)"),
+            residual=Term(k1["residual"], st, f"{CDC_PATH} power_w.stage_k1.residual"),
+            pg_idle_ctl_shared=Term(n["pg_idle_w"], st, f"{CDC_PATH} power_w.decomposition.per_element_at_n['2417'].pg_idle_w",
+                                    "per element of a 2,417-element stage from the measured 1- and 4-element stages"),
+            residual_ctl_shared=Term(n["residual"], st, f"{CDC_PATH} power_w.decomposition.per_element_at_n['2417'].residual"),
+            pg_idle_ctl_aon_shared=Term(None, st, "superseded by the measured stage decomposition"),
+            residual_ctl_aon_shared=Term(None, st, "superseded by the measured stage decomposition"),
+            wake_ns=Term(c["wake"]["wake_ns"], st, f"{CDC_PATH} wake.wake_ns"),
+            verdict=c.get("verdict"))
+    elif sp.exists():
         s = json.loads(sp.read_text())
         ok = s.get("verdict", "").startswith("ADOPT")
         st = "measured" if ok else "unvalidated"
@@ -351,7 +369,8 @@ def qwen(F, get, reg, dram):
 # ---------------------------------------------------------------------------------------------------------------------
 def iso(ref_name, ref_total, designs):
     """Every design replicated to the reference's total silicon (logic + DRAM + switches): batch-1 per-user rate is
-    unchanged, concurrent batch-1 users = replicas; per-user tok/s per 1,000 mm2 and per logic reticle."""
+    unchanged, concurrent batch-1 users = replicas. This is an independent batch-1 replication lower bound,
+    not a saturated large-batch throughput result; per-user tok/s per 1,000 mm2 and per logic reticle."""
     out = {}
     for name, (sil, rate, label) in designs.items():
         rep = ref_total / sil["total_mm2"]
@@ -360,7 +379,9 @@ def iso(ref_name, ref_total, designs):
                          replicas_at_ref_silicon=round(rep, 3), batch1_users_at_ref_silicon=round(rep, 2),
                          aggregate_b1_tok_s_integer_replicas=round(int(rep) * rate, 1),
                          aggregate_b1_tok_s_fractional=round(rep * rate, 1))
-    return dict(reference=ref_name, reference_total_mm2=ref_total, rows=out)
+    return dict(reference=ref_name, reference_total_mm2=ref_total,
+                aggregate_scope="Independent batch-1 replication lower bound; not saturated large-batch throughput",
+                rows=out)
 
 
 def ledger_fix():
@@ -432,7 +453,8 @@ def build():
                 supersedes="results/uarch/ds_energy_silicon_authoritative_20261004 (INVALID: old 2,466-2,532 tok/s DS ROM "
                            "rate, ASSUMED 10% power-gating residual)",
                 inputs=dict(scoreboard=SB_PATH, scoreboard_commit=load(SB_PATH).get("generated_from_commit"),
-                            element_power=PG_PATH, spine=SPINE_PATH if (ROOT / SPINE_PATH).exists() else "pending",
+                            element_power=PG_PATH, spine=CDC_PATH if (ROOT / CDC_PATH).exists() else
+                            (SPINE_PATH if (ROOT / SPINE_PATH).exists() else "pending"),
                             registry=REG_PATH, integration=INTEG_PATH, recheck=RECHECK_PATH, economics=ECON_PATH),
                 status_rank=RANK, ledger_fix=ledger_fix(), deepseek_1m=D, deepseek_compare=ds_cmp, qwen_8k=Q, qwen_compare=q_cmp)
 
@@ -471,9 +493,9 @@ def readme(d):
           f"{el['wake_ns']['value']:.1f} ns." + (
               f" Gated spine: PG idle {sp['pg_idle']['value'] * 1e3:.3f} mW, residual {sp['residual']['value'] * 100:.2f}% "
               f"({sp['residual']['status']}; verdict {sp['verdict']})" + (
-                  f"; with one controller a stage {sp['residual_ctl_shared']['value'] * 100:.2f}%, controller and its "
-                  f"always-on clock branch shared {sp['residual_ctl_aon_shared']['value'] * 100:.2f}%"
-                  if sp.get('residual_ctl_aon_shared') and sp['residual_ctl_aon_shared']['value'] is not None else "") + "."
+                  f"; per element of a 2,417-element stage sharing one controller {sp['residual_ctl_shared']['value'] * 100:.2f}% "
+                  f"({sp['residual_ctl_shared']['src']})"
+                  if sp.get('residual_ctl_shared') and sp['residual_ctl_shared']['value'] is not None else "") + "."
               if sp else " Gated spine: pending (results/rtl/rom_stage_spine_gate_20261004)."),
           f"Idle window at 1M: token {fmt(r['idle_window_1m']['token_us'], 1)} us, stage window "
           f"{r['idle_window_1m']['stage_window_us']:.2f} us, wake {r['idle_window_1m']['wake_us'] * 1e3:.1f} ns "
@@ -485,6 +507,7 @@ def readme(d):
     for k, v in dc["J_per_token_mtp_hbm_over_rom"].items():
         L.append(f"- MTP, ROM {k}: {v:.3f}")
     L += ["", "### Equal total silicon (logic + HBM DRAM at 1,089 mm2 a stack + switch chips), DS ROM as reference", "",
+          dc["iso_silicon"]["aggregate_scope"] + ".", "",
           "| Design | Rate | Per-user tok/s | Total mm2 | Per-user tok/s per 1,000 mm2 | Replicas at ROM silicon | Batch-1 aggregate (integer replicas) |",
           "|---|---|---:|---:|---:|---:|---:|"]
     for k, v in dc["iso_silicon"]["rows"].items():
@@ -509,6 +532,7 @@ def readme(d):
     L += ["", f"Per-user AR: ROM / HBM TP4 = {qc['per_user_ar_rom_over_hbm_tp4']:.3f}; ROM / 1x H100 = "
           f"{qc['per_user_ar_rom_over_h100_tp1']:.2f}; ROM / 8x H100 TP8 = {qc['per_user_ar_rom_over_h100_tp8']:.2f}.", "",
           "### Equal total silicon, Qwen ROM as reference", "",
+          qc["iso_silicon"]["aggregate_scope"] + ".", "",
           "| Design | Rate | Per-user tok/s | Logic dies (reticles) | Total mm2 | Per-user tok/s per 1,000 mm2 | Replicas at ROM silicon | Batch-1 aggregate (integer replicas) |",
           "|---|---|---:|---:|---:|---:|---:|---:|"]
     for k, v in qc["iso_silicon"]["rows"].items():
