@@ -1,0 +1,25 @@
+{
+  "original_source_commit": "d2d64eb088a4a45a9ef8a697cb5a2d148b8ff462",
+  "original_stage": "Slang canonicalization before mapping",
+  "original_terminal_exit": 1,
+  "original_frontend_peak_RSS_KiB": 1425224,
+  "original_estimated_mapping_admission_GiB": 288,
+  "mapping_peak_measured": false,
+  "cause": "read_slang default unroll limit4000 exhausted in W6 encode64; full stderr recovered by unquiet same frontend invocation",
+  "largest_source_loop": "100 held configuration words, encode64 loops71 +7*71 +7 per word, plus100 outer iterations =57600",
+  "corrected_compiler_budget": 65536,
+  "narrow_same_source_elaboration_exit": 0,
+  "RTL_changed": false,
+  "ordinary_cases_replayed": false,
+  "clock_uncertainty_changed": false,
+  "mapped_area": null,
+  "actual_pin_capacitance": null,
+  "parent_qualified": false,
+  "diagnostics_sha256": {
+    "default4000_read.ys": "24df9c4a4f736aff39e0beec22e38977d4956108f2220db57762bf1cdca31a8c",
+    "default4000_stderr.log": "81c789b6d9c8cadea3b78229dc386357741c3a30527a2dc56a1bbadc761e1c60",
+    "bounded65536_read.ys": "44e662d27bae92647f0f4b0a3c8efb367c2dd0751b5fe1ba0db9569db39b3052",
+    "bounded65536_stdout.log": "c872c23cf24304c3217472ff413fbfa7a8deb5d720b408fbb85493c2d8756041",
+    "default4000_stdout.log": "c052605ab5cc7d1b4193f446ef1c78d3b03a85f50bcdef69548d5fc18a1756be"
+  }
+}

@@ -2,7 +2,8 @@
 // Actual selected-SIMT LDG -> CVTBF16 -> retirement -> acknowledged STG.
 // Stimulus is the retained native GU cold FP32 output; expected is comparator
 // only. This exporter gate does not claim a live TC->GU->SwiGLU chain.
-module tb_hbm_accel_gu_retirement #(parameter integer EXPORT=1);
+module tb_hbm_accel_gu_retirement #(parameter integer EXPORT=1, METADATA_ONLY=0);
+ localparam integer SPANS=METADATA_ONLY?1:768;
  reg clk=0,rst_n=0; always #0.4165 clk=~clk;
  reg im_we=0,launch_v=0; reg [12:0] im_addr=0; reg [63:0] im_data=0;
  reg [7:0] sid=0,did=0; reg [8:0] expert=41; reg matrix=0;
@@ -82,7 +83,7 @@ module tb_hbm_accel_gu_retirement #(parameter integer EXPORT=1);
   word(3,ins(8'h0e,2,1,0,0)); // caller-bound real conversion
   word(4,ins(8'h39,2,4,11,64)); // real acknowledged rounded store
   word(5,ins(8'h32,0,0,0,0));
-  for(span=0;span<768;span=span+1) begin
+  for(span=0;span<SPANS;span=span+1) begin
    @(negedge clk);
    expert=9'(meta[span*5]);matrix=1'(meta[span*5+1]);row_base=12'(meta[span*5+2]);
    sid=8'(meta[span*5+3]);did=8'(meta[span*5+4]);accepted=0;accept=0;
@@ -106,7 +107,7 @@ module tb_hbm_accel_gu_retirement #(parameter integer EXPORT=1);
    wait(done||fault);@(negedge clk);if(fault || (EXPORT && !terminal)) $fatal(1,"terminal fault/missing GU completion span=%0d done=%b fault=%b enrolled=%b seen=%b terminal=%b",span,done,fault,dut.g_on.gu_en,dut.g_on.gu_seen,terminal);
    @(negedge clk);
   end
-  if(stores!=9216 || acks!=1536 || (EXPORT && (rows!=9216 || exports!=768))) $fatal(1,"row/ack totals");
+  if(stores!=12*SPANS || acks!=2*SPANS || (EXPORT && (rows!=12*SPANS || exports!=SPANS))) $fatal(1,"row/ack totals");
   $display("PASS_GU_RETIREMENT_EXPORT enabled=%0d experts=41,65 matrices=G,U rows=%0d stores=%0d acks=%0d spans=%0d held_cycles=%0d retained_FP32_input=1 live_full_chain=0",EXPORT,rows,stores,acks,exports,total_hold);
   if(EXPORT) begin
    `ifdef GU_METADATA_FAULTS

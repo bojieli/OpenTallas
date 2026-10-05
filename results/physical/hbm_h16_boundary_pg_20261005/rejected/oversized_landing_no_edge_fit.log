@@ -1,0 +1,10 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ORD-0030] Using 1 thread(s).
+Traceback (most recent call last):
+  File "/contract/stitch.py", line 21, in <module>
+    assert choices,('No finite legal M3 bridge location',lo,hi)
+AssertionError: ('No finite legal M3 bridge location', 1348758, 1349082)
