@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "b3cff9140",
+ "generated_from_commit": "4592e3082",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -289,8 +289,8 @@
    "note": "93.4% of 4.000 TB/s peak",
    "value": 3.734,
    "resolved": true,
-   "blob": "4f32e431172748cdaaf1cd90640711024e977f80",
-   "last_commit": "f44553f6d 2026-10-04"
+   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
+   "last_commit": "3ae50a082 2026-10-04"
   },
   "qwen_rom.stream4_fill_pct_peak": {
    "target": "qwen_rom",
@@ -303,8 +303,8 @@
    "pointer": "regex:\\| STREAM4 \\(this\\) \\|[^\\n]*\\| ([\\d.]+ %) \\|",
    "value": "93.4 %",
    "resolved": true,
-   "blob": "4f32e431172748cdaaf1cd90640711024e977f80",
-   "last_commit": "f44553f6d 2026-10-04"
+   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
+   "last_commit": "3ae50a082 2026-10-04"
   },
   "qwen_rom.stream4_bench_P8191_pct": {
    "target": "qwen_rom",
@@ -318,8 +318,8 @@
    "note": "15/15 PASS bench",
    "value": "93.0 %",
    "resolved": true,
-   "blob": "4f32e431172748cdaaf1cd90640711024e977f80",
-   "last_commit": "f44553f6d 2026-10-04"
+   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
+   "last_commit": "3ae50a082 2026-10-04"
   },
   "qwen_rom.kv_ideal_L0_P8191": {
    "target": "qwen_rom",
@@ -333,8 +333,8 @@
    "note": "README only; no committed JSON for this job",
    "value": 5290,
    "resolved": true,
-   "blob": "4f32e431172748cdaaf1cd90640711024e977f80",
-   "last_commit": "f44553f6d 2026-10-04"
+   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
+   "last_commit": "3ae50a082 2026-10-04"
   },
   "qwen_rom.realmem_L0_P8191": {
    "target": "qwen_rom",
