@@ -252,6 +252,102 @@ def prepare_accept_head(*, release, release_sha256, step, decoder_sources,
     return inputs
 
 
+def prepare_full_decoder(*, prepared_inputs, decoder_stage_list, full_history_inputs, output):
+    """Extend authorized L0->HEAD inputs; carry RTL X through all 36 layers.
+
+    Decoder sources are the existing owner VPOS compiler's per-layer images.
+    Only past KV is consumed from the existing fulltoken cache receipt. No
+    cached current-layer X or expected HEAD value enters this plan.
+    """
+    prepared_inputs,decoder_stage_list,full_history_inputs,output=map(
+        Path,(prepared_inputs,decoder_stage_list,full_history_inputs,output))
+    selected.require(not output.exists(),'fresh full decoder output required')
+    entered=json.loads(prepared_inputs.read_text())
+    selected.require(entered['status']=='prepared','authorized L0/HEAD inputs required')
+    for path,pin in entered['input_sha256'].items():
+        selected.require(selected.sha(path)==pin,'authorized entering input changed: '+path)
+    plan=Path(entered['stages']).read_text().splitlines()
+    selected.require(len(plan)==3 and plan[0].split()[0]=='ACCEPT' and
+                     plan[1].split()[0]=='L0' and plan[2].split()[0]=='head',
+                     'existing actual ACCEPT/L0/HEAD plan required')
+    tokens=list(map(int,plan[0].split()[1:]));npos=len(tokens)
+    selected.require(npos==entered['npos'] and 1<=npos<=4 and
+                     tokens[0]==entered['token'] and entered['position']+npos<=8192,
+                     'authorized slot extent differs')
+    history=json.loads(full_history_inputs.read_text())
+    selected.require(history['schema']=='opentallas.qwen-rom-full36-inputs.v1' and
+                     history['position']==entered['position'] and history['token']==entered['token'],
+                     'full history must match actual pending position/token')
+    selected.require(set(history['history'])=={f'L{l}_die{r}' for l in range(36) for r in range(4)},
+                     'all 144 actual past-history bindings required')
+    rawdir=Path(history['history_directory']).resolve(strict=True)
+    oracle=Path(history['oracle']['root'])/'oracle.json'
+    selected.require(selected.sha(oracle)==history['oracle']['sha256'],'past history source changed')
+    frame=json.loads(oracle.read_text())['per_position'][str(entered['position'])]
+    selected.require(frame['token']==tokens[0],'past history pending token differs')
+    for rank in range(4):
+        key=f'L0_die{rank}'
+        selected.require(selected.sha(Path(entered['history'])/(key+'.bin'))==
+                         history['history'][key]['raw_sha256'], 'L0 history differs from authorized inputs')
+    pins=dict(entered['input_sha256'])
+    pins[str(oracle.resolve())]=history['oracle']['sha256']
+    for path in (prepared_inputs,decoder_stage_list,full_history_inputs,Path(entered['stages'])):
+        pins[str(path.resolve())]=selected.sha(path)
+    for key,binding in history['history'].items():
+        raw=Path(binding['raw']).resolve(strict=True)
+        selected.require((rawdir/(key+'.bin')).resolve(strict=True)==raw and
+                         raw.stat().st_size==16777216 and selected.sha(raw)==binding['raw_sha256'] and
+                         binding['source_sha256']==frame['kv_pre_sha256'][key],
+                         'actual full history raw binding differs: '+key)
+        pins[str(raw)]=binding['raw_sha256']
+    rows=[line.split() for line in decoder_stage_list.read_text().splitlines() if line.strip()]
+    selected.require(len(rows)==36 and all(len(row)==6 and row[0]==f'L{l}' and row[-1]=='0'
+                     for l,row in enumerate(rows)), 'actual L0..L35 source list, no KV reset, required')
+    sys.path.insert(0,str(runtime.ROOT))
+    try:
+        from tools.runtime.qwen_combined import attention_descriptors_vp as descriptors
+        from tools import hdc_isa as isa
+    finally:sys.path.pop(0)
+    def x_bases(path):
+        found={}
+        for word in map(lambda w:int(w,16),path.read_text().split()):
+            op=isa.decode(word);slot=(word>>900)&7
+            if op['unit']==isa.UNIT_SU and slot not in found:found[slot]=op['a_base']
+        return [found.get(slot) for slot in range(npos)]
+    heads=plan[2].split()[1:5]
+    carried=[x_bases(Path(directory)/'program.hex') for directory in heads]
+    selected.require(all(None not in bases for bases in carried),'actual HEAD slot X bases required')
+    # Preflight literal per-layer X layout before materializing any images.
+    for row in rows:
+        for rank,directory in enumerate(row[1:5]):
+            selected.require(x_bases(Path(directory)/'program.hex')==carried[rank],
+                             'decoder entering X does not match carried slot layout: '+row[0])
+            for name in ('program.hex','segments.hex','matrix_int8.hex','matrix_scale_bf16.hex','crom.hex'):
+                path=Path(directory)/name;pins[str(path.resolve())]=selected.sha(path)
+    output.mkdir()
+    lines=[plan[0]]
+    for layer,row in enumerate(rows):
+        directories=[]
+        for rank,source in enumerate(row[1:5]):
+            destination=output/'images'/f'L{layer}'/f'die{rank}'
+            descriptors.emit(source,destination,npos=npos,enable=True)
+            # Layer zero must be the exact already-authorized component image.
+            if layer==0:
+                old=Path(plan[1].split()[rank+1])
+                for name in ('program.hex','segments.hex','near_slot_bases.hex'):
+                    selected.require((old/name).read_bytes()==(destination/name).read_bytes(),
+                                     'full decoder L0 differs from authorized producer binding')
+            directories.append(str(destination.resolve()))
+        lines.append(' '.join([f'L{layer}',*directories,'0']))
+    lines.append(plan[2])
+    stages=output/'stages.txt';stages.write_text('\n'.join(lines)+'\n')
+    result=dict(entered,stages=str(stages.resolve()),history=str(rawdir),input_sha256=pins,
+                full_decoder=True,layers=list(range(36)),
+                scope='Actual entering embeddings + past KV; RTL X carry L0..L35/HEAD; unexecuted')
+    (output/'inputs.json').write_text(json.dumps(result,indent=2)+'\n')
+    return result
+
+
 def prepare(*args,**kwargs):
     old_runtime,old_selection=predecessor.runtime,predecessor.selected
     try:
@@ -263,20 +359,29 @@ def prepare(*args,**kwargs):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--full-decoder',action='store_true')
+    for key in ('prepared-inputs','decoder-stage-list','full-history-inputs'):p.add_argument('--'+key,type=Path)
     p.add_argument('--accept-head',action='store_true')
     p.add_argument('--pack-cached-slots',action='store_true')
     p.add_argument('--position',type=int)
     p.add_argument('--slot-oracle-roots',nargs='+',type=Path)
     p.add_argument('--slot-oracle-sha256',nargs='+')
     for key in ('selection','oracle-root','history','output'):p.add_argument('--'+key,type=Path,required=key=='output')
-    p.add_argument('--oracle-sha256');p.add_argument('--layer',type=int,required=True)
+    p.add_argument('--oracle-sha256');p.add_argument('--layer',type=int)
     p.add_argument('--images',nargs=4,type=Path)
     for key in ('release','head-manifest','preload'):p.add_argument('--'+key,type=Path)
     for key in ('release-sha256','head-manifest-sha256','preload-sha256'):p.add_argument('--'+key)
     p.add_argument('--step',choices=('step1','step2'),default='step1')
     p.add_argument('--decoder-sources',nargs=4,type=Path);p.add_argument('--head-images',nargs=4,type=Path)
     a=p.parse_args()
-    if a.pack_cached_slots:
+    if not a.full_decoder and a.layer is None:p.error('actual --layer required')
+    if a.full_decoder:
+        if a.accept_head or a.pack_cached_slots:p.error('full decoder extends an existing prepared plan')
+        for key in ('prepared_inputs','decoder_stage_list','full_history_inputs'):
+            if getattr(a,key) is None:p.error('actual --'+key.replace('_','-')+' required')
+        print(json.dumps(prepare_full_decoder(prepared_inputs=a.prepared_inputs,
+            decoder_stage_list=a.decoder_stage_list,full_history_inputs=a.full_history_inputs,output=a.output)))
+    elif a.pack_cached_slots:
         if a.accept_head:p.error('pack entering bytes separately from ACCEPT authorization')
         for key in ('position','head_manifest','head_manifest_sha256','oracle_root','oracle_sha256',
                     'slot_oracle_roots','slot_oracle_sha256'):
