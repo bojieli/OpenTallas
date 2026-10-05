@@ -79,9 +79,11 @@ def prepare(measured, native, output, source=ROOT):
     if text.count(old) != 1:
         raise ValueError('HBM extent argument is missing or ambiguous')
     text = text.replace(old, '-GHBM_LAYERS=36')
+    text += '\n-GBASELINE_AR=1\n'
     (output/'top.args.f').write_text(text)
     params['die'] = [p if not p.startswith('-GHBM_LAYERS=') else '-GHBM_LAYERS=36'
                      for p in params['die']]
+    params['die'].append('-GBASELINE_AR=1')
     pins = {str(p): sha(p) for p in (top, host, tagged, pc, stack,
             measured/'die/Vdie__hierMkArgs.f', measured/'build_params.json')}
     for leaf in LEAVES:
