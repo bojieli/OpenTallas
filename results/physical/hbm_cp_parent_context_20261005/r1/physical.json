@@ -1,0 +1,272 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T21:29:26.246012+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_integrated_su_cp_context",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.166666666667,
+    "core_input_delay_min_ns": 0.0,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_cp_parent_context_20261005/context.sdc",
+          "sha256": "8cee49360aba9e51f6e61bab3e26cd107f840282ef96fe03db50126636b91e5d"
+        }
+      ],
+      "lines": [
+        "create_clock -name core_clk -period 833.333333333 [get_ports clk]",
+        "set_clock_uncertainty -setup 60 [get_clocks core_clk]",
+        "set_clock_uncertainty -hold 25 [get_clocks core_clk]",
+        "set_clock_latency -source 0 [get_clocks core_clk]",
+        "set_clock_latency -early 90 [get_clocks core_clk]",
+        "set_clock_latency -late 100 [get_clocks core_clk]",
+        "set ot_inputs [get_ports {launch_v launch_pc cp_job cp_gen launch_token launch_pos lease_granted release_r exec_done exec_fault retired_original_ops shared_fault}]",
+        "set ot_outputs [get_ports {native_launch lease_v release_v owned pending quiet selected done fault selected_pc held_job held_gen held_token held_pos}]",
+        "set_input_delay -clock core_clk -max 166.666666667 $ot_inputs",
+        "set_input_delay -clock core_clk -min 0 $ot_inputs",
+        "set_output_delay -clock core_clk -max 166.666666667 $ot_outputs",
+        "set_output_delay -clock core_clk -min 0 $ot_outputs",
+        "set_load 9.673192000 $ot_outputs",
+        "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $ot_inputs",
+        "set ot_association_outputs [get_ports {exec_owned new_request_permit association_fault}]",
+        "set_output_delay -clock core_clk -max 166.666666667 $ot_association_outputs",
+        "set_output_delay -clock core_clk -min 0 $ot_association_outputs",
+        "set_load 9.673192000 $ot_association_outputs",
+        "set_input_delay -clock core_clk -max 166.666666667 [get_ports por_n]",
+        "set_input_delay -clock core_clk -min 0 [get_ports por_n]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.166666666667,
+    "output_delay_min_ns": 0.0,
+    "parameters": {
+      "ENABLE": 1,
+      "SU_BALANCED_OWNER_BOUNDARY": 1,
+      "SU_ENABLE": 1,
+      "SU_REGISTERED_BOUNDARY": 1,
+      "SU_REGISTERED_OUTPUTS": 1,
+      "SU_REGISTERED_STATUS": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+        "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+        "size_bytes": 1493
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+        "sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+        "size_bytes": 2175
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+        "sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+        "size_bytes": 22540
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+        "sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+        "size_bytes": 1067
+      },
+      {
+        "path": "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+        "sha256": "01799fa336832464849944731114b27ecd22483a6514f36d8929fa8af5de6ef6",
+        "size_bytes": 2283
+      }
+    ],
+    "top": "ot_hbm_integrated_su_cp_context"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n{\"allcorner_spef_evaluator\": \"/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl\", \"original_sha256\": \"8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c\", \"patched_sha256\": \"532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d\", \"helper_sha256\": \"6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a\"}\ncp /work/constraint.sdc /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.sdc\ntouch -r /work/constraint.sdc /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 16 thread(s).\nmkdir -p /work/objects/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\nlink_design ot_hbm_integrated_su_cp_context\nread_sdc /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_2_yosys.sdc\n[ERROR STA-0410] -early/-late is only allowed with -source.\nError: 1_2_yosys.sdc, 19 STA-0410\n\nElapsed time: 0:01.89[h:]min:sec. CPU time: user 1.80 sys 0.09 (100%). Peak memory: 302724KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/asap7/opentallas_ot_hbm_integrated_su_cp_context_asap7_harvey_cp_parent_context_r1/base/1_synth.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T21:29:08.870546+00:00",
+  "git": {
+    "commit": "b7de99e45b581370c17372a4b762705f1861144b",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_integrated_su_cp_context",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "SU_ENABLE=1",
+      "--param",
+      "SU_REGISTERED_OUTPUTS=1",
+      "--param",
+      "SU_REGISTERED_STATUS=1",
+      "--param",
+      "SU_REGISTERED_BOUNDARY=1",
+      "--param",
+      "SU_BALANCED_OWNER_BOUNDARY=1",
+      "--source",
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv",
+      "--source",
+      "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_context.sv",
+      "--clock-period-ns",
+      "0.833333333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--io-delay-fraction",
+      "0.2",
+      "--core-input-delay-min-ns",
+      "0",
+      "--core-input-delay-max-ns",
+      "0.166666666667",
+      "--output-delay-min-ns",
+      "0",
+      "--output-delay-max-ns",
+      "0.166666666667",
+      "--sdc-append",
+      "physical/hbm_cp_parent_context_20261005/context.sdc",
+      "--die-area",
+      "0",
+      "0",
+      "77.76",
+      "77.76",
+      "--core-area",
+      "17.28",
+      "17.28",
+      "60.48",
+      "60.48",
+      "--step-tcl",
+      "POST_IO_PLACEMENT=physical/hbm_cp_parent_context_20261005/pins_and_regions.tcl",
+      "--orfs-var",
+      "PDN_TCL=/src/physical/hbm_cp_parent_context_20261005/pdn.tcl",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--orfs-var",
+      "IO_PLACER_H=M6",
+      "--orfs-var",
+      "IO_PLACER_V=M7",
+      "--corner",
+      "TT",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--max-transition-ns",
+      "0.320",
+      "--max-fanout",
+      "32",
+      "--hold-margin-ns",
+      "0.010",
+      "--stages",
+      "pnr",
+      "--place-density",
+      "0.50",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "TMPDIR=/work/tmp",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--keep-heavy-artifacts",
+      "--nickname-tag",
+      "harvey_cp_parent_context_r1",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/work",
+      "--output",
+      "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-route-r1/physical.json",
+      "--step-tcl",
+      "POST_TAPCELL=physical/common/ot_macro_track_assert_hook.tcl"
+    ],
+    "driver": {
+      "commit": "b7de99e45b581370c17372a4b762705f1861144b",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-source-r1/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-source-r1"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/jobs/harvey-cp-parent-context-source-r1"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
