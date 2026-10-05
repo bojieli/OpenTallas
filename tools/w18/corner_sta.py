@@ -33,11 +33,12 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def script(corner: str, base: str, macros: list[str]) -> str:
+def script(corner: str, base: str, macros: list[str], post_sdc: list[str] = ()) -> str:
     libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in LIBS[corner])
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
     check = "max" if corner == "ss" else "min"
+    post = "\n".join(f"read_sdc /src/{p}" for p in post_sdc)
     return f"""
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -48,6 +49,7 @@ read_db {base}/6_final.odb
 read_sdc {base}/6_final.sdc
 read_spef {base}/6_final.spef
 set_propagated_clock [all_clocks]
+{post}
 puts "OT_CORNER {corner}"
 puts "OT_WS [sta::worst_slack_cmd {check}]"
 puts "OT_TNS [sta::total_negative_slack_cmd {check}]"
@@ -74,10 +76,10 @@ def _f(v):
         return None
 
 
-def run(orfs: Path, corner: str, macros: list[str]) -> dict:
+def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = ()) -> dict:
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = f"/work/{base.relative_to(orfs)}"
-    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros))
+    (orfs / f"w18_sta_{corner}.tcl").write_text(script(corner, rel, macros, post_sdc))
     cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:latest", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
@@ -101,11 +103,15 @@ def main(argv=None):
     ap.add_argument("--orfs-dir", type=Path, required=True)
     ap.add_argument("--macro", action="append", default=[], help="repo-relative macro view dir")
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--post-sdc", action="append", default=[],
+                    help="repo-relative SDC read after the design is loaded and the clock propagated (e.g. a "
+                         "-reference_pin die-context boundary); absent: unchanged behaviour")
     a = ap.parse_args(argv)
     o = a.orfs_dir.resolve()
     rec = dict(schema="opentallas.w18.corner_sta.v1", orfs_dir=str(o),
                sdc=(next((o / "results/asap7").glob("*/base")) / "6_final.sdc").read_text()[:600],
-               setup_ss=run(o, "ss", a.macro), hold_ff=run(o, "ff", a.macro),
+               setup_ss=run(o, "ss", a.macro, a.post_sdc), hold_ff=run(o, "ff", a.macro, a.post_sdc),
+               post_sdc={p: sha(ROOT / p) for p in a.post_sdc},
                libraries=LIBS, tool_sha256=sha(Path(__file__)),
                policy="AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps")
     rec["closes_signoff"] = bool(rec["setup_ss"]["worst_slack_ps"] is not None and rec["setup_ss"]["worst_slack_ps"] >= 0
