@@ -45,6 +45,16 @@
     "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/rope_m6a5_observation.json",
     "verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
     "reason": "Driver observation timed out; actual OpenROAD PID2604449 remains in GRT repair. No timing verdict."
+   },
+   "rope_d65": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/rope_d65_d45h_observation.json",
+    "verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+    "reason": "Driver observation expired; underlying route remains in GRT hold repair. No timing verdict."
+   },
+   "rope_d45h": {
+    "record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/rope_d65_d45h_observation.json",
+    "verdict": "INCOMPLETE_ROUTE_STILL_RUNNING",
+    "reason": "Driver observation expired; underlying route remains in GRT hold repair. No timing verdict."
    }
   }
  },
