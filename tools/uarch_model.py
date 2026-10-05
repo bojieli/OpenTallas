@@ -7791,3 +7791,63 @@ def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, ins
                 source='rtl/hdc/ot_hdc_core_vector_weight.sv',
                 area_obligation='All held word, 11 DYN operands, position, shifted position, rounds, invalid and phase flops; map before slot fit',
                 physical_obligation='Register /ODD alone still requires SS/FF measurement; no clock relaxation')
+
+
+def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
+    """Port of the adopted zero-edge ROM-VP LA controls to combined VP.
+
+    Queues, ports, descriptors, tags, near service and arithmetic unchanged.
+    This sizes source additions; routed ROM-VP closure is not combined closure.
+    """
+    cw = 13
+    bits = fw + vwa + ntok + 2*cw + 7 + 32
+    return dict(default_enabled=False, added_register_bits_per_die=bits,
+                replicas=replicas, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='enable muxes, prefix logic, key trees, clock/reset/routing',
+                MACs_per_cycle=0, extra_memory_ports=0,
+                existing_VM_read_bytes_per_edge=fw//8,
+                existing_collective_payload_bits_per_edge=fw,
+                existing_collective_tag_bits=44, new_boundary_bits=0,
+                added_instruction_or_collective_edges=0,
+                composed_token_latency_delta_cycles=0,
+                queue_depth_unchanged=4, clock_hz=1200000000,
+                SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                combined_context_clock_closed=False, floorplan_fit=False,
+                adopted=False,
+                source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
+                physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
+
+
+def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
+                                   service_period_fs=833333, ack_tail_edges=0):
+    """Additional alignment around the existing canonical MP commit element.
+
+    A raw lane sampled E0 is decoded after E1 and enters service at E2.
+    Compose the final lane's actual ACK tail with pipeline empty, never sum
+    two edges onto every FILL stage or assume they are unhidden token delay.
+    Canonical decoder/state area belongs to the existing element model.
+    """
+    bits=2*sw*aw+2
+    old_empty=fill_lat+3
+    new_empty=fill_lat+5
+    before=max(old_empty,ack_tail_edges)
+    after=max(new_empty,ack_tail_edges)
+    return dict(default_enabled=False, replicas=replicas, MACs_per_cycle=0,
+                added_register_bits_per_die=bits, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='canonical decoder/state, enable muxes, clock/reset/routing',
+                initiation_interval_service_edges=1, added_lane_service_edges=2,
+                existing_lane_address_bits_per_edge=sw*aw,
+                existing_lane_data_bits_per_edge=sw*32,
+                added_memory_ports=0, new_boundary_bits=0, routing_tracks_added=0,
+                existing_lane_input_bytes_per_edge=sw*4,
+                empty_pipeline_tail_service_edges=new_empty,
+                actual_ack_tail_service_edges=ack_tail_edges,
+                composed_tail_service_edges=after,
+                composed_tail_delta_service_edges=after-before,
+                composed_tail_delta_fs=(after-before)*service_period_fs,
+                token_composition='per-layer max(actual native ACK tail, FILL_LAT+5); serialize only exposed fence tail',
+                service_period_fs=service_period_fs,
+                combined_context_clock_closed=False, floorplan_fit=False, adopted=False,
+                source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')
