@@ -89,7 +89,8 @@ def fragment_coverage(dispatch, groups, stage, rank, program_root, *, terminal=N
             stop = min(later, default=len(images[r]))
             words = images[r][entry:stop]
             require(len(words) >= 2 and words[-1] == end_word and
-                    all(ISA.decode(w, full_shape=True)['unit'] != ISA.UNIT_END for w in words[:-1]),
+                    all(not (ISA.decode(w, full_shape=True)['unit'] == ISA.UNIT_END and
+                             ISA.decode(w, full_shape=True)['ctl'] == 0) for w in words[:-1]),
                     'fragment needs its actual unique terminal END/wait31, without padding')
             ranks.append(dict(rank=r, die_id=offer['die_id'], source_node=offer['node'],
                               source_nodes=offer.get('source_nodes', [offer['node']]),
@@ -246,7 +247,7 @@ def emit_current_stage_candidate(execution, out, *, stage=37, layer=20,
                          reads=n['instruction'].get('_reads',[]),writes=n['instruction'].get('_writes',[]))
             event['missing'] += ['selected native physical service home/capacity and program entry allocation',
                                  'native operand/publication leases and matched visibility/retirement']
-            if n['instruction']['unit'] == ISA.UNIT_END:
+            if n['instruction']['unit'] == ISA.UNIT_END and n['instruction'].get('ctl', 0) == 0:
                 event['end_designation']='layer fragment END; not token/HEAD/global argmax terminal'
         else:
             event['source_action']=n
