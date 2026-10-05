@@ -67,6 +67,25 @@ def dsrom_source_program_inventory(words_by_home, *, tp=4, instruction_bits=2048
         new_hardware=False,adoption=False)
 
 
+def dsrom_source_selection_restore_inventory():
+    """Existing native SU BYP: exact L19.A0 restore, no physical credit.
+
+    s81_minimum_su256.cpp::inputs interns identical A/B/C/D addresses before
+    issuing scalar SourceIo requests. Four operands alias one 512-word span.
+    The actual owner still owes native transport, writes, ACK and reverse drain.
+    """
+    return dict(added_instruction_words_per_rank=2,added_active_program_bytes_TP4=2048,
+        copied_bytes_per_rank=2048,copied_bytes_TP4=8192,
+        native_operand_references_per_rank=4*512,
+        native_prefetch_scalar_reads_per_rank=512,
+        native_prefetch_scalar_port_parallelism=1,
+        native_publication_writes_per_rank=512,native_target_ACKs_per_rank=512,
+        added_FF=0,added_global_port_bits=0,added_response_edges=None,
+        SU_serial_clock_GHz=0.9,loaded_clock_binding_qualified=False,
+        copy_cycles=None,transport_cycles=None,source_lease_hold_cycles=None,
+        fence_drain_cycles=None,physical_area=None,physical_slots=None,adopted=False)
+
+
 def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
     """Price a compiler's finite source order; missing service costs stay unknown.
 
@@ -302,6 +321,21 @@ def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
                 parent_busy="Existing phase/capture ownership through positive VM commit and capture_drained; never a delayed idle credit",
                 fault_policy="Aligned fault drives existing warm-quarantine request, inhibits writes, retains accepted debt; prior writes not rolled back",
                 root_fault_quarantine_fanout=roots,
+                publication_visibility_guard=dict(
+                    purpose="Existing capture_live/drained exports include the actual pending publication copy before consumer/retirement",
+                    added_FF=0, added_edges=0,
+                    quiet_OR2_count=2 * roots + 1, quiet_INV_count=1,
+                    quarantine_AND2_count=roots, quarantine_OR2_count=roots,
+                    export_OR3_count=1, export_AND3_count=1,
+                    export_INV_count_no_CSE=2,
+                    cell_body_um2_no_CSE=(4 * roots + 3) * .08748 + 3 * .04374,
+                    OR2_AND2_OR3_AND3_cell_area_um2=.08748,
+                    INV_cell_area_um2=.04374,
+                    basis="ASAP7 RVT SS SIMPLE211120/INVBUF220122 Liberty; explicit Boolean construction, not synthesis/loaded delay",
+                    raw_fault_timing="Still timed through source publication_quiet to actual phase live/drained/C8 guards; no free fault-blind edge or falsepath",
+                    quiet_control_sink_count=4,
+                    loaded_clock_wire_fault_fanout_cost=None,
+                    paired_register_timing_gain_guaranteed=False),
                 E1_fault_bank_fanout=2,
                 tracks_slot_fit=None, gate_power_w=None,
                 source_exactness_pass=False, connected_consumer_gate_pass=False,
@@ -9332,3 +9366,27 @@ def hbm_topk_balanced_fanout_model():
                 source_and_common_helper_unchanged=True,
                 retained_live_context='peirce-topk-balanced-route-r1',
                 retained_supervisor=3271408, contexts=contexts)
+
+
+def qwen_service_actual_edge_eligibility_model(exposed_column_transactions=None):
+    """Observed clock-calendar failure and unadmitted conservative column-wait cost."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('qwen_service_actual_edge_calendar.py')
+    spec = importlib.util.spec_from_file_location('qwen_actual_edge_calendar', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    result = module.model()
+    result['observed_tCCD_S_violation'] = dict(interval_fs=833333, required_fs=1024000,
+        columns=256, violations=194, actual_PC_source='rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv')
+    result['conservative_column_guard_only'] = dict(pcs=128, added_FF_floor=128,
+        area_floor_um2=128 * .2916, new_ports=0, added_boundary_bits=0,
+        added_clock_reset_bits=128, mux_and_wire_and_slot_fit=None,
+        extra_gap_edges_per_column=1, peak_bytes_per_PC_per_service_edge=16,
+        other_DRAM_timing_repairs='not included; this guard alone is insufficient',
+        adoption=False)
+    result['exposed_column_transactions'] = exposed_column_transactions
+    result['prospective_extra_exposed_service_edges'] = exposed_column_transactions
+    result['composed_token_delta_s'] = None
+    result['composition_missing'] = 'actual accepted column/refresh/return/credit calendar and generated edge phase; no free overlap assumption'
+    return result

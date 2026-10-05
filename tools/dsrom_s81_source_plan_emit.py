@@ -465,6 +465,217 @@ def emit_current_service_candidates(candidate, out, *, service_homes, program_ro
     return result
 
 
+def emit_current_source_continuation(candidate, out, *, program_root, source_input,
+                                     calendar_pricer, program_pricer, restore_pricer):
+    """Compile the four literal L19/L20 actions in the current service plan.
+
+    The restore uses the existing SU BYP instruction and publication namespace.
+    This does not create the external L14 accepted offer, grant a publication,
+    or satisfy either native visibility fence. The actual owner must bind those
+    prerequisites before enrolling this inactive compiler candidate.
+    """
+    import copy
+    import gzip
+    import hashlib
+    import hdc_isa_v41 as ISA
+    if (candidate.get('candidate_only') is not True or candidate.get('active') is not False
+            or candidate.get('service_home_candidates') != {'19':38,'20':40}):
+        raise ValueError('current inactive service38/40 source plan required')
+    out=Path(out);root=Path(program_root);source_input=Path(source_input)
+    if out.exists():raise ValueError('fresh source continuation output required')
+    source_sha=candidate['source_input_sha256'].get(str(source_input))
+    if source_sha is None:
+        source_sha=candidate['source_input_sha256'].get(str(source_input.relative_to(Path(__file__).resolve().parents[1])))
+    if hashlib.sha256(source_input.read_bytes()).hexdigest()!=source_sha:
+        raise ValueError('canonical source input differs from compiled plan')
+    with gzip.open(source_input,'rt') as f:source=json.load(f)
+    nodes={n['id']:n for n in source['nodes']}
+    source_index={n['id']:9+i for i,n in enumerate(source['nodes'])}
+    expected=['L19.A0','L19.fence','L20.A0','L20.fence']
+    if candidate['uncompiled_source_events']!=expected:
+        raise ValueError('exact four current source events required')
+    joined=copy.deepcopy(candidate);events=joined['source_order'];offers=joined['offers']
+    groups=[];action_events={e['node']:e for e in events if e['node'] in expected}
+    for name,e in action_events.items():
+        if e['source_action']!=nodes[name] or e['catalogue_producer_id']!=source_index[name]:
+            raise ValueError('source action/catalogue namespace changed')
+    for layer,required,origin in ((19,True,14),(20,False,20)):
+        if nodes[f'L{layer}.A0']['action'] != dict(before_instruction=7,candidate_source=None,
+                hardware_binding=None,kind='restore_position_selection',region='SELG',
+                required=required,source=origin):
+            raise ValueError('selected restore semantics changed')
+    producer=nodes['L14.I63'];inst=producer['instruction']
+    if (inst['unit'],inst['coll_op'],inst['coll_dst'],inst['coll_k'],inst['coll_n'])!=(6,2,447360,512,512):
+        raise ValueError('actual L14 TOPK SELG producer changed')
+    if producer['template_word_sha256']!='d0ca14372349ed80e998c5140108eaf4796bb1ed121c3b5529e9729abd4e6c79':
+        raise ValueError('released source14 template changed')
+    instruction=dict(unit=ISA.UNIT_SU,wait=31,su_vec=ISA.VEC_I,su_nout=1,
+                     su_nin=512,dst=ISA.DST_VM,o_base=447360,o_si=1)
+    # Real SU prefetches all operands; all four read the retained source span.
+    for operand in 'abcd':
+        instruction.update({operand+'_src':ISA.SRC_VM,operand+'_base':447360,operand+'_si':1})
+    word=ISA.encode(full_shape=True,**instruction)
+    end=ISA.encode(full_shape=True,unit=ISA.UNIT_END,wait=31)
+    writer=source_index['L19.A0'];files={};prefixes={};entry=None
+    for rel,sha in candidate['artifacts'].items():
+        raw=(root/rel).read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=sha:raise ValueError('current program image changed')
+        if rel.startswith('s38_r'):
+            words=raw.decode().splitlines()
+            if entry is None:entry=len(words)
+            if entry!=len(words):raise ValueError('TP4 copy entry differs')
+            prefixes[rel]=sha
+            raw+=f'{word:0512x}\n{end:0512x}\n'.encode()
+        files[rel]=raw
+    if entry!=113 or writer!=2360 or source_index['L14.I63']!=1792:
+        raise ValueError('current source/native/catalogue association changed')
+    if entry+2>1<<14 or writer>=1<<14 or 447360+512>1<<19:
+        raise ValueError('native program/publication/VM capacity exceeded')
+    restore=dict(source_node='L14.I63',source_catalogue_producer=source_index['L14.I63'],
+        source_template_sha256=producer['template_word_sha256'],source_home=28,
+        destination_home=38,source_dies=[112,113,114,115],destination_dies=[152,153,154,155],
+        source_address=447360,destination_address=447360,words=512,scalar_format='raw unsigned ID32',
+        bytes_per_rank=2048,source_native_entry=None,source_native_pc=None,
+        source_native_writer=None,source_accepted_offer=None,
+        destination_entry=entry,destination_producer_pc=entry,destination_end_pc=entry+1,
+        destination_catalogue_writer=writer,word_hex=f'{word:0512x}',
+        word_sha256=hashlib.sha256(word.to_bytes(256,'little')).hexdigest(),
+        provider_header='tools/runtime/dsrom/s81_source_selection_restore.hpp',
+        native_factory='dsrom_s81_bind_minimum_su256',
+        required_owner_binding='Arch retained source14 accepted Offer/native writer/lease; Epic native restore provider',
+        source_and_destination_numeric_addresses_are_not_aliases=True,
+        actual_hooks_bound=False)
+    old_to_new={}
+    for e in events:
+        old=list(e['native_groups']);e['native_groups']=[]
+        # Preserve each group once; a nonfield run can cover several nodes.
+        for g in old:
+            if g not in old_to_new:
+                old_to_new[g]=len(groups);groups.append(candidate['ownerorderedgroups'][g])
+            e['native_groups'].append(old_to_new[g])
+        if e['node']=='L19.A0':
+            indices=[]
+            for rank in range(4):
+                indices.append(len(offers))
+                offers.append(dict(node=e['node'],source_nodes=[e['node']],stage=38,rank=rank,
+                    die_id=152+rank,entry=entry,producer_pc=entry,end_pc=entry+1,
+                    source_pc=[dict(source_node=e['node'],pc=entry,catalogue_producer_id=writer)],
+                    provider='native-source-selection-restore',context_bound=False,
+                    physical_home_adopted=False))
+            e['native_groups']=[len(groups)];groups.append(indices)
+            e.update(source_continuation='native_SU_BYP',restore=restore,
+                     runtime_binding_required=True,missing=[restore['required_owner_binding']])
+        elif e['node']=='L20.A0':
+            e.update(source_continuation='inactive_optional_restore',runtime_binding_required=False,
+                     native_reads=0,native_writes=0,native_ACKs=0,missing=[])
+        elif e['node'].endswith('.fence'):
+            terminal=next(t for t in joined['stage_handoff_candidates'] if t['fence_node']==e['node'])
+            if e['depends_on']!=[e['ordinal']-1] or events[e['ordinal']-1]['node']!=terminal['source_node']:
+                raise ValueError('fence must follow the actual source layer END')
+            terminal.update(request_kind=1,request_kind_name='STAGE_HANDOFF',token_result_valid=False)
+            e.update(source_continuation='native_typed_STAGE_HANDOFF',terminal=terminal,
+                     runtime_binding_required=True,
+                     missing=['Arch actual accepted terminal context, whole ordered coverage and native visibility/drain pins'])
+    if len(old_to_new)!=len(candidate['ownerorderedgroups']):
+        raise ValueError('current compiled group omitted from continuation')
+    by_stage={}
+    for group in groups:by_stage.setdefault(str(offers[group[0]]['stage']),[]).append(group)
+    joined.update(ownerorderedgroups=groups,ownerorderedgroups_by_stage=by_stage,
+        node_order_by_stage={h:[[offers[i]['node'] for i in g] for g in gs] for h,gs in by_stage.items()},
+        uncompiled_source_events=[],unbound_runtime_source_events=['L19.A0','L19.fence','L20.fence'],
+        complete_source_continuation=True,complete_physical_stage_plan=False,
+        generated_fragment_END_words=candidate['generated_fragment_END_words']+1,
+        source_selection_restore=restore,unchanged_program_prefix_sha256=prefixes)
+    # Prices remain unknown until the real owner provides measurements. No
+    # zero-cost restore, fence, transport, or drain is implied by source closure.
+    prices=restore_pricer()
+    joined['source_continuation_model']=prices
+    if calendar_pricer is not None:joined['calendar']=calendar_pricer(events)
+    if program_pricer is not None:
+        counts={rel.split('_r')[0][1:]:len(raw.decode().splitlines()) for rel,raw in files.items()}
+        joined['program_inventory_model']=program_pricer(counts)
+    out.mkdir(parents=True)
+    for rel,raw in files.items():
+        path=out/rel;path.parent.mkdir(exist_ok=True);path.write_bytes(raw)
+    joined['artifacts']={rel:hashlib.sha256(raw).hexdigest() for rel,raw in files.items()}
+    for name,obj in [('parent_dispatch.json',joined),('ownerorderedgroups.json',groups),
+                     ('node_order.json',joined['node_order_by_stage']),
+                     ('source_actions.json',dict(events=[e for e in events if e['node'] in expected],
+                         source_selection_restore=restore,model=prices))]:
+        (out/name).write_text(json.dumps(obj,indent=2)+'\n')
+    _emit_source_continuation_header(out/'source_actions.hpp',restore,joined['stage_handoff_candidates'])
+    return joined
+
+
+def _emit_source_continuation_header(path, restore, terminals):
+    """Existing native operation/terminal types, no new callback/receipt ABI."""
+    word=int(restore['word_hex'],16)
+    literal=','.join(f'0x{(word>>(32*j))&0xffffffff:08x}u' for j in range(64))
+    lines=['#pragma once','#include "s81_prefix_publication.hpp"',
+           '#include "s81_source_selection_restore.hpp"',
+           '#include "s81_wavefront_native_result_read.hpp"',
+           '#include "s81_typed_completion_request_bind.hpp"',
+           'namespace dsrom_s81_emitted_source_actions {',
+           'constexpr unsigned source14_catalogue_producer=1792;',
+           'constexpr unsigned source_home=28, destination_home=38;',
+           'constexpr unsigned selection_address=447360, selection_words=512;',
+           'constexpr unsigned copy_entry=113, copy_end_pc=114, copy_writer=2360;',
+           'constexpr unsigned handoff_request_kind=1;',
+           'constexpr bool l20_restore_required=false;',
+           'inline DsromS81PrefixOperation l19_restore_operation() {',
+           f' return {{copy_writer,2u,"{restore["word_sha256"]}",{{{literal}}}}};','}',
+           '// Enrollment is NOT admission or begin; the real provider owns both.',
+           'inline void enroll_l19_restore(dsrom_s81_minimum::PrefixPublication& p) {',
+           ' p.enroll_literal(copy_writer,{{selection_address,selection_words}});','}',
+           '// Bind the ACTUAL owner tuple. Missing source14 is rejected by Epic.',
+           'inline std::unique_ptr<dsrom_s81_minimum::SourceSelectionRestore> bind_restore(',
+           ' unsigned layer,DsromS81MinimumRuntime& runtime,const DsromC8SourceOffer& destination,',
+           ' std::optional<dsrom_s81_minimum::SelectionRestoreSource> retained_source,',
+           ' std::optional<DsromS81SourceIoTransferHooks::Binding> native_copy,',
+           ' const DsromS81MinimumSourceTags& tags,',
+           ' DsromS81SourceIoTransferHooks::Fence positive_context,',
+           ' DsromS81SourceIoTransferHooks::Fence input_visible,',
+           ' DsromS81SourceIoTransferHooks::Fence remote_drained,',
+           ' DsromS81SourceIoTransferHooks::Fence all_copies_drained,bool opt_in=false) {',
+           ' if(layer!=19u && layer!=20u)',
+           '  throw std::runtime_error("only literal L19/L20 source restore actions are compiled");',
+           ' if(layer==19u && (destination.entry!=copy_entry || !native_copy ||',
+           '     !native_copy->enrolled_writer || *native_copy->enrolled_writer!=copy_writer))',
+           '  throw std::runtime_error("L19 source action requires actual emitted entry113/writer2360");',
+           ' const dsrom_s81_minimum::SelectionRestoreAction action{layer,layer==19u?14u:20u,7u,layer==19u};',
+           ' return std::make_unique<dsrom_s81_minimum::SourceSelectionRestore>(',
+           '  runtime,action,destination,std::move(retained_source),std::move(native_copy),tags,',
+           '  std::move(positive_context),std::move(input_visible),std::move(remote_drained),',
+           '  std::move(all_copies_drained),opt_in);','}',
+           '// Only attach a literal terminal to an ALREADY retained real offer.',
+           '// Planck drives saved typed request; Arch supplies coverage/visibility.',
+           'inline DsromS81NativeResultTerminal handoff_terminal(unsigned layer,',
+           ' const DsromC8SourceOffer& actual_retained_offer) {',
+           ' DsromC8SourceDispatch checked(actual_retained_offer);']
+    for t in terminals:
+        layer=int(t['source_node'].split('.')[0][1:]);home=t['candidate_home']
+        lines.extend([f' if(layer=={layer}u) {{',
+            f'  if(actual_retained_offer.die_id<{4*home} || actual_retained_offer.die_id>{4*home+3} || actual_retained_offer.entry!={t["terminal_entry"]})',
+            '   throw std::runtime_error("source fence does not match retained native terminal offer");',
+            f'  return {{actual_retained_offer,"{t["source_node"]}",{t["producer_pc"]}u,{t["end_pc"]}u}};',
+            ' }'])
+    lines+=[' throw std::runtime_error("only actual L19/L20 source handoff fences are compiled");','}',
+            'template<class Top> void drive_source_fence_request(Top& top,unsigned layer,',
+            ' const DsromS81WaveRequest& saved_request,',
+            ' const DsromC8SourceOffer& saved_accepted_context,',
+            ' const DsromC8SourceOffer& actual_retained_terminal_offer,',
+            ' int actual_terminal_die_id,bool request_retained) {',
+            ' // Rejection cannot leave a stale valid request; accepted RTL debt is untouched.',
+            ' top.wf_join_request_v=0; top.wf_join_request_binding_valid=0;',
+            ' const auto terminal=handoff_terminal(layer,actual_retained_terminal_offer);',
+            ' dsrom_s81_drive_saved_typed_completion_request(top,saved_request,',
+            '  saved_accepted_context,terminal,DsromS81CompletionKind::STAGE_HANDOFF,',
+            '  actual_terminal_die_id,request_retained);','}',
+            '// No restore callback for L20.A0: explicit required=false source action.',
+            '// Neither this header nor END grants visibility, completion or an ACK.','}']
+    path.write_text('\n'.join(lines)+'\n')
+
+
 def emit_candidate_dispatch(execution, candidate, context, out, *,
                             layers=None, expert_ids_by_node=None, include_fields=True, endpoint_map=None, fragment_endpoints=None):
     """Pack native candidate programs using the caller's existing source objects.
