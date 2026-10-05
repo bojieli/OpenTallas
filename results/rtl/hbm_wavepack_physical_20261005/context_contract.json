@@ -1,0 +1,65 @@
+{
+  "status": "UNBOUND_NO_CONTEXTUAL_STA_OR_PNR",
+  "source_join_reference": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+  "selected_caller_hashes_match_measured_r3": {
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv": true,
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv": true,
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv": true,
+    "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv": true
+  },
+  "clock": {
+    "period_ps": 833.333333,
+    "setup_ss_uncertainty_ps": 60,
+    "hold_ff_uncertainty_ps": 25,
+    "root_and_insertion": null
+  },
+  "boundary_requests": [
+    {
+      "pins": "start/op_bound/op_id_a32/op_id_b32/op_rows13/op_pack_w2",
+      "producer": "actual installed caller command/tuple FFs UNBOUND",
+      "receiver": "u_results context arrays and actual u_sm.u_sch s_*",
+      "required": "actual producer FF clkQ and clock arrival, fanout incl BOTH queues, wire/cap and actual input hold/setup"
+    },
+    {
+      "pins": "sm_ready->start_ready",
+      "producer": "u_sm.u_sch.s_ready",
+      "receiver": "installed command acceptance/hold FF UNBOUND",
+      "required": "actual ready-return clock/wire/load; do not assume zero round-trip"
+    },
+    {
+      "pins": "bc_d_ready/bc_d_valid/bc_d_base32/bc_d_lines24",
+      "producer_receiver": "actual u_sm.u_dch s_valid/s_ready/s_data",
+      "required": "loaded credit/channel source register and captured descriptor timing; requestjoin config/root fanout"
+    },
+    {
+      "pins": "bc_req_v/bc_req_addr32/bc_req_tag10/bc_req_ready",
+      "producer_receiver": "actual u_sm.u_rch m_valid/m_data/m_ready",
+      "required": "actual PIO2 channel port FF/master/clock/load"
+    },
+    {
+      "pins": "req_v/req_addr32/req_tag10/req_ready",
+      "producer_receiver": "requestjoin to installed HBM request arbiter/provider UNBOUND",
+      "required": "no memory/tag/credit ready fiction, actual boundary launch/capture clock/load"
+    },
+    {
+      "pins": "sm_rv/sm_row12/sm_rdata256",
+      "producer": "actual u_sm result boundary chain PIO2",
+      "receiver": "u_results restore decoder, data directly forwards",
+      "required": "actual output FF and clock/wire delays; arithmetic G1 route is separate"
+    },
+    {
+      "pins": "rv/rop32/rrow12/rdata256",
+      "receiver": "installed DS20 result publication/consumer FF UNBOUND",
+      "required": "actual loaded restore mux + 256 payload wires, no fake adjacent FF or host reader receipt as hardware"
+    },
+    {
+      "pins": "pair_active/pair_delta7/issue_v/row_ok/row13/absolute_xa7 -> selected_xa7",
+      "producer_receiver": "Euclid g_pack_address launch-captured metadata + u_issue -> existing s1_xa register",
+      "required": "actual launch FF, issuer FF and s1 receiving clock/load including unchanged consumers"
+    }
+  ],
+  "read_only_existing_jobs": "Goodall sole wholeSM route + Euclid installed CTS query remain untouched",
+  "actual_missing_contract_owner": "Erdos caller source + Euclid production/neighbor clock; Rawls installed request/result parent, Maxwell composed slot/track cost",
+  "sizing_scope": "only existing request/result state and address hook, no BC/TC/BD datapath, no W11 or unrelated modules",
+  "adopted": false
+}

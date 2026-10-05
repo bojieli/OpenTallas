@@ -1,0 +1,33 @@
+PCWB digest source implementation; physical adoption PENDING
+
+Baseline: retained r9d SHA9b1d561d10fd6feee452df10dc87d173b90f17f5d6284af823240f6418935f20;
+failed pcwb_r9d_late_0833 SS -34.28ps c_oh[26]->wnro_q[10], FF+7.44ps, area5322.33um2.
+New source: rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_digest.sv
+New module: ot_hbm_accel_stream_pc_wb_digest; DIGEST_CUT=0 default (retained r9d).
+Enable DIGEST_CUT=1. WQ per-slot row-equality flags register alongside the existing
+row command against next queue rows. Digest factored by bank before ACT-hit mux;
+accepted new pushes still compare their actual row and grant, popped slots excluded.
+No arbitration, timers, DRAM row state, posted write/data/ACK/order or WA_LATE edits.
+Pre-RTL sizing in preedit_model.json refers to unified uarch_model constants;
+WQ8 adds8FF (2.3328um2 bodyproxy;4.6656um2 reservation), no new ports/boundarytracks,
+no command/ACK cycles. Combinational/clock/reset/routing area unmeasured, not free.
+
+Remote source lockstep: /srv/opentallas-scratch/jobs/bacon-pcwb-digest-cut-r1 onEPYC2.
+Retained r9d vs both DIGEST_CUT0/1; all outputs and nextdigest checked.
+WA_LATE1 REFpb PC0 WQ8 and WA_LATE0 REFab PC1 WQ4, seeds1/2/26 x200kcycles,
+1.2M cycles, zero mismatches. Compile16jobs, admission16GiB, no wall/AS/file/RAMcap.
+Standalone same-input randomized source gate only, not full-token or new DRAM byte oracle.
+Remote source+objects/logs preserved; live predecessors untouched.
+
+Euclid owns ONE next source-qualified route, Sagan inventory; do not duplicate.
+Use corrected shared driver including argv repair a78bb8cbb (origin mergecfa845b75).
+Retain actual pcwb_r9d_late_0833 parameters ENABLE1 REF_MODE1 PC0 CRED64 WB_EN1 WA_LATE1;
+add DIGEST_CUT1 and change ONLY module/source plus fresh output/work/nickname.
+Original util40/density0.6/holdmargin0.01/IOdelay0/SS833ps/setup60ps/FFhold25ps;
+IO0 is retained standalone boundary, NOT full parent clock closure.
+Use explicit --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited,
+OT_ORFS_NUM_CORES<=16, existing EPYC2 admission after fresh measured headroom;
+run tools/w18/corner_sta.py on same source-qualified ODB/SPEF.
+Accept only SS>=0/FF>=0, DRC/antenna/DRV clean and closes_signoff=true;
+retain original failures. Rerun retained DSwb/DRAM eligibility gate on this exact
+source before adoption; no rate credit or invented full-token latency delta.

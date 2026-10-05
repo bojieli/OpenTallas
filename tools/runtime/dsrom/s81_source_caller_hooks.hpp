@@ -275,3 +275,42 @@ public:
         }catch(...){stopped=true;throw;}
     }
 };
+
+// L19.A0 observes the existing native SU copy's own publication. The source
+// writer and destination writer are actual enrolled native associations, not
+// catalogue ordinals or a declaration that a copy has happened.
+inline std::function<bool(const DsromC8SourceOffer&,unsigned)>
+dsrom_s81_bind_l19_selection_copy_visible(
+    DsromC8SourceOffer destination_offer, DsromS81SavedVmSpan source_span,
+    DsromS81MinimumSourceIo source_io, DsromS81MinimumSourceIo destination_io,
+    dsrom_s81_minimum::PrefixPublication& source_publication, unsigned source_writer,
+    dsrom_s81_minimum::PrefixPublication& destination_publication, unsigned destination_writer,
+    std::function<bool(const DsromC8SourceOffer&,unsigned)> actual_writer_admitted) {
+    DsromC8SourceDispatch checked(destination_offer);
+    const unsigned rank=unsigned(destination_offer.die_id)%4;
+    if(destination_offer.die_id<152||destination_offer.die_id>=156||
+       !source_span.producer||source_span.producer->stage!=28||
+       source_span.producer_die!=112+int(rank)||source_span.producer_identity>=(1ull<<47)||
+       source_span.producer_address!=447360||source_span.destination_address!=447360||
+       source_span.words!=512||source_writer>=(1u<<14)||destination_writer>=(1u<<14)||
+       !source_io.span_lease||!destination_io.span_lease||!actual_writer_admitted||
+       ((source_span.producer_identity>>21)&1023)!=destination_offer.user||
+       (source_span.producer_identity&((1ull<<21)-1))!=destination_offer.position)
+        throw std::runtime_error("L19 selection copy requires actual SOURCE14/home28 to home38 association");
+    return [destination_offer,source_span,source_io,destination_io,&source_publication,
+            source_writer,&destination_publication,destination_writer,
+            actual_writer_admitted](const DsromC8SourceOffer& offer,unsigned writer) {
+        if(offer.die_id!=destination_offer.die_id||offer.identity!=destination_offer.identity||
+           offer.token!=destination_offer.token||offer.position!=destination_offer.position||
+           offer.user!=destination_offer.user||offer.epoch!=destination_offer.epoch||
+           offer.entry!=destination_offer.entry||writer!=destination_writer)
+            throw std::runtime_error("L19 selection copy changed actual accepted destination/writer");
+        if(source_publication.fault()||destination_publication.fault())
+            throw std::runtime_error("L19 selection publication quarantined");
+        return source_publication.complete(source_span.producer_identity,source_writer)&&
+               source_io.span_lease(source_span.producer_identity,447360,512)&&
+               actual_writer_admitted(offer,writer)&&
+               destination_publication.complete(offer.identity,writer)&&
+               destination_io.span_lease(offer.identity,447360,512);
+    };
+}

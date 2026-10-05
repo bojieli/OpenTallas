@@ -152,16 +152,17 @@ row("hbm_accel", "ir_em", "missing",
 # ---------------------------------------------------------------- Full-chip
 row("qwen_rom", "fullchip", "partial",
     ["results/rtl/qwen_rom_fulldie_20261003/STATUS.md", "results/rtl/qwen_rom_fulldie_20261003/README.md",
-     "results/rtl/qwen_rom_fulldie_20261003/feasibility.json"],
-    "792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. GRT k16 NOT closed "
-    "(b2 36.4k overflow; b3r2 variants worse). No die-level detailed route, timing budgets or STA. Die top "
-    "for synthesis does not exist at full shape (tile fabric is host-composed).",
+     "results/rtl/qwen_rom_fulldie_20261003/b3r3/grt/b3r16B40_k16_banded_i50/summary.json"],
+    "792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. Die global route CLOSED "
+    "at b3r16B40 (50-iteration GRT, 0 overflow; scoreboard f1df64409). No die-level detailed route, timing "
+    "budgets or STA. Die top for synthesis does not exist at full shape (tile fabric is host-composed).",
     "XL", "high")
 row("dsrom_s81", "fullchip", "partial",
     ["results/rtl/dsrom_s81_fulldie_20261004/STATUS.md", "results/rtl/dsrom_integration_20261004/elaborate.json"],
-    "Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. Open: q element pin "
-    "xs_q1[151] access; die top lint OOM at 81 GB (elaborate.json killed_oom, not a verdict); no detailed route "
-    "or die STA; q element pair route p8 not met (setup -88 ps, 3,531 paths).",
+    "Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. The all-flags S81 die top "
+    "(die_c2_allon) lints with 0 errors at 33.5 GB peak (elaborate.json; the c0/c1 configs were OOM-killed at "
+    "81-84 GB, not verdicts). Open: q element pin xs_q1[151] access; no detailed route or die STA; q element "
+    "pair route p8 not met (setup -88 ps, 3,531 paths).",
     "L", "high")
 row("hbm_accel", "fullchip", "missing",
     ["results/rtl/hbm_accel_fmax_inventory_20261004/inventory.json",
@@ -231,7 +232,7 @@ row("qwen_rom", "fsr_control", "partial",
 row("dsrom_s81", "fsr_control", "partial",
     ["results/rtl/dsrom_system_rtl_20261003/STATUS.md", "rtl/dsrom_sys/ot_dsrom_stage_guard.sv"],
     "Stage guards, stall export, wavefront package controller RTL; power/reset sequencing NOT built (Qwen's "
-    "ot_qwen_sys_rst_seq is reusable); S81 die top cannot be linted on 81 GB.", "M", "med")
+    "ot_qwen_sys_rst_seq is reusable); the all-flags S81 die top lints (33.5 GB) but has never been simulated.", "M", "med")
 row("hbm_accel", "fsr_control", "partial",
     ["rtl/gpu_sys/ot_gpu_reset_ctrl.sv", "rtl/gpu_sys/ot_gpu_cmdproc.sv",
      "rtl/hbm_accel/service/ot_hbm_accel_causal_command_provider.sv"],
@@ -262,7 +263,7 @@ row("dsrom_s81", "fsr_mtp", "partial",
     ["results/rtl/dsrom_dspark_rtl_20261003/REPLAY.md", "results/rtl/dsrom_dspark_step_slices_20261004/composition.json",
      "results/rtl/ds_mtp_accept_20261003"],
     "DSpark drafter + accept RTL exact on the reduced vehicle and as measured step slices at 1M; fused draft head "
-    "adopted. Not run inside the S81 system top (die top too large to elaborate).", "M", "med")
+    "adopted. Not run inside the S81 system top (the die top lints at 33.5 GB but has no system simulation).", "M", "med")
 row("hbm_accel", "fsr_mtp", "partial",
     ["results/rtl/dshbm_dspark_draft_20261004/README.md", "results/rtl/hbm_system_rtl_20261003/STATUS.md"],
     "DS draft measured on SM elements (chain + full shape exact); DSpark lowering exact on the functional machine; "
@@ -290,7 +291,7 @@ ranked = [
     {"rank": 4, "item": "qwen_rom fsr_mtp: drafter D0 fault at ctx 8K", "why": "headline MTP step not exact in RTL at target context"},
     {"rank": 5, "item": "all dies: clock -- meso FIFO / forwarded links not instantiated in any die top", "why": "single tree proven infeasible; die clocking is a sign-off blocker"},
     {"rank": 6, "item": "all dies: power intent (UPF) and DS PG route closure", "why": "PG measured but intent not in a standard format; R4 route -228 ps"},
-    {"rank": 7, "item": "qwen_rom / hbm_accel fullchip", "why": "Qwen GRT not closed; no accelerator die floorplan"},
+    {"rank": 7, "item": "qwen_rom / hbm_accel fullchip", "why": "Qwen die GRT closed (b3r16B40) but no detailed route/STA; no accelerator die floorplan"},
 ]
 
 out = {

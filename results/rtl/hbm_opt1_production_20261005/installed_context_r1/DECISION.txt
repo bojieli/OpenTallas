@@ -1,0 +1,16 @@
+Read-only installed legacy SM CTS/ETM context extraction. No new RTL, placement, routing, or changed timing constraints.
+
+The production issue cut remains NOT_MET (-152.51 ps SS, +7.75 ps FF). Its 473+323+60 ps external allocation exceeds 833.333333 ps even before logic, so the cut output violation cannot establish an installed PQ queue-path failure. Internal cut R2R remains +36.97 ps, not whole-SM closure.
+
+Goodall CTS is legacy ot_hbm_accel_sm_v ENABLE1, with ibf-driven G1 selection and no production PQ FIFO. Its actual SDC is 833 ps, SS setup uncertainty60 ps / FF hold uncertainty25 ps. The 0.333333 ps tighter period is retained, not rescored.
+
+Macro timing uses actual retained SS/FF ETMs, including native min/max_clock_tree_path arcs, propagated installed CTS clock paths, and the actual ASAP7 placement RC setup. No clock insertion is manually canceled or credited; no routed SPEF is available at CTS. Timing is placement-estimated context evidence only.
+
+The production BOV selection has 48 logical data/tag selects plus valid/fault (50 logical sinks per leaf), while the legacy snapshot selects those48 with ibf. Legacy BOV loading or an ETM broad cap envelope cannot prove the successor loaded50-sink network. Required installed PQ queue/head capture/pop receiver and new BOV distribution are absent. No timing/adoption/token credit transfers from this old hierarchy to production.
+
+All query-script failures are retained alongside successful raw path sections. No architecture verdict is inferred from Tcl errors.
+
+Actual legacy macro->G1 worst queried SS -482.11 ps (TC tag->gt[7]); FF -106.62 ps (TC data->gy[16]). TC valid->G1 -339.30 ps; BD valid->G1 worst -309.32 ps.
+Actual G1->DG worst queried SS -188.87 ps (gy[23]->DG q[39]); FF -237.87 ps (gy[27]->DG q[43]). SS launch CLK3974.83 ps, capture CLK4236.16 ps at next833 ps edge => capture network3403.16 ps, unequal clock insertion. FF launch CLK2411.61 ps versus same-edge capture2764.61 ps. Native STA CRPR is retained; no manual cancellation.
+Actual representative legacy BD ov net SS cap7.750561..7.923763 fF, first sink one placed BUFx3, loaded SS ov arc395.51 ps. This is not the successor50 logical sinks.
+Corrected terminal queries both exit0/COMPLETE and all selected before/after pins match. Original failed query files preserved. No adoption/fullSM/PQ/rate credit.

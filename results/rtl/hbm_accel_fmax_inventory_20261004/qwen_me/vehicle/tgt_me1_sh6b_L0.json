@@ -1,0 +1,200 @@
+{
+  "binary_sha256": "6be24bbbe69c8007d1ee6fb8f75d2c5b97860413c015eb5d2c87d8ed0d4ee74c",
+  "claim_boundary": "HA8 vehicle: the W12 exact datapath (static schedule, lane-local fusion, no kernel launch) with every HBM-resident code word and the KV window timed by the r14 streaming controller; window data are served from the stage images (arrival timed, not carried); SS/FF, area and routing not claimed.",
+  "design_point": {
+    "ar256": false,
+    "arith_target": true,
+    "bd": 31,
+    "code_banks": 10,
+    "coll_depth": 16,
+    "coll_lat": 11,
+    "groups_per_die": 6144,
+    "lv": 7,
+    "mem_extra": 1,
+    "nws": 4,
+    "ord": 4,
+    "scale_lat": 6,
+    "smax": 11,
+    "smin": 6,
+    "spine_h": true,
+    "su_width": 64,
+    "tcut": 6,
+    "tp": 2,
+    "tws": 30,
+    "xvm": 1
+  },
+  "kv_dir": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp2_l3/P8191/kv_pre",
+  "layer_x_checks": {
+    "L0_die0_x": {
+      "actual_sha256": "0e3cf0efbb777c57ea35dc311f5e0ee572195dba75e54b0590c4bf169e817b9d",
+      "expected_sha256": "0e3cf0efbb777c57ea35dc311f5e0ee572195dba75e54b0590c4bf169e817b9d",
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L0_die1_x": {
+      "actual_sha256": "0e3cf0efbb777c57ea35dc311f5e0ee572195dba75e54b0590c4bf169e817b9d",
+      "expected_sha256": "0e3cf0efbb777c57ea35dc311f5e0ee572195dba75e54b0590c4bf169e817b9d",
+      "mismatches": 0,
+      "words": 4096
+    }
+  },
+  "memory_system": {
+    "core_clock_ps": 833.333,
+    "cred": 32,
+    "hbm_ctl_clock_ps": 1024,
+    "head_words": 3168,
+    "kv_words_per_layer": 86,
+    "lag_words": 40,
+    "preroll_ctl_cycles": 5000,
+    "ref_mode": 1,
+    "sram_code_words_beyond_head": 1098,
+    "sram_mib_per_die": 421.0,
+    "stacks_per_die": 4,
+    "stream_words": 86,
+    "window_mib": 21.0,
+    "window_words": 224
+  },
+  "oracle_dir": "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold/tp2_l3/P8191",
+  "oracle_logit_bits": null,
+  "oracle_token": null,
+  "plan": [
+    {
+      "hbm_words": 86,
+      "segments": [
+        [
+          0,
+          128,
+          0,
+          2
+        ],
+        [
+          0,
+          86,
+          0,
+          3
+        ],
+        [
+          192,
+          88,
+          0,
+          2
+        ],
+        [
+          456,
+          512,
+          0,
+          2
+        ],
+        [
+          1224,
+          264,
+          0,
+          2
+        ]
+      ],
+      "sram_words": 992,
+      "stage": "L0"
+    }
+  ],
+  "position": 8191,
+  "rtl_logit_bits": "00000000",
+  "rtl_token": 0,
+  "schema": "opentallas.hbm-accel-qwen-token.v1",
+  "simulate_wall_seconds": 1031.9,
+  "source_sha256": {
+    "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv": "24f3f13649f31078863b9d82d48c2f2984a1bd3a7eabdbd47c9947a311501cf6",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_isa.svh": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+    "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_sfu_q.sv": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+    "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+    "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+    "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "99f42f159c8f8aa255e796291188ddf3e17d1d688de8f69be8a23b93d000a397",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "7aa4575511e4a942ead6611041855c815f03ce411a99ef77bf09188401dd7a78",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+    "rtl/test/qwen_rom_runtime/ot_qwen_hbmacc_rt_die_w12.sv": "761799736039b1345140b7d2da2634829baf3adfe4be49477c04af3e815f4618",
+    "rtl/test/qwen_rom_runtime/qwen_hbmacc_rt_w12.cpp": "1f35dbe10ae759e39e5ad0c58e8330e7827e0c6e869aaf4403f9373ae0285cd4",
+    "rtl/test/qwen_runtime/qwen_rt_matvec.hpp": "337ae8dedab0e49ddfa76c70a88589b7ea374548e0d88f4bce2628aadc4e453b",
+    "rtl/test/qwen_runtime/qwen_rt_memory.hpp": "8b6f9b084ca2a20cc12c99da7d53629635141a9a28302a87cbfae16b54145b47",
+    "tools/qwen_hbmacc_rt_token_w12.py": "401eccf4417d48e761591333fc65f7842aebd2dfec03907f76e0544daf50bc21",
+    "tools/qwen_rom_arithmetic_contract_w12.py": "8a1a3cd678e1e31da246b76489e8fa4461e79ddc6cc683fd71f43b316cb5a54d",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/qwen_rom_rt_token_w12.py": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1"
+  },
+  "source_stable": true,
+  "stages": {
+    "L0": {
+      "cycles": 6743,
+      "die0": {
+        "attention": 434,
+        "collective": 816,
+        "ctl_cycles": 10492,
+        "desc_gap": 384,
+        "hbm_fault": 0,
+        "hbm_wait": 0,
+        "kv_wait": 4,
+        "last_wread_cyc": 5888,
+        "matmul": 2499,
+        "other": 69,
+        "rd": 264192,
+        "room_block": 0,
+        "stream_unit": 2922,
+        "words_done": 86,
+        "wst_fault": 0
+      },
+      "die1": {
+        "attention": 434,
+        "collective": 816,
+        "ctl_cycles": 10492,
+        "desc_gap": 384,
+        "hbm_fault": 0,
+        "hbm_wait": 0,
+        "kv_wait": 4,
+        "last_wread_cyc": 5888,
+        "matmul": 2499,
+        "other": 69,
+        "rd": 264192,
+        "room_block": 0,
+        "stream_unit": 2922,
+        "words_done": 86,
+        "wst_fault": 0
+      },
+      "end_cyc": 6750,
+      "me_clock_edges": "5077/5077",
+      "next_token": "0/0",
+      "next_val": "00000000/00000000",
+      "start_cyc": 7
+    }
+  },
+  "stages_run": [
+    "L0"
+  ],
+  "status": "pass",
+  "steps": [],
+  "token_in": 24,
+  "total_cycles": 6750
+}

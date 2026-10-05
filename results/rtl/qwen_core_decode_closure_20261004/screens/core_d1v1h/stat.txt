@@ -1,0 +1,61 @@
+
+19. Printing statistics.
+
+=== ot_qwen_rom_core ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+  1966053        - wires
+  1966053        - wire bits
+  1919205        - public wires
+  1919205        - public wire bits
+  1869073        - ports
+  1869073        - port bits
+    53473 7.25E+03 cells
+      131        -   $scopeinfo
+     1829  160.001   AND2x2_ASAP7_75t_R
+     1336  116.873   AND3x1_ASAP7_75t_R
+      398    40.62   AND4x1_ASAP7_75t_R
+       73    8.515   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+     6915  604.924   AO21x1_ASAP7_75t_R
+       12     1.75   AO221x1_ASAP7_75t_R
+        3    0.525   AO222x2_ASAP7_75t_R
+       27    3.543   AO22x1_ASAP7_75t_R
+        5    1.166   AO31x2_ASAP7_75t_R
+      151   17.613   AO32x1_ASAP7_75t_R
+       15    2.624   AOI211x1_ASAP7_75t_R
+      305   35.575   AOI21x1_ASAP7_75t_R
+       74   10.789   AOI22x1_ASAP7_75t_R
+       18    1.312   BUFx2_ASAP7_75t_R
+      101   38.287   DFFASRHQNx1_ASAP7_75t_R
+    11571 3.37E+03   DFFHQNx1_ASAP7_75t_R
+        1    0.262   ICGx1_ASAP7_75t_R
+     8210  359.105   INVx1_ASAP7_75t_R
+      201   26.375   MAJx2_ASAP7_75t_R
+     3875  338.985   NAND2x1_ASAP7_75t_R
+        5    0.802   NAND3x1_ASAP7_75t_R
+     6207  542.988   NOR2x1_ASAP7_75t_R
+        6    0.962   NOR3x1_ASAP7_75t_R
+      442   51.555   OA211x2_ASAP7_75t_R
+     3427   349.76   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+     2499  437.225   OA222x2_ASAP7_75t_R
+     1145  166.941   OA22x2_ASAP7_75t_R
+        2    0.437   OA31x2_ASAP7_75t_R
+      154   22.453   OA33x2_ASAP7_75t_R
+      865  100.894   OAI21x1_ASAP7_75t_R
+      547   79.753   OAI22x1_ASAP7_75t_R
+      636   55.637   OR2x2_ASAP7_75t_R
+      843   73.746   OR3x1_ASAP7_75t_R
+       53    5.409   OR4x1_ASAP7_75t_R
+        8    0.933   OR5x1_ASAP7_75t_R
+      829  132.955   XNOR2x2_ASAP7_75t_R
+      552    88.53   XOR2x2_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_qwen_rom_core': 7254.395640
+     of which used for sequential elements: 3412.390680 (47.04%)
+

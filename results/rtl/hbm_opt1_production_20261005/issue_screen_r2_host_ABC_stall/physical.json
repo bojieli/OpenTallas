@@ -1,0 +1,221 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T12:51:32.560194+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_accel_issue_pq_sm_boundary",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.473,
+    "core_input_delay_min_ns": 0.166666667,
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.323,
+    "output_delay_min_ns": 0.166666667,
+    "parameters": {
+      "ENABLE": 1,
+      "PQ_ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "physical/hbm_opt1_production_20261005/ot_hbm_accel_issue_pq_sm_boundary.sv",
+        "sha256": "ee2f28d83e1092bbdaf7d83821ad346d98e9748b73aea9ef492cb176b2a2b795",
+        "size_bytes": 2903
+      },
+      {
+        "path": "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "sha256": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+        "size_bytes": 16831
+      },
+      {
+        "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+        "size_bytes": 29816
+      },
+      {
+        "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+        "sha256": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+        "size_bytes": 21613
+      },
+      {
+        "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+        "sha256": "f63863a56f7c8929bf862750c095c2951ba340d4bc3bbb1763e27ec1b8f72427",
+        "size_bytes": 13293
+      },
+      {
+        "path": "rtl/gpu/ot_gpu_issue.sv",
+        "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+        "size_bytes": 7358
+      }
+    ],
+    "top": "ot_hbm_accel_issue_pq_sm_boundary"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\ng hashes of 6905 cells of `\\ot_hbm_accel_issue_pq_sm_boundary'.\nFinding duplicate cells in `\\ot_hbm_accel_issue_pq_sm_boundary'.\nComputing hashes of 6897 cells of `\\ot_hbm_accel_issue_pq_sm_boundary'.\nFinding duplicate cells in `\\ot_hbm_accel_issue_pq_sm_boundary'.\n<suppressed ~4134 debug messages>\nFinding identical cells in module `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000010'.\nComputing hashes of 2 cells of `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000010'.\nFinding duplicate cells in `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000010'.\nFinding identical cells in module `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000011'.\nComputing hashes of 3 cells of `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000011'.\nFinding duplicate cells in `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000011'.\nFinding identical cells in module `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000000111'.\nComputing hashes of 7 cells of `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000000111'.\nFinding duplicate cells in `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000000111'.\nFinding identical cells in module `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000001'.\nComputing hashes of 1 cells of `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000001'.\nFinding duplicate cells in `$paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000001'.\nFinding identical cells in module `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000010100'.\nComputing hashes of 20 cells of `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000010100'.\nFinding duplicate cells in `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000010100'.\nRemoved a total of 1378 cells.\n\n9.23.3. Executing OPT_DFF pass (perform DFF optimizations).\n\n9.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).\nFinding unused cells or wires in module \\ot_hbm_accel_issue_pq_sm_boundary..\nFinding unused cells or wires in module $paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000010..\nFinding unused cells or wires in module $paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000011..\nFinding unused cells or wires in module $paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000000111..\nFinding unused cells or wires in module $paramod\\ot_hbm_accel_bc_kreg\\W=s32'00000000000000000000000000000001..\nFinding unused cells or wires in module $paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000010100..\nRemoved 1339 unused cells and 7029 unused wires.\n<suppressed ~1340 debug messages>\n\n9.23.5. Finished fast OPT passes.\n\n9.24. Executing ABC pass (technology mapping using ABC).\n\n9.24.1. Extracting gate netlist of module `\\ot_hbm_accel_issue_pq_sm_boundary' to `<abc-temp-dir>/input.blif'..\nReplacing 1 occurrences of constant undef bits with constant zero bits\n\nERROR: ABC failed with status F\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T12:38:13.956163+00:00",
+  "git": {
+    "commit": "e3cbe9ada25b17eb64c845f094b41d62606b29a9",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_accel_issue_pq_sm_boundary",
+      "--source",
+      "physical/hbm_opt1_production_20261005/ot_hbm_accel_issue_pq_sm_boundary.sv",
+      "--source",
+      "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+      "--source",
+      "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "--source",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "--source",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "--source",
+      "rtl/gpu/ot_gpu_issue.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "PQ_ENABLE=1",
+      "--clock-period-ns",
+      "0.833333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--core-input-delay-min-ns",
+      "0.166666667",
+      "--core-input-delay-max-ns",
+      "0.473",
+      "--output-delay-min-ns",
+      "0.166666667",
+      "--output-delay-max-ns",
+      "0.323",
+      "--false-path-from",
+      "rst_n",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "synth,pnr",
+      "--core-utilization",
+      "30",
+      "--place-density",
+      "0.55",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "euclid_pq_issue_s1_e3c_r2",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r2/work",
+      "--output",
+      "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r2/physical.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": "e3cbe9ada25b17eb64c845f094b41d62606b29a9",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

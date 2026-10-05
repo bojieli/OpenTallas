@@ -1,0 +1,59 @@
+{
+  "verdict": "FAIL_SS_SETUP_AND_SLEW",
+  "supervisor_rc": 0,
+  "corner_runner_rc": 0,
+  "SS_setup_ps": -20.47,
+  "FF_hold_ps": 5.24,
+  "violating_SS_D_pins": 34,
+  "DRC": 0,
+  "antenna": 0,
+  "signal_integrity_violations": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 2
+  },
+  "cell_area_um2": 29809.2,
+  "source_endpoint_sha256": "03d967478a507647599f79d648f962e81ab7b843df5c2a762169ec0fc9a5eb45",
+  "source_equals_existing_exactness_pin": true,
+  "exact_cases": 492,
+  "exact_mismatches": 0,
+  "latency": {
+    "existing_measurement_samples": 24,
+    "mean_delta_clk_sm": 2.125,
+    "min_delta_clk_sm": 1,
+    "max_delta_clk_sm": 4,
+    "priced_added_clk_sm_per_collective": 2,
+    "added_cycles_per_record": 0,
+    "prospective_added_token_ns_265_collectives": 441.6666666666667,
+    "phase_jitter_in_measured_delta": true,
+    "no_new_bench": true
+  },
+  "clock_and_IO": {
+    "period_ns": 0.833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "false_path_IO": true,
+    "clk_link_tied_to_clk_sm": true
+  },
+  "critical_cone": {
+    "start": "u_mux.g_on.g_dsl[14].g_on.u_own/q",
+    "end": "u_ep.g_on.dat[3712]",
+    "scope": "internal held-owner select to TX payload capture; not the former lane-mask cone"
+  },
+  "adoption": false,
+  "installed_parent": false,
+  "TU_clock_credit": false,
+  "closing_clocks_changed": false,
+  "selected_successor_remains": "ot_gpu_coll_endpoint_f12_txmask only; existing live own routes preserved",
+  "artifacts_sha256": {
+    "physical.json": "68c8a0f2c6d9f5b64056144e043f63f4d6a5ea0048fd41e6ffc1f78d7651f00f",
+    "corner.log": "03d26e380a17bf24d67fca8c0e9a1ebf5bc43eb41bf7c1bf94f1ad90de2e5818",
+    "exit": "a89a10e988260c6a8ce993dd05893f41d050e2be9c42056a749139cafc9f9117",
+    "corner_sta.json": "c9d9f21cf915bda226cac7f1766a19e40a3eec3e097e0bcd7619241319da31db",
+    "physical_artifacts/config.mk": "7906e2ff8d49cee2b1f07843a3c6b983e8fb65a3a56fb2bcc9884abad021004b",
+    "physical_artifacts/constraint.sdc": "ba765e4f8f7c7110751b29b05a059c0054770da6459003a358a33f921c9a27da",
+    "physical_artifacts/metadata.json": "9da1dbf40a506e1be4211e57341c517503f61b6e3fdcc0bd0cf26f26f72a181b",
+    "physical_artifacts/6_finish.rpt": "588fbf7c37b6d7f57a7eab8591a279d75a253e8a3f16b3329c6f06626109ad8b",
+    "physical_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
