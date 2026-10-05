@@ -96,10 +96,11 @@ module tb_qwen_w1_held_frame;
    end
  endtask
  reg [63:0] r0,w0,a0;reg [31:0] first_x[0:2047],second_x[0:2047];
- integer i,q,first_cycles;
+ integer i,q;
  initial begin
    repeat(3)@(negedge clk);rst_n=1;
    boot(256,256,4);boot(5172,192,8);
+   $display("BOOT actual_postverified_words=%0d",acks);
    phase=1;me_wanted=1;r0=reads;w0=writes;a0=acks;
    for(i=208;i<2256;i=i+1)begin
      re[i]=1;ra[i*24+:24]=4096+((i-208)%128)*32;
@@ -117,6 +118,7 @@ module tb_qwen_w1_held_frame;
        $fatal(1,"first native XVM capture/publication order mismatch %0d",i);
      checks=checks+1;
    end
+   $display("W1 literalphase checked_reads=%0d positive_ACKs=%0d",reads-r0,acks-a0);
    // Actual next phase changes LIVE address parity; fallback must use those
    // addresses, not the literal firstphase leaf map. Same-frame SU writes a
    // read operand: all old reads must precede its physical masked write.
@@ -134,6 +136,7 @@ module tb_qwen_w1_held_frame;
        $fatal(1,"cross-phase XVM publication mismatch %0d",i);
      checks=checks+1;
    end
+   $display("W1 nextphase fallback_reads=%0d positive_ACKs=%0d",reads-r0,acks-a0);
    // A non-ME readback does not advance the held ME response. Check all 48
    // physically written vectors and their three preserved neighbor words.
    phase=3;me_wanted=0;

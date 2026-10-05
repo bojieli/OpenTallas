@@ -1,4 +1,5 @@
 `timescale 1ns/1ps
+`default_nettype none
 // Source-matched opt-in VM realization. Physical clock keeps running while the
 // entire native source/controller clock is held. No native edge is admitted
 // across unpaid masked writes. Read snapshot precedes every write of a frame.
@@ -385,3 +386,5 @@ module ot_qwen_finite_vm_adapter #(
         end
     end
 endmodule
+
+`default_nettype wire
