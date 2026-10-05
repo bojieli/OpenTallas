@@ -23,8 +23,14 @@
 // peak), WSTREAM (start -> merge done), KGSTACK per stack, and VERDICT.
 // ---------------------------------------------------------------------------
 module tb_dsrom_s81_window_la #(
-    parameter integer LA = 1, CREDITS = 8, BG = 0, KG = 0, CLK_PS = 833,
+    parameter integer LA = 1, CREDITS = 8, BG = 0, KG = 0, CLK_PS = 833, LA_IW = 8, LA_ISSUE_PC = 0,
+    parameter integer OWN_WRITE = 1,  // 0: all 128 rows are host image (+WMEM must hold the own row): cold-row reference
     parameter integer KG_FIRST = 0,   // 1: the gather runs first (with the own-row write), the window job starts after it
+    parameter integer PULLIN = 0,     // HBM controller idle REFpb pull-in (ot_hdc_v41x_idx_hbm PULLIN)
+    parameter integer PULLIN_LRU = 0,
+    parameter integer PULLIN_BATCH = 0,
+    parameter integer REF_LEGACY = 0,     // diagnostic only: the pre-2026-10-04 REFpb placement
+    parameter longint REFI_PS = 3900000,  // diagnostic only (the no-refresh floor); 3.9 us is JESD238
     parameter integer BG_STOP = 0,    // 1: the background scan stops when the window job starts (the scan precedes the select)
     parameter integer BASE = 0, BSTEP = 1000, OSTEP = 136,
     parameter integer MAX_CYCLES = 400000
@@ -54,7 +60,7 @@ module tb_dsrom_s81_window_la #(
     wire [NPC-1:0] wl_req_v, wl_req_rdy, wl_rsp_v, wl_rsp_rdy;
     wire [NPC*AW-1:0] wl_req_addr; wire [NPC*LENW-1:0] wl_req_len; wire [NPC*13-1:0] wl_req_tag, wl_rsp_tag;
     wire [NPC*BEATW-1:0] wl_rsp_beat; wire [NPC*DW-1:0] wl_rsp_data;
-    ot_dsrom_window_attn_source_la #(.STREAM_LA(LA != 0), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10),
+    ot_dsrom_window_attn_source_la #(.STREAM_LA(LA != 0), .LA_IW(LA_IW), .LA_ISSUE_PC(LA_ISSUE_PC), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10),
         .SEC_W(AW), .HAW(AW), .TAGW(TAGW), .WIN_STACK(0), .STREAM_II1(0), .REFILL_CREDITS(CREDITS)) u_src (
         .clk(clk), .rst_n(rst_n),
         .retain_qk(1'b0), .retain_pv(1'b0), .retain_complete(1'b0), .retain_invalidate(1'b0),
@@ -195,12 +201,25 @@ module tb_dsrom_s81_window_la #(
             .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wd),
             .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
             .fault(wm_fault[s]), .w_grants(), .a_held());
+`ifdef DRAMCHK
+        // the traced copy of the same controller (rtl/test/ot_hdc_v41x_idx_hbm_trace.sv: the model byte for byte
+        // plus a JESD238 command log and checker), checked at the end of the run
+        ot_hdc_v41x_idx_hbm_trace #(.NPC(NPC), .AW(AW), .DW(DW), .MEM_WORDS(MEMW), .TAGW(STAGW), .LENW(LENW),
+            .BEATW(BEATW), .QD(64), .RQD(32), .RW(16), .MAXSKIP(16), .CLK_PS(CLK_PS), .REFPB(3), .MEM_MODE(0),
+            .PULLIN(PULLIN), .PULLIN_LRU(PULLIN_LRU), .PULLIN_BATCH(PULLIN_BATCH), .REF_LEGACY(REF_LEGACY), .REFI_PS(REFI_PS)) hm (
+            .clk(clk), .rst_n(rst_n), .req_v(h_v), .req_rdy(h_rdy), .req_addr(h_addr), .req_len(h_len),
+            .req_tag(h_tag), .req_we(h_we), .req_wdata(h_wdata), .req_wstrb(h_wstrb), .wr_done(h_wd),
+            .rsp_v(r_v), .rsp_rdy(r_rdy), .rsp_tag(r_tag), .rsp_beat(r_beat), .rsp_data(r_data));
+        final hm.dram_check(s);
+`else
         ot_hdc_v41x_idx_hbm_c8 #(.NPC(NPC), .AW(AW), .DW(DW), .MEM_WORDS(MEMW), .TAGW(STAGW), .LENW(LENW),
-            .BEATW(BEATW), .QD(64), .RQD(32), .RW(16), .MAXSKIP(16), .CLK_PS(CLK_PS), .REFPB(3), .MEM_MODE(0)) hm (
+            .BEATW(BEATW), .QD(64), .RQD(32), .RW(16), .MAXSKIP(16), .CLK_PS(CLK_PS), .REFPB(3), .MEM_MODE(0),
+            .PULLIN(PULLIN), .PULLIN_LRU(PULLIN_LRU), .PULLIN_BATCH(PULLIN_BATCH), .REF_LEGACY(REF_LEGACY), .REFI_PS(REFI_PS)) hm (
             .clk(clk), .rst_n(rst_n), .req_v(h_v), .req_rdy(h_rdy), .req_addr(h_addr), .req_len(h_len),
             .req_tag(h_tag), .req_we(h_we), .req_wdata(h_wdata), .req_wstrb(h_wstrb), .wr_done(h_wd),
             .wr_done_addr(), .wr_done_tag(),
             .rsp_v(r_v), .rsp_rdy(r_rdy), .rsp_tag(r_tag), .rsp_beat(r_beat), .rsp_data(r_data));
+`endif
         if (KG != 0) begin : g_kg
             ot_hdc_v41x_idx_kgather #(.NPC(NPC), .WB(WB), .AW(AW), .HW(HW), .TAGW(16), .LENW(LENW), .BEATW(BEATW),
                 .DW(DW), .LBW(LBW), .LMW(LMW), .DF(DF)) kg (
@@ -267,6 +286,7 @@ module tb_dsrom_s81_window_la #(
     // ---------------- sequence ----------------
     longint t_start = -1, t_staged = -1, t_done = -1, t_first_w = -1, t_last_w = -1, kg_last = -1;
     integer phase = 0, nprime = 0, beats = 0, bad = 0, wsect = 0, kg_bad = 0;
+    longint w_rsp_stall = 0, w_req_notrdy = 0, w_issue_idle = 0;
     integer kptr [0:3]; longint kfirst [0:3], klast [0:3];
     initial for (integer q = 0; q < 4; q = q + 1) begin kptr[q] = 0; kfirst[q] = -1; klast[q] = -1; end
     integer li = 0;
@@ -277,7 +297,7 @@ module tb_dsrom_s81_window_la #(
         if (rst_n) case (phase)
             0: begin                                    // prime the 127 older rows (host image already in HBM)
                 if (prime_v && prime_ready) nprime = nprime + 1;
-                if (nprime < 127) begin prime_v <= 1; prime_row <= 21'(FIRST + nprime); end
+                if (nprime < (OWN_WRITE != 0 ? 127 : 128)) begin prime_v <= 1; prime_row <= 21'(FIRST + nprime); end
                 else phase <= 1;
             end
             1: begin                                    // kgather lists, then wait for T0
@@ -288,7 +308,7 @@ module tb_dsrom_s81_window_la #(
                 end
                 if (BG != 0 && cyc >= T0 - 600) bg_on <= 1;
                 if (cyc >= T0 - 1 && (KG == 0 || li >= 2048)) begin
-                    t_wstart = cyc + 1; phase <= 6;
+                    t_wstart = cyc + 1; phase <= 6; if (OWN_WRITE == 0) nblk = 16;
                     if (KG != 0 && KG_FIRST != 0) begin kg_cmd <= 1; t_kg0 = cyc + 1; end
                 end
             end
@@ -331,6 +351,11 @@ module tb_dsrom_s81_window_la #(
             (g_stack[0].r_tag[p*STAGW + 14 +: 3] == 3'b111 && g_stack[0].r_tag[p*STAGW + 13] == 1'b0 ||
              g_stack[0].r_tag[p*STAGW + 16] && g_stack[0].r_tag[p*STAGW + 14 +: 2] == 2'b00)) c = c + 1;
         if (c != 0) begin if (t_first_w < 0) t_first_w = cyc; t_last_w = cyc; wsect = wsect + c; end
+        for (integer p = 0; p < NPC; p = p + 1) begin
+            if (g_stack[0].r_v[p] && !g_stack[0].r_rdy[p]) w_rsp_stall = w_rsp_stall + 1;
+            if (wl_req_v != 0 || u_src.busy) begin if (!wl_req_rdy[p]) w_req_notrdy = w_req_notrdy + 1; end
+        end
+        if (u_src.busy && wl_req_v == 0 && t_first_w >= 0 && wsect < 2176) w_issue_idle = w_issue_idle + 1;
     end
     // streamed rows
     integer srow = 0;
@@ -374,6 +399,7 @@ module tb_dsrom_s81_window_la #(
         $display("WLOAD la=%0d credits=%0d bg=%0d kg=%0d clk_ps=%0d t0=%0d cycles=%0d ns=%0.1f bytes=69632 tbps=%0.4f peak_tbps=%0.4f frac=%0.4f first_rsp_cycles=%0d last_rsp_cycles=%0d sectors=%0d la_cycles=%0d refill_cycles=%0d",
                  LA, CREDITS, BG, KG, CLK_PS, T0, lc, lns, tbps, peak, tbps / peak, t_first_w - t_start,
                  t_last_w - t_start, wsect, la_cycles, refill_cycles);
+        $display("WDIAG rsp_stall_pc_cycles=%0d req_notrdy_pc_cycles=%0d issue_idle_cycles=%0d", w_rsp_stall, w_req_notrdy, w_issue_idle);
         $display("WSTREAM cycles=%0d ns=%0.1f rows=%0d beats=%0d", t_done - t_start, sns, srow, beats);
         $display("WWRITE cycles=%0d ns=%0.1f blocks=16 sectors_written=%0d", t_wdone - t_wstart,
                  real'(t_wdone - t_wstart) * CLK_PS / 1000.0, sectors_written);

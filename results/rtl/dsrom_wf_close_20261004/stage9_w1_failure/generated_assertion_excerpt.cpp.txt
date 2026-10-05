@@ -1,0 +1,46 @@
+        if (VL_UNLIKELY((((0U != ((((((0x00040000U 
+                                       > vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6213) 
+                                      | (0x00044000U 
+                                         <= vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6213)) 
+                                     << 3U) | (((0x00040000U 
+                                                 > vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6212) 
+                                                | (0x00044000U 
+                                                   <= vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6212)) 
+                                               << 2U)) 
+                                   | ((((0x00040000U 
+                                         > vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6211) 
+                                        | (0x00044000U 
+                                           <= vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6211)) 
+                                       << 1U) | ((0x00040000U 
+                                                  > vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6210) 
+                                                 | (0x00044000U 
+                                                    <= vlSelfRef.__VdfgRegularize_h6e95ff9d_0_6210)))) 
+                                  & (IData)(vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__wq_pop))) 
+                          | ((IData)(vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__f_go) 
+                             & ((0x00040000U > (0x0fffffffU 
+                                                & ((IData)(0x00040000U) 
+                                                   + 
+                                                   (0x7ffffffeU 
+                                                    & (vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__fa 
+                                                       >> 1U))))) 
+                                | (0x00044000U <= (0x0fffffffU 
+                                                   & ((IData)(0x00040001U) 
+                                                      + 
+                                                      (0x7ffffffeU 
+                                                       & (vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__fa 
+                                                          >> 1U))))))))))) {
+            VL_WRITEF_NX("[%0t] %%Error: ot_chip_v41x_kv_prefetch.sv:315: Assertion failed in %m: ot_chip_v41x_kv_prefetch: KV sector %0d outside [262144, 278528)\n",4, 'M',vlSymsp->name(),"tb_dsrom_wavefront_array.g_node[0].g_pooled_idx.g_kv_hbm.u_kv", 'T',-9
+                         , '#',64,VL_TIME_UNITED_Q(1000)
+                         , '#',28,(0x0fffffffU & ((IData)(0x00040000U) 
+                                                  + 
+                                                  (0x7ffffffeU 
+                                                   & (vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__fa 
+                                                      >> 1U)))));
+            vlSelfRef.__Vdly__tb_dsrom_wavefront_array__DOT__kv_fault_w = 1U;
+            tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__fault_code 
+                = (0x00000010U | (IData)(tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__fault_code));
+            VL_STOP_MT("/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-9f4dfd7be/rtl/chip/ot_chip_v41x_kv_prefetch.sv", 315, "");
+        }
+        if (vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__f_go) {
+            vlSelfRef.__VdlyVal__tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__sfi__v2 
+                = (0x00000fffU & ((IData)(1U) + (IData)(vlSelfRef.tb_dsrom_wavefront_array__DOT__g_node__BRA__0__KET____DOT__g_pooled_idx__DOT__g_kv_hbm__DOT__u_kv__DOT__sfi
