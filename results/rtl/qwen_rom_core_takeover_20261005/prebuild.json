@@ -1,0 +1,64 @@
+{
+  "actual_screen": {
+    "SS_setup_ps": -64.189598,
+    "clock_ps": 833,
+    "host": "ot-epyc1tb",
+    "path": "d_chase_n[2] -> chase/issue/load enable fanout -> run_val[7]",
+    "physical_signoff": false,
+    "run": "core_d1v0g",
+    "uncertainty_ps": 60
+  },
+  "adoption": false,
+  "baseline_P0_edited": false,
+  "candidate": "preserved Claude WIP, DEC_LA=1",
+  "change": "read predecoded chase count from held NEXT FIFO entry; use registered DYN selects; retained startup E1/E2/E3 tables ready before earliest E4 push",
+  "clock": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "period_ps": 833,
+    "qualified": false
+  },
+  "default_DEC_LA": 0,
+  "instruction_semantics": "unaltered fields, DYN truncation, VPOS moduloNW, invalid split, held FIFO, actual ready/idle/barrier, END/reset",
+  "latency": {
+    "added_edges_expected": 0,
+    "first_push_earliest_edge": 4,
+    "measured_for_this_WIP": false,
+    "per_instruction_added_edges_expected": 0,
+    "tables_ready_edge": 3,
+    "token_extra_ns_expected": 0
+  },
+  "ports": {
+    "MACs_per_cycle": 0,
+    "internal_decoded_boundary_bits": 878,
+    "new_external_bits": 0,
+    "new_memory_bytes_per_cycle": 0,
+    "unchanged_program_read_bits": 1024
+  },
+  "replicas": "one core per retained TP rank, four ranks; no new die/engine",
+  "routing": {
+    "FIFO_read_mux": "8:1 per field, 3-bit held la_nx",
+    "channel_capacity": null,
+    "local_enable_fanout": "LOAD control omits16 chase count sinks; field output loads retained",
+    "new_external_tracks": 0,
+    "slot_fit": false
+  },
+  "schema": "qwen.rom.core_takeover.v1",
+  "source_pins": {
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_isa.svh": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+    "tools/qwen_rom_core_dec_emit_w12.py": "8c634b5bcf5169d9c7588d3d332bd12e6e20b2b8edb58ad1ab5c34c96afe429c",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/qwen_rom_verify_core_emit_w12.py": "77ce26ad3a9399d6cf55aa559041ea1f7e8ef8d96ffc4078cdeaa1bba0b5b5d2"
+  },
+  "state": {
+    "decoded_FIFO_bits": 7048,
+    "decoded_entry_bits": 878,
+    "dyn_selection_regs_bits": 264,
+    "dyn_selector_count": 11,
+    "entry_count": 8,
+    "incremental_vs_previous_CLAUDE_screen_bits": 160,
+    "staged_instruction_bits": 1024,
+    "storage_upper_bound_basis": "declared registers before constant pruning; full cost includes tables/kept adders/mux/CTS and must be measured"
+  }
+}
