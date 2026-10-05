@@ -31,7 +31,7 @@ module ot_dsrom_window_attn_source_la #(
     parameter integer POS_W = 21, USER_W = 10, SEC_W = 30, HAW = 30, TAGW = 16,
     parameter bit RETAIN_L0 = 0,
     parameter integer WIN_STACK = 0, STREAM_II1 = 0, REFILL_CREDITS = 1,
-    parameter integer NPC = 32, WTAGW = 13, WLENW = 4, BEATW = 4, LA_IW = 8,
+    parameter integer NPC = 32, WTAGW = 13, WLENW = 4, BEATW = 4, LA_IW = 8, LA_ISSUE_PC = 0,
     parameter integer MAX_CONTEXT = 1048576
 ) (
     input wire clk, rst_n,
@@ -192,7 +192,7 @@ module ot_dsrom_window_attn_source_la #(
         wire [NPC*256-1:0] st_acc_data;
         wire all_rows, stage_fault; wire [11:0] landed;
         reg la_start;
-        ot_dsrom_window_stream_la_s81 #(.NPC(NPC), .AW(HAW), .TAGW(WTAGW), .LENW(WLENW), .BEATW(BEATW), .IW(LA_IW)) u_la (
+        ot_dsrom_window_stream_la_s81 #(.NPC(NPC), .AW(HAW), .TAGW(WTAGW), .LENW(WLENW), .BEATW(BEATW), .IW(LA_IW), .ISSUE_PC(LA_ISSUE_PC)) u_la (
             .clk(clk), .rst_n(rst_n), .start(la_start), .base(HAW'(j_base)), .busy(la_busy), .fault(la_fault),
             .req_v(wl_req_v), .req_rdy(wl_req_rdy), .req_addr(wl_req_addr), .req_len(wl_req_len), .req_tag(wl_req_tag),
             .rsp_v(st_acc_v), .rsp_tag(st_acc_tag), .rsp_beat(st_acc_beat), .rsp_data(st_acc_data));

@@ -50,7 +50,7 @@ module ot_v41_mbist_shell (
         .dbg_bira_events(), .dbg_bira_must_cols(), .dbg_bira_overflow());
     genvar m;
     generate for (m = 0; m < 4; m = m + 1) begin : g_rom
-        ot_mbist_rom_collar #(.WORDS(4096), .DW(274), .AMAX(AMAX)) u_rc (
+        ot_mbist_rom_collar_par #(.WORDS(4096), .DW(274), .AMAX(AMAX)) u_rc (
             .clk(clk), .rst_n(rst_n), .f_ce(rf_ce[m]), .f_addr(rf_addr[12*m +: 12]), .f_rd(),
             .m_ce(rm_ce[m]), .m_addr(rm_addr[12*m +: 12]), .m_rd(rm_rd[274*m +: 274]),
             .t_en(rom_sel[m]), .t_clear(rom_clear), .t_req(rom_req), .t_addr(rom_addr), .exp_sig(rom_exp[32*m +: 32]),
