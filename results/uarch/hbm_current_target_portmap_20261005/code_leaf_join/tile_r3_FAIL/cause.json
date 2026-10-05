@@ -1,0 +1,8 @@
+{
+  "source_commit": "13190ebc8",
+  "verdict": "FAIL_KV_EXTRA_EDGE_MISMATCH",
+  "compile_exit": 0,
+  "runtime_exit": 1,
+  "cause": "Unconditional KV delay replaced original read-qualified capture/hold; observed at first valid KV capture after CODE-to-KV bubble. Corrected source retains original capture before additionalD1. Comparison was not weakened.",
+  "successor_source": "a2937731c"
+}

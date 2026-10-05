@@ -78,6 +78,7 @@ module tb_hdc_v41x_vec_sfu #(parameter integer MLAT = 3, parameter integer ALAT 
         if (fed == n && cyc > n + 400) begin
             $display("V41XSFU n=%0d div=%0d div_err=%0d exp=%0d exp_err=%0d rsq=%0d rsq_err=%0d rsq_fault_timing=%0d sp=%0d sp_err=%0d",
                      n, dn, de, en, ee, rn, re, rsq_fm, sn, se);
+            if (de != 0 || ee != 0 || re != 0 || se != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
             $finish;
         end
     end

@@ -1,0 +1,11 @@
+{
+  "host": "ot-epyc1tb",
+  "unit": "s81-native-attention-cached-cxx-o2-20261004-r1.service",
+  "invocation": "2219ef7000f7411c9d2a60931cc2864c",
+  "root": "/srv/opentallas-scratch/builds/goodall-s81-native-attention-cached-o2-20261004-r1",
+  "consumer": "Cicero future normal grouped native ATT caller; excludes Arch fastSIM",
+  "scope": "host cached-generated-CXX compile optimization only; no HDL regeneration or runtime/numerical/clock/physical/rate claim",
+  "original_runtime_preserved": 588707,
+  "original_cache_preserved": "/home/ubuntu/dsrom-s81-native-attention-785b57e02-r1/out",
+  "transfer_preflight_failure": "First source-transfer hashing used hashlib.file_digest unavailable on PVE Python3.10; failed before tar data/build. Corrected SHA streaming, same immutable source inputs."
+}

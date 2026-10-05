@@ -8,6 +8,9 @@
 // translation unit. No weak symbol or host memory-response fallback. The hook
 // must join the actual tagged read ports to this model's shared controller
 // state and backing memory. It owns no separate model/clock/ACK store.
+// Called during settle AND after the caller assigns all actual clocks/resets,
+// before either model evaluates an edge. The die's hclk/hrst_n identify the
+// existing tagged-row boundary; backend sampling is its selected RTL's job.
 bool qwen_stream4_wire_native_tagged_rows(Vdie&,Vhbm&);
 
 struct CombinedStream4 {

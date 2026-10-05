@@ -1,5 +1,7 @@
 # DS-V4.1 HBM switch collectives: AUTHORITATIVE scenarios and tables (2026-10-04)
 
+> **TAU SUPERSEDED (owner rule 2026-10-04).** `model.json`/the record is now composed at the third-party published tau (3.8879, `tools/third_party_tau.py`, `results/speculative/third_party_acceptance_20261004/`). Hand-written figures below that quote tau 4.159 are the superseded self-measured composition: scale MTP tok/s by 3.8879/4.159 = 0.9348 (and MTP J/token by its inverse); AR figures and ROM:HBM ratios are unchanged.
+
 **AUTHORITATIVE (owner decision 2026-10-04).** These values replace every earlier switch and collective figure. Two records are SUPERSEDED but kept unchanged:
 - the 0.668 us W15 switch term (scenario `w15`);
 - the literature range (`results/uarch/hbm_switch_latency_range_20261004/`).

@@ -133,6 +133,7 @@ module tb_hbm_stream_bw;
             if (now < b_act[p][bk] + RAS + RP) v("tRC (REFpb)", p, bk);
             if (now < b_ref_end[p][bk]) v("REFpb during refresh", p, bk);
             if (now < p_last_act[p] + RREFD) v("tRREFD (REFpb after ACT)", p, bk);
+            if (now < p_last_refpb_any[p] + RREFD) v("tRREFD (REFpb after REFpb)", p, bk);
             if (p_round[p][bk]) v("REFpb bank twice in one round", p, bk);
             p_round[p][bk] = 1; if (&p_round[p]) p_round[p] = 0;
             if (now - p_last_ref[p] > REFI / 32 - (MUT == 3 ? 2000 : 0)) v("REFpb late", p, bk);

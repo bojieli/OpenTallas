@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.dsrom.expert-transport.casebook.v1",
+  "verdict": "PASS_ENDPOINT_PAYLOAD_ONLY",
+  "shape_contract": "results/rtl/dsrom_recovery_20261004/expert_placement_sweep/HANDOFF.txt",
+  "shape_contract_sha256": "ca90e531b9e838f5c935827e747ebe0f41eb55646088508d909399fef459cf96",
+  "shape_contract_commit": "7095e772abb58b1ff3b0fec2e82a1fcfaca90cdb",
+  "rows": [
+    {
+      "payload_B": 2304,
+      "role": "Conditional BF16-packed GU return; no pack/unpack implementation",
+      "payload_flits": 36,
+      "measured_endpoint_cycles": 47,
+      "vendor_cycles": {
+        "board": 156,
+        "ucie": 11
+      },
+      "measured_rtl_cycles_including_vendor": 214,
+      "phy_extra_cycles": 0,
+      "wire_cycles": 90,
+      "total_cycles": 304,
+      "total_us": 0.2533333333333333,
+      "raw_record": "results/rtl/dsrom_expert_transport_20261005/measurement.json",
+      "raw_record_sha256": "d4c102c5df326820c487d264e1f222bf5c8b63e33196ded5401ae111762a2107",
+      "raw_source_commit": "5bdbbee2fd209e313844fcf35673f65939798f42",
+      "reused": true
+    },
+    {
+      "payload_B": 4608,
+      "role": "Native raw32 GU return; conditional BF16-packed W2 input",
+      "payload_flits": 72,
+      "measured_endpoint_cycles": 83,
+      "vendor_cycles": {
+        "board": 156,
+        "ucie": 11
+      },
+      "measured_rtl_cycles_including_vendor": 250,
+      "phy_extra_cycles": 0,
+      "wire_cycles": 90,
+      "total_cycles": 340,
+      "total_us": 0.2833333333333334,
+      "raw_record": "results/rtl/dsrom_expert_transport_20261005/measurement.json",
+      "raw_record_sha256": "d4c102c5df326820c487d264e1f222bf5c8b63e33196ded5401ae111762a2107",
+      "raw_source_commit": "5bdbbee2fd209e313844fcf35673f65939798f42",
+      "reused": true
+    },
+    {
+      "payload_B": 9216,
+      "role": "Native raw32 W2 input",
+      "payload_flits": 144,
+      "measured_endpoint_cycles": 155,
+      "vendor_cycles": {
+        "board": 156,
+        "ucie": 11
+      },
+      "measured_rtl_cycles_including_vendor": 322,
+      "phy_extra_cycles": 0,
+      "wire_cycles": 90,
+      "total_cycles": 412,
+      "total_us": 0.3433333333333333,
+      "raw_record": "results/rtl/dsrom_expert_transport_20261005/native_raw32/measurement.json",
+      "raw_record_sha256": "15f6496801b98080eddca7c132f36c8e6ecf4336b98a71440b21fc8519e63683",
+      "raw_source_commit": "6580e008846563057ed4530b69d19afafd99fd0b",
+      "reused": false
+    },
+    {
+      "payload_B": 20480,
+      "role": "Native raw32 field input",
+      "payload_flits": 320,
+      "measured_endpoint_cycles": 331,
+      "vendor_cycles": {
+        "board": 156,
+        "ucie": 11
+      },
+      "measured_rtl_cycles_including_vendor": 498,
+      "phy_extra_cycles": 0,
+      "wire_cycles": 90,
+      "total_cycles": 588,
+      "total_us": 0.49,
+      "raw_record": "results/rtl/dsrom_expert_transport_20261005/native_raw32/measurement.json",
+      "raw_record_sha256": "15f6496801b98080eddca7c132f36c8e6ecf4336b98a71440b21fc8519e63683",
+      "raw_source_commit": "6580e008846563057ed4530b69d19afafd99fd0b",
+      "reused": false
+    }
+  ],
+  "reused_packed_field_reference": {
+    "payload_B": 10240,
+    "total_cycles": 428,
+    "us": 0.3567,
+    "raw_record": "results/rtl/dsrom_recovery_20261004/draft/rlinks.json",
+    "raw_record_sha256": "b1cd51670614f282153496f32c0f6e1e4904fffb81bf5243929fcde37f28ffd5",
+    "role": "Conditional packed field input ONLY; no current pack/unpack bridge",
+    "rerun": false
+  },
+  "raw_record_labels": "Initial gu_return/w2_input names precede native raw32 shape correction; original raw PASS records immutable. Current role is defined by bytes and Arendt source contract.",
+  "whole_chain_latency_us": null,
+  "pack_unpack_bound": false,
+  "consumer_vm_fanout_bound": false,
+  "physical_qualified": false,
+  "adoption": false
+}

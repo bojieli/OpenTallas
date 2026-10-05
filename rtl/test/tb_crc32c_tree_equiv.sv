@@ -87,6 +87,7 @@ module tb_crc32c_tree_equiv;
             $display("PASS crc32c_tree: %0d comparisons over four widths, the XOR-mask form equals ot_crc_pkg::crc32c on every one", checks);
         else
             $display("FAIL crc32c_tree: %0d of %0d comparisons differ", errors, checks);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

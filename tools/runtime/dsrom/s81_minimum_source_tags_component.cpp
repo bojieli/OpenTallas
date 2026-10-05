@@ -33,17 +33,23 @@ struct Provider {
   // by the selected factory; scalar reservations retain stage/rank/producer.
   const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
   const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
-  if((native_i0&&std::string(native_i0)=="1")||(native_index&&std::string(native_index)=="1")) {
+  const char* native_gather=std::getenv("DSROM_S81_NATIVE_L20_GATHER");
+  if((native_i0&&std::string(native_i0)=="1")||(native_index&&std::string(native_index)=="1")||
+     (native_gather&&std::string(native_gather)=="1")) {
    if(r.stage!=37)throw std::runtime_error("native L20 I0 requires canonical stage37");
    phase=0;entry=0;return;
   }
+  const char* head=std::getenv("DSROM_S81_NATIVE_HEAD_END");
+  const bool native_head=head&&std::string(head)=="1";
+  if(native_head&&(r.stage!=80||r.pair!=11))
+   throw std::runtime_error("native HEAD requires selected stage80/pair11");
   const char* path=std::getenv("DSROM_S81_MINIMUM_SELECTED_DIR");
   if(!path||!*path)throw std::runtime_error("source-selected PHROM/CFG path required");
   std::ifstream in(std::string(path)+"/spine_phase.hex");std::string s;
   if(!std::getline(in,s))throw std::runtime_error("source PHROM missing");
   std::size_t n=0;auto ph=std::stoull(s,&n,16);
-  if(n!=s.size()||ph!=22517998140008448ull)throw std::runtime_error("minimum source PHROM not selected literal");
-  std::ifstream cfg(std::string(path)+"/e"+std::to_string(r.pair)+".cfg.hex");
+  if(n!=s.size()||ph!=(native_head?0xdf90000000502801ull:22517998140008448ull))throw std::runtime_error("minimum source PHROM not selected literal");
+  std::ifstream cfg(std::string(path)+(native_head?"/cfg.hex":"/e"+std::to_string(r.pair)+".cfg.hex"));
   if(!cfg.good())throw std::runtime_error("actual selected pair CFG missing");
   // Selected factory's literal component phase/key are phase0 / emitted_key0.
   // Enrolled through exact PHROM plus caller ReturnPhaseBinding equality below.
