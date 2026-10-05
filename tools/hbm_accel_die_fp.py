@@ -484,6 +484,7 @@ def buses(m):
     hub = m['hub']
     faces = m['stn_faces']
     station, chain = _router(m, B, P)
+    pf = m['variant'].get('port_fix')
 
     def sm_face(it, port):
         f = SM_FACE[port]
