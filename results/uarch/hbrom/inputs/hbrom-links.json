@@ -1,0 +1,263 @@
+{
+  "schema": "hbrom-link-audit-v1",
+  "sources_sha256": {
+    "results/rtl/dsrom_1m_allmeasured_20261004/links.json": "13757346b2039c2794c00996871b98fbcd5747783a81f501a0eb140404824a4b",
+    "results/rtl/dsrom_system_rtl_20261003/link_rt_bench.json": "cd5fbda7b791c5eafcbb7fa9e5b0425ec84df375a9a5ef1ce5b203d215f5ae19",
+    "results/uarch/dsrom_baseline_link_clock_20261004/context_r1/model.json": "87e9499fdf0520b9692aa593a236e2336d419946b10b1bf22be30ae2ef31fa10",
+    "rtl/dsrom_sys/ot_dsrom_link_rt.sv": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+    "tools/uarch_model.py": "d97982d88554cf74763c90ffaffd683d04e4a9a15e21f1ef90f7efdec094302b",
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706"
+  },
+  "recommendation": "Reuse TP4 two-package/two-die-per-package activation collectives within a storage stage; retain golden TP4 output ordering. Chain storage stages using full mHC residual packets. Keep weight streams on die. Other TP degrees and ROM cluster geometry need new routing and exact-reduction prices.",
+  "stage_link": {
+    "payload_residual_bytes": 40960,
+    "metadata_bytes": 16,
+    "payload_total_bytes": 40976,
+    "flit_bytes": 64,
+    "flit_count": 641,
+    "clock_hz": 1200000000.0,
+    "endpoint_payload_Bps": 76800000000.0,
+    "board_net_PHY_Bps": 171290000000.0,
+    "board_lanes_per_die_pair": 13,
+    "board_lane_raw_Gbps": 112,
+    "measured_endpoint_cycles": 652,
+    "board_vendor_cycles": 156,
+    "ucie_vendor_cycles": 11,
+    "wire_cycles_old_geometry": 90,
+    "total_old_geometry_cycles": 909,
+    "old_geometry_us": 0.7575,
+    "formula_cycles": "12 + (ceil(payload_B/64)-1) + board_vendor_cycles + ucie_vendor_cycles + ceil(source_route_um/504) + ceil(destination_route_um/504); 12 endpoint cycles inferred from 652-(641-1), match old full-packet baseline only",
+    "conditional_repair_added_cycles": 2,
+    "qualification": "Cycle-exact synthetic packet fixture plus assumed/vendor PHY and geometric routed-reach budgets; baseline fails SS setup. Not an integrated SS/FF-qualified link."
+  },
+  "credits": {
+    "board_credits": 512,
+    "board_replay_flits": 512,
+    "seq_bits": 10,
+    "ucie_credits": 64,
+    "board_measured_max_replay_occupancy": 319,
+    "ucie_measured_max_replay_occupancy": 29,
+    "fullrate_credit_loop_formula": "2*CHANNEL_CYCLES + 10 baseline; +1 for proposed registered repair; add actual extra route/CDC feedback cycles if not represented by channel",
+    "board_min_from_formula": 322,
+    "board_repaired_min_from_formula": 323,
+    "reverse_frame_bits_per_cycle": 53,
+    "forward_frame_bits_per_cycle": 555,
+    "reverse_transport_warning": "Bench assumes independently available reverse ACK/NAK/credit lane at one frame/cycle. Real framing and bandwidth must be reserved.",
+    "buffer_storage_bits_per_unidirectional_link": 525312,
+    "buffer_storage_bytes_per_unidirectional_link": 65664.0,
+    "buffer_ports": "Replay and receive each 1R1W; payload+last only, extra metadata/register stages separate",
+    "buffer_area_if_all_DFF_mm2_lower_bound": 0.1531809792,
+    "sram_area_mm2": null,
+    "full_queue_physical_fit": false
+  },
+  "collectives": {
+    "attn.a_allgather": {
+      "op": "all_gather",
+      "payload_B": 3648,
+      "words_per_rank": 15,
+      "cycles": 280,
+      "us": 0.2333,
+      "exact": true,
+      "cycles_each_issue": [
+        280,
+        280
+      ],
+      "free_running_cycles": [
+        274,
+        283
+      ],
+      "model_us": 0.2346,
+      "reclock_only_cycles": 224
+    },
+    "attn.idx.topk_merge": {
+      "op": "all_gather",
+      "payload_B": 16384,
+      "words_per_rank": 64,
+      "cycles": 334,
+      "us": 0.2783,
+      "exact": true,
+      "cycles_each_issue": [
+        334
+      ],
+      "free_running_cycles": [
+        328,
+        335
+      ],
+      "model_us": 0.2814,
+      "reclock_only_cycles": 278
+    },
+    "attn.cand.merge": {
+      "op": "all_gather",
+      "payload_B": 65536,
+      "words_per_rank": 256,
+      "cycles": 550,
+      "us": 0.4583,
+      "exact": true,
+      "cycles_each_issue": [
+        550
+      ],
+      "free_running_cycles": [
+        544,
+        551
+      ],
+      "model_us": 0.4603,
+      "reclock_only_cycles": 494
+    },
+    "attn.rows_allgather": {
+      "op": "all_gather",
+      "payload_B": 67584,
+      "words_per_rank": 264,
+      "cycles": 559,
+      "us": 0.4658,
+      "exact": true,
+      "cycles_each_issue": [
+        559,
+        559
+      ],
+      "free_running_cycles": [
+        553,
+        562
+      ],
+      "model_us": 0.4678,
+      "reclock_only_cycles": 503
+    },
+    "attn.out_allreduce": {
+      "op": "all_reduce",
+      "payload_B": 20480,
+      "words_per_rank": 320,
+      "cycles": 590,
+      "us": 0.4916,
+      "exact": true,
+      "cycles_each_issue": [
+        590,
+        590
+      ],
+      "free_running_cycles": [
+        585,
+        593
+      ],
+      "model_us": 0.4869,
+      "reclock_only_cycles": 526
+    },
+    "ffn.router_allgather": {
+      "op": "all_gather",
+      "payload_B": 1536,
+      "words_per_rank": 6,
+      "cycles": 271,
+      "us": 0.2258,
+      "exact": true,
+      "cycles_each_issue": [
+        271
+      ],
+      "free_running_cycles": [
+        266,
+        272
+      ],
+      "model_us": 0.2304,
+      "reclock_only_cycles": 215
+    },
+    "ffn.combine_allreduce": {
+      "op": "all_reduce",
+      "payload_B": 20480,
+      "words_per_rank": 320,
+      "cycles": 590,
+      "us": 0.4916,
+      "exact": true,
+      "cycles_each_issue": [
+        590
+      ],
+      "free_running_cycles": [
+        586,
+        592
+      ],
+      "model_us": 0.4869,
+      "reclock_only_cycles": 526
+    },
+    "head.argmax_merge": {
+      "op": "all_gather",
+      "payload_B": 32,
+      "words_per_rank": 1,
+      "cycles": 264,
+      "us": 0.22,
+      "exact": true,
+      "cycles_each_issue": [
+        264,
+        264
+      ],
+      "free_running_cycles": [
+        259,
+        266
+      ],
+      "model_us": 0.2257,
+      "reclock_only_cycles": 208
+    }
+  },
+  "collective_counts_old_mapping": {
+    "attn.a_allgather": 40,
+    "attn.rows_allgather": 40,
+    "attn.out_allreduce": 40,
+    "ffn.router_allgather": 40,
+    "ffn.combine_allreduce": 40,
+    "attn.idx.topk_merge": 8,
+    "attn.cand.merge": 1,
+    "head.argmax_merge": 1
+  },
+  "collective_conventions": {
+    "all_gather_payload": "Total gathered bytes; per-rank flits ceil(total_bytes/(TP*64)).",
+    "all_reduce_payload": "20480B FP32 contribution per rank for 5120 elements; do NOT divide by TP. Output conversion only after prescribed reduction.",
+    "tp4_order": "(rank0+rank1)+(rank2+rank3), fixed FP32 rounded tree",
+    "fixture_endpoint": "Issue to last VM commit at slowest rank, behavioural always-ready VM; local 13 cycles at 0.9GHz lane-group write service remains extra if binding same VM path",
+    "tp4_gather_fit_cycles": "263.15 + 1.1204*ceil(payload_B/(4*64)) for measured old geometry; interpolate within fixture only",
+    "tp4_reduce_20480_cycles": 590,
+    "tp4_reduce_arbitrary_payload_fit": null,
+    "other_TP_qualified": false
+  },
+  "route": {
+    "SS_1p2GHz_reach_um_per_stage": 504,
+    "old_board_stages_per_endpoint": 45,
+    "old_ucie_stages_per_endpoint": 34,
+    "minimum_signal_tracks": 608,
+    "tracks_capacity": null,
+    "floorplan_rule": "New hub/PHY placement recomputes length and tracks; no reuse of old wire stages as a new physical result."
+  },
+  "physical": {
+    "baseline_SS_setup_ps": -417.3,
+    "baseline_FF_hold_ps": 4.2,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "baseline_signoff_pass": false,
+    "repair_is_off_by_default": true,
+    "repair_full_queue_qualified": false,
+    "serdes_PHY_area_mm2": null,
+    "ucie_PHY_area_mm2": null,
+    "note": "PHY footprint must come from selected floorplan contract; no extrapolation of whole old die PHY area to new endpoint count. Historical port_board route also failed; prelayout area is not closure."
+  },
+  "hbm_switch_alternative": {
+    "crossing_vendor_ns": 477.6,
+    "ports_per_package": 8,
+    "port_Gbps": 800,
+    "assumed_payload_efficiency": 0.9,
+    "payload_Bps": 720000000000.0,
+    "endpoint_reducer_cycles_TP8": 22,
+    "reducer_hz": 1200000000.0,
+    "tail_us": 0.15,
+    "allreduce_formula_us": "(2*477.6 + 22/1.2 + 2*payload_B/720)/1000 + .15",
+    "allgather_formula_us": "(477.6 + payload_B/720)/1000 + .15",
+    "qualification": "Vendor crossing + measured HA2 reducer + assumed efficiency/tail; not substitute for measured TP4 direct links; scale-up switch area/power outside logic die must be included."
+  },
+  "power_transport": {
+    "board_j_per_bit": 6.5e-12,
+    "ucie_j_per_bit": 5e-13,
+    "board_13lane_always_on_W_proxy": 9.464,
+    "full_residual_one_board_crossing_dynamic_J_proxy": 2.130752e-06,
+    "note": "Source technology.json proxies. Avoid double-counting lane always-on energy and active-bit energy; separate power states and include idle/wake policy."
+  },
+  "open_gates": [
+    "New geometry placement/route and PHY footprint",
+    "Full-depth queues and CRC/credit logic SS/FF closure",
+    "Finite VM consumer backpressure and receiver buffers",
+    "Exact reduction authority if TP degree or K split changes",
+    "Reverse link physical bandwidth reservation",
+    "Actual stage count and route graph from storage placement"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "verdict": "FAIL_SS_SETUP",
+  "adopted": false,
+  "terminal_verified_at_utc": "2026-10-05T07:19:48Z",
+  "owner": "Bacon (Codex)",
+  "family_primary": "Euclid",
+  "source_sha256": "dde4c2ba9853e06f10b472dc3775db8268e157e0181697fee047d5b2933d74d5",
+  "source_commit": "db420f504485a99a11fb7e1430bdd7b221f31a75",
+  "source_reverified_clean": true,
+  "runner_sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+  "setup_SS_ps": -49.052319,
+  "hold_FF_ps": 5.690448,
+  "flow_completed": true,
+  "route_exit": 0,
+  "corner_exit": 0,
+  "physical_metrics": {
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "clock_count": 1,
+    "core_area_um2": 10207.9,
+    "die_area_um2": 11064.5,
+    "drc_errors": 0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
+    "fmax_hz": 1133720000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0,
+    "hold_wns_ns": 0.00485589,
+    "instance_count": 97998,
+    "library_time_unit_ns": 0.001,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "missing_metadata_keys": [],
+    "orfs_aggregate_fmax_hz": 1133720000.0,
+    "per_clock_fmax_hz": {},
+    "power_total_w": 0.0468513,
+    "raw_timing_library_units": {
+      "hold_tns_ns": 0,
+      "hold_wns_ns": 4.85589,
+      "setup_tns_ns": -2198.19,
+      "setup_wns_ns": -49.0523
+    },
+    "routed_nets": 43375,
+    "routed_wirelength_um": 178318,
+    "sequential_area_um2": 1845.13,
+    "sequential_cell_count": 5628,
+    "setup_tns_ns": -2.1981900000000003,
+    "setup_violations": 164,
+    "setup_wns_ns": -0.0490523,
+    "standard_cell_area_um2": 5467.86,
+    "standard_cell_count": 44833,
+    "utilization_fraction": 0.535652,
+    "vias": 410047
+  },
+  "limiting_path": "on.bsel[3] -> on.wbr_q (registered bank selection through slot readiness/stay_ready and final ready selection)",
+  "critical_path_attribution": "Raw extracted max path plus exact mapped 6_final.v cell excerpts: _61554_ drives on.next_head_ready.stay_ready; _61989_ selects advanced/current readiness into wbr_q. This is the surviving readiness cone, not the obsolete original c_oh[26]->wnro_q[10] path.",
+  "setup_improvement_vs_CMD_util40_ps": 23.21709,
+  "setup_improvement_vs_DIGEST_ps": 62.45936900000001,
+  "routed_area_delta_vs_CMD_util40_um2": -4.660000000000764,
+  "routed_area_delta_vs_DIGEST_um2": 31.789999999999964,
+  "scope": "Single PC standalone util45, actual frozen 833ps SS60/FF25 IO0 screen; no installed parent or full128 clock qualification.",
+  "decision": "Reject current CMD1 as a closing 833ps successor; retain default-off source and functional PASS history. Stop leaf/geometry trials here: no fourth blind source, extra utilization, repeated lockstep, repack or inference. Next decision requires actual priced parent/clock/finite command and visibility context; it cannot turn a negative SS margin into adoption.",
+  "actual_parent_handoff": {
+    "parent_source_owner": "Euclid",
+    "parent_top": "ot_hbm_accel_pcwb_service_stack",
+    "model_and_ca_owner": "Sagan",
+    "source_list_owner": "Rawls",
+    "leaf_owner": "Bacon",
+    "production_parent_installed_at_terminal": false,
+    "existing_connected_fixture": "results/rtl/pcwb_head_lookahead_20261005/connected.sv; direct1024ps hclk isolated row grant; source qualification only, unchanged and not rerun",
+    "proposed_parent_clock": "Explicit uniform1024ps service_clk input, separate core833.333 input; component assumption only, actual physical master/distribution/contextSSFF and composed latency unqualified. No average-clock substitution or change to the frozen833ps route.",
+    "fractional_clock_requirement": "If the actual parent uses fractional hclk, shortest833.333ps plus actual pulse/CTS/CDC/DRAM eligibility must qualify. Existing Qwen r14 194tCCD counterexample is a different source, not proof that PCWB inherited that clock.",
+    "required_context": [
+      "actual master clock/reset/source waveform",
+      "finite C/A grant and command acceptance",
+      "prepaid finite column capacity and actual landing credits",
+      "matched physical write visibility, transaction identity and fences",
+      "real input/output timing/load, CDC phase/reset and clock tree/pulse qualification",
+      "composed latency/area including parent storage and eligibility; no rate claim from standalone geometry"
+    ]
+  },
+  "artifacts_remote": "/srv/opentallas-scratch/jobs/euclid-svc-b-cmd-u45-r1",
+  "retained_extracted_artifacts": {
+    "6_final.def": {
+      "retained": false,
+      "sha256": "c5a8a5dff264966d9a32cbf078ba32837c14ada841ca55c02337dc7c9560c5d9",
+      "size_bytes": 44777186
+    },
+    "6_final.gds": {
+      "retained": false,
+      "sha256": "c1dc77841739f58f01d09a78216395e616379088890ab860dabafd18b4af74ad",
+      "size_bytes": 52268544
+    },
+    "6_final.odb": {
+      "retained": false,
+      "sha256": "cd6194b92b2f99eefc06243d26b6e756a9d72024708c8eb66ff84230ac302314",
+      "size_bytes": 75344861
+    },
+    "6_final.spef": {
+      "retained": false,
+      "sha256": "a4d3820a9cc189238fb662b048037d548d6fc743eaea927ec5c3c59f5fb56b38",
+      "size_bytes": 57503240
+    },
+    "6_final.v": {
+      "retained": true,
+      "sha256": "553c63bd164a0adda6069328c09aa7104b4e4366992ed05364f72929453eeaf7",
+      "size_bytes": 4552444
+    }
+  },
+  "corner_sdc_sha256": "d0f191cbfe26867e79324e48ad0c29628256cfeea3d924e3b05c2916ddc597a1",
+  "raw_sha256": {
+    "physical.json": "04a70ddb6032590e8541848b23a9fe6e70e3f2d7582dcc70e0444b9009d169e8",
+    "corner_sta.json": "cf82ae45995f790c2e348b84cb771457e66316d01f47d70d83af975b1d0e23e5",
+    "w18_sta_ss.log": "549cf03e3507f521507f0c964abb250ce74a140d6f1e775d996a0ce3dccf6bd4",
+    "w18_sta_ff.log": "fe6b827aaa220e85dfeb708f9d4087a1c0d44f9ce94d35b0f1064e0e4ce27b33",
+    "exit": "9c2eda766e635ce14d27fe9f20e6279edf15e3eb94c8d9d93b5c48a9cef61456",
+    "route.log": "f28984ee6d0c1633968cedd1f3c578d8780535fe796bf394d5b03fdae8798a5f",
+    "corner.log": "336942cc48bb729dc7e37a2eedc2deacf0cd29bb48e6a800a8a44f3b3058245c",
+    "config.mk": "89b47cad45f5565671768f25bc4a84b9d29e0372a75fa4364435a56630320084",
+    "constraint.sdc": "5c408833c724888dada5a72cb9e902fc4b93aaf28b67bae1a426250e29906756",
+    "6_finish.rpt": "8f27a1020e4da535830ef3c614b9f94d2f114ffa9dd86c8291a6e82d51a3c19e",
+    "run.sh": "301bc66fcf5f9b782603c2741da62258ee5e64c827a2a54c9793b3b2ac1b88dc",
+    "launch.json": "df5a13fbdaba081b72a89562b59b4628abbf315ebeb710da19e1483ebf03495e",
+    "critical_path_cells.txt": "7339b5d4df0fb6020e7982b6e9c080db9f93b9d5a6d02d38fed7a331c638c99d"
+  },
+  "release": "Own route processes naturally exited; execution capacity released. Shared readonly source worktree and remote objects retained pending Euclid/Sagan parent and svcA consumer release; no automatic shared retirement."
+}

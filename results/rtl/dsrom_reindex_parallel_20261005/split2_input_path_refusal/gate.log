@@ -1,0 +1,36 @@
+Traceback (most recent call last):
+  File "/srv/opentallas/repos/russell-reindex-parallel-split2-20261005/tools/dsrom_reindex_kc7_split_gate.py", line 47, in <module>
+    main()
+  File "/srv/opentallas/repos/russell-reindex-parallel-split2-20261005/tools/dsrom_reindex_kc7_split_gate.py", line 27, in main
+    gate.cmd_gather(a)
+  File "/srv/opentallas/repos/russell-reindex-parallel-split2-20261005/tools/dsrom_reindex_candidates.py", line 166, in cmd_gather
+    _, blk = cand_blocks(a.gold)
+  File "/srv/opentallas/repos/russell-reindex-parallel-split2-20261005/tools/dsrom_reindex_candidates.py", line 84, in cand_blocks
+    c = np.load(gold / "ctx1048576_cand.npz")["cand"]
+  File "/srv/opentallas/tools/python310/lib/python3.10/site-packages/numpy/lib/_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+FileNotFoundError: [Errno 2] No such file or directory: '/mnt/epyc1-scratch/claude/dsrom-reindex/gold/ctx1048576_cand.npz'
+Command exited with non-zero status 1
+	Command being timed: "python3 tools/dsrom_reindex_kc7_split_gate.py --out /srv/opentallas-scratch/codex/russell-reindex-parallel-20261005/split2/gate --gold /mnt/epyc1-scratch/claude/dsrom-reindex/gold"
+	User time (seconds): 4.95
+	System time (seconds): 0.01
+	Percent of CPU this job got: 3310%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.15
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 27048
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 2
+	Minor (reclaiming a frame) page faults: 4507
+	Voluntary context switches: 203
+	Involuntary context switches: 748
+	Swaps: 0
+	File system inputs: 4584
+	File system outputs: 64
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

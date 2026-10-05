@@ -70,6 +70,40 @@ rows = [
  r("ot_rom_oneshot_die (Qwen collective endpoint)", "Q", "qwen-core", "open", f"{RCL}/screens/qwen/oneshot_die_d32_833.json", -1208, None, P, "screen", "490 MHz, rp->head mux->pop loop", owner="qwen-core"),
  r("ot_hbmacc_qwen_wstream + engine-side CDC/ME_STALL gating", "Q", "qwen-core", "never_measured", "none", owner="qwen-core"),
 ]
+# Closed source-selected ctl components, independently of blocked spec/topk.
+# Baseline rows stay unchanged: a variant is not an automatic clock adoption.
+ctl_path = pathlib.Path(__file__).parent / "ctl_takeover_20261005/closure.json"
+if ctl_path.exists():
+    ctl = json.loads(ctl_path.read_text())
+    for item in ctl["rows"]:
+        variant = item["module"] + " " + item["label"] + " (source-selected)"
+        row = r(variant, "DS", "ctl", "closed_variant",
+                "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/" + item["label"] + "/corner_sta.json",
+                item["SS_register_ps"], item["FF_hold_ps"], P, "routed",
+                "Full-shape source-selected component only; " + item["cycle_scope"] + "; default off, parent accelerator unqualified",
+                owner="Sagan (Codex item 9 ctl)")
+        row.update(canonical_module=item["module"], parameters=item["parameters"],
+                   ss_worst_slack_ps=item["SS_worst_ps"], cycle_delta=item["cycle_delta"],
+                   source_pins=item["source_pins"], complete_accelerator_qualified=False)
+        rows.append(row)
+    rows.append(r("ot_dshbm_spec_state_f spec_f3 (source-selected)", "DS", "ctl", "blocked_exactness",
+                  "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/sim_spec3_s8/run.log",
+                  note="Retained terminal reports 2 mismatches although exit0; positive routed slack does not permit adoption", owner="Claude (exactness escalation)"))
+
+
+# New source-selected spec successor: historical failed spec_f3 stays blocked.
+spec_path = pathlib.Path(__file__).parent / "ctl_spec_token_edge_20261005/closure.json"
+if spec_path.exists():
+    spec = json.loads(spec_path.read_text())
+    row = r(spec["module"] + " " + spec["label"] + " (source-selected)", "DS", "ctl", "closed_variant",
+            "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_spec_token_edge_20261005/corner_sta.json",
+            spec["SS_register_ps"], spec["FF_hold_ps"], P, "routed",
+            spec["cycle_scope"], owner="Sagan (Codex item9 ctl); Pauli semantic source")
+    row.update(canonical_module=spec["module"], parameters=spec["parameters"],
+               source_pins=spec["source_pins"], ss_worst_slack_ps=spec["SS_worst_ps"],
+               cycle_delta=0, complete_accelerator_qualified=False)
+    rows.append(row)
+
 limiter = {
  "as_built_sm_clock_ghz": 0.5897,
  "set_by": "ot_gpu_bulk_copy (DS line 1088) consume loop cons_p -> 1024:1 full[cons_p] -> take: screen 590 MHz (-863 ps at 0.833 ns), "

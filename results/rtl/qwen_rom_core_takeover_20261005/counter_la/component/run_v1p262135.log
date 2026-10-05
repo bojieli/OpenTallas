@@ -1,0 +1,3 @@
+PASS counter lookahead full32bit carry8/16/24/wrap coherent-state probes
+PASS DEC_LA actual chunked argmax/END equal token/value/cycles, zero-edge ordered64 full decoded fields; VPOS offsets8/splits16/stalls/barriers/END; invalid16
+rtl/test/tb_qwen_rom_dec_la_takeover.sv:108: $finish called at 1170000 (1ps)

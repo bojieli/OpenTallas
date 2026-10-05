@@ -1,0 +1,12 @@
+%Warning: die0_p1.hex:0: $readmem file not found
+%Warning: die0_p0.hex:0: $readmem file not found
+INSTALLED LOAD_VERIFY status=0 crc=77ffc71c vcrc=77ffc71c sectors=128 host_cycles=4456 elapsed=4473 bytes=4096
+INSTALLED STORE status=0 crc=77ffc71c vcrc=77ffc71c sectors=128 host_cycles=3778 elapsed=3795 bytes=4096
+ROUNDTRIP words64=512 mismatches=0 reads=512 writes=512 b_acks=8 system_fault=0 steps=0
+INSTALLED STORE_ALIGN status=3 crc=ffffffff vcrc=00000000 sectors=0 host_cycles=0 elapsed=18 bytes=31
+INSTALLED STORE_B_ERROR status=4 crc=77ffc71c vcrc=77ffc71c sectors=128 host_cycles=3779 elapsed=3795 bytes=4096
+PASS installed_loader_roundtrip
+- /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src/rtl/test/hbm_accel/tb_hbm_accel_loader_installed.sv:94: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.155 s; speed 78.428 us/s
+- Verilator: cpu 0.155 s on 1 threads; allocated 10 MB

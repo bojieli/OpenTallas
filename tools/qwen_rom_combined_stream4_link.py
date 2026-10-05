@@ -52,11 +52,15 @@ def main():
     p.add_argument('--native-tagged-sha256',required=True)
     p.add_argument('--dspark',action='store_true')
     p.add_argument('--full-decoder',action='store_true')
+    p.add_argument('--require-adopted',action='store_true')
     a=p.parse_args();retained.require(not a.full_decoder or a.dspark,'full decoder requires DSpark');retained.require(not a.out.exists(),'immutable output exists')
     retained.require(retained.sha(a.native_tagged_source)==a.native_tagged_sha256,
                      'required Claude native tagged-row source changed')
     build=json.loads(a.compiled_params.read_text());d,c,h,t=require_models(build,a.die_build,a.hbm_build,dspark=a.dspark)
     retained.require(not a.full_decoder or d['HBM_LAYERS']==36,'full decoder requires actual 36-layer HBM extent')
+    if a.require_adopted:
+        retained.require(a.dspark and a.full_decoder and d.get('SEQ_LA')==1 and
+                         d.get('MP_COMMIT_NATIVE')==1,'final adopted host requires actual LA1/native MP commit model')
     top='ot_qwen_rom_combined_dspark_die' if a.dspark else emitter.TOP
     old=json.loads((a.reuse_build/'build_params.json').read_text())
     retained.require(retained.params(old['tile'])==t,'retained tile parameter identity differs')
@@ -90,7 +94,7 @@ def main():
                 source_defaults=build.get('source_defaults',{}),compiled_params_sha256=retained.sha(a.compiled_params),
                 native_tagged_source=str(a.native_tagged_source.resolve()),native_tagged_sha256=a.native_tagged_sha256,
                 archive_sha256=before,archives_stable=before=={str(p):retained.sha(p) for p in archives},
-                generated_runtime_sha256=retained.sha(cpp),full_decoder=a.full_decoder,maximum_stages=37 if a.full_decoder else (2 if a.dspark else 1),
+                generated_runtime_sha256=retained.sha(cpp),full_decoder=a.full_decoder,adopted_required=a.require_adopted,maximum_stages=37 if a.full_decoder else (2 if a.dspark else 1),
                 scope='Actual single-array STREAM4 host link; no numerical/physical/rate verdict')
     if exe.exists():record['executable_sha256']=retained.sha(exe)
     (a.out/'link.json').write_text(json.dumps(record,indent=2)+'\n')

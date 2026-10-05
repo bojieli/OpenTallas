@@ -1,0 +1,69 @@
+{
+  "verdict": "PASS_MINIMUM_NATIVE_FULL_FIELD_ON_SIM_ONLY_PREFIX",
+  "position": 1048575,
+  "token": 16754,
+  "stage": 37,
+  "rank": 0,
+  "host_selected_pair": 11,
+  "actors": [
+    {
+      "node": "L20.I7",
+      "phase": 18,
+      "producer": 2478,
+      "native_pairs": 160,
+      "rows": 320,
+      "address": 419776,
+      "accepted_cycle": 41919
+    },
+    {
+      "node": "L20.I8",
+      "phase": 19,
+      "producer": 2479,
+      "native_pairs": 64,
+      "rows": 128,
+      "address": 420096,
+      "accepted_cycle": 80075
+    }
+  ],
+  "input": {
+    "source": "produced canonical I0..I6, seeded representative initial H/PF/SSX",
+    "scope": "SIM_ONLY_EXACT",
+    "producer": 2476,
+    "address": 46464,
+    "words": 5120,
+    "native_ACK_cycle": 6080,
+    "sha256": "09489d179fd8089130771861da792fcf7dea5368bbe1becaaa56150c53d7818f"
+  },
+  "native_shared_cycles_to_final_readback": 83481,
+  "cycles_include": "XN import ACK, native operand prefetch, both fields, publication and final SRAM readbacks; prefix arithmetic cycles excluded",
+  "native_output_bit_mismatches": 0,
+  "native_output_words": 448,
+  "full_token": false,
+  "physical_or_headline_timing_claim": false,
+  "field_array_instantiated": false,
+  "static_cut_artifact_owner": "Arendt; main 8ef891d46, terminal 3db096fd7",
+  "static_cut_archive_sha256": "895d24e0dd5ec35f0f5ad973cf03171143d6d76736c42bc8cb712723f7954682",
+  "static_cut_internal_header_sha256": "0ced93834d4efde22e21f477e4ecc82e77ff35150839cbf044f6830692771850",
+  "runtime_host": "ot-agidock128",
+  "retained_job": "/home/ubuntu/cicero-s81-L20-field-prefix-r1",
+  "successful_run": "field-r3",
+  "caller_r3_sha256": "882f8fda3beddf80c0f976e911f292cace4f45d4bc8cb43b4aea1e10bf15c074",
+  "compiled_binding_header_sha256": "378cdef4903964671c30b13dc8e51cbef506751283c1e0c3dee6afb8d23f7611",
+  "failed_verdicts_preserved": [
+    "host_include_failure.log",
+    "source_startup_failure.json",
+    "teardown_failure.json",
+    "teardown_failure.log"
+  ],
+  "source_sha256": {
+    "tools/dsrom_s81_l20_sim_only.py": "cd1d7fa9558e9c84defae1201e372e677839e323c00d0d23fd2fe72fce365a81",
+    "tools/dsrom_s81_l20_field_run.py": "98d0fbfd8a816df440653e81fc9003d6f2e1d26e35205b405814c31b6d2f1882",
+    "tools/dsrom_s81_l20_field_compare.py": "03e377884433705175f8354b20d1a2ab24c935b62d92b5ac20dde3271abae145",
+    "tools/dsrom_s81_l20_field_binding.py": "30d6b086c4c265a53e0cf58fbfe1d8a2eea63b92d5607dae793cc1fd6f3bad5f",
+    "tools/runtime/dsrom/s81_minimum_l20_field.cpp": "882f8fda3beddf80c0f976e911f292cace4f45d4bc8cb43b4aea1e10bf15c074",
+    "tools/runtime/dsrom/s81_minimum_element.cpp": "881db50ec29fa72dcf462f2b610b15774db83c3201f44a6fcac0ead6a02af24c",
+    "tools/runtime/dsrom/s81_minimum_qe_static.cpp": "13e671f3eca5f7559e32301cce6e923ac461de05c85618e5d94386f2e4621aeb",
+    "tools/runtime/dsrom/s81_minimum_qe_controls.cpp": "57d1410ad44457a2f7e188f0ff43695cf11bffa456ef57798b4b4783ebe11e51",
+    "tools/runtime/dsrom/s81_minimum_qe_tags.cpp": "d1fa84ee4b424b41acf9c5ed11f07c5f382b5decbc93f53bc7f0d674fbee27a4"
+  }
+}

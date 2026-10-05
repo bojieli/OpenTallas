@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.qss_l7_physical_terminal.v1",
+  "source_commit": "d2a24e9d2c7a0e8561361baea08c1c5dd06384f4",
+  "original_host": "ot-epyc2",
+  "original_root": "/srv/opentallas-scratch/codex/ampere-qwen-rom-die-item7-l7-fixedtool-20261004",
+  "supervisor_pid": 1779467,
+  "provider_pid": 1779483,
+  "driver_rc": 1,
+  "orfs_rc": 2,
+  "verdict": "FAIL_CTS_RSZ-0060",
+  "hold_repair_buffers": 34174,
+  "cts_repair_setup_wns_ps": -1008.568,
+  "cts_repair_setup_endpoint": "tw_v",
+  "setup_endpoint_class": "primary output, not an internal register endpoint",
+  "cts_repair_hold_wns_ps": -131.131,
+  "cts_repair_hold_tns_ps": -15890.923,
+  "cts_repair_hold_endpoint": "res_q[126]$_DFF_P_/D",
+  "hold_endpoint_source_cone": "res_in[126] -> res_q[126] direct boundary capture; actual timed startpoint not retained",
+  "measurement_basis": "CTS placement parasitics, multi-corner repair; not routed signoff",
+  "final_ss_setup_ps": null,
+  "final_ff_hold_ps": null,
+  "routed_drc": null,
+  "grt_overflow": null,
+  "additional_hardware_recipe_failures": 2,
+  "bench_replayed": false,
+  "passed_bench_requests": 1505,
+  "passed_bench_argmax_tops": 751,
+  "bench_bw_fifo": 0,
+  "physical_bw_fifo": 1,
+  "period_ps": 833.333,
+  "ss_setup_uncertainty_ps": 60,
+  "ff_hold_uncertainty_ps": 25,
+  "boundary_input_and_output_delay_ps": 166.667,
+  "clock_sinks_before_cts": {
+    "clk_macro": 16,
+    "clk_regs": 24053,
+    "bw_clk": 2132
+  },
+  "cts_clock_buffers": {
+    "clk_macro": 23,
+    "clk_regs": 2078,
+    "bw_clk": 184,
+    "latency_balance": 10
+  },
+  "cts_dummy_loads": {
+    "clk_regs": 1660,
+    "bw_clk": 138
+  },
+  "raw_sha256": {
+    "launcher.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launcher.pid": "0a1d79a633a2701ddf3858cfcb2563196158a9a3bd77785f20015d9a8be9bc27",
+    "run_physical.py": "363597c5c7aaadb2241cb4bd3f28511951fee9dd7ef9e968f4c68e0ec3d0d955",
+    "runs/s570_l7_splitface_m7/driver.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "runs/s570_l7_splitface_m7/driver.log": "b8a6051d798ad77e11b5830f267232fa1d86740e1a6247e6146d678b8a1de242",
+    "runs/s570_l7_splitface_m7/physical.json": "aa3a64cf7756a99b832395d78d8a180e97ef9c2f51a190a07e71ed06d6effaba",
+    "runs/s570_l7_splitface_m7/launch.json": "874bb9b83df58cbcfe45560ec5eb51a96e1ef1c28666a3f0c9f66dd7a71f38a6",
+    "inputs/reuse.json": "5e9274a6179f796ebd505426b158cfb7c17e9f287a28a1f77d2cf49ff6668506",
+    "inputs/model.json": "81d49f907887a6e6d5f16b9b7b09bc30517b52792abb23c5253466ab7f49d4dd",
+    "runs/s570_l7_splitface_m7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_asap7_codex_item7_s570_l7_splitface_m7/base/4_1_cts.json": "4ed8dd171daca96756302de6aa1121822fe6ade152b819fe14cad726730613b2",
+    "runs/s570_l7_splitface_m7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_asap7_codex_item7_s570_l7_splitface_m7/base/4_1_cts.log": "0ddd259d99d5913edfe2d9bd90391d560829b5df8cb4b36d3908cd4990bb033e",
+    "runs/s570_l7_splitface_m7/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_codex_item7_s570_l7_splitface_m7/base/3_place.sdc": "651c24fc72c1d8ec6a26615105c850f79659b36dc4a597a19e766d7d6aad0348",
+    "launcher.log.failed_ssh_transfer": "0cf02be4e60b5839b87ecc87cbf357ec3c20e0f37bf7916d552b48e13779d614",
+    "launcher.pid.failed_ssh_transfer": "bc6cd95ef0e468dcfb6ca8a25f5bea1fa9525c65d157c6e2efd3c2b397f754a6",
+    "run_physical.py.failed_ssh_transfer": "358bb81616e02d94e90700f6b4fb8f505dbd74b6ccdf162ab86e5efc68ccfacf"
+  },
+  "retained_remote_artifacts": {
+    "runs/s570_l7_splitface_m7/work/orfs/results/asap7/opentallas_ot_qwen_slab_port_group_asap7_codex_item7_s570_l7_splitface_m7/base/3_place.odb": {
+      "sha256": "882640dffcf99ef3533adbd7f57b61d1cb424d07c7e77760479c9539f516088c",
+      "size_bytes": 111994824
+    }
+  },
+  "final_artifact_inventory": {
+    "6_final.odb": [],
+    "6_final.spef": [],
+    "6_final.sdc": []
+  },
+  "hardware_admission": false,
+  "die_composition_admission": false,
+  "next_action": "-> CLAUDE item7: next capture/clock-boundary recipe requires RTL/source-contract change; no third speculative run"
+}

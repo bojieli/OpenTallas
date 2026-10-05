@@ -1,0 +1,19 @@
+{
+  "scope": "directed final control hook API including explicit endpoint fault input; no TU arithmetic replay/fulltoken/physical claim",
+  "host": "ot-epyc2",
+  "job": "/srv/opentallas-scratch/jobs/sagan-shared-join-component-r2",
+  "admission_GB": 1,
+  "verdict": "PASS_TWO_COMPONENTS",
+  "sources": {
+    "rtl/hbm_accel/integration/ot_hbm_tu_shared8.sv": "ccb99ba15698537dae682c6f1a717df3672aed75ab7fcd8141fafa5fb7444d4e",
+    "rtl/hbm_accel/integration/ot_hbm_host_dma_shared64.sv": "76392cd0f88101b153ada4b33506e8753cff08418e024dde43afb7085a64893b",
+    "rtl/test/hbm_accel/integration/tb_hbm_tu_shared8.sv": "cbe2fb77c063d0fdaf33f51028fa8a43f9d2e09b86c6013b842cce2ea1155133",
+    "rtl/test/hbm_accel/integration/tb_hbm_host_dma_shared64.sv": "f5a8e032e00a3e3f9bdaac8f6993a266a4fe6915ecd285e62661929526f46c3c"
+  },
+  "logs": {
+    "tu.run.log": "cf79b7a702c8b7c8feef0165c3781df94fc0482e75b527d3845b99491eb1d7b6",
+    "dma.run.log": "44dd3ea1f00eaa449ed2f3120bd08d1626f38a9fddaffed24f0563e8c690fa7e",
+    "tu.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dma.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
