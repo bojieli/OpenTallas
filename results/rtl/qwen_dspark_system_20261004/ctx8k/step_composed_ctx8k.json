@@ -1,0 +1,504 @@
+{
+ "schema": "opentallas.qwen-dspark-step-composed.v1",
+ "exact": {
+  "c_L0": true,
+  "c_AR0": true,
+  "c_H0": true,
+  "c_H1": true,
+  "c_H2": true,
+  "c_D0": true
+ },
+ "outputs_bit_exact": {
+  "c_L0": true,
+  "c_AR0": true,
+  "c_H0": true,
+  "c_H1": true,
+  "c_H2": true,
+  "c_D0": true
+ },
+ "faults": {
+  "c_L0": [
+   [
+    "S1L0",
+    "0",
+    "0",
+    "0"
+   ],
+   [
+    "S2L0",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_AR0": [
+   [
+    "ARL0",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_H0": [
+   [
+    "H0",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_H1": [
+   [
+    "H1",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_H2": [
+   [
+    "H2",
+    "0",
+    "0",
+    "0"
+   ]
+  ],
+  "c_D0": [
+   [
+    "D0",
+    "0",
+    "0",
+    "0"
+   ]
+  ]
+ },
+ "fault_trace": {
+  "c_L0": [],
+  "c_AR0": [],
+  "c_H0": [],
+  "c_H1": [],
+  "c_H2": [],
+  "c_D0": []
+ },
+ "components_cycles": {
+  "verify_layer_L0_step1_P": 24320,
+  "verify_layer_L0_step2_Pprime": 25252,
+  "ar_layer_L0_P": 14574,
+  "head_p1": 2999,
+  "verify_head_p4_step1": 11993,
+  "verify_head_p4_step2": 11993,
+  "drafter_layer_D0_S3": 30611,
+  "accept_after_head": {
+   "c_H1": 64,
+   "c_H2": 64
+  }
+ },
+ "memory_stalls": {
+  "c_L0": {
+   "S1L0": {
+    "cycles": 24320,
+    "layer": 0,
+    "me_clock_edges": "9215/9215",
+    "memory": {
+     "die0": {
+      "drain_low": 4965,
+      "fill_cycles": 10457,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 3844,
+      "rsp_tile_stall": 32,
+      "stall_bridge": 3153,
+      "stall_drain": 4360,
+      "stall_kv": 3852,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 14458,
+      "wr_lat_max": 478,
+      "wr_sectors": 544
+     },
+     "die1": {
+      "drain_low": 4965,
+      "fill_cycles": 10457,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 3844,
+      "rsp_tile_stall": 32,
+      "stall_bridge": 3153,
+      "stall_drain": 4360,
+      "stall_kv": 3852,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 14458,
+      "wr_lat_max": 478,
+      "wr_sectors": 544
+     },
+     "die2": {
+      "drain_low": 4965,
+      "fill_cycles": 10457,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 3844,
+      "rsp_tile_stall": 32,
+      "stall_bridge": 3153,
+      "stall_drain": 4360,
+      "stall_kv": 3852,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 14458,
+      "wr_lat_max": 478,
+      "wr_sectors": 544
+     },
+     "die3": {
+      "drain_low": 4965,
+      "fill_cycles": 10457,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 3844,
+      "rsp_tile_stall": 32,
+      "stall_bridge": 3153,
+      "stall_drain": 4360,
+      "stall_kv": 3852,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 14458,
+      "wr_lat_max": 478,
+      "wr_sectors": 544
+     }
+    },
+    "np": 4,
+    "pos": 8187
+   },
+   "S2L0": {
+    "cycles": 25252,
+    "layer": 0,
+    "me_clock_edges": "9527/9527",
+    "memory": {
+     "die0": {
+      "drain_low": 5116,
+      "fill_cycles": 11390,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4162,
+      "rsp_tile_stall": 87,
+      "stall_bridge": 3153,
+      "stall_drain": 4975,
+      "stall_kv": 4170,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 30509,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     },
+     "die1": {
+      "drain_low": 5116,
+      "fill_cycles": 11390,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4162,
+      "rsp_tile_stall": 87,
+      "stall_bridge": 3153,
+      "stall_drain": 4975,
+      "stall_kv": 4170,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 30509,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     },
+     "die2": {
+      "drain_low": 5116,
+      "fill_cycles": 11390,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4162,
+      "rsp_tile_stall": 87,
+      "stall_bridge": 3153,
+      "stall_drain": 4975,
+      "stall_kv": 4170,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 30509,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     },
+     "die3": {
+      "drain_low": 5116,
+      "fill_cycles": 11390,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4162,
+      "rsp_tile_stall": 87,
+      "stall_bridge": 3153,
+      "stall_drain": 4975,
+      "stall_kv": 4170,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 30509,
+      "wr_lat_max": 552,
+      "wr_sectors": 544
+     }
+    },
+    "np": 4,
+    "pos": 8188
+   }
+  },
+  "c_AR0": {
+   "ARL0": {
+    "cycles": 14574,
+    "layer": 0,
+    "me_clock_edges": "8838/8838",
+    "memory": {
+     "die0": {
+      "drain_low": 3849,
+      "fill_cycles": 9893,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 5611,
+      "rsp_tile_stall": 9,
+      "stall_bridge": 425,
+      "stall_drain": 3712,
+      "stall_kv": 5613,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 12387,
+      "wr_lat_max": 96,
+      "wr_sectors": 136
+     },
+     "die1": {
+      "drain_low": 3849,
+      "fill_cycles": 9893,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 5611,
+      "rsp_tile_stall": 9,
+      "stall_bridge": 425,
+      "stall_drain": 3712,
+      "stall_kv": 5613,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 12387,
+      "wr_lat_max": 96,
+      "wr_sectors": 136
+     },
+     "die2": {
+      "drain_low": 3849,
+      "fill_cycles": 9893,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 5611,
+      "rsp_tile_stall": 9,
+      "stall_bridge": 425,
+      "stall_drain": 3712,
+      "stall_kv": 5613,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 12387,
+      "wr_lat_max": 96,
+      "wr_sectors": 136
+     },
+     "die3": {
+      "drain_low": 3849,
+      "fill_cycles": 9893,
+      "fill_sectors": 131032,
+      "kvok_low_with_desc": 5611,
+      "rsp_tile_stall": 9,
+      "stall_bridge": 425,
+      "stall_drain": 3712,
+      "stall_kv": 5613,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "tile_edges": 12387,
+      "wr_lat_max": 96,
+      "wr_sectors": 136
+     }
+    },
+    "np": 1,
+    "pos": 8187
+   }
+  },
+  "c_D0": {
+   "D0": {
+    "cycles": 30611,
+    "layer": 0,
+    "me_clock_edges": "11421/11421",
+    "memory": {
+     "die0": {
+      "drain_low": 3821,
+      "fill_cycles": 10395,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4367,
+      "rsp_tile_stall": 11,
+      "stall_bridge": 9406,
+      "stall_drain": 3373,
+      "stall_kv": 4373,
+      "stall_mem": 0,
+      "stall_retire": 3788,
+      "tile_edges": 15771,
+      "wr_lat_max": 532,
+      "wr_sectors": 408
+     },
+     "die1": {
+      "drain_low": 3821,
+      "fill_cycles": 10395,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4367,
+      "rsp_tile_stall": 11,
+      "stall_bridge": 9406,
+      "stall_drain": 3373,
+      "stall_kv": 4373,
+      "stall_mem": 0,
+      "stall_retire": 3788,
+      "tile_edges": 15771,
+      "wr_lat_max": 532,
+      "wr_sectors": 408
+     },
+     "die2": {
+      "drain_low": 3821,
+      "fill_cycles": 10395,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4367,
+      "rsp_tile_stall": 11,
+      "stall_bridge": 9406,
+      "stall_drain": 3373,
+      "stall_kv": 4373,
+      "stall_mem": 0,
+      "stall_retire": 3788,
+      "tile_edges": 15771,
+      "wr_lat_max": 532,
+      "wr_sectors": 408
+     },
+     "die3": {
+      "drain_low": 3821,
+      "fill_cycles": 10395,
+      "fill_sectors": 131040,
+      "kvok_low_with_desc": 4367,
+      "rsp_tile_stall": 11,
+      "stall_bridge": 9406,
+      "stall_drain": 3373,
+      "stall_kv": 4373,
+      "stall_mem": 0,
+      "stall_retire": 3788,
+      "tile_edges": 15771,
+      "wr_lat_max": 532,
+      "wr_sectors": 408
+     }
+    },
+    "np": 3,
+    "pos": 8188
+   }
+  }
+ },
+ "accept_rtl": {
+  "c_H1": [
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "0",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   },
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "1",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   },
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "2",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   },
+   {
+    "a": "0",
+    "bonus": "98951",
+    "die": "3",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "1"
+   }
+  ],
+  "c_H2": [
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "0",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   },
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "1",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   },
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "2",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   },
+   {
+    "a": "3",
+    "bonus": "1958",
+    "die": "3",
+    "kv_committed_len": "0",
+    "kv_committed_v": "0",
+    "kv_fault": "0000",
+    "n_emit": "4"
+   }
+  ]
+ },
+ "commits": [
+  "COMMIT 1 of block 8187..8190: committed_len=8188 (rollback 8188..8190)"
+ ],
+ "composed": {
+  "verify_cycles": 887513,
+  "ar_token_cycles": 527663,
+  "draft_cycles": 169925.0,
+  "draft_terms": {
+   "drafter_layers_rtl": 153055,
+   "drafter_lm_head_S_slots_from_measured_heads": 8995.0,
+   "priced_not_rtl": {
+    "ingest": 3024,
+    "markov": 4851,
+    "source": "results/rtl/qwen_rom_dspark_20261003/drafter/drafter_rom_schedule.json draft_step_cycles.existing_rtl S=3 (MODEL_ONLY)"
+   }
+  },
+  "commit_cycles": 65,
+  "step_cycles": 1057503.0
+ },
+ "bounds": {
+  "verify_layer_increment_per_extra_position": 3248.6666666666665,
+  "speedup_if_draft_were_free": 1.8693977357482947,
+  "verify_layer_cycles_break_even": 41034.81398611111,
+  "verify_layer_cycles_for_1pct_gain": 40578.4783690869,
+  "drafter_su_serial_stall_cycles_per_layer": 9406
+ },
+ "tau": 3.1445,
+ "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.qwen3_8b.by_draft_tokens.3 (DERIVED from published DSpark Table 1 (Qwen3-8B, gamma 7, T=1.0): per benchmark solve constant conditional acceptance r from tau7 = 1 + sum_{i<=7} r^i, then tau3 = 1 + sum_{i<=3} r^i; equal weight over the 9 benchmarks (3 math, 3 code, 3 chat))",
+ "tau_superseded": {
+  "tau": 3.0375,
+  "draft_tokens": 3,
+  "source": "results/rtl/qwen_rom_dspark_20261003/drafter/tau_summary.json tau_w8_S3_B4 (self-measured, owner 6 classes; SUPERSEDED 2026-10-04 by owner rule)"
+ },
+ "clock_hz": 1200000000.0,
+ "per_user_accepted_tok_s": 3568.2168277536803,
+ "ar_tok_s": 2274.1787845651484,
+ "speedup_vs_ar": 1.569013329985825,
+ "jobs": {
+  "c_L0": "k_L0",
+  "c_AR0": "k_AR0",
+  "c_H0": "c_H0",
+  "c_H1": "c_H1",
+  "c_H2": "c_H2",
+  "c_D0": "k_D0r"
+ },
+ "claim_boundary": "TARGET CONTEXT (owner rule): decoder layer 0 verify (P 8187..8190, 3 drafts rejected, commit 1, step 2 at 8188..8191 over the RTL-left HBM), layer-0 AR at P8187 and drafter layer 0 at start 8188 (real-magnitude context window) measured on the VPRM REAL_MEM RTL (REAL_MEM tagged-fill path, in-tile KV slices; HBM_STREAM cannot serve P>=2048, near-HBM attention not integrated); heads position-independent, measured at P255; 36- and 5-layer totals composed from layer 0; drafter context ingest and Markov epilogue priced (model), not RTL; tau = published third-party value (tools/third_party_tau.py, owner rule 2026-10-04; superseded self-measured 3.0375); no SS/FF closure of the new logic."
+}

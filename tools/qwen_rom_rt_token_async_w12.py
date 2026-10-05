@@ -97,6 +97,9 @@ def main() -> None:
     ap.add_argument("--tp", type=int, choices=(2, 4), default=2, help="dies (tensor-parallel ranks)")
     ap.add_argument("--enable-ar256", action="store_true", help="opt in to zero-count 256-word all-reduce descriptors")
     ap.add_argument("--async-coll", action="store_true", help="ASYNC_COLL=1: decode descriptor bit 20 as a cut-through all-reduce")
+    ap.add_argument("--sb-pipe", type=int, nargs="?", const=1, default=0, choices=(0, 1, 2, 3, 4),
+                    help="SB_PIPE of the asynchronous sequencer (bare flag = 1: pipelined scoreboard set; "
+                         "2/3: also the registered read, no wide lookup in the read loop)")
     ap.add_argument("--coll-lat", type=int, default=11, help="collective link latency (cycles), ot_rom_oneshot_allreduce LAT")
     ap.add_argument("--coll-depth", type=int, default=16,
                     help="collective receive FIFO words per source (a power of two); credits return over the link, "
@@ -145,7 +148,7 @@ def main() -> None:
     models = [
         ("die", "ot_qwen_rom_rt_die_async_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
-          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GASYNC_COLL={int(args.async_coll)}", *spine, *arithmetic]),
+          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GASYNC_COLL={int(args.async_coll)}", f"-GSB_PIPE={int(args.sb_pipe)}", *spine, *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic_w12", [*map(str, TILE_RTL)],
@@ -223,7 +226,7 @@ def main() -> None:
         "design_point": {"tp": args.tp, "collective_lat_cycles": args.coll_lat, "groups_per_die": G, "tiles_per_die": G // 4, "count_width": NW, "su_width": args.su_width,
                          "su_reducer_time_levels": args.lv, "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut,
                          "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local),
-                         "ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll)},
+                         "ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll), "sb_pipe": args.sb_pipe},
         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,
                         "upper_tree_level_nws": args.nws, "tree_to_spine_tws": args.tws, "result_write_ord": args.ord,
                         "mem_extra": args.mem_extra,

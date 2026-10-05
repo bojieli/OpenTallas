@@ -1,0 +1,313 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Executing script file `/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/map.ys' --
+
+1. Executing Liberty frontend.
+Imported 4 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv
+Parsing SystemVerilog input from `/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv' to AST representation.
+Generating RTLIL representation for module `\leaf'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \leaf
+
+3.2. Analyzing design hierarchy..
+Top module:  \leaf
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 8 switch rules as full_case in process $proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10 in module leaf.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_INIT pass (extract init attributes).
+
+4.4. Executing PROC_ARST pass (detect async resets in processes).
+
+4.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+     1/21: $8$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:224]$22
+     2/21: $7$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[223:192]$21
+     3/21: $6$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[191:160]$20
+     4/21: $5$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[159:128]$19
+     5/21: $4$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[127:96]$18
+     6/21: $3$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[95:64]$17
+     7/21: $2$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[63:32]$16
+     8/21: $1$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[31:0]$15
+     9/21: $0\q[255:0]
+    10/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\merge[255:0]$14
+    11/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\k[31:0]$13
+    12/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [255:224]
+    13/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [223:192]
+    14/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [191:160]
+    15/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [159:128]
+    16/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [127:96]
+    17/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [95:64]
+    18/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [63:32]
+    19/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z[255:0]$12 [31:0]
+    20/21: $0$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\x[519:0]$11
+    21/21: $0\d[519:0]
+
+4.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\leaf.$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\x' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+  created $dff cell `$procdff$47' with positive edge clock.
+Creating register for signal `\leaf.$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\z' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+  created $dff cell `$procdff$48' with positive edge clock.
+Creating register for signal `\leaf.$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\k' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+  created $dff cell `$procdff$49' with positive edge clock.
+Creating register for signal `\leaf.\d' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+  created $dff cell `$procdff$50' with positive edge clock.
+Creating register for signal `\leaf.\q' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+  created $dff cell `$procdff$51' with positive edge clock.
+Creating register for signal `\leaf.$func$\merge$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$1$\merge' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+  created $dff cell `$procdff$52' with positive edge clock.
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 8 empty switches in `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+Removing empty process `leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/merge256/leaf.sv:6$10'.
+Cleaned up 8 empty switches.
+
+5. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \leaf.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$49 ($dff) from module leaf.
+Removing $procdff$52 ($dff) from module leaf.
+Removing $procdff$47 ($dff) from module leaf.
+Replaced 3 DFF cells.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \leaf..
+Removed 0 unused cells and 33 unused wires.
+<suppressed ~1 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \leaf.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \leaf..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+6.16. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing TECHMAP pass (map to technology primitives).
+
+7.1. Executing Verilog-2005 frontend: <techmap.v>
+Parsing Verilog input from `<techmap.v>' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+7.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $dff.
+No more expansions possible.
+<suppressed ~10 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \leaf.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \leaf..
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+8.9. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  create mapping for $_DFF_N_ from mapping for $_DFF_P_.
+  final dff cell mappings:
+    DFFHQNx1_ASAP7_75t_R _DFF_N_ (.CLK(~C), .D( D), .QN(~Q));
+    DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    unmapped dff cell: $_DFFSR_PNN_
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+Mapping DFF cells in module `\leaf':
+  mapped 776 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+10. Executing ABC pass (technology mapping using ABC).
+
+10.1. Extracting gate netlist of module `\leaf' to `<abc-temp-dir>/input.blif'..
+Extracted 1032 gates and 1808 wires to a netlist network with 776 inputs and 512 outputs.
+
+10.1.1. Executing ABC.
+Running ABC command: berkeley-abc -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/allowed_ss.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.00 sec
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx1_ASAP7_75t_R".
+ABC: Library "asap7sc7p5t_AO_RVT_SS_nldm_211120" from "/tmp/dsrom-s81-minimum-w6-leaves-20261004-r3/allowed_ss.lib" has 3 cells (1 skipped: 1 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.00 sec
+ABC: Memory =    0.10 MB. Time =     0.00 sec
+ABC: + strash 
+ABC: + ifraig 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+10.1.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      776
+ABC RESULTS:   NAND2x1_ASAP7_75t_R cells:      768
+ABC RESULTS:        internal signals:      520
+ABC RESULTS:           input signals:      776
+ABC RESULTS:          output signals:      512
+Removing temp directory.
+Removed 0 unused cells and 1289 unused wires.
+
+11. Executing CHECK pass (checking for obvious problems).
+checking module leaf..
+found and reported 0 problems.
+
+12. Executing Verilog backend.
+Dumping module `\leaf'.
+
+13. Executing JSON backend.
+
+End of script. Logfile hash: 80d711091d
+CPU: user 0.45s system 0.01s, MEM: 22.87 MB total, 16.84 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 42% 2x write_verilog (0 sec), 11% 1x clean (0 sec), ...

@@ -1,0 +1,265 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "label": "A2",
+ "generated_at": "2026-10-04T10:18:18.343735+00:00",
+ "tool": {
+  "script": "tools/signoff_analysis.py",
+  "sha256": "1947ef1537ed5b97bf1ae74fc2126a7b7953dd064d930aba36871fbce1ddca8b",
+  "image": "openroad/orfs:latest"
+ },
+ "routed": {
+  "results_dir": "/srv/opentallas-scratch/claude/rom-stage-pg/jobs/A2/work/orfs/results/asap7/opentallas_ot_v41_rom_pg_ao_asap7_rom_stage_pg_A2_20261004/base",
+  "stage": "final",
+  "parasitics": "routed SPEF (OpenRCX)",
+  "odb_sha256": "600a3933030308d22e1012717c373819a9de8e8e4432390250db321651a054b0",
+  "spef_sha256": "aed8c3a5195aa64e1ae1569c7c7f96d2e7009abed2cbdf53ba585954b446ad49",
+  "netlist_sha256": "fd80638be90e4785c675d2ec33a63898e20a930531568b72073984f4c5623e59"
+ },
+ "pdn": {
+  "variant": null,
+  "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)"
+ },
+ "activity": {
+  "source": "vectorless",
+  "note": "OpenSTA default activity (0.1 at inputs, propagated)"
+ },
+ "corners": {
+  "TT": {
+   "corner": {
+    "lib_tag": "TT",
+    "voltage_v": 0.7,
+    "temperature_c": 25.0,
+    "process": "typical"
+   },
+   "libraries": [
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib"
+   ],
+   "macro_libraries": {},
+   "power_w": {
+    "total": {
+     "internal": 0.0026605722960084677,
+     "switching": 0.0009314094204455614,
+     "leakage": 7.184029868767539e-07,
+     "total": 0.003592700231820345
+    },
+    "sequential": {
+     "internal": 0.0014195081312209368,
+     "switching": 0.00019532919395714998,
+     "leakage": 1.946479954995084e-07,
+     "total": 0.0016150319715961814
+    },
+    "combinational": {
+     "internal": 0.0003789347829297185,
+     "switching": 0.00025273242499679327,
+     "leakage": 4.568486531297822e-07,
+     "total": 0.0006321240798570216
+    },
+    "clock": {
+     "internal": 0.0008621326996944845,
+     "switching": 0.0004833473649341613,
+     "leakage": 6.690928699981669e-08,
+     "total": 0.0013455470325425267
+    },
+    "macro": {
+     "internal": 0.0,
+     "switching": 0.0,
+     "leakage": 0.0,
+     "total": 0.0
+    }
+   },
+   "power_by_hierarchy_w": {
+    "__other__": {
+     "internal": 0.0026605747875751524,
+     "switching": 0.0009314092575002039,
+     "leakage": 7.184071107651591e-07,
+     "total": 0.0035927023998737276,
+     "instances": 34378
+    }
+   },
+   "activity_annotation": {
+    "unannotated": 18650
+   },
+   "timing": {
+    "setup_wns_ns": 0.19911777782155582,
+    "hold_wns_ns": 0.029866289996682838,
+    "setup_tns_ns": 0.0,
+    "hold_tns_ns": 0.0,
+    "min_period": [
+     {
+      "clock": "core_clk",
+      "period_min_ns": 0.55,
+      "fmax_mhz": 1806.73
+     }
+    ]
+   },
+   "clock_tree": {
+    "setup_skew_ns": null,
+    "hold_skew_ns": null,
+    "clock_network_power_share": 0.3745224888581274,
+    "note": "clock_network_power_share is OpenSTA's Clock group (tree buffers and clock nets) over total; register clock-pin internal power sits in the Sequential group"
+   },
+   "ir": [],
+   "ir_by_hierarchy": {},
+   "em": {},
+   "session_seconds": 3.0
+  },
+  "SS": {
+   "corner": {
+    "lib_tag": "SS",
+    "voltage_v": 0.63,
+    "temperature_c": 100.0,
+    "process": "slow"
+   },
+   "libraries": [
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_SS_nldm_FAKE.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_SS_nldm_FAKE.lib"
+   ],
+   "macro_libraries": {},
+   "power_w": {
+    "total": {
+     "internal": 0.0021006350871175528,
+     "switching": 0.0007174808415584266,
+     "leakage": 9.959614544641227e-06,
+     "total": 0.002828075550496578
+    },
+    "sequential": {
+     "internal": 0.0011203591711819172,
+     "switching": 0.00014937086962163448,
+     "leakage": 2.729534799073008e-06,
+     "total": 0.0012724596308544278
+    },
+    "combinational": {
+     "internal": 0.0003001471050083637,
+     "switching": 0.0001939695794135332,
+     "leakage": 6.221463536348892e-06,
+     "total": 0.000500338152050972
+    },
+    "clock": {
+     "internal": 0.0006801316048949957,
+     "switching": 0.0003741405380424112,
+     "leakage": 1.0087178452522494e-06,
+     "total": 0.0010552809108048677
+    },
+    "macro": {
+     "internal": 0.0,
+     "switching": 0.0,
+     "leakage": 0.0,
+     "total": 0.0
+    }
+   },
+   "power_by_hierarchy_w": {
+    "__other__": {
+     "internal": 0.0021006381711310227,
+     "switching": 0.0007174809731390257,
+     "leakage": 9.95966399481153e-06,
+     "total": 0.0028280787884668313,
+     "instances": 34378
+    }
+   },
+   "activity_annotation": {
+    "unannotated": 18650
+   },
+   "timing": {
+    "setup_wns_ns": 0.029934554834909477,
+    "hold_wns_ns": -0.001789929315876293,
+    "setup_tns_ns": 0.0,
+    "hold_tns_ns": -0.002178562885646329,
+    "min_period": [
+     {
+      "clock": "core_clk",
+      "period_min_ns": 0.79,
+      "fmax_mhz": 1261.41
+     }
+    ]
+   },
+   "session_seconds": 4.3
+  },
+  "FF": {
+   "corner": {
+    "lib_tag": "FF",
+    "voltage_v": 0.77,
+    "temperature_c": 0.0,
+    "process": "fast"
+   },
+   "libraries": [
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_FF_nldm_FAKE.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_FF_nldm_FAKE.lib"
+   ],
+   "macro_libraries": {},
+   "power_w": {
+    "total": {
+     "internal": 0.0034620417281985283,
+     "switching": 0.0012138874735683203,
+     "leakage": 5.034357286604063e-07,
+     "total": 0.004676432814449072
+    },
+    "sequential": {
+     "internal": 0.0018104173941537738,
+     "switching": 0.0002561242727097124,
+     "leakage": 1.2571101137837104e-07,
+     "total": 0.0020666674245148897
+    },
+    "combinational": {
+     "internal": 0.0004986064741387963,
+     "switching": 0.0003316327347420156,
+     "leakage": 3.385418949619634e-07,
+     "total": 0.0008305777446366847
+    },
+    "clock": {
+     "internal": 0.0011530183255672455,
+     "switching": 0.0006261297967284918,
+     "leakage": 3.91826482371016e-08,
+     "total": 0.001779187354259193
+    },
+    "macro": {
+     "internal": 0.0,
+     "switching": 0.0,
+     "leakage": 0.0,
+     "total": 0.0
+    }
+   },
+   "power_by_hierarchy_w": {
+    "__other__": {
+     "internal": 0.0034620427996933127,
+     "switching": 0.0012138865915248067,
+     "leakage": 5.034393698223768e-07,
+     "total": 0.004676432877806693,
+     "instances": 34378
+    }
+   },
+   "activity_annotation": {
+    "unannotated": 18650
+   },
+   "timing": {
+    "setup_wns_ns": 0.28917079841761506,
+    "hold_wns_ns": 0.012176606944969137,
+    "setup_tns_ns": 0.0,
+    "hold_tns_ns": 0.0,
+    "min_period": [
+     {
+      "clock": "core_clk",
+      "period_min_ns": 0.42,
+      "fmax_mhz": 2365.1
+     }
+    ]
+   },
+   "session_seconds": 3.7
+  }
+ }
+}

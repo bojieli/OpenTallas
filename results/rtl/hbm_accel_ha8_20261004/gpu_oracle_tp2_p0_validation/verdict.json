@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm-accel-ha8-gpu-oracle-validation.v1",
+ "tool": "tools/qwen_hbmacc_position_oracle_gpu.py (TP2, local RTX PRO 6000)",
+ "reference": "retained CPU ISA oracle /home/ubuntu/w12/oracle6144 on ot-pve1 (TP2 G6144, token 0, position 0)",
+ "reference_oracle_sha256": "8d781378170794c7641472caf36096a0dd75c16620b6edfc68c81e0a439d8471",
+ "layer_die_x_exact": 72,
+ "layer_die_x_total": 72,
+ "token": 50994,
+ "logit_bits": "419c0f7e",
+ "reference_token": 50994,
+ "reference_logit_bits": "419c0f7e",
+ "verdict": "PASS"
+}

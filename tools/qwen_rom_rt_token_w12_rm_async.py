@@ -102,6 +102,9 @@ def main() -> None:
     ap.add_argument("--real-mem", action="store_true", required=True, help="the REAL_MEM configuration (default-off)")
     ap.add_argument("--enable-ar256", action="store_true", help="ENABLE_AR256=1: one-stream 256-word all-reduce descriptors")
     ap.add_argument("--async-coll", action="store_true", help="ASYNC_COLL=1: decode descriptor bit 20 as a cut-through all-reduce")
+    ap.add_argument("--sb-pipe", type=int, nargs="?", const=1, default=0, choices=(0, 1, 2, 3, 4),
+                    help="SB_PIPE of the asynchronous sequencer (bare flag = 1: pipelined scoreboard set; "
+                         "2/3: also the registered read, no wide lookup in the read loop)")
     ap.add_argument("--kv-ideal", action="store_true", help="A/B reference: KV service HBM bypassed, slices preloaded")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     ap.add_argument("--groups", type=int, default=6144)
@@ -171,7 +174,7 @@ def main() -> None:
         ("die", "ot_qwen_rom_rt_die_w12_rm", [str(pub), str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", "-GSCALE_LOCAL=0", f"-GMEM_EXTRA={args.mem_extra}", *spine,
-          "-GREAL_MEM=1", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GASYNC_COLL={int(args.async_coll)}", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
+          "-GREAL_MEM=1", f"-GENABLE_AR256={int(args.enable_ar256)}", f"-GASYNC_COLL={int(args.async_coll)}", f"-GSB_PIPE={int(args.sb_pipe)}", f"-GSCALE_BANKS={args.scale_banks}", f"-GCROM_WORDS={args.crom_words}",
           f"-GHBM_LAYERS={args.hbm_layers}", f"-GEMBED_ROM={int(not args.no_embed_rom)}", f"-GFILL_LAT={args.fill_lat}", f"-GNRD={args.nrd}", f"-GLKA={args.lka}", *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
@@ -295,7 +298,7 @@ def main() -> None:
         "schema": "opentallas.qwen-rom-rt-real-memory-async.v1", "status": "pass" if good else "fail",
         "configuration": "KV_IDEAL A/B reference (HBM bypassed, slices preloaded)" if args.kv_ideal else "REAL_MEM",
         "position": args.pos, "token": args.token, "returncode": p.returncode,
-        "design_point": {"ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll), "tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
+        "design_point": {"ar256_enabled": bool(args.enable_ar256), "async_coll": bool(args.async_coll), "sb_pipe": args.sb_pipe, "tp": args.tp, "groups_per_die": G, "su_width": args.su_width, "su_reducer_time_levels": args.lv,
                          "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut, "collective_lat_cycles": args.coll_lat,
                          "collective_depth": args.coll_depth, "code_banks": args.code_banks, "mem_extra": args.mem_extra},
         "wire_stages": {"bd": args.bd, "xvm": args.xvm, "nws": args.nws, "tws": args.tws, "ord": args.ord},

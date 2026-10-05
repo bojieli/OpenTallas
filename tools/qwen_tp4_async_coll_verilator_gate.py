@@ -78,6 +78,7 @@ def main():
     ap.add_argument("--lat", type=int, default=339)
     ap.add_argument("--depth", type=int, default=256)
     ap.add_argument("--seeds", type=int, default=2)
+    ap.add_argument("--sb-pipe", type=int, choices=(0, 1, 2, 3, 4), default=0, help="SB_PIPE of the asynchronous sequencer")
     args = ap.parse_args()
     if args.result.exists():
         raise SystemExit("Refusing to overwrite an existing verdict")
@@ -86,7 +87,7 @@ def main():
     result = {"schema": "opentallas.qwen-tp4-async-coll-verilator-gate.v1", "status": "fail", "source_sha256": pins,
               "simulator": subprocess.check_output([VERILATOR, "--version"], text=True).strip(),
               "design_point": {"tp": 4, "lanes": 16, "elements": 4096, "lat": args.lat, "depth": args.depth,
-                               "me_ports_in_bench": NP},
+                               "me_ports_in_bench": NP, "sb_pipe": args.sb_pipe},
               "builds": {}, "cases": {},
               "claim_boundary": "Real sequencers (legacy and asynchronous), VM word ports, rank-order binary32 "
                                 "collective and links under Verilator; stub core with scheduled ME result writes. "
@@ -99,7 +100,7 @@ def main():
             p = subprocess.run([VERILATOR, "--binary", "--timing", "-O3", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                                 "-Wno-TIMESCALEMOD", "-Wno-PINMISSING", "-Wno-INITIALDLY", "-Wno-BLKSEQ",
                                 "--top-module", "tb_qwen_tp4_async_coll_vl", f"-GDEPTH={args.depth}",
-                                f"-GLAT={args.lat}", f"-GLEGACY={legacy}", f"-GNP={NP}", f"-GTMAX={TMAX}",
+                                f"-GLAT={args.lat}", f"-GLEGACY={legacy}", f"-GSB_PIPE={args.sb_pipe}", f"-GNP={NP}", f"-GTMAX={TMAX}",
                                 "--Mdir", str(mdir), "-j", "8", *(str(ROOT / s) for s in SOURCES[:5])],
                                capture_output=True, text=True)
             (args.work / f"build_legacy{legacy}.log").write_text(p.stdout + p.stderr)
