@@ -9,6 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 def model():
     record = json.loads((ROOT / 'results/rtl/ha2_owner_reducer_takeover_20261005/takeover.json').read_text())
     price = record['parent_adapter_prebuild_price']
+    price['prebuild_quiet_ff_reservation'] = price['quiet_monitor_counter_ff']
+    price['quiet_monitor_counter_ff'] = 6 + 16 + 2
+    price['total_added_ff'] = 4113 + 122 + price['quiet_monitor_counter_ff']
+    price['ff_cell_area_floor_um2'] = price['total_added_ff'] * .2916
+    price['new_cdc'] = 1
+    price['new_payload_cdc'] = 0
+    price['new_control_cdc'] = 'one PHY-quiet bit through two core-domain synchronizer FF; drain latency phase-dependent, unmeasured'
+    price['quiet_price_detail'] = '6 pending FF +16 delivered-word FF +2 PHY-quiet sync FF; expected count combinational; conservative prebuild reserve93 retained separately'
     price['selection'] = dict(NC=8, NOG=8, BF16=1, PFMAX=384, NPT=8,
         INJ=2, DEL=4, LANES=16, LAT=7, SLOTREG=1, HUBW=35, WSTG=14,
         QAW=6, TXAW=6, RXAW=8, SWCRED=256)
