@@ -64,6 +64,11 @@ def run(a):
             'released full TP4 reference required')
     require(released['tokens_sha256'] == a.tokens_sha256, 'actual prompt differs from released reference')
     require(sha(a.decoded_pins) == a.decoded_pins_sha256, 'retained image pins changed')
+    require(sha(a.binding) == a.binding_sha256, 'released checkpoint binding changed')
+    binding = json.loads(a.binding.read_text())
+    require(binding['checkpoint_revision'] == 'b968826d9c46dd6066d109eabc6255188de91218' and
+            binding['checkpoint_lock_sha256'] == '5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607',
+            'released checkpoint/contract binding required')
     image_pins = json.loads(a.decoded_pins.read_text())
     for name, digest in released['oracle_source_sha256'].items():
         require(sha(ROOT/name) == digest, 'released golden source changed: '+name)
@@ -72,6 +77,8 @@ def run(a):
     for entry in prep['images']:
         pins = (image_pins['layer_image_sha256'][f"L{entry['layer']}"][entry['die']]
                 if entry['kind'] == 'layer' else image_pins[f"head_die{entry['die']}"]['image_sha256'])
+        if entry['kind'] == 'head':
+            pins = dict(pins, **{'crom.hex':binding['program_sha256']['head_final_norm_crom.hex']})
         require(all(pins[name] == digest for name,digest in entry['image_sha256'].items()),
                 'decoded matrix/scale/constant source differs from retained image')
         if entry['kind'] == 'layer':
@@ -102,7 +109,7 @@ def run(a):
                   layers=36, head=True, tp=4, groups=6144, su_width_arith=1024, kv_format='fp8',
                   positions=[a.position], tokens_used=tokens[:a.position + 1], tokens_sha256=a.tokens_sha256,
                   input_book_sha256=a.inputs_sha256, prep_sha256=a.prep_sha256,
-                  decoded_image_pins_sha256=a.decoded_pins_sha256,
+                  decoded_image_pins_sha256=a.decoded_pins_sha256, binding_sha256=a.binding_sha256,
                   historical_released_prep_sha256=released['prep_sha256'],
                   decoded_source_join='all148 image payload pins and all layer/head instruction hashes matched; fresh metadata',
                   head_program_sha256=head_hashes, per_position={str(a.position):frame},
@@ -169,9 +176,9 @@ def run(a):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for name in ('inputs', 'prep', 'tokens', 'preload', 'reference', 'released-oracle', 'decoded-pins', 'history-directory', 'out'):
+    for name in ('inputs', 'prep', 'tokens', 'preload', 'reference', 'released-oracle', 'decoded-pins', 'binding', 'history-directory', 'out'):
         p.add_argument('--'+name, type=Path, required=True)
-    for name in ('inputs-sha256', 'prep-sha256', 'tokens-sha256', 'preload-sha256', 'reference-sha256', 'released-oracle-sha256', 'decoded-pins-sha256'):
+    for name in ('inputs-sha256', 'prep-sha256', 'tokens-sha256', 'preload-sha256', 'reference-sha256', 'released-oracle-sha256', 'decoded-pins-sha256', 'binding-sha256'):
         p.add_argument('--'+name, required=True)
     p.add_argument('--position', type=int, required=True)
     p.add_argument('--token', type=int, required=True)
