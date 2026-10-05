@@ -39,5 +39,5 @@ ulimit -v unlimited
  --die-area 0 0 1814.376 1403.976 --core-area 2.16 2.16 1812.216 1401.816 \
  --stages synth --core-utilization 30 --place-density .55 --orfs-var ADDER_MAP_FILE= \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
- --purpose pathfinding --nickname-tag item9-loaded32-synth-r1 \
+ --purpose characterization --nickname-tag item9_loaded32_synth_r1 \
  --keep-workdir "$out/work" --output "$out/physical.json" > "$out/run.log" 2>&1
