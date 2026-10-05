@@ -79,7 +79,7 @@ module ot_hbm_accel_expert_fetch_stream_wg #(
     assign e_ready = !id_full;
     // ---------------- dispatch (hclk): arrival table, fetch order, one descriptor per (expert, PC) --
     reg [IW-1:0] tab [0:7]; reg [2:0] tset [0:7]; reg [3:0] cnt;
-    reg [2:0] ord [0:29]; reg [5:0] j0s [0:29]; reg [5:0] ns [0:29]; reg keeps [0:29];
+    reg [2:0] ord [0:41]; reg [5:0] j0s [0:41]; reg [5:0] ns [0:41]; reg keeps [0:41];
     reg [5:0] oc; reg [7:0] prot; reg plan_started,id_fault,retire_toggle;
     wire [NPC-1:0] tag_room,tq_empty;
     wire task_consumed;
@@ -91,7 +91,7 @@ module ot_hbm_accel_expert_fetch_stream_wg #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin rearm_c1<=0;rearm_c2<=0;end
       else begin rearm_c1<=retire_toggle;rearm_c2<=rearm_c1;end
-    reg [4:0] ptr [0:NPC-1];
+    reg [5:0] ptr [0:NPC-1];
     wire [NPC-1:0] pc_r, pc_busy, pc_fault, dv; wire [NPC-1:0] all_done_v;
     for (genvar p = 0; p < NPC; p = p + 1) begin : dsp
       assign dv[p] = (6'(ptr[p]) < oc) && tag_room[p] && !id_fault;
@@ -104,9 +104,9 @@ module ot_hbm_accel_expert_fetch_stream_wg #(
     wire sched_start=(cnt==6)&&!plan_started&&!id_fault;
     ot_hbm_accel_wg_dispatch #(.ENABLE(1)) u_schedule (
       .clk(hclk),.rst_n(hrst_n),.task_valid(sched_start),.ids(held_ids),.task_ready(sched_ready),
-      .desc_valid(sched_v),.desc_ready(oc<30),.desc_slot(sched_k),.desc_j0(sched_j0),.desc_n(sched_n),
+      .desc_valid(sched_v),.desc_ready(oc<42),.desc_slot(sched_k),.desc_j0(sched_j0),.desc_n(sched_n),
       .desc_keep(sched_keep),.desc_last(sched_last),.busy(sched_busy),.fault(sched_fault));
-    wire retire=(cnt==6)&&(oc==30)&&(&all_done_v)&&(&tq_empty)&&(&l_empty)&&consumed_h2;
+    wire retire=(cnt==6)&&(oc==42)&&(&all_done_v)&&(&tq_empty)&&(&l_empty)&&consumed_h2;
     assign id_pop=!id_empty&&(cnt<6)&&!retire&&!id_fault&&(ack_h2==retire_toggle);
     reg id_legal;
     always @* begin
@@ -126,7 +126,7 @@ module ot_hbm_accel_expert_fetch_stream_wg #(
               prot<=prot|(8'b1<<set_of(id_q));end
           end
           if(sched_start&&sched_ready) plan_started<=1;
-          if(sched_v&&oc<30) begin ord[oc]<=sched_k;j0s[oc]<=sched_j0;ns[oc]<=sched_n;keeps[oc]<=sched_keep;oc<=oc+1'b1;end
+          if(sched_v&&oc<42) begin ord[oc]<=sched_k;j0s[oc]<=sched_j0;ns[oc]<=sched_n;keeps[oc]<=sched_keep;oc<=oc+1'b1;end
           for(integer p=0;p<NPC;p=p+1) if(dv[p]&&pc_r[p]) ptr[p]<=ptr[p]+1'b1;
         end
       end
@@ -154,7 +154,7 @@ module ot_hbm_accel_expert_fetch_stream_wg #(
       wire [5:0] rj0={tq[tq_r[3:0]][2:0],3'b0};
       wire [5:0] rj=rj0+rcnt;
       wire tq_push=dv[p]&&pc_r[p]&&!retire;
-      wire tq_pop=rd_v[p]&&(rcnt==(rj0==32?6'd16:6'd7));
+      wire tq_pop=rd_v[p]&&(rcnt==(rj0==48?6'd0:6'd7));
       assign tag_room[p]=(tq_w-tq_r)<16;
       assign tq_empty[p]=(tq_w==tq_r);
       always @(posedge hclk or negedge hrst_n)

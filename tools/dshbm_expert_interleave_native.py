@@ -64,7 +64,7 @@ def main():
   vec=a.out/'dispatch/reference.txt';vectors(vec)
   for mut in (0,1):
    with (a.out/f'dispatch_mut{mut}.log').open('w') as f: subprocess.run([str(exe),f'+VECTORS={vec}',f'+mut={mut}'],stdout=f,stderr=subprocess.STDOUT,check=True)
-  assert 'DISPATCH_PASS patterns=117649 accepted_descriptors=3529470' in (a.out/'dispatch_mut0.log').read_text()
+  assert 'DISPATCH_PASS patterns=117649 accepted_descriptors=4941258' in (a.out/'dispatch_mut0.log').read_text()
   assert 'DUPLICATE_REJECTED_NO_DESCRIPTOR' in (a.out/'dispatch_mut1.log').read_text()
   rec['dispatch_patterns']=117649;rec['status']='DISPATCH_PASS_BUILDING_CONNECTED';save()
   exe,cmd=build(a.out/'connected','tb_hbm_accel_expert_fetch_wg',SRC,a.jobs)

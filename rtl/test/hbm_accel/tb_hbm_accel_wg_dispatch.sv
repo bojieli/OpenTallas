@@ -20,10 +20,10 @@ module tb_hbm_accel_wg_dispatch;
    @(negedge clk);tv=0;
    if(mut!=0)begin repeat(2)@(posedge clk);if(!fault||v)$fatal(1,"duplicate accepted");
     $display("DUPLICATE_REJECTED_NO_DESCRIPTOR");$finish;end
-   for(integer d=0;d<30;d=d+1)begin
+   for(integer d=0;d<42;d=d+1)begin
     rc=$fscanf(f,"%d %d %d %d\n",ek,ej,en,e_keep);if(rc!=4)$fatal(1,"descriptor reference");
     do @(posedge clk);while(!(v&&ready));
-    if(int'(k)!=ek||int'(j)!=ej||int'(n)!=en||int'(keep)!=e_keep||last!=(d==29)||fault)
+    if(int'(k)!=ek||int'(j)!=ej||int'(n)!=en||int'(keep)!=e_keep||last!=(d==41)||fault)
       $fatal(1,"DESCRIPTOR mismatch pattern=%0d d=%0d actual=%0d,%0d,%0d,%0d reference=%0d,%0d,%0d,%0d",p,d,k,j,n,keep,ek,ej,en,e_keep);
     seen++;
    end

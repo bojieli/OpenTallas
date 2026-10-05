@@ -8,18 +8,20 @@ from dshbm_expert_workgroup import weight_lines
 
 @pytest.mark.parametrize('ids',[(41,65,158,164,259,266),(128,129,142,159,160,228),(0,7,14,21,28,35),(0,6,7,377,382,383)])
 def test_classes_and_all_sectors_once(ids):
- p=chunks(ids);assert len(p)==30
+ p=chunks(ids);assert len(p)==42
  for k,e in enumerate(ids):
-  c=[x for x in p if x.slot==k];assert [x.j0 for x in c]==[0,8,16,24,32]
-  assert [x.keep for x in c]==[True,True,True,False,False]
+  c=[x for x in p if x.slot==k];assert [x.j0 for x in c]==[0,8,16,24,32,40,48]
+  assert [x.keep for x in c]==[True,True,True,False,True,True,False]
   for pc in range(32):
    a=[v for x in c for v in sector_addresses(x,pc)]
    assert len(a)==len(set(a))==49
    assert [v[3]*4+v[4] for v in a]==[j*32+pc for j in range(49)]
+ for c in p: assert 1<=c.sectors<=8
  for k in range(6):
   same=[r for r in range(k) if ids[r]%7==ids[k]%7]
   if same:
    assert max(i for i,x in enumerate(p[:24]) if x.slot==max(same)) < min(i for i,x in enumerate(p[:24]) if x.slot==k)
+   assert max(i for i,x in enumerate(p[24:]) if x.slot==max(same)) < min(i for i,x in enumerate(p[24:]) if x.slot==k)
 
 @pytest.mark.parametrize('ids',[(1,1,2,3,4,5),(0,1,2,3,4,384)])
 def test_no_router_repair(ids):
@@ -63,3 +65,30 @@ def test_a8_descriptors_preserve_default_and_actual_row_views():
     assert v['native_rows']==list(range(parity,12,2))
     covered.extend(range(v['row_start'],v['row_stop']))
    assert covered==list(range(2280,2304))
+
+
+def test_w2_real_source_rows_tail_and_prefix_are_not_uniform():
+ from dshbm_expert_workgroup_interleave import w2_source_rows,w2_legacy_tail,w2_compact_stream
+ from dshbm_matched_sm_seq import gen_op
+ def read(e,m,a,b):
+  assert m=='w2'
+  p=np.broadcast_to(np.arange(1152,dtype=np.uint32).astype(np.uint8),(b-a,1152)).copy()
+  p[:,0]=np.uint8(a%256)
+  return p,np.full((b-a,72),127,np.uint8)
+ views=w2_source_rows(read,383,2,0)  # actual54 rows106..159, not die0's53
+ assert [v['suffix_capacity_lines'] for v in views]==[10,10,0,0,28,28,28,28]
+ assert [len(v['rows']) for v in views]==[1,1,0,0,3,3,3,3]
+ raw,lut,prefix,native=w2_legacy_tail(views)
+ assert len(raw)==136*128 and lut[-4:]==((255,255),)*4
+ assert len(prefix[0])==64 and len(prefix[4])==96
+ off=0
+ for i,v in enumerate(views):
+  compact,words=w2_compact_stream(v['packed'],v['scale']);n=v['suffix_capacity_lines']*128
+  assert prefix[i]+raw[off:off+len(compact)-len(prefix[i])]==compact
+  assert all(x==0 for x in raw[off+len(compact)-len(prefix[i]):off+n]);off+=n
+  if v['rows']:
+   g=gen_op('v41_fp4',len(v['rows']),2304,8,None,
+        X=[np.zeros(2304,np.float32) for _ in range(8)],released_fp4=(v['packed'],v['scale']))
+   assert tuple(g['lines'])==words==native[i]
+ assert sum(len(v['rows']) for q in range(4) for v in w2_source_rows(read,383,0,q))==53
+ assert sum(len(v['rows']) for q in range(4) for v in w2_source_rows(read,383,2,q))==54

@@ -25,16 +25,18 @@ class Chunk:
 def chunks(ids):
     steer(ids,0)  # authoritative released domain, uniqueness and router order
     ids=tuple(int(e) for e in ids)
-    progress=[0]*6; visited=set(); out=[]
-    while len(out)<24:
-        fronts=[k for k in range(6) if progress[k]<4 and
-                not any(ids[r]%7==ids[k]%7 and progress[r]<4 for r in range(k))]
-        first=[k for k in fronts if ids[k]%7 not in visited]
-        k=min(first) if first else min(fronts,key=lambda k:
-            (-sum(4-progress[r] for r in range(6) if ids[r]%7==ids[k]%7),k))
-        g=progress[k];out.append(Chunk(k,ids[k],ids[k]%7,ids[k]//7,g*8,8,g!=3))
-        progress[k]+=1;visited.add(ids[k]%7)
-    out += [Chunk(k,e,e%7,e//7,32,17,False) for k,e in enumerate(ids)]
+    out=[]
+    for base,count in ((0,4),(32,3)):
+        progress=[0]*6; visited=set()
+        while any(v<count for v in progress):
+            fronts=[k for k in range(6) if progress[k]<count and
+                    not any(ids[r]%7==ids[k]%7 and progress[r]<count for r in range(k))]
+            first=[k for k in fronts if ids[k]%7 not in visited]
+            k=min(first) if first else min(fronts,key=lambda k:
+                (-sum(count-progress[r] for r in range(6) if ids[r]%7==ids[k]%7),k))
+            g=progress[k]; j0=base+g*8
+            out.append(Chunk(k,ids[k],ids[k]%7,ids[k]//7,j0,1 if j0==48 else 8,g!=count-1))
+            progress[k]+=1;visited.add(ids[k]%7)
     return tuple(out)
 
 
@@ -98,3 +100,102 @@ if __name__=='__main__':
     (out/'plan.json').write_text(json.dumps(dict(layer=a.layer,die=a.die,stack=a.stack,
         ids=ids,sm_ids=[4*k+a.stack for k in range(6)],
         descriptors=[c.__dict__ for c in plan],start_delay_ps=None,measured=False),indent=2)+'\n')
+
+
+def w2_source_rows(reader, expert, die, stack):
+    """Retain W19's greedy 32-SM row assignment, using actual TP96 row bounds.
+
+    W19 allocates capacity for 54 rows. A 53-row die's last capacity row is
+    padding, never a fabricated released tensor row. This returns each SM's
+    actual raw fields and its legacy GU/W2 line seam, not uniform 17-line data.
+    """
+    if not 0<=die<96 or not 0<=stack<4:
+        raise ValueError('actual die/stack range')
+    start,stop=die*5120//96,(die+1)*5120//96
+    sizes=[0]*32;gu=[0]*32;owners=[[] for _ in range(32)]
+    for _ in range(48):
+        m=min(range(32),key=lambda m:(sizes[m],m))
+        sizes[m]+=2720;gu[m]+=2720
+    for row in range(54):
+        m=min(range(32),key=lambda m:(sizes[m],m));sizes[m]+=1224
+        if start+row<stop: owners[m].append(start+row)
+    out=[]
+    for m in range(stack,32,4):
+        rows=owners[m]
+        p=np.empty((len(rows),1152),np.uint8);s=np.empty((len(rows),72),np.uint8)
+        for k,r in enumerate(rows):
+            a,b=reader(expert,'w2',r,r+1)
+            if a.dtype!=np.uint8 or a.shape!=(1,1152) or b.dtype!=np.uint8 or b.shape!=(1,72):
+                raise ValueError('released W2 raw FP4/UE8M0 shape')
+            p[k]=a[0];s[k]=b[0]
+        capacity=(sizes[m]+127)//128-(gu[m]+127)//128
+        out.append(dict(sm=m,rows=tuple(rows),packed=p,scale=s,
+            prefix_bytes=min((-gu[m])%128,len(rows)*1224),suffix_capacity_lines=capacity))
+    return tuple(out)
+
+
+def w2_compact_stream(packed,scale):
+    """Existing native FP4 issue_order: 72 blocks, C8/G2, no re-encoding.
+
+    The last group carries ONE active lane (17 bytes), not GU's four lanes.
+    Retains all 1224 bytes per row; the legacy cfg tail alone omits 64/96 bytes.
+    """
+    if packed.dtype!=np.uint8 or packed.ndim!=2 or packed.shape[1]!=1152 or scale.dtype!=np.uint8 or scale.shape!=(len(packed),72):
+        raise ValueError('W2 raw field shape/type')
+    raw=bytearray();words=[]
+    for r,g,t in issue_order(len(packed),2,8,True):
+        word=0
+        for lane in range(8):
+            block=(g*8+lane)*8+t
+            if block<72:
+                word|=int.from_bytes(packed[r,block*16:(block+1)*16].tobytes(),'little')<<(128*lane)
+                word|=int(scale[r,block])<<(1024+8*lane)
+        words.append(word)
+        raw+=word.to_bytes(136,'little') if g==0 else (word&((1<<128)-1)).to_bytes(16,'little')+(word>>1024).to_bytes(1,'little')
+    assert len(raw)==len(packed)*1224
+    return bytes(raw),tuple(words)
+
+
+def w2_legacy_tail(views):
+    """Exact cfg_lut suffix ownership + four zero transport pads for stack0.
+
+    Prefix bytes belong to the final legacy GU line and are returned separately:
+    callers MUST assemble them before W2 numerical execution. This helper does
+    not qualify the current GU pad-only gearbox for delivering these prefixes.
+    """
+    lut=[];tail=bytearray();prefixes={};native={}
+    for local,v in enumerate(views):
+        raw,words=w2_compact_stream(v['packed'],v['scale']);n=v['prefix_bytes']
+        prefixes[local]=raw[:n];native[local]=words
+        suffix=raw[n:];capacity=v['suffix_capacity_lines']*128
+        if len(suffix)>capacity: raise ValueError('legacy W2 tail capacity')
+        tail+=suffix+bytes(capacity-len(suffix))
+        lut.extend((local,line) for line in range(v['suffix_capacity_lines']))
+    if len(lut)>136: raise ValueError('W2 stack sector extent')
+    pad=136-len(lut);tail+=bytes(pad*128);lut.extend((255,255) for _ in range(pad))
+    return bytes(tail),tuple(lut),prefixes,native
+
+
+def w2_exported_reader(root,layer,ids):
+    """Read only the enrolled released die2 source slices (no input inference)."""
+    from pathlib import Path
+    import json,hashlib
+    root=Path(root);rec=json.loads((root/'source.json').read_text())
+    if rec['layer']!=layer or tuple(rec['expert_ids'])!=tuple(ids):
+        raise ValueError('W2 released slice owner')
+    fields={}
+    for t in rec['tensors']:
+        p=root/t['file'];raw=p.read_bytes()
+        if len(raw)!=t['bytes'] or hashlib.sha256(raw).hexdigest()!=t['sha256']:
+            raise ValueError('W2 released bytes changed')
+        parts=t['tensor'].split('.');expert=int(parts[4]);kind='packed' if parts[-1]=='weight' else 'scale'
+        fields[expert,kind]=(np.frombuffer(raw,np.uint8).reshape(t['shape']),t['row_start'],t['row_stop'])
+    def read(e,m,start,stop):
+        if m!='w2':raise ValueError('W2 only')
+        result=[]
+        for kind in ('packed','scale'):
+            data,a,b=fields[e,kind]
+            if not a<=start<=stop<=b:raise ValueError('released slice row bounds')
+            result.append(data[start-a:stop-a].copy())
+        return tuple(result)
+    return read
