@@ -13,7 +13,8 @@ def sources():
     tree=ast.parse((ROOT/'tools/gpu_sys/run_system.py').read_text())
     deps=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign)
               and any(isinstance(t,ast.Name) and t.id=='DEP_SRC' for t in n.targets))
-    return list(dict.fromkeys(['rtl/gpu_sys/ot_gpu_simt_lane.sv','rtl/gpu_sys/ot_gpu_simt_divlane.sv',
+    return list(dict.fromkeys(['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
+       'rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv','rtl/gpu_sys/ot_gpu_simt_lane.sv','rtl/gpu_sys/ot_gpu_simt_divlane.sv',
        'rtl/gpu_sys/ot_gpu_bd_line.sv','rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv']+deps+
        ['rtl/test/hbm_accel/'+TOP+'.sv']))
 
@@ -60,7 +61,7 @@ def run(work):
     (work/'source_pins.json').write_text(json.dumps(pins,indent=2)+'\n')
     for enabled in (1,0):
         log=work/f'build_{enabled}.log'
-        cmd=['iverilog','-g2012','-s',TOP,'-P'+TOP+'.EXPORT='+str(enabled),'-o',str(work/f'gate_{enabled}.vvp')]+[str(ROOT/p) for p in sources()]
+        cmd=['iverilog','-g2012','-s',TOP,'-P'+TOP+'.EXPORT='+str(enabled),'-o',str(work/f'gate_{enabled}.vvp')]+(['-DGU_METADATA_FAULTS'] if enabled else [])+[str(ROOT/p) for p in sources()]
         with log.open('w') as f:rc=subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT).returncode
         if rc:return rc
         with (work/f'run_{enabled}.log').open('w') as f:
