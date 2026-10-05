@@ -8815,3 +8815,9 @@ def hbm_stream_aq_slot_ready_cut(*, pcs=128, queue_depth=4):
                 invariant='for every valid queue slot: ready_q[i] == OR(wq_boh[i] & rdyr_q); current head select equals original wr_bank_rdy',
                 source_constraint='all grant/refresh/open/stale/tRCD next equations unchanged; no stale readiness or earlier visibility',
                 period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
+
+
+def dsrom_field_static_provider_price(image_directory):
+    """Current canonical immutable provider plus issuer reservation; no physical credit."""
+    from dsrom_field_static_provider import model
+    return model(image_directory)
