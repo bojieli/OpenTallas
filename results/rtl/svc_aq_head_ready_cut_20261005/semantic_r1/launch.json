@@ -1,0 +1,26 @@
+{
+  "pid": 887642,
+  "source_commit": "973696daea77f546dc8030a08afff379ace950d1",
+  "host": "ot-epyc2",
+  "worktree": "/srv/opentallas/repos/euclid-svc-aq-head-ready-973696-20261005",
+  "output": "/srv/opentallas-scratch/jobs/euclid-svc-aq-head-ready-semantic-r1",
+  "pins": {
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_pc_aq_head_ready_cut.sv": "7be5be3f78d7081430544ab22a6cef71c03091364b14e267ab7ae034e3f68819",
+    "rtl/hbm_accel/svc/aq_head_ready_cut/ot_hbm_r14_stream_stack_aq_head_ready_cut.sv": "a70b662c8c9497cb2f658c718f8745c9b4dd7355a6f275ec5f808143ceafa680",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_head_ready_lockstep.sv": "31c1e65e8550db078d29901435068f0a6d8048699b7fe5d04378411104c3fb96",
+    "tools/svc_aq_head_ready_lockstep.sh": "615d851668c32f9fb7ef0030b5e8dec8729d4116719ba13a889188aae19b8ce1",
+    "results/uarch/hbm_stream_aq_head_ready_cut_20261005/model.json": "1c0dabb0d018a41bf9395f344675a0ee0acbb99c2ab98eac394de4d6d72e32f1",
+    "tools/uarch_model.py": "69eb394160a7247c4ba0582847ec7a7e13004d200dc9770f94f2f17251dac734"
+  },
+  "admission_GiB": 2,
+  "caps": null,
+  "gate": "200kcycles twoPCs default0+enable1 vs49fa; realinputgrant/credit/refresh/queue/reset +headinvariant",
+  "timestamp": "2026-10-05T04:39:23.941372+00:00",
+  "MemAvailable": "MemAvailable:   1007124028 kB",
+  "disk_free_bytes": 481468108800,
+  "load": [
+    57.9658203125,
+    53.3759765625,
+    51.08203125
+  ]
+}

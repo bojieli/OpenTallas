@@ -8255,6 +8255,60 @@ def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
                 build_gate_pass=slot_ok and corridor_ok,
                 routed_area_fit=False, adopted=False,
                 unresolved='actual top reserved slot and CRC locality/corridor map; additional clock/buffer repair cannot be priced as zero')
+
+
+def hbm_loader_high_address_price(*, byte_address_bits=37, stack_bits=2,
+        service_sector_bits=34, stack_bytes=22500000000, dies=1):
+    """Current per-die ND1 host hierarchy, explicit stack/local byte address.
+
+    ADDR={stack,local_byte}; 32GiB encoded stride is not free storage: per-stack
+    capacity is checked. CSR DADDR_HI exposes every high bit; NBYTES remains32
+    so software explicitly chunks large transfers, never relies on an aperture.
+    """
+    local=byte_address_bits-stack_bits
+    if not 32<=byte_address_bits<=64 or not 0<=stack_bits<=2 or local<5 or service_sector_bits<local-5:
+        raise ValueError('address translation must be lossless')
+    if stack_bytes>(1<<local):raise ValueError('stack capacity exceeds local address')
+    delta=byte_address_bits-32
+    return dict(default_enabled=False, selected=False, adopted=False,
+                per_die_host_instances=1, engine_pairs_per_die=1, dies=dies,
+                byte_address_bits=byte_address_bits, stack_bits=stack_bits,
+                local_byte_bits=local, stack_capacity_bytes=stack_bytes,
+                encoded_stack_stride_bytes=1<<local,
+                flat_encoded_space_bytes=1<<byte_address_bits,
+                translation='stack=ADDR[36:35], sector=zero_extend(ADDR[34:5]); literal bit wiring for37/2/34',
+                address_holes='local offsets >=stack_bytes rejected; descriptor cannot cross a stack',
+                CSR_high_offset=0x2c, CSR_high_bits=delta,
+                reserved_high_CSR_bits='rejected before any DMA/MREQ, never silently discarded',
+                DMA_host_address_bits=64, DMA_host_address_cost_delta_bits=0,
+                DMA_translation='host address remains independent full64; width converter does not translate HBM addresses',
+                tag_bits=16, tag_cost_delta_bits=0,
+                tag_identity='retained LOAD/STORE classbit15, exact STORE lower15 tag/ROB matching',
+                raw_added_descriptor_and_memory_base_bits_per_die=4*delta,
+                raw_added_command_CDC_payload_bits_per_die=2*4*delta,
+                added_address_storage_bits_per_die=12*delta+3,
+                added_service_formatter_fault_flag_bits_per_die=1,
+                added_reserved_HI_validity_flag_bits_per_die=2,
+                request_internal_packet_bits=1+byte_address_bits+256+32+16,
+                request_service_packet_bits=1+service_sector_bits+2+256+32+16,
+                service_boundary_delta_bits_vs_byte32=service_sector_bits+2-32,
+                response_packet_bits=1+16+256,
+                ingress_DMA_payload_bits=64, engine_payload_bits=256,
+                memory_bytes_per_accepted_edge=32, added_memory_ports=0,
+                MACs_per_cycle=0, added_latency_cycles=0,
+                initiation_interval='unchanged accepted request/ACK and W/B flow; no new engine',
+                protection_cost='two widened byte-end and local-end comparisons; capacity/stack-cross, HI reserved-bit, alignment and full64 host-wrap guards; no parity/ECC substitution',
+                mux_and_fanout_cost='widen descriptor/base/address mux+adder5bits perengine; reuse ND1 arbitration, response tags and heldowner',
+                mapping_combinational_cost='wire slices/zero-extension only; no divide/remap/page engine',
+                area_um2=None, area_status='ESTIMATE63 extra stored bits at37 plus widened arithmetic/guards/mux/CDC; mapped cost unknown',
+                FF_area_floor_um2_ESTIMATE=(12*delta+3)*0.2916,
+                corridor_capacity=None, slot_fit=False,
+                clock_targets={'host_ns':1.0,'mem_ns':0.833},
+                SS_setup_ps=60, FF_hold_ps=25, clock_closed=False,
+                composed_decode_gain_percent=None,
+                binding_required='Sagan confirms stack-high/local-byte mapping +service stack/sector ports; Kant actualservice.loader slot/corridor, priorCRCroute does not qualify widened source')
+
+
 def dsrom_s81_native_port_hc_pair():
     """MODEL ONLY: retain first HC-pre mix intermediate beside the EXISTING SU lanes.
 
@@ -8495,3 +8549,116 @@ def dsrom_field_address_lookahead_price():
             "component_functional_admitted":True,"physical_admitted":False,
             "clock_target_ns":.833333,"ss_setup_uncertainty_ns":.060,"ff_hold_uncertainty_ns":.025,
             "token_latency_delta_cycles":0,"performance_adopted":False}
+
+
+def hbm_stream_aq_head_ready_cut(*, pcs=128, queue_depth=4):
+    """Exact next-head readiness cut for mandatory AQ service closure.
+
+    Register next_nonempty AND readiness(next_head, next_bank_state), using
+    both existing next-head alternatives. This adds no command or ACK edge.
+    Conservative logic inventory precedes synthesis sharing; loaded timing
+    and clock/reset/buffer/route cost require the connected route.
+    """
+    if pcs < 1 or queue_depth < 2 or queue_depth & (queue_depth-1):
+        raise ValueError('positive PC count and retained power-of-two queue required')
+    return dict(default_enabled=False, MACs_per_cycle=0, pcs=pcs,
+                queue_depth=queue_depth, added_state_bits_per_pc=1,
+                total_added_state_bits=pcs, FF_cell_area_floor_um2=pcs*DFF_UM2,
+                inherited_hold_cut_bits_per_pc=32,
+                mask_AND_equivalents_per_pc=64, OR2_equivalents_per_pc=62,
+                late_mux_bits_per_pc=1, nonempty_gate_bits_per_pc=1,
+                next_readiness_extra_sinks_per_bank_max=2,
+                next_head_onehot_extra_sinks_per_bit_max=1,
+                head_ready_source_consumers=2,
+                existing_wr_ok_fanout_retained=True,
+                output_bytes_per_cycle_max_per_pc=32,
+                extra_memory_ports=0, added_boundary_bits=0,
+                added_external_tracks=0, added_row_command_cycles=0,
+                added_column_command_cycles=0, added_ACK_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                added_memory_bytes_per_cycle=0,
+                price_excludes_measured_credit='logic sharing, clock/reset buffers, local wires and loaded delay unknown until route',
+                area_fit='one added FF/PC in existing service slot; mapped fit unqualified',
+                invariant='q == wq_ne && OR(hb_oh & rdyr_q) after every edge for AQ',
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                SSFF_closed=False, adopted=False)
+
+def hbm_topk_predicate_lookahead_model():
+    """Default-off N384/P16/K6 selector control successor; no adopted timing gain.
+
+    Price before RTL: compare payloads before selecting one-bit predicates.
+    Gross proxy deliberately takes no credit for removed wide compare-input muxes.
+    0.2 um2/bit mux is the existing assumed mux basis in this unified model.
+    Comparator budget: 32 XNOR + 32 decision gates per added comparator;
+    use the same 0.2 um2 gate-equivalent screening basis, not mapped cell area.
+    """
+    comparators = 16
+    gates = comparators*64 + 2*128 + 3*128
+    proxy = gates*0.2
+    return dict(default_enabled=False, N=384, P=16, K=6, IW=9,
+                original_source_sha256='74a669e6d21b25945de777257813bfc4d9f6e7db25fdc261751d1381c9b742f2',
+                MACs_per_cycle=0, memory_bytes_per_cycle=0,
+                input_bits_per_cycle=512, output_bits_per_result=54,
+                extra_boundary_bits=0, replicas=1, input_beats_per_vector=24,
+                added_register_bits=0, added_queue_entries=0,
+                extra_comparators_32bit=comparators,
+                comparator_count_before=128, comparator_count_after=144,
+                eligibility_AND_bits=256, one_bit_select_upper_bound=384,
+                gross_added_gate_equivalents=gates,
+                gross_added_cell_area_proxy_um2=proxy,
+                area_proxy_basis='ASSUMED 0.2 um2/gate equivalent; no removed mux credit',
+                original_synthesis_cell_area_um2=22760.02,
+                cell_area_screen_um2=22760.02+proxy,
+                original_routed_core_area_um2=83806.8,
+                cell_utilization_screen=(22760.02+proxy)/83806.8,
+                floorplan_screen_pass=(22760.02+proxy)/83806.8<0.30,
+                incoming_key_compare_fanout_before=8,
+                incoming_key_compare_fanout_after=9,
+                registered_key_predicate_fanout=8,
+                fresh_predicate_sinks=128, lane_fresh_predicate_sinks=8,
+                routing_tracks_added_boundary=0,
+                local_routing_and_buffer_area_measured=False,
+                added_latency_cycles=0, initiation_interval_cycles=1,
+                composed_token_latency_delta_cycles=0,
+                setup_period_ps=833, setup_uncertainty_ps=60,
+                hold_uncertainty_ps=25, io_delay_fraction=0.2,
+                baseline_SS_slack_ps=-362.448517,
+                baseline_FF_slack_ps=3.35,
+                candidate_SSFF_closed=False, adopted=False)
+
+
+def hbm_stream_aq_last_bound_predicate_cut(*, pcs=128):
+    """Conditional mandatory PRE-bound decode repair; not implementation admission.
+
+    Six predicates mirror S<=last on the same accepted descriptor edge.
+    S=0 is constant and S=4 reuses last[2]. Encoded last and all other
+    comparators remain. No row/column/grant edge changes are permitted.
+    """
+    if pcs < 1:
+        raise ValueError('positive physical PC inventory required')
+    return dict(default_enabled=False, candidate_selected=False,
+                implementation_started=False, MACs_per_cycle=0, pcs=pcs,
+                added_state_bits_per_pc=6, total_added_state_bits=6*pcs,
+                FF_cell_area_floor_um2=6*pcs*DFF_UM2,
+                capture_enable_muxes_per_pc_max=6,
+                descriptor_decode_OR2_per_pc_max=5,
+                descriptor_decode_AND2_per_pc_max=5,
+                descriptor_bit_extra_loads_before_sharing=[4,6,6],
+                predicate_fanout_to_bank_sneed=4,
+                clock_reset_extra_sinks_per_pc=6,
+                encoded_last_and_other_comparators_retained=True,
+                new_memory_ports=0, extra_memory_bytes_per_cycle=0,
+                added_boundary_bits=0, added_external_tracks=0,
+                added_row_command_cycles=0, added_column_command_cycles=0,
+                added_grant_cycles=0, added_ACK_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                output_bytes_per_cycle_max_per_pc=32,
+                area_fit='6FF/PC body floor in existing service slot; full mapped/control/wire fit unknown',
+                added_local_wire_tracks='unmeasured; six four-bank predicate fanouts and descriptor capture enable',
+                loaded_comb_delay_ps=None, clock_reset_buffer_area_um2=None,
+                invariant='ge_last[S] == (S <= last) at every edge including reset and zero-length descriptor underflow',
+                update='same desc_acc as encoded last; reset0 for six nontrivial predicates',
+                source_cone='last -> S<=last -> sneed -> PRE lowest-bank priority -> c_oh',
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                SSFF_closed=False, adopted=False,
+                build_condition='Only if current head-ready route final verdict requires remaining bounddecode repair')
