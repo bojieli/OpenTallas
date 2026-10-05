@@ -3,7 +3,8 @@
 // All compute, rounding, actual ROM/SRAM ports, stage controls and KV owners
 // are retained. Only the embedded simulation provider is removed and its real
 // typed boundary exported. Same priced model851.8086996; no new hardware,
-// storage or latency. Physical adapter/transport and final token gates remain
+// state or latency. Export loading still needs context qualification.
+// Physical adapter/transport and final token gates remain
 // with the owners; no constant producer returns or unprotected runtime path.
 // Additive full-shape original-AR consumer join. NEAR_HBM=0, DSpark OFF.
 // Existing core/program/ROM/vector/tile/collective semantics retained.
@@ -64,7 +65,7 @@ module ot_qwen_p0_full_consumer_exports #(
     output wire [18:0] stream_d_row,
     output wire [10:0] stream_d_n,
     input wire [NPC-1:0] stream_l_v, stream_w_room, stream_wd_v,
-    output wire [NPC-1:0] stream_l_pop, stream_w_v,
+    output wire [NPC-1:0] stream_l_pop, stream_w_v, stream_wd_accept,
     input wire [NPC*17-1:0] stream_l_sec,
     input wire [NPC*8-1:0] stream_l_row,
     input wire [NPC*256-1:0] stream_l_data,
@@ -73,7 +74,6 @@ module ot_qwen_p0_full_consumer_exports #(
     output wire [NPC*9-1:0] stream_w_tag,
     input wire [NPC*9-1:0] stream_wd_tag,
     input wire producer_fault,
-    input wire [15:0] producer_fault_code,
     input  wire              clk,
     input  wire              hclk, // independent periodic 1024ps controller root
     input  wire              warm_rst_n, // admission pause only; cold POR is rt_rst_n
@@ -332,7 +332,7 @@ module ot_qwen_p0_full_consumer_exports #(
     wire [NPC-1:0] hl_v, hl_pop, hw_v, hw_room, hwd_v;
     wire [NPC*17-1:0] hl_sec; wire [NPC*8-1:0] hl_row; wire [NPC*256-1:0] hl_data, hw_data;
     wire [NPC*24-1:0] hw_sec; wire [NPC*TGWK-1:0] hw_tag, hwd_tag;
-    wire kv_fault, svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code;
+    wire kv_fault, svc_fault, hbm_fault; wire [15:0] svc_code;
     //: a LAYER starts at the stage's first core start (the sequencer starts the core once per program
     //: segment, i.e. again after each collective, within the same layer)
     reg kv_arm;
@@ -392,7 +392,15 @@ module ot_qwen_p0_full_consumer_exports #(
     assign hwd_v=stream_wd_v;
     assign hwd_tag=stream_wd_tag;
     assign hbm_fault=producer_fault;
-    assign hbm_code=producer_fault_code;
+    // Exact existing service ACK identity predicate (service lines608-612).
+    // Export its retirement eligibility; neither valid alone nor a permanent
+    // ready grants permission to release a protected transport transaction.
+    for(genvar p=0;p<NPC;p=p+1)begin:consumer_ACK
+        wire [8:0] tag=hwd_tag[p*9+:9];
+        assign stream_wd_accept[p]=rst_n && hwd_v[p] && tag[8] &&
+            u_kv.w_valid[tag[5:0]] && u_kv.w_gen[tag[5:0]]==tag[7:6] &&
+            u_kv.w_pc[tag[5:0]]==8'(p);
+    end
     assign kv_fault = svc_fault | hbm_fault;
     assign kv_fault_code = svc_code | (hbm_fault ? 16'h8000 : 16'h0);
 
