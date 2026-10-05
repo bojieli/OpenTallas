@@ -8534,6 +8534,49 @@ def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
                 physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
 
 
+def dsrom_wfc_decoded_read_price(maxu=866, nw=21, group_size=32):
+    """Same-edge decoded record/ring reads; mandatory controller candidate.
+
+    Decode the existing RD0 address into registered user and slot selects.
+    RD1 still reads, RD2 still selects the group, EX still consumes it.
+    This changes address fanout, not event ordering, storage or memory ports.
+    Reservations include the decode and full AND/OR read network without
+    credit for removal of the previous binary mux. Parent fit is unproven.
+    """
+    groups = (maxu + group_size - 1) // group_size
+    rw = 18 + 3*nw
+    select_ff = maxu + 8*groups
+    record_terms = maxu*rw
+    ring_terms = maxu*8*nw
+    decode_terms = 5*maxu + 3*8*groups
+    nand2 = 2*(record_terms + ring_terms) + decode_terms
+    buffers = 3*select_ff + maxu*((rw+31)//32) + groups*8*((group_size*nw+31)//32)
+    gross = select_ff*0.2916 + nand2*0.08748 + buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.decoded_read.v1',
+        baseline_controller_sha256='601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099',
+        default_enabled=False, adopted=False, mandatory_controller=True,
+        full_shape=dict(MAXU=maxu,NW=nw,FLIT=512,AW=30,VWA=15,USER_W=10,KVW=32768,WIN=6),
+        groups=groups, replicas=1, MACs_per_cycle=0,
+        record_bits_per_user=rw, ring_bits_per_user=8*nw,
+        retained_user_storage_bits=maxu*(rw+8*nw+2),
+        additional_select_FF_bits=select_ff, NAND2_reservation=nand2,
+        buffer_reservation_cells=buffers, gross_cell_reservation_um2=gross,
+        total_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+        new_memory_ports=0, new_external_boundary_bits_per_cycle=0,
+        record_read_bits_per_edge=rw, ring_read_bits_per_edge=nw,
+        record_read_bytes_per_edge=rw/8, ring_read_bytes_per_edge=nw/8,
+        ring_selector_prebuffer_fanout=group_size*nw,
+        record_selector_prebuffer_fanout=rw,
+        routing_tracks_required=None, channel_capacity=None, floorplan_slot=None,
+        routing_capacity_proven=False, parent_slot_fit_proven=False,
+        area_requires_mapping=True, added_pipeline_edges=0,
+        single_user_latency_delta_cycles=0, reset_or_fault_policy_change=False,
+        target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+        source_exact=False, stage_exact=False, contextual_SS_FF_closed=False,
+        missing_boundary='actual selected caller completion/config producer launch and capture pins',
+        scope='RD0 decoded selects -> same RD1 old-data read -> same RD2 group capture -> same EX; invalid user returns zero; same-edge writes retain read-before-write semantics')
+
+
 def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
                                    measured_stage_cycles=73670):
     """Unselected one-edge completion alternatives, priced on a retained trace.
