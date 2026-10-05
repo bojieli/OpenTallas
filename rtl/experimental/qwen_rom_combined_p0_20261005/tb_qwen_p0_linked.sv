@@ -21,6 +21,7 @@ module tb_qwen_p0_linked #(
     input wire hold_rows,
     input wire bad_ack_tag,
     output wire join_desc_accepted, join_go,
+    output wire join_desc_committed, join_go_committed,
     output wire [127:0] join_row_valid, join_row_take, join_ack_valid,
     output wire [6:0] join_debt,
     output wire join_bad_ack_seen,
@@ -67,6 +68,8 @@ module tb_qwen_p0_linked #(
     end
     assign join_desc_accepted=hd_v&&hd_rdy;
     assign join_go=h_go;
+    assign join_desc_committed=u_hbm.protected_dv && u_hbm.desc_r;
+    assign join_go_committed=u_hbm.protected_go;
     assign join_row_valid=producer_lv;
     assign join_row_take=producer_pop&producer_lv;
     assign join_ack_valid=hwd_v;
