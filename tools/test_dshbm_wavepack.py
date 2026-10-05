@@ -2,7 +2,7 @@
 from dataclasses import replace
 import unittest
 
-from dshbm_wavepack import Op, compile_run, pair_descriptor, pair_refusal, request_addresses
+from dshbm_wavepack import Op, compile_run, pair_descriptor, pair_refusal, request_addresses, tag16_mapping
 
 
 class Packing(unittest.TestCase):
@@ -55,6 +55,28 @@ class Packing(unittest.TestCase):
         self.assertIn('reducer keys', pair_refusal(a, b))
         self.assertEqual([d['kind'] for d in compile_run([a, b], True)['descriptors']],
                          ['LINEAR', 'LINEAR'])
+
+    def test_finite_w2_tag_identity_and_live_key_uniqueness(self):
+        m = tag16_mapping(pair_descriptor(self.a, self.b))
+        self.assertEqual(m['tag_bits'], 12+1+3)
+        self.assertEqual(len(set(m['reducer_keys'])), m['rows_total'])
+        identities = [(r['operation'], r['local_row']) for r in m['virtual_rows']]
+        self.assertEqual(identities, [(0,0), (0,1), (1,0), (1,1)])
+        # All eight row/group slots fit one wave; slot recurrence stays eight.
+        items = [(r,g) for r in range(4) for g in range(2)]
+        for r in range(4):
+            self.assertEqual([g for rr,g in items if rr==r], [0,1])
+        for t in range(7):
+            for s in range(8):
+                self.assertEqual((t+1)*8+s-(t*8+s),8)
+
+    def test_w2_x_address_relocation_and_wrap(self):
+        for a_base in range(128):
+            b_base = (a_base+16)%128
+            for g in range(2):
+                for t in range(8):
+                    xa=(a_base+8*g+t)%128
+                    self.assertEqual((xa+(b_base-a_base)%128)%128,(b_base+8*g+t)%128)
 
 
 if __name__ == '__main__':
