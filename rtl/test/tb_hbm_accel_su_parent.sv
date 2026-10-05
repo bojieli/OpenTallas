@@ -2,7 +2,7 @@
 // Production CP + owner + engines + actual installed CDC/backend classes.
 // SM arithmetic is outside this minimum cut; its prior LSU/bulk producers
 // issue real requests, hold their responses, and retire only actual handshakes.
-module tb_hbm_accel_su_parent;
+module tb_hbm_accel_su_parent #(parameter integer OWNER_ONLY=0);
  reg clk=0,clk_mem=0;always #0.416667 clk=~clk;always #0.5 clk_mem=~clk_mem;
  reg rst_n=0,cmd_we=0,db_v=0,loader_we=0;
  reg [7:0] cmd_addr=0;reg [63:0] cmd_data=0,loader_data=0;
@@ -63,11 +63,17 @@ module tb_hbm_accel_su_parent;
  assign c_req_strb[127:32]=0;assign c_req_tag[63:16]={32'd0,16'h77};
  assign c_rsp_rdy[3:1]={2'd0,bulk_rsp_ready};
  wire [31:0] vcount,rcount,wcount,fcount;wire [3:0] logical_retired;
+ generate if(OWNER_ONLY==0) begin:g_exec
  ot_hbm_accel_su_parent_exec #(.ENABLE(1)) exec(
   .clk(clk),.rst_n(rst_n),.owned(owned),.config_idle(db_rdy),.loader_we(loader_we),.loader_addr(loader_addr),.loader_data(loader_data),
   .selected_pc(selected_pc),.job_id(cpl_job),.req_v(su_req_v),.req_rdy(su_req_rdy),.req(su_req),
   .rsp_v(su_rsp_v),.rsp_rdy(su_rsp_rdy),.rsp(su_rsp),.done(exec_done),.fault(exec_fault),
   .virtual_edges(vcount),.read_requests(rcount),.write_requests(wcount),.publication_requests(fcount),.retired_original_ops(logical_retired));
+ end else begin:g_owner_only
+ assign su_req_v=0;assign su_req=0;assign su_rsp_rdy=0;
+ assign exec_done=0;assign exec_fault=0;assign vcount=0;assign rcount=0;
+ assign wcount=0;assign fcount=0;assign logical_retired=0;
+ end endgenerate
  genvar c;
  generate for(c=0;c<4;c=c+1) begin:g_cdc
   ot_gpu_mreq_cdc #(.ENABLE(1),.AW(3)) crossing(
@@ -102,7 +108,7 @@ module tb_hbm_accel_su_parent;
   if(late_prior && owned) $fatal(1,"borrow while late actual producer request/response outstanding");
   if(su_req_v && su_req_rdy) request_edge=cycle;
   if(su_rsp_v && su_rsp_rdy) wait_edges=wait_edges+cycle-request_edge;
-  if(owner_fault || exec_fault || |cdc_fault || mem_fault) $fatal(1,"parent/provider fault mode=%0d cycle=%0d state=%0d cursor=%0d",mode,cycle,exec.g_on.state,exec.g_on.cursor);
+  if(owner_fault || exec_fault || |cdc_fault || mem_fault) $fatal(1,"parent/provider fault mode=%0d cycle=%0d",mode,cycle);
  end
  task automatic read_sector(input integer addr,input integer tag_value);
   begin
@@ -154,6 +160,12 @@ module tb_hbm_accel_su_parent;
   do @(posedge clk);while(!old_req_ready);
   @(negedge clk);old_req_v=0;
   wait(old_rsp_v);@(negedge clk);late_prior=0;
+  if(OWNER_ONLY) begin
+   wait(owned);@(negedge clk);
+   if(old_consumed!=2 || bulk_consumed!=1 || !owned || pending || owner_done || cpl_v)
+    $fatal(1,"late producer ownership exclusion/actual retirement");
+   $display("BORROW_RACE_PASS old_consumed=2 bulk_consumed=1 true_grant=1 no_fake_done=1");$finish;
+  end
   wait(cpl_v);@(negedge clk);finish_cycle=cycle;finish_time=$realtime;
   // This cut deliberately has no SM RESULT kernel: preserve CP's real status2.
   if(cpl_status!=2 || cpl_token!=0 || cpl_job!=41 || cpl_gen!=3 || cpl_pos!=20'hfffff ||
