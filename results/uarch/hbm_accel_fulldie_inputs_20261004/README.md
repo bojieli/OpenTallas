@@ -64,7 +64,9 @@ The selected-instance record requires:
 
 - `design_kind: "hbm_accelerator"`, `target: "deepseek"|"qwen"`, `adopted: true`
   (selected component design, **not** full-die signoff), `census_complete: true`;
-- `top`, full `top_parameters`, and `source_pins` (path/SHA references);
+- `top`, `top_source`, full `top_parameters`, and `source_pins` (path/SHA references);
+  every public parameter in the exact top and instance module headers must be
+  supplied explicitly; the compiler does not fill values from RTL defaults;
 - `instances`: exact `name`, `role`, `module`, `rtl_source`, explicit
   `parameters`, `master`, `lef`, `abstract_provenance`, `ports`, `tied_ports`;
 - each port's `kind` (`memory`, `signal`, `clock_power`), `physical_bits` and
