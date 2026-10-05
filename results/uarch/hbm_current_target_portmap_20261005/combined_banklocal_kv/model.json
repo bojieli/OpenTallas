@@ -1,0 +1,119 @@
+{
+  "selection": "ONE_COMBINED_BANKLOCAL_CODE_RELEASED_PRIOR_KV_TILE_GATE",
+  "default_enabled": false,
+  "adopted": false,
+  "before_RTL": true,
+  "source_commit": "b29cbfe411a9b50e59e81493ed06ae0cfb148e4b",
+  "source_pins": {
+    "tools/uarch_model.py": "6946c2781cf24f23ba3ecb4d024f96981e7418fc7d8ef96eb6aeb001bb13a967",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair_banklocal.sv": "8b713f7c9d1af826e3316e5cd18c5e768e1c1b81f7f6225e8d3e1d68bc90a516",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_read_pipeline.sv": "bdbfd5c960ceb9616c40246102f6a25063370a59363d181e89dcf184e27181d3",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_tile_logic_w12.sv": "08ffd8ad1c2d29047999a5f9bcf198762f600d99e7c66205ab21cec73237bd80",
+    "rtl/hdc/kv/ot_qwen_kv_land_merge.sv": "9f77946d0950244004b006e8988041ab06ad1933f0b776148928929f385fcce7",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hbm_accel/service/ot_hbm_accel_owned_crossing.sv": "0969552e5c1f153a3bacba3a6f94029004454e5c0fc854d94266c47482524ec1"
+  },
+  "unified_constant": {
+    "path": "tools/uarch_model.py",
+    "DFF_UM2": 0.2916,
+    "read": "AST literal, no sparse unrelated measurement dependencies"
+  },
+  "CODE": {
+    "macros": 20,
+    "firstrow": 3980,
+    "rows": 512,
+    "virtualreads": [
+      96,
+      127
+    ],
+    "physicalreads": [
+      4076,
+      4107
+    ],
+    "banks": [
+      3,
+      4
+    ],
+    "readedges": 2,
+    "II": 1,
+    "bytes_per_edge": 64,
+    "boundary_bits": 512,
+    "extra_FF": 2304,
+    "extra_FF_floor_um2": 671.8464,
+    "slot_positive_reserve_um2": 6030.63296,
+    "context": "Kant model/Pauli mappedphysical, no routeadoption"
+  },
+  "KV": {
+    "layer": 0,
+    "rank": 0,
+    "tile": 0,
+    "GT": 6144,
+    "TG": 4,
+    "heads": 2,
+    "KV_VB": 131072,
+    "KV_HB": 16,
+    "KV_AW": 7,
+    "position": 8191,
+    "current_lane_preloaded": false,
+    "sectors": [
+      0,
+      1,
+      32768,
+      32769
+    ],
+    "input": "retainedPRIOR4194304LEU32 bits exactinverseE4M3, no neworacle",
+    "operand": "actualnative L0_die0_x.hex produced output first1024words; diagnostic partialK, NOTcanonical QR",
+    "macros": 2,
+    "bytes": 8192,
+    "landing_sources": 12,
+    "landing_gross_FF_reserve": 8192,
+    "landing_FF_floor_um2": 2388.7872,
+    "assembly_mux_bit_terms": 6144,
+    "assembly_mux_positive_um2_proxy": 24576,
+    "writer_register_FF": 1032,
+    "writer_register_floor_um2": 300.93120000000005,
+    "private_control_FF": 8,
+    "private_control_floor_um2": 2.3328,
+    "landing_edges": 2,
+    "writer_edges": 1,
+    "SRAM_write_edges": 1,
+    "read_edges": 1,
+    "extra_operand_edges": 1,
+    "MEM_EXTRA": 1,
+    "read_II": 1,
+    "bytes_per_readedge": 64,
+    "boundary_bits": 512,
+    "MACs_per_issue": 64,
+    "issues": 8,
+    "partial_outputs": 128,
+    "private_receipt": "only AFTER actual masked SRAMwrite, retained fullsourceidentity crossing reverse; NOTgrant-as-visibility",
+    "mapping": "word=sector*2,head=word>>16,tk=(word&65535)>>7,dim=word&127;tile=(tk%48)*32+dim//4;local=(tk//48)*2+head,quarter=dim%4; stack=sector[1:0],PC={sector[15],sector[5:2]}"
+  },
+  "CDC": {
+    "instances": 2,
+    "coded_bits_each": 1728,
+    "service_ps": 1024,
+    "core_ps": 833.333,
+    "free_clock_credit": false
+  },
+  "latency": {
+    "KV": "4 returned32B sectors, eachforwardCDC+land2+writer1+write1+positive reverse; all4 beforeGO",
+    "CODE": "32continuousII1 plusoriginalcompute+paid1edge",
+    "partialK": "8II1 plusoriginaldecode/mul/tree+paid1edge",
+    "composed_fulltoken_exposed_edges": null
+  },
+  "physical": {
+    "installed_array": false,
+    "SSFF": false,
+    "tracks": "CODEsame512read +KV512write/512mask/7row; wholeports/routes/clock remainOPEN",
+    "fullstorage_counts": "CODE421.5MiB+scale50112/CROM541953/VM177808U32 and actualTP4KV4194304packedB priced separately; no wholefit"
+  },
+  "scope": {
+    "expected_is_provider": false,
+    "canonical_query": false,
+    "current_token_KV": false,
+    "global_publication": false,
+    "fulltoken": false,
+    "component_numeric": true
+  }
+}
