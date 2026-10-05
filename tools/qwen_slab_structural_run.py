@@ -73,6 +73,8 @@ def command(a, out):
         # a macro-branch delay-buffer derate: the ROM clock leads the capture flops (clk->q 754 ps of 833 at SS)
         argv += ["--orfs-var", "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -no_obstruction_aware "
                  f"-delay_buffer_derate {a.cts_derate:g}"]
+    if a.rom_lead:
+        argv += ["--orfs-var", f"QSS_ROM_LEAD_BUFS={a.rom_lead}"]
     if a.td_only:
         argv += ["--orfs-var", "GPL_ROUTABILITY_DRIVEN=0"]
     for kv in a.orfs_var:
@@ -89,6 +91,8 @@ def main():
     p.add_argument("--td-only", action="store_true")
     p.add_argument("--orfs-var", action="append", default=[])
     p.add_argument("--hold-margin-ns", type=float, default=0.01, help="ORFS hold repair margin (flow only, stricter)")
+    p.add_argument("--rom-lead", type=int, default=0,
+                   help="remove the last N macro-branch CTS delay buffers (ROM clock leads its capture; rom_lead.tcl)")
     p.add_argument("--cts-derate", type=float, default=None,
                    help="tuned CTS: -no_obstruction_aware and -delay_buffer_derate D (macro clock leads)")
     p.add_argument("--param", action="append", default=[], help="extra RTL parameter NAME=VALUE (IN_STAGE, AM_SPLIT, S5_CTL)")
