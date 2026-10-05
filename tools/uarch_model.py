@@ -10065,6 +10065,13 @@ def hbm_r5a_p2_stack_context_model():
     r4=json.loads(r4path.read_text()) if r4path.exists() else None
     ordinary=None if r4 is None else [r for r in r4['cases'] if not r['case'].startswith('neg_')]
     ordinary_pass=False if ordinary is None else all(r['verdict']=='PASS' for r in ordinary)
+    current_path=ROOT/'results/rtl/hbm_accel_r5a_p2_20261005/stack_context_current.json'
+    current=json.loads(current_path.read_text()) if current_path.exists() else None
+    protection_pass=current is not None and current['protection_pass']
+    if current is not None:
+        for f,h in current['input_sha256'].items():
+            if f.endswith('expert_stack_p2.sv') and hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=h:
+                raise ValueError('current stack gate belongs to different production RTL')
     ff=dict(configuration_SECC=100*72,configuration_valid_and_fault=4,
         descriptor_code_and_valid=74,notice_dual_rail=2,
         PC_issued_returned_counters=32*16*4,PC_codec_slot=32*362,
@@ -10118,7 +10125,13 @@ def hbm_r5a_p2_stack_context_model():
             for k in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
         clocks=dict(stream_ps=833.333333333,service_ps=1024,setup_uncertainty_ps=60,
             hold_uncertainty_ps=25,source_owned_register_relations=True,actual_CTS_and_loads_pending=True),
-        gates=dict(exact=ordinary_pass,protection=False,physical=False,performance=False,adopted=False))
+        current_gate=None if current is None else dict(record=str(current_path.relative_to(ROOT)),
+            ordinary_source_commit=current['ordinary_source_commit'],
+            verified_mutation_source_commit=current['mutation_source_commit'],
+            protection_pass=protection_pass,production_RTL_changed_by_mutation_repair=False,
+            original_unexpected_double_mutation_PASS_retained=True,
+            actual_two_bit_held_code_at_stream_capture_refused_before_publication=True),
+        gates=dict(exact=ordinary_pass,protection=protection_pass,physical=False,performance=False,adopted=False))
 
 
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
