@@ -9310,3 +9310,27 @@ def qwen_service_aq_act_parent_clock_model():
         command_calendar="same accepted-edge count; wall latency depends on actual accumulator phase and consumer stalls",
         SSFF_closed=False, adopted=False, full128_clock_credit=False,
         slower854_61_bound_selected=False)
+
+
+def qwen_service_actual_edge_eligibility_model(exposed_column_transactions=None):
+    """Observed clock-calendar failure and unadmitted conservative column-wait cost."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('qwen_service_actual_edge_calendar.py')
+    spec = importlib.util.spec_from_file_location('qwen_actual_edge_calendar', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    result = module.model()
+    result['observed_tCCD_S_violation'] = dict(interval_fs=833333, required_fs=1024000,
+        columns=256, violations=194, actual_PC_source='rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv')
+    result['conservative_column_guard_only'] = dict(pcs=128, added_FF_floor=128,
+        area_floor_um2=128 * .2916, new_ports=0, added_boundary_bits=0,
+        added_clock_reset_bits=128, mux_and_wire_and_slot_fit=None,
+        extra_gap_edges_per_column=1, peak_bytes_per_PC_per_service_edge=16,
+        other_DRAM_timing_repairs='not included; this guard alone is insufficient',
+        adoption=False)
+    result['exposed_column_transactions'] = exposed_column_transactions
+    result['prospective_extra_exposed_service_edges'] = exposed_column_transactions
+    result['composed_token_delta_s'] = None
+    result['composition_missing'] = 'actual accepted column/refresh/return/credit calendar and generated edge phase; no free overlap assumption'
+    return result
