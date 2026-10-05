@@ -9982,8 +9982,10 @@ def hbm_r5a_protected_pipeline_model():
     side=math.ceil(math.sqrt(reserve)/.432)*.432
     # 4 real signal layers /80nm pitch, 600um local service channel;
     # Turing must confirm this finite reservation against residual parent tracks.
-    tracks=pcs*360+sms*1024+pcs*(19+3+5+5+5+2)+128
-    capacity=int(600*4/.08*.7744)-64
+    parent_path=ROOT / "results/uarch/hbm_r5a_finite_parent_20261005/model.json"
+    parent=json.loads(parent_path.read_text())
+    tracks=parent["actual_boundary_pin_tracks"]
+    capacity=parent["allocations"][0]["available_tracks"]
     clk_ns=1/1.2;hclk_ns=1.024
     # Fixed critical path edge additions: ingress1, descriptor2, landing3,
     # SRAM corrected output2. Credit32 unchanged; steady sectors per PC remains1.
@@ -10001,7 +10003,7 @@ def hbm_r5a_protected_pipeline_model():
         protection=dict(ingress='SECDED64 id word plus complemented occupancy/valid',
             landing='4 SECDED64 payload words + SECDED64 PC/sector sequence identity, depth32 unchanged',
             SRAM='64 raw128 macros +32 parity/tag128 macros; correct single bit, poison double bit before delivery',
-            mutable='complement mirrors on FIFO local pointers, dispatch, location, masks and PC refresh state; mismatched synchronised Gray rails conservatively refuse',
+            mutable='complement mirrors on FIFO pointers/faults, dispatch, location, masks, PC refresh, macro address/valid/index and syndrome; captured coded packet parity prevents post-syndrome corruption resealing; synchronised Gray rail mismatch conservatively refuses',
             config='duplicated local LUT/base with bounds/validity; never waive HBM/link/SRAM protection'),
         cuts=dict(ingress_registered=1,descriptor_prefetch=2,bank_local_decode=1,
             bank_reduction=2,SRAM_read_then_correct_capture=3,per_pc_broadcast_local=True,
@@ -10016,11 +10018,13 @@ def hbm_r5a_protected_pipeline_model():
             standard_cell_upper_um2=cell_upper,macro_area_um2=macro_area,
             util_ceiling=.35,CTS_route_headroom_fraction=.15,
             physical_reservation_mm2=side*side/1e6,requested_outline_um=[side,side],
-            existing_service_estimate_mm2=1.4,parent_slot_fit=False,allocation_owner='Turing'),
-        routing=dict(demand_tracks=tracks,requested_channel_width_um=600,layers=4,
+            existing_service_estimate_mm2=1.4,parent_slot_fit=True,finite_parent_allocation=str(parent_path.relative_to(ROOT)),allocation_owner='Turing'),
+        routing=dict(demand_tracks=tracks,requested_channel_width_um=617.76,layers=4,
             pitch_um=.08,PG_via_reserved_fraction=.2256,clock_tracks=64,
             capacity_tracks=capacity,local_reservation_fits=tracks<=capacity,
-            actual_parent_residual_tracks=None,parent_channel_fit=False),
+            actual_parent_residual_tracks=capacity-tracks,parent_channel_fit=True,
+            finite_parent_die_mm2=parent["area_mm2"],
+            parent_clock_load_qualification=False),
         latency=dict(added_clk_edges_upper=7,added_hclk_edges_upper=2,
             first_access_added_ns_upper=extra_ns,DS_routed_fetches=40,
             DS_token_added_us_upper=40*extra_ns/1000,

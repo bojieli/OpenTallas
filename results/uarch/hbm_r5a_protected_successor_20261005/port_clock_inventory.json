@@ -1,0 +1,76 @@
+{
+  "source_commit": "bee4a854a6b924ef1f7014daaeb1c4bf6891533e",
+  "top": "ot_hbm_accel_expert_fetch_p2",
+  "ENABLE_default": 0,
+  "full_shape": {
+    "NPC": 32,
+    "NSM": 8,
+    "DEPTH": 512,
+    "CRED": 32,
+    "SRAM_macros": 96
+  },
+  "physical_slot_requested_um": [
+    2000.16,
+    2000.16
+  ],
+  "Turing_reply": "/tmp/claude-review-20261003/TURING_TO_GALILEO_R5A_FINITE_PARENT_20261005.txt",
+  "ports": {
+    "e_valid/e_code[71:0]/e_ready": {
+      "clock": "clk",
+      "receiver": "on.iv/on.ic -> on.u_ids",
+      "code": "SECDED64 descriptor id; high data bits zero",
+      "actual_parent_producer_pin": null
+    },
+    "cfg_lines[127:0]/cfg_lut[6271:0]": {
+      "clock": "clk",
+      "receiver": "32 PC-local duplicate configuration LUTs/linecounts",
+      "actual_parent_producer_pin": null
+    },
+    "notice": {
+      "clock": "hclk",
+      "receiver": "on.pc[p].notice_r/notice_n -> local protected refresh sequencer",
+      "actual_parent_producer_pin": null
+    },
+    "rd_v[31:0]/rd_code[11519:0]": {
+      "clock": "hclk",
+      "receiver": "32 protected depth32 CDC landings",
+      "code": "four SECDED64 payload words + SECDED64{zero43,PC5,seq16}",
+      "actual_parent_producer_pin": null
+    },
+    "row_v/op/bank/row,col_v/bank/col": {
+      "clock": "hclk",
+      "source": "on.pc[p].u protected command registers and legal credit-qualified column decisions",
+      "actual_parent_capture_pin": null
+    },
+    "s_valid[7:0]/s_data[8191:0]/s_ready[7:0]": {
+      "clock": "clk",
+      "source": "corrected finite eight-credit parity-protected output FIFO",
+      "actual_parent_capture_pin": null
+    }
+  },
+  "clock_relations": {
+    "clk_period_ps": 833.333333333,
+    "hclk_period_ps": 1024,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "CDC": "two Gray synchronizer stages, complementary rails; clocks asynchronous",
+    "SRAM_write": "negedge clk wv/wa/wd/ws to rising-edge macro capture",
+    "SRAM_read": "negedge clk ra -> rising-edge macro r_addr -> real macro clkQ -> packet1 rising clk; registered syndrome/correction -> output"
+  },
+  "macro": {
+    "name": "ot_sram_1r1w_512x128_m4_r2c2",
+    "views": "physical/asap7_memory_macros_v2",
+    "clkQ_ps": {
+      "SS": 524.0724742442052,
+      "FF": 346.0436643943168
+    },
+    "capture_pin": "on.sm[m].bank[c].half[h].u_ram/clk and ecc_ram/clk",
+    "data_load": "actual extracted downstream correction registers; not a guessed terminal load"
+  },
+  "parent_qualification": false,
+  "missing": [
+    "real enclosing producer/capture instance pins, codec placement and insertion phases",
+    "extracted terminal loads at SS/FF",
+    "native finite allocation current source record"
+  ]
+}
