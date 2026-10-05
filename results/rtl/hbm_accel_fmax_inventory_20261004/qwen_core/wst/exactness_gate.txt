@@ -1,0 +1,16 @@
+RESULT gate_lockstep DUT=1 seed=1 cycles=300000 tables=91 me_ok=167774 stall=131866 mismatches=0
+RESULT gate_lockstep DUT=1 seed=2 cycles=300000 tables=85 me_ok=175794 stall=123868 mismatches=0
+RESULT gate_lockstep DUT=1 seed=3 cycles=300000 tables=71 me_ok=174112 stall=125609 mismatches=0
+RESULT gate_lockstep DUT=1 seed=4 cycles=300000 tables=66 me_ok=187391 stall=112347 mismatches=0
+RESULT gate_lockstep DUT=2 seed=1 cycles=300000 tables=91 me_ok=167774 stall=131866 mismatches=0
+RESULT gate_lockstep DUT=2 seed=2 cycles=300000 tables=85 me_ok=175794 stall=123868 mismatches=0
+RESULT gate_lockstep DUT=2 seed=3 cycles=300000 tables=71 me_ok=174111 stall=125610 mismatches=0
+RESULT gate_lockstep DUT=2 seed=4 cycles=300000 tables=66 me_ok=187391 stall=112347 mismatches=0
+RESULT gate_lockstep DUT=3 seed=1 cycles=300000 tables=91 me_ok=167774 stall=131866 mismatches=0
+RESULT gate_lockstep DUT=3 seed=2 cycles=300000 tables=85 me_ok=175794 stall=123868 mismatches=0
+RESULT gate_lockstep DUT=3 seed=3 cycles=300000 tables=71 me_ok=174111 stall=125610 mismatches=0
+RESULT gate_lockstep DUT=3 seed=4 cycles=300000 tables=66 me_ok=187391 stall=112347 mismatches=0
+RESULT gate_lockstep DUT=3 seed=11 cycles=400000 tables=95 me_ok=241575 stall=158047 mismatches=0
+RESULT gate_lockstep DUT=3 seed=12 cycles=400000 tables=111 me_ok=239158 stall=160401 mismatches=0
+RESULT gate_lockstep DUT=3 seed=13 cycles=400000 tables=102 me_ok=237973 stall=161621 mismatches=0
+RESULT gate_lockstep DUT=3 seed=14 cycles=400000 tables=99 me_ok=230930 stall=168676 mismatches=0

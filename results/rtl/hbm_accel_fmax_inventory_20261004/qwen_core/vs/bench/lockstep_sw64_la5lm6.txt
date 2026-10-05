@@ -1,0 +1,46 @@
+LAT sfu=0 red=0 n=1 ref_mean=24 delta_min=11 delta_max=11
+LAT sfu=0 red=1 n=3 ref_mean=90 delta_min=48 delta_max=48
+LAT sfu=0 red=2 n=1 ref_mean=94 delta_min=48 delta_max=48
+LAT sfu=1 red=0 n=2 ref_mean=85 delta_min=48 delta_max=48
+LAT sfu=1 red=2 n=2 ref_mean=141 delta_min=85 delta_max=85
+LAT sfu=2 red=0 n=2 ref_mean=51 delta_min=35 delta_max=35
+LAT sfu=2 red=1 n=1 ref_mean=117 delta_min=72 delta_max=72
+LAT sfu=2 red=2 n=1 ref_mean=118 delta_min=72 delta_max=72
+LAT sfu=3 red=0 n=1 ref_mean=63 delta_min=44 delta_max=44
+LAT sfu=3 red=1 n=3 ref_mean=130 delta_min=81 delta_max=81
+LAT sfu=3 red=2 n=1 ref_mean=126 delta_min=81 delta_max=81
+LAT sfu=4 red=0 n=2 ref_mean=108 delta_min=74 delta_max=74
+LAT sfu=4 red=1 n=3 ref_mean=176 delta_min=111 delta_max=111
+LAT sfu=4 red=2 n=4 ref_mean=176 delta_min=111 delta_max=111
+RESULT seed=1 ops=300 LA=5 LM=6 vm_writes=20999 kv_writes=23434 red_writes=390 faults=394 mismatches=0 ref_cycles=20948 dut_cycles=34198
+LAT sfu=0 red=0 n=1 ref_mean=23 delta_min=11 delta_max=11
+LAT sfu=0 red=1 n=2 ref_mean=91 delta_min=48 delta_max=48
+LAT sfu=0 red=2 n=3 ref_mean=92 delta_min=48 delta_max=48
+LAT sfu=1 red=0 n=1 ref_mean=73 delta_min=48 delta_max=48
+LAT sfu=1 red=1 n=3 ref_mean=144 delta_min=85 delta_max=85
+LAT sfu=1 red=2 n=6 ref_mean=145 delta_min=85 delta_max=85
+LAT sfu=2 red=0 n=4 ref_mean=57 delta_min=35 delta_max=35
+LAT sfu=2 red=1 n=1 ref_mean=140 delta_min=72 delta_max=72
+LAT sfu=2 red=2 n=2 ref_mean=126 delta_min=72 delta_max=72
+LAT sfu=3 red=0 n=3 ref_mean=64 delta_min=44 delta_max=44
+LAT sfu=3 red=1 n=1 ref_mean=126 delta_min=81 delta_max=81
+LAT sfu=3 red=2 n=1 ref_mean=128 delta_min=81 delta_max=81
+LAT sfu=4 red=0 n=2 ref_mean=105 delta_min=74 delta_max=74
+LAT sfu=4 red=1 n=2 ref_mean=169 delta_min=111 delta_max=111
+LAT sfu=4 red=2 n=1 ref_mean=169 delta_min=111 delta_max=111
+RESULT seed=2 ops=300 LA=5 LM=6 vm_writes=26706 kv_writes=24310 red_writes=404 faults=367 mismatches=0 ref_cycles=21896 dut_cycles=35588
+LAT sfu=0 red=0 n=4 ref_mean=23 delta_min=11 delta_max=11
+LAT sfu=0 red=1 n=1 ref_mean=91 delta_min=48 delta_max=48
+LAT sfu=0 red=2 n=3 ref_mean=96 delta_min=48 delta_max=48
+LAT sfu=1 red=0 n=4 ref_mean=77 delta_min=48 delta_max=48
+LAT sfu=1 red=1 n=2 ref_mean=138 delta_min=85 delta_max=85
+LAT sfu=1 red=2 n=1 ref_mean=140 delta_min=85 delta_max=85
+LAT sfu=2 red=0 n=3 ref_mean=52 delta_min=35 delta_max=35
+LAT sfu=2 red=1 n=3 ref_mean=121 delta_min=72 delta_max=72
+LAT sfu=2 red=2 n=2 ref_mean=126 delta_min=72 delta_max=72
+LAT sfu=3 red=1 n=1 ref_mean=129 delta_min=81 delta_max=81
+LAT sfu=3 red=2 n=1 ref_mean=127 delta_min=81 delta_max=81
+LAT sfu=4 red=0 n=4 ref_mean=107 delta_min=74 delta_max=74
+LAT sfu=4 red=1 n=4 ref_mean=171 delta_min=111 delta_max=111
+LAT sfu=4 red=2 n=1 ref_mean=171 delta_min=111 delta_max=111
+RESULT seed=3 ops=300 LA=5 LM=6 vm_writes=30110 kv_writes=21130 red_writes=370 faults=376 mismatches=0 ref_cycles=22097 dut_cycles=36077

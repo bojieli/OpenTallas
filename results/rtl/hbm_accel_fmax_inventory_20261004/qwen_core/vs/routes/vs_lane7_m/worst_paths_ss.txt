@@ -1,0 +1,35 @@
+rc=0
+corner_rc=0
+r2r -153.25 ws -153.25 i2r 241.15 out -150.796494 hold -5.76 False
+PATH -153.3 u.s1_tag[55]$_DFF_P_/QN -> u.s2_a[27]$_DFF_P_/D
+PATH -152.8 u.s1_tag[55]$_DFF_P_/QN -> u.s2_a[28]$_DFF_P_/D
+PATH -150.8 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[1]
+PATH -148.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[27]
+PATH -147.3 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[3]
+PATH -145.7 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[26]
+PATH -145.6 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[17]
+PATH -144.5 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[18]
+PATH -144.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[9]
+PATH -143.4 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[5]
+PATH -143.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[2]
+PATH -142.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[0]
+PATH -141.5 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[14]
+PATH -140.0 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[7]
+PATH -137.8 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[6]
+PATH -135.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[4]
+PATH -134.7 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[31]
+PATH -134.7 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[23]
+PATH -125.0 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[24]
+PATH -124.2 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[10]
+PATH -122.8 u.s1_tag[55]$_DFF_P_/QN -> u.s2_a[21]$_DFF_P_/D
+PATH -122.2 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[11]
+PATH -120.0 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[13]
+PATH -119.8 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[12]
+PATH -119.3 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[22]
+PATH -118.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[8]
+PATH -114.5 u.s1_tag[55]$_DFF_P_/QN -> u.s2_a[16]$_DFF_P_/D
+PATH -113.5 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[15]
+PATH -113.1 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[29]
+PATH -112.6 u.u_dmd.genblk1.g_line.line[530]$_DFF_P_/QN -> l_out[28]
+
+[exited with code 0]

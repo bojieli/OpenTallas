@@ -1,0 +1,18 @@
+{
+ "tp_seq": {
+  "bench": "rtl/test/hbm_accel_qwen/fmax/tb_qwen_tp_seq_f12_lockstep.sv (Icarus; original vs REG_OUT=1 REG_CDATA=1, identical random inputs incl. mid-run resets, every output compared every cycle; c_data masked only while rst_n is low); c_data compared whenever c_valid, vm_waddr/vm_wdata whenever vm_we (don't-care otherwise)",
+  "cases": "12 runs (N=2/4 x ENABLE_AR256 0/1 x seeds 1-3), 12000000 cycles, ~295k collective sends per run; results obey collective causality (a result word only after this die sent it)",
+  "mismatches": 0,
+  "records": "coll/exactness_tp_seq.txt",
+  "replay": "coll/jobs/bench_tp_seq.sh <src> <out> (ot-epyc1tb)"
+ },
+ "oneshot": {
+  "bench": "rtl/test/hbm_accel_qwen/fmax/tb_oneshot_f12_lockstep.sv (Verilator 5.032 --binary; package ot_rom_oneshot_allreduce with original dies vs ot_rom_oneshot_allreduce_f12; per-die output streams data/last/rank/err word for word + final fault/fault_code)",
+  "cases": "48 runs: TP2 (N2 D16 LAT11 flop) and TP4 (N4 D1024 LAT339 SRAM) x seeds 1-3 x producer stall 0/10/30% x serial/pipelined, slow links (BPC 32), N4 D1024 LAT11, N4 D16, ADD_IMPL 0; random fp32 incl. zeros/subnormals/non-finite/huge (faults fire identically); 4344024 result words compared (final RTL: registered pop, free-slot writes, registered credit flags)",
+  "mismatches": 0,
+  "records": "coll/exactness_oneshot_matrix.txt",
+  "cycle_delta": "serial (TP-sequencer) no-stall runs: all-reduce +2 (TP2) / +6 (TP4) on every collective, gather +0; ADD_IMPL=0 runs (storage/head/credit-flag change alone): +0 on every collective incl. the SRAM FIFO",
+  "replay": "coll/jobs/bench_matrix.sh <src> <out> (ot-epyc1tb)"
+ },
+ "rtl_version": "v4: sliced registered selects (final candidate)"
+}

@@ -1,0 +1,5 @@
+RESULT fp8r_equiv checked=671088640 mismatches=0
+- rtl/test/hbm_accel_qwen/fmax/tb_fp8r_equiv.sv:97: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 0s; walltime 3.756 s; speed 0.000 s/s
+- Verilator: cpu 3.756 s on 1 threads; allocated 7 MB
