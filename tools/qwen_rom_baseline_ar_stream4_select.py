@@ -61,6 +61,14 @@ def prepare(measured, native, output, source=ROOT):
     build.mkdir()
     for leaf in LEAVES:
         shutil.copytree(measured/'die'/leaf, build/leaf)
+    # Direct top-only Verilation includes this hierarchy file but does not emit
+    # it. Declare the exact completed libraries without regeneration rules.
+    # A missing archive remains a make error instead of rebuilding a leaf.
+    libraries = [str(p.relative_to(build)) for leaf in LEAVES
+                 for p in sorted((build/leaf).glob('lib*.a'))]
+    (build/'Vdie_hier.mk').write_text(
+        '# Retained measured compute libraries; top-only compilation.\n'
+        'VM_HIER_LIBS := '+' '.join(libraries)+'\n')
     text = (measured/'die/Vdie__hierMkArgs.f').read_text()
     lines = text.splitlines()
     original_top = next(p for p in lines if p.endswith('/ot_qwen_rom_rt_die_w12_stream4.sv'))
@@ -112,6 +120,63 @@ def access(output):
     subprocess.run(command, check=True)
 
 
+def emit_host(host_source):
+    host_text = host_source.read_text()
+    # Enroll the proven output-IO repair after the final caller transformations.
+    # The original caller and pinned W12 host remain byte-identical.
+    if 'create_directories' not in host_text:
+        anchor = '    const std::string dir = argv[3], preload = argv[4];'
+        if host_text.count(anchor) != 1:
+            raise ValueError('caller output-directory anchor changed')
+        host_text = host_text.replace(anchor, anchor+'''
+    std::error_code output_error;
+    std::filesystem::create_directories(dir, output_error);
+    if(output_error || !std::filesystem::is_directory(dir)) {
+        fprintf(stderr,"cannot create output directory %s: %s\\n",dir.c_str(),output_error.message().c_str());
+        return 2;
+    }
+''')
+    if 'qwen_plain_ar_checked_open' not in host_text:
+        host_text = host_text.replace('fopen(', 'qwen_plain_ar_checked_open(')
+        anchor = '#include <vector>'
+        if host_text.count(anchor) != 1:
+            raise ValueError('caller include anchor changed')
+        host_text = host_text.replace(anchor, anchor+'''
+#include <filesystem>
+#include <cerrno>
+#include <cstdlib>
+static FILE* qwen_plain_ar_checked_open(const char* path,const char* mode) {
+    const bool writing=mode && (mode[0]=='w' || mode[0]=='a');
+    if(writing)fflush(stdout); // retain stage diagnostics before every dump
+    FILE* file=fopen(path,mode);
+    if(!file && writing) {
+        fprintf(stderr,"cannot open output %s: %s\\n",path,strerror(errno));
+        exit(2);
+    }
+    return file;
+}
+''')
+    if '.threads(1)' not in host_text and '->threads(1)' not in host_text:
+        for old, new in (
+            ('    RtPool pool(threads);', '    RtPool pool(threads);\n    for(int i=0;i<pool.size();++i)pool.ctx(i)->threads(1);'),
+            ('    for (int d = 0; d < D; d++) dctx[d].commandArgs(argc, argv);',
+             '    for (int d = 0; d < D; d++) { dctx[d].threads(1); dctx[d].commandArgs(argc, argv); }'),
+            ('    cctx.commandArgs(argc, argv);', '    cctx.threads(1); cctx.commandArgs(argc, argv);')):
+            if host_text.count(old) != 1:
+                raise ValueError('caller context construction anchor changed')
+            host_text = host_text.replace(old, new)
+    host_text = host_text.replace('                    return busy ? 4 : 0;',
+                                  '                    fflush(stdout);\n                    return busy ? 4 : 0;')
+    progress = '    long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;'
+    if host_text.count(progress) != 1:
+        raise ValueError('caller progress cadence anchor changed')
+    host_text = host_text.replace(progress, progress+
+                                  '\n    if(progress_every<=0)progress_every=4096;')
+    if '#include <filesystem>' not in host_text:
+        host_text = '#include <filesystem>\n'+host_text
+    return host_text
+
+
 def link(output, verilator_root, cxx, host_source=None):
     output, verilator_root = Path(output), Path(verilator_root)
     book = json.loads((output/'selection.json').read_text())
@@ -120,9 +185,8 @@ def link(output, verilator_root, cxx, host_source=None):
             raise ValueError('selected source/archive changed: '+path)
     source = Path(book['source_root'])
     host_source = Path(host_source) if host_source else source/HOST
-    host_text = host_source.read_text()
-    if 'create_directories' not in host_text or 'fflush(stdout)' not in host_text:
-        raise ValueError('fulltoken caller requires the actual output-directory/flush repair')
+    emitted_host = output/'qwen_plain_ar_fulltoken.cpp'
+    emitted_host.write_text(emit_host(host_source))
     includes = {verilator_root/'include', verilator_root/'include/vltstd',
                 source/'rtl/test/qwen_runtime', source/'rtl/test/qwen_rom_runtime',
                 output/'reuse/gen'}
@@ -136,7 +200,7 @@ def link(output, verilator_root, cxx, host_source=None):
     command = [cxx, '-std=c++20', '-O2', '-pthread', '-DGROUPS=6144', '-DCOUNTWIDTH=18',
                '-DSWIDTH=64', '-DSMAXB=11', '-DTCUTL=7', '-DNWSD=5', '-DXVMD=1',
                '-DTPD=4', '-DCBANKS=5', '-DSMINV=7',
-               *('-I'+str(p) for p in sorted(includes)), str(host_source),
+               *('-I'+str(p) for p in sorted(includes)), str(emitted_host),
                '-Wl,--start-group', *map(str, archives), '-Wl,--end-group',
                *(str(verilator_root/'include'/p) for p in
                  ('verilated.cpp', 'verilated_threads.cpp', 'verilated_dpi.cpp')),
@@ -144,7 +208,8 @@ def link(output, verilator_root, cxx, host_source=None):
     (output/'link.command.json').write_text(json.dumps(command, indent=2)+'\n')
     subprocess.run(command, check=True)
     (output/'link.json').write_text(json.dumps(dict(host_source=str(host_source),
-        host_sha256=sha(host_source), executable_sha256=sha(output/'qwen_plain_ar_stream4'),
+        host_sha256=sha(host_source), emitted_host_sha256=sha(emitted_host),
+        executable_sha256=sha(output/'qwen_plain_ar_stream4'),
         returncode=0), indent=2)+'\n')
 
 

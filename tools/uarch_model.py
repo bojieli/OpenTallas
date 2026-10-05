@@ -7937,3 +7937,33 @@ def hbm_loader_install_contract(*, partitions=2, dies=2, queue_depth=4,
                 adopted=False,
                 historical_single_client_GBps={'write_only':9.788,'with_readback':4.998},
                 historical_record='results/rtl/tapeout_hbm_loader_20261004/record.json')
+
+
+def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
+    """Exact current-queue bank mask cut for the retained AQ row controller.
+
+    Register the OR of surviving slots plus an accepted push. This equals the
+    current queue's bank set at every edge; the existing prior-cycle hold stays
+    in PRE exclusion. No eligibility or row/column issue edge moves.
+    """
+    if queue_depth < 2 or queue_depth & (queue_depth-1) or pcs < 1:
+        raise ValueError('retained AQ queue needs power-of-two depth >=2 and real PC count')
+    bits = 32
+    return dict(default_enabled=False, MACs_per_cycle=0, pcs=pcs,
+                existing_queue_depth=queue_depth, added_state_bits_per_pc=bits,
+                total_added_state_bits=pcs*bits,
+                register_cell_area_floor_um2_per_pc=bits*0.2916,
+                register_cell_area_floor_um2_total=pcs*bits*0.2916,
+                area_floor_excludes='queue-survivor OR, push decode, enable mux, clock/reset/wires',
+                mask_fanin_per_bank=queue_depth+1, late_pop_mux_bits=32,
+                extra_memory_ports=0, extra_memory_bytes_per_cycle=0,
+                boundary_bits_added=0, external_routing_tracks_added=0,
+                local_registered_mask_bits=32, local_placement_fit='pending selected service route',
+                added_row_command_cycles=0, added_column_command_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                composed_single_user_token_delta_ns=0,
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                refresh_and_DRAM_eligibility='unchanged exact current and prior queue hold masks',
+                interface_and_tags='unchanged accepted push/pop; no payload/visibility or grant changes',
+                SSFF_closed=False, adopted=False,
+                source_basis='svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv')
