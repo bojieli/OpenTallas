@@ -72,7 +72,6 @@ def main():
         tcl = f'''
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
 foreach f [lsort [glob $P/lib/NLDM/*_RVT_{corner.upper()}_*.lib*]] {{ read_liberty $f }}
-read_liberty /src/physical/asap7_memory_macros/{MACRO}/{MACRO}_{corner}.lib
 read_db /route/6_final.odb
 read_sdc /out/boundary.sdc
 read_spef /route/6_final.spef
