@@ -10286,7 +10286,7 @@ def hbm_r5a_p2_stack_context_model():
     protection_pass=current is not None and current['protection_pass']
     if current is not None:
         for f,h in current['input_sha256'].items():
-            if f.endswith('expert_stack_p2.sv') and hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=h:
+            if f.startswith(('rtl/hbm_accel/service/','rtl/gpu/w6/')) and hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=h:
                 raise ValueError('current stack gate belongs to different production RTL')
     ff=dict(configuration_SECC=100*72,configuration_valid_and_fault=4,
         descriptor_code_and_valid=74,notice_dual_rail=2,
