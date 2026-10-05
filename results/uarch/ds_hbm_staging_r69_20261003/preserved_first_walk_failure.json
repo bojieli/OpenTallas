@@ -1,8 +1,0 @@
-{
-  "verdict": "FAIL_CLOSED_METADATA_WALK_PRESERVED",
-  "exception": "FileNotFoundError",
-  "path": "results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/checkpoint_input_manifest.json",
-  "cause": "First draft treated every historical R36 ledger entry as a currently enrolled dependency; literal composed_class validates only tools/ entries.",
-  "frozen915_changed": false,
-  "remote_launch": false
-}

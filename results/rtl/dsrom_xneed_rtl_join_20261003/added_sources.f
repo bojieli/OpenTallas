@@ -1,6 +1,0 @@
-rtl/v41rom/xneed_lookahead/ot_v41_need_lookahead.sv
-rtl/v41rom/xneed_lookahead/ot_v41_rom_elem_qp_xneed_w10.sv
-rtl/v41rom/xneed_lookahead/support/ot_v41_bterm3_w10.sv
-rtl/v41rom/xneed_lookahead/support/ot_v41_segtree3.sv
-rtl/v41die/ot_v41_pair_w17w10_xneed.sv
-rtl/dsrom_sys/ot_v41_field_w17w10_xneed_sys.sv

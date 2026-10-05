@@ -1,4 +1,0 @@
-STATS TAG_ISO_P8191_r30 hbm_act=6801 rd=136464 wr=136 refpb=1964 violations=0 max_landing=12 rsp_tile_stall=15099 fill_sectors=131072 wr_sectors=136 wr_lat_max=65
-PASS TAG_ISO_P8191_r30 "P":8191,"tag_rate_pct":30,"fill_cycles":1393,"stream_TBps":3.613,"stream_pct_of_peak":90.3,"tagged_sectors_during_fill":3323,"tagged_TBps_during_fill":0.092,"total_pct_of_peak":92.6,"tagged_requests":337,"tagged_beats":5392,"tagged_bad":0,"violations":0 : slices, token HBM codes and every tagged beat exact
-KV_SERVICE4_STANDALONE PASS
-{"cases":[{"name":"TAG_ISO_P8191_r30","pass":true,"P":8191,"tag_rate_pct":30,"fill_cycles":1393,"stream_TBps":3.613,"stream_pct_of_peak":90.3,"tagged_sectors_during_fill":3323,"tagged_TBps_during_fill":0.092,"total_pct_of_peak":92.6,"tagged_requests":337,"tagged_beats":5392,"tagged_bad":0,"violations":0,"detail":"slices, token HBM codes and every tagged beat exact"}],"status":"pass"}

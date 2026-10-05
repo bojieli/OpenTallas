@@ -1,6 +1,0 @@
-{
-  "verdict": "FAIL_VERIFIER_JSON_KEY_TYPES",
-  "message": "FAIL: model or source pins differ",
-  "cause": "in-memory stage/depth histogram integer keys compared against JSON string keys; no runtime or numeric mismatch",
-  "new_runtime": false
-}
