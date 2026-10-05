@@ -52,14 +52,18 @@ row("qwen_rom", "dft", "partial",
 row("dsrom_s81", "dft", "partial",
     ["docs/DFT.md", "results/dft/pkg_ctrl/atpg.json", "results/dft/fabric_router/atpg.json",
      "results/dft/tapeout_20261004"],
-    "Old V4.1 package/fabric blocks graded. The S81 q element (ot_v41_rom_elem_q_qp_w10) is item (a) of this "
-    "stream (results/dft/tapeout_20261004/dsrom_q_element). Die-level chain stitching, TAP per die and "
-    "transition-fault ATPG missing.",
+    "S81 q element (ot_v41_rom_elem_q_qp_w10) scanned with X-bounded ROM macros and the ICG opened in test "
+    "(tools/dft/macro_bound.py): 31,606 flops in 31 chains (max 1,032), stuck-at fault coverage 95.58% / test "
+    "coverage 99.77%, 9,042 patterns, gate-level confirmed, scan-off equivalence proven (31,793 points). "
+    "Open: die-level chain stitching / compression, TAP per die, transition-fault ATPG, scan timing closure "
+    "(the element itself is not closed at 0.833 ns in this frame).",
     "L", "med")
 row("hbm_accel", "dft", "partial",
     ["docs/DFT.md", "results/dft/kv_stream/atpg.json", "results/dft/tapeout_20261004"],
-    "Only the old HBM-comparator KV streamer/matvec graded. The accelerator SM element is item (a) "
-    "(results/dft/tapeout_20261004/hbm_sm_element). HBM controller, service and collective blocks ungraded.",
+    "SM tensor-core column ot_gpu_bd_col (the replicated leaf of the SM element; the whole SM was never routed): "
+    "6,006 flops in 6 chains, fault coverage 94.44% / test coverage 99.78%, 1,606 patterns, gate-level confirmed, "
+    "equivalence proven; scan costs +10.3% std-cell area, +16.7% wirelength, SS WNS -102.6 -> -117.0 ps "
+    "(baseline not closed in the generic recipe). HBM controller, service and collective blocks ungraded.",
     "L", "med")
 
 # ---------------------------------------------------------------- MBIST
@@ -72,9 +76,11 @@ row("qwen_rom", "mbist", "partial",
     "M", "med")
 row("dsrom_s81", "mbist", "partial",
     ["rtl/dft/ot_mbist_ctrl.sv", "results/rtl/mbist_campaign.json", "results/rtl/tapeout_bist_20261004"],
-    "No collars on the S81 element ROM macros (4096-row, 2 per slot) or cfg ROMs (ot_rom_4096x72_m8), nor on the "
-    "on-die KV window/staging SRAM. Item (b) of this stream builds and proves it on the element bench "
-    "(results/rtl/tapeout_bist_20261004).",
+    "Element bench PASS (results/rtl/tapeout_bist_20261004): 4 ROM macros of the q element behind signature "
+    "collars (generated successor) + 2 KV staging SRAM banks behind March C-/BIRA collars, one controller; exact vs "
+    "the pinned element through the BIST, 22/22 fault cases, 17.95 us per element at 1.2 GHz. Open: cfg ROMs "
+    "(ot_rom_4096x72_m8), die-level controller hierarchy/TAP, fuse box for repair, closure of the collars in the "
+    "routed element.",
     "M", "high")
 row("hbm_accel", "mbist", "partial",
     ["rtl/hdc/kv/ot_hdc_kv_bufs.sv", "docs/MEMORY_COMPILERS_AND_BIST.md"],
@@ -196,12 +202,13 @@ row("dsrom_s81", "fsr_load", "partial",
     "Weights in ROM; KV/index-key HBM services RTL+tested in system gates (5 dies, 3 packages, exact). HBM "
     "controller domain model-only; Engram history restore is testbench logic.",
     "M", "med")
-row("hbm_accel", "fsr_load", "missing",
-    ["results/rtl/hbm_system_rtl_20261003/STATUS.md", "results/rtl/hbm_accel_ha8_20261004/REPLAY.md",
-     "rtl/gpu_sys/ot_gpu_host_bridge.sv"],
-    "Checkpoint/weight load into HBM is a load-time image (no host DMA path into HBM); the host bridge loader "
-    "only writes command and instruction memories. Without it the accelerator cannot boot. Selected as item (c) "
-    "of this stream.",
+row("hbm_accel", "fsr_load", "partial",
+    ["results/rtl/hbm_system_rtl_20261003/STATUS.md", "results/rtl/tapeout_hbm_loader_20261004/README.md",
+     "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv"],
+    "Was missing (load-time $readmemh images only). Item (c): rtl/hbm_accel/loader/ot_hbm_accel_loader.sv loads "
+    "a real V4.1 die image through AXI -> CDC -> memsys bit-exact (0 mismatches over 4.2M words, CRC + read-back "
+    "verify; results/rtl/tapeout_hbm_loader_20261004). Open: install behind ot_host_if in the system top, one "
+    "port per partition for full-rate boot (measured 9.8 GB/s on one client), HBM -> host (KV save).",
     "M", "high")
 # host
 row("qwen_rom", "fsr_host", "exists",
@@ -277,9 +284,9 @@ for d in DIES:
     counts[d] = c
 
 ranked = [
-    {"rank": 1, "item": "hbm_accel fsr_load: host -> HBM weight/KV loader", "why": "the accelerator cannot boot without it; exact and small; stream item (c)"},
-    {"rank": 2, "item": "dsrom_s81 mbist: ROM + KV SRAM BIST on the element", "why": "16,919 cfg ROMs + 2,417 pairs untestable at wafer sort; stream item (b)"},
-    {"rank": 3, "item": "dsrom_s81 / hbm_accel dft: scan + ATPG on the hardened elements", "why": "coverage and the 1.2 GHz scan cost are unknown on the replicated element; stream item (a)"},
+    {"rank": 1, "item": "hbm_accel fsr_load: host -> HBM weight/KV loader", "why": "the accelerator could not boot without it; stream item (c) DONE as a standalone engine (bit-exact on a real V4.1 die image); install behind ot_host_if open"},
+    {"rank": 2, "item": "dsrom_s81 mbist: ROM + KV SRAM BIST on the element", "why": "16,919 cfg ROMs + 2,417 pairs untestable at wafer sort; stream item (b) DONE on the element bench (22/22 faults, exact); cfg ROMs and die hierarchy open"},
+    {"rank": 3, "item": "dsrom_s81 / hbm_accel dft: scan + ATPG on the hardened elements", "why": "stream item (a): 95.6% / 94.4% FC, 99.8% TC; the scanned q element does NOT route in its frame -> re-floorplan or compression is now the top DFT risk"},
     {"rank": 4, "item": "qwen_rom fsr_mtp: drafter D0 fault at ctx 8K", "why": "headline MTP step not exact in RTL at target context"},
     {"rank": 5, "item": "all dies: clock -- meso FIFO / forwarded links not instantiated in any die top", "why": "single tree proven infeasible; die clocking is a sign-off blocker"},
     {"rank": 6, "item": "all dies: power intent (UPF) and DS PG route closure", "why": "PG measured but intent not in a standard format; R4 route -228 ps"},

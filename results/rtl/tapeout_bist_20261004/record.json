@@ -4,7 +4,7 @@
  "vehicle": "ot_v41_elem_mbist_top: S81 q pair element (4 x ot_rom_4096x274_m8 behind ROM collars, generated successor ot_v41_rom_elem_qp_mb_w10) + 2 KV staging banks (ot_sram_1r1w_256x256_m2_r2c2) behind SRAM collars, one shared ot_mbist_ctrl",
  "reference": "pinned ot_v41_rom_elem_q_qp_w10 at the routed S81 parameters",
  "simulator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
- "build_seconds": 37.0,
+ "build_seconds": 10.1,
  "rom": {
   "macros": [
    "d_0",
@@ -79,7 +79,7 @@
     "21545",
     "c3be36d94a11bdbd0082a2b5c029cd00"
    ],
-   "seconds": 70.7
+   "seconds": 46.6
   },
   {
    "seed": 2,
@@ -93,7 +93,7 @@
     "21545",
     "c3be36d94a11bdbd0082a2b5c029cd00"
    ],
-   "seconds": 71.8
+   "seconds": 45.5
   }
  ],
  "functional_pass": true,
@@ -1159,7 +1159,7 @@
   "rtl/dft/ot_mbist_ctrl.sv": "0d7d9e900a2e18f0ee42287c0e566602a2c02e0d9fe0197d0db17fa0488ef83e",
   "rtl/dft/ot_mbist_bira.sv": "584282503a83bc47b63e0a7fcaaad29c616e4a6115952be015c89162ca80bb8f",
   "rtl/dft/ot_mbist_rom_collar.sv": "43ca354517ed9a5ee7def67a19a282406a560c15f0f5613453037b5126b736f4",
-  "rtl/dft/ot_mbist_rom_collar_par.sv": "9c9849b9012b73c0875c68cdb4734835e9c4d19cf02f52f1d277ed1de18b3dde",
+  "rtl/dft/ot_mbist_rom_collar_par.sv": "37a1ec17eae96d0de23ad549062eb5fe7a96a1a7cfbee62ec0a55b1efb9e29aa",
   "rtl/dft/ot_mbist_sram_collar.sv": "00bc7a2106d794c6209b74f97ad701c56a204342455dd8b75936d2d6ec4e40b4",
   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
   "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
@@ -1167,6 +1167,6 @@
   "tools/dft/elem_mbist_campaign.py": "8f327388431abc03af94bfa1d539c0b9890b60c22c38c61ab5b75a5c803d98bf",
   "tools/dft/gen_elem_mbist.py": "8363914c0023636afa20f11960a6396f5ad49e161bb74d59b155d676d54968c7"
  },
- "seconds": 111.7,
+ "seconds": 58.6,
  "verdict": "PASS"
 }
