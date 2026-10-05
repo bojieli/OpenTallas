@@ -141,8 +141,24 @@
    ]
   }
  },
- "adoption": "All three levers pending. Inherited SwiGLU ADOPT retained as history; no pending latency is applied to the adopted composition.",
+ "adoption": "This takeover makes no new adoption. Main retained concurrent SwiGLU ADOPT. Norm and softmax remain pending; legacy main norm source is not qualified by the LA6 exact records.",
  "launches": 0,
  "exact_bench_replays": 0,
- "claude_worktrees_and_live_jobs_preserved": true
+ "claude_worktrees_and_live_jobs_preserved": true,
+ "integration": {
+  "main_merge": "d044b6d45",
+  "policy": "Main conflicting hunks preserved with -X ours",
+  "main_norm_differs_from_la6_records": [
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/test/tb_dsrom_su_norm.sv",
+   "tools/dsrom_su_norm.py"
+  ],
+  "la6_snapshot": {
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/ot_dsrom_su_norm.sv": "9fd7962fc1c9c294426a47f72e984ffec2737e083c002ca2b744d479e06220e3",
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/tb_dsrom_su_norm.sv": "fcdb57ca72faf67c0a4831c585f65dfd1bc09e42a47a7c40416efefc30d02272",
+   "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/la6_inputs/dsrom_su_norm.py": "f6f024aa6977d6707a3ad06b85ace40c8cd551073075a39fba91864bf362e6d0"
+  },
+  "main_swiglu_verdict": "ADOPT retained from concurrent main integration; source-binding concern in this receipt is unresolved, not an adoption decision",
+  "current_exactness_scope": "Checks above bind isolated preserved branch sources, not the conflicting main norm variant. Live norm routes still use the byte-identical LA6 source on EPYC1."
+ }
 }
