@@ -163,11 +163,12 @@
       "response_check": 512,
       "drain_metadata": 147,
       "decoded_FIFO": 2032,
+      "list_header_and_result_checks": 57,
       "list_capture": 1912,
       "pending_and_metadata_checks": 384,
       "local_half_copies": 1084
     },
-    "net_FF_delta": 1304,
+    "net_FF_delta": 1361,
     "protection": "SRAM SECDED; counter check bits; pending/metadata checks; full tag/beat identity; finite occupancy and reservation checks, no invented clears or credits"
   },
   "latency": {
@@ -188,7 +189,7 @@
   "area": {
     "control_cell_cap_um2": 37452.2,
     "retained_KC8_cells_um2": 37615.4,
-    "estimated_FF_delta_um2": 494.32032,
+    "estimated_FF_delta_um2": 515.92788,
     "unmeasured_mapping_logic_CTS_delta_um2": null,
     "control_cap_unchanged": true,
     "list_macro_reservation_um2": 82730.4192,

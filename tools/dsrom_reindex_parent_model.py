@@ -12,7 +12,7 @@ def model():
     counter_saved=32*128*2-4*128*5
     response_saved=32*128-8*32*(7+1+2+1+1)
     extra=dict(request_FIFO=33*(61+4),response_check=8*32*2,
-               drain_metadata=4*79-4*(16+28)+3+4,decoded_FIFO=8*254,list_capture=banks*70+4*70+70+70+12+2*14*6+8*12*2,
+               drain_metadata=4*79-4*(16+28)+3+4,decoded_FIFO=8*254,list_header_and_result_checks=14+14+28+1,list_capture=banks*70+4*70+70+70+12+2*14*6+8*12*2,
                pending_and_metadata_checks=3*128,local_half_copies=2*2*(95+40+7+128+1))
     net_ff=sum(extra.values())-counter_saved-response_saved-256
     return dict(status='PREBUILD_DEFAULT_OFF',default_enabled=False,shape=dict(NPC=npc,WB=128,DF=8,LSW=3,lists=slots,entries_per_list=entries,local_block_bits=lbw),
