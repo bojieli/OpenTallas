@@ -12,7 +12,7 @@ K = 5120
 DIE_ROWS = 24
 SM_ROWS = 12
 EXPERT_ROWS = 2304
-N_EXPERTS = 256
+N_EXPERTS = 384
 
 
 @dataclass(frozen=True)
