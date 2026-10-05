@@ -10059,7 +10059,7 @@ def hbm_r5a_p2_stack_context_model():
         PC_issued_returned_counters=32*16*4,PC_codec_slot=32*362,
         PC_sticky_fault=64,SM_coded_slot=8*1154,
         SM_capture_payload_parity_valid=8*(1024+16+2),SM_sticky_fault=16,
-        status_synchronizers=8)
+        status_synchronizers=8,configuration_reset_release_rails=8)
     bits=sum(ff.values());cell=bits*DFF_UM2+60000
     return dict(item=6,enabled_default=False,prebuild=True,
         source='additive ot_hbm_accel_expert_stack_p2; old tagged256 stack/service/crossing unchanged',
@@ -10088,7 +10088,8 @@ def hbm_r5a_p2_stack_context_model():
         routing=dict(old_leaf_boundary_tracks=27488,new_outer_typed_port_tracks_pending=True,
             track_capacity_requires_actual_parent_update=True),
         latency=dict(added_clk_edges=3,added_hclk_edges=1,
-            fixed_added_ns=3/1.2+1.024,configuration_setup_edges=1,
+            fixed_added_ns=3/1.2+1.024,configuration_setup_edges=3,
+            configuration_service_release_sync_edges=2,
             configuration_initialization_not_per_fetch=True,
             per_token_40fetch_added_us=40*(3/1.2+1.024)/1000,
             expression='measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free',

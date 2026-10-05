@@ -58,9 +58,10 @@
       "SM_coded_slot": 9232,
       "SM_capture_payload_parity_valid": 8336,
       "SM_sticky_fault": 16,
-      "status_synchronizers": 8
+      "status_synchronizers": 8,
+      "configuration_reset_release_rails": 8
     },
-    "FF_bits_total": 38568
+    "FF_bits_total": 38576
   },
   "replication": {
     "descriptor_fanout": 1,
@@ -70,11 +71,11 @@
     "global_unregistered_payload_mux": false
   },
   "area": {
-    "additional_standard_cell_ceiling_um2": 71246.4288,
-    "combined_standard_cell_ceiling_um2": 563639.3984000001,
+    "additional_standard_cell_ceiling_um2": 71248.7616,
+    "combined_standard_cell_ceiling_um2": 563641.7312,
     "macro_count": 96,
     "macro_area_um2": 497052.0,
-    "required_placement_um2": 3485128.880457143,
+    "required_placement_um2": 3485136.545371429,
     "child_slot_fit_pending_Turing": true,
     "clock_PG_and_native_channel_update_pending": true
   },
@@ -87,7 +88,8 @@
     "added_clk_edges": 3,
     "added_hclk_edges": 1,
     "fixed_added_ns": 3.524,
-    "configuration_setup_edges": 1,
+    "configuration_setup_edges": 3,
+    "configuration_service_release_sync_edges": 2,
     "configuration_initialization_not_per_fetch": true,
     "per_token_40fetch_added_us": 0.14096,
     "expression": "measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free",
