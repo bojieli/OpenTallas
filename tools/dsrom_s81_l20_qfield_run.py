@@ -28,7 +28,9 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
     terminal = json.loads((a.qnorm_run/'terminal.json').read_text())
-    if terminal.get('exit_code') != 0:
+    exit_statuses = [terminal[key] for key in ('exit', 'exit_code') if key in terminal]
+    if not exit_statuses or any(type(status) is not int or status != 0
+                                for status in exit_statuses):
         raise ValueError('completed actual native I11..I13 caller required')
     if 'QNORM_COMPLETE' not in (a.qnorm_run/'runtime.log').read_text():
         raise ValueError('native qnorm control/publication did not complete')

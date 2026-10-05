@@ -9785,3 +9785,25 @@ def hbm_su_command_bridge_model():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.command_bridge_model()
+
+
+def hbm_su_finite_rf_provider_model():
+    """Finite GPU RF working-set candidate, including staged publication cost."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_finite_rf_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.finite_rf_provider_model()
+
+
+def hbm_su_finite_provider_tradeoff_model():
+    """Selected sector path versus finite RF staging; no headline clock credit."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_finite_provider_tradeoff', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.finite_provider_tradeoff_model()

@@ -156,5 +156,184 @@ def provider_requirements():
         RTL_build_admitted=False,physical_qualified=False,adopted=False)
 
 
+def finite_provider_tradeoff_model():
+    """Compose Euclid's selected finite transport with actual provider costs.
+
+    Payload floors cannot stand in for successful service bounds. The same
+    original HC engine benchmark is used only as a scoped comparison, not a
+    physically corrected baseline or a token-rate denominator.
+    """
+    import hashlib
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    p = 'results/uarch/hbm_su_finite_provider_20261005/selection.json'
+    selection = json.loads((root/p).read_text())
+    stream = selection['alternatives'][1]
+    rows = []
+    for row in stream['rows']:
+        rd = row['read_sectors_aligned_contiguous_optimistic']
+        wr = row['write_sectors_aligned_contiguous_optimistic']
+        floor = rd+wr
+        rows.append(dict(kind=row['kind'], read_sectors_floor=rd,
+            write_sectors_floor=wr, serial_sector_payload_floor_us=floor/1000,
+            successful_service_upper_bound_us=None,
+            explicit_latency_equation=(
+                f'{rd}*T_read_roundtrip + {wr}*T_write_roundtrip + '
+                'staging/pack_mux + read_drain + checked_publication + owner_handoff; '
+                'engine overlap allowed only by accepted dependent-event calendar'),
+            roundtrip_definition='each includes actual request CDC, accepted backend wait/service, matched response CDC and acceptance; do not add CDC again',
+            native_and_fused_operand_response_compatibility=False,
+            field_to_X_availability_time_us=None, physically_qualified=False))
+    hc = rows[0]
+    original = 487/.9/1000
+    rf = finite_rf_provider_model()
+    return dict(schema='opentallas.hbm-su-finite-provider.composition.v1',
+        authoritative_provider_selection=p,
+        selected_transport=selection['selected_transport_candidate'],
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest(),
+            'rtl/gpu_sys/ot_gpu_mreq_cdc.sv':hashlib.sha256((root/'rtl/gpu_sys/ot_gpu_mreq_cdc.sv').read_bytes()).hexdigest()},
+        rows=rows, original_HC_benchmark_us=original,
+        HC_transport_floor_over_original_benchmark=hc['serial_sector_payload_floor_us']/original,
+        HC_nonoverlapped_81_call_payload_floor_us=81*hc['serial_sector_payload_floor_us'],
+        repeated_call_scope='conditional 81 serial HC calls only; not token delta or proof of current physical provider latency',
+        decision='selected sector path is a functional-integration candidate, NOT an acceleration credit; pricing cannot use original fixed-wide bench as physical baseline',
+        smallest_alternative='existing finite two-read RF with exclusive staged Q/KV working set; limited contiguous commands, not a replacement whole VM',
+        alternative_source='rtl/gpu/ot_gpu_rf_service.sv',
+        alternative_Q_KV_staged_service_us={r['kind']:r['provider_time_us_at_target_900MHz'] for r in rf['rows']},
+        alternative_adapter_reservation_mm2_ESTIMATE=rf['shared_adapter_reservation_mm2_ESTIMATE'],
+        alternative_RF_body_mm2=rf['macro_body_mm2'],
+        alternative_macro_debit='retain installed RF body once if actually leased; dedicated replica adds 0.49812185088mm2 body before clock/PG/routes',
+        alternative_remaining_costs='actual source staging load, CR address namespace, byte-aligned RMW, quant/KV destination, external clock crossings, loaded mux/FF hold and slot',
+        selected_sector_staging_DFF_floor_mm2=stream['DFF_body_floor_um2_if_register_implementation']/1e6,
+        selected_sector_staging_area_scope='largest fused input/output reserve incl sealed state; before mux/clock/PG/corridor; mutually exclusive command variants, not summed with RF proposal',
+        existing_CDC_FIFO_payload_bits=8*(337+273),
+        CDC_FIFO_debit='already installed in borrowed SM0 route; retain once, no new ports; outstanding limit1 cannot inherit FIFO throughput8',
+        physical_SS_FF_acceptance=False, clock_hz_qualified=None,
+        component_exactness_not_physical_qualification=True,
+        composed_token_delta_us=None, headline_rate_gain_percent=None,
+        adoption=False, RTL_build_admitted=False)
+
+
+def finite_rf_provider_model():
+    """One finite, GPU-style working-set candidate; not a wide VM claim.
+
+    Only contiguous Q/KV norm commands are selected. Their operands are
+    snapshotted before issuing the unchanged fixed-response fused wrapper.
+    All unstallable outputs are reserved before GO. The enclosing adapter,
+    source/namespace mapping and loaded register cuts are still to be built.
+    """
+    import hashlib
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    macro_path = ('physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/'
+                  'ot_sram_1r1w_128x256_m1_r2c2.json')
+    macro = json.loads((root / macro_path).read_text())
+    paths = ['rtl/gpu/ot_gpu_rf_service.sv',
+             'rtl/gpu/ot_gpu_full_sm_service.sv',
+             'rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv',
+             'rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv',
+             'results/rtl/hbm_su_fused_20261005/command_bridge_provider_gap.json',
+             macro_path, 'tools/uarch_model.py']
+    rows = []
+    for name, n, d, rd in [('q_norm', 256, 1280, 0),
+                           ('kv_norm', 512, 512, 64)]:
+        # Worst contiguous extent alignment: one extra RF vector per extent.
+        # No indirection, arbitrary gather, scalar broadcast or coalescing credit.
+        vectors_per_extent = (d + 127) // 128 + 1
+        reads = vectors_per_extent  # two independent x/gain extents, two ports
+        outputs = 1 + bool(rd)      # keep y and RoPE publications, no deadwrite credit
+        writes = outputs * vectors_per_extent
+        # Partial first/last vectors require checked ownership and RMW of old
+        # untouched lanes using the same finite read port. No extra SRAM port.
+        rmw_reads = 2 * outputs
+        # Each transaction adds TWO explicit packing/selection register cuts.
+        # Source-only II3/II2 is not a loaded 1.2 GHz guarantee.
+        staged_read_edges = 5
+        staged_write_edges = 4
+        terms = dict(operand_snapshot=(reads * staged_read_edges),
+                     output_boundary_RMW=(rmw_reads * staged_read_edges),
+                     mirrored_output_publication=(writes * staged_write_edges),
+                     snapshot_read_drain_fence=1, command_handoff=1,
+                     final_ACK_and_owner_publication_fence=1)
+        quant_bits = d * (8 + 16) + ((d + 31)//32)*10
+        snapshot_bits = 2*d*32
+        output_bits = outputs*d*32
+        # Dedicated quant reserve is NOT a physical KV/reduction destination.
+        payload_bits = snapshot_bits + output_bits + quant_bits
+        transfer_ff = 2*(8192+4096)  # two proposed packing cuts each way
+        metadata_ff = 1024  # explicit conservative reservation, issuer identity extra
+        ff = payload_bits + transfer_ff + metadata_ff
+        # Positive feedback/selector allowance; not mapped cell/timing evidence.
+        enable_mux_gate_eq = 4*payload_bits
+        snapshot_select_gate_eq = 3*2*n*32*((d+n-1)//n-1)
+        packing_mux_gate_eq = 3*4096*(n//128-1)
+        gates = enable_mux_gate_eq + snapshot_select_gate_eq + packing_mux_gate_eq
+        cell_floor = ff*.2916 + gates*.08748
+        edges = sum(terms.values())
+        rows.append(dict(kind=name, lanes=n, dimension=d, rope_tail=rd,
+            RF_read_transactions=reads, output_partial_vector_RMW_reads=rmw_reads,
+            RF_write_transactions=writes, source_read_II_edges=3,
+            source_write_II_edges=2, candidate_staged_read_edges=5,
+            candidate_staged_write_edges=4, staged_terms_edges=terms,
+            conservative_serial_provider_edges=edges,
+            provider_time_us_at_target_900MHz=edges/.9/1000,
+            working_set_RF_vectors=(2+outputs)*vectors_per_extent,
+            working_set_capacity_fits_512_vectors=True,
+            input_snapshot_FF_bits=snapshot_bits,
+            full_output_reservation_FF_bits=output_bits,
+            separate_quant_reservation_FF_bits=quant_bits,
+            proposed_packing_cuts_FF_bits=transfer_ff,
+            control_FF_reservation_bits=metadata_ff,
+            total_added_FF_bits=ff, logic_NAND2_equivalents_ESTIMATE=gates,
+            adapter_cell_floor_mm2_ESTIMATE=cell_floor/1e6,
+            adapter_50pct_reservation_mm2_ESTIMATE=2*cell_floor/1e6,
+            internal_snapshot_bits_per_edge=n*32,
+            snapshot_gain_and_data_are_separate=True,
+            full_program_composed_delta_us=None,
+            KV_reduction_publication_time_us=None, source_load_store_time_us=None,
+            actual_same_clock_binding=False, loaded_cuts_qualified=False))
+    return dict(schema='opentallas.hbm-su-finite-rf.price.v1',
+        selection='one existing GPU RF service, exclusive Q/KV norm working set',
+        owners=dict(model='Maxwell', RTL='Euclid', programs='Einstein'),
+        source_sha256={p: hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths},
+        selected_provider='rtl/gpu/ot_gpu_rf_service.sv',
+        real_caller='rtl/gpu/ot_gpu_full_sm_service.sv:u_rf',
+        transfer=dict(read_ports=2, words_per_read_port=128,
+                      read_bytes_per_transaction=1024, write_bytes_per_transaction=512,
+                      operand_return_bits=8192, write_bits=4096,
+                      read_address_bits=18, write_address_bits=9,
+                      payload_boundary_tracks_lower_bound=12288,
+                      capacity_outstanding_transactions=1,
+                      reads_and_writes_mutually_exclusive=True,
+                      source_read_response_edges=1, source_write_ACK_edges=0,
+                      ACK_scope='both macro copies write at acceptance; ACK consumed next edge, reuse later',
+                      source_read_II_edges=3, source_write_II_edges=2),
+        replicas_per_selected_provider=1, logical_RF_bytes=262144,
+        physical_operand_copies=2, macros_per_provider=128,
+        macro_body_mm2=128*macro['area']['macro_area_um2']/1e6,
+        macro_body_debit='existing leased RF: retain inherited body once; new dedicated replica adds full body',
+        macro_timing_calibrated_only=macro['claim_boundary'],
+        macro_SS_clkQ_ps=macro['timing']['ss']['clk_to_q_ps'],
+        macro_FF_clkQ_ps=macro['timing']['ff']['clk_to_q_ps'],
+        macro_clock_cap_SS_fF=128*macro['timing']['ss']['clk_cap_ff'],
+        target_local_clock_hz=900000000, target_clock_not_qualified=True,
+        mux_and_route_cuts='two positive register cuts per RF transaction, counted once in rows; loaded timing unknown',
+        CDC='RF, snapshot and fused endpoint proposed same SU clock; outer SM/HBM domain crossings not bound',
+        external_CDC_us=None, installed_RF_replica_available=None,
+        clock_reset_route_PG_area_mm2=None, physical_slot_fit=None,
+        initialization_and_transfer='actual source bits loaded through finite ports before snapshot; load/store and CR namespace adapter are not free',
+        minimum_RTL_step='Euclid: default-off whole-command host RF lease after existing SIMD/host debt drain; operand snapshot and complete output reservation; finite packing/RMW and held mirrored ACK publication',
+        caller_lease_gap='full_sm_service reserves RF for each SIMD operation, not an entire host fused command; competing host/SIMD work must be excluded by the new command lease',
+        shared_adapter_reservation_mm2_ESTIMATE=max(r['adapter_50pct_reservation_mm2_ESTIMATE'] for r in rows),
+        shared_adapter_area_rule='one Q/KV adapter sized to max row, not sum; incremental buffers are distinct from inherited fused endpoint registers',
+        lease='drain competing readers/writers before snapshot; retain through all mirrored ACKs, read drain, quant destination publication and owner fence',
+        no_native_full_width_provider=True, MACs_per_cycle_added=0,
+        bench_3538944_bytes_not_replicated=True, rows=rows,
+        not_supported=['native VI/gather interface', 'HC norm/post full command',
+                       'KV/reduction destination publication', 'external X producer capture'],
+        exact_adapter_implemented=False, RTL_build_admitted=False,
+        SS60_FF25_qualified=False, adopted=False, headline_gain_percent=None)
+
+
 if __name__ == "__main__":
     print(json.dumps(model(), indent=2))
