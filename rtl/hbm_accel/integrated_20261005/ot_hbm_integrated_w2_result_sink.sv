@@ -359,7 +359,10 @@ module ot_hbm_w2_sink_transaction_pipeline(
     ({1'b0,base_b}+33'(rows_b)*33'd32<={1'b0,limit_b})&&
     (limit_a<=base_b||limit_b<=base_a)));
  assign reserve_r=normal&&state==IDLE&&owned&&installed&&shape&&!fault;
- assign source_permit=normal&&active&&!finished&&!fault;
+ // New native acceptance cannot replace the response route while a checked
+ // publication is selected/in flight. Accepted native returns and no-ready
+ // result capture use retained owner/seats below, independent of this gate.
+ assign source_permit=normal&&state==CAPTURE&&!have_pending&&!finished&&!fault;
  assign done=normal&&state==DONE&&!fault;
  assign quiet=normal&&state==IDLE&&!fault;
  assign retire_r=done&&owned;

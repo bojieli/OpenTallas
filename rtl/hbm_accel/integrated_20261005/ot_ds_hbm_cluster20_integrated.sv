@@ -7,7 +7,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,SU_REGISTERED_BOUNDARY=0,SU_BALANCED_OWNER_BOUNDARY=0,W2_RESULT_ENABLE=0,W2_PROTECTED_TRANSACTION_PIPELINE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
  parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1
@@ -265,7 +265,7 @@ end else begin:g_on
         assign obs_rsp_tag[15:0]=p_rsp_tag[15:0];assign obs_rsp_we[0]=p_rsp_we[0];
         assign w2_lease_granted[d]=peer_grants[1];
         assign w2_release_r[d]=peer_releases[1]&&w2_route_drained&&(!W2_RESULT_ENABLE||w2_sink_retire_r);
-        ot_hbm_integrated_w2_result_sink #(.ENABLE(W2_RESULT_ENABLE)) u_w2_sink(
+        ot_hbm_integrated_w2_result_sink #(.ENABLE(W2_RESULT_ENABLE),.PROTECTED_TRANSACTION_PIPELINE(W2_PROTECTED_TRANSACTION_PIPELINE)) u_w2_sink(
          .clk(clk_sm),.por_n(rst_sm_n),.owned(peer_grants[1]),.installed(w2_output_installed[d]),
          .reserve_v(w2_reserve_v[d]),.reserve_r(w2_reserve_r[d]),.pair_op(w2_pair_op[d]),
          .rows_a(w2_rows_a[d*2+:2]),.rows_b(w2_rows_b[d*2+:2]),

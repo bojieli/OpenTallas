@@ -8895,7 +8895,7 @@ def hbm_w2_publication_model():
              root / codec_rel, root / 'tools/hbm_accel_sm_v_floorplan.py',
              root / 'results/floorplan/hbm_gpu/v41_hbm_die.json']
     # Source-pinned minimum component measurement; no connected-parent replay.
-    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS'
+    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r4_PASS'
     candidate = json.loads((candidate_dir / 'result.json').read_text())
     for name, expected in candidate['artifact_sha256'].items():
         if hashlib.sha256((candidate_dir / name).read_bytes()).hexdigest() != expected:
@@ -8917,7 +8917,16 @@ def hbm_w2_publication_model():
         or parent_context['channels']['available_W2_tracks'] is not None
         or parent_context['clock']['actual_parent_clock_constraint'] is not None):
         raise ValueError('W2 owner binding changed: consume actual allocation before admission')
-    paths += [successor, candidate_dir / 'result.json', candidate_dir / 'source.json', parent_context_path]
+    finite_path = inputs / 'finite_child_d7f4a688e.json'
+    finite = json.loads(finite_path.read_text())
+    child = finite['W2']
+    if child['state_bits_preoptimization'] != ff or child['external_signal_bits'] != 1213:
+        raise ValueError('finite W2 child must bind implemented state and exact ports')
+    if not all(c['available_signal_tracks'] >= c['demand_tracks'] for c in finite['channels']):
+        raise ValueError('finite W2 child boundary channel does not fit')
+    if child['residual_cell_capacity_um2'] < 0:
+        raise ValueError('finite W2 child body/CTS/IO/hold budget does not fit')
+    paths += [successor, candidate_dir / 'result.json', candidate_dir / 'source.json', parent_context_path, finite_path]
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -8972,6 +8981,8 @@ def hbm_w2_publication_model():
             CE_critical_path=False, CE_holds_accepted_debt=True,
             CE_requires_preissued_noready_results_still_captured_in_reserved_seats=True,
             DUE_always_vetoes_handshakes=True,
+            new_native_admission='protected CAPTURE with no pending row; does not revoke accepted returns or reserved no-ready callbacks',
+            extra_GO_or_owner_ledger=False,
             physical_triplicate_independence_credited=False,
             representation_basis='72-bit SECDED code FF per64bit stripe, not textual triplicate views; successor mapping not measured',
             implementation_present=True, exact_gate_passed=True,
@@ -8982,7 +8993,9 @@ def hbm_w2_publication_model():
             estimated_buffer_count=buffers, mapped_fanout=None,
             stage_boundary_tracks_lower_bound=(4+identity_words)*72,
             provider_boundary_tracks_lower_bound=337+273,
-            actual_parent_channel_capacity_tracks=None, channel_fit=None,
+            actual_parent_channel_capacity_tracks=sum(c['available_signal_tracks'] for c in finite['channels']),
+            actual_boundary_signal_demand_tracks=1213, finite_reserved_channels=finite['channels'],
+            channel_fit=True, channel_fit_scope='analytical exclusive finite child allocation; no routed capacity claim',
             unchanged_hub_layer_policy_required=True),
         area=dict(planned_cell_body_um2=body, planned_50pct_placement_um2=placement,
             FF_proxy_um2=.2916, mux2_bit_proxy_um2=.2,
@@ -8992,19 +9005,26 @@ def hbm_w2_publication_model():
             historical_component_core_um2=terminal['physical_metrics']['core_area_um2'],
             historical_component_core_is_not_parent_slot=True,
             parent_instance_path='ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink',
-            actual_parent_slot_bbox_um=None, slot_fit=None,
+            actual_parent_slot_bbox_um=child['core_bbox_um'], slot_fit=True,
+            slot_fit_scope='analytical body plus CTS/IO/hold budgets in actual finite reservation; no mapped/routed claim',
+            actual_slot_outline_um2=child['usable_outline_um2'],
+            CTS_IO_cell_area_budget_um2=child['CTS_IO_cell_area_budget_um2'],
+            hold_repair_cell_area_budget_um2=child['hold_repair_cell_area_budget_um2'],
+            residual_cell_capacity_um2=child['residual_cell_capacity_um2'],
             binding_owner='Turing 01a10dba-5786-7d01-b636-797f591b5657 (existing dieplan takeover; Claude limit confirmed)',
             owner_readonly_source_paths=['/home/ubuntu/wt-claude-hbmsm/tools/hbm_accel_sm_v_floorplan.py',
                                         '/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json'],
             inspected_existing_sources=['tools/hbm_accel_sm_v_floorplan.py', 'results/floorplan/hbm_gpu/v41_hbm_die.json'],
             owner_existing_floorplan_source_sha256='1220a8ab77d53a4bd0bac98cf988cee3b116ae6186ab3faf2329d14b949538df',
             actual_owner_context='results/rtl/hbm_die_takeover_20261005/selected_parent_context.json#W2/channels/clock',
-            parent_owner_measured_missing=True,
-            missing_physical_keys=['W2 parent_instance/replica mapping', 'W2 parent_slot_bbox_um', 'W2 clk_sm clock/uncertainty constraint binding',
-                                   'W2 boundary corridor layers/pitch/usable tracks and competing allocations']),
+            parent_owner_measured_missing=False,
+            missing_physical_keys=['actual propagated clk_sm insertion/skew and extracted boundary loads',
+                                   'gateway transport stages: 2 each direction, budget4 roundtrip edges; installation unbound']),
         timing=dict(target_clock_ps=833.333, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
             parent_sink_clock_port='clk_sm (immutable_parent.sv u_w2_sink .clk)',
-            parent_clock_constraint_source=None,
+            parent_clock_constraint_source='results/rtl/hbm_child_contract_20261005/w2_parent_clk_sm.sdc (d7f4a688e; budget, not propagated STA)',
+            actual_parent_clock_contract=finite['clock'],
+            actual_loaded_parent_clock_qualified=False,
             old_REGISTERED_SUBBLOCKS_verdict='REJECT_SS_SETUP',
             old_SS_slack_ps=-733.090149, old_FF_hold_slack_ps=15.645707,
             inherited_same_fourrow_gate_release_edges=dict(original=162, registered=181, measured_delta=19),
@@ -9019,7 +9039,31 @@ def hbm_w2_publication_model():
             measured_successor_delta_edges_vs_registered=candidate['delta_edges_vs_rejected_registered_181'],
             measured_calendar_scope='same four-row inputs/stalls; arrival-seat schedule differs; delta is observed calendar, not sum of cut inventory',
             release_181_plus_planned_edges_is_not_a_measurement=True,
+            parent_transport_budget_roundtrip_edges=finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
+            parent_transport_budget_for_8_provider_transactions_edges=8*finite['boundary_transport']['extra_roundtrip_cycles_per_transaction_budget'],
+            transport_budget_not_installed_or_measured=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        connected_parent_integration=dict(
+            parent_source='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv',
+            parameter='W2_PROTECTED_TRANSACTION_PIPELINE', default=0,
+            actual_parent_basis='72e15410b (published parent join main2eb337dc8)',
+            preserved_CP_parameters=['SU_REGISTERED_OUTPUTS','SU_REGISTERED_STATUS','SU_REGISTERED_BOUNDARY','SU_BALANCED_OWNER_BOUNDARY'],
+            preserved_association='ot_hbm_integrated_su_cp_association; accepted executor lifetime separate from live admission',
+            inherited_CP_join_terminal='results/rtl/hbm_cp_parent_association_20261005/functional_r1/terminal.json (266checks/17responses; no replay or W2 credit)',
+            actual_parent_diff_scope='only W2 default-off parameter and u_w2_sink binding; all CP/association hooks unchanged',
+            companion_CP_callable='hbm_cp_balanced_veto_model restored verbatim from2eb337dc8; owner Harvey',
+            CP_association_added_admission_edges=1,
+            CP_association_cost_owner='CP function; never repriced inside W2 publication',
+            actual_composed_clock_and_latency_qualified=False,
+            composition_condition='Actual parent must bind clk_sm and scheduled CP/SU/W2 overlap calendar; native-only W2 bench does not exercise SU association',
+            finite_ingress_seats=4, added_sink_state_bits=0,
+            CP_writer='Harvey; ot_ds_hbm_cmdproc20 and ot_hbm_integrated_su_cp_bind remain unchanged',
+            reset_hook='ot_hbm_integrated_cp_reset; CP local reset after CP idle and all_routes_drained',
+            root_POR='rst_sm_n; stays distinct from local CP reset',
+            bench='rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv',
+            bench_scope='one selected pair with retained GU/SwiGLU inputs, live native W2/sector/provider/shared owner and actual CP reset hook; no SU/gather/formatter or full-die reset claim',
+            warm_test='request while accepted publication debt outstanding; drain normally, preserve held CPL, ACK only after matched CPL take',
+            connected_gate_passed=False, no_physical_admission=True),
         parent_boundary_requirements=dict(
             consumer_owner='Turing 01a10dba-5786-7d01-b636-797f591b5657',
             implemented_instance='g_on.g_die[d].u_w2_sink.transaction_pipeline.u_pipe',
@@ -9052,7 +9096,7 @@ def hbm_w2_publication_model():
                 'channel length, layer/pitch, residual track allocation after competing trunks'],
             no_slot_or_clock_fit_claim=True),
         measured_successor_component=candidate,
-        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json',
+        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r4_PASS/result.json',
             targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept', 'payload_CE_with_accepted_debt', 'selected_checked_payload_CE_with_accepted_debt'],
             assertions='accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high',
             warm_hook_in_component=False,
@@ -9061,9 +9105,12 @@ def hbm_w2_publication_model():
                                'g_on.g_die[d].u_cp.rst_n(cp_reset_n)',
                                'all_routes_drained', 'cp_reset_wait'],
             parent_condition='real CP reset/quarantine hook must hold root POR high and retain sink/borrower/CDC accepted debt until matched consumption; gate does not certify warm reset'),
+        finite_child_owner_contract=finite,
         model_bounded=True, parent_binding_complete=False,
+        finite_child_reservation_bound=True,
+        parent_binding_remaining='actual propagated clock/receiver loads and required gateway transport installation; current connected gate',
         engine_RTL_admitted=True,
-        source_permission='Owner explicitly authorizes bounded component pipeline/gate while actual parent slot remains unbound; no physical fit or route admission',
+        source_permission='Finite d7f4a688e child slot/channel/budget-clock contract bound; functional integration continues, actual loaded clock and transport installation not qualified',
         physical_launch_admitted=False, adopted=False)
 
 
