@@ -8019,6 +8019,52 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+
+def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
+    """One finite retained stage result, qualified by real source-owned pins.
+
+    Complete plan coverage and five visibility predicates are REQUIRED inputs;
+    this join never counts a fragment END as whole-plan coverage. The selected
+    native END/result and C8/capture/collective health bind inside the overlay.
+    Functional implementation needs that contract, not prior STA arrival data.
+    """
+    metadata_bits = idw + 3*paw
+    result_bits = nw + 32
+    flags = 5  # active, fresh producer, END pending, result held, quarantine
+    ff = metadata_bits + result_bits + flags
+    compare_bits = 3*idw + 3*paw
+    comparison_nand2 = 7*compare_bits + 8*paw
+    control_nand2 = 128
+    mux_nand2 = 4*ff
+    buffers = 3*ff
+    nand2 = comparison_nand2 + control_nand2 + mux_nand2
+    gross = ff*0.37908 + buffers*0.10206 + nand2*0.08748
+    return dict(default_enabled=False, adopted=False, replicas=1,
+                retained_slots=1, new_FF_bits=ff, saved_metadata_bits=metadata_bits,
+                retained_result_bits=result_bits, control_flags=flags,
+                equality_compare_bits=compare_bits,
+                comparison_NAND2_reservation=comparison_nand2,
+                control_NAND2_reservation=control_nand2, mux_NAND2_reservation=mux_nand2,
+                buffer_reservation_cells=buffers, NAND2_equivalent_reservation=nand2,
+                gross_cell_reservation_um2=gross,
+                additional_implementation_reservation_um2=gross,
+                total_cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+                MACs_per_cycle=0, new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                required_source_authority_input_bits=(2+metadata_bits)+(2+idw)+(2+idw+5),
+                producer_data_bits_per_edge=result_bits, native_result_capture_words=1,
+                added_response_edges_when_all_authorities_visible=0,
+                response_basis='END is sampled on its native edge; following-cycle native done/data may bypass retention on the original response edge. Held data waits for real coverage/visibility/quiet, never a fixed timer.',
+                coverage_counters_added=0, coverage_authority='Required identity-matched wholeplan coverage pin; actual owner hook remains unbound',
+                warm_reset='Preserve retained metadata/data/debt and quarantine any active request; no reset retirement',
+                clock='same selected native clk', new_clock_pin_cap_fF_SS=ff*0.433982,
+                mapped_area_proven=False, routing_capacity_proven=False,
+                source_contract_for_component_ready=True, physical_context_ready=False,
+                actual_SS_FF_arrivals=None, SS_FF_closed=False,
+                target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
+
+
 def dsrom_wfc_completion_ready_price(nw=21, txq=4):
     """Conditional same-edge completion-ready lookahead, not an adopted repair.
 
