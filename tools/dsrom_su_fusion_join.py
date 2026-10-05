@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -61,6 +62,60 @@ def footprint(params):
         "floorplan_fit": None,
         "cost_status": "ESTIMATE: source-counted storage/ports; area, muxes, fanout and corridor unpriced",
     }
+
+
+def transport_join(result, baseline, source_root, cached_manifest):
+    """Consume actual valid/data landings; distribute elapsed time once."""
+    require(result["pass"] is True, "transport failed")
+    require(result["source"]["clock_hz"] == 1200000000, "transport clock changed")
+    require(result["source"]["params"]["REGISTER_OUTPUT"] == 1, "transport not enabled")
+    require(result["source"]["cached_files_sha256"] == cached_manifest, "cached payload source drift")
+    for path, digest in result["source"]["source_sha256"].items():
+        require(sha(source_root / path) == digest, "transport source drift: " + path)
+    events = {}
+    for line in result["boundary_events"]:
+        m = re.fullmatch(r"SU_BOUNDARY (\w+) cycle=(\d+)(?: vector=(\d+))?", line)
+        require(m is not None, "malformed boundary event")
+        event, cycle, vector = m.groups()
+        events.setdefault(event, []).append((int(cycle), int(vector) if vector is not None else None))
+    go, = events["go"]
+    require(go[0] == result["go"], "go identity mismatch")
+    for kind in ("y", "q"):
+        raw, landed = events["raw_" + kind], events["consumer_" + kind]
+        require(len(raw) == len(landed) == 5, "incomplete output stream")
+        for index, (a, b) in enumerate(zip(raw, landed)):
+            require(a[1] == b[1] == index and b[0] - a[0] == 23, "transport order/delay mismatch")
+    gain = events["gain_load"]
+    require([v for _, v in gain] == list(range(5)) and gain[-1][0] < go[0], "gain availability changed")
+    require(events["consumer_q"][-1][0] - go[0] == result["q_last"], "endpoint mismatch")
+    chain = next(c for c in baseline["chains"] if c["chain"] == "L20.attn.hc_pre_norm")
+    names = [nd["node"] for nd in chain["nodes"]] + ["attn.quant"]
+    boundaries = [events[k][-1][0] for k in
+                  ("mix_output", "sumsq_root", "reduction_scalar", "raw_y", "consumer_q")]
+    nodes, prev, bprev = [], go[0], 0
+    for index, (name, end) in enumerate(zip(names, boundaries)):
+        if index < 4:
+            nd = chain["nodes"][index]
+            op = chain["per_op"][nd["op"]]
+            bend = op["last_result"] if nd["event"] == "result" else op["last_write"]
+        else:
+            bend = completion(chain) + 210  # checked against the wired quant record by caller
+        nodes.append(dict(node="L20." + name, baseline_cycles=bend - bprev,
+                          baseline_us=(bend - bprev) / 900,
+                          candidate_cycles=end - prev, candidate_us=(end - prev) / 1200,
+                          candidate_boundary_cycle=end,
+                          endpoint="actual registered quant landing" if index == 4 else "actual internal dependency edge"))
+        prev, bprev = end, bend
+    require(sum(n["candidate_cycles"] for n in nodes) == result["q_last"], "double counted candidate")
+    return dict(chain=chain["chain"], nodes=nodes, actual_transport_cycles=23,
+                gain_load_cycles=5, gain_first_to_output_cycles=boundaries[-1] - gain[0][0],
+                gain_loaded_to_go_wait_cycles=go[0] - gain[-1][0],
+                input_first_available_cycle=events["lane_input"][0][0],
+                input_last_available_cycle=events["lane_input"][-1][0],
+                wall_us=dict(baseline_component=bprev / 900, candidate_go_to_output=result["q_last"] / 1200,
+                             candidate_first_gain_to_output=(boundaries[-1] - gain[0][0]) / 1200),
+                cdc="not in component: use graph crossings once; no zero-CDC adoption",
+                gate="component functional/transport PASS; credits/VM lease/area/corridor/SSFF HOLD")
 
 
 def join(baseline, quant, anatomy, comp, norm_dir, source_root):
@@ -159,6 +214,8 @@ def main():
     ap.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--norm-dir", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--transport", type=Path)
+    ap.add_argument("--cached-manifest", type=Path)
     a = ap.parse_args()
     base = a.root / "results/rtl/dsrom_1m_allmeasured_20261004"
     rec = a.root / "results/rtl/dsrom_recovery_20261004"
@@ -167,6 +224,13 @@ def main():
     result = join(*(read(p) for p in inputs), a.norm_dir, a.root)
     result["inputs_sha256"] = {str(p.relative_to(a.root)): sha(p) for p in inputs}
     result["tool_sha256"] = sha(__file__)
+    if a.transport:
+        require(a.cached_manifest is not None, "need original cached payload manifest")
+        require(read(inputs[1])["nodes"]["L20.attn.quant"]["qdq_wired_cycles"] == 210,
+                "wired quant reference changed")
+        result["actual_registered_transport"] = transport_join(
+            read(a.transport), read(inputs[0]), a.root, read(a.cached_manifest))
+        result["inputs_sha256"].update({str(p): sha(p) for p in (a.transport, a.cached_manifest)})
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(result, indent=2) + "\n")
     print(result["verdict"], len(result["rows"]), "source-bound chains; adoption=false")
