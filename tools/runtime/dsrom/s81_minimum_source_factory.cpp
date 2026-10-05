@@ -404,6 +404,16 @@ struct HeadRank {
         if(prefetched<5120){auto value=io.read_word(ID,46464+prefetched);if(value)xn[prefetched++]=*value;return;}
         normalizations_done=true;
     }
+    bool normalization_visible() const {
+        // Host progress alone is not a source-span grant. HEAD admission must
+        // retain the same actual input ACKs and final native SU writer version
+        // that produced the held XN readbacks in this bank/context.
+        return initialized&&inputs_done&&normalizations_done&&prefetched==5120&&
+            !read_pending&&!fault()&&publication.complete(ID,PrefixPublication::PF)&&
+            target->source_span_lease(ID,0,20480)&&
+            io.span_lease(ID,41152,4)&&publication.complete(ID,ops[4].index)&&
+            io.span_lease(ID,46464,5120);
+    }
     void prepare(){accepted_this_edge=0;su.participant.prepare(rt.result());}
     void prepare_bank(){bank.prepare(rt.result());
         // Same bank owner's LOW combinational settle, no extra rising edge.
@@ -762,7 +772,7 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         for(auto& rank:ranks)rank->initialize();
         initialized=true;}
     bool inputs_visible(){Source::require(initialized,"HEAD inputs before cold initialization");
-        bool ready=true;for(auto& rank:ranks){rank->load();rank->normalize();ready=ready&&rank->normalizations_done;}return ready;}
+        bool ready=true;for(auto& rank:ranks){rank->load();rank->normalize();ready=ready&&rank->normalization_visible();}return ready;}
     void calculate_actual_xn_rows() {
         const char* helper=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_HELPER");
         const char* output=std::getenv("DSROM_S81_SIM_ONLY_HEAD_DOT_DIR");
@@ -774,8 +784,8 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
         Source::require(std::filesystem::create_directory(input),"actual-XN input directory unavailable");
         for(unsigned rank=0;rank<4;++rank) {
             auto& owner=*ranks[rank];
-            Source::require(owner.normalizations_done&&owner.prefetched==5120&&
-                owner.io.span_lease(ID,46464,5120),"actual-XN math before native normalization/read lease");
+            Source::require(owner.normalization_visible(),
+                "actual-XN math before matched H/PF/native XN publication and read leases");
             std::ofstream raw(input/("XN_rank"+std::to_string(rank)+".u32"),std::ios::binary);
             Source::require(bool(raw),"actual-XN source output unavailable");
             for(uint32_t value:owner.xn) {
@@ -808,7 +818,8 @@ struct SourceHeadEnd:std::enable_shared_from_this<SourceHeadEnd> {
     }
     void start(){Source::require(initialized&&!dot&&observed_head_go,
         "HEAD DOT requires actual accepted original core I5");
-        for(const auto& rank:ranks)Source::require(rank->normalizations_done,"HEAD DOT before native normalization/XN staging");
+        for(const auto& rank:ranks)Source::require(rank->normalization_visible(),
+            "HEAD DOT before matched input/native normalization/XN span visibility");
         if(sim_actual_xn)calculate_actual_xn_rows();
         dot=true;current=0;
         if(returned_rows()){for(auto& rank:ranks){rank->publication.begin(ID,4892);rank->publication_begun=true;}}

@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.dshbm.wavepack.tag16_model.v1",
+  "default_enabled": false,
+  "scope": "three homogeneous FP4 W2 pairs, each A/B rows2 G2 c8",
+  "tag": {
+    "row_bits": 12,
+    "group_last_bits": 1,
+    "reducer_slot_bits": 3,
+    "total_bits": 16,
+    "extra_bits": 0,
+    "encoding": "virtual_row=Arow or rowsA+Brow; slot=virtual_row mod8"
+  },
+  "source_binding": "Euclid pq_production_20261005 issuer absolute xa; packed caller only",
+  "arithmetic": {
+    "new_macs": 0,
+    "added_arithmetic_edges": 0,
+    "chunk_revisit_edges": 8,
+    "golden_order_changed": false
+  },
+  "control": {
+    "descriptor_bits": 113,
+    "max_outstanding": 4,
+    "caller_held_ff_allowance": 475,
+    "mapper_ff": 0,
+    "nand2_equivalent_allowance": 600,
+    "buffers": 6,
+    "x_delta_precomputed": "(xbB-xbA) mod128; held with descriptor",
+    "completion": "retire descriptor only after all four actual rows; no early reuse"
+  },
+  "area": {
+    "ff_allowance_um2": 180.063,
+    "combinational_allowance_um2": 53.10036,
+    "cell_basis": "uarch_model 0.37908 reset FF allowance/0.08748 NAND2/0.10206 BUF",
+    "utilisation": 0.5,
+    "reserved_floorplan_um2": 466.32671999999997,
+    "actual_slot_fit": null
+  },
+  "fanout": {
+    "x_select_sinks": 7,
+    "result_op_select_sinks": 32,
+    "result_row_select_sinks": 12,
+    "local_control_buffer_allowance": 6
+  },
+  "boundaries": {
+    "added_column_tag_bits": 0,
+    "extra_memory_ports": 0,
+    "mapper_issue_inputs_bits": 21,
+    "mapper_result_inputs_bits": 13,
+    "restored_identity_output_bits": 48,
+    "added_external_identity_bits": 32,
+    "route_tracks_lower_bound": 32,
+    "physical_channel_capacity": null
+  },
+  "latency": {
+    "issue_mapper_edges": 0,
+    "result_mapper_edges": 0,
+    "existing_s1_capture_required": true,
+    "added_selector_path_requires_ss_ff": true,
+    "measured_incremental_gain": null
+  },
+  "clocks": {
+    "period_ps": 833.333333,
+    "ss_uncertainty_ps": 60,
+    "ff_uncertainty_ps": 25,
+    "caller_additional_clock_sinks": 475,
+    "mapper_additional_clock_sinks": 0,
+    "loaded_clock_capacitance": null
+  },
+  "component_source_admitted": true,
+  "physical_build_admitted": false,
+  "adoption": false
+}

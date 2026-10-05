@@ -982,7 +982,7 @@
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -993,7 +993,7 @@
    "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05"
+   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1004,7 +1004,7 @@
    "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": ""
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1015,7 +1015,7 @@
    "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": ""
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1037,7 +1037,7 @@
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "as-built S81 microarchitecture, before the recovery levers"
+   "note": "as-built S81 microarchitecture, before the recovery levers; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1092,7 +1092,7 @@
    "pointer": "MTP.verify_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1114,7 +1114,7 @@
    "pointer": "MTP.II_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1279,7 +1279,7 @@
    "pointer": "MTP.tau",
    "unit": "tokens/step",
    "status": "partial",
-   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows"
+   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -4005,6 +4005,105 @@
    "unit": "x",
    "status": "partial",
    "note": "verify layer 13,104 exact; upper-draft bound 0.691x"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "finite_q_component_us",
+   "label": "Finite-provider Q norm: accepted command to checked completion (component only)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "finite_provider_measured_candidate.accepted_to_observed_completion_us",
+   "unit": "us",
+   "status": "measured",
+   "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "finite_q_response_wait_us",
+   "label": "Finite Q request/response waits, including CDC/backend once",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "finite_provider_measured_candidate.response_wait_us_including_CDC_backend",
+   "unit": "us",
+   "status": "measured",
+   "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "finite_q_requests",
+   "label": "Finite Q accepted read/write/publication-readback transactions",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "finite_provider_measured_candidate.request_counts.total",
+   "unit": "requests",
+   "status": "measured",
+   "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_ar_increment_us",
+   "label": "Joint PQ+XMAP incremental AR group projection beyond measured PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.AR.incremental_vs_measured_PQ_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p1_l20_cycles",
+   "label": "Joint PQ+XMAP P1 L20 component cycles",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.ar_l20.result.total_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_mtp_increment_us",
+   "label": "Joint PQ+XMAP incremental MTP group projection beyond measured PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.MTP.incremental_vs_measured_PQ_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p6_l20_cycles",
+   "label": "Joint PQ+XMAP P6 L20 component cycles",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.p6_l20.result.total_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_increment_cycles",
+   "label": "Paired W2 interval reduction versus source-matched PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.measured_component_saved_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_ar_projection_us",
+   "label": "Paired W2 incremental exposed AR projection",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.incremental_AR_projection_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
   }
  ],
  "derived": [
@@ -4971,6 +5070,17 @@
     "ds_rom.ar_tok_s_1m_s81_window_asbuilt",
     "ds_rom.window_s81_lf_us_mean"
    ]
+  },
+  {
+   "target": "hbm_ds",
+   "lever": "Finite-provider Q norm",
+   "verdict": "component exact; unadopted; matched-provider gain unknown",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "numbers": "640 transactions; no free wide ports; current native provider also unpriced",
+   "figures": [
+    "hbm_ds.finite_q_component_us",
+    "hbm_ds.finite_q_response_wait_us"
+   ]
   }
  ],
  "open_items": [
@@ -5093,6 +5203,12 @@
    "item": "Own-row bypass lever: stage the token's own row from the block stream instead of an HBM round trip before the window job (measured own-row write ~0.6 us on the critical path of window-only/re-use layers)",
    "owner": "unowned (Claude proposal)",
    "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json"
+  },
+  {
+   "target": "hbm_ds",
+   "item": "Bind real borrowed-client program lease, remaining KV/RoPE/quant and dependent publication; measure native/fused with the same finite provider before gain credit",
+   "owner": "Rawls / Euclid / Einstein; Maxwell composition",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json"
   }
  ],
  "missing_baselines": [

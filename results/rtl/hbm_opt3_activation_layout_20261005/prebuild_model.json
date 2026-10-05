@@ -1,0 +1,318 @@
+{
+  "scope": "Prebuild static map; no measured gain or physical closure",
+  "default_xmap": 0,
+  "nc": 8,
+  "streaming_target_ps": 833.333333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "macs_per_cycle_delta": 0,
+  "added_latency_cycles": 0,
+  "added_state_bits": 0,
+  "added_muxes": 0,
+  "added_demuxes": 0,
+  "added_sram_macros": 0,
+  "inherited_sram_macros": 128,
+  "inherited_activation_storage_bits": 4194304,
+  "writer_bytes_per_cycle": 256,
+  "writer_data_bits_per_cycle": 2048,
+  "writer_boundary_bits": 2063,
+  "inherited_leaf_read_bits_per_cycle": 32768,
+  "static_field_fanout": 1,
+  "leaf_replicas": 32,
+  "logical_cell_area_delta_um2": 0,
+  "wire_stage_delta": 0,
+  "existing_write_landing_edges": 8,
+  "routing": "Rewired existing 2048-bit port and masks; actual source-to-leaf wires/corridor not qualified.",
+  "root": "Per-format fixed wiring views only; physical caller/format selection remains existing producer obligation.",
+  "required_tracks": 2048,
+  "channel_capacity": null,
+  "area_fit": "No new leaf logic/state; routed placement/wire fit remains unmeasured.",
+  "runtime_format_mux_added": false,
+  "option3B_built": false,
+  "load_law": "Actual beats/address * addresses + 1; must measure each sequence and overlap with PQ.",
+  "layout_check": [
+    {
+      "active": 1,
+      "fmt": "bf16",
+      "used_bits": 1024,
+      "groups": [
+        0
+      ],
+      "bijective": true
+    },
+    {
+      "active": 1,
+      "fmt": "fp8",
+      "used_bits": 1064,
+      "groups": [
+        0
+      ],
+      "bijective": true
+    },
+    {
+      "active": 1,
+      "fmt": "fp4",
+      "used_bits": 2128,
+      "groups": [
+        0,
+        4
+      ],
+      "bijective": true
+    },
+    {
+      "active": 2,
+      "fmt": "bf16",
+      "used_bits": 2048,
+      "groups": [
+        0
+      ],
+      "bijective": true
+    },
+    {
+      "active": 2,
+      "fmt": "fp8",
+      "used_bits": 2128,
+      "groups": [
+        0,
+        1
+      ],
+      "bijective": true
+    },
+    {
+      "active": 2,
+      "fmt": "fp4",
+      "used_bits": 4256,
+      "groups": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "bijective": true
+    },
+    {
+      "active": 3,
+      "fmt": "bf16",
+      "used_bits": 3072,
+      "groups": [
+        0,
+        1
+      ],
+      "bijective": true
+    },
+    {
+      "active": 3,
+      "fmt": "fp8",
+      "used_bits": 3192,
+      "groups": [
+        0,
+        1
+      ],
+      "bijective": true
+    },
+    {
+      "active": 3,
+      "fmt": "fp4",
+      "used_bits": 6384,
+      "groups": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "bijective": true
+    },
+    {
+      "active": 4,
+      "fmt": "bf16",
+      "used_bits": 4096,
+      "groups": [
+        0,
+        1
+      ],
+      "bijective": true
+    },
+    {
+      "active": 4,
+      "fmt": "fp8",
+      "used_bits": 4256,
+      "groups": [
+        0,
+        1,
+        2
+      ],
+      "bijective": true
+    },
+    {
+      "active": 4,
+      "fmt": "fp4",
+      "used_bits": 8512,
+      "groups": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "bijective": true
+    },
+    {
+      "active": 5,
+      "fmt": "bf16",
+      "used_bits": 5120,
+      "groups": [
+        0,
+        1,
+        2
+      ],
+      "bijective": true
+    },
+    {
+      "active": 5,
+      "fmt": "fp8",
+      "used_bits": 5320,
+      "groups": [
+        0,
+        1,
+        2
+      ],
+      "bijective": true
+    },
+    {
+      "active": 5,
+      "fmt": "fp4",
+      "used_bits": 10640,
+      "groups": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "bijective": true
+    },
+    {
+      "active": 6,
+      "fmt": "bf16",
+      "used_bits": 6144,
+      "groups": [
+        0,
+        1,
+        2
+      ],
+      "bijective": true
+    },
+    {
+      "active": 6,
+      "fmt": "fp8",
+      "used_bits": 6384,
+      "groups": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "bijective": true
+    },
+    {
+      "active": 6,
+      "fmt": "fp4",
+      "used_bits": 12768,
+      "groups": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "bijective": true
+    },
+    {
+      "active": 7,
+      "fmt": "bf16",
+      "used_bits": 7168,
+      "groups": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "bijective": true
+    },
+    {
+      "active": 7,
+      "fmt": "fp8",
+      "used_bits": 7448,
+      "groups": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "bijective": true
+    },
+    {
+      "active": 7,
+      "fmt": "fp4",
+      "used_bits": 14896,
+      "groups": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "bijective": true
+    },
+    {
+      "active": 8,
+      "fmt": "bf16",
+      "used_bits": 8192,
+      "groups": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "bijective": true
+    },
+    {
+      "active": 8,
+      "fmt": "fp8",
+      "used_bits": 8512,
+      "groups": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "bijective": true
+    },
+    {
+      "active": 8,
+      "fmt": "fp4",
+      "used_bits": 17024,
+      "groups": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "bijective": true
+    }
+  ]
+}
