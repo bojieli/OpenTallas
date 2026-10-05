@@ -56,6 +56,7 @@
   "quiet_monitor_counter_ff": 93,
   "quiet_observation": "Explicit delay-valid OR and AFIFO write-empty outputs; no private hierarchy taps, added payload registers, or change to pointer advancement.",
   "quiet_price_detail": "core reducer pending6 + core expected/actual-delivery counters16x2 +2 PHYquiet synchronizers + fault/handshake counters; conservative93 reserve; synth area UNKNOWN",
+  "rank_contract": "shared8 rank<96; AR rank64..95 receive only, never inject/reduce",
   "reducer_cycles": 23,
   "reset_delegated": "unchanged parent rst_n/prst_n; no new automatic reset or credit release",
   "route_variants": [

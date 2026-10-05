@@ -19,6 +19,7 @@ def model():
     price['quiet_observation'] = ('Explicit delay-valid OR and AFIFO write-empty outputs; '
         'no private hierarchy taps, added payload registers, or change to pointer advancement.')
     price['parent_area_scope'] = 'replaces embedded array/tree, not a second reducer'
+    price['rank_contract'] = 'shared8 rank<96; AR rank64..95 receive only, never inject/reduce'
     price['macs_per_cycle'] = 0
     price['fp32_adds_per_issue'] = 7 * 16
     price['golden_tree'] = 'three levels adjacent rank pairs, FP32 rounding at every node, final BF16 RNE'

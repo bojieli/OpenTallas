@@ -75,7 +75,7 @@ module ot_hbm_accel_tu_endpoint_owner #(
         reg context_bound,context_fault;
         reg [7:0] bound_rank; reg [15:0] bound_pf;
         reg [63:0] bound_operation;reg [31:0] bound_phase;
-        wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<NOG*NC;
+        wire config_ok=pf>0 && pf<=PFMAX && pf%NC==0 && (!BF16 || !((pf/NC)&1)) && rank<96; // actual shared8 TP96 admission, AR has only 64 contributors
         wire arm=go && endpoint_rearm_ready && config_ok;
         always @(posedge clk or negedge rst_n) if(!rst_n) begin
           context_bound<=0;context_fault<=0;bound_rank<=0;bound_pf<=0;bound_operation<=0;bound_phase<=0;
@@ -225,7 +225,7 @@ module ot_hbm_accel_tu_endpoint_owner #(
         if(NC>1)begin:g_owner
           ot_ha2_tu_owner_adapter #(.NC(NC),.NOG(NOG),.PFMAX(PFMAX),.LANES(LANES),.BF16(BF16),
             .INJ(INJ),.NPT(NPT),.LAT(LAT),.SLOTREG(SLOTREG)) u_owner
-          (.clk(clk),.rst_n(rst_n),.active(context_bound&&!context_fault),.arm(arm),.rank(RANK[7:0]),.pf(PF[15:0]),
+          (.clk(clk),.rst_n(rst_n),.active(context_bound&&CONTRIB&&!context_fault),.arm(arm),.rank(RANK[7:0]),.pf(PF[15:0]),
             .h_v(h_v),.h_d(h_d),.p_v(partial_v),.p_flit(partial_flit),
             .r_v(r_v),.r_m(r_m),.r_d(r_d),.dupe(dupe),.issue_o(owner_issue),.quiet(owner_quiet));
         end else begin:g_gather
