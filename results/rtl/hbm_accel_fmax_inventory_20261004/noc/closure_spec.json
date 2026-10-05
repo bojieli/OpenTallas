@@ -43,6 +43,13 @@
      "label": "collctx_f12x_r6",
      "route_label": "collctx_f12x_r6",
      "fix": "same, XREG=1: SS -4.23 ps (6 pins: dmask -> TX FIFO write data)"
+    },
+    {
+     "label": "collctx_f12x_r7",
+     "route_label": "collctx_f12x_r7",
+     "fix": "Claude registered look-ahead per-word lane mask; retained comparison only, not selected parent successor",
+     "terminal": "FAIL SS-20.47ps/FF+5.24ps/2slew, despite flow and corner runner exit0",
+     "latency_record": "bench/coll_f12_r7.json:492cases/0mismatch,24phase-sampled deltas mean2.125; model +2clk_sm/collective"
     }
    ],
    "after": {

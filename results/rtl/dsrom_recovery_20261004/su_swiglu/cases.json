@@ -1,0 +1,159 @@
+{
+ "cases": [
+  {
+   "name": "L0.swiglu",
+   "kind": "swiglu",
+   "routed": true,
+   "n": 3456,
+   "blocks": 108,
+   "lim": "41200000",
+   "source": "su_cases L0.ffn.swiglu (check: golden BF16 activation) + quant_work/L0_ffn.quant2"
+  },
+  {
+   "name": "L0.shared_swiglu",
+   "kind": "swiglu",
+   "routed": false,
+   "n": 576,
+   "blocks": 18,
+   "lim": "41200000",
+   "source": "su_cases L0.ffn.shared_swiglu (check: golden BF16 activation) + quant_work/L0_ffn.shared_quant"
+  },
+  {
+   "name": "L3.swiglu",
+   "kind": "swiglu",
+   "routed": true,
+   "n": 3456,
+   "blocks": 108,
+   "lim": "41200000",
+   "source": "su_cases L3.ffn.swiglu (check: golden BF16 activation) + quant_work/L3_ffn.quant2"
+  },
+  {
+   "name": "L3.shared_swiglu",
+   "kind": "swiglu",
+   "routed": false,
+   "n": 576,
+   "blocks": 18,
+   "lim": "41200000",
+   "source": "su_cases L3.ffn.shared_swiglu (check: golden BF16 activation) + quant_work/L3_ffn.shared_quant"
+  },
+  {
+   "name": "L20.swiglu",
+   "kind": "swiglu",
+   "routed": true,
+   "n": 3456,
+   "blocks": 108,
+   "lim": "41200000",
+   "source": "su_cases L20.ffn.swiglu (check: golden BF16 activation) + quant_work/L20_ffn.quant2"
+  },
+  {
+   "name": "L20.shared_swiglu",
+   "kind": "swiglu",
+   "routed": false,
+   "n": 576,
+   "blocks": 18,
+   "lim": "41200000",
+   "source": "su_cases L20.ffn.shared_swiglu (check: golden BF16 activation) + quant_work/L20_ffn.shared_quant"
+  },
+  {
+   "name": "L24.swiglu",
+   "kind": "swiglu",
+   "routed": true,
+   "n": 3456,
+   "blocks": 108,
+   "lim": "41200000",
+   "source": "su_cases L24.ffn.swiglu (check: golden BF16 activation) + quant_work/L24_ffn.quant2"
+  },
+  {
+   "name": "L24.shared_swiglu",
+   "kind": "swiglu",
+   "routed": false,
+   "n": 576,
+   "blocks": 18,
+   "lim": "41200000",
+   "source": "su_cases L24.ffn.shared_swiglu (check: golden BF16 activation) + quant_work/L24_ffn.shared_quant"
+  },
+  {
+   "name": "random.swiglu",
+   "kind": "swiglu",
+   "routed": true,
+   "n": 4096,
+   "blocks": 128,
+   "lim": "41200000",
+   "source": "random stress (seed 20261004), golden hdc_golden_v41 silu/mul/to_bf16 + aq_expect"
+  },
+  {
+   "name": "L0.z_quant",
+   "kind": "qbank",
+   "rope": false,
+   "fp4": 0,
+   "blocks": 64,
+   "source": "quant_work/L0_attn.z_quant (golden z = bf16(wo_a) die slice)"
+  },
+  {
+   "name": "L3.z_quant",
+   "kind": "qbank",
+   "rope": false,
+   "fp4": 0,
+   "blocks": 64,
+   "source": "quant_work/L3_attn.z_quant (golden z = bf16(wo_a) die slice)"
+  },
+  {
+   "name": "L20.z_quant",
+   "kind": "qbank",
+   "rope": false,
+   "fp4": 0,
+   "blocks": 64,
+   "source": "quant_work/L20_attn.z_quant (golden z = bf16(wo_a) die slice)"
+  },
+  {
+   "name": "L24.z_quant",
+   "kind": "qbank",
+   "rope": false,
+   "fp4": 0,
+   "blocks": 64,
+   "source": "quant_work/L24_attn.z_quant (golden z = bf16(wo_a) die slice)"
+  },
+  {
+   "name": "L20.idx_q",
+   "kind": "qbank",
+   "rope": true,
+   "fp4": 1,
+   "blocks": 128,
+   "source": "su_cases L20.attn.idx.q (x, CROM cos/sin, check) + quant_work/L20_attn.idx.q"
+  },
+  {
+   "name": "L24.idx_q",
+   "kind": "qbank",
+   "rope": true,
+   "fp4": 1,
+   "blocks": 128,
+   "source": "su_cases L24.attn.idx.q (x, CROM cos/sin, check) + quant_work/L24_attn.idx.q"
+  },
+  {
+   "name": "random.qfp8",
+   "kind": "qbank",
+   "rope": false,
+   "fp4": 0,
+   "blocks": 256,
+   "source": "random stress"
+  },
+  {
+   "name": "random.qfp4",
+   "kind": "qbank",
+   "rope": false,
+   "fp4": 1,
+   "blocks": 256,
+   "source": "random stress"
+  },
+  {
+   "name": "random.idx_q",
+   "kind": "qbank",
+   "rope": true,
+   "fp4": 1,
+   "blocks": 128,
+   "source": "random stress"
+  }
+ ],
+ "su_cases_sha256": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+ "generated_utc": "2026-10-05T02:50:05Z"
+}
