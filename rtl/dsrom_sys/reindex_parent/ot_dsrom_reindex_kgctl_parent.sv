@@ -165,7 +165,7 @@ module ot_dsrom_reindex_kgctl_parent #(
     // -- slot state ------------------------------------------------------------------------------------
     reg [NPC-1:0]  pend_c [0:WB-1];
     reg [NPC-1:0]  pend_s [0:WB-1];
-    reg [2:0]      cntc   [0:4*WB-1]; // 4 actual code channels per block, checked count
+    reg [4:0]      cntc   [0:4*WB-1]; // four distinct beats per actual code channel plus check bit
     reg [WB-1:0]   adm;
     reg [WB-1:0]   adm_q;                   // adm, a cycle later (aligned with cpart)
     reg [7:0]      cpart [0:WB-1];          // nothing pending in each 8-channel group (code 0-3, scale 4-7)
@@ -320,7 +320,7 @@ module ot_dsrom_reindex_kgctl_parent #(
     reg [QW-1:0] list_seq[0:LIST_LAT-2];
     reg [1:0] list_m[0:LIST_LAT-2];
     integer li, ci;
-    reg [1:0] next_count;
+    reg [3:0] next_beats;
     assign drain_accept=can0&&!fault&&!memory_fault;
     // ---- control (synchronously reset) ----------------------------------------------------------------
     always @(posedge clk) begin
@@ -332,7 +332,7 @@ module ot_dsrom_reindex_kgctl_parent #(
             room_all <= 1'b1; room_g <= 8'hff; rob_ok <= 1'b1; inuse <= 0;
             list_v <= 0;
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
-            for (p = 0; p < 4 * WB; p = p + 1) cntc[p] <= 3'd0;   // 4 beats wrap it back to 0
+            for (p = 0; p < 4 * WB; p = p + 1) cntc[p] <= 5'd0;   // empty distinct-beat mask
         end else begin
             if(memory_fault)fault<=1;
             // completion, two cycles late: per-group partials, then their AND (never early: adm_q is
@@ -353,10 +353,10 @@ module ot_dsrom_reindex_kgctl_parent #(
                     ci=(p^m_fc[e])&3;
                     if(rr_bad[e/SG][p]||!adm[e]||
                        (rr_kind[e/SG][p]?!pend_s[e][p]:(!pend_c[e][p]||(^cntc[e*4+ci])||
-                        rr_beat[e/SG][p*2+:2]!=cntc[e*4+ci][1:0])))fault<=1;
+                        cntc[e*4+ci][rr_beat[e/SG][p*2+:2]])))fault<=1;
                     else if(!rr_kind[e/SG][p])begin
-                        next_count=cntc[e*4+ci][1:0]+2'd1;
-                        cntc[e*4+ci]<={^next_count,next_count};
+                        next_beats=cntc[e*4+ci][3:0] | (4'b0001 << rr_beat[e/SG][p*2+:2]);
+                        cntc[e*4+ci]<=(&next_beats)?5'd0:{^next_beats,next_beats};
                     end
                 end
             end
@@ -545,9 +545,9 @@ module ot_dsrom_reindex_kgctl_parent #(
                 if (rr_oh[p2][e2] && !rr_bad[e2/SG][p2] && adm[e2] &&
                     (rr_kind[e2/SG][p2] ? pend_s[e2][p2] :
                      (pend_c[e2][p2] && !(^cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)]) &&
-                      rr_beat[e2/SG][p2*2+:2] == cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][1:0]))) begin
+                      !cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][rr_beat[e2/SG][p2*2+:2]]))) begin
                     if (rr_kind[e2/SG][p2]) pend_s[e2][p2] <= 1'b0;
-                    else if (cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][1:0] == 2'd3) pend_c[e2][p2] <= 1'b0;
+                    else if (&(cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][3:0] | (4'b0001 << rr_beat[e2/SG][p2*2+:2]))) pend_c[e2][p2] <= 1'b0;
                 end
         for (e2 = 0; e2 < WB; e2 = e2 + 1)
             for (l2 = 0; l2 < 2; l2 = l2 + 1)
