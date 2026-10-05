@@ -10046,6 +10046,63 @@ def hbm_r5a_protected_pipeline_model():
             parent_context=False,adopted=False))
 
 
+def hbm_r5a_p2_stack_context_model():
+    """Price source-owned real P2 caller/receiver before RTL, not an IO fixture.
+
+    Static layout is loaded exactly once per cold reset and held throughout the
+    stream. Reconfiguration requires reset/drain by the enclosing owner; this
+    minimum context does not claim legacy task/lease completion.
+    """
+    leaf=hbm_r5a_protected_pipeline_model()
+    ff=dict(configuration_SECC=100*72,configuration_valid_and_fault=4,
+        descriptor_code_and_valid=74,notice_dual_rail=2,
+        PC_issued_returned_counters=32*16*4,PC_codec_slot=32*362,
+        PC_sticky_fault=64,SM_coded_slot=8*1154,
+        SM_capture_payload_parity_valid=8*(1024+16+2),SM_sticky_fault=16,
+        status_synchronizers=8)
+    bits=sum(ff.values());cell=bits*DFF_UM2+60000
+    return dict(item=6,enabled_default=False,prebuild=True,
+        source='additive ot_hbm_accel_expert_stack_p2; old tagged256 stack/service/crossing unchanged',
+        shape=dict(NPC=32,NSM=8,DEPTH=512,CRED=32,replicas_per_die=4),
+        compute=dict(MACs_per_cycle=0,rounding_changes=0,reduction_changes=0),
+        ports_bytes_per_cycle=dict(raw_HBM=32*32,coded_HBM=32*45,SM_capture=8*128,
+            configuration_write=800,configuration_held_read=800),
+        boundaries_bits_per_cycle=dict(leaf_descriptor=72,leaf_return=32*360,
+            leaf_SM=8*1024,configuration=6400,notice=1,
+            physical_external_raw_return=32*(256+16+1),
+            physical_external_ordinal=32*16,physical_external_SM=8*(1024+2)),
+        cuts=dict(descriptor_encode=1,return_encode=1,SM_encode=1,SM_decode_capture=1,
+            descriptor_capacity=1,PC_return_capacity=1,SM_endpoint_capacity=2,
+            existing_credit_per_PC=32,configuration_updates='once per cold reset before acceptance',
+            configuration_protection='100 held W6 SECDED64 words, bounds checked by real leaf',
+            PC_identity='complemented issued/returned ordinal registers, actual col_v issue debt; supplied PHY response ordinal must equal next return and debt must be nonzero',
+            SM_protection='16 W6 SECDED64 held words then corrected1024 capture with16 parity bits; double errors or held parity/valid faults refuse publication'),
+        state=dict(FF_bits_by_class=ff,FF_bits_total=bits),
+        replication=dict(descriptor_fanout=1,PC_encoders=32,SM_receivers=8,
+            config_leaf_local_replicas=32,global_unregistered_payload_mux=False),
+        area=dict(additional_standard_cell_ceiling_um2=cell,
+            combined_standard_cell_ceiling_um2=leaf['area']['standard_cell_upper_um2']+cell,
+            macro_count=96,macro_area_um2=leaf['area']['macro_area_um2'],
+            required_placement_um2=(leaf['area']['standard_cell_upper_um2']+cell+leaf['area']['macro_area_um2'])/.35*1.15,
+            child_slot_fit_pending_Turing=True,clock_PG_and_native_channel_update_pending=True),
+        routing=dict(old_leaf_boundary_tracks=27488,new_outer_typed_port_tracks_pending=True,
+            track_capacity_requires_actual_parent_update=True),
+        latency=dict(added_clk_edges=3,added_hclk_edges=1,
+            fixed_added_ns=3/1.2+1.024,configuration_setup_edges=1,
+            configuration_initialization_not_per_fetch=True,
+            per_token_40fetch_added_us=40*(3/1.2+1.024)/1000,
+            expression='measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free',
+            first_access_criterion_ns=140,criterion_independent_of_token_gain=True,
+            current_R3_first_access_ns=150.423,estimated_context_first_access_ns=153.947,
+            estimated_composed_gain_us=13.023-40*(3/1.2+1.024)/1000,
+            measured_context=False),
+        targets={k:dict(applicable=k.endswith('_hbm'),added_ns_per_fetch=3/1.2+1.024 if k.endswith('_hbm') else 0)
+            for k in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
+        clocks=dict(stream_ps=833.333333333,service_ps=1024,setup_uncertainty_ps=60,
+            hold_uncertainty_ps=25,source_owned_register_relations=True,actual_CTS_and_loads_pending=True),
+        gates=dict(exact=False,physical=False,performance=False,adopted=False))
+
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
