@@ -109,25 +109,38 @@ def cmd_screen(a):
     subprocess.run(args, check=True, cwd=ROOT)
 
 
+CONTEXT_SDC = "physical/dsrom_link/context_io.sdc"
+# routed configurations, both under the in-context I/O constraints of the baseline link-clock record
+ROUTES = {
+    # the hardened S81 board-leg endpoint at its real storage: CREDITS 256 on 6 ot_sram_1r1w_256x256 macros
+    "hard": dict(credits=256, seqw=9, mem=1),
+    # like-for-like with results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL (flop storage, 16 credits)
+    "ctx16": dict(credits=16, seqw=5, mem=0),
+}
+
+
 def cmd_route(a):
-    work = Path(a.work) / "route"
+    rc = ROUTES[a.config]
+    work = Path(a.work) / f"route_{a.config}"
     work.mkdir(parents=True, exist_ok=True)
     args = [sys.executable, "tools/run_abi3_physical.py", "--view", "asap7", "--top", "ot_dsrom_link_cl"]
     for s in ENDPOINT:
         args += ["--source", s]
-    for k, v in params(256, 9, 1).items():
+    for k, v in params(rc["credits"], rc["seqw"], rc["mem"]).items():
         args += ["--param", f"{k}={v}"]
-    args += ["--macro-view", f"ot_sram_1r1w_256x256_m2_r2c2={MACRO}", "--macro-place-halo", "5", "5",
+    if rc["mem"]:
+        args += ["--macro-view", f"ot_sram_1r1w_256x256_m2_r2c2={MACRO}", "--macro-place-halo", "5", "5"]
+    args += ["--orfs-var", f"SDC_FILE=/src/{CONTEXT_SDC}",
              "--clock-period-ns", "0.833333", "--clock-uncertainty-ns", "0.06", "--clock-uncertainty-hold-ns", "0.025",
              "--orfs-corner", "WC", "--hold-corners", "WC,BC", "--io-delay-fraction", "0.2",
              "--stages", "pnr", "--core-utilization", str(a.util), "--place-density", str(a.density),
              "--hold-margin-ns", "0.01", "--orfs-var", "ADDER_MAP_FILE=", "--orfs-var", "NUM_CORES=20",
              "--slew-margin-percent", "30", "--purpose", "signoff_target",
-             "--nickname-tag", f"claude_hopcl_{a.tag}", "--keep-workdir", str(work / "work"), "--force",
+             "--nickname-tag", f"claude_hopcl_{a.config}_{a.tag}", "--keep-workdir", str(work / "work"), "--force",
              "--output", str(work / "physical.json")]
     subprocess.run(args, cwd=ROOT)
     subprocess.run([sys.executable, "tools/w18/corner_sta.py", "--orfs-dir", str(work / "work/orfs"),
-                    "--macro", MACRO, "--output", str(work / "corner_sta.json")], cwd=ROOT)
+                    *(["--macro", MACRO] if rc["mem"] else []), "--output", str(work / "corner_sta.json")], cwd=ROOT)
 
 
 def cmd_record(a):
@@ -147,14 +160,24 @@ def cmd_record(a):
                wire_stage_cycles=wire, total_cycles=ret_cyc, us=round(ret_cyc / H.CLK * 1e6, 4))
     exact = all(r["as_expected"] for r in runs.values())
     pre = json.loads((work / "screen_pre/screen.json").read_text())
-    cs = json.loads((work / "route/corner_sta.json").read_text())
-    phys = json.loads((work / "route/physical.json").read_text()) if (work / "route/physical.json").is_file() else {}
-    ss_r, ff_r = cs["setup_ss"]["worst_slack_ps"], cs["hold_ff"]["worst_slack_ps"]
-    closes = (pre["ss_setup_wns_ps"] >= 0 and pre["ff_hold_wns_ps"] >= 0 and ss_r is not None and ff_r is not None
-              and ss_r >= 0 and ff_r >= 0)
+    routes = {}
+    for nm in ROUTES:
+        d = work / f"route_{nm}"
+        cs = json.loads((d / "corner_sta.json").read_text())
+        ph = json.loads((d / "physical.json").read_text()) if (d / "physical.json").is_file() else {}
+        routes[nm] = dict(config=dict(ROUTES[nm], **params(ROUTES[nm]["credits"], ROUTES[nm]["seqw"], ROUTES[nm]["mem"])),
+                          ss_setup_wns_ps=cs["setup_ss"]["worst_slack_ps"], ss_tns_ps=cs["setup_ss"].get("tns_ps"),
+                          ff_hold_wns_ps=cs["hold_ff"]["worst_slack_ps"],
+                          ff_violating=cs["hold_ff"].get("violating_d_pins"), corner_sta=cs,
+                          flow_completed=ph.get("flow_completed"),
+                          drc=(ph.get("place_and_route") or {}).get("drc_errors"),
+                          physical_summary={k: v for k, v in (ph.get("place_and_route") or {}).items()
+                                            if not isinstance(v, (dict, list)) or k == "memory_macros"})
+    ok = lambda r: (r["ss_setup_wns_ps"] is not None and r["ff_hold_wns_ps"] is not None
+                    and r["ss_setup_wns_ps"] >= 0 and r["ff_hold_wns_ps"] >= 0)
+    closes = pre["ss_setup_wns_ps"] >= 0 and pre["ff_hold_wns_ps"] >= 0 and all(ok(r) for r in routes.values())
     ct = json.loads((REC / "hop/hop_ct.json").read_text())
     old = json.loads(H.LINKS.read_text())["hop"]
-    pr = phys.get("place_and_route", {}) if isinstance(phys, dict) else {}
     detail = dict(
         schema="opentallas.dsrom-recovery.hop-closed.v1",
         generated_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -179,11 +202,7 @@ def cmd_record(a):
                                            draft_hop_us=ct["draft_hop_5row"]["us"],
                                            screen_ss_ps=ct["screen"]["ss_setup_wns_ps"], closes=False)),
         screen_prelayout=pre,
-        route=dict(corner_sta=cs, closes_signoff=cs.get("closes_signoff"),
-                   flow_completed=phys.get("flow_completed"), physical_summary={k: pr.get(k) for k in
-                   ("die_area_um2", "core_area_um2", "cell_area_um2", "utilization", "memory_macros", "drc_errors",
-                    "antenna_violations") if k in pr},
-                   config=params(256, 9, 1), macro=MACRO),
+        routes=routes, context_sdc=CONTEXT_SDC, macro=MACRO,
         runs=runs, simulator=sim["simulator"], sources=sim["sources"],
         pinned_unchanged={p: H.sha(ROOT / p) for p in ("rtl/dsrom_sys/ot_dsrom_link_rt.sv",
                                                       "rtl/dsrom_sys/ot_dsrom_link_ct.sv",
@@ -197,15 +216,22 @@ def cmd_record(a):
         class_="MANDATORY baseline block: the stage-hop endpoint must close; replaces the unclosed as-built hop",
         as_built_not_closed=("AS-BUILT HOP NOT CLOSED: the pinned ot_dsrom_link_rt behind the measured 0.7575 us hop "
                              "(links.json) fails the 1.2 GHz pre-layout SS screen at -417.3 ps "
-                             "(results/rtl/dsrom_recovery_20261004/hop/hop_ct.json screen.baseline_link_rt_same_screen)"),
+                             "(results/rtl/dsrom_recovery_20261004/hop/hop_ct.json screen.baseline_link_rt_same_screen) "
+                             "and, routed in context, SS -176.6 ps / FF hold -44.7 ps "
+                             "(results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL/verdict.json)"),
         ss_ff=dict(prelayout=dict(ss_setup_wns_ps=pre["ss_setup_wns_ps"], ff_hold_wns_ps=pre["ff_hold_wns_ps"],
                                   basis="ORFS yosys/abc CORNER=WC (ADDER_MAP_FILE off), OpenSTA SS/FF, ideal clock, "
                                         "I/O false-pathed; flop storage depth 16"),
-                   routed=dict(ss_setup_wns_ps=ss_r, ff_hold_wns_ps=ff_r,
-                               ss_tns_ps=cs["setup_ss"].get("tns_ps"), ff_violating=cs["hold_ff"].get("violating_d_pins"),
-                               basis="run_abi3_physical synth+pnr (WC, hold WC/BC), routed 6_final + SPEF timed by "
-                                     "tools/w18/corner_sta.py at SS (setup, 60 ps) and FF (hold, 25 ps), propagated "
-                                     "clock, 6 x ot_sram_1r1w_256x256 macros at their own SS/FF liberty; CREDITS 256"),
+                   routed_in_context={nm: dict(ss_setup_wns_ps=r["ss_setup_wns_ps"], ff_hold_wns_ps=r["ff_hold_wns_ps"],
+                                               ss_tns_ps=r["ss_tns_ps"], ff_violating=r["ff_violating"],
+                                               flow_completed=r["flow_completed"], drc=r["drc"])
+                                      for nm, r in routes.items()},
+                   basis="run_abi3_physical pnr (WC, hold WC/BC) under the in-context I/O SDC of "
+                         "results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL (input 100/30 ps, output "
+                         "60/25 ps, load 0.6 fF; " + CONTEXT_SDC + "); routed 6_final + SPEF timed by "
+                         "tools/w18/corner_sta.py at SS (setup, 60 ps) and FF (hold, 25 ps), propagated clock; "
+                         "hard = CREDITS 256 on 6 ot_sram_1r1w_256x256 macros (own SS/FF liberty), ctx16 = the "
+                         "baseline record's like-for-like flop configuration",
                    period_ps=833.333, closes=closes),
         info=dict(hop_us=hop["us"],
                   hop_source=f"ot_dsrom_link_cl RTL {hop['measured_endpoint_cycles']} cyc (closed endpoint; per-die "
@@ -225,7 +251,7 @@ def cmd_record(a):
         command="python3 tools/dsrom_hop_closed.py " + " ".join(sys.argv[1:]))
     (REC / "levers/hop_closed.json").write_text(json.dumps(lever, indent=1, default=str) + "\n")
     print(json.dumps(dict(verdict=verdict, exact=exact, pre=(pre["ss_setup_wns_ps"], pre["ff_hold_wns_ps"]),
-                          routed=(ss_r, ff_r), hop=hop["us"], draft=draft["us"], ret=ret["us"]), indent=1))
+                          routed={nm: (r["ss_setup_wns_ps"], r["ff_hold_wns_ps"]) for nm, r in routes.items()}, hop=hop["us"], draft=draft["us"], ret=ret["us"]), indent=1))
 
 
 def main():
@@ -235,6 +261,7 @@ def main():
     ap.add_argument("--util", type=float, default=30)
     ap.add_argument("--density", type=float, default=0.55)
     ap.add_argument("--tag", default="r1")
+    ap.add_argument("--config", default="hard", choices=sorted(ROUTES))
     a = ap.parse_args()
     {"sim": cmd_sim, "screen": cmd_screen, "route": cmd_route, "record": cmd_record}[a.cmd](a)
 

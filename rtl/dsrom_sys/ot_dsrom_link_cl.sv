@@ -31,6 +31,14 @@
 //  (f) Status counters: registered increment, 16 + 16-bit halves with a
 //      registered carry (a status read may lag by <= 2 cycles).  Fault
 //      causes are registered before the first-cause latch (+1 cycle).
+//  (h) IN_NEG=1: in_data / in_last are captured on the FALLING clock edge
+//      (mid-cycle, after the producer's rising-edge launch has settled) and
+//      used by the rising-edge logic: the value at the next rising edge is
+//      the same as a direct capture (0 cycles), while the port-to-register
+//      hold check becomes a half-cycle check, so the ~770 data inputs need no
+//      hold-buffer chains against the block's propagated clock latency under
+//      the in-context I/O constraints (input min 30 ps).  The controls
+//      (in_valid, out_ready) stay rising-edge.                           0 cyc
 //  (g) The receive-overflow and credit-return checks stay as faults but no
 //      longer gate the state update (a correct link never raises them; the
 //      fault latches either way).
@@ -56,7 +64,8 @@ module ot_dsrom_link_cl #(
     parameter integer KEEPALIVE      = 16,
     parameter integer PHY_NUM        = 0,
     parameter integer PHY_DEN        = 1,
-    parameter integer MEM            = 0      // 0 flop arrays, 1 SRAM macros (CREDITS 256)
+    parameter integer MEM            = 0,     // 0 flop arrays, 1 SRAM macros (CREDITS 256)
+    parameter integer IN_NEG         = 1      // 1: in_data / in_last captured on the falling edge, see (h)
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -167,6 +176,11 @@ module ot_dsrom_link_cl #(
     assign in_ready = (credits != 0) && !occ[IW] && !replaying && pace_ok;
 `endif
     wire            accept = in_valid && in_ready;
+    reg  [W-1:0]    in_data_n;
+    reg             in_last_n;
+    always @(negedge clk) begin in_data_n <= in_data; in_last_n <= in_last; end
+    wire [W-1:0]    in_d = (IN_NEG != 0) ? in_data_n : in_data;
+    wire            in_l = (IN_NEG != 0) ? in_last_n : in_last;
 
     // replay read: one read outstanding, 2-cycle registered read
     reg             rd_v1, rd_v2;
@@ -343,8 +357,8 @@ module ot_dsrom_link_cl #(
             else if (rp_go || (rd_v2 && rd_s2 != snd)) rd_v2 <= 1'b0;
             // TX pipe
             t0_v <= launch; t0_first <= accept; t0_seq <= snd;
-            t0_data <= rp_go ? rb_q[W-1:0] : in_data;
-            t0_last <= rp_go ? rb_q[W] : in_last;
+            t0_data <= rp_go ? rb_q[W-1:0] : in_d;
+            t0_last <= rp_go ? rb_q[W] : in_l;
             t1_v <= t0_v; t1_f <= {t0_pay, t0_crc};
 
             // ---------------- receiver ----------------

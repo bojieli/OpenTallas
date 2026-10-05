@@ -1,0 +1,10 @@
+# In-context I/O constraints of results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL/constraint.sdc (verbatim): the DS-ROM stage-hop link endpoint check.
+create_clock -name clk -period 833.333333 [get_ports clk]
+set_clock_uncertainty -setup 60 [get_clocks clk]
+set_clock_uncertainty -hold 25 [get_clocks clk]
+set_input_delay -max 100 -clock clk [get_ports {in_valid in_data* in_last out_ready channel_cycles*}]
+set_input_delay -min 30 -clock clk [get_ports {in_valid in_data* in_last out_ready channel_cycles*}]
+set_output_delay -max 60 -clock clk [all_outputs]
+set_output_delay -min 25 -clock clk [all_outputs]
+set_load 0.6 [all_outputs]
+set_false_path -from [get_ports rst_n]
