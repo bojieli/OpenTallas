@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "c7509e44b",
+ "generated_from_commit": "b3cff9140",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -50,7 +50,7 @@
    "status": "partial",
    "path": "results/rtl/qwen_rom_fulldie_20261003/b3r3/wire_bound_8k.json",
    "pointer": "ar.bound_tok_s",
-   "note": "measured REAL_MEM 527,663 cycles + 6,363: worst block word 64 vs RTL tws 38 (+26/ME op), F2 two-beat +1/ME op, hub-stack 53 vs 46 (+7 x 2 a layer); stage counts are floorplan geometry at 430.56 um, no routed-path STA; die GRT not closed",
+   "note": "measured REAL_MEM 527,663 cycles + 6,363: worst block word 64 vs RTL tws 38 (+26/ME op), F2 two-beat +1/ME op, hub-stack 53 vs 46 (+7 x 2 a layer); stage counts are floorplan geometry at 430.56 um, no routed-path STA; die global route closed at b3r16B40 (50-it GRT 0 overflow)",
    "value": 2247.1,
    "resolved": true,
    "blob": "910c6e53bcb7115703d8e33e6f8a61bb7eb4fd88",
@@ -4924,7 +4924,7 @@
    "value": 6169.7,
    "resolved": true,
    "blob": "1943275931ff98ae3bffce8adbedbc99f632d125",
-   "last_commit": "4f0d6f2e9 2026-10-04"
+   "last_commit": "4c14835d1 2026-10-04"
   },
   "qwen_rom.ar_tok_s_8k_stream4_wirebound": {
    "target": "qwen_rom",
@@ -4939,7 +4939,7 @@
    "value": 5974.3,
    "resolved": true,
    "blob": "1943275931ff98ae3bffce8adbedbc99f632d125",
-   "last_commit": "4f0d6f2e9 2026-10-04"
+   "last_commit": "4c14835d1 2026-10-04"
   },
   "qwen_rom.dspark_tok_s_8k_stream4": {
    "target": "qwen_rom",
