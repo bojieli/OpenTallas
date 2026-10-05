@@ -1,0 +1,124 @@
+{
+  "schema": "opentallas.qwen.activation-vm.selected-source-comparison.v1",
+  "scope": "Selected Qwen HBM af266 and ROM plainAR STREAM4 1d44, source-only; no runtime or build",
+  "hbm_main_source": "5d464000af1cd4f54212694de40a7a7d11aaa495",
+  "rom_selection_pin": {
+    "host": "ot-epyc2",
+    "path": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/selection.json",
+    "sha256": "210cafa9afab3db0103748cbeb1b87881720e8b2478287ec775edb28dcd94937"
+  },
+  "rom_top": "ot_qwen_rom_rt_die_w12_stream4_tagged_ar",
+  "rom_parameters": {
+    "die": [
+      "-GG=6144",
+      "-GNW=18",
+      "-GSNW=18",
+      "-GQWEN_FULLSHAPE=1",
+      "-GME_IDLE_GATE=1",
+      "-GD=4",
+      "-GSW=64",
+      "-GLV=7",
+      "-GSCALE_LOCAL=0",
+      "-GMEM_EXTRA=1",
+      "-GSMIN=7",
+      "-GSMAX=11",
+      "-GTCUT=7",
+      "-GBD=41",
+      "-GXVM=1",
+      "-GNWS=5",
+      "-GTWS=38",
+      "-GORD=7",
+      "-GREAL_MEM=1",
+      "-GENABLE_AR256=1",
+      "-GNSTK=4",
+      "-GSCALE_BANKS=13",
+      "-GCROM_WORDS=1048576",
+      "-GHBM_LAYERS=36",
+      "-GEMBED_ROM=1",
+      "-GFILL_LAT=8",
+      "-GNRD=256",
+      "-GLKA=512",
+      "-GWBW=4",
+      "-GHBM_PHASE=0",
+      "-GHBM_PULLIN=16",
+      "-GBASELINE_AR=1"
+    ],
+    "coll": [
+      "-GN=4",
+      "-GLANES=16",
+      "-GTAGW=32",
+      "-GDEPTH=256",
+      "-GLAT=339",
+      "-GBPC_NUM=3600"
+    ],
+    "tile": [
+      "-GGT=6144",
+      "-GNW=18",
+      "-GSMIN=7",
+      "-GCODE_BANKS=5",
+      "-GMEM_EXTRA=1",
+      "-GKV_VB=131072",
+      "-GKV_NH=2"
+    ]
+  },
+  "shared": {
+    "exact_controller_module": false,
+    "exact_host_VM_callback": false,
+    "VX_enable_slots": 2048,
+    "VX_scalar_address_width": 24,
+    "VX_scalar_data_width": 32,
+    "scalar_words": 177808,
+    "retained_bytes": 711232,
+    "XVM": 1,
+    "affine_expression": "xc + ((GBASE + port) mod 2^split)*xcs; selected GBASE=0",
+    "common_address_service_helpers": [
+      "physical_address",
+      "demand"
+    ],
+    "whole_HBM_build_proposal_function_valid_for_ROM": false
+  },
+  "hbm": {
+    "controller": "core.u_me.u_ctl: ot_qwen_me_spctl_w12 in ot_qwen_me_spine_h_w12",
+    "provider": "C++ caller m.vm array; independently enabled VX reads and deferred write commit",
+    "actual_finite_VM_macro_binding": false,
+    "ME_result_vectors": 96,
+    "SMIN": 6,
+    "scalar_retention_bytes": 711232,
+    "provider_macro_area_um2": null
+  },
+  "rom": {
+    "controller": "core.u_me.u_top: ot_qwen_w12_matvec_part PART2 in ot_qwen_me_spine_w12",
+    "provider": "selected top RTL reg [31:0] vm[0:VM_ELEMS-1], synchronous behavioral multi-access array",
+    "provider_source": "/srv/opentallas/repos/laplace-qwen-plainar-stream4-1d44fd09d/rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv",
+    "provider_line": 289,
+    "VX_read_loop_line": 309,
+    "ME_write_loop_line": 325,
+    "SU_write_loop_line": 331,
+    "host_role": "rm_vm preload / output readback; no per-edge host VX callback",
+    "actual_finite_VM_macro_binding": false,
+    "physical_bank_row_port_namespace": null,
+    "ME_result_vectors": 48,
+    "SMIN": 7,
+    "SS_FF_loaded_VM_corridor": null,
+    "provider_macro_area_um2": null,
+    "other_macros": "code ROM and scale ROM plus tile KV SRAM / tagged STREAM4 HBM path are separate services, not VM provider",
+    "ordering": "RTL NBA reads pre-edge old vm; write order ME,MX,SU,reducer,collective; ME VX pipeline holds under me_clk_en",
+    "capacity_bound_by_RTL_array_only": true
+  },
+  "applicability": {
+    "reuse_scalar_bank_mapping_and_exact_request_dedup_algebra": true,
+    "transfer_HBM_command_counts_or_cycles": false,
+    "reason": "ROM selected program/top/elaboration differ: SMIN7/BD41/NWS5/TWS38/ORD7/AR2561 and collective LAT339 versus HBM SMIN6/BD31/NWS4/TWS30/ORD4/AR2560/LAT11",
+    "new_architecture": false,
+    "new_RTL": false,
+    "new_numerical_run": false
+  },
+  "verdict": "ROM_OWN_BEHAVIORAL_VM_CONFIRMED_NO_FINITE_MACRO_BINDING_ON_SELECTED_VM_ACCESSES",
+  "source_excerpts": "rom_comparison_source.json",
+  "direct_consumers": [
+    "Maxwell",
+    "Laplace",
+    "Ampere"
+  ],
+  "adopted": false
+}

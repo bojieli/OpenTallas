@@ -110,3 +110,19 @@ Only source-algebra/hash/range/finite-segment checks, no numerical campaign.
 Failed records, retained body costs, archived actual native build untouched.
 
 Additional r2 hazard: read macro access accept+1 vs write accept+2; source admission must compare physical macro edges across commands, not rely on same-command rw_collision_fault alone. Head staging region/strides/producer ownership checks cover all four ranks, independently; no cross-rank data identity assumed.
+
+SELECTED ROM STREAM4 SCOPE COMPARISON (source-only, no transferred counts)
+rom_provider_comparison.json + rom_comparison_source.json + rom_selected_source.json
+bind Laplace plainAR top1d44/3d5c, coreabc8, arraycba4, controller2918, actual
+caller a10e and selected source book. VX face2048/AW24/FP32 and affine
+xc+((gb+port) mod S)*xcs match algebra, but ROM core.u_me.u_top is the older
+ot_qwen_w12_matvec_part PART2; HBM uses ot_qwen_me_spctl_w12 u_ctl.
+ROM provider is its OWN RTL behavioral reg vm[177808] (top line289); loops
+309/325/331 serve VX/ME/SU. ROM host rm_vm only preloads/readback: it is NOT
+HBM m.vm callback. No finite SRAM/bank/controller namespace is on these selected
+VM accesses. Actual code/scale/KV macros and STREAM4 HBM are separate.
+Source-selected ROM SMIN7 =>48 ME vectors, not HBM96; BD41/NWS5/TWS38/ORD7/AR2561
+and collective339 differ. Reuse physical_address/demand helpers only; do not
+run HBM-specialized whole-program cost on ROM or transfer HBM timings/commands.
+ROM physical VM realization cost remains unbound from its independently checked
+behavioral provider; no numerical result invalidation or physical adoption.
