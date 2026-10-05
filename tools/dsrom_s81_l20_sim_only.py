@@ -149,6 +149,9 @@ def capture_h_chain_inputs(ranks, nodes, execution, output, result, *, pause=Tru
 
 
 def main():
+    if M.V.ARITH != 'chunk8' or M.V.FUSE:
+        raise ValueError('S81 caller requires resolved ARITH=chunk8 and FUSE empty; '
+                         f'got ARITH={M.V.ARITH!r}, FUSE={sorted(M.V.FUSE)!r}')
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--head-chain',action='store_true',help='carry produced L20 H/PF directly into released head')
@@ -224,6 +227,7 @@ def main():
             p.error(str(exc))
     a.output.mkdir(exist_ok=False)
     result = dict(scope='S81.L20.position1048575', functional='SIM_ONLY',
+                  arithmetic_mode=dict(arith=M.V.ARITH, fuse=sorted(M.V.FUSE)),
                   headline_timing=False, completed=False, exact=None,
                   source_stage=37, simulation_ticks=0, native_cycles=None)
     if native_pv is not None:
@@ -493,9 +497,18 @@ def main():
                 mismatches.append(dict(rank=rank.r, region=region,
                     count=int(np.count_nonzero(M.G.bits(got)!=M.G.bits(want)))))
         result.update(completed=True, exact=not any(x['count'] for x in mismatches), mismatches=mismatches)
-        if a.head_chain:
+        # Retain the produced END operands independently of the optional head
+        # arithmetic. Native HEAD loads these bits through its existing VM
+        # writer/ACK path; files alone confer no publication or lease credit.
+        if result['exact']:
+            for rank in ranks:
+                M.G.bits(rank.vm[:20480]).astype('<u4').tofile(a.output/f'H_rank{rank.r}.u32')
+                M.G.bits(rank.vm[41152:41156]).astype('<u4').tofile(a.output/f'PF_rank{rank.r}.u32')
+            result['head_input_scope']='PRODUCED_L20_END_H_PF_ONLY_NO_NATIVE_PUBLICATION_CREDIT'
+        if result['exact'] or a.head_chain:
             np.savez(a.output/'carry.npz',H=np.stack([r.vm[:20480].reshape(4,5120) for r in ranks]),
                 PF=np.stack([r.vm[41152:41156] for r in ranks]))
+        if a.head_chain:
             result['completed']=False
             head_chain(ranks,model,a.output,result)
             result['completed']=True

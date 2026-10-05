@@ -1,0 +1,37 @@
+{
+  "objective": "DeepSeek V4.1 HBM-style reusable compute fed by ROM: analytical model selects cluster, die count and topology, then RTL exact validation, synthesis and physical implementation with measured fleet admission",
+  "request_file": "/home/ubuntu/.codex/attachments/a4dcf2e9-0f28-4ce7-95ef-725b7f9b62f4/pasted-text-1.txt",
+  "base_revision": "55ba24fdc32cda16de602f5ec5d758d176e96d1a",
+  "default_off": true,
+  "requirements": {
+    "analytical_model": "G0 rejected: 1303.348us exceeds current ROM725.057us; global TP96 capacity and latency budgets are architecture-only, no admitted successor",
+    "whole_model_storage_and_mapping": "checkpoint inventory and whole-row executable allocator implemented; codec tests pass",
+    "cluster_die_and_network_selection": "G0 rejected as rescue direction; new globally reused TP96 organization under architecture-only capacity/ownership/latency screening",
+    "RTL_implementation": "stopped; partial sources preserved; no full connected pass",
+    "full_shape_exact_component_validation": "connected build stopped before simulation; no qualification",
+    "synthesis": "baseline NC1 completed before stop; intrinsic timing failed; all hardware jobs terminal or stopped, checkpoints retained",
+    "contextual_SS_FF_physical": "STOPPED pending analytically superior complete design",
+    "model_calibration": "pending_measurements",
+    "merge_and_push": "through83d781e27 integrated/pushed via a08adc6b4; G0 baseline record pending next commit"
+  },
+  "scope_notes": [
+    "No full-system simulation unless owner asks; minimal full-shape components compose token schedule.",
+    "Prior failures immutable; zero-cost unknowns forbidden.",
+    "Clock 1.2GHz SS60ps/FF25ps; serial chain0.9GHz.",
+    "ROM no ECC; mutable protection retained."
+  ],
+  "next_actions": [
+    "Preserve HBM global ownership and identify actual active engines per operation",
+    "Resolve worst ROM-pool capacity and local assignment imbalance",
+    "Price private compute/SRAM, ROM selection, service and fabric within die rectangles",
+    "Derive complete matched latency before any decision to resume hardware"
+  ],
+  "current_findings": [
+    "Preserving HBM global rank ownership avoids G0 additional activation gathers and layer-owner KV paths.",
+    "TP96x16 with local row rotation needs984ROMpairs/engine before compact-layout study; scalar area804.930mm2 is not a geometric fit.",
+    "Current HBM460.053us nominal and603.754us clock sensitivity are conditional component compositions, not physical sign-off.",
+    "No successor TPOT claimed: actual16-engine schedule, ROM finite delivery, local rotation and complete service area remain unresolved."
+  ],
+  "owner_steering": "Stop implementation of slower candidate; first rethink architecture. Hardware work remains stopped until a complete matched analytical design shows a latency advantage.",
+  "hardware_authorization": "STOPPED: no RTL edits, synthesis, simulation or physical jobs authorized for G0"
+}

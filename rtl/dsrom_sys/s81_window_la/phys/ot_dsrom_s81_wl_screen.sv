@@ -47,7 +47,7 @@ module ot_dsrom_s81_wl_screen #(
     wire [7:0] rows_refilled;
     wire [3:0] m_v, m_we, s_rdy; wire [4*AW-1:0] m_addr; wire [15:0] m_len; wire [4*TAGW-1:0] m_tag;
     wire [1023:0] m_wdata; wire [127:0] m_wstrb;
-    ot_dsrom_window_attn_source_la #(.STREAM_LA(1), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10), .SEC_W(AW),
+    ot_dsrom_window_attn_source_la #(.STREAM_LA(1), .LA_ISSUE_PC(1), .REFILL_OWNER_SAFE(1), .POS_W(21), .USER_W(10), .SEC_W(AW),
         .HAW(AW), .TAGW(TAGW), .WIN_STACK(0), .STREAM_II1(0), .REFILL_CREDITS(8)) u_src (
         .clk(clk), .rst_n(rst_n),
         .retain_qk(1'b0), .retain_pv(1'b0), .retain_complete(1'b0), .retain_invalidate(1'b0),

@@ -987,6 +987,48 @@ def cmd_links(a):
     return 0
 
 
+# the recovery placement's die-to-die messages (one row each, on the stage-hop endpoint ot_dsrom_link_rt + the same
+# light-FEC / UCIe vendor budget and endpoint wire stages as the 5-row stage hop): name, bytes, role
+RECOVERY_HOPS = [
+    ("x_row", 10240, "ffn_norm x of one block row (5,120 BF16) primary rank die -> its expert replica die"),
+    ("ids", 64, "one row's 3 routed expert ids (one flit) primary -> replica"),
+    ("weights", 64, "one row's 3 FP32 route weights (one flit) primary -> replica"),
+    ("ret_row", 5120, "one row's routed-expert sum, the rank's 1,280 output rows FP32, replica -> primary"),
+]
+
+
+def cmd_rlinks(a):
+    """The recovery placement's messages measured on the stage-hop link RTL (same bench, case and budget rule as
+    `links --part hop`; only the payload differs)."""
+    import dsrom_1m_links as L
+    out = Path(a.out)
+    work = out / "rlinks_work"
+    work.mkdir(parents=True, exist_ok=True)
+    phy = L.phy_Bps()
+    res = dict(schema="opentallas.dsrom-1m.draft-blocks.rlinks.v1", generated_utc=now(), source_commit=git_head(),
+               rule="total = link_rt first input -> last flit delivered (measured RTL incl. the light-FEC/UCIe "
+                    "vendor delay lines) + PHY serialisation beyond the endpoint's + 2 x 45 SerDes wire stages",
+               hops={}, sources={p: sha(ROOT / p) for p in L.HOP_RTL})
+    for name, nb, role in RECOVERY_HOPS:
+        r = L.run_hop_case(work, (f"rec_{name}", dict(FB=64, CH=L.CH_LFEC, CHU=L.CH_UCIE), nb, role))
+        f = r["fields"]
+        phy_cyc = nb / phy * CLK
+        phy_extra = max(0, int(np.ceil(phy_cyc - f["flits"] - 1e-9))) if phy_cyc > f["flits"] else 0
+        wire = 2 * L.SERDES_STAGES
+        tot = f["last_flit"] + phy_extra + wire
+        res["hops"][name] = dict(role=role, exact=r["exact"], payload_B=nb, payload_flits=f["flits"],
+                                 link_rt_first_to_last_cycles=f["last_flit"],
+                                 vendor_channel_cycles=dict(board=L.CH_LFEC, ucie_fanout=L.CH_UCIE),
+                                 measured_endpoint_cycles=f["last_flit"] - L.CH_LFEC - L.CH_UCIE,
+                                 phy_serialization_extra_cycles=phy_extra, wire_stage_cycles=wire, total_cycles=tot,
+                                 us=round(tot / CLK * 1e6, 4), summary=r["summary"])
+        print(name, nb, tot, res["hops"][name]["us"], r["exact"], flush=True)
+    res["status"] = "pass" if all(h["exact"] for h in res["hops"].values()) else "fail"
+    (out / "rlinks.json").write_text(json.dumps(res, indent=1) + "\n")
+    print("RLINKS", res["status"])
+    return 0 if res["status"] == "pass" else 1
+
+
 # ======================================================================================================================
 # record: per-element measured times -> the block's fixed dependency graph (the S81 graph's sliding layer L0)
 # ======================================================================================================================
@@ -1307,6 +1349,287 @@ def cmd_record(a):
 
 
 # ======================================================================================================================
+# recovery placement "DP1-EP5" (lever draft of the DS-ROM recovery): the three blocks' non-expert weights co-located
+# on ONE TP4 primary group (no stage hop between blocks), each block's routed experts replicated on 5 expert TP4
+# groups, replica r serving block row r (its 3 experts run concurrently with the other rows')
+# ======================================================================================================================
+REC_DIR = ROOT / "results/rtl/dsrom_recovery_20261004"
+REC_DRAFT_DIR = REC_DIR / "draft"
+PLACEMENT = REC_DRAFT_DIR / "placement.json"
+PRIMARY_WORD_STRIDE = 1024          # block st's non-expert words in a pair start at st * 1,024 (L0 uses <= 888 a pair)
+PAIR_WORDS = 8192
+DIE_MM2_REF = "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json die.decision_priced_mm2"
+REPLICAS = ROWS
+NONBLOCK_HEAD = ("norm.weight", "markov_head.", "confidence_head.")
+NONBLOCK_SEED = ("main_proj.", "main_norm.")
+
+
+def _ckpt_headers(snap: Path, prefix="mtp."):
+    idx = json.loads((snap / "model.safetensors.index.json").read_text())["weight_map"]
+    files = sorted({f for k, f in idx.items() if k.startswith(prefix)})
+    out = {}
+    for fn in files:
+        with open(snap / fn, "rb") as f:
+            n = int.from_bytes(f.read(8), "little")
+            h = json.loads(f.read(n))
+        for k, v in h.items():
+            if k.startswith(prefix):
+                out[k] = dict(shape=v["shape"], dtype=v["dtype"], file=fn)
+    return out
+
+
+def cmd_placement(a):
+    """The placement map: every released mtp.* tensor (2,401) and, for matrices, every rank row slice, homed once
+    per replica.  In-die pairs: the S81 allocator's L0 placement (non-expert matrices: L0's pairs with block st's
+    words at base st*1,024 + its offset in the pair; routed expert e: L0 expert e's pairs and bases)."""
+    import gzip
+    import dsrom_1m_field as FD
+    hdr = _ckpt_headers(Path(a.snapshot))
+    l0 = {}
+    with gzip.open(FD.S81 / "matrix_map.jsonl.gz", "rt") as f:
+        for ln in f:
+            r = json.loads(ln)
+            if r["layer"] == 0 and (r["expert"] is None or r["expert"] < 128):
+                l0[r["alias"]] = r
+    groups = [dict(group="draft.primary", dies=TP, role="attention, router, shared expert, hc mixes, norms and window "
+                   "caches of mtp.0, mtp.1 and mtp.2 (one block at a time); mtp.0 seed projection")]
+    groups += [dict(group=f"draft.mtp{st}.rep{r}", dies=TP, role=f"routed experts 0..127 of mtp.{st} (replica {r}: "
+                    f"serves block row {r})") for st in range(STAGES) for r in range(REPLICAS)]
+    words = {g["group"]: [0] * TP for g in groups}
+    pair_use = {}                   # primary: (rank-invariant) pair -> words, to check the per-pair capacity
+    tensors, n_rows = [], 0
+    for name in sorted(hdr):
+        h = hdr[name]
+        parts = name.split(".")
+        st = int(parts[1])
+        sub = ".".join(parts[2:])
+        rec = dict(tensor=name, shape=h["shape"], dtype=h["dtype"])
+        if sub.startswith(NONBLOCK_HEAD):
+            rec.update(home="head group (the draft head sweeps; head-term owner, unchanged)", slices=None)
+            tensors.append(rec)
+            continue
+        if sub.endswith(".scale"):
+            rec.update(home="with its weight's rows (UE8M0 block exponents carried in the element word)", slices=None)
+            tensors.append(rec)
+            continue
+        m = re.fullmatch(r"ffn\.experts\.(\d+)\.(w[123])\.weight", sub)
+        if m:
+            e, w = int(m.group(1)), m.group(2)
+            ent = l0[f"exp{e}.{w}"]
+            sl = []
+            for r in range(REPLICAS):
+                g = f"draft.mtp{st}.rep{r}"
+                for rank, rs in enumerate(ent["rank_slices"]):
+                    nw = sum(c * wd for _, _, _, c, _, _, wd in ent["plans"])
+                    words[g][rank] += nw
+                    sl.append(dict(group=g, rank=rank, rows=rs["rows"], cols=rs["cols"], words=nw,
+                                   in_die=f"S81 L0 exp{e}.{w} plans ({len(ent['plans'])} superrow runs, pairs and "
+                                          f"bases as the S81 allocator placed them on the L0 stage-0 die)"))
+            assert all(rs["rows"][0] == (0 if i == 0 else ent["rank_slices"][i - 1]["rows"][1])
+                       for i, rs in enumerate(ent["rank_slices"])) and ent["rank_slices"][-1]["rows"][1] == h["shape"][0]
+            n_rows += REPLICAS * h["shape"][0]
+            rec.update(home="replicas", slices=sl)
+            tensors.append(rec)
+            continue
+        alias = {"attn.wq_a.weight": ["wq_a"], "attn.wkv.weight": ["wkv"], "attn.wq_b.weight": ["wq_b.rows0", "wq_b.rows4608"],
+                 "attn.wo_a.weight": ["wo_a.group0.rows0", "wo_a.group0.rows768", "wo_a.group1.rows0", "wo_a.group1.rows768"],
+                 "attn.wo_b.weight": ["wo_b.rows0", "wo_b.rows4608"], "ffn.gate.weight": ["gate"],
+                 "ffn.shared_experts.w1.weight": ["shared.w1"], "ffn.shared_experts.w3.weight": ["shared.w3"],
+                 "ffn.shared_experts.w2.weight": ["shared.w2"]}.get(sub)
+        if alias:
+            sl = []
+            for al in alias:
+                ent = _mtp_entry(l0[al], st) if al == "gate" else l0[al]
+                for rank, rs in enumerate(ent["rank_slices"]):
+                    nw = sum(c * wd for _, _, _, c, _, _, wd in ent["plans"])
+                    words["draft.primary"][rank] += nw
+                    sl.append(dict(group="draft.primary", rank=rank, rows=rs["rows"], cols=rs["cols"], words=nw,
+                                   in_die=f"S81 L0 {al} pairs, block words at base {st} x {PRIMARY_WORD_STRIDE} + "
+                                          f"the entry's offset in the pair"))
+                for _, pair, _, c, _, _, wd in ent["plans"]:     # one rank die's pairs (rank-invariant plans)
+                    pair_use[(st, pair)] = pair_use.get((st, pair), 0) + c * wd
+            # rows: the rank slices of all aliases partition the released rows exactly once
+            area = sum((s["rows"][1] - s["rows"][0]) * (s["cols"][1] - s["cols"][0]) for s in sl)
+            assert area == h["shape"][0] * h["shape"][1], (name, area, h["shape"])
+            n_rows += h["shape"][0]
+            rec.update(home="draft.primary", slices=sl)
+            tensors.append(rec)
+            continue
+        if sub.startswith(NONBLOCK_SEED):
+            rec.update(home="draft.primary (mtp.0 seed projection: the seed term, timing unchanged; rows split over "
+                            "the 4 rank dies, pair placement not timed here)", slices=None)
+            tensors.append(rec)
+            continue
+        rec.update(home="draft.primary, replicated on every rank die (vector / hc-mix store, as S81 holds L0's)",
+                   slices=None)
+        tensors.append(rec)
+    # per-pair capacity on the primary: the three blocks' non-expert words stacked at st * 1,024
+    per_pair = {}
+    for (st, pair), w in pair_use.items():
+        assert w <= PRIMARY_WORD_STRIDE, (st, pair, w)
+        per_pair[pair] = max(per_pair.get(pair, 0), st * PRIMARY_WORD_STRIDE + w)
+    assert max(per_pair.values()) <= PAIR_WORDS
+    cap = 2417 * PAIR_WORDS
+    fp = json.loads((ROOT / "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json").read_text())
+    die_mm2 = fp["die"]["decision_priced_mm2"]
+    n_dies = TP * len(groups)
+    rec = dict(
+        schema="opentallas.dsrom-recovery.draft-placement.v1", name="DP1-EP5", generated_utc=now(),
+        source_commit=git_head(), checkpoint=Path(a.snapshot).resolve().name, mtp_tensors=len(hdr),
+        rule=("each DSpark block's non-expert matrices (wq_a, wkv, wq_b, wo_a, wo_b, gate, shared w1/w3/w2) on ONE "
+              "primary TP4 group for all three blocks (the S81 L0 rank slices and pairs; block st's words at base "
+              "st x 1,024 of each pair), so block st+1 starts on the dies that hold block st's output (no stage "
+              "hop); each block's 128 routed experts replicated on 5 expert TP4 groups (the S81 L0 rank slices and "
+              "the L0 stage-0 die's pairs of expert e), replica r computing block row r's 3 experts and their sum "
+              "in id order; every row of every released matrix placed once per replica"),
+        groups=groups, dies=dict(primary=TP, expert_replicas=TP * STAGES * REPLICAS, total=n_dies,
+                                 baseline_draft_dies=TP * STAGES, added_vs_baseline_draft=n_dies - TP * STAGES,
+                                 die_mm2=die_mm2, die_mm2_source=DIE_MM2_REF,
+                                 added_silicon_mm2=round((n_dies - TP * STAGES) * die_mm2, 1)),
+        capacity=dict(pair_words=PAIR_WORDS, die_words=cap,
+                      words_per_rank_die={g: max(v) for g, v in words.items() if g in ("draft.primary", "draft.mtp0.rep0")},
+                      fill={g: round(max(v) / cap, 4) for g, v in words.items() if g in ("draft.primary", "draft.mtp0.rep0")},
+                      primary_max_words_in_a_pair=max(per_pair.values())),
+        links=dict(per_primary_rank_die=f"{STAGES * REPLICAS} replica links (one to rank r of each expert group, "
+                                        "light-FEC board + UCIe class, the stage-hop endpoint ot_dsrom_link_rt); the "
+                                        "baseline needed 2 stage links a block group",
+                   note="a star of 15 board links per primary die: port count beyond the S81 die's stage links is "
+                        "an added link-endpoint area not yet priced in the die floorplan"),
+        matrix_rows_placed=n_rows, tensors=tensors)
+    PLACEMENT.parent.mkdir(parents=True, exist_ok=True)
+    Path(a.record).write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps(dict(tensors=len(tensors), dies=rec["dies"], capacity={k: v for k, v in rec["capacity"].items()
+                                                                            if k != "words_per_rank_die"}), indent=1))
+    return 0
+
+
+def _serial_us(phases, w):
+    """field_nodes' rule: phases back to back on one die (go -> idle + 1 except the last, + go -> last row write of
+    the last) + S81 floorplan wire stages a phase."""
+    cyc = sum(p["go_to_idle"] + 1 for p in phases[:-1]) + phases[-1]["go_to_last_row"] + w * len(phases)
+    return cyc / CLK * 1e6, cyc
+
+
+def recovery_graph():
+    """block_graph() re-wired for DP1-EP5: the routed-expert chain runs per row on its replica; the shared w2 stays
+    on the primary; the combine waits for every row's returned sum and the shared w2."""
+    g = block_graph()
+    moved = ("ffn.experts_gu", "ffn.swiglu", "ffn.route_w", "ffn.quant2", "ffn.down")
+    for n in moved:
+        g.pop(n)
+    for n, nd in g.items():
+        assert not any(d in moved for d in nd["deps"]) or n == "ffn.combine_allreduce", (n, nd["deps"])
+    g["ffn.shared_down"] = dict(deps=["ffn.shared_quant"], kind="matvec")
+    for r in range(ROWS):
+        g[f"ffn.x_hop.r{r}"] = dict(deps=["ffn.norm.scale"], kind="hop")
+        g[f"ffn.rquant.r{r}"] = dict(deps=[f"ffn.x_hop.r{r}"], kind="vector")
+        g[f"ffn.ids_hop.r{r}"] = dict(deps=["ffn.top6_order"], kind="hop")
+        g[f"ffn.w_hop.r{r}"] = dict(deps=["ffn.weights"], kind="hop")
+        g[f"ffn.experts_gu.r{r}"] = dict(deps=[f"ffn.rquant.r{r}", f"ffn.ids_hop.r{r}"], kind="matvec")
+        g[f"ffn.swiglu.r{r}"] = dict(deps=[f"ffn.experts_gu.r{r}"], kind="vector")
+        g[f"ffn.route_w.r{r}"] = dict(deps=[f"ffn.swiglu.r{r}", f"ffn.w_hop.r{r}"], kind="vector")
+        g[f"ffn.quant2.r{r}"] = dict(deps=[f"ffn.route_w.r{r}"], kind="vector")
+        g[f"ffn.down.r{r}"] = dict(deps=[f"ffn.quant2.r{r}"], kind="matvec")
+        g[f"ffn.ret_hop.r{r}"] = dict(deps=[f"ffn.down.r{r}"], kind="hop")
+    g["ffn.combine_allreduce"]["deps"] = [f"ffn.ret_hop.r{r}" for r in range(ROWS)] + ["ffn.shared_down"]
+    return g
+
+
+def cmd_recovery(a):
+    base = json.loads(Path(a.base).read_text())
+    rl = json.loads(Path(a.rlinks).read_text())
+    pl = json.loads(Path(a.placement).read_text())
+    assert base["exact"] and rl["status"] == "pass"
+    hops = rl["hops"]
+    fpj = json.loads((ROOT / "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json").read_text())["trunk_stages"]
+    import dsrom_1m_field as FD
+    w = 2 * fpj["stages_at_504"]["field_one_way"] - FD.BST_IN_VEHICLE
+    g0, g = block_graph(), recovery_graph()
+    stages, blocks, per_node = {}, [], {}
+    for st in range(STAGES):
+        bn = base["nodes"][f"mtp.{st}"]
+        t0 = {n: v["us"] for n, v in bn.items()}
+        tot0, _, _ = longest(g0, t0)
+        assert abs(tot0 - base["block_us"][st]) < 1e-3, (st, tot0, base["block_us"][st])   # the record recomposes
+        ph = base["stages"][f"mtp.{st}"]["field_phases"]
+        assert all(p["exact"] and p["complete"] for p in ph)
+        src = {n: dict(v) for n, v in bn.items() if n not in ("ffn.experts_gu", "ffn.swiglu", "ffn.route_w",
+                                                              "ffn.quant2", "ffn.down")}
+
+        def put(n, us, source, exact=True, cls="measured", mod=0.0):
+            src[n] = dict(us=round(us, 5), source=source, exact=exact, cls=cls, modelled_part_us=round(mod, 5))
+        if st > 0:
+            put("hop_in", 0.0, f"DP1-EP5: mtp.{st} sits on the primary group that holds mtp.{st - 1}'s output "
+                               "(residual already in every rank die's hub VM): no stage hop", True, "placement")
+        sh = [p for p in ph if p["phase"].endswith("shared.w2")]
+        us, cyc = _serial_us(sh, w)
+        put("ffn.shared_down", us, f"ROM field vehicle (as-built record) phase {sh[0]['phase']} np 4, {cyc} cyc incl. "
+                                   f"{w} S81 wire, on the primary")
+        for r in range(ROWS):
+            gu = [p for p in ph if p["node"] == "ffn.experts_gu" and p["rows"] == [r]]
+            dn = [p for p in ph if p["node"] == "ffn.down" and p["rows"] == [r]]
+            assert len(gu) == len(dn) == 3, (st, r, len(gu), len(dn))
+            ugu, cgu = _serial_us(gu, w)
+            udn, cdn = _serial_us(dn, w)
+            put(f"ffn.experts_gu.r{r}", ugu, f"ROM field vehicle (as-built record) phases {', '.join(p['phase'] for p in gu)} "
+                                            f"back to back on replica {r} (identical image: L0 expert pairs), {cgu} cyc incl. "
+                                            f"{3 * w} S81 wire")
+            put(f"ffn.down.r{r}", udn, f"ROM field vehicle (as-built record) phases {', '.join(p['phase'] for p in dn)} "
+                                       f"back to back on replica {r}, {cdn} cyc incl. {3 * w} S81 wire")
+            for n, key in (("swiglu", "ffn.swiglu"), ("route_w", "ffn.route_w"), ("quant2", "ffn.quant2"),
+                           ("rquant", "ffn.quant")):
+                b = bn[key]
+                put(f"ffn.{n}.r{r}", b["us"], f"UPPER BOUND: the 5-row measured {key} ({b['source']}) charged to "
+                                              f"replica {r}'s one row", b["exact"], b["cls"], b["modelled_part_us"])
+            for n, hk in (("x_hop", "x_row"), ("ids_hop", "ids"), ("w_hop", "weights"), ("ret_hop", "ret_row")):
+                hh = hops[hk]
+                put(f"ffn.{n}.r{r}", hh["us"], f"ot_dsrom_link_rt RTL at {hh['payload_B']} B ({hh['role']}): "
+                                               f"{hh['measured_endpoint_cycles']} cyc endpoint + light-FEC/UCIe VENDOR "
+                                               f"budget {sum(hh['vendor_channel_cycles'].values())} cyc + "
+                                               f"{hh['wire_stage_cycles']} wire", hh["exact"], "measured+vendor_phy",
+                    sum(hh["vendor_channel_cycles"].values()) / CLK * 1e6)
+        t = {n: v["us"] for n, v in src.items()}
+        missing = [n for n in g if n not in t]
+        assert not missing, missing
+        tot, path, _ = longest(g, t)
+        ex = all(v["exact"] in (True, None) for v in src.values())
+        stages[f"mtp.{st}"] = dict(block_us=round(tot, 4), baseline_block_us=base["block_us"][st], exact=ex,
+                                   critical_path=[dict(node=n, us=src[n]["us"], cls=src[n]["cls"]) for n in path],
+                                   modelled_on_path_us=round(sum(src[n]["modelled_part_us"] for n in path), 4),
+                                   nodes=src)
+        blocks.append(tot)
+        old = {n: v["us"] for n, v in bn.items()}
+        per_node[f"mtp.{st}"] = dict(
+            hop_in=[old["hop_in"], src["hop_in"]["us"]],
+            experts_gu=[old["ffn.experts_gu"], max(src[f"ffn.experts_gu.r{r}"]["us"] for r in range(ROWS))],
+            down=[old["ffn.down"], max(max(src[f"ffn.down.r{r}"]["us"] for r in range(ROWS)), src["ffn.shared_down"]["us"])],
+            added_hops_on_path=round(sum(src[n]["us"] for n in path if "_hop." in n), 4),
+            block=[base["block_us"][st], round(tot, 4)])
+        print(f"mtp.{st}: {base['block_us'][st]:.4f} -> {tot:.4f} us exact {ex}")
+    total = round(sum(blocks), 4)
+    rec = dict(
+        schema="opentallas.dsrom-1m.draft-blocks.v1", variant="recovery DP1-EP5",
+        basis=("the as-built full-shape draft-block measurement (results/rtl/dsrom_1m_allmeasured_20261004/"
+               "draft_blocks.json: every element exact vs the golden draft at the 1M anchor) recomposed on the DP1-EP5 "
+               "placement (results/rtl/dsrom_recovery_20261004/draft/placement.json): blocks co-located on one primary "
+               "TP4 group (no stage hop into mtp.1 / mtp.2), routed experts on 5 row replicas per block (each "
+               "replica's 3 phases are the measured phases of the identical L0-pair image), + the replica messages "
+               "measured on the stage-hop link RTL (rlinks.json)"),
+        exact=all(s["exact"] for s in stages.values()), block_us=[round(b, 4) for b in blocks], blocks_total_us=total,
+        baseline_blocks_total_us=base["blocks_total_us"], per_node_old_new_us=per_node, stages=stages,
+        rlinks=hops, placement=dict(record=str(Path(a.placement).resolve().relative_to(ROOT)), sha256=sha(a.placement),
+                                    name=pl["name"], dies=pl["dies"]),
+        still_modelled=base["still_modelled"] + [
+            dict(term="replica SU nodes (swiglu, route_w, quant2, quant) of ONE row", us=None,
+                 why="charged at the measured 5-row op-major time (an upper bound: the replica issues a subset)")],
+        source_commit=git_head(), generated_utc=now(),
+        inputs={str(Path(p).resolve().relative_to(ROOT)): sha(p) for p in (a.base, a.rlinks, a.placement, __file__)})
+    Path(a.record).write_text(json.dumps(rec, indent=1, default=str) + "\n")
+    print(json.dumps(dict(blocks=rec["block_us"], total=total, baseline=base["blocks_total_us"], exact=rec["exact"])))
+    return 0
+
+
+# ======================================================================================================================
 # main
 # ======================================================================================================================
 def main():
@@ -1342,10 +1665,21 @@ def main():
     p.add_argument("--ncal", type=int, default=24)
     p.add_argument("--nmeas", type=int, default=12)
     p.add_argument("--jobs", type=int, default=16)
+    p = sp.add_parser("rlinks")
+    p.add_argument("--out", required=True)
+    p = sp.add_parser("placement")
+    p.add_argument("--snapshot", type=Path, default=SNAP_DEFAULT)
+    p.add_argument("--record", default=str(PLACEMENT))
+    p = sp.add_parser("recovery")
+    p.add_argument("--base", default=str(REC))
+    p.add_argument("--rlinks", default=str(REC_DRAFT_DIR / "rlinks.json"))
+    p.add_argument("--placement", default=str(PLACEMENT))
+    p.add_argument("--record", default=str(REC_DRAFT_DIR / "draft_blocks_recovery.json"))
     a = ap.parse_args()
     return {"golden": cmd_golden, "fplan": cmd_fplan, "fextract": cmd_fextract, "fbuild": cmd_fbuild,
             "frun": cmd_frun, "suprep": cmd_suprep, "surun": cmd_surun, "quant": cmd_quant, "select": cmd_select,
-            "attn": cmd_attn, "links": cmd_links, "record": cmd_record}[a.cmd](a)
+            "attn": cmd_attn, "links": cmd_links, "record": cmd_record, "rlinks": cmd_rlinks,
+            "placement": cmd_placement, "recovery": cmd_recovery}[a.cmd](a)
 
 
 if __name__ == "__main__":

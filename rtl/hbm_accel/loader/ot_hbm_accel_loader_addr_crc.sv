@@ -1,0 +1,335 @@
+// Additive width-selected successor; pinned original unchanged. DADDR_HI=0x2c.
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// ot_hbm_accel_loader: host -> HBM load engine of the HBM accelerator die (boot-time weight load, KV image
+// restore).  Before this block the accelerator's HBM contents existed only as load-time $readmemh images
+// (results/rtl/hbm_system_rtl_20261003/STATUS.md): there was no path for the host to put a checkpoint into HBM.
+//
+// The host programs one transfer through an AXI4-Lite register slave (the PCIe BAR view, like ot_host_if) and
+// the engine copies [HADDR, HADDR + BYTES) of host memory to the die-global HBM byte address DADDR:
+//   clk_host: AXI4 read master (256-bit beats, INCR bursts of up to BURST beats that never cross 4 KB, up to
+//             MAXOUT bursts outstanding, one ID so data return in order); every beat is folded into a CRC-32
+//             and pushed into an asynchronous FIFO;
+//   clk_mem:  one MREQ client of the die memory system (ot_gpu_memsys: crossbar -> L2 slices -> HBM partitions):
+//             one full-strobe 32-byte sector write per beat, at most OUTW writes unacknowledged; when VERIFY is
+//             set, every written sector is read back (VOUT reads outstanding, a tag-indexed reorder buffer
+//             restores address order) and folded into a second CRC-32;
+//   completion crosses back through a second asynchronous FIFO; STATUS, CRC_GOT, VCRC_GOT, CYCLES and `irq`.
+// CRC-32: polynomial 0x04C11DB7, init 0xFFFFFFFF, no final XOR, each 256-bit sector folded LSB first in address
+// order -- tools/mem_compiler/ecc.py signature(words, 256), the same definition as the ROM BIST signature.
+//
+// Registers (byte offset, 32-bit): 0x00 CTRL  W: [0] go  [1] verify;  R: [0] busy
+//   0x04 STATUS R: [3:0] code (0 ok, 1 payload CRC != CRC_EXP, 2 HBM read-back CRC != CRC_EXP, 3 address/size
+//               not 32-byte aligned or zero, 4 AXI read error, 5 memory-side fault)  [8] done;  W1C [8]
+//   0x08 HADDR_LO  0x0C HADDR_HI  0x10 DADDR  0x14 BYTES  0x18 CRC_EXP
+//   0x1C CRC_GOT (payload)  0x20 VCRC_GOT (read-back)  0x24 SECTORS (written and acknowledged)  0x28 CYCLES
+// ENABLE = 0 (default): inert, every output 0.
+// ---------------------------------------------------------------------------
+module ot_hbm_accel_loader_addr_crc #(
+    parameter integer CRC_MATRIX=0, ADDR_W=32, STACK_W=0,
+    parameter [63:0] STACK_BYTES=0,
+    parameter integer ENABLE = 0,
+    parameter integer BURST  = 16,     // beats per AXI burst (<= 128)
+    parameter integer MAXOUT = 8,      // AXI bursts outstanding
+    parameter integer OUTW   = 96,     // memory writes outstanding (2 L2 slices x OSD 64 downstream)
+    parameter integer VOUT   = 16,     // read-back reads outstanding (power of two)
+    parameter integer TW     = 16,     // MREQ tag width
+    parameter integer CDC_AW = 5       // data FIFO depth 2^CDC_AW
+) (
+    input  wire          clk_host,
+    input  wire          rst_host_n,
+    // AXI4-Lite register slave
+    input  wire          s_awvalid, output wire s_awready, input wire [11:0] s_awaddr,
+    input  wire          s_wvalid,  output wire s_wready,  input wire [31:0] s_wdata,
+    output reg           s_bvalid,  input  wire s_bready,
+    input  wire          s_arvalid, output wire s_arready, input wire [11:0] s_araddr,
+    output reg           s_rvalid,  input  wire s_rready,  output reg  [31:0] s_rdata,
+    // AXI4 read master (host memory)
+    output reg           m_arvalid, input wire m_arready, output reg [63:0] m_araddr, output reg [7:0] m_arlen,
+    output wire [2:0]    m_arsize,  output wire [1:0] m_arburst,
+    input  wire          m_rvalid,  output wire m_rready, input wire [255:0] m_rdata, input wire [1:0] m_rresp,
+    input  wire          m_rlast,
+    output wire          irq,
+    // memory clock domain: one MREQ client of ot_gpu_memsys
+    input  wire          clk_mem,
+    input  wire          rst_mem_n,
+    output wire          req_v,
+    input  wire          req_rdy,
+    output wire          req_we,
+    output wire [ADDR_W-1:0] req_addr,
+    output wire [255:0]  req_wdata,
+    output wire [31:0]   req_wstrb,
+    output wire [TW-1:0] req_tag,
+    input  wire          rsp_v,
+    output wire          rsp_rdy,
+    input  wire [TW-1:0] rsp_tag,
+    input  wire          rsp_we,
+    input  wire [255:0]  rsp_data
+);
+ // Literal LSB-first 256-bit CRC32 linear map from mem_compiler/ecc.py.
+ // Same state feedback and acceptance edge; no added register or byte reorder.
+ function automatic [31:0] crc_fold(input [31:0] s, input [255:0] w);
+ reg fb;integer i;
+ begin
+ if(CRC_MATRIX)begin
+ crc_fold[0]=^(s & 32'h9108245d) ^ ^(w & 256'h826880efa40da72d78c17d03f5a36f178bc1851a6378032be771ea80ba241089);
+ crc_fold[1]=^(s & 32'hb3186ce7) ^ ^(w & 256'hc35cc098760b74bbc4a1c3820f72d89c4e21479752c402be14c91fc0e73618cd);
+ crc_fold[2]=^(s & 32'hf738fd93) ^ ^(w & 256'he3c6e0a39f081d709a919cc2f21a0359acd126d1ca1a0274ed156560c9bf1cef);
+ crc_fold[3]=^(s & 32'hee71fb26) ^ ^(w & 256'h71e37051cf840eb84d48ce61790d01acd6689368e50d013a768ab2b064df8e77);
+ crc_fold[4]=^(s & 32'h4debd211) ^ ^(w & 256'hba9938c743cfa0715e651a334925efc1e0f5ccae11fe83b6dc34b3d8884bd7b2);
+ crc_fold[5]=^(s & 32'h0adf807f) ^ ^(w & 256'hdf241c8c05ea7715d7f3f01a513198f77bbb634d6b8742f0896bb36cfe01fb50);
+ crc_fold[6]=^(s & 32'h15bf00fe) ^ ^(w & 256'h6f920e4602f53b8aebf9f80d2898cc7bbdddb1a6b5c3a17844b5d9b67f00fda8);
+ crc_fold[7]=^(s & 32'hba7625a1) ^ ^(w & 256'hb5a187cca5773ae80d3d810561ef092a552f5dc93999d397c52b065b85a46e5d);
+ crc_fold[8]=^(s & 32'he5e46f1e) ^ ^(w & 256'hd8b84309f6b63a597e5fbd814554eb82a1562bfeffb4eae005e469ad78f627a7);
+ crc_fold[9]=^(s & 32'hcbc8de3d) ^ ^(w & 256'h6c5c2184fb5b1d2cbf2fdec0a2aa75c150ab15ff7fda757002f234d6bc7b13d3);
+ crc_fold[10]=^(s & 32'h06999827) ^ ^(w & 256'hb446902dd9a029bb27569263a4f655f723940fe5dc953993e608f0ebe4199960);
+ crc_fold[11]=^(s & 32'h9c3b1412) ^ ^(w & 256'hd84bc8f948ddb3f0eb6a343227d845ec1a0b82e88d329fe2147592f54828dc39);
+ crc_fold[12]=^(s & 32'ha97e0c78) ^ ^(w & 256'hee4d649300637ed50d74671ae64f4de186c4446e25e14cdaed4b23fa1e307e95);
+ crc_fold[13]=^(s & 32'h52fc18f0) ^ ^(w & 256'h7726b2498031bf6a86ba338d7327a6f0c362223712f0a66d76a591fd0f183f4a);
+ crc_fold[14]=^(s & 32'ha5f831e1) ^ ^(w & 256'h3b935924c018dfb5435d19c6b993d37861b1111b89785336bb52c8fe878c1fa5);
+ crc_fold[15]=^(s & 32'h4bf063c2) ^ ^(w & 256'h1dc9ac92600c6fdaa1ae8ce35cc9e9bc30d8888dc4bc299b5da9647f43c60fd2);
+ crc_fold[16]=^(s & 32'h06e8e3d8) ^ ^(w & 256'h8c8c56a6940b90c028163b725bc79bc993adc15c812617e649a558bf1bc71760);
+ crc_fold[17]=^(s & 32'h0dd1c7b1) ^ ^(w & 256'h46462b534a05c860140b1db92de3cde4c9d6e0ae40930bf324d2ac5f8de38bb0);
+ crc_fold[18]=^(s & 32'h1ba38f63) ^ ^(w & 256'h232315a9a502e4300a058edc96f1e6f264eb7057204985f99269562fc6f1c5d8);
+ crc_fold[19]=^(s & 32'h37471ec7) ^ ^(w & 256'h11918ad4d28172180502c76e4b78f3793275b82b9024c2fcc934ab17e378e2ec);
+ crc_fold[20]=^(s & 32'h6e8e3d8f) ^ ^(w & 256'h08c8c56a6940b90c028163b725bc79bc993adc15c812617e649a558bf1bc7176);
+ crc_fold[21]=^(s & 32'hdd1c7b1f) ^ ^(w & 256'h046462b534a05c860140b1db92de3cde4c9d6e0ae40930bf324d2ac5f8de38bb);
+ crc_fold[22]=^(s & 32'h2b30d262) ^ ^(w & 256'h805ab1b53e5d896e786125ee3ccc7178ad8f321f117c9b747e577fe2464b0cd4);
+ crc_fold[23]=^(s & 32'hc7698099) ^ ^(w & 256'hc245d8353b23639a44f1eff4ebc557abdd061c15ebc64e91d85a5571990196e3);
+ crc_fold[24]=^(s & 32'h8ed30133) ^ ^(w & 256'h6122ec1a9d91b1cd2278f7fa75e2abd5ee830e0af5e32748ec2d2ab8cc80cb71);
+ crc_fold[25]=^(s & 32'h1da60266) ^ ^(w & 256'h3091760d4ec8d8e6913c7bfd3af155eaf74187057af193a47616955c664065b8);
+ crc_fold[26]=^(s & 32'haa442091) ^ ^(w & 256'h9a203be90369cb5e305f40fd68dbc5e2f0614698de00caf9dc7aa02e89042255);
+ crc_fold[27]=^(s & 32'h54884122) ^ ^(w & 256'h4d101df481b4e5af182fa07eb46de2f17830a34c6f00657cee3d50174482112a);
+ crc_fold[28]=^(s & 32'ha9108245) ^ ^(w & 256'h26880efa40da72d78c17d03f5a36f178bc1851a6378032be771ea80ba2410895);
+ crc_fold[29]=^(s & 32'h5221048b) ^ ^(w & 256'h1344077d206d396bc60be81fad1b78bc5e0c28d31bc0195f3b8f5405d120844a);
+ crc_fold[30]=^(s & 32'ha4420917) ^ ^(w & 256'h09a203be90369cb5e305f40fd68dbc5e2f0614698de00caf9dc7aa02e8904225);
+ crc_fold[31]=^(s & 32'h4884122e) ^ ^(w & 256'h04d101df481b4e5af182fa07eb46de2f17830a34c6f00657cee3d50174482112);
+ end else begin
+
+            crc_fold = s;
+            for (i = 0; i < 256; i = i + 1) begin
+                fb = crc_fold[31] ^ w[i];
+                crc_fold = {crc_fold[30:0], 1'b0} ^ (fb ? 32'h04C11DB7 : 32'h0);
+            end
+        
+ end
+ end
+ endfunction
+
+    generate if (ENABLE == 0) begin : g_off
+        assign s_awready = 1'b0; assign s_wready = 1'b0; assign s_arready = 1'b0;
+        always @* begin s_bvalid = 1'b0; s_rvalid = 1'b0; s_rdata = 32'd0;
+                        m_arvalid = 1'b0; m_araddr = 64'd0; m_arlen = 8'd0; end
+        assign m_arsize = 3'd0; assign m_arburst = 2'd0; assign m_rready = 1'b0; assign irq = 1'b0;
+        assign req_v = 1'b0; assign req_we = 1'b0; assign req_addr = 32'd0; assign req_wdata = 256'd0;
+        assign req_wstrb = 32'd0; assign req_tag = {TW{1'b0}}; assign rsp_rdy = 1'b0;
+    end else begin : g_on
+        // ================================ clk_host =================================================
+        reg [ADDR_W-1:0] daddr;
+        reg [31:0] haddr_lo, haddr_hi, nbytes, crc_exp, crc_got, vcrc_got, sectors, cycles;
+        reg [3:0]  status;
+        reg        done, busy, verify;
+        // AXI-Lite: one write (AW and W together) and one read at a time
+        wire wr_go = s_awvalid && s_wvalid && !s_bvalid;
+        assign s_awready = wr_go;
+        assign s_wready  = wr_go;
+        assign s_arready = s_arvalid && !s_rvalid;
+        wire start_req = wr_go && s_awaddr[7:0] == 8'h00 && s_wdata[0] && !busy;
+        // transfer state
+        reg [31:0] n_sec, ar_sec, rx_sec;        // sectors in the transfer, requested, received
+        reg [7:0]  out_bursts;
+        reg        axi_err, cmd_pend, crc_bad;
+        reg [63:0] ar_next;
+        wire [63:0] haddr = {haddr_hi, haddr_lo};
+
+        localparam integer LOCAL_W=ADDR_W-STACK_W;
+        localparam integer HI_W=ADDR_W-32;
+        initial if(ADDR_W<32||ADDR_W>64||STACK_W<0||STACK_W>2||LOCAL_W<5||STACK_BYTES>(65'h1<<LOCAL_W)) $fatal(1,"loader address geometry");
+        reg daddr_invalid;
+        wire [ADDR_W:0] d_end={1'b0,daddr}+(ADDR_W+1)'(nbytes);
+        wire [ADDR_W:0] local_end={1'b0,(daddr & ADDR_W'((65'h1<<LOCAL_W)-1))}+(ADDR_W+1)'(nbytes);
+        wire [64:0] host_end={1'b0,haddr}+65'(nbytes);
+        wire desc_bad=daddr_invalid || d_end>(65'h1<<ADDR_W) || local_end>(65'h1<<LOCAL_W) || (STACK_BYTES!=0&&local_end>STACK_BYTES) || host_end>65'h10000000000000000;
+
+        // completion from clk_mem
+        wire        cpl_v;
+        wire [67:0] cpl_d;                       // {status[3:0], sectors[31:0], vcrc[31:0]}
+        // command to clk_mem
+        wire        cmd_rdy;
+        // data to clk_mem
+        wire        dq_rdy;
+        assign m_arsize = 3'd5;                  // 32 bytes per beat
+        assign m_arburst = 2'd1;                 // INCR
+        assign m_rready = busy && dq_rdy;
+        wire beat = m_rvalid && m_rready;
+        wire [31:0] rem = n_sec - ar_sec;
+        wire [31:0] to4k = 32'd128 - {25'd0, ar_next[11:5]};
+        wire [31:0] blen0 = (rem < BURST) ? rem : BURST;
+        wire [31:0] blen = (blen0 < to4k) ? blen0 : to4k;
+        always @(posedge clk_host or negedge rst_host_n) begin
+            if (!rst_host_n) begin
+                haddr_lo <= 0; haddr_hi <= 0; daddr <= 0; daddr_invalid<=0; nbytes <= 0; crc_exp <= 0; crc_got <= 32'hFFFFFFFF;
+                vcrc_got <= 0; sectors <= 0; cycles <= 0; status <= 0; done <= 0; busy <= 0; verify <= 0;
+                s_bvalid <= 0; s_rvalid <= 0; s_rdata <= 0;
+                n_sec <= 0; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0; axi_err <= 0; cmd_pend <= 0; crc_bad <= 0;
+                ar_next <= 0; m_arvalid <= 0; m_araddr <= 0; m_arlen <= 0;
+            end else begin
+                // ---- registers ----
+                if (s_bvalid && s_bready) s_bvalid <= 0;
+                if (wr_go) begin
+                    s_bvalid <= 1;
+                    case (s_awaddr[7:0])
+                        8'h04: if (s_wdata[8]) done <= 0;
+                        8'h08: if (!busy) haddr_lo <= s_wdata;
+                        8'h0C: if (!busy) haddr_hi <= s_wdata;
+                        8'h10: if (!busy) daddr <= (daddr & ~ADDR_W'(32'hffffffff)) | ADDR_W'(s_wdata);
+                        8'h2c: if(!busy) begin daddr<=ADDR_W'({s_wdata,32'b0}|(64'(daddr)&64'hffffffff));daddr_invalid<=|(s_wdata>>HI_W);end
+                        8'h14: if (!busy) nbytes <= s_wdata;
+                        8'h18: if (!busy) crc_exp <= s_wdata;
+                        default: ;
+                    endcase
+                end
+                if (s_rvalid && s_rready) s_rvalid <= 0;
+                if (s_arvalid && s_arready) begin
+                    s_rvalid <= 1;
+                    case (s_araddr[7:0])
+                        8'h00: s_rdata <= {31'd0, busy};
+                        8'h04: s_rdata <= {23'd0, done, 4'd0, status};
+                        8'h08: s_rdata <= haddr_lo;   8'h0C: s_rdata <= haddr_hi;
+                        8'h10: s_rdata <= 32'(daddr); 8'h2c:s_rdata<=32'(64'(daddr)>>32);      8'h14: s_rdata <= nbytes;
+                        8'h18: s_rdata <= crc_exp;    8'h1C: s_rdata <= crc_got;
+                        8'h20: s_rdata <= vcrc_got;   8'h24: s_rdata <= sectors;
+                        8'h28: s_rdata <= cycles;
+                        default: s_rdata <= 32'd0;
+                    endcase
+                end
+                // ---- start ----
+                if (start_req) begin
+                    verify <= s_wdata[1];
+                    done <= 0; status <= 0; crc_got <= 32'hFFFFFFFF; vcrc_got <= 0; sectors <= 0; cycles <= 0;
+                    axi_err <= 0; crc_bad <= 0;
+                    if (desc_bad || nbytes == 0 || nbytes[4:0] != 0 || haddr_lo[4:0] != 0 || daddr[4:0] != 0) begin
+                        status <= 4'd3; done <= 1;
+                    end else begin
+                        busy <= 1; n_sec <= nbytes >> 5; ar_sec <= 0; rx_sec <= 0; out_bursts <= 0;
+                        ar_next <= haddr; cmd_pend <= 1;
+                    end
+                end
+                if (busy) cycles <= cycles + 1;
+                if (cmd_pend && cmd_rdy) cmd_pend <= 0;
+                // ---- AR: bursts that never cross a 4 KB boundary ----
+                if (m_arvalid && m_arready) m_arvalid <= 0;
+                if (busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) begin
+                    m_arvalid <= 1; m_araddr <= ar_next; m_arlen <= blen[7:0] - 8'd1;
+                    ar_sec <= ar_sec + blen; ar_next <= ar_next + {27'd0, blen, 5'd0};
+                end
+                // outstanding bursts: +1 at AR issue (registered above), -1 at the last beat
+                out_bursts <= out_bursts + ((busy && !m_arvalid && ar_sec != n_sec && out_bursts < MAXOUT[7:0]) ? 8'd1 : 8'd0)
+                                         - ((beat && m_rlast) ? 8'd1 : 8'd0);
+                // ---- R: fold and forward ----
+                if (beat) begin
+                    crc_got <= crc_fold(crc_got, m_rdata);
+                    rx_sec <= rx_sec + 1;
+                    if (m_rresp != 2'b00) axi_err <= 1;
+                end
+                // ---- completion ----
+                if (busy && cpl_v) begin
+                    busy <= 0; done <= 1;
+                    vcrc_got <= cpl_d[31:0]; sectors <= cpl_d[63:32];
+                    if (axi_err) status <= 4'd4;
+                    else if (cpl_d[67:64] != 0) status <= cpl_d[67:64];
+                    else if (crc_got != crc_exp) status <= 4'd1;
+                    else if (verify && cpl_d[31:0] != crc_exp) status <= 4'd2;
+                    else status <= 4'd0;
+                end
+            end
+        end
+        assign irq = done;
+
+        // ---- crossings ----
+        wire        c_v, d_v;
+        wire [ADDR_W+32:0] c_d;                         // {verify, n_sec, daddr}
+        wire [255:0] d_d;
+        reg         c_rdy, d_rdy, k_v;
+        reg  [67:0] k_d;
+        wire        k_rdy;
+        wire        unused_f0, unused_f1, unused_f2;
+        ot_gpu_cdc_fifo #(.ENABLE(1), .W(ADDR_W+33), .AW(2)) u_cmd (
+            .wclk(clk_host), .wrst_n(rst_host_n), .in_v(cmd_pend), .in_rdy(cmd_rdy), .in_d({verify, n_sec, daddr}),
+            .rclk(clk_mem), .rrst_n(rst_mem_n), .out_v(c_v), .out_rdy(c_rdy), .out_d(c_d), .ovf_fault(unused_f0));
+        ot_gpu_cdc_fifo #(.ENABLE(1), .W(256), .AW(CDC_AW)) u_data (
+            .wclk(clk_host), .wrst_n(rst_host_n), .in_v(beat), .in_rdy(dq_rdy), .in_d(m_rdata),
+            .rclk(clk_mem), .rrst_n(rst_mem_n), .out_v(d_v), .out_rdy(d_rdy), .out_d(d_d), .ovf_fault(unused_f1));
+        ot_gpu_cdc_fifo #(.ENABLE(1), .W(68), .AW(2)) u_cpl (
+            .wclk(clk_mem), .wrst_n(rst_mem_n), .in_v(k_v), .in_rdy(k_rdy), .in_d(k_d),
+            .rclk(clk_host), .rrst_n(rst_host_n), .out_v(cpl_v), .out_rdy(1'b1), .out_d(cpl_d), .ovf_fault(unused_f2));
+
+        // ================================ clk_mem ==================================================
+        localparam [2:0] M_IDLE = 3'd0, M_WRITE = 3'd1, M_DRAIN = 3'd2, M_VERIFY = 3'd3, M_CPL = 3'd4;
+        localparam integer VB = (VOUT <= 1) ? 1 : $clog2(VOUT);
+        reg [2:0]  ms;
+        reg [ADDR_W-1:0] m_base;
+        reg [31:0] m_n, w_idx, w_ack, r_idx, f_idx;
+        reg        m_ver, m_fault;
+        reg [31:0] vcrc;
+        reg [7:0]  w_out;
+        reg [255:0] rob [0:VOUT-1];
+        reg [VOUT-1:0] rob_v;
+        wire w_can = ms == M_WRITE && w_idx != m_n && d_v && w_out < OUTW[7:0];
+        wire r_can = ms == M_VERIFY && r_idx != m_n && (r_idx - f_idx) < VOUT;
+        assign req_v     = w_can || r_can;
+        assign req_we    = ms == M_WRITE;
+        assign req_addr  = m_base + (ADDR_W'(ms == M_WRITE ? w_idx : r_idx) << 5);
+        assign req_wdata = d_d;
+        assign req_wstrb = 32'hFFFFFFFF;
+        assign req_tag   = ms == M_WRITE ? w_idx[TW-1:0] : {{(TW-VB){1'b0}}, r_idx[VB-1:0]};
+        assign rsp_rdy   = 1'b1;
+        always @* begin
+            c_rdy = ms == M_IDLE;
+            d_rdy = w_can && req_rdy;
+        end
+        wire fold_now = ms == M_VERIFY && rob_v[f_idx[VB-1:0]];
+        always @(posedge clk_mem or negedge rst_mem_n) begin
+            if (!rst_mem_n) begin
+                ms <= M_IDLE; m_base <= 0; m_n <= 0; w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0;
+                m_ver <= 0; m_fault <= 0; vcrc <= 32'hFFFFFFFF; w_out <= 0; rob_v <= 0; k_v <= 0; k_d <= 0;
+            end else begin
+                if (k_v && k_rdy) k_v <= 0;
+                // write acknowledgements / read-back data
+                if (rsp_v) begin
+                    if (rsp_we) w_ack <= w_ack + 1;
+                    else if (ms == M_VERIFY) begin
+                        rob[rsp_tag[VB-1:0]] <= rsp_data;
+                    end else m_fault <= 1;
+                end
+                w_out <= w_out + ((req_v && req_rdy && req_we) ? 8'd1 : 8'd0) - ((rsp_v && rsp_we) ? 8'd1 : 8'd0);
+                rob_v <= (rob_v | ((rsp_v && !rsp_we && ms == M_VERIFY) ? (VOUT'(1) << rsp_tag[VB-1:0]) : {VOUT{1'b0}}))
+                         & ~(fold_now ? (VOUT'(1) << f_idx[VB-1:0]) : {VOUT{1'b0}});
+                case (ms)
+                    M_IDLE: if (c_v) begin
+                        m_base <= c_d[ADDR_W-1:0]; m_n <= c_d[ADDR_W+:32]; m_ver <= c_d[ADDR_W+32];
+                        w_idx <= 0; w_ack <= 0; r_idx <= 0; f_idx <= 0; vcrc <= 32'hFFFFFFFF; m_fault <= 0;
+                        ms <= M_WRITE;
+                    end
+                    M_WRITE: begin
+                        if (req_v && req_rdy) w_idx <= w_idx + 1;
+                        if (w_idx == m_n) ms <= M_DRAIN;
+                    end
+                    M_DRAIN: if (w_ack == m_n) ms <= m_ver ? M_VERIFY : M_CPL;
+                    M_VERIFY: begin
+                        if (req_v && req_rdy) r_idx <= r_idx + 1;
+                        if (fold_now) begin
+                            vcrc <= crc_fold(vcrc, rob[f_idx[VB-1:0]]);
+                            f_idx <= f_idx + 1;
+                        end
+                        if (f_idx == m_n) ms <= M_CPL;
+                    end
+                    M_CPL: if (!k_v) begin
+                        k_v <= 1; k_d <= {m_fault ? 4'd5 : 4'd0, w_ack, m_ver ? vcrc : 32'd0}; ms <= M_IDLE;
+                    end
+                    default: ms <= M_IDLE;
+                endcase
+            end
+        end
+    end endgenerate
+endmodule
