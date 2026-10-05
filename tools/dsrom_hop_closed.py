@@ -48,6 +48,9 @@ def cases():
         ("hop_cl_halves", base, H.RESIDUAL_B, "HEADLINE stage hop (board legs on the SRAM macro model)", "PASS"),
         ("hop_cl_halves_err", dict(base, ERRF=37, ERRR=29), H.RESIDUAL_B,
          "exactness under errors: forward flip every 37th frame, reverse every 29th (go-back-N replay)", "PASS"),
+        ("hop_cl_halves_err_heavy", dict(base, ERRF=5, ERRR=3), H.RESIDUAL_B,
+         "heavy errors: forward flip every 5th frame, reverse every 3rd (exercises every replay / ACK-overtake path "
+         "under the RTL equivalence assertions)", "PASS"),
         ("ret_cl_flit", dict(base, MODE=0), H.RETURN_B, "HEADLINE token return: one 8-B flit, one traversal", "PASS"),
         ("hop_cl_halves_draft5", base, H.DRAFT_B, "DSpark draft 5-row hop (204,880 B) at the hardened depth 256",
          "PASS"),
