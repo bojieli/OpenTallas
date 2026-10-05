@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_w5_ao_protection;
  reg clk=0;always #0.5 clk=~clk;
- reg por_n=0,cv=0,sv=0,external_stop=0;reg [4:0] ca=0;reg [47:0] cd=0;
+ reg por_n=0,cv=0,sv=0,external_stop=0,domain_fault=0;reg [4:0] ca=0;reg [47:0] cd=0;
  wire [3:0] se;reg [3:0] sa=0;
  wire sc,arst,rq,ready,pgready,pgfault,busy,ef;
  wire [4:0] rpa;wire [47:0] rpd;
@@ -11,7 +11,7 @@ module tb_w5_ao_protection;
  .pg_en(1'b1),.sched_v(sv),.sched_gap(24'd32),.pg_lead(24'd400),.pg_bet(24'd64),.pg_idle(8'd0),
  .pg_step(16'd8),.pg_rst(8'd4),.pg_ack_to(16'd200),.sw_en(se),.sw_ack(sa),.s_clk(sc),.arst_n(arst),
  .e_pv(2'b0),.e_pval(64'b0),.e_prow(32'b0),.e_pseg(10'b0),.e_pnseg(10'b0),.e_perr(2'b0),
- .e_ppos(6'b0),.e_busy(1'b0),.e_fault(1'b0),.dbusy(dbusy),.dack(dack),.ack(ack),.rdy(rdy),
+ .e_ppos(6'b0),.e_busy(1'b0),.e_fault(domain_fault),.dbusy(dbusy),.dack(dack),.ack(ack),.rdy(rdy),
  .rq(rq),.rp_a(rpa),.rp_d(rpd),.ready_a(ready),.pg_ready(pgready),.pg_fault(pgfault),.busy(busy),.fault(ef));
  ot_w5_pg_dif dif(.e_clk(sc),.arst_n(arst),.cfg_v(1'b0),.cfg_a(5'b0),.cfg_d(48'b0),.go(1'b0),
  .rq(rq),.rp_a(rpa),.rp_d(rpd),.ready_a(ready),.e_busy(1'b0),.e_pv(2'b0),.e_rst_n(erst),
@@ -20,8 +20,8 @@ module tb_w5_ao_protection;
  integer f,i,cycles;
  reg [24:0] v0,d0;reg [1322:0] snap;
  initial begin
- for(f=0;f<9;f=f+1)begin
-  @(negedge clk);por_n=0;cv=0;sv=0;external_stop=0;
+ for(f=0;f<10;f=f+1)begin
+  @(negedge clk);por_n=0;cv=0;sv=0;external_stop=0;domain_fault=0;
   repeat(4)@(negedge clk);por_n=1;
   for(i=0;i<25;i=i+1)begin
    @(negedge clk);cv=1;ca=5'(i);cd=48'h53edacefabcd^i;
@@ -42,6 +42,7 @@ module tb_w5_ao_protection;
   6:dut.u_p.u_ctl.u_sched.u_pg.cnt[3]=~dut.u_p.u_ctl.u_sched.u_pg.cnt[3];
   7:dut.u_p.g_e[0].u_eao.iso_q=~dut.u_p.g_e[0].u_eao.iso_q;
   8:external_stop=1;
+  9:domain_fault=1;
   endcase
   #0.01;
   if(!pgfault || pgready || !busy || arst) $fatal(1,"fault failed exclusion f=%0d",f);
@@ -54,6 +55,6 @@ module tb_w5_ao_protection;
   cv=0;sv=0;
   $display("FAULT_PASS family=%0d retained_valid=%h retained_dirty=%h",f,v0,d0);
  end
- $display("PASS protected full25 AO 9 fault families retained debt/no fake ACK/cold-only recovery");$finish;
+ $display("PASS protected full25 AO 10 fault families retained debt/no fake ACK/cold-only recovery");$finish;
  end
 endmodule

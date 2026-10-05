@@ -25,3 +25,11 @@ Existing Goodall/Einstein/Claude jobs are preserved, never killed or restarted.
 No editing of original RTL, peer child modules, pinned failure records, docs,
 or central measured scoreboard. Unresolved far(-329ps) vehicle identity has
 been requested; its path classes are not inferred from this r7 diagnosis.
+
+Live continuation: ONE source-changed full128 route on E2, source090bd3652,
+PID1246044, /srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1.
+Routing-layer precheck PASS macros0 hooks0 warnings0. All IO timed; actual
+SS/FF route and actual enclosing allocation remain unqualified. See route_launch.json.
+FullLANES16 PF384 HA2 changed-boundary gate uses tb_item9_ha2_fullshape.sv,
+against original owner reducer (PF64 and384), same golden tree and clocks.
+The original single-lane28word evidence is retained and not overstated.

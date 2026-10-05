@@ -46,13 +46,18 @@ NOTICE_LEAD_PS = 300_000          # >= LEAD 32 + tRFCpb 196 + tRCD 19 cycles = 2
 def build(work, ref_mode, sources=SOURCES, top=TOP):
     d = work / f'build_ref{ref_mode}'
     exe = d / 'obj' / f'V{top}'
-    if exe.exists():
+    fingerprint=hashlib.sha256((' '.join(sources)+str(ref_mode)+''.join(hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources)).encode()).hexdigest()
+    stamp=d/'source.sha256'
+    if exe.exists() and stamp.exists() and stamp.read_text().strip()==fingerprint:
         return exe
+    # Verilator keeps unchanged generated C++ files; make reuses only matching
+    # objects. A binary without a matching source stamp is never accepted.
     d.mkdir(parents=True, exist_ok=True)
     cmd = [VERILATOR, '--binary', '--timing', '-Wno-fatal', '-Wno-WIDTH', '-j', '4', '-O2', '--top-module', top,
            '--Mdir', str(d / 'obj'), f'-GREF_MODE={ref_mode}'] + [str(ROOT / s) for s in sources]
     with open(d / 'build.log', 'w') as log:
         subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)
+    stamp.write_text(fingerprint+'\n')
     return exe
 
 
@@ -125,7 +130,7 @@ def main(argv=None):
                                                 capture_output=True, text=True).stdout.strip()),
                input_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in sources},
                simulator=subprocess.run([VERILATOR, '--version'], capture_output=True, text=True).stdout.strip(),
-               host=os.uname().nodename, controller_clock_ps=1024, sm_clock_ps=833,
+               host=os.uname().nodename, controller_clock_ps=1024, sm_clock_ps=833.333333333,
                metric='router top-6 out -> every SM of the stack has released the first expert\'s w1/w3 lines '
                       '(the c52 w19_expert_fetch exposed_ns metric)',
                assumed_path_ns=dict(noc_each_way=5.0, phy_command=5.0, phy_response=10.0,
@@ -138,7 +143,7 @@ def main(argv=None):
                price=PRICE, measured_first_access_worst_ns=measured,
                measured_r5a_gain_us_vs_central=gain_us,
                cases=res + neg, protection=protection,
-               protection_pass=protection[0]['verdict']=='PASS' and all(p['verdict']=='FAIL' for p in protection[1:]))
+               protection_pass=protection[0]['verdict']=='PASS' and protection[0].get('bad',1)==0 and all(p['verdict']=='FAIL' and 'DUT FAULT' in p.get('raw','') for p in protection[1:]))
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=2) + '\n')
     print(json.dumps(dict(stats=st, exact=rec['exact'], negative=rec['negative_controls'], gain_us=gain_us,protection_pass=rec['protection_pass']), indent=2))

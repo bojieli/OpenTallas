@@ -31,13 +31,13 @@ def prepare(report, out):
                     boxes[i]=[min(a[0],b[0]),min(a[1],b[1]),max(a[2],b[2]),max(a[3],b[3])]
                     boxes.pop(j);changed=True;break
             if changed:break
-    model=hbm_smh_local_grt_price(boxes)
+    model=hbm_smh_local_grt_price(boxes, reservation=1.0)
     assert model['added_physical_tracks']==0 and model['repair_area_fraction']<.002
-    t=['# Actual congestion boxes + one GCell halo; reserve capacity, never invent tracks.',
+    t=['# Actual congestion boxes + one GCell halo; hard interior keepout, never invent tracks.',
        'if {$::env(ROUTING_LAYER_ADJUSTMENT) != 0.25} {error "Unexpected retained global routing reservation"}']
     for box in boxes:
         for layer in range(2,7):
-            t.append('set_global_routing_region_adjustment {'+' '.join(map(str,box))+'} -layer M'+str(layer)+' -adjustment 0.5')
+            t.append('set_global_routing_region_adjustment {'+' '.join(map(str,box))+'} -layer M'+str(layer)+' -adjustment 1.0')
     out.mkdir(parents=True,exist_ok=False)
     (out/'local_channels.tcl').write_text('\n'.join(t)+'\n')
     (out/'localization.json').write_text(json.dumps(dict(report_sha256=hashlib.sha256(raw).hexdigest(),
@@ -45,7 +45,8 @@ def prepare(report, out):
         layer_attribution='Report serializes Layer -; final per-layer flow totals retained, no invented per-box layer.',
         macro_geometry=dict(x=[112.32,207.144],leaf1_y=[34.56,79.92,125.28,170.64],leaf0_y=[293.76,339.12,384.48,429.84],height=41.04,
             obstructions='LEF M1/M2/M3 full footprint; M4 x0.072..94.752; all unchanged'),
-        model=model,rows=rows,adopt=False),indent=2)+'\n')
+        model=model,rows=rows,adopt=False,
+        reservation_safety='OpenROAD6cb3f2b704 computeRegionAdjustments: r=1 gives interior0 and boundary edge_cap-0, always0<=new_cap<=edge_cap; r=.5 underflow on zero-capacity border rejected.'),indent=2)+'\n')
     (out/'congestion.rpt').write_bytes(raw)
     return model
 
