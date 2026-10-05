@@ -97,6 +97,8 @@ module ot_dsrom_reindex_kgctl_parent #(
     reg [4:0]      e5_f0[0:1], e5_fc[0:1];
     reg [NPC-1:0]  e5_cm[0:1], e5_sm[0:1];
 
+    initial if(OPT_KC6!=1||OPT_KC7!=1||OPT_KC8!=1||LIST_LAT!=6) $fatal(1,"production parent uses its modeled fixed cuts");
+
     // -- decoded-pair FIFO, registered head ----------------------------------------------------------
     reg [QW-1:0]   pf_seq [0:PD-1];
     reg [1:0]      pf_m   [0:PD-1];
@@ -138,6 +140,20 @@ module ot_dsrom_reindex_kgctl_parent #(
     localparam integer CHW = 2 * HW + 5 + 7 + SW + 2 * CG;         // b0, bc, fc, j, rs, cm / sm of the group
     wire [GS*2*SLW-1:0] sl_q;               // copy g, lane l at [(2 g + l) SLW +: SLW]
     wire [GS*2*CHW-1:0] ch_q;
+    // One priced edge splits the global head into two physical halves.
+    // The word and its real dispatch enable move together; no ready bypass.
+    localparam integer HCW=SLW+2*HW+SW+WB;
+    wire [4*HCW-1:0] half_q;
+    generate for(genvar hh=0;hh<2;hh=hh+1)begin:g_half
+        for(genvar hl=0;hl<2;hl=hl+1)begin:g_lane
+            wire [SW-1:0] hs=hl?hd_s1:hd_seq[SW-1:0];
+            ot_hdc_v41x_kg_kreg_parent #(.W(HCW)) u_h(.clk(clk),
+                .d({hl?w_oh1_d:w_oh0_d,hd_b0[hl],hd_bc[hl],hs,
+                    hd_blk[hl],hd_j[hl],hd_f0[hl],hd_fc[hl],
+                    disp?hd_cm[hl]:{NPC{1'b0}},disp?hd_sm[hl]:{NPC{1'b0}}}),
+                .q(half_q[(2*hh+hl)*HCW+:HCW]));
+        end
+    end endgenerate
 
     // -- per-channel request FIFOs: [0, NPC) code, [NPC, 2 NPC) scale ------------------------------
     reg [AW-1:0]   fq_addr [0:2*NPC*DF-1];
@@ -205,8 +221,8 @@ module ot_dsrom_reindex_kgctl_parent #(
     end endgenerate
     ot_dsrom_parent_ready_last #(.W(1)) u_rob (
         .eligible(drain_eligible), .two(drain_two), .ready(dr_ready),
-        .old_head(use_base <= QW'(WB-4)), .one_head(use_one <= QW'(WB-4)),
-        .two_head(use_two <= QW'(WB-4)), .next_head(next_rob_ok));
+        .old_head(use_base <= QW'(WB-6)), .one_head(use_one <= QW'(WB-6)),
+        .two_head(use_two <= QW'(WB-6)), .next_head(next_rob_ok));
     reg            dq_v; reg [1:0] dq_m; reg [SW-1:0] dq_slot;    // drain decided: read metadata next
     reg [WB-1:0]   dq_oh;
 
@@ -214,8 +230,8 @@ module ot_dsrom_reindex_kgctl_parent #(
     assign w_oh1_d = (rst_n && !(cmd_v && !busy) && run && disp && hd_m[1]) ? onehot(hd_s1) : {WB{1'b0}};
     generate for (genvar wc = 0; wc < 3; wc = wc + 1) begin : g_woh
         if (OPT_KC8 != 0) begin : g_on
-            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w0 (.clk(clk), .d(w_oh0_d), .q(w_oh0_c[wc*WB +: WB]));
-            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w1 (.clk(clk), .d(w_oh1_d), .q(w_oh1_c[wc*WB +: WB]));
+            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w0 (.clk(clk), .d(half_q[0*HCW+SLW+2*HW+SW+:WB]), .q(w_oh0_c[wc*WB +: WB]));
+            ot_hdc_v41x_kg_kreg_parent #(.W(WB)) u_w1 (.clk(clk), .d(half_q[1*HCW+SLW+2*HW+SW+:WB]), .q(w_oh1_c[wc*WB +: WB]));
         end else begin : g_off
             assign w_oh0_c[wc*WB +: WB] = w_oh0;
             assign w_oh1_c[wc*WB +: WB] = w_oh1;
@@ -238,13 +254,16 @@ module ot_dsrom_reindex_kgctl_parent #(
     genvar gg, gl;
     generate for (gg = 0; gg < GS; gg = gg + 1) begin : g_cp
         for (gl = 0; gl < 2; gl = gl + 1) begin : g_l
-            wire [SW-1:0] rs = gl ? hd_s1 : hd_seq[SW-1:0];
-            wire [CG-1:0] cmg = disp ? hd_cm[gl][gg*CG +: CG] : {CG{1'b0}};
-            wire [CG-1:0] smg = disp ? hd_sm[gl][gg*CG +: CG] : {CG{1'b0}};
-            ot_hdc_v41x_kg_kreg_parent #(.W(SLW)) u_s (.clk(clk), .d({hd_blk[gl], hd_j[gl], hd_f0[gl], hd_fc[gl],
-                                                               hd_cm[gl], hd_sm[gl]}), .q(sl_q[(2*gg+gl)*SLW +: SLW]));
-            ot_hdc_v41x_kg_kreg_parent #(.W(CHW)) u_c (.clk(clk), .d({hd_b0[gl], hd_bc[gl], hd_fc[gl], hd_j[gl], rs,
-                                                               cmg, smg}), .q(ch_q[(2*gg+gl)*CHW +: CHW]));
+            wire [HCW-1:0] h=half_q[(2*(gg/(GS/2))+gl)*HCW+:HCW];
+            wire [SW-1:0] rs=h[SLW+:SW];
+            wire [HW-1:0] bc=h[SLW+SW+:HW],b0=h[SLW+SW+HW+:HW];
+            wire [4:0] fc=h[2*NPC+:5];
+            wire [6:0] j=h[2*NPC+10+:7];
+            wire [CG-1:0] cmg=h[NPC+gg*CG+:CG],smg=h[gg*CG+:CG];
+            ot_hdc_v41x_kg_kreg_parent #(.W(SLW)) u_s (.clk(clk), .d(h[0+:SLW]),
+                .q(sl_q[(2*gg+gl)*SLW+:SLW]));
+            ot_hdc_v41x_kg_kreg_parent #(.W(CHW)) u_c (.clk(clk),.d({b0,bc,fc,j,rs,cmg,smg}),
+                .q(ch_q[(2*gg+gl)*CHW+:CHW]));
         end
     end endgenerate
 
@@ -393,7 +412,7 @@ module ot_dsrom_reindex_kgctl_parent #(
                     fq_wp[p] <= wp;
                     // room counts the pushes but not this cycle's pop (conservative: keeps the request
                     // port's req_rdy out of the 64-FIFO room AND)
-                    rm[p] = (cnt + 4 <= DF);
+                    rm[p] = (cnt + 6 <= DF);
                     if (p < NPC ? (iss[p % NPC] && !use_s[p % NPC]) : (iss[p % NPC] && use_s[p % NPC])) begin
                         fq_rp[p] <= fq_rp[p] + 1'b1;
                         cnt = cnt - 1'b1;
