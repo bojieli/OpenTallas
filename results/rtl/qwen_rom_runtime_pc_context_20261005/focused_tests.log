@@ -1,0 +1,12 @@
+test_context_reuses_literal_stack_and_clock_blocks (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+test_frozen_record_cold_equal (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+test_old_pc_cannot_be_selected (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+test_retained_macro_pin_units_and_once_only_cost (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+test_selected_source_and_clock (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+test_service_price_is_not_token_measurement (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+test_wrong_rank_count_refused (test_qwen_rom_runtime_pc_context.RuntimeContext) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.005s
+
+OK
