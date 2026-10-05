@@ -1,0 +1,31 @@
+{
+  "original_source": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+  "original_binary_sha256": "ab87c025abffbc23bcfe6464e7f0002d7ae9fd87f3407a24152ef1b8c2a73571",
+  "verdict": "GEARBOX_ELASTIC_DEADZONE",
+  "original_timer_unchanged": true,
+  "expected_sector_returns": 9408,
+  "actual_sector_returns": 9408,
+  "last_return_ps": 8761856,
+  "tag_and_landing_queues_empty": true,
+  "reported_source_faults": 0,
+  "gu_complete_next_line_mask": 15,
+  "gearbox_actual": {
+    "accepted": 26,
+    "issued": 27,
+    "buffered_bytes": 132,
+    "next_output_bytes": 136,
+    "original_capacity_bytes": 256,
+    "original_input_limit_bytes": 128
+  },
+  "fix": {
+    "capacity_bytes": 260,
+    "reachable_count_quantum_bytes": 4,
+    "additional_ff_bits_per_sm": 32,
+    "added_edges": 0
+  },
+  "numeric_connected_pass": false,
+  "w2_numeric_pass": false,
+  "whole_token": false,
+  "ss_ff_closed": false,
+  "start_delay_credit_us": 0
+}

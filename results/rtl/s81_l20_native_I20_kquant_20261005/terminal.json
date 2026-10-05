@@ -1,0 +1,17 @@
+{
+  "exit": 0,
+  "argv": [
+    "/home/ubuntu/arch-s81-I20-kquant-caller-r1/minimum_kquant",
+    "/home/ubuntu/cicero-s81-L20-native-I20-kquant-r1/runtime",
+    "2147483648",
+    "/home/ubuntu/cicero-s81-L20-native-I19-rope-r1/runtime/native_L20_I19_rank0.u32",
+    "/home/ubuntu/cicero-s81-L20-native-I19-rope-r1/runtime/native_L20_I19_rank1.u32",
+    "/home/ubuntu/cicero-s81-L20-native-I19-rope-r1/runtime/native_L20_I19_rank2.u32",
+    "/home/ubuntu/cicero-s81-L20-native-I19-rope-r1/runtime/native_L20_I19_rank3.u32",
+    "/home/ubuntu/cicero-s81-field-four-rank-caller-prep-r2/initial_H_L20_r0.u32"
+  ],
+  "elapsed_host_seconds": 16.490688280027825,
+  "source_commit": "74997e5403864b5fbf96585f8c43583ea9312235",
+  "scope": "Native I20 allfourranks actual I19 KVN with VM ACK; I18coefficients and initialprefix SIM_ONLY; no WINDOW visibility/fulltoken",
+  "full_token": false
+}

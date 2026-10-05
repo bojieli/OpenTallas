@@ -1,0 +1,31 @@
+{
+  "verdict": "FAIL_NUMERICAL",
+  "runtime_exit": 0,
+  "compared_words": 2048,
+  "bit_mismatches": 1900,
+  "source_commit": "74997e5403864b5fbf96585f8c43583ea9312235",
+  "input_source": "actual exact native I19 whole512 KVN per rank, recorded in results/rtl/s81_l20_native_I19_rope_20261005",
+  "operation": "Canonical stage37 L20 I20 QE QDQ8 mode1, producer2491, KVN54720 -> KVQ55232",
+  "position": 1048575,
+  "token": 16754,
+  "publication_scope": "Actual fresh VM import, native QE and matched output ACK/readback; no WINDOW/HBM current commit claimed",
+  "upstream_scope": "I18 coefficient staging and initial prefix SIM_ONLY",
+  "cycles": {
+    "input_ack_by_rank": [
+      630,
+      1257,
+      1884,
+      2511
+    ],
+    "qe_accept": 5582,
+    "native_drain": 8672,
+    "readback_complete": 18912
+  },
+  "elapsed_host_seconds": 16.490688280027825,
+  "full_token": false,
+  "physical_or_clock_claim": false,
+  "downstream_release": false,
+  "causal_fix_owner": "Arch",
+  "preserved_remote_root": "ot-agidock128:/home/ubuntu/cicero-s81-L20-native-I20-kquant-r1",
+  "disposition": "Failure preserved; no replay or model rebuild before causal source diagnosis. Existing I23 and native639236 unchanged."
+}
