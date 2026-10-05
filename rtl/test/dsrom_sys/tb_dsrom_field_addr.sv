@@ -251,7 +251,7 @@ function automatic [47:0] word_at(input [13:0] a,input bit bf);
  begin
  v=0; v[0]=1;
  if(bf) begin v[4]=1;v[15:8]=8'd47;end
- else begin v[13:12]=2'b11;v[8:1]=8'd95;end
+ else begin v[13:12]=2'b11;v[8:1]=8'd11;v[11:9]=3'd7;end
  if(a[2:0]==3) v[0]=0;
  word_at=v;
  end
@@ -306,7 +306,7 @@ task automatic tick;
  for(integer r=0;r<R;r=r+1)begin r_row[16*r+:16]={2'(qt[head]),14'(r)};r_pos[3*r+:3]=3'(qp[head]);end
  if(qp[head]==qn[head])head=head+1;else qp[head]=qp[head]+1;
  end
- if(cycles>100000) $fatal(1,"FIXTURE incomplete");
+ if(cycles>100000) $fatal(1,"FIXTURE incomplete run=%0d tag=%0d i=%0d need=%0d have=%0d accepted=%0d ends=%0d",baseline.sm_run,baseline.sm_tag,baseline.sm_i,baseline.need_q,baseline.have[baseline.spar],launches,ends);
  end
 endtask
 initial begin

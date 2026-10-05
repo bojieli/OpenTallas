@@ -36,6 +36,18 @@ class AddressLookahead(unittest.TestCase):
                                 else: proposed=old
                                 self.assertEqual(proposed,expected,(saw,n,base,i,filled,ready))
 
+    def test_fixture_q_last_pair_legal(self):
+        # Decoder math derives the last pair from full K, not a relaxed timeout.
+        k=6144; u=(k//512)-1; b=7; sv=3
+        need=u*512+256+b*32+32
+        self.assertEqual(need,k)
+        self.assertEqual(u*16+b,183)
+        self.assertEqual(u*16+8+b,191)
+        self.assertLess(191,k//32)
+        self.assertGreater(95*512+256+32,k) # preserved failing r1 fixture
+        bench=(ROOT/'rtl/test/dsrom_sys/tb_dsrom_field_addr.sv').read_text()
+        self.assertIn("v[8:1]=8'd11;v[11:9]=3'd7",bench)
+
     def test_named_budget(self):
         spec=importlib.util.spec_from_file_location('um',ROOT/'tools/uarch_model.py')
         mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
@@ -55,5 +67,11 @@ class AddressLookahead(unittest.TestCase):
         self.assertIn('parameter integer ADDR_LOOKAHEAD = 0',new)
         self.assertIn('if (can_go)',new)
         self.assertIn("wire [15:0] ahead_i = sm_i + 16'd2",new)
+
+    def test_parent_hook_has_no_other_delta(self):
+        old=(ROOT/'rtl/v41die/ot_v41_fieldtop_pq_w17w10.sv').read_text()
+        new=(ROOT/'rtl/v41die/ot_v41_fieldtop_pq_addr_w17w10.sv').read_text()
+        new=new.split('\n',1)[1].replace('module ot_v41_fieldtop_pq_addr_w17w10 #(','module ot_v41_fieldtop_pq_w17w10 #(',1).replace('    parameter integer ADDR_LOOKAHEAD = 0,\n','',1).replace('    ot_v41_spine_pq_addr_w17w10 #(','    ot_v41_spine_pq_w17w10 #(',1).replace(', .ADDR_LOOKAHEAD(ADDR_LOOKAHEAD)) u_sp (',') u_sp (',1)
+        self.assertEqual(new,old)
 
 if __name__=='__main__': unittest.main()

@@ -1,0 +1,35 @@
+{
+  "purpose": "Fresh gate after independently proven illegal r1 fixture input; no RTL/expectation relaxation. Existing r1 source and failure immutable.",
+  "q_word_contract": {
+    "u": 11,
+    "b": 7,
+    "sv2": 3,
+    "required_have": 6144,
+    "last_block_indices": [
+      183,
+      191
+    ]
+  },
+  "full_size": {
+    "R": 128,
+    "KMAX": 6144,
+    "SAW": 14,
+    "PHW": 6,
+    "VRD": 64,
+    "VAW": 19,
+    "BST": 2
+  },
+  "expected_launches": 20,
+  "expected_ends": 20,
+  "expected_root_writes": 10496,
+  "engine_delta_since_r1": false,
+  "parent_hook": "ot_v41_fieldtop_pq_addr_w17w10 ADDR_LOOKAHEAD=1 (default0); actual field/VM literal unchanged. Hook prepared, not fullfield gate.",
+  "source_sha256": {
+    "rtl/test/dsrom_sys/tb_dsrom_field_addr.sv": "fa37ebdd59a2d0c29c1520dded03b3c7f6b42d5eddfe0fe8ce3e6a538bf5c223",
+    "rtl/v41die/ot_v41_spine_pq_addr_w17w10.sv": "dc68352dbd69b46a4124b3aabf87831d54fd2c08b1ec9f0ef6a05096c1bddd65",
+    "rtl/v41die/ot_v41_fieldtop_pq_addr_w17w10.sv": "3ff526a9ef9f3b5d4dddca04746f43b58013cb2686582bc51f1f8e9e1c1f1970",
+    "tests/test_dsrom_field_address_lookahead.py": "a6654cc91ae99e97d7b9f426d16ac6445ff9ef2ef91ec56a4f1aa9732dd41822",
+    "tools/run_dsrom_field_address_gate.sh": "a1756129dcd64e06a52a20c4ccb98195ff85920dd0f811a096c19aeb6b569c9a",
+    "results/rtl/dsrom_field_address_lookahead_20261005/model.json": "4a91d72727547c3e11f2203862346283c74a40e9146fb88f57a62dd61009fb53"
+  }
+}
