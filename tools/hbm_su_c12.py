@@ -121,11 +121,62 @@ def all_pass(rec):
     return bad
 
 
+def cmd_compose(argv):
+    """DS 1M AR / MTP with the c12 SU chain records in place of the m6a5 ones (same cases, same levers): the matched
+    reference's rows corrected+wg+su12 and matched (+ fused SU chains), SU lanes at 1.2 GHz; every other term from
+    the committed records (tools/dshbm_hbm_opt_compose.setup).  --c12-v2 / --c12-p6: the c12 su-run records."""
+    import argparse
+    import dshbm_hbm_opt_compose as OC
+    import dshbm_chain_levers as CL
+    import dshbm_baseline_measure as DM
+    import dshbm_matched_reference as M
+    import dshbm_1m_allmeasured as A
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--c12-v2", type=Path, required=True)
+    ap.add_argument("--c12-p6", type=Path, required=True)
+    ap.add_argument("--out", type=Path, required=True)
+    a = ap.parse_args(argv)
+    S = OC.setup()
+    ar0, mm0, _, _ = OC.gate_rows(S)
+    s1 = CL.best_of([("dr", json.loads(a.c12_v2.read_text()))])
+    s6 = CL.best_of([("dr", json.loads(a.c12_p6.read_text()))])
+    assert all(DM.su_exact(c) for c in s1["chains"] + s6["chains"]), "c12 SU records not exact"
+    c12 = (CL.su_table_overlap(s1), CL.su_table_overlap(s6))
+    T12 = dict(A.TARGET, su=1.2e9, du_ser=M.F_SER)
+    use = ("coll", "local", "hbm", "mixes")
+    rows = {}
+    for name, pair in (("m6a5", S["su12"]), ("c12", c12)):
+        for fz_name, fz in (("corrected+wg+su12", None), ("matched", S["fused"])):
+            t, _ = M.walk(S["prog"], S["smseq"], pair[0], S["coll"], S["local"], S["hbm"], P=1, clk=T12, use=use, wg=True,
+                          fused=fz)
+            mm, _ = M.mtp(S["prog"], S["smseq"], pair[1], S["coll"], S["local"], S["hbm"], T12, use, True, fz)
+            rows[f"{fz_name}:{name}"] = dict(AR_us=round(t, 3), AR_tok_s=round(1e6 / t, 1), MTP_step_us=mm["step_us"],
+                                             MTP_tok_s=mm["mtp_tok_s"])
+    eff = {}
+    for fz_name in ("corrected+wg+su12", "matched"):
+        b, c = rows[f"{fz_name}:m6a5"], rows[f"{fz_name}:c12"]
+        eff[fz_name] = dict(AR_us_delta=round(c["AR_us"] - b["AR_us"], 3),
+                            AR_rate_pct=round(100 * (b["AR_us"] / c["AR_us"] - 1), 3),
+                            MTP_step_us_delta=round(c["MTP_step_us"] - b["MTP_step_us"], 3),
+                            MTP_rate_pct=round(100 * (c["MTP_tok_s"] / b["MTP_tok_s"] - 1), 3))
+    chains = {c["chain"]: c.get("first_emit_to_last_write") for c in s1["chains"]}
+    rec = dict(schema="opentallas.dshbm.su_c12_compose.v1", context=1048576, position=1048575,
+               gate_reproduced=dict(AR_us=ar0, MTP_step_us=mm0["step_us"]), su_records=dict(
+                   c12_v2=OC.rel(a.c12_v2), c12_v2_sha256=OC.sha(a.c12_v2), c12_p6=OC.rel(a.c12_p6),
+                   c12_p6_sha256=OC.sha(a.c12_p6)), c12_params=dict(P), rows=rows, effect_c12_vs_m6a5=eff,
+               c12_chain_spans_P1=chains)
+    a.out.write_text(json.dumps(rec, indent=1, default=float) + "\n")
+    print(json.dumps(dict(rows=rows, effect=eff), indent=1))
+    return 0
+
+
 def main():
     argv = sys.argv[1:]
     if not argv:
         print(__doc__)
         return 2
+    if argv[0] == "compose":
+        return cmd_compose(argv[1:])
     cmd, argv = argv[0], take_params(argv[1:])
     import rtl_hdc_v41x_vec_campaign as VC
     if cmd == "campaign":
