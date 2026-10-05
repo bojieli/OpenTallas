@@ -10,6 +10,14 @@
 //   FSQ    the side / softplus square roots are ot_hdc_fsqrt_c12 (same depth)
 //   RPAD, RSL, RTAP, ROUT  the reducer's added registers (rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv: padding, slice
 //          boundary, tap, OUT input): every result RPAD + RSL + RTAP + ROUT deeper; RSLICE its slice width (physical only)
+//   CTL12  the controller at 1.2 GHz (the routed N = 64 vehicle missed by 1.3-1.65 ns): the op set-up runs over
+//          more stages (the stride products in two halves, the layout, the depths; +3 cycles a set-up, +5 for a
+//          whole-op reduction that does not flatten), and the vector loop decides from REGISTERED conditions,
+//          each computed one cycle ahead from the next-cycle state: the row-end / last-vector flags (with the next
+//          position precomputed), the first-vector checkpoints, and the chaining credits.  Internal credits
+//          (SELF, SELF_RES) are exact next-cycle values; the external producer's x_* are sampled one cycle
+//          earlier (a credit seen stays true: written data stays written), so an op waiting on x_* may start one
+//          cycle later.  Nothing else moves; the element results are unchanged.
 // The checkpoint depths, the control pipe and sfu_d (now 10 bits: sqrt(softplus) exceeds 255 at MLAT 6 / ALAT 6)
 // follow them.  Nothing else changes.
 // ---------------------------------------------------------------------------
@@ -179,7 +187,8 @@ module ot_hdc_v41x_vec #(
     parameter integer RSL = 0,          // c12 reducer: slice-boundary register
     parameter integer RTAP = 0,         // c12 reducer: tap register
     parameter integer ROUT = 0,         // c12 reducer: OUT input register
-    parameter integer RSLICE = 64       // c12 reducer: lanes a slice
+    parameter integer RSLICE = 64,      // c12 reducer: lanes a slice
+    parameter integer CTL12 = 0         // c12 controller: pipelined set-up, registered emit-loop conditions
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -367,13 +376,35 @@ module ot_hdc_v41x_vec #(
                  (q_dst == DST_NONE || q_oso == ni_a * q_osi);
     reg          s_flat, s_wnf, s_flatbad;
     reg [CW-1:0] s_ni, s_no;
-    always @(posedge clk) if (pst == 2'd1) begin
-        s_flat <= s1_cand && s1_ok;
+    reg [2:0]    sst;                    // CTL12: the set-up's sub-step while pst == 1
+    // CTL12 stage A: the stride products (mod 2^AW) in two halves of the 16-bit count, registered
+    reg [AW-1:0] pl_a, pl_b, pl_c, pl_d, pl_o, pl_n;
+    reg [AW-9:0] ph_a, ph_b, ph_c, ph_d, ph_o, ph_n;
+    wire [AW-1:0] f_h = q_bhalf ? ni_h : ni_a;
+    always @(posedge clk) if (pst == 2'd1 && sst == 3'd0) begin
+        pl_a <= ni_a[7:0] * q_asi; ph_a <= ni_a[15:8] * q_asi[AW-9:0];
+        pl_b <= f_h[7:0] * q_bsi;  ph_b <= f_h[15:8] * q_bsi[AW-9:0];
+        pl_c <= ni_a[7:0] * q_csi; ph_c <= ni_a[15:8] * q_csi[AW-9:0];
+        pl_d <= f_h[7:0] * q_dsi;  ph_d <= f_h[15:8] * q_dsi[AW-9:0];
+        pl_o <= ni_a[7:0] * q_osi; ph_o <= ni_a[15:8] * q_osi[AW-9:0];
+        pl_n <= q_nout * q_nin[7:0]; ph_n <= q_nout * q_nin[15:8];
+    end
+    wire [AW-1:0] pr_a = pl_a + {ph_a, 8'd0}, pr_b = pl_b + {ph_b, 8'd0}, pr_c = pl_c + {ph_c, 8'd0},
+                  pr_d = pl_d + {ph_d, 8'd0}, pr_o = pl_o + {ph_o, 8'd0}, pr_n = pl_n + {ph_n, 8'd0};
+    wire s1_okp = (q_aind == IND_NONE) && (q_dst != DST_KVT) &&
+                  (s1_even || !(q_bhalf || q_qm == QM_ALT_NP || q_qm == QM_ALT_PN)) &&
+                  (q_aso == pr_a) && (q_bso == pr_b) && (q_cpair || q_cso == pr_c) && (q_dso == pr_d) &&
+                  (q_dst == DST_NONE || q_oso == pr_o);
+    wire s1_okx = (CTL12 != 0) ? s1_okp : s1_ok;
+    wire [CW-1:0] s1_nn = (CTL12 != 0) ? pr_n : q_nout * q_nin;
+    wire s1_ld = (CTL12 != 0) ? (pst == 2'd1 && sst == 3'd1) : (pst == 2'd1);
+    always @(posedge clk) if (s1_ld) begin
+        s_flat <= s1_cand && s1_okx;
         // a whole-op reduction whose layout does not flatten: rows of whole 8-element chunks
-        s_wnf <= (q_redwhole || q_redtree) && q_red != RED_NONE && !s1_ok && q_nout > 1;
-        s_flatbad <= (q_redwhole || q_redtree) && q_red != RED_NONE && !s1_ok && q_nout > 1 && (q_nin[2:0] != 3'd0);
-        s_ni <= (s1_cand && s1_ok) ? q_nout * q_nin : q_nin;
-        s_no <= (s1_cand && s1_ok) ? 1 : q_nout;
+        s_wnf <= (q_redwhole || q_redtree) && q_red != RED_NONE && !s1_okx && q_nout > 1;
+        s_flatbad <= (q_redwhole || q_redtree) && q_red != RED_NONE && !s1_okx && q_nout > 1 && (q_nin[2:0] != 3'd0);
+        s_ni <= (s1_cand && s1_okx) ? s1_nn : q_nin;
+        s_no <= (s1_cand && s1_okx) ? 1 : q_nout;
     end
 
     // ---- S2: layout, depths, offset terms ---------------------------------------------------------
@@ -386,20 +417,46 @@ module ot_hdc_v41x_vec #(
     // aligned block of the op's element order
     wire [4:0] c_tz = tzero(s_ni);
     wire [4:0] c_lsz = s_wnf ? c_tz : log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
-    wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
-    wire c_packed = !s_wnf && (s_ni <= (1 << c_ls));
+    wire [3:0] x_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
+    // CTL12 stages C (slot size), D (layout and the first depths), E / F (a non-flattening whole-op
+    // reduction's vector count s_no * (s_ni >> ls), in two halves of s_no)
+    reg  [3:0] r_ls, r_nsh;
+    reg        r_packed;
+    reg  [CW-1:0] r_nvs, r_sh;
+    reg  [9:0] r_dF, r_dM, r_dS, r_lt2;
+    reg  [CW-1:0] r_wl;
+    reg  [CW-9:0] r_wh;
+    wire [3:0] c_ls = (CTL12 != 0) ? r_ls : x_ls;
+    wire x_packed = !s_wnf && (s_ni <= (1 << c_ls));
+    wire c_packed = (CTL12 != 0) ? r_packed : x_packed;
     wire c_rpow = pow2(q_rso);
-    wire [3:0] c_nsh = (c_packed && (!red_on || c_rpow)) ? (c_lvw - c_ls) : 4'd0;
-    wire [CW-1:0] c_nvs = s_wnf ? s_no * (s_ni >> c_ls) : (s_ni + (1 << c_ls) - 1) >> c_ls;
+    wire [3:0] x_nsh = (x_packed && (!red_on || c_rpow)) ? (c_lvw - c_ls) : 4'd0;
+    wire [3:0] c_nsh = (CTL12 != 0) ? r_nsh : x_nsh;
+    wire [CW-1:0] x_nvs = s_wnf ? s_no * (s_ni >> c_ls) : (s_ni + (1 << c_ls) - 1) >> c_ls;
+    wire [CW-1:0] c_nvs = (CTL12 != 0) ? r_nvs : x_nvs;
     wire [4:0] c_L = log2c(c_nvs);
     wire c_span = red_on && !c_packed;
     wire c_gather = (q_aind != IND_NONE);
     wire [AW-1:0] c_gstr = (q_aind == IND_I) ? q_asi : q_aso;
     wire c_div = (q_m1 == M1_DIVB || q_m1 == M1_DIVIMM);
-    wire [9:0] c_dF = c_gather ? 10'd6 + OPR + CAPR : 10'd4 + CAPR;       // broadcast register + fetch
-    wire [9:0] c_dM = c_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
-    wire [9:0] c_dS = c_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
-    wire [9:0] c_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
+    wire [9:0] x_dF = c_gather ? 10'd6 + OPR + CAPR : 10'd4 + CAPR;       // broadcast register + fetch
+    wire [9:0] x_dM = x_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
+    wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
+    wire [9:0] x_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
+    wire [9:0] c_dF = (CTL12 != 0) ? r_dF : x_dF;
+    wire [9:0] c_dM = (CTL12 != 0) ? r_dM : x_dM;
+    wire [9:0] c_dS = (CTL12 != 0) ? r_dS : x_dS;
+    wire [9:0] c_lt = (CTL12 != 0) ? r_lt2 : x_lt;
+    always @(posedge clk) begin
+        if (pst == 2'd1 && sst == 3'd2) r_ls <= x_ls;
+        if (pst == 2'd1 && sst == 3'd3) begin
+            r_packed <= x_packed; r_nsh <= x_nsh; r_sh <= s_ni >> c_ls;
+            r_nvs <= (s_ni + (1 << c_ls) - 1) >> c_ls;          // replaced below for a non-flattening reduction
+            r_dF <= x_dF; r_dM <= x_dM; r_dS <= x_dS; r_lt2 <= x_lt;
+        end
+        if (pst == 2'd1 && sst == 3'd4) begin r_wl <= s_no[7:0] * r_sh; r_wh <= s_no[15:8] * r_sh[CW-9:0]; end
+        if (pst == 2'd1 && sst == 3'd5) r_nvs <= r_wl + {r_wh, 8'd0};
+    end
     // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 7 ALAT, TREE ALAT lt)
     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + RPAD + RSL + RTAP + ROUT
                       + H_R[9:0] * c_lt;
@@ -492,11 +549,15 @@ module ot_hdc_v41x_vec #(
     // position of the vector, its end
     wire [CW-1:0] S_sz = 1 << a_ls;
     wire [CW-1:0] nslot = 1 << a_nsh;
-    wire wrap = a_packed || (i_v + S_sz >= a_ni);                    // the vector ends its row(s)
-    wire last_v = wrap && (o_v + nslot >= a_no);
+    wire wrap_c = a_packed || (i_v + S_sz >= a_ni);                  // the vector ends its row(s)
+    wire last_c = wrap_c && (o_v + nslot >= a_no);
+    reg  wrap_r, olast_r, ck_r, ch_r;   // CTL12: the conditions of the current vector, registered
+    wire wrap = (CTL12 != 0) ? wrap_r : wrap_c;
+    wire last_v = (CTL12 != 0) ? (wrap_r && olast_r) : last_c;
     // first-vector checkpoints
-    wire ck_ok = (a_dF >= cpF) && (a_dM >= cpM) && (a_dS >= cpS) &&
-                 (a_red == RED_NONE || a_dR >= cpR) && (!a_span || a_dT >= cpT);
+    wire ck_c = (a_dF >= cpF) && (a_dM >= cpM) && (a_dS >= cpS) &&
+                (a_red == RED_NONE || a_dR >= cpR) && (!a_span || a_dT >= cpT);
+    wire ck_ok = (CTL12 != 0) ? ck_r : ck_c;
     // chaining
     wire [15:0] need = a_chlead + a_acc[23:8];
     wire [15:0] pv_cnt = r_tot - pv_mark;
@@ -505,20 +566,86 @@ module ot_hdc_v41x_vec #(
     wire        pv_ok  = !ds[7] || (pv_v && pv_seq == a_chseq && !pv_neg && pv_cnt >= need);
     wire [7:0]  dx = x_dseq - a_chseq;
     wire [7:0]  dr = i_rseq - a_chseq;
-    wire ch_ok = (a_chsrc == CH_NONE) ? 1'b1 :
-                 (a_chsrc == CH_SELF) ? pv_ok :
-                 (a_chsrc == CH_RES)  ? !dr[7] :
-                 (!dx[7] || (x_seq == a_chseq && x_cnt >= need));
+    wire ch_c = (a_chsrc == CH_NONE) ? 1'b1 :
+                (a_chsrc == CH_SELF) ? pv_ok :
+                (a_chsrc == CH_RES)  ? !dr[7] :
+                (!dx[7] || (x_seq == a_chseq && x_cnt >= need));
+    wire ch_ok = (CTL12 != 0) ? ch_r : ch_c;
     wire emit = a_v && (a_started || ck_ok) && ch_ok;
     wire promote = (pst == 2'd3) && (!a_v || (emit && last_v));
 
+    // ---- CTL12: the next cycle's conditions, registered ------------------------------------------
+    // The row-end / last-vector flags of the current vector (with the next position i_v + S, o_v + nslot kept
+    // in registers), the first-vector checkpoints and the chaining credits, each computed from the state the
+    // next cycle will hold (promote / emit select among precomputed candidates), so `emit` is a few gates.
+    reg  [CW-1:0] iv1_r, ov1_r;
+    reg           a_wrap0, p_wrap0, p_olast0;
+    always @(posedge clk) if (pst == 2'd2 && !s2_go) begin     // the lane-load cycle
+        p_wrap0 <= p_packed || ((1 << p_ls) >= p_ni);
+        p_olast0 <= ((1 << p_nsh) >= p_no);
+    end
+    wire [CW-1:0] iv2 = iv1_r + S_sz;
+    wire [CW-1:0] ov2 = ov1_r + nslot;
+    always @(posedge clk) begin
+        if (promote) begin
+            iv1_r <= 1 << p_ls; ov1_r <= 1 << p_nsh; wrap_r <= p_wrap0; olast_r <= p_olast0; a_wrap0 <= p_wrap0;
+        end else if (emit) begin
+            if (wrap_r) begin iv1_r <= S_sz; ov1_r <= ov2; wrap_r <= a_wrap0; olast_r <= (ov2 >= a_no); end
+            else begin iv1_r <= iv2; wrap_r <= a_packed || (iv2 >= a_ni); end
+        end
+    end
+    // checkpoints: the counters' next values
+    wire [9:0] n_cpF = emit ? a_dF : (cpF != 0) ? cpF - 10'd1 : 10'd0;
+    wire [9:0] n_cpM = emit ? a_dM : (cpM != 0) ? cpM - 10'd1 : 10'd0;
+    wire [9:0] n_cpS = emit ? a_dS : (cpS != 0) ? cpS - 10'd1 : 10'd0;
+    wire [9:0] n_cpT = (emit && a_red != RED_NONE) ? a_dT : (cpT != 0) ? cpT - 10'd1 : 10'd0;
+    wire [9:0] n_cpR = (emit && a_red != RED_NONE) ? a_dR : (cpR != 0) ? cpR - 10'd1 : 10'd0;
+    wire ck_prom = (p_dF >= n_cpF) && (p_dM >= n_cpM) && (p_dS >= n_cpS) &&
+                   (q_red == RED_NONE || p_dR >= n_cpR) && (!p_span || p_dT >= n_cpT);
+    wire ck_hold = (a_dF >= n_cpF) && (a_dM >= n_cpM) && (a_dS >= n_cpS) &&
+                   (a_red == RED_NONE || a_dR >= n_cpR) && (!a_span || a_dT >= n_cpT);
+    // chaining: next-cycle internal credit state (exact) and the external producer's state now
+    wire [15:0] n_rtot = r_tot + (ret_i ? 16'd1 : 16'd0);
+    wire [7:0]  n_idseq = (ret_i && ret_i_last) ? ret_i_seq : i_dseq;
+    wire [7:0]  n_irseq = (res_i && res_i_last) ? res_i_seq : i_rseq;
+    wire [15:0] pvm_e = a_started ? a_mark : e_tot;          // pv_mark after this op's last emit
+    function automatic chf(input [1:0] src, input [7:0] cseq, input [15:0] nd, input pvv, input [7:0] pvs,
+                           input [15:0] pvm, input [15:0] rt, input [7:0] dsq, input [7:0] rsq);
+        reg [15:0] cnt;
+        reg [7:0] d_s, d_r, d_x;
+        begin
+            cnt = rt - pvm;
+            d_s = dsq - cseq; d_r = rsq - cseq; d_x = x_dseq - cseq;
+            chf = (src == CH_NONE) ? 1'b1 :
+                  (src == CH_SELF) ? (!d_s[7] || (pvv && pvs == cseq && !cnt[15] && cnt >= nd)) :
+                  (src == CH_RES)  ? !d_r[7] :
+                  (!d_x[7] || (x_seq == cseq && x_cnt >= nd));
+        end
+    endfunction
+    wire [23:0] acc_e = a_acc + {8'd0, a_chmul};
+    wire [15:0] need_e = a_chlead + acc_e[23:8];
+    wire ch_prom_a = chf(q_chsrc, q_chseq, q_chlead, 1'b1, a_seq, pvm_e, n_rtot, n_idseq, n_irseq);
+    wire ch_prom_i = chf(q_chsrc, q_chseq, q_chlead, pv_v, pv_seq, pv_mark, n_rtot, n_idseq, n_irseq);
+    wire ch_emit = chf(a_chsrc, a_chseq, need_e, pv_v, pv_seq, pv_mark, n_rtot, n_idseq, n_irseq);
+    wire ch_hold = chf(a_chsrc, a_chseq, need, pv_v, pv_seq, pv_mark, n_rtot, n_idseq, n_irseq);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin ck_r <= 1'b0; ch_r <= 1'b0; end
+        else begin
+            ck_r <= promote ? ck_prom : ck_hold;
+            ch_r <= promote ? (a_v ? ch_prom_a : ch_prom_i) : emit ? ch_emit : ch_hold;
+        end
+    end
+
     // set-up state
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin pst <= 2'd0; seq_ctr <= 8'd0; nbank <= 1'b0; s2_go <= 1'b0; end
+        if (!rst_n) begin pst <= 2'd0; sst <= 3'd0; seq_ctr <= 8'd0; nbank <= 1'b0; s2_go <= 1'b0; end
         else begin
             s2_go <= 1'b0;
-            if (accept) begin pst <= 2'd1; seq_ctr <= seq_ctr + 8'd1; nbank <= ~nbank; end
-            else if (pst == 2'd1) begin pst <= 2'd2; s2_go <= 1'b1; end
+            if (accept) begin pst <= 2'd1; sst <= 3'd0; seq_ctr <= seq_ctr + 8'd1; nbank <= ~nbank; end
+            else if (pst == 2'd1 && (CTL12 == 0 || (sst == 3'd3 && !s_wnf) || sst == 3'd5)) begin
+                pst <= 2'd2; s2_go <= 1'b1;
+            end
+            else if (pst == 2'd1) sst <= sst + 3'd1;
             else if (pst == 2'd2 && !s2_go) pst <= 2'd3;       // lanes load the bank in this cycle
             else if (promote) pst <= 2'd0;
         end

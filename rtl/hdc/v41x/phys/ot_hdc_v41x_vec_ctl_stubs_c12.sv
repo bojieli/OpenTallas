@@ -113,5 +113,5 @@ module ot_su12_ctl64 #(parameter integer N = 64, parameter integer M = 16, param
     output wire dbg_res, output wire [7:0] dbg_sseq
 );
     ot_hdc_v41x_vec #(.N(N), .M(M), .AW(AW), .NW(NW), .BCAST_STAGES(7), .RET_STAGES(8), .MLAT(6), .ALAT(6), .OPR(1),
-                      .DDIV(21), .SIDEX(4), .FSQ(1), .CAPR(1), .RPAD(1), .RSL(2), .RTAP(1), .ROUT(1), .RSLICE(64)) u (.*);
+                      .DDIV(21), .SIDEX(4), .FSQ(1), .CAPR(1), .RPAD(1), .RSL(2), .RTAP(1), .ROUT(1), .RSLICE(64), .CTL12(1)) u (.*);
 endmodule
