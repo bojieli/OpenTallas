@@ -369,7 +369,8 @@ def qwen(F, get, reg, dram):
 # ---------------------------------------------------------------------------------------------------------------------
 def iso(ref_name, ref_total, designs):
     """Every design replicated to the reference's total silicon (logic + DRAM + switches): batch-1 per-user rate is
-    unchanged, concurrent batch-1 users = replicas; per-user tok/s per 1,000 mm2 and per logic reticle."""
+    unchanged, concurrent batch-1 users = replicas. This is an independent batch-1 replication lower bound,
+    not a saturated large-batch throughput result; per-user tok/s per 1,000 mm2 and per logic reticle."""
     out = {}
     for name, (sil, rate, label) in designs.items():
         rep = ref_total / sil["total_mm2"]
@@ -378,7 +379,9 @@ def iso(ref_name, ref_total, designs):
                          replicas_at_ref_silicon=round(rep, 3), batch1_users_at_ref_silicon=round(rep, 2),
                          aggregate_b1_tok_s_integer_replicas=round(int(rep) * rate, 1),
                          aggregate_b1_tok_s_fractional=round(rep * rate, 1))
-    return dict(reference=ref_name, reference_total_mm2=ref_total, rows=out)
+    return dict(reference=ref_name, reference_total_mm2=ref_total,
+                aggregate_scope="Independent batch-1 replication lower bound; not saturated large-batch throughput",
+                rows=out)
 
 
 def ledger_fix():
@@ -504,6 +507,7 @@ def readme(d):
     for k, v in dc["J_per_token_mtp_hbm_over_rom"].items():
         L.append(f"- MTP, ROM {k}: {v:.3f}")
     L += ["", "### Equal total silicon (logic + HBM DRAM at 1,089 mm2 a stack + switch chips), DS ROM as reference", "",
+          dc["iso_silicon"]["aggregate_scope"] + ".", "",
           "| Design | Rate | Per-user tok/s | Total mm2 | Per-user tok/s per 1,000 mm2 | Replicas at ROM silicon | Batch-1 aggregate (integer replicas) |",
           "|---|---|---:|---:|---:|---:|---:|"]
     for k, v in dc["iso_silicon"]["rows"].items():
@@ -528,6 +532,7 @@ def readme(d):
     L += ["", f"Per-user AR: ROM / HBM TP4 = {qc['per_user_ar_rom_over_hbm_tp4']:.3f}; ROM / 1x H100 = "
           f"{qc['per_user_ar_rom_over_h100_tp1']:.2f}; ROM / 8x H100 TP8 = {qc['per_user_ar_rom_over_h100_tp8']:.2f}.", "",
           "### Equal total silicon, Qwen ROM as reference", "",
+          qc["iso_silicon"]["aggregate_scope"] + ".", "",
           "| Design | Rate | Per-user tok/s | Logic dies (reticles) | Total mm2 | Per-user tok/s per 1,000 mm2 | Replicas at ROM silicon | Batch-1 aggregate (integer replicas) |",
           "|---|---|---:|---:|---:|---:|---:|---:|"]
     for k, v in qc["iso_silicon"]["rows"].items():
