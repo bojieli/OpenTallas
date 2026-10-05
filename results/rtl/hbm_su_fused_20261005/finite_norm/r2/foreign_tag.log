@@ -1,0 +1,6 @@
+FINITE_EVENT accept cycle=5 time_ns=4.583337000
+FINITE_NEGATIVE_PASS foreign_tag held_cycles=8 requests=1 debt=1 completion=0
+- /srv/opentallas/repos/einstein-hbm-su-finite-7569c1699/rtl/test/tb_hbm_accel_su_fused_mreq.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 73ns; walltime 0.067 s; speed 1.090 us/s
+- Verilator: cpu 0.067 s on 1 threads; allocated 11 MB
