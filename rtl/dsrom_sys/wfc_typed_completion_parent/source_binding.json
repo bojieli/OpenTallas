@@ -1,0 +1,18 @@
+{
+  "selected": "rtl/dsrom_sys/wavefront_native_result_read_parent/native/ot_v41_rt_die_l20_c8.sv",
+  "generated": "rtl/dsrom_sys/wfc_typed_completion_parent/ot_v41_rt_die_l20_c8.sv",
+  "input_sha256": "00a71ce7c9b9205541ffb2aa5193fed4e43ae20f0d973949a3f3a29d39190a40",
+  "output_sha256": "749c00470c321be00cea2b4510b580cc5556d17af3174f9b220da835c922fcaa",
+  "join_source": "rtl/rom/wavefront/completion/ot_dsrom_wf_typed_completion_join.sv",
+  "default_WFC_TYPED_COMPLETION_JOIN": 0,
+  "pinned_fbd7531ca_sources_unchanged": true,
+  "controller_token_completion": "Only joined_token_result_valid drives legacy token controller; no handoff claim as token",
+  "stage_handoff_consumer": "Required actual consumer of wf_join_stage_handoff_done/terminal_kind with wf_join_handoff_accepted; ignores raw token/value payload",
+  "wholeplan_coverage_bound": false,
+  "visibility_bound": false,
+  "stage_handoff_END_and_final_fence_bound": false,
+  "token_HEAD_terminal_bound": false,
+  "source_clock": "selected clk unchanged",
+  "actual_consumer_loads": null,
+  "physical_context_qualified": false
+}

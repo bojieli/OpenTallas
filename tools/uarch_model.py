@@ -8118,6 +8118,50 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+def dsrom_wfc_typed_completion_price(idw=47, paw=14, nw=21):
+    """Add one retained terminal kind to the finite END/result join.
+
+    STAGE_HANDOFF never asserts token validity; token result still requires
+    fresh native argmax. No reset/clock/cycle or arithmetic change.
+    """
+    base = dsrom_wfc_stage_completion_join_price(idw, paw, nw)
+    nand2, buffers = 32, 3
+    gross = 0.37908 + nand2*0.08748 + buffers*0.10206
+    return dict(base=base, kind_bits=1, new_FF_bits=base['new_FF_bits']+1,
+                kind_increment_NAND2_reservation=nand2,
+                kind_increment_buffer_cells=buffers,
+                kind_increment_gross_um2=gross,
+                kind_increment_budget_um2=2*gross,
+                total_cell_growth_budget_um2=base['total_cell_growth_budget_um2']+2*gross,
+                added_response_edges=0, new_memory_ports=0,
+                new_clock_pin_cap_fF_SS=0.433982,
+                kinds={'TOKEN_RESULT': 0, 'STAGE_HANDOFF': 1},
+                stage_handoff='Real bound END/context plus entire ordered coverage and real final fence/visibility; no argmax required and token_result_valid is always false.',
+                token_result='Original fresh bound native argmax producer and END required.',
+                physical_context_ready=False, SS_FF_closed=False)
+
+
+def dsrom_wfc_stage_completion_parent_interface_price(idw=47, paw=14, nw=21):
+    """Wire-only native source edge exports, before source overlay generation.
+
+    Actual observed pins gain load; routing is not free even without new FFs.
+    Buffer reservation is a model budget, not enrollment of a real consumer.
+    """
+    bits = 8 + 3*idw + 3*paw + nw + 32
+    nand2 = 18  # qualifier AND gates, including three-input admission/launch
+    buffers = 3*bits
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(replicas=1, new_FF_bits=0, new_clock_pin_cap_fF_SS=0,
+                new_memory_ports=0, new_memory_bytes_per_cycle=0, MACs_per_cycle=0,
+                new_output_boundary_bits=bits, added_response_edges=0,
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                parent_source_clock='selected clk unchanged',
+                actual_consumer_loads=None, routing_capacity_proven=False,
+                physical_context_ready=False, SS_FF_closed=False,
+                note='Actual descriptor admission, FIFO launch, registered engine start and retirement are distinct edges; exports do not assert wholeplan coverage.')
+
+
 def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
     """One finite retained stage result, qualified by real source-owned pins.
 
