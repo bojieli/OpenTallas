@@ -8287,6 +8287,33 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+def dsrom_wfc_reset_release_gate_price():
+    """Owner-supplied reset-release qualifiers, not a clock-domain change.
+
+    The existing rst_q register still releases one edge after rst_n. Suppress
+    all link admission/write and core-start terms during that existing edge;
+    no new state or steady-state response edge is added.
+    """
+    signals = ['in_ready', 'rx_hdr', 'rx_res', 'rx_side', 'vm_we',
+               'st_rx', 'st_new', 'st_q', 'st_fb', 'st_wk', 'core_start']
+    nand2, buffers = 2*len(signals), 3*len(signals)
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(new_FF_bits=0, new_clock_pin_cap_fF_SS=0, new_memory_ports=0,
+                new_memory_bytes_per_cycle=0, MACs_per_cycle=0, replicas=1,
+                reset_qualified_terms=signals, added_pipeline_edges=0,
+                reset_release_edges_after_rst_n=1, steady_state_cycle_delta=0,
+                model_reference_cycle_contract='Existing registered-root +1 reset edge; SOURCE1 serial engine +3.7 cycles/issue historical until remeasured. Golden rounding and reductions unchanged.',
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                original_clock_and_reset_register_unchanged=True,
+                full_shape=dict(WIN=6,FLIT=512,NW=21,AW=30,VWA=15,USER_W=10,MAXU=866,KVW=32768),
+                target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+                utilizations=[0.40,0.45,0.50], actual_route_fit_unknown=True,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                prior_r12_source_sha256='26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba',
+                physical_adopted=False)
+
+
 def dsrom_wfc_typed_completion_price(idw=47, paw=14, nw=21):
     """Add one retained terminal kind to the finite END/result join.
 
@@ -8946,6 +8973,56 @@ def qwen_me_bypass_capture_price(*, gt=6144, smin=6, tcut=6, tree_lat=7):
         next_gate='Minimum same-adder old/off/on arithmetic and edge gate, then ONE frozen tree context SS/FF route; never timeout-only rerun')
 
 
+def qwen_me_port_route_context(*, utilization=25):
+    """Unchanged full TP2 port, prospective placement variant; NOT a new cut.
+
+    Current t4 source-path is e_f[60] (ots bit3) through the 16-row CSA and
+    final24-bit sum into a_qots[23]. The early tag->E->A boundaries and all
+    result/argmax edges remain unchanged. Loaded SS/FF failures are retained.
+    This prices a placement-only trial, never assumes that utilization fixes
+    that cone. A future registered partial-sum repair needs its own model.
+    """
+    if utilization not in (25, 30, 35):
+        raise ValueError('Only the owner supplied three placement utilizations')
+    w, pq, aw, nw, gt, smin = 16, 4, 24, 18, 6144, 6
+    lanes, groups = w*pq, gt >> smin
+    replicas = groups // pq
+    tag = 8 + 2*aw + 3*(nw+1)
+    in_bits = 16 + lanes*32 + 1 + tag + lanes*16
+    out_bits = pq + pq*aw + lanes + lanes*32 + (1+32+nw) + 1
+    cells = 56431.7  # Actual t4 final routed port standard-cell footprint.
+    # 15% additional implementation reserve, not measured buffer/clock savings.
+    reserved = cells*1.15
+    return dict(schema='opentallas.qme.port-route-context.v1',
+        source='ot_qwen_me_spport_w12; unchanged v3 kept prefix/ring source',
+        params=dict(W=w,IL=8,AW=aw,NW=nw,GT=gt,SMIN=smin,PQ=pq,TREE_LAT=7,SCALE_LAT=6),
+        replicas=replicas, result_groups=groups, postscale_muls_per_port_edge=lanes,
+        MACs_per_cycle=0, raw_result_bytes_per_port_edge=lanes*4,
+        scale_bytes_per_port_edge=lanes*2, output_bytes_per_port_edge=lanes*4,
+        added_memory_ports=0, added_external_boundary_bits=0,
+        boundary=dict(input_bits_per_edge=in_bits,output_bits_per_edge=out_bits,
+                      parent_registered=True,pt_id='static port-instance index in enclosing g_pt; never dynamic owner allocation'),
+        address_cone=dict(ots_bits=aw,qrows=16,port_offset_sums=pq,
+                          unbuffered_ots_bit_destination_upper_bound=16*pq,
+                          registered_partials=False,
+                          measured_SS_ps=-262.587738,measured_FF_ps=-.387551),
+        ports_and_tracks=dict(top_signal_pins=in_bits+out_bits+2,
+                              external_track_demand_upper_bound=in_bits+out_bits,
+                              channel_capacity_and_loaded_cut_fit=None,
+                              new_mux_demux_or_fanout=0),
+        area=dict(actual_t4_cell_um2=cells,actual_t4_core_um2=146210,
+                  gross_cell_reservation_um2=reserved,
+                  planned_utilization_percent=utilization,
+                  minimum_core_for_reserved_cells_um2=reserved/(utilization/100),
+                  all24_port_cell_reservation_um2=replicas*reserved,
+                  parent_slot_fit=None,additional_15_percent_is_reserve=True),
+        latency=dict(added_edges=0,changed_II=0,changed_token_edges=0,
+                     result_pipeline='existing E/A, SCALE_LAT6, two output captures; original golden tree/argmax order unchanged'),
+        clock=dict(period_ps=833,SS_setup_ps=60,FF_hold_ps=25,relaxed=False),
+        adoption=False, SSFF_qualified=False,
+        physical_scope='one full64-lane port, not a whole-SM or whole-token qualification')
+
+
 def dsrom_field_address_lookahead_price():
     """Current single S81 field issuer; new reservation, no existing-state credit.
 
@@ -9496,3 +9573,41 @@ def qwen_service_actual_edge_eligibility_model(exposed_column_transactions=None)
     result['composed_token_delta_s'] = None
     result['composition_missing'] = 'actual accepted column/refresh/return/credit calendar and generated edge phase; no free overlap assumption'
     return result
+
+
+def hbm_loader_retained_token_host_price(*, mem_words, dies=2, slices=2):
+    """Acceptance8c retained reduced HA3 fixture; boot is outside decode latency.
+    No new engine/datapath. Actual LOAD_VERIFY and finite ACK/readback then
+    code/command SRAM publication fence precede host SQ doorbell. Not a new
+    full-target model or physical/adoption claim.
+    """
+    n=mem_words*dies*slices*32
+    return dict(scope='retained reduced Qwen/V4.1 acceptance8c, HA3=0',
+        added_MACs_per_cycle=0,added_engine_area_um2=0,new_engine_RTL=False,
+        dies=dies,SMs_per_die=2,lanes_per_SM=128,slices_per_die=slices,
+        mem_words_per_partition=mem_words,image_bytes=n,host_DMA_bits=64,
+        host_DMA_bytes_per_edge=8,mem_payload_bits=256,mem_bytes_per_accepted_edge=32,
+        internal_request_bits=337,response_bits=273,loader_clients_per_die=1,
+        loader_write_debt_slots=96,loader_verify_read_slots=16,data_CDC_words=32,
+        code_CDC_record_bits=97,code_CDC_words=8,
+        loader_replica_count=dies,existing_dma_arbiter_clients=2*dies+1,
+        host_period_ns=4.0,SM_period_ns=.833,mem_period_ns=1.0,link_period_ns=.9,
+        minimum_host_read_boot_ns=n/8*4,boot_extra_verify_bytes=n,
+        boot_latency_measured_ns=None,decode_latency_measured_cycles=None,
+        decode_added_cycles=0,new_boundary_bits_per_cycle=0,new_ports=0,
+        fence='real descriptorCRC/readback/status + matchedACKdebt; all accepted ld records applied and actual SRAM readback observed before SQ_TAIL',
+        bytes_and_visibility='retained images only in host memory; no gpu_sys_mem_prefix, no hierarchical DUT assignment',
+        existing_wire_CDC_credits_refresh='retained model RTL exercised, not zero-cost or physical signoff',
+        unknowns='production PCIe tail, full-system physical CDC/slot/SSFF remain unqualified',
+        adopted=False,physical_qualified=False,source_changed_datapath=False)
+
+
+def ha2_tu_owner_adapter_model():
+    """Additive runtime owner replacement, selected shared8 TU shape, unadopted."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('ha2_tu_owner_model.py')
+    spec = importlib.util.spec_from_file_location('ha2_tu_owner_model', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()

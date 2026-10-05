@@ -256,6 +256,8 @@ def apply_levers(P, info, lever_dir, excluded=()):
     applied, skipped = [], []
     for f in sorted((lever_dir / "levers").glob("*.json")):
         r = json.loads(f.read_text())
+        if r.get("schema") != "opentallas.dsrom-recovery.lever.v1":      # an analysis record kept beside the levers
+            continue
         row = dict(lever=r["lever"], record=rel(f), sha256=sha(f), verdict=r.get("verdict"))
         if r["lever"] in excluded or r.get("verdict") != "ADOPT" or r.get("exact") is not True:
             skipped.append(row)

@@ -1,0 +1,36 @@
+%Warning: die1_p1.hex:0: $readmem file not found
+%Warning: die1_p0.hex:0: $readmem file not found
+%Warning: die0_p1.hex:0: $readmem file not found
+%Warning: die0_p0.hex:0: $readmem file not found
+HOST_IMAGE_VISIBLE die=0 bytes=4194304 CRC=597f8a12 readback=597f8a12 sectors=131072
+HOST_IMAGE_VISIBLE die=1 bytes=4194304 CRC=f713458c readback=f713458c sectors=131072
+CODE_PUBLISHED accepted=18766 actualSRAMwrites=18766
+LOADED 4688 instruction words x 4 SMs, 7 commands x 2 dies
+STEP 0 pos 0 in 92 next 3978 OK  (step 86289 clk_sm cycles, sim cycle 6439240) fault 0
+STEP 1 pos 1 in 872 next 382 OK  (step 87846 clk_sm cycles, sim cycle 6527134) fault 0
+STEP 2 pos 2 in 198 next 382 OK  (step 87633 clk_sm cycles, sim cycle 6614818) fault 0
+STEP 3 pos 3 in 361 next 382 OK  (step 88834 clk_sm cycles, sim cycle 6703700) fault 0
+STEP 4 pos 4 in 448 next 382 OK  (step 86114 clk_sm cycles, sim cycle 6789863) fault 0
+STEP 5 pos 5 in 2210 next 3932 OK  (step 86799 clk_sm cycles, sim cycle 6876712) fault 0
+STEP 6 pos 6 in 13 next 382 OK  (step 86823 clk_sm cycles, sim cycle 6963585) fault 0
+STEP 7 pos 7 in 93 next 382 OK  (step 85836 clk_sm cycles, sim cycle 7049470) fault 0
+STEP 8 pos 8 in 198 next 382 OK  (step 88671 clk_sm cycles, sim cycle 7138189) fault 0
+STEP 9 pos 9 in 92 next 382 OK  (step 86464 clk_sm cycles, sim cycle 7224703) fault 0
+STEP 10 pos 10 in 3363 next 3837 OK  (step 86566 clk_sm cycles, sim cycle 7311317) fault 0
+STEP 11 pos 11 in 198 next 382 OK  (step 88921 clk_sm cycles, sim cycle 7400285) fault 0
+STEP 12 pos 12 in 115 next 382 OK  (step 88289 clk_sm cycles, sim cycle 7488621) fault 0
+STEP 13 pos 13 in 271 next 382 OK  (step 88233 clk_sm cycles, sim cycle 7576904) fault 0
+STEP 14 pos 14 in 116 next 382 OK  (step 88169 clk_sm cycles, sim cycle 7665120) fault 0
+STEP 15 pos 15 in 271 next 1073 OK  (step 86990 clk_sm cycles, sim cycle 7752161) fault 0
+CQ kind 1 status 0 slot 0 tag 7 pos 15 token 1073 step_cycles 86990 generated 1
+STEP 16 pos 16 in 1073 next 382 OK  (step 87525 clk_sm cycles, sim cycle 7839734) fault 0
+CQ kind 1 status 0 slot 0 tag 7 pos 16 token 382 step_cycles 87525 generated 2
+STEP 17 pos 17 in 382 next 93 OK  (step 87911 clk_sm cycles, sim cycle 7927695) fault 0
+CQ kind 2 status 1 slot 0 tag 7 pos 17 token 93 step_cycles 87911 generated 3
+BAR tokens counter 3
+BAR MSIs 0
+TB_GPU_HBM_SYSTEM PASS steps=18 cq_tokens=3 clk_sm_cycles=7928053 fails=0
+- /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src_host_token/rtl/test/hbm_accel/tb_hbm_accel_loader_token_host.sv:287: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7ms; walltime 2038.359 s; speed 3.244 us/s
+- Verilator: cpu 13372.758 s on 8 threads; allocated 536 MB
