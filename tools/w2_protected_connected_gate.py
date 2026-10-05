@@ -17,7 +17,8 @@ def sha(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def run(donor, job, overlay):
+def run(donor, job, overlay, reuse_objects=None):
+    object_dir = reuse_objects if reuse_objects is not None else donor / 'build/obj'
     pins = json.loads((donor / 'build/source_pin.json').read_text())
     # Actual original frontend allocation, not a process address-space cap.
     available_kb = int(next(x.split()[1] for x in Path('/proc/meminfo').read_text().splitlines()
@@ -25,7 +26,7 @@ def run(donor, job, overlay):
     loads = os.getloadavg()
     if max(loads) >= 128 or available_kb < 16722.289 * 1024:
         raise RuntimeError('donor host lacks current permitted load/memory headroom; keep objects')
-    object_bytes = sum(p.stat().st_size for p in (donor / 'build/obj').rglob('*') if p.is_file())
+    object_bytes = sum(p.stat().st_size for p in object_dir.rglob('*') if p.is_file())
     source_bytes = sum((donor / 'src' / rel).stat().st_size for rel in pins)
     if shutil.disk_usage(job.parent).free < object_bytes + source_bytes + int(366.634 * 1024**2):
         raise RuntimeError('private retained object/source copy lacks actual disk headroom')
@@ -48,7 +49,7 @@ def run(donor, job, overlay):
         shutil.copy2(overlay / rel, target)
     # Reflink when supported, ordinary private copies otherwise. Never hardlink
     # generated mutable objects into the original completed job.
-    subprocess.run(['cp', '-a', '--reflink=auto', str(donor / 'build/obj'), str(job / 'obj')], check=True)
+    subprocess.run(['cp', '-a', '--reflink=auto', str(object_dir), str(job / 'obj')], check=True)
     command = json.loads((donor / 'build/command.json').read_text())
     command = [x.replace(str(donor / 'src'), str(job / 'src')) for x in command]
     command[command.index('--Mdir') + 1] = str(job / 'obj')
@@ -56,7 +57,7 @@ def run(donor, job, overlay):
     command.append(str(job / 'src' / replacements[2]))
     all_sources = list(dict.fromkeys(list(pins) + replacements))
     receipt = dict(source_commit=(overlay / 'source.commit').read_text().strip(),
-                   donor=str(donor), reused_objects=True, load=loads, available_kb=available_kb,
+                   donor=str(donor), reused_objects=str(object_dir), load=loads, available_kb=available_kb,
                    retained_case=str(donor / 'case'), original_NS2_prefix=str(donor / 'original/mem'),
                    source_sha256={rel: sha(job / 'src' / rel) for rel in all_sources},
                    immutable_donor_sha256=pins, default_source_option=0,
@@ -86,5 +87,7 @@ if __name__ == '__main__':
     p.add_argument('--donor', type=Path, required=True)
     p.add_argument('--job', type=Path, required=True)
     p.add_argument('--overlay', type=Path, required=True)
+    p.add_argument('--reuse-objects', type=Path)
     a = p.parse_args()
-    run(a.donor.resolve(), a.job.resolve(), a.overlay.resolve())
+    run(a.donor.resolve(), a.job.resolve(), a.overlay.resolve(),
+        a.reuse_objects.resolve() if a.reuse_objects else None)
