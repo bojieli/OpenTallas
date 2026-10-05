@@ -8376,8 +8376,8 @@ def qwen_me_bypass_capture_price(*, gt=6144, smin=6, tcut=6, tree_lat=7):
     mux2 = 4 * nand2
     shifted = 64 * and2_or2 + 32 * and2_or2 + 16 * mux2
     predicates = 5 * and2_or2
-    # Gross local allowance: one BUF equivalent per selector bit destination.
-    buffer_allowance = 64 * nand2
+    # Gross local allowance: one BUF equivalent per selector destination (64 masks +16 exponent muxes).
+    buffer_allowance = 80 * nand2
     gross = shifted + predicates + buffer_allowance
     return dict(
         schema='opentallas.qme.bypass-capture.v1', default_enabled=False,
@@ -8396,7 +8396,7 @@ def qwen_me_bypass_capture_price(*, gt=6144, smin=6, tcut=6, tree_lat=7):
         storage=dict(delta_raw_reset_ff_per_adder=-30,delta_tree_raw_ff=-30*n,
                      saved_FF_area_credit_um2=0,mutable_protection_changed=False),
         logic=dict(shifted_and2=64,shifted_or2=32,exponent_mux2=16,
-                   predicate_gate_allowance=5,selector_buffer_allowance=64,
+                   predicate_gate_allowance=5,selector_buffer_allowance=80,
                    removed_first_stage_nested_mux2_upper_bound=96,
                    removed_mux_area_credit_um2=0,
                    selector_fanout_per_take=32,exponent_selector_fanout=8,
