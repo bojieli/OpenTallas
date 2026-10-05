@@ -18,11 +18,13 @@ ROOT = Path(__file__).resolve().parents[1]
 TOP = 'ot_hbm_accel_pcwb_service_stack'
 SOURCEBOOK = 'results/uarch/hbm_pcwb_actual_parent_20261005/model.json'
 SOURCES = (
+    'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
     'rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv',
     'rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb.sv',
     'rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv',
     'rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv',
     'rtl/hbm_accel/integration/ot_hbm_pcwb_ca_slots.sv',
+    'rtl/hbm_accel/integration/ot_hbm_pcwb_prepaid_column.sv',
     'rtl/hbm_accel/integration/ot_hbm_accel_pcwb_service_stack.sv',
 )
 
@@ -61,7 +63,9 @@ def resolve_sources(root: Path = ROOT, *, enable: int = 0,
             or book.get('CMD_MATCH_CUT_default') != 0):
         raise ValueError('PCWB sourcebook top/default selection mismatch')
     pins = book.get('sources')
-    required = (SOURCES[0], SOURCES[2], SOURCES[3])
+    required = ('rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv',
+                'rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv',
+                'rtl/hbm_accel/service/ot_hbm_accel_dskv_wb.sv')
     if not isinstance(pins, dict) or any(path not in pins for path in required):
         raise ValueError('PCWB sourcebook lacks frozen CDC/CMD/writer pins')
     changed = [path for path in SOURCES if path in pins and pins[path] != hashes[path]]

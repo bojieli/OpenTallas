@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.dsrom-reindex.kc8-launch.v1",
+  "host": "ot-epyc2",
+  "launcher_pid": 3397875,
+  "time_child_pid": 3397901,
+  "physical_driver_pid": 3397903,
+  "source_commit": "84960455199bacf7ddc3309b8506770ba1792242",
+  "worktree": "/srv/opentallas/repos/russell-dsrom-reindex-kc8-20261005",
+  "output": "/srv/opentallas-scratch/codex/russell-dsrom-reindex-kc8-20261005/route_r1",
+  "gate_replayed": false,
+  "actual_phase_at_record": "Yosys OPT/MEMORY_MAP",
+  "adopted": false,
+  "fresh_headroom": {
+    "mem_available_GiB": 864,
+    "disk_available_GiB": 106,
+    "CPU_idle_percent": 65,
+    "prior_kc7_route_disk_GiB": 5.6
+  },
+  "admission_planning_GiB": 40,
+  "cores": 16,
+  "unlimited_synth_and_flow_timeouts": true,
+  "recipe": "results/rtl/dsrom_reindex_kc8_20261005/route_launch.sh"
+}
