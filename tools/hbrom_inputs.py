@@ -103,7 +103,11 @@ def normalize_dag(record):
             if n['kind'] == 'weight':
                 n['kind'] = 'dedicated_fp32'
                 n['resources'] = [scope + ':he']
-                n['retained_latency_basis'] = 'existing dedicated HE; shared tile has no FP32 matrix mode'
+                n['retained_latency_basis'] = 'dedicated1536MAC HE: max(inherited,ceil(MACs/1536)+85 product/chunk/tree cycles at0.9GHz); analytic allowance'
+                n['inherited_duration_ns'] = n['duration_ns']
+                n['duration_ns'] = max(n['duration_ns'], (math.ceil(n['macs']/1536)+85)/.9)
+                n['he_capacity_MAC_per_cycle'] = 1536
+                n['unknown'] = True
             elif n['kind'] in ('vector', 'reduce', 'select'):
                 n['resources'] = [scope + ':su']
             elif n['kind'] == 'sinkhorn':
@@ -118,21 +122,28 @@ def normalize_dag(record):
             continue
         previous = None
         for i, c in enumerate(n['components']):
-            name = n['id'] + f':component{i}'
             repeat = c.get('repeat', 1)
-            node = dict(id=name, deps=[previous] if previous else list(n['deps']),
-                        kind='weight', layer=n['layer'], format=c['format'],
-                        rows=c['rows'] * repeat, k=c['k'], macs=c['macs'],
-                        weight_bytes=c['weight_bytes'],
-                        activation_bytes=c['activation_bytes'] * c.get('groups', 1),
-                        result_bytes=c['result_bytes'], replicated=c.get('replicated_on_TP_ranks', False),
-                        duration_ns=None, resources=[], logical_component=c,
-                        parent=n['id'], unknown=True,
-                        activation_group_policy='all distinct grouped operands charged; per-rank subset requires mapping proof')
-            if 'stage' in n:
-                node['stage'] = n['stage']
-            nodes.append(node)
-            previous = name
+            parts = 2 if c['name'].endswith('w1_w3') else c.get('groups', 1)
+            jobs = repeat * parts
+            for r in range(repeat):
+                for part in range(parts):
+                    first = r == 0 and part == 0
+                    name = n['id'] + f':component{i}' + ('' if first else f':repeat{r}:part{part}')
+                    node = dict(id=name, deps=[previous] if previous else list(n['deps']),
+                                kind='weight', layer=n['layer'], format=c['format'],
+                                rows=c['rows'] // parts, k=c['k'], macs=c['macs'] // jobs,
+                                weight_bytes=c['weight_bytes'] / jobs,
+                                activation_bytes=c['activation_bytes'] / repeat,
+                                result_bytes=c['result_bytes'] / jobs,
+                                replicated=c.get('replicated_on_TP_ranks', False),
+                                duration_ns=None, resources=[], logical_component=c,
+                                parent=n['id'], unknown=True, selected_expert_slot=r,
+                                matrix_part=part, component_repeats=repeat,
+                                activation_group_policy='separate matrix dispatches; same expert ID order; no gate/up/group tail fusion credit')
+                    if 'stage' in n:
+                        node['stage'] = n['stage']
+                    nodes.append(node)
+                    previous = name
         nodes.append(dict(id=n['id'], deps=[previous], kind='join', layer=n['layer'],
                           duration_ns=0, resources=[], parent_components=True))
     ids = {n['id'] for n in nodes}
@@ -145,9 +156,22 @@ def build_inputs(input_dir=None, *, max_logic_dies=368):
     directory = Path(input_dir) if input_dir is not None else DEFAULT_INPUT_DIR
     records, pins = {}, {}
     for name in ('inventory', 'dag', 'rom-macros', 'compute', 'weight-network',
-                 'floorplan', 'power', 'hub', 'config', 'clock'):
+                 'floorplan', 'power', 'hub', 'config', 'clock', 'sram'):
         records[name], path, digest = _read(directory, name)
         pins[path.name] = digest
+    for name in ('protection_plan', 'control_plan', 'inner_control_plan', 'service_area'):
+        path = directory.parent / f'{name}.json'
+        raw = path.read_bytes()
+        records[name] = json.loads(raw)
+        pins[str(Path('..') / path.name)] = hashlib.sha256(raw).hexdigest()
+    protection, control, service = (records[k] for k in ('protection_plan','control_plan','service_area'))
+    protect_blocks = protection['blocks']
+    private_protection = sum(protect_blocks[k]['area_allowance_packed_50pct_mm2'] for k in ('activation','ring'))
+    shared_protection = sum(protect_blocks[k]['area_allowance_packed_50pct_mm2'] for k in ('shared_rf','shared_scratch'))
+    shared_sram_area = records['sram']['candidate_footprints']['shared_rf_scratch_protected']['packed_mm2_factor_1_31']
+    inner_control_area = records['inner_control_plan']['area']['incremental_packed_50pct_mm2']
+    private_area = inner_control_area + 0.334465594474 + private_protection + control['area']['packed_increment_over_unprotected_mm2'] + 0.0011
+    shared_area = 0.299210 + shared_sram_area + shared_protection
     inv, rom, comp, net, floor = (records[k] for k in
                                 ('inventory', 'rom-macros', 'compute', 'weight-network', 'floorplan'))
     tensors, auxiliary, storage = normalize_storage(inv)
@@ -159,17 +183,20 @@ def build_inputs(input_dir=None, *, max_logic_dies=368):
                  capture_area_per_pair_mm2=2 * rom['service']['capture_bare_DFF_area_um2_per_stream']/1e6,
                  source='site-snapped v2 area; conservative256bit capacity; two alternating4096-row macros',
                  capture_area_status='2x bare capture DFF placement allowance; not routed measurement')
-    compute = dict(area_mm2=comp['area_mm2'], local_sram_bytes=229376,
-                   private_tile_area_mm2=0.334465594474, shared_service_area_mm2=0.984012854014,
-                   shared_sram_bytes=589824,
-                   sharing_status='source NC1 partition: private x+staging+matrix, shared mirroredRF+scratch+SIMD; protection/control excluded',
+    compute = dict(area_mm2=private_area + shared_area, local_sram_bytes=229376,
+                   private_tile_area_mm2=private_area, shared_service_area_mm2=shared_area,
+                   shared_sram_bytes=688128,
+                   protection_area=dict(private_codec_mm2=private_protection,shared_codec_mm2=shared_protection,control_increment_mm2=control['area']['packed_increment_over_unprotected_mm2'],translator_allowance_mm2=.0011,inner_control_increment_mm2=inner_control_area),
+                   retained_ring_depth=1024, retained_ring_bytes=163840,
+                   sharing_status='source NC1 partition; retained1024line ring; protected RF/scratch growth and codec/control allowances included; unmeasured',
                    macs_per_cycle={k:v for k,v in comp['macs_per_cycle_batch1'].items() if v>0},
                    weight_ingress_Bpc=comp['ingress_Bpc'],
                    activation_load_Bpc=comp['activation_external_write_Bpc'], result_Bpc=comp['result_Bpc'],
-                   pipeline_cycles=comp['pipeline_cycles']['conservative_drain_budget'],
+                   pipeline_cycles=comp['pipeline_cycles']['conservative_drain_budget'] + 5 + 2 + 8 + 3,
+                   extra_pipeline_basis='5outercontrol+3innercontrol stages+2translator+8payload protection write/read stages, conservative serial allowance',
                    golden_recurrence_cycles={'fp4':64,'fp8':64,'bf16':64},
                    clock_ghz=comp['frequency_ghz'],
-                   arithmetic_mode='chunk8', descriptor_cycles=9,
+                   arithmetic_mode='chunk8', descriptor_cycles=9 + control['cycles']['descriptor_admission_extra'],
                    area_status=comp['area_scope'],
                    recurrence_status='8 slots x8 cycles allowance; exact K-dependent chunk/tree must be model priced')
     networks = {}
@@ -183,14 +210,23 @@ def build_inputs(input_dir=None, *, max_logic_dies=368):
              leaf_tracks_needed=row['leaf_tracks_need'], leaf_tracks_available=row['leaf_tracks_capacity'],
              credit_depth_beats=row['credit_depth_beats'], fifo_beats=128,
              source_status='positive geometry/mux/clock/protection allowance screen, not physical evidence')
-    physical = dict(die_mm2=floor['die']['area_mm2'], fixed_service_mm2=100,
-                    cluster_packing_fraction=.8, auxiliary_fixed_mm2=100,
+    physical = dict(die_mm2=floor['die']['area_mm2'], fixed_service_mm2=service['roles']['full_service']['total_mm2'],
+                    cluster_packing_fraction=.8, auxiliary_fixed_mm2=service['roles']['archive']['total_mm2'],
                     auxiliary_rom_packing_fraction=.75, activation_root_Bpc=256,
                     activation_broadcast_cycles=8, result_root_Bpc=256,
-                    fixed_service_status='assumed100mm2 incl38.601mm2 SU+VM minimum,HE,attention,index,PHY; rectangle fit unproven',
+                    hbm_stacks_per_compute_die=4, hbm_stacks_per_auxiliary_die=0,
+                    hbm_dram_dies_per_stack=8, hbm_base_dies_per_stack=1,
+                    hbm_stack_capacity_bytes=24_000_000_000,
+                    hbm_stack_basis='assumed8-high24GB HBM3E, onebase die; fullservice fourPHY percompute die; not vendor-qualified',
+                    fixed_service_status='source service_area.json full_service complete positive ledger; physical qualification absent',
                     cluster_packing_status='assumed80% after explicit local network channel footprint',
-                    auxiliary_status='assumed100mm2 service plus75% ROM packing; archive lookup network unqualified',
+                    auxiliary_status='source archive service16mm2 plus assumed75% ROM packing; lookup network unqualified',
                     activation_status='256B/cycle root plus8cycle fanout allowance; tree dimension must be checked')
+    phy_area = sum(c['area_mm2'] for c in service['roles']['full_service']['components'] if c['name']=='HBM_PHY')
+    hub_area = physical['fixed_service_mm2'] - phy_area
+    physical_floorplan = dict(hub_um=[16100, math.ceil((hub_area*1e6/16100)/2.16)*2.16],
+                              hbm_phy_count=4,hub_service_area_mm2=hub_area,
+                              service_area_record='results/uarch/hbrom/service_area.json')
     # Known global matrix templates plus a positive reserve for uncompiled commands.
     config_bytes = 65536 * 42
     storage['implementation_configuration_reserve_bytes'] = config_bytes
@@ -205,9 +241,9 @@ def build_inputs(input_dir=None, *, max_logic_dies=368):
                 'retained sequential legacy field-resource edges may overestimate shared-compute path',
                 'FP32 dedicated HC exact recurrence and dedicated reservation need contextual validation',
                 'sharedRF/SIMD arbitration and mutable SRAM protection area/latency remain unimplemented']
-    return dict(schema=SCHEMA, default_enabled=False, source_pins=pins,
-                supported_tp=[4], max_logic_dies=max_logic_dies,
-                macro=macro, compute=compute, networks=networks, physical=physical,
+    result = dict(schema=SCHEMA, default_enabled=False, source_pins=pins,
+                supported_tp=[1,2,4,8], max_logic_dies=max_logic_dies,
+                macro=macro, compute=compute, networks=networks, physical=physical,physical_floorplan=physical_floorplan,
                 tensors=tensors, auxiliary_storage_bytes=storage['auxiliary_source_bytes']+storage['derived_auxiliary_bytes']+config_bytes,
                 auxiliary_storage=auxiliary, storage_scopes=storage, dag=dag,
                 full_checkpoint_bytes=inv['checkpoint_bytes'],
@@ -217,7 +253,7 @@ def build_inputs(input_dir=None, *, max_logic_dies=368):
                 historical_extra_hops=dict(count=records['dag']['baseline_extra_hops'],
                                             ns=records['dag']['baseline_extra_hop_ns'],
                                             policy='old layout only; new topology must reprice placement crossings'),
-                sweep=dict(tp=[4],pairs_per_tile=[64,128,256,512,1024],tiles_per_cluster=[1,2,4,8],layers_per_stage=[1,2,4]),
+                sweep=dict(tp=[1,2,4,8],pairs_per_tile=[64,128,256,512,1024],tiles_per_cluster=[1,2,4,8],layers_per_stage=[1,2,4]),
                 topology=dict(kind='TP4 groups with direct interstage links; source sharing retained',
                               inherited_hops='S81 DAG hops retained conservatively; not new placement proof'),
                 qualification_blockers=blockers, gates={},
@@ -226,6 +262,17 @@ def build_inputs(input_dir=None, *, max_logic_dies=368):
                 assumptions=[physical['fixed_service_status'],physical['cluster_packing_status'],
                              physical['auxiliary_status'],physical['activation_status'],
                              compute['area_status'],compute['recurrence_status']])
+    from hbrom_floorplan import placement_geometry
+    physical['cluster_slots_by_geometry'] = {'128:4': placement_geometry(result,128,4)['slots']}
+    physical['geometry_status'] = 'protected/control area re-screen at selected128pair4tile geometry; other candidates require own geometry gate'
+    from hbrom_transport import reprice_nodes, transport_summary
+    result['baseline_dag'] = copy.deepcopy(dag)
+    result['dag_by_tp'] = {str(tp): reprice_nodes(dag, tp) for tp in result['supported_tp']}
+    result['transport_by_tp'] = {tp: transport_summary(nodes) for tp, nodes in result['dag_by_tp'].items()}
+    result['dag'] = copy.deepcopy(result['dag_by_tp']['4'])
+    result['qualification_blockers'].append('TP1/2/4/8 transport and partition service are own analytical bounds, not measured TP scaling')
+    result['assumptions'].append('Candidate must reprice pristine baseline_dag for actual layers_per_stage; never transform a priced variant twice')
+    return result
 
 
 def main():

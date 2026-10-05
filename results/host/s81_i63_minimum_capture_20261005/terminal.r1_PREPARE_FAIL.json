@@ -1,0 +1,32 @@
+{
+  "scope": "ONE controlled-source I63 PV; SIM_ONLY endpoint, native adapter; no original-run attribution",
+  "source_commit": "19392cbcae5a1b179292743adf1bdcfb0d810495",
+  "estimated_host_peak_bytes": 2147483648,
+  "compiler_workers": 1,
+  "stages": [
+    {
+      "name": "prepare",
+      "command": [
+        "python3",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005/source/prepare.py",
+        "/srv/opentallas/repos/arch-i63-minimum-capture-20261005",
+        "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005"
+      ],
+      "exit": 1,
+      "seconds": 3.179214261001107
+    }
+  ],
+  "exit": 1,
+  "source_sha256": {
+    "source/adapter_config.hpp": "f34e54aec9b2a1cd72081f0c65ebc4b1f8147d2dcbce7459b1d97a6c0f471e6a",
+    "source/run.py": "812c06ee7b3f6406306cc17cf67dc0f256c444ea484d5d60c527e98cc940d91c",
+    "source/capture.cpp": "de8a28e9195598cf6a7734613b31964fa801a962b438c076ebb1e7e499a23992",
+    "source/s81_sim_only_attention_endpoint.hpp": "4741300afb2199eaf261add2badae02c397ef28f5f76017ad196662e2fcb8f1f",
+    "source/prepare.py": "adde7780ee3e4aeb9129234f17928f0c401b7ee6ef29f1e0477bc21ccea3c2f9",
+    "source/s81_minimum_attention_cut.hpp": "0d84be8dd8e2a31ab90b6f444b9a94cb87caceb06030f8561746eab3fc1b4185",
+    "source/s81_minimum_runtime.hpp": "0f3bad0a3efd4dc3cda64d1d67ff23e053ff6a50df3393e72b287e78d08cba2c",
+    "adapter/VDsromAttention__ALL.a": "18c57df9182d5b0fa2343c6cea749b26dbe529b4507220c1785f66aab2f74be2",
+    "adapter/libverilated.a": "6b20f7786e34a9ad71a8024d195e6590a96ed8ad35b1b774e6421e865aace9f0",
+    "adapter/VDsromAttention.h": "e6bfa2e5704f59d97ec20350c97157390a9b99f13dd06e6d1c69513479b8df62"
+  }
+}
