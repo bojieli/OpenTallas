@@ -72,7 +72,12 @@ module ot_qwen_slab_port_group #(
     //               each bank's capture select drives the column OR through 8 kept copies of 32 loads.  0 cycles.
     parameter integer IN_STAGE = 0,
     parameter integer AM_SPLIT = 0,
-    parameter integer S5_CTL = 0
+    //   SCALE_PAIR 1: each column's bank OR is registered per bank pair (south / north) before m5, a wire stage
+    //               across the column height; the request then leads by LEAD = 9 (the tag is a tap of the top's
+    //               s3 tag line, available that early -- header 1.), so an op gains no cycle.  res_in is due
+    //               LEAD cycles after its tag, as before.
+    parameter integer S5_CTL = 0,
+    parameter integer SCALE_PAIR = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -108,7 +113,7 @@ module ot_qwen_slab_port_group #(
 );
     localparam integer LW = $clog2(W);
     localparam integer BPC = SCALE_BANKS / COLS;
-    localparam integer LEAD = 8;              // tag pins -> multiplier input (see header, 1.)
+    localparam integer LEAD = 8 + SCALE_PAIR; // tag pins -> multiplier input (see header, 1.)
     localparam integer DW = 20;               // signed width of the row-count differences
     localparam integer KR = 1 + 1 + 1 + 1 + 1 + 1 + W + AW + NW;   // tag carried past the request stage
 
@@ -218,6 +223,7 @@ module ot_qwen_slab_port_group #(
             wire [AW-1:0] addr2;
             ot_qwen_slab_pg_rcopy #(.AW(AW)) u_r2 (.clk(clk), .gre(gre1), .addr(addr1), .gre_q(gre2), .addr_q(addr2));
             wire [255:0] cor [0:BPC];
+            wire [255:0] bterm [0:BPC-1];
             assign cor[0] = 256'd0;
             for (b = 0; b < BPC; b = b + 1) begin : g_bank
                 localparam integer BK = c * BPC + b;
@@ -240,10 +246,27 @@ module ot_qwen_slab_port_group #(
                 for (sk = 0; sk < 8; sk = sk + 1) begin : g_sel
                     assign selv[32*sk +: 32] = {32{(S5_CTL != 0) ? sel5c[sk] : sel5}};
                 end
-                assign cor[b+1] = cor[b] | (cap4 & selv);
+                assign bterm[b] = cap4 & selv;
+                assign cor[b+1] = cor[b] | bterm[b];
             end
             reg [255:0] m5;
-            always @(posedge clk) m5 <= cor[BPC];
+            if (SCALE_PAIR != 0) begin : g_pair
+                // south pair = cor[BPC/2]; north pair = the same chain restarted at BPC/2 (identical OR terms)
+                wire [255:0] nor_ [BPC/2:BPC];
+                assign nor_[BPC/2] = 256'd0;
+                genvar hb;
+                for (hb = BPC/2; hb < BPC; hb = hb + 1) begin : g_h
+                    assign nor_[hb+1] = nor_[hb] | bterm[hb];
+                end
+                reg [255:0] m5s, m5n;
+                always @(posedge clk) begin
+                    m5s <= cor[BPC/2];
+                    m5n <= nor_[BPC];
+                    m5 <= m5s | m5n;
+                end
+            end else begin : g_nopair
+                always @(posedge clk) m5 <= cor[BPC];
+            end
             assign colq[c] = m5;
         end
     endgenerate
