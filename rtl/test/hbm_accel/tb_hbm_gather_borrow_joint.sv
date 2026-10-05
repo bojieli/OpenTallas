@@ -144,7 +144,11 @@ module tb_hbm_gather_borrow_joint;
  endtask
  task automatic send(input [2:0] kind,input [31:0] addr,input [15:0] tag,input [511:0] data);
   req_kind=kind;req_addr=addr;req_tag=tag;req_data=data;req_v=1;
-  while(!req_r)begin if(bridge_fault)$fatal(1,"request fault");step();end
+  #1;
+  while(!req_r)begin
+   if(bridge_fault)$fatal(1,"request fault state=%0d bad=%0d shared=%0d legal=%0d frame=%0d",bridge.on.state,bridge.on.bad,borrow_fault,bridge.on.legal,bridge.on.frame_match);
+   step();
+  end
   step();req_v=0;
  endtask
  task automatic exact_return(input [2:0] kind,input [31:0] addr,input [15:0] tag,input [511:0] data);
