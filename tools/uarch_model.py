@@ -10176,3 +10176,76 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
                 'TX_word_select covered by retained qualified-byte TXmask']),
         gates=dict(fullshape_exact=False, contextual_SS_FF=False,
             hub_routing_layer_check=False, installed=False, adoption=False))
+
+
+def dsrom_window_parent_boundary_model():
+    """Price the actual WINDOW caller/first-consumer cut before context RTL.
+
+    This is a register/macro projection, not a new pipeline or a whole S81.
+    Routed WINDOW leaf dimensions, clock load and SS/FF arcs are required
+    inputs after its terminal; aggregate attention area is not a subslot.
+    """
+    d, td, nl, trows, bw, pwords = 512, 32, 4, 640, 2, 1
+    tiles = nl * (d // td)
+    rowbits = (d // 32) * 265
+    slices = (rowbits + 255) // 256
+    producer = 16 * (256 + 8) + 2 + 5 + 4 + 2*30 + 2*21 + 1
+    lifecycle = 3 + 2*16 + 10 + 4*21 + 4*30 + 2 + 1 + 2*11 + 6
+    native = 2 + 10 + 21 + 1 + 1 + 16
+    # Exact source E1 and R0 operands. No arithmetic or transposer stand-in.
+    e_operands = tiles * td * 18
+    r0_operands = tiles * td * 18
+    r0_all = tiles * (td*18 + pwords*td*16 + 2*bw + 8 + 4)
+    e_all = (e_operands + pwords*td*16 + d*16 + 2*bw + 8 + 5 +
+             16 + nl + 1 + 5 + 8)
+    # Include the source T/wptr/act and read-address/tag capture families;
+    # remaining scheduler state stays at timed terminals, not fake registers.
+    capture_control_upper = 512
+    ff_upper = producer + lifecycle + native + e_all + r0_all + capture_control_upper
+    sources = [
+        'rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv',
+        'rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv',
+        'rtl/chip/ot_chip_v41x_window_block_guard.sv',
+        'rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_attn.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv',
+    ]
+    return dict(item=4, status='SOURCE_PRICED_WAIT_WINDOW_TERMINAL_AND_ALLOCATION',
+        scope='actual packed-block producer/native lifecycle and first attention captures; no whole S81',
+        source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
+        shape=dict(H=16,D=d,TD=td,NL=nl,TROWS=trows,NT=tiles,NSTAGE=1,PWORDS=pwords,ILV=0,REPL=0),
+        compute=dict(MACs_per_cycle_in_cut=0, arithmetic_omitted_at_actual_R0_boundary=True),
+        state=dict(producer_FF_bits=producer, descriptor_lifecycle_FF_bits=lifecycle,
+            native_reset_user_position_guard_generation_FF_bits=native,
+            engine_E1_operand_FF_bits=e_operands, tile_R0_operand_FF_bits=r0_operands,
+            all_projected_R0_FF_bits=r0_all, all_projected_E1_FF_bits=e_all,
+            capture_control_upper_FF_bits=capture_control_upper, FF_upper_bits=ff_upper,
+            FF_cell_floor_um2=ff_upper*DFF_UM2),
+        memory=dict(name='ot_sram_1r1w_256x256_m2_r2c2', macros=nl*slices,
+            implementation='existing actual SRAM_MACRO branch; bind its own aligned LEF and SS/FF views',
+            logical_payload_bits=trows*rowbits, physical_capacity_bits=nl*slices*256*256,
+            write_ports=nl*slices, read_ports=nl*slices, bytes_per_physical_port_per_cycle=32,
+            physical_read_bytes_per_cycle=nl*slices*32, physical_write_bytes_per_cycle=nl*slices*32,
+            logical_read_bytes_per_cycle=nl*rowbits/8, logical_write_bytes_per_cycle=nl*rowbits/8,
+            actual_macro_area_um2=None, SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
+        communication=dict(WINDOW_to_staging_bits_per_cycle=nl*rowbits,
+            staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
+            producer_payload_bits_per_cycle=264, producer_identity_bits_per_cycle=10+21+4,
+            staging_write_enable_fanout=slices, R0_replicas=tiles,
+            per_tile_operand_bits=td*18, logical_signal_tracks_lower_bound=nl*rowbits+e_operands+r0_operands,
+            actual_allocated_channel_capacity=None, route_fit=False),
+        clock=dict(source='native clk -> source/producer/descriptor/attention staging/E1/R0; rst_s[1] reset',
+            period_ps=1000/1.2, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+            leaf_propagated_CTS_and_input_clock_load=None, parent_propagated_CTS=None,
+            real_macro_SS_FF_clkQ_and_loaded_capture_required=True, IO_waiver=False),
+        latency=dict(added_cycles=0, token_gain=0, preserves_actual_E1_R0_capture_edges=True,
+            WINDOW_140ns_performance_miss_retained=True),
+        area=dict(leaf_actual_dimensions_um=None, leaf_actual_cell_area_um2=None,
+            extra_control_mux_route_CTS_area_um2=None, actual_allocated_WINDOW_subslot=None,
+            aggregate_attention_reservation_is_not_WINDOW_slot=True, slot_fit=False),
+        gates=dict(ready_for_context_RTL=False, terminal_leaf_required=True,
+            own_macro_views_and_actual_slot_required=True, exact344_completed_no_repeat=True,
+            parent_SS_FF_qualified=False, hub_routing_layer_check=False, adoption=False))
