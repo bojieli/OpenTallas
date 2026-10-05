@@ -2,12 +2,61 @@
   "authoring_authorization": "Owner authorized additive extraction at PART2 g_tin/lvl7; full joint price before RTL",
   "baseline_files_edited": false,
   "check_scope": "Python model widths/storage/flight and existing-source cut literals only; not numerical/RTL/SSFF gate",
+  "common_advance_partition": {
+    "choice": "owner selected COMMON logical advance; full-flight alternate only on actual unrepairable source counterexample",
+    "existing_enable": "ot_hdc_cg latch-based ICG: en sampled while clk low, must include reset. Existing me_clk gate controls spine only, not all required paths",
+    "global_enable_contract": "common advance only at real low-phase ICG admission after ALL required operand captures, cut holding capacity, reset/epoch and source transport obligations permit; never derived solely from depth4 FIFO w_rdy",
+    "inflight_contract": "148 logical-edge flight is retained by actual held pipelines, NOT declared depth4 landing. Maxwell must price all retained clock-enable/ICG fanout and every unpaused response capture capacity/credit before release",
+    "input_weight_contract": "selected W_HBM0 uses released code ROM; do not assume arbitrary async weight arrival held forever. Any buffered async weight receiver in enclosing successor must keep capture/backpressure independent of logical compute advance",
+    "logical_fast": [
+      "PART2 issue counters/active/e_v/e_tag and address-precompute pipelines",
+      "PART2 pre-cut tag/valid/split pipelines through SD+TL*7+XD",
+      "spine u_ib/u_go/u_xs/u_xnet/u_tws",
+      "PART1 tile IREG/IB/xl delay and u_me issue/operand/mul/acc_q/u_fb (all IL8 slots)",
+      "tile u_node and external lw/lvv NWS pipelines through level7"
+    ],
+    "macro_counterexample": {
+      "binding": "one clk drives u_me/u_node/code selector/cap and SRAM read/write",
+      "case": "freezing this whole clk also freezes already-authorized KV writes; leaving it running to capture KV advances IL8 compute phase",
+      "required_delta": "separate actual service/macro-response clock from logical computation; consume each captured operand once with held actual metadata and positive ready",
+      "source": "rtl/hdc/ot_qwen_rom_tile_w12.sv"
+    },
+    "model_pending": [
+      "actual unpaused capture/consume flag and metadata FF deltas",
+      "distributed ICG/clken clock and reset fanout/load/slot costs",
+      "reservation occupancy across pre-cut pipeline/cut FIFO/result ACK",
+      "literal stage schedule with paused logical edges and accepted memory grants"
+    ],
+    "physical_replicas": {
+      "dies": 4,
+      "lower_tree_hosted_nodes": 1488,
+      "spine": 1,
+      "tiles": 1536
+    },
+    "reset_contract": "unpaused service paths retain/drain accepted debt; logical reset clocks continue; both FIFO epochs quarantine data/tag together; no reset-as-write-ACK",
+    "reuse_counterexample": {
+      "case": "me=0 due logical-credit pause and kv_active=1 => entire tile u_me/u_node advances while spine/tags held",
+      "consequence": "existing OR-gated tile clock is NOT a correct common-advance implementation. Split unpaused KV fill/capture from logical tile clock before reuse; no claim common advance itself impossible",
+      "expression": "tile_en[d] = me || fab[d]->kv_active();",
+      "source": "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12_stream4.cpp:582"
+    },
+    "serial": [
+      "existing upper g_lvl8..13/tag/split/valid accepted-beat paths",
+      "existing scale multiply and output/AMAX/reduction paths; no tree reordering"
+    ],
+    "ungated_capture": [
+      "forward/reverse ratioFIFO pointer/state/shadow and handshake logic",
+      "HBM descriptor/request/return/write-ACK and buffered fill receivers",
+      "KV slice writes and pending response capture",
+      "macro-read completion and matched selector/tag capture after an already-accepted request"
+    ],
+    "wrapper_rtl_admitted": false
+  },
   "full_model_admission": false,
   "pending_exact_source_hooks": [
-    "all-PART1 common advance/admission and IL8 feedback phase preservation OR priced full-flight landing",
+    "source COMMON advance partition chosen; split service captures from tile/spine arithmetic clocks with preserved IL8 circulating phase",
     "source-qualified pack alignment and canonical fault at cut",
-    "literal scale and result grant/ACK adapters",
-    "selected core top.args equality to retained parameter source"
+    "literal scale and result grant/ACK adapters"
   ],
   "preserved": {
     "arithmetic": "original add/multiply bit operations and each adjacent-pair level order",
@@ -16,6 +65,25 @@
   },
   "schema": "opentallas.qwen.w12.lvl7_source_carveout.v1",
   "selected_generated_core_sha256": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+  "selected_top_args": {
+    "host": "ot-epyc2",
+    "parameters_verified": {
+      "BD": 41,
+      "G": 6144,
+      "MEM_EXTRA": 1,
+      "NW": 18,
+      "NWS": 5,
+      "ORD": 7,
+      "SMAX": 11,
+      "SMIN": 7,
+      "TCUT": 7,
+      "TWS": 38,
+      "XVM": 1
+    },
+    "path": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/top.args.f",
+    "retained_copy": "selected_top.args.f",
+    "sha256": "3f594f557fe8261053f73a8130e411d534f517c62c7209ce7d068c7cd2fee2de"
+  },
   "source_extraction": {
     "accepted_beat": "payload24576 + canonicaltag167 + valid1 + matchedfault1",
     "consumer": "existing upper g_lvl[8..13], post-scale/result/AMAX on serial domain",
