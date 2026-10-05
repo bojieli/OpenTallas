@@ -66,7 +66,7 @@ f=I.decode(sum(x<<(32*j) for j,x in enumerate(words)),full_shape=True)
 names=['nout','tiles','k','wbase','ts','ks','js','xbase','xks','xjs','xcs','hg','ogs','round','obase','ots','ojs','mmode','oen','m']
 with (src/'adapter_config.hpp').open('w') as out:
     out.write('inline void configure(VDsromAttention& a) {\n')
-    for n in names: out.write(f' a.i_{n}={640 if n=="k" else f["me_"+n]};\n')
+    for n in names: out.write(f' a.i_{n}={640 if n=="k" else f["mx_m" if n=="m" else "me_"+n]};\n')
     out.write('}\n')
 manifest=dict(scope='ONE controlled-source rank0 I63 PV diagnostic; no original accepted-input reconstruction',
     identity47=2147483648,producer=2534,source_node='L20.I63',stage=37,rank=0,position=1048575,
