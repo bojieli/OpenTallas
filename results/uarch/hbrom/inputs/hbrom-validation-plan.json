@@ -1,0 +1,349 @@
+{
+  "schema": "opentallas.hbrom.validation_plan.v1",
+  "created_utc": "2026-10-05T04:12:04.610096+00:00",
+  "status": "PLAN_NOT_EXECUTION_EVIDENCE",
+  "scope": "Minimal full-shape components supporting complete requested model/design/RTL/synthesis/route work",
+  "source_pins": [
+    {
+      "path": "tools/hdc_golden_v41.py",
+      "sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+    },
+    {
+      "path": "tools/hbm_accel_sm_v_gate.py",
+      "sha256": "4bf565c45e4d9b090f5048dfaf1ffef3c89b62b4aa06c33dd6a223163ffdadd4"
+    },
+    {
+      "path": "tools/w19_sm_real_ops.py",
+      "sha256": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7"
+    },
+    {
+      "path": "docs/MICROARCH_MODEL.md",
+      "sha256": "86bee5d2713409f98461dd7d46aa1e5fa8d30db34dfec51a50e96949805b4f6a"
+    }
+  ],
+  "companion_artifacts": [
+    "/tmp/hbrom-rtl-vehicle.json",
+    "/tmp/hbrom-model-checks.json",
+    "/tmp/hbrom-fleet.json"
+  ],
+  "baseline_commands": [
+    {
+      "command": "python3 tools/hbm_accel_sm_v_gate.py real --dump <pinned_actual_operand_dump.pkl> --simulator verilator --cols 1 --build-jobs 1 --jobs 1 --workdir <remote_run_dir> --out <run_dir>/baseline_real.json",
+      "scope": "Existing HBM tile baseline only; does not validate new ROM provider",
+      "available": true
+    },
+    {
+      "command": "python3 tools/hbm_accel_sm_v_gate.py synth --simulator verilator --cols 1 --build-jobs 1 --jobs 1 --workdir <remote_run_dir> --out <run_dir>/baseline_vectors.json",
+      "scope": "Existing synthetic-vector simulation, NOT synthesis",
+      "available": true
+    }
+  ],
+  "new_runner_status": "New ROM wrapper bench and gate must bind cases after selected analytical geometry exists; this plan does not assert those commands already implemented.",
+  "run_manifest_required": [
+    "clean commit/worktree and source hashes",
+    "selected geometry/model digest",
+    "golden digest and explicit arithmetic/fusion settings",
+    "checkpoint extracted payload hashes and original ranges",
+    "tools versions/full commands",
+    "host admission resource/disk evidence",
+    "immutable start/end/exit and per-case verdict",
+    "source-bound RTL and physical constraints"
+  ],
+  "execution_policy": [
+    "No heavy local jobs; guarded remote clean pinned worktree runs after model build readiness.",
+    "Reserve measured CPU/RAM/disk; no arbitrary wall-time/address-space/file-size caps.",
+    "Reuse valid running jobs; preserve compiler objects and failed evidence.",
+    "One mechanism at full selected shape; do not use a reduced pilot to claim throughput/area closure."
+  ],
+  "cases": [
+    {
+      "id": "M01",
+      "status": "NOT_RUN",
+      "claim_scope": "Analytical build readiness",
+      "minimum_vehicle": "Unified uarch model plus checkpoint inventory",
+      "inputs": "Selected cluster parameters, all AR tensor mappings, memory macro abstracts, finite port inventory, topology and decode DAG",
+      "pass_predicates": [
+        "Every mandatory AR tensor including embedding, head, Engram, scales, configuration and derived tables has capacity and reachable placement; vision/MTP scope explicit.",
+        "MAC/cycle by precision, bytes/cycle every port, bits/cycle every boundary, routing tracks/capacity, replicas/mux/fanout, area/slot fit and composed single-user latency all priced.",
+        "Per-operation active resources respect row/tile/pair mapping, exclusive compute modes, NC1 semantics and finite outstanding queues.",
+        "Die count/topology derived from simultaneous capacity, area, power, routing and service constraints; total silicon includes HBM DRAM dies.",
+        "Nominal and conservative missing-evidence assumptions tagged; no zero-cost unmeasured delivery or reuse.",
+        "Selected candidate and rejected candidates retained with objective and constraints."
+      ],
+      "required_artifacts": [
+        "model.json",
+        "candidate_sweep.json",
+        "mapping_manifest.json",
+        "dag.json",
+        "source_manifest.json"
+      ],
+      "depends_on": [],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "P01",
+      "status": "NOT_RUN",
+      "claim_scope": "Released payload identity",
+      "minimum_vehicle": "One selected physical cluster and its addressed ROM regions",
+      "inputs": "Real checkpoint byte ranges, scales, row/K geometry and mapping manifest",
+      "pass_predicates": [
+        "Hash actual extracted bytes, record shard identity/ranges and header/index hashes; header hashes alone do not authenticate payload.",
+        "Independent decoder reconstructs logical weight coordinates and verifies exact bytes/scales before arithmetic.",
+        "Every simulated weight comes through DUT ROM request/capture/mux/response path; no testbench result injection or already-decoded weight bypass.",
+        "No ROM ECC/parity-only sidecars introduced; mutable-state protection and descriptor/address/transaction checks retained."
+      ],
+      "required_artifacts": [
+        "payload_manifest.json",
+        "rom_image.bin",
+        "decode_comparison.json"
+      ],
+      "depends_on": [
+        "M01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "A01",
+      "status": "NOT_RUN",
+      "claim_scope": "Quantized full-K exactness and tile service",
+      "minimum_vehicle": "One full selected compute tile with physical sharing-bank count",
+      "inputs": "Released FP4 routed gate/up/down and FP8 dense/a_proj shards; full logical K and every output row resident in selected tile",
+      "pass_predicates": [
+        "Explicit HDC_V41_ARITH=chunk8 and empty HDC_V41_FUSE unless separately approved; independent pinned golden computes expected outputs.",
+        "All output FP32/BF16 bits compared at specified boundary; block32 exact dot, scale and chunk8 block-sum order preserved.",
+        "Mixed-format a_proj/down decompositions cover all terms exactly once and preserve golden cross-segment order.",
+        "No reduced K or reduced row count is used to justify full-shape service, occupancy or throughput.",
+        "Record first request, first usable output, last output, arrive, release and retired cycles plus ROM/activation/output occupancy."
+      ],
+      "required_artifacts": [
+        "golden.npy",
+        "dut_outputs.bin",
+        "comparison.json",
+        "event_trace.json",
+        "occupancy.json"
+      ],
+      "depends_on": [
+        "P01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "A02",
+      "status": "NOT_RUN",
+      "claim_scope": "BF16 head/grouped-output exactness",
+      "minimum_vehicle": "One full selected BF16 tile/output group",
+      "inputs": "Released head and grouped wo_a rows with full logical K; exact released FP8-to-BF16 conversion for wo_a if selected",
+      "pass_predicates": [
+        "Full-K original output reduction tree and rounding points retained; final tree padding explicit.",
+        "Every selected physical row checked, including partial last tile and IL8 row-count edge.",
+        "Head max comparison preserves ties and defined exceptional values; final winner is compared to independent golden across all groups in software composition.",
+        "No hidden configuration-write overlap unless hardware path and finite ports establish it."
+      ],
+      "required_artifacts": [
+        "golden.npy",
+        "comparison.json",
+        "conversion_provenance.json",
+        "service_trace.json"
+      ],
+      "depends_on": [
+        "P01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "A03",
+      "status": "NOT_RUN",
+      "claim_scope": "Arithmetic adversarial mechanism coverage",
+      "minimum_vehicle": "Smallest complete actual arithmetic lane/reducer plus representative full-K tile",
+      "inputs": "Independent boundary vectors: cancellation, exponent range, signed zero, quantizer halfway/ties, scale transitions, non-power-of-two chunk count, rows1/7/8/9, K/block tails where supported",
+      "pass_predicates": [
+        "Compare to golden directly, not merely ENABLE0 vs ENABLE1 equivalence.",
+        "Supported tails exact; unsupported K/shape descriptors rejected before ROM access rather than silently truncated.",
+        "NaN/Inf and FP8 saturation policy matches existing contract; no new algebraic reassociation."
+      ],
+      "required_artifacts": [
+        "vectors_manifest.json",
+        "comparison.json"
+      ],
+      "depends_on": [
+        "M01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "S01",
+      "status": "NOT_RUN",
+      "claim_scope": "Actual compute reuse and bank service",
+      "minimum_vehicle": "One selected full bank-sharing cluster connected to full tile",
+      "inputs": "Back-to-back operations from different physical ROM banks, different experts and precision modes; retained real activation inputs",
+      "pass_predicates": [
+        "Same physical compute instance reused for distinct weights without reset or free preload between operations.",
+        "Bank mux selection/capture/format conversion/phase startup and descriptor delivery included in measured latency.",
+        "Concurrent arrivals use real finite arbiter and buffers; measured service obeys bank/port inventory.",
+        "Weight lane ordering is checked at response boundary against independent address map."
+      ],
+      "required_artifacts": [
+        "reuse_trace.json",
+        "port_counters.json",
+        "comparison.json"
+      ],
+      "depends_on": [
+        "A01",
+        "A02"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "F01",
+      "status": "NOT_RUN",
+      "claim_scope": "Finite flow and ownership",
+      "minimum_vehicle": "Same selected cluster with actual request/tag interface and result sink",
+      "inputs": "Request stalls, bounded response latency variation/reordering where permitted, burst completion, downstream stall, queue saturation, operation transition and reset",
+      "pass_predicates": [
+        "The inherited1088-bit response interface has no rsp_ready; capacity reserved before issuing every irrevocable ROM response.",
+        "Inherited result interface has no ready; wrapper admits work only with sufficient sink capacity or proven always-accept service.",
+        "No lost, duplicated, stale or reordered logical row; identity and epoch checked at retirement.",
+        "Credits never negative/exceed capacity; no buffer overwritten before consumer release.",
+        "Activation visibility and complete input writes precede eligible issue; prior output/release cannot expose next operation prematurely.",
+        "Progress checked under a finite declared service bound; permanent external stall is not called deadlock."
+      ],
+      "required_artifacts": [
+        "flow_trace.json",
+        "assertion_results.json",
+        "max_occupancy.json",
+        "latency_distribution.json"
+      ],
+      "depends_on": [
+        "S01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "C01",
+      "status": "NOT_RUN",
+      "claim_scope": "Producer-consumer boundary integration",
+      "minimum_vehicle": "One tile and smallest real downstream consumer/CDC/fusion path",
+      "inputs": "Full-shape activation/result blocks with actual ratio3:4 CDC and finite shared resources",
+      "pass_predicates": [
+        "Golden consumer receives exact values in required order and begins only when dependencies satisfied.",
+        "Clock crossings, first result visibility, last result and completion/release charged distinctly.",
+        "No whole-array simulation needed; external traffic driven from pinned analytical schedule with real finite ports."
+      ],
+      "required_artifacts": [
+        "boundary_trace.json",
+        "comparison.json",
+        "cdc_report.json"
+      ],
+      "depends_on": [
+        "F01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "Y01",
+      "status": "NOT_RUN",
+      "claim_scope": "Selected full cluster synthesis",
+      "minimum_vehicle": "Synthesizable selected compute plus complete bank-select/capture/config/buffers and real memory blackboxes",
+      "inputs": "Same parameters/source hashes as RTL validation; selected macro inventory",
+      "pass_predicates": [
+        "No blackbox arithmetic, missing modules, unintended latches, unconstrained generated clocks or synthesized-away active banks.",
+        "Macro count, SRAM ports, capture flop count and mux fanout reconcile to model.",
+        "Mapped logic plus real macro footprint/halo/routing/clock reserve fits selected slot.",
+        "Actual synthesis report retained; tools/hbm_accel_sm_v_gate.py synth is synthetic-vector simulation, NOT logic synthesis."
+      ],
+      "required_artifacts": [
+        "synthesis.log",
+        "netlist.v",
+        "statistics.json",
+        "constraints.sdc",
+        "macro_inventory.json"
+      ],
+      "depends_on": [
+        "M01",
+        "F01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "R01",
+      "status": "NOT_RUN",
+      "claim_scope": "Contextual selected cluster physical closure",
+      "minimum_vehicle": "One real full-shape hardened cluster with adjacent macro abstracts/corridor loads representing replication",
+      "inputs": "Matched synthesized netlist, real selected ROM/SRAM LEF/LIB, floorplan and boundary loads",
+      "pass_predicates": [
+        "1.2GHz streaming setup at SS, hold at FF; setup uncertainty60ps and hold25ps unchanged.",
+        "Serial-chain domain0.9GHz separately constrained; true CDC exceptions reviewed and bounded.",
+        "ROM actual clk-to-q included, two-cycle capture justified and final capture/select stage included.",
+        "Detailed-route DRC, antenna where available, congestion and actual hub routing-layer check pass; TT is pathfinding only.",
+        "Pin access, required boundary tracks, macro obstructions, fanout and neighbor corridor interference covered.",
+        "No new clock frequency headline until matched SS/FF evidence exists."
+      ],
+      "required_artifacts": [
+        "routed.odb",
+        "routed.def",
+        "ss_setup.rpt",
+        "ff_hold.rpt",
+        "drc.rpt",
+        "congestion.rpt",
+        "hub_routing_check.json",
+        "floorplan_manifest.json"
+      ],
+      "depends_on": [
+        "Y01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "W01",
+      "status": "NOT_RUN",
+      "claim_scope": "Candidate power and cooling evidence",
+      "minimum_vehicle": "Routed full cluster with measured activity and priced replicas",
+      "inputs": "Real active, idle-gated, bank-switch and wake workloads; model schedule",
+      "pass_predicates": [
+        "Macro/periphery/net/clock/SRAM/compute/interface/leakage terms have explicit boundaries; no double counting.",
+        "ROM model energy assumptions kept separate from measured routed-cell activity.",
+        "Per-token energy includes all idle dies and resident KV HBM; instantaneous peak from simultaneous phase schedule.",
+        "Wake cycles and gating state enter both timing and energy; no assumed zero idle power.",
+        "Selected die thermal budget and whole-system budget met or candidate rejected."
+      ],
+      "required_artifacts": [
+        "activity.saif",
+        "power_breakdown.json",
+        "schedule_peak.json",
+        "energy_per_token.json"
+      ],
+      "depends_on": [
+        "R01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    },
+    {
+      "id": "D01",
+      "status": "NOT_RUN",
+      "claim_scope": "Composed complete-token claim",
+      "minimum_vehicle": "Analytical static DAG composed from measured minimal components",
+      "inputs": "Validated mapping/topology plus new cluster timings and source-pinned reused component evidence",
+      "pass_predicates": [
+        "All forty layers, embedding, head, Engram, index, attention, SU, collectives and output return covered; no unknown component assigned zero.",
+        "Every DAG node binds to resident stage/die including layer=-1; topology hop counts recomputed for selected placement.",
+        "Serial dependencies, compute/ports mutual exclusion, memory startup, CDC, buffer leases and retire tails composed.",
+        "1M KV exact full-scan traffic retained unless candidate-only semantics separately proven; no free persistent-cache assumption.",
+        "Measured full-shape mechanism gain >=1% per-user rate and contextual SS/FF/hub gates required for adoption; keep opt-in disabled otherwise.",
+        "Model prediction vs measured-component composition vs integrated achieved performance labelled separately.",
+        "Whole-system simulation only as final integration smoke if owner explicitly requests; not required to characterize each mechanism."
+      ],
+      "required_artifacts": [
+        "composition.json",
+        "coverage.json",
+        "model_measurement_deltas.json",
+        "adoption_verdict.json"
+      ],
+      "depends_on": [
+        "C01",
+        "R01",
+        "W01"
+      ],
+      "failure_policy": "Preserve immutable failed run; no adoption credit; correct model or reject measured-slower/nonclosing lever rather than tune it into a claimed gain."
+    }
+  ]
+}

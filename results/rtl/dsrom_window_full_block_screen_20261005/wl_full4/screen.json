@@ -1,0 +1,31 @@
+{
+ "top": "ot_dsrom_s81_wl_screen",
+ "params": {},
+ "period_ps": 833.0,
+ "ss_setup_wns_ps": -1175.2,
+ "ff_hold_wns_ps": 3.2,
+ "cell_area_um2": 568089.142192,
+ "ss_fmax_prelayout_hz": 497948751,
+ "worst_start": "ir[395]$_DFF_P_",
+ "worst_end": "u_src.g_la.u_stage.sectors_landed[10]$_DFF_PN0_",
+ "worst_slack_by_stage_ps": {
+  "u_src.g_la.u_stage.sectors_landed": -1175.24,
+  "u_src.g_la.u_writer.st_blocks_written": -1168.57,
+  "u_src.g_la.u_writer.row_user": -1165.03,
+  "u_src.g_la.u_writer.row_tag": -1164.28,
+  "u_src.g_la.u_writer.codes": -1154.6,
+  "u_src.g_la.u_writer.scale": -1154.6,
+  "u_src.g_la.u_writer.st_sectors_written": -1134.15,
+  "orr": -1116.8,
+  "u_src.g_la.u_writer.user_id": -1113.37,
+  "u_src.g_la.u_writer.row": -1113.01,
+  "u_src.g_la.u_writer.bidx": -1105.14,
+  "u_src.g_la.u_stage.in_job": -1096.83,
+  "u_src.g_la.u_writer.fault": -1080.07,
+  "u_src.g_la.u_writer.sec": -1058.64,
+  "u_src.g_la.u_writer.state": -1047.3,
+  "u_src.g_la.u_writer.fault_code": -1021.58,
+  "u_src.g_la.u_stage.g_bank.g_col.mem": -1011.12
+ },
+ "basis": "pre-layout: ORFS yosys/abc at CORNER=WC, OpenSTA SS RVT libs (setup, 60 ps) and FF RVT libs (hold, 25 ps), ideal clock"
+}

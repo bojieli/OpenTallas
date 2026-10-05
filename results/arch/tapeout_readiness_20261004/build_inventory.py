@@ -52,14 +52,18 @@ row("qwen_rom", "dft", "partial",
 row("dsrom_s81", "dft", "partial",
     ["docs/DFT.md", "results/dft/pkg_ctrl/atpg.json", "results/dft/fabric_router/atpg.json",
      "results/dft/tapeout_20261004"],
-    "Old V4.1 package/fabric blocks graded. The S81 q element (ot_v41_rom_elem_q_qp_w10) is item (a) of this "
-    "stream (results/dft/tapeout_20261004/dsrom_q_element). Die-level chain stitching, TAP per die and "
-    "transition-fault ATPG missing.",
+    "S81 q element (ot_v41_rom_elem_q_qp_w10) scanned with X-bounded ROM macros and the ICG opened in test "
+    "(tools/dft/macro_bound.py): 31,606 flops in 31 chains (max 1,032), stuck-at fault coverage 95.58% / test "
+    "coverage 99.77%, 9,042 patterns, gate-level confirmed, scan-off equivalence proven (31,793 points). "
+    "Open: die-level chain stitching / compression, TAP per die, transition-fault ATPG, scan timing closure "
+    "(the element itself is not closed at 0.833 ns in this frame).",
     "L", "med")
 row("hbm_accel", "dft", "partial",
     ["docs/DFT.md", "results/dft/kv_stream/atpg.json", "results/dft/tapeout_20261004"],
-    "Only the old HBM-comparator KV streamer/matvec graded. The accelerator SM element is item (a) "
-    "(results/dft/tapeout_20261004/hbm_sm_element). HBM controller, service and collective blocks ungraded.",
+    "SM tensor-core column ot_gpu_bd_col (the replicated leaf of the SM element; the whole SM was never routed): "
+    "6,006 flops in 6 chains, fault coverage 94.44% / test coverage 99.78%, 1,606 patterns, gate-level confirmed, "
+    "equivalence proven; scan costs +10.3% std-cell area, +16.7% wirelength, SS WNS -102.6 -> -117.0 ps "
+    "(baseline not closed in the generic recipe). HBM controller, service and collective blocks ungraded.",
     "L", "med")
 
 # ---------------------------------------------------------------- MBIST
@@ -72,9 +76,11 @@ row("qwen_rom", "mbist", "partial",
     "M", "med")
 row("dsrom_s81", "mbist", "partial",
     ["rtl/dft/ot_mbist_ctrl.sv", "results/rtl/mbist_campaign.json", "results/rtl/tapeout_bist_20261004"],
-    "No collars on the S81 element ROM macros (4096-row, 2 per slot) or cfg ROMs (ot_rom_4096x72_m8), nor on the "
-    "on-die KV window/staging SRAM. Item (b) of this stream builds and proves it on the element bench "
-    "(results/rtl/tapeout_bist_20261004).",
+    "Element bench PASS (results/rtl/tapeout_bist_20261004): 4 ROM macros of the q element behind signature "
+    "collars (generated successor) + 2 KV staging SRAM banks behind March C-/BIRA collars, one controller; exact vs "
+    "the pinned element through the BIST, 22/22 fault cases, 17.95 us per element at 1.2 GHz. Open: cfg ROMs "
+    "(ot_rom_4096x72_m8), die-level controller hierarchy/TAP, fuse box for repair, closure of the collars in the "
+    "routed element.",
     "M", "high")
 row("hbm_accel", "mbist", "partial",
     ["rtl/hdc/kv/ot_hdc_kv_bufs.sv", "docs/MEMORY_COMPILERS_AND_BIST.md"],
@@ -146,16 +152,17 @@ row("hbm_accel", "ir_em", "missing",
 # ---------------------------------------------------------------- Full-chip
 row("qwen_rom", "fullchip", "partial",
     ["results/rtl/qwen_rom_fulldie_20261003/STATUS.md", "results/rtl/qwen_rom_fulldie_20261003/README.md",
-     "results/rtl/qwen_rom_fulldie_20261003/feasibility.json"],
-    "792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. GRT k16 NOT closed "
-    "(b2 36.4k overflow; b3r2 variants worse). No die-level detailed route, timing budgets or STA. Die top "
-    "for synthesis does not exist at full shape (tile fabric is host-composed).",
+     "results/rtl/qwen_rom_fulldie_20261003/b3r3/grt/b3r16B40_k16_banded_i50/summary.json"],
+    "792.36 mm2 floorplan (reticle 858 mm2), legality + track PASS, pin access PASS. Die global route CLOSED "
+    "at b3r16B40 (50-iteration GRT, 0 overflow; scoreboard f1df64409). No die-level detailed route, timing "
+    "budgets or STA. Die top for synthesis does not exist at full shape (tile fabric is host-composed).",
     "XL", "high")
 row("dsrom_s81", "fullchip", "partial",
     ["results/rtl/dsrom_s81_fulldie_20261004/STATUS.md", "results/rtl/dsrom_integration_20261004/elaborate.json"],
-    "Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. Open: q element pin "
-    "xs_q1[151] access; die top lint OOM at 81 GB (elaborate.json killed_oom, not a verdict); no detailed route "
-    "or die STA; q element pair route p8 not met (setup -88 ps, 3,531 paths).",
+    "Layer + head die floorplans, legality/on-track PASS, GRT k16 i50 overflow 0 PASS. The all-flags S81 die top "
+    "(die_c2_allon) lints with 0 errors at 33.5 GB peak (elaborate.json; the c0/c1 configs were OOM-killed at "
+    "81-84 GB, not verdicts). Open: q element pin xs_q1[151] access; no detailed route or die STA; q element "
+    "pair route p8 not met (setup -88 ps, 3,531 paths).",
     "L", "high")
 row("hbm_accel", "fullchip", "missing",
     ["results/rtl/hbm_accel_fmax_inventory_20261004/inventory.json",
@@ -196,12 +203,13 @@ row("dsrom_s81", "fsr_load", "partial",
     "Weights in ROM; KV/index-key HBM services RTL+tested in system gates (5 dies, 3 packages, exact). HBM "
     "controller domain model-only; Engram history restore is testbench logic.",
     "M", "med")
-row("hbm_accel", "fsr_load", "missing",
-    ["results/rtl/hbm_system_rtl_20261003/STATUS.md", "results/rtl/hbm_accel_ha8_20261004/REPLAY.md",
-     "rtl/gpu_sys/ot_gpu_host_bridge.sv"],
-    "Checkpoint/weight load into HBM is a load-time image (no host DMA path into HBM); the host bridge loader "
-    "only writes command and instruction memories. Without it the accelerator cannot boot. Selected as item (c) "
-    "of this stream.",
+row("hbm_accel", "fsr_load", "partial",
+    ["results/rtl/hbm_system_rtl_20261003/STATUS.md", "results/rtl/tapeout_hbm_loader_20261004/README.md",
+     "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv"],
+    "Was missing (load-time $readmemh images only). Item (c): rtl/hbm_accel/loader/ot_hbm_accel_loader.sv loads "
+    "a real V4.1 die image through AXI -> CDC -> memsys bit-exact (0 mismatches over 4.2M words, CRC + read-back "
+    "verify; results/rtl/tapeout_hbm_loader_20261004). Open: install behind ot_host_if in the system top, one "
+    "port per partition for full-rate boot (measured 9.8 GB/s on one client), HBM -> host (KV save).",
     "M", "high")
 # host
 row("qwen_rom", "fsr_host", "exists",
@@ -224,7 +232,7 @@ row("qwen_rom", "fsr_control", "partial",
 row("dsrom_s81", "fsr_control", "partial",
     ["results/rtl/dsrom_system_rtl_20261003/STATUS.md", "rtl/dsrom_sys/ot_dsrom_stage_guard.sv"],
     "Stage guards, stall export, wavefront package controller RTL; power/reset sequencing NOT built (Qwen's "
-    "ot_qwen_sys_rst_seq is reusable); S81 die top cannot be linted on 81 GB.", "M", "med")
+    "ot_qwen_sys_rst_seq is reusable); the all-flags S81 die top lints (33.5 GB) but has never been simulated.", "M", "med")
 row("hbm_accel", "fsr_control", "partial",
     ["rtl/gpu_sys/ot_gpu_reset_ctrl.sv", "rtl/gpu_sys/ot_gpu_cmdproc.sv",
      "rtl/hbm_accel/service/ot_hbm_accel_causal_command_provider.sv"],
@@ -255,7 +263,7 @@ row("dsrom_s81", "fsr_mtp", "partial",
     ["results/rtl/dsrom_dspark_rtl_20261003/REPLAY.md", "results/rtl/dsrom_dspark_step_slices_20261004/composition.json",
      "results/rtl/ds_mtp_accept_20261003"],
     "DSpark drafter + accept RTL exact on the reduced vehicle and as measured step slices at 1M; fused draft head "
-    "adopted. Not run inside the S81 system top (die top too large to elaborate).", "M", "med")
+    "adopted. Not run inside the S81 system top (the die top lints at 33.5 GB but has no system simulation).", "M", "med")
 row("hbm_accel", "fsr_mtp", "partial",
     ["results/rtl/dshbm_dspark_draft_20261004/README.md", "results/rtl/hbm_system_rtl_20261003/STATUS.md"],
     "DS draft measured on SM elements (chain + full shape exact); DSpark lowering exact on the functional machine; "
@@ -277,13 +285,13 @@ for d in DIES:
     counts[d] = c
 
 ranked = [
-    {"rank": 1, "item": "hbm_accel fsr_load: host -> HBM weight/KV loader", "why": "the accelerator cannot boot without it; exact and small; stream item (c)"},
-    {"rank": 2, "item": "dsrom_s81 mbist: ROM + KV SRAM BIST on the element", "why": "16,919 cfg ROMs + 2,417 pairs untestable at wafer sort; stream item (b)"},
-    {"rank": 3, "item": "dsrom_s81 / hbm_accel dft: scan + ATPG on the hardened elements", "why": "coverage and the 1.2 GHz scan cost are unknown on the replicated element; stream item (a)"},
+    {"rank": 1, "item": "hbm_accel fsr_load: host -> HBM weight/KV loader", "why": "the accelerator could not boot without it; stream item (c) DONE as a standalone engine (bit-exact on a real V4.1 die image); install behind ot_host_if open"},
+    {"rank": 2, "item": "dsrom_s81 mbist: ROM + KV SRAM BIST on the element", "why": "16,919 cfg ROMs + 2,417 pairs untestable at wafer sort; stream item (b) DONE on the element bench (22/22 faults, exact); cfg ROMs and die hierarchy open"},
+    {"rank": 3, "item": "dsrom_s81 / hbm_accel dft: scan + ATPG on the hardened elements", "why": "stream item (a): 95.6% / 94.4% FC, 99.8% TC; the scanned q element does NOT route in its frame -> re-floorplan or compression is now the top DFT risk"},
     {"rank": 4, "item": "qwen_rom fsr_mtp: drafter D0 fault at ctx 8K", "why": "headline MTP step not exact in RTL at target context"},
     {"rank": 5, "item": "all dies: clock -- meso FIFO / forwarded links not instantiated in any die top", "why": "single tree proven infeasible; die clocking is a sign-off blocker"},
     {"rank": 6, "item": "all dies: power intent (UPF) and DS PG route closure", "why": "PG measured but intent not in a standard format; R4 route -228 ps"},
-    {"rank": 7, "item": "qwen_rom / hbm_accel fullchip", "why": "Qwen GRT not closed; no accelerator die floorplan"},
+    {"rank": 7, "item": "qwen_rom / hbm_accel fullchip", "why": "Qwen die GRT closed (b3r16B40) but no detailed route/STA; no accelerator die floorplan"},
 ]
 
 out = {

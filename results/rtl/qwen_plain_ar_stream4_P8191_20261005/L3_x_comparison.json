@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "scope": "completed L3 X only; current-token KV/finalHEAD pending",
+  "position": 8191,
+  "token": 24,
+  "stage": "cycles=5282 start_cyc=16618 end_cyc=21900 me_busy=3253/3253 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=3976s",
+  "checks": {
+    "die0": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0",
+      "expected_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0"
+    },
+    "die1": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0",
+      "expected_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0"
+    },
+    "die2": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0",
+      "expected_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0"
+    },
+    "die3": {
+      "words": 4096,
+      "mismatches": 0,
+      "first_mismatch": null,
+      "actual_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0",
+      "expected_sha256": "b6923c4ae8eddc1f8dc4f1df5c7c8dc06af503b8914d04c4ffae8896a3d33eb0"
+    }
+  }
+}
