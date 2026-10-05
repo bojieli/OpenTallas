@@ -20,6 +20,7 @@ def main():
  def run(binary,out,lists):
   result=original_run(binary,out,lists)
   Path(str(out)+'.case.json').write_text(json.dumps(result,indent=2)+'\n')
+  if not result.get('pass_'):raise RuntimeError('exact gate failed: '+str(out))
   return result
  gate.kg_run=run
  try:gate.cmd_gather(a)
