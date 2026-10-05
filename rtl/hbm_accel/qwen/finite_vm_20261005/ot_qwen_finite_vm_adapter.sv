@@ -70,32 +70,6 @@ module ot_qwen_finite_vm_adapter #(
     wire [14:0] leaf_pack_word;
     wire [15:0] leaf_pack_mask;
     wire [511:0] leaf_pack_data;
-    generate if(W1_FRAME)begin:g_w1
-        // The leaf sees decoded immutable LIVE seats, never a static opcode
-        // or assumed k=0 phase. Nonmatching address/en patterns fall back.
-        if(NR!=2256 || NW!=865 || VX0!=208 || NVX!=2048)begin:g_bad_geometry
-            initial $fatal(1,"W1 leaf requires actual ROM aperture");
-        end
-        ot_qwen_rom_w1_frame_leaf #(.ENABLE(ENABLE)) u_leaf(
-            .clk(clk),.rst_n(rst_n),.frame_start(state==LGSTART && leaf_ready),
-            .frame_clear(state==LCLEAR),.frame_ue(frame_ue),
-            .frame_ready(leaf_ready),.w1_valid(leaf_valid),.fallback_v(leaf_fallback),.fault(leaf_fault),
-            .ren(ren),.raddr(raddr),.wen(wen),.waddr(waddr),.wdata(wdata),
-            .window_v(state==RWAIT && leaf_active && rd_valid &&
-                rd_owner==pending_owner && rd_rot==0 && leaf_window_ready),
-            .window_base(requested_base),.window_words(rd_words),.window_ready(leaf_window_ready),
-            .read_put_v(leaf_put_v),.read_put_ready(state==LRPUT && !frame_ue && !fault),
-            .read_put_mask(leaf_put_mask),.read_put_data(leaf_put_data),
-            .select_v(state==LWSELECT && leaf_select_ready),.select_group({1'b0,leaf_group}),
-            .select_ready(leaf_select_ready),.pack_v(leaf_pack_v),
-            .pack_ready(state==LWPACK && !frame_ue && !fault),
-            .pack_word(leaf_pack_word),.pack_mask(leaf_pack_mask),.pack_data(leaf_pack_data));
-    end else begin:g_no_w1
-        assign leaf_ready=0;assign leaf_valid=0;assign leaf_fallback=0;assign leaf_fault=0;
-        assign leaf_window_ready=0;assign leaf_put_v=0;assign leaf_put_mask=0;assign leaf_put_data=0;
-        assign leaf_select_ready=0;assign leaf_pack_v=0;assign leaf_pack_word=0;
-        assign leaf_pack_mask=0;assign leaf_pack_data=0;
-    end endgenerate
 
     reg [2047:0] last_window;
     reg [14:0] last_base;
@@ -147,7 +121,7 @@ module ot_qwen_finite_vm_adapter #(
     // A response must be consumed on a held physical edge, including a stray
     // pulse on the empty-frame fast path. Gate on bounded event reduction;
     // the owned FSM checks identity without a227-bit comparator on the gate.
-    assign native_tick = ENABLE ? (rst_n && !fault && !frame_ue && !service_event && native_epoch!=64'hffffffffffffffff && ((state==ADMIT && (!me_frame||source_me_wanted))||fast_head||fast_empty)) : 1'b1;
+    assign native_tick = ENABLE ? (rst_n && !fault && !leaf_fault && !frame_ue && !service_event && native_epoch!=64'hffffffffffffffff && ((state==ADMIT && (!me_frame||source_me_wanted))||fast_head||fast_empty)) : 1'b1;
     assign native_me_lease = ENABLE ? (native_tick && ((state==ADMIT)?me_frame:source_me_wanted)) : source_me_wanted;
     assign drained = ENABLE ? (state==CAP && !pack_valid && !fault) : 1'b1;
 
@@ -180,6 +154,32 @@ module ot_qwen_finite_vm_adapter #(
             bank_owner[wb*TAGW+:TAGW]=pending_owner;
         end
     end
+    generate if(W1_FRAME)begin:g_w1
+        // The leaf sees decoded immutable LIVE seats, never a static opcode
+        // or assumed k=0 phase. Nonmatching address/en patterns fall back.
+        if(NR!=2256 || NW!=865 || VX0!=208 || NVX!=2048)begin:g_bad_geometry
+            initial $fatal(1,"W1 leaf requires actual ROM aperture");
+        end
+        ot_qwen_rom_w1_frame_leaf #(.ENABLE(ENABLE)) u_leaf(
+            .clk(clk),.rst_n(rst_n),.frame_start(state==LGSTART && leaf_ready),
+            .frame_clear(state==LCLEAR),.frame_ue(frame_ue),
+            .frame_ready(leaf_ready),.w1_valid(leaf_valid),.fallback_v(leaf_fallback),.fault(leaf_fault),
+            .ren(ren),.raddr(raddr),.wen(wen),.waddr(waddr),.wdata(wdata),
+            .window_v(state==RWAIT && leaf_active && rd_valid &&
+                rd_owner==pending_owner && rd_rot==0 && leaf_window_ready),
+            .window_base(requested_base),.window_words(rd_words),.window_ready(leaf_window_ready),
+            .read_put_v(leaf_put_v),.read_put_ready(state==LRPUT && !frame_ue && !fault),
+            .read_put_mask(leaf_put_mask),.read_put_data(leaf_put_data),
+            .select_v(state==LWSELECT && leaf_select_ready),.select_group({1'b0,leaf_group}),
+            .select_ready(leaf_select_ready),.pack_v(leaf_pack_v),
+            .pack_ready(state==LWPACK && !frame_ue && !fault),
+            .pack_word(leaf_pack_word),.pack_mask(leaf_pack_mask),.pack_data(leaf_pack_data));
+    end else begin:g_no_w1
+        assign leaf_ready=0;assign leaf_valid=0;assign leaf_fallback=0;assign leaf_fault=0;
+        assign leaf_window_ready=0;assign leaf_put_v=0;assign leaf_put_mask=0;assign leaf_put_data=0;
+        assign leaf_select_ready=0;assign leaf_pack_v=0;assign leaf_pack_word=0;
+        assign leaf_pack_mask=0;assign leaf_pack_data=0;
+    end endgenerate
     generate if(ENABLE) begin:g_bound
         ot_qwen_checked_vm_bank #(.TAG_W(TAGW)) u_bank(
             .clk(clk),.rst_n(rst_n),.rd_v(rd_issue),.rd_base_word(rd_base),
