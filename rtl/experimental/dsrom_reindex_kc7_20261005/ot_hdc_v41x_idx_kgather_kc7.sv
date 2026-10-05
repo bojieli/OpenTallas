@@ -434,22 +434,22 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
         end
     end
 
-    localparam integer PW = AW + LENW + TAGW;
-    wire [NPC*PW-1:0] next_payload;
+    localparam integer RQPW = AW + LENW + TAGW;
+    wire [NPC*RQPW-1:0] next_payload;
     generate for (genvar pp=0; pp<NPC; pp=pp+1) begin : g_payload_ready_last
-        wire [PW-1:0] code_payload = {fq_addr[pp*DF+fq_rp[pp]],
+        wire [RQPW-1:0] code_payload = {fq_addr[pp*DF+fq_rp[pp]],
             LENW'(4), TAGW'({1'b0, fq_slot[pp*DF+fq_rp[pp]]})};
-        wire [PW-1:0] scale_payload = {fq_addr[(NPC+pp)*DF+fq_rp[NPC+pp]],
+        wire [RQPW-1:0] scale_payload = {fq_addr[(NPC+pp)*DF+fq_rp[NPC+pp]],
             LENW'(1), TAGW'({1'b1, fq_slot[(NPC+pp)*DF+fq_rp[NPC+pp]]})};
-        wire [PW-1:0] old_payload = {req_addr[pp*AW+:AW],
+        wire [RQPW-1:0] old_payload = {req_addr[pp*AW+:AW],
             req_len[pp*LENW+:LENW], req_tag[pp*TAGW+:TAGW]};
-        for (genvar ps=0; ps<PW; ps=ps+8) begin : g_slice
-            localparam integer W = (PW-ps < 8) ? PW-ps : 8;
+        for (genvar ps=0; ps<RQPW; ps=ps+8) begin : g_slice
+            localparam integer W = (RQPW-ps < 8) ? RQPW-ps : 8;
             ot_dsrom_kc7_payload_last #(.W(W)) u_select (
                 .eligible(run && ((fq_n[pp] != 0) || use_s[pp])),
                 .scale(use_s[pp]), .valid(req_v[pp]), .ready(req_rdy[pp]),
                 .old_data(old_payload[ps+:W]), .code_data(code_payload[ps+:W]),
-                .scale_data(scale_payload[ps+:W]), .next_data(next_payload[pp*PW+ps+:W]));
+                .scale_data(scale_payload[ps+:W]), .next_data(next_payload[pp*RQPW+ps+:W]));
         end
     end endgenerate
     // ---- data (no reset: every word is written before it is read) ---------------------------------------
@@ -546,7 +546,7 @@ module ot_hdc_v41x_idx_kgctl_kc7 #(
         for (p2 = 0; p2 < NPC; p2 = p2 + 1)
             if (OPT_KC7) begin
                 {req_addr[p2*AW+:AW], req_len[p2*LENW+:LENW], req_tag[p2*TAGW+:TAGW]}
-                    <= next_payload[p2*PW+:PW];
+                    <= next_payload[p2*RQPW+:RQPW];
             end else if (iss[p2]) begin
                 if (use_s[p2]) begin
                     req_addr[p2*AW +: AW] <= fq_addr[(NPC + p2) * DF + fq_rp[NPC + p2]];

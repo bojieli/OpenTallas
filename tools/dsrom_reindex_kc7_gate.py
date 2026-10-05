@@ -23,7 +23,16 @@ def main():
                    "rtl/test/hdc_v41x_idx_kgather.cpp"]
     original_build = gate.kg_build
     gate.kg_build = lambda obj, params: original_build(obj, dict(params, OPT_KC6=1, OPT_KC7=1))
-    gate.cmd_gather(a)
+    try:
+        gate.cmd_gather(a)
+    except __import__('subprocess').CalledProcessError as e:
+        # The original runner captures compiler diagnostics; preserve them.
+        for name in ('stdout', 'stderr'):
+            data = getattr(e, name)
+            if data:
+                (a.out / ('compiler_' + name + '.log')).write_bytes(
+                    data if isinstance(data, bytes) else data.encode())
+        raise
     import json, hashlib
     p = a.out / "gather.json"
     record = json.loads(p.read_text())
