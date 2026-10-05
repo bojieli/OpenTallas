@@ -48,6 +48,44 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
+    """Price a compiler's finite source order; missing service costs stay unknown.
+
+    This is a sequential candidate calendar, not a FIELD phase census or a
+    claim that operand movement is free. TP4 service is maximum, never sum.
+    Cost rows, when supplied by an actual owner, include prefetch, arithmetic,
+    publication/ACK, context restore, collective and fragment drain cycles.
+    """
+    costs = {} if measured_service_cycles is None else measured_service_cycles
+    rows = []
+    finish = 0.0
+    for ordinal, e in enumerate(events):
+        if e['ordinal'] != ordinal or e['depends_on'] != ([] if ordinal==0 else [ordinal-1]):
+            raise ValueError('literal sequential source calendar/order required')
+        cost = costs.get(e['node'])
+        seconds = None
+        if cost is not None:
+            if len(cost) != 4:
+                raise ValueError('actual TP4 per-rank service costs required')
+            values=[]
+            for r in cost:
+                if r['cycles'] < 0 or r['clock_hz'] <= 0:
+                    raise ValueError('service cycle/clock price bounds')
+                values.append(r['cycles']/r['clock_hz'])
+            seconds=max(values)
+        start=finish
+        finish=None if start is None or seconds is None else start+seconds
+        rows.append(dict(node=e['node'],depends_on=e['depends_on'],start_s=start,
+                         service_s=seconds,finish_s=finish,
+                         missing=e['missing']+([] if cost is not None else ['actual composed per-rank service cycles/clock'])))
+    return dict(order='literal source order, sequential dependencies; no overlap credit',
+                rank_composition='TP4 maximum',rows=rows,composed_seconds=finish,
+                composition_complete=all(not r['missing'] for r in rows),
+                unknown_costs_are_zero=False,added_hardware_area_um2=0,
+                hardware_change='compiler-only candidate; existing physical capacity/homes unresolved',
+                adoption=False)
+
+
 def dsrom_recovery_decision_gate():
     """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
 
