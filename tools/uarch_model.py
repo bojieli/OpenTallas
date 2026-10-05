@@ -48,6 +48,25 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_source_program_inventory(words_by_home, *, tp=4, instruction_bits=2048, address_bits=14):
+    """Finite compiler inventory; active content does not shrink physical ROM."""
+    if tp != 4 or instruction_bits != 2048 or address_bits != 14:
+        raise ValueError('selected native S81 instruction/entry/TP aperture required')
+    if any(type(n) is not int or not 0 < n <= 1<<address_bits for n in words_by_home.values()):
+        raise ValueError('actual native program capacity exceeded')
+    return dict(words_per_rank_by_home=words_by_home,
+        active_bytes_per_rank=sum(words_by_home.values())*instruction_bits//8,
+        active_bytes_TP4=sum(words_by_home.values())*instruction_bits//8*tp,
+        declared_address_capacity_words_per_home=1<<address_bits,
+        instruction_bits_per_fetch=instruction_bits,
+        declared_capacity_is_not_active_word_count=True,
+        physical_ROM_area_and_port_cost=None,
+        physical_storage_slot_bound=False,
+        runtime_END_prefetch_restore_ACK_and_drain_cycles=None,
+        compiler_added_hardware_FF=0,added_global_port_width_bits=0,
+        new_hardware=False,adoption=False)
+
+
 def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
     """Price a compiler's finite source order; missing service costs stay unknown.
 
@@ -283,6 +302,21 @@ def rom_spine_publication_price(*, roots=128, elements=2417, phases=1):
                 parent_busy="Existing phase/capture ownership through positive VM commit and capture_drained; never a delayed idle credit",
                 fault_policy="Aligned fault drives existing warm-quarantine request, inhibits writes, retains accepted debt; prior writes not rolled back",
                 root_fault_quarantine_fanout=roots,
+                publication_visibility_guard=dict(
+                    purpose="Existing capture_live/drained exports include the actual pending publication copy before consumer/retirement",
+                    added_FF=0, added_edges=0,
+                    quiet_OR2_count=2 * roots + 1, quiet_INV_count=1,
+                    quarantine_AND2_count=roots, quarantine_OR2_count=roots,
+                    export_OR3_count=1, export_AND3_count=1,
+                    export_INV_count_no_CSE=2,
+                    cell_body_um2_no_CSE=(4 * roots + 3) * .08748 + 3 * .04374,
+                    OR2_AND2_OR3_AND3_cell_area_um2=.08748,
+                    INV_cell_area_um2=.04374,
+                    basis="ASAP7 RVT SS SIMPLE211120/INVBUF220122 Liberty; explicit Boolean construction, not synthesis/loaded delay",
+                    raw_fault_timing="Still timed through source publication_quiet to actual phase live/drained/C8 guards; no free fault-blind edge or falsepath",
+                    quiet_control_sink_count=4,
+                    loaded_clock_wire_fault_fanout_cost=None,
+                    paired_register_timing_gain_guaranteed=False),
                 E1_fault_bank_fanout=2,
                 tracks_slot_fit=None, gate_power_w=None,
                 source_exactness_pass=False, connected_consumer_gate_pass=False,
@@ -9161,6 +9195,51 @@ def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
     return record
 
 
+def hbm_topk_balanced_compare_model():
+    """Second mandatory CTL repair, priced against retained route_r1 context.
+
+    Gross count for each 42-bit balanced unsigned comparison: 42 generate
+    ANDs +42 equality XNORs +41 internal nodes*(AND/OR/AND)=207 gates.
+    No credit is taken for the existing 300 comparison cones removed.
+    """
+    logic = 300*207*0.2
+    route = logic*0.20
+    hold = 8*336*2*0.25
+    total = 28519.8 + logic + route + hold + 0.2 + 55*2*0.25
+    return dict(default_enabled=False, variant=2, N=384,P=16,K=6,IW=9,
+                MACs_per_cycle=0, memory_bytes_per_cycle=0, replicas=1,
+                input_bits_per_cycle=512, output_bits_per_result=54,
+                extra_boundary_bits=0, added_register_bits=0,
+                comparison_count=300, comparison_width=42,
+                unsigned_compare_gross_gate_equivalents=300*207,
+                logic_gross_proxy_um2=logic,
+                local_route_buffer_reserve_um2=route,
+                independent_hold_reserve_um2=hold,
+                hold_reserve_basis='up to 2 assumed 0.25um2 buffers per 2688 leaf s0 destination bits',
+                area_basis='ASSUMED0.2um2/gate and0.25um2/buffer; no removed-cone credit',
+                routed_predecessor_stdcell_um2=28519.8,
+                candidate_stdcell_upper_screen_um2=total,
+                component_slot='CTL.TOPK_CTX384 retained component; parent slot binding pending Sagan',
+                die_area_um=[0,0,290.54,290.54],
+                core_area_um=[2.052,2.160,288.522,288.360],
+                core_area_um2=81987.714,
+                placement_density=0.55,
+                cell_occupancy_screen=total/81987.714,
+                fixed_component_screen_pass=total/81987.714<0.55,
+                parent_slot_fit=False,
+                compare_tree_internal_signal_bound=300*2*41,
+                compare_tree_local_fanout_bound=3,
+                compare_result_payload_fanout_max=84,
+                added_clock_sinks=0,
+                valid_pipeline_encoding='complemented; same logical reset and pulse edge',
+                added_latency_cycles=0, initiation_interval_cycles=1,
+                composed_token_latency_delta_cycles=0,
+                setup_period_ps=833,setup_uncertainty_ps=60,
+                hold_uncertainty_ps=25,io_delay_fraction=0.2,
+                hold_repair_margin_ps=20, predecessor_hold_repair_margin_ps=10,
+                SSFF_closed=False, adopted=False)
+
+
 def qwen_rom_registered_issue_commit_price():
     """Source-counted mandatory core repair; no clock/adoption credit.
 
@@ -9209,3 +9288,25 @@ def hbm_stream_aq_period_bound_candidate(*, exposed_service_cycles=None):
                 timing_requalification='linear fixed-netlist bound only; changed clock/CTS/IO/CDC context not measured',
                 limiting_cone='PC1 refwin -> wq_act / oldest pwin -> wab_oh[27]',
                 physical_record='results/rtl/svc_aq_block_nonempty_cut_20261005/route_r1/terminal.json')
+
+
+def qwen_service_aq_act_parent_clock_model():
+    """Source-selected enrollment; fractional clock is not an ideal 1024ps clock."""
+    return dict(default_enabled=False, MACs_per_cycle=0, stacks=4, pcs=128,
+        added_state_bits=4096, register_area_floor_um2=1194.3936,
+        area_excludes="local mask logic, enabled mux, clock/reset distribution and wires",
+        added_memory_ports=0, added_boundary_bits=0, added_command_edges=0,
+        composed_token_delta_edges=0, core_fs=833333, intended_average_ctl_fs=1024000,
+        shortest_service_rising_edge_interval_fs=833333,
+        longest_service_rising_edge_interval_fs=1666666,
+        high_pulse_fs=416666.5, low_pulse_min_fs=416666.5,
+        generated_clock="hclk=~clk & tick_q; tick_q selected at core rising edge by accumulator",
+        clock_gate="raw AND, not installed ICG; tick-to-falling-edge stability and pulse width unqualified",
+        replicas_clock_load="128 PC + four stack controllers + existing service rings; actual capacitance unknown",
+        CDC="existing t_clk/hclk FIFOs and core/hclk landing/write handoff unchanged; actual phase/skew unqualified",
+        IO="owning parent grants/credits/landing/ACK real wires preserved; actual arrival/load budgets unknown",
+        checker_time="existing now=hcyc*1024ps differs from actual fractional edge timestamps",
+        required_context="SS60/FF25 shortest833.333ps service edge; generated-clock waveform/pulse/IO/CDC and physical-time DRAM checks",
+        command_calendar="same accepted-edge count; wall latency depends on actual accumulator phase and consumer stalls",
+        SSFF_closed=False, adopted=False, full128_clock_credit=False,
+        slower854_61_bound_selected=False)

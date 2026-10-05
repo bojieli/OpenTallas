@@ -269,12 +269,199 @@ def emit_current_stage_candidate(execution, out, *, stage=37, layer=20,
         complete_source_operation_coverage=True,complete_physical_stage_plan=False,
         selected_stage_compiled_fragment_count_per_rank=len(selected),
         required_ranks=[0,1,2,3],native_END_is_whole_stage_or_head_completion=False,
-        terminal=None,missing_terminal='HEAD/global_argmax is outside selected resident layer scopes; no token terminal assigned',
+        terminal=None,missing_terminal='intermediate layer handoff requires all source coverage/fences bound; token HEAD terminal outside scope',
         source_input_sha256=execution.input_sha256,artifacts=artifacts,
         calendar=calendar_pricer(events))
     (out/'parent_dispatch.json').write_text(json.dumps(result,indent=2)+'\n')
     (out/'ownerorderedgroups.json').write_text(json.dumps(selected,indent=2)+'\n')
     (out/'node_order.json').write_text(json.dumps(result['node_order_by_stage'],indent=2)+'\n')
+    return result
+
+
+def emit_current_service_candidates(candidate, out, *, service_homes, program_root, program_pricer=None):
+    """Link literal nonfield runs at explicit current service candidate homes.
+
+    No placement selection or acceptance is performed. Original canonical field
+    offers remain unchanged. Actions/fences require their real visibility hooks.
+    """
+    import copy
+    import hashlib
+    import hdc_isa_v41 as ISA
+    if candidate.get('candidate_only') is not True or candidate.get('active') is not False:
+        raise ValueError('current inactive compiler candidate required')
+    if service_homes != {19:38,20:40}:
+        raise ValueError('bounded owner-requested current L19/L20 service38/40 candidate only')
+    out=Path(out)
+    if out.exists():
+        raise ValueError('fresh service candidate output required')
+    rows=[];runs=[];current=None
+    programs={};prefixes={};prefix_hashes={}
+    for home in service_homes.values():
+        lengths=[]
+        for rank in range(4):
+            rel=f's{home}_r{rank}/prog.hex'
+            if rel in candidate['artifacts']:
+                raw=(Path(program_root)/rel).read_bytes()
+                if hashlib.sha256(raw).hexdigest()!=candidate['artifacts'][rel]:
+                    raise ValueError('canonical field program prefix changed')
+                prefix=[int(w,16) for w in raw.decode().splitlines()]
+                prefix_hashes[rel]=hashlib.sha256(raw).hexdigest()
+            else:prefix=[]
+            prefixes[home,rank]=prefix;lengths.append(len(prefix))
+        if len(set(lengths))!=1:
+            raise ValueError('actual TP4 program prefix capacity differs')
+        programs[home]=list(prefixes[home,0])
+    known_exports={
+        'su':('tools/runtime/dsrom/s81_minimum_su256_ports.hpp','dsrom_s81_bind_minimum_su256'),
+        'he':('tools/runtime/dsrom/s81_minimum_he_l20.hpp','dsrom_s81_bind_minimum_he_l20'),
+        'xu':('tools/runtime/dsrom/s81_minimum_xu.hpp','dsrom_s81_bind_minimum_xu'),
+        'collective':('tools/runtime/dsrom/s81_minimum_tp4_gather.hpp','dsrom_s81_bind_native_tp4_gather; retained L0-only shapes require actual L19/L20 adaptation'),
+    }
+    end=ISA.encode(full_shape=True,unit=ISA.UNIT_END,wait=31)
+    def close_run():
+        nonlocal current
+        if current is None:return
+        # A real source END already terminates the last run. Do not fabricate
+        # another operation/edge after it. Other runs retain existing END31 ABI.
+        words=programs[current['stage']]
+        if words[-1] != end:words.append(end)
+        current['end_pc']=len(words)-1
+        current['producer_pc']=current['end_pc']-1
+        runs.append(current);current=None
+    for event in candidate['source_order']:
+        if event['native_groups']:
+            close_run();continue
+        e=copy.deepcopy(event)
+        provider=e['required_provider'];literal=e.get('source_instruction')
+        scope=int(e['node'].split('.')[0][1:])
+        if literal is None:
+            close_run();decoded={}
+        else:
+            decoded=ISA.decode(int(literal,16),full_shape=True)
+        e['unit']=decoded.get('unit')
+        prefix={0:'ctl',1:'me_',3:'qe_',4:'xu_',5:'he_',6:'coll_'}.get(e['unit'])
+        e['operand_control_fields']={k:v for k,v in decoded.items() if
+            (prefix is not None and k.startswith(prefix)) or
+            (e['unit']==2 and (k.startswith('su_') or k.endswith(('_base','_si','_so','_d','_do','_di')))) or
+            k in ('unit','wait','pred')}
+        e['zero_base_addresses_retained']=True
+        e['operand_fields_are_encoded_native_values']=True
+        # Physical clock selection remains an owner's actual loaded binding.
+        # SU target is explicitly selected in the existing floorplan, not new.
+        e['clock_domain']=('serial_0p9 target; physical binding pending' if provider=='su' else
+                           'source-owned domain pending; one shared native runtime clock is not a physical domain')
+        e['clock_source']=('tools/dsrom_s81_fulldie.py su_s/su_n dom=serial_0p9' if provider=='su' else
+                           'tools/dsrom_s81_unified_components.py clock_load selected_VM_GHz=None')
+        e['existing_provider_export']=known_exports.get(provider)
+        e['provider_scope_qualified']=False
+        e['existing_provider_limitation']={
+            'su':'SUN256: actual instruction/dynamic operands, layer CROM and span/ACK enrollment required',
+            'he':'retained HE adapter is L20.I1/I78 only; L19 needs its own released tensor enrollment',
+            'xu':'retained minimum XU wrapper accepts Sinkhorn only; SEL needs actual selected index/router provider',
+            'collective':'retained TP4 gather factory is L0 I9/I10 only; current collectives need exact op/count/order enrollment',
+            'matrix':'actual selected WINDOW/CKV/QK/PV native provider and retained context required',
+        }.get(provider,'actual current source-owned provider and accepted visibility required')
+        e['service_home_candidate']=service_homes.get(scope)
+        e['physical_home_adopted']=False
+        if scope in service_homes and literal is not None:
+            words=programs[service_homes[scope]]
+            if current is None:
+                current=dict(ordinal=len(runs),stage=service_homes[scope],required_ranks=[0,1,2,3],
+                             entry=len(words),source_nodes=[],source_pc=[])
+            pc=len(words);words.append(int(literal,16))
+            current['source_nodes'].append(e['node'])
+            current['source_pc'].append(dict(source_node=e['node'],pc=pc,
+                                            catalogue_producer_id=e['catalogue_producer_id']))
+            e['candidate_native_pc']=pc
+            if decoded['unit']==ISA.UNIT_END and decoded['ctl']==0:close_run()
+        else:
+            close_run();e['candidate_native_pc']=None
+        rows.append(e)
+    close_run()
+    if any(len(w)>1<<14 for w in programs.values()):
+        raise ValueError('actual service candidate entry14 capacity exceeded')
+    out.mkdir(parents=True)
+    files={}
+    for home,words in programs.items():
+        base=len(prefixes[home,0]);tail=words[base:]
+        for rank in range(4):
+            path=out/f's{home}_r{rank}'/'prog.hex';path.parent.mkdir()
+            raw=''.join(f'{w:0512x}\n' for w in prefixes[home,rank]+tail).encode()
+            path.write_bytes(raw);files[str(path.relative_to(out))]=hashlib.sha256(raw).hexdigest()
+    handoffs=[]
+    for layer,home in service_homes.items():
+        last=next(r for r in reversed(runs) if r['stage']==home)
+        handoffs.append(dict(source_node=last['source_nodes'][-1],fence_node=f'L{layer}.fence',
+            candidate_home=home,terminal_entry=last['entry'],producer_pc=last['producer_pc'],
+            end_pc=last['end_pc'],designation='intermediate stage/layer handoff, not token terminal',
+            actual_hooks_bound=False))
+    result=dict(service_home_candidates=service_homes,candidate_only=True,active=False,
+        adopted=False,source_field_mapping_unchanged=True,required_ranks=[0,1,2,3],
+        null_binding_operations=rows,ordered_nonfield_runs=runs,
+        compiled_program_words_per_rank={h:len(w) for h,w in programs.items()},program_address_bits=14,
+        unchanged_field_prefix_sha256=prefix_hashes,
+        files_sha256=files,context=candidate['context'],physical_capacity_qualified=False,
+        calendar=candidate['calendar'],calendar_prices_complete=False,
+        stage_handoff_candidates=handoffs,
+        missing=['actual stage40 service slot/ports/clock capacity and native operand/publication enrollment',
+                 'actual source action/fence visibility, C8 retirement and 37/38<->40 copy/exclusion/reverse binding',
+                 'actual composed service/transport/ACK/drain calendar prices'])
+    # SAME source compiler namespace: construct the complete ordered offers,
+    # not a second field-only traversal. Source events remain native fences.
+    offers=copy.deepcopy(candidate['offers']);groups=[];events=[]
+    starts={run['source_nodes'][0]:run for run in runs};members={}
+    for run in runs:
+        for node in run['source_nodes']:members[node]=run['source_nodes'][0]
+    run_groups={}
+    for original in candidate['source_order']:
+        event=copy.deepcopy(original);event['native_groups']=[]
+        for old in original['native_groups']:
+            event['native_groups'].append(len(groups))
+            groups.append(list(candidate['ownerorderedgroups'][old]))
+        if event['node'] in starts:
+            run=starts[event['node']];indices=[];index=len(groups)
+            for rank in range(4):
+                indices.append(len(offers))
+                offers.append(dict(node=run['source_nodes'][0],source_nodes=run['source_nodes'],
+                    source_pc=run['source_pc'],stage=run['stage'],rank=rank,
+                    die_id=4*run['stage']+rank,entry=run['entry'],
+                    producer_pc=run['producer_pc'],end_pc=run['end_pc'],
+                    context_bound=False,provider='native-source-run',physical_home_adopted=False))
+            groups.append(indices);run_groups[event['node']]=index
+        if event['node'] in members:
+            event['native_groups']=[run_groups[members[event['node']]]]
+        events.append(event)
+    by_stage={}
+    for group in groups:
+        by_stage.setdefault(str(offers[group[0]]['stage']),[]).append(group)
+    # Existing field images at other homes retain their bytes and keys.
+    for rel,sha in candidate['artifacts'].items():
+        if rel in files:continue
+        raw=(Path(program_root)/rel).read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=sha:raise ValueError('field image changed')
+        path=out/rel;path.parent.mkdir(exist_ok=True);path.write_bytes(raw);files[rel]=sha
+    word_counts={}
+    for rel in files:
+        home=rel.split('_r')[0][1:]
+        if home not in word_counts:word_counts[home]=len((out/rel).read_text().splitlines())
+    inventory=None if program_pricer is None else program_pricer(word_counts)
+    result['program_inventory_model']=inventory
+    result['generated_fragment_END_words']=len(groups)-2 # two literal layer ENDs retained
+    joined=dict(schema=candidate['schema'],candidate_only=True,active=False,adopted=False,
+        parent_dispatch_ready=False,hardware_admission=False,context=candidate['context'],
+        source_input_sha256=candidate['source_input_sha256'],source_order=events,
+        complete_selected_source_order=candidate['complete_selected_source_order'],
+        offers=offers,ownerorderedgroups=groups,ownerorderedgroups_by_stage=by_stage,
+        node_order_by_stage={home:[[offers[i]['node'] for i in g] for g in gs] for home,gs in by_stage.items()},
+        artifacts=files,complete_source_operation_coverage=True,complete_physical_stage_plan=False,
+        native_END_is_whole_stage_or_head_completion=False,stage_handoff_candidates=handoffs,
+        calendar=candidate['calendar'],service_home_candidates=service_homes,
+        uncompiled_source_events=[e['node'] for e in events if not e['native_groups']],
+        program_inventory_model=inventory,generated_fragment_END_words=len(groups)-2)
+    (out/'parent_dispatch.json').write_text(json.dumps(joined,indent=2)+'\n')
+    (out/'ownerorderedgroups.json').write_text(json.dumps(groups,indent=2)+'\n')
+    (out/'node_order.json').write_text(json.dumps(joined['node_order_by_stage'],indent=2)+'\n')
+    (out/'service_bindings.json').write_text(json.dumps(result,indent=2)+'\n')
     return result
 
 

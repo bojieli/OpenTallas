@@ -1,0 +1,355 @@
+{
+ "schema": "opentallas.noc_fmax.coll_f12_exactness.v1",
+ "verdict": "PASS",
+ "sources": {
+  "rtl/gpu_sys/ot_gpu_coll_endpoint.sv": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+  "rtl/gpu_sys/ot_gpu_coll_fabric.sv": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "835a3bdc2cb5ee07ce949e238d06ef8320870df5cb322830f61748a033087477",
+  "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv": "8c21a27e4b575994f353f12d0f0d61b40126f8d24c93593e1f90e1872b01f5d3",
+  "rtl/test/gpu_sys/tb_gpu_coll.sv": "759fda2314331901cffe1f3f1d1796f46dc570202cb26e5fb76eabf65a5026ec",
+  "tools/gpu_sys/run_coll.py": "a69d24ca4d252061338d01c62b80f26b7a25c00f5f6aa785720fe9dff5f0eaac"
+ },
+ "xreg": 0,
+ "rows": [
+  {
+   "seed": 1,
+   "baseline": {
+    "n_fail": 0,
+    "n_cases": 164,
+    "done": [
+     0,
+     0,
+     214,
+     7021
+    ],
+    "measure": [
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       29,
+       31
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       23,
+       26
+      ]
+     },
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       28,
+       31
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       23,
+       26
+      ]
+     }
+    ],
+    "bad": []
+   },
+   "f12": {
+    "n_fail": 0,
+    "n_cases": 164,
+    "done": [
+     0,
+     0,
+     193,
+     7353
+    ],
+    "measure": [
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       32,
+       30
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       26,
+       25
+      ]
+     },
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       31,
+       30
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       27,
+       26
+      ]
+     }
+    ],
+    "bad": []
+   },
+   "latency_delta_sm_cycles": [
+    [
+     3,
+     -1
+    ],
+    [
+     3,
+     -1
+    ],
+    [
+     3,
+     -1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "pass_": true
+  },
+  {
+   "seed": 2,
+   "baseline": {
+    "n_fail": 0,
+    "n_cases": 164,
+    "done": [
+     0,
+     0,
+     184,
+     7150
+    ],
+    "measure": [
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       29,
+       28
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       25,
+       25
+      ]
+     },
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       30,
+       29
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       25,
+       25
+      ]
+     }
+    ],
+    "bad": []
+   },
+   "f12": {
+    "n_fail": 0,
+    "n_cases": 164,
+    "done": [
+     0,
+     0,
+     204,
+     7486
+    ],
+    "measure": [
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       30,
+       30
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       27,
+       26
+      ]
+     },
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       30,
+       29
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       26,
+       26
+      ]
+     }
+    ],
+    "bad": []
+   },
+   "latency_delta_sm_cycles": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "pass_": true
+  },
+  {
+   "seed": 3,
+   "baseline": {
+    "n_fail": 0,
+    "n_cases": 164,
+    "done": [
+     0,
+     0,
+     204,
+     7210
+    ],
+    "measure": [
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       29,
+       29
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       26,
+       26
+      ]
+     },
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       29,
+       29
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       26,
+       25
+      ]
+     }
+    ],
+    "bad": []
+   },
+   "f12": {
+    "n_fail": 0,
+    "n_cases": 164,
+    "done": [
+     0,
+     0,
+     192,
+     7493
+    ],
+    "measure": [
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       30,
+       31
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       26,
+       26
+      ]
+     },
+     {
+      "mode": "ALL_REDUCE",
+      "count": 128,
+      "latency_sm": [
+       30,
+       31
+      ]
+     },
+     {
+      "mode": "ALL_GATHER",
+      "count": 64,
+      "latency_sm": [
+       26,
+       26
+      ]
+     }
+    ],
+    "bad": []
+   },
+   "latency_delta_sm_cycles": [
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "pass_": true
+  }
+ ]
+}

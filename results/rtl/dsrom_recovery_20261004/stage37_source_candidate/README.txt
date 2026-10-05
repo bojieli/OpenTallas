@@ -52,3 +52,39 @@ stage37 field groups alone must never assert wholeplan_complete.
 wf_join_visibility_valid/fault/identity/visibility[4:0] requires real continuation,
 KV, index, remote, allcopy sources. Existing join retains C8/capture/collective
 qualification; no duplicate join RTL or fabricated counter is emitted here.
+
+Constructive continuation: service38_40_candidate/service_bindings.json.
+Owner-requested CURRENT service candidates: L19->38/dies152..155, L20->40/dies160..163.
+No rejected service-home candidate is imported or relabelled. Field assignment unchanged.
+All199 remaining literal nonfield instructions linked in34 ordered service runs.
+Together with68 field groups,102 TP4 native fragment groups cover all259 source
+instructions; four source events L19.A0/L19.fence/L20.A0/L20.fence still require
+actual source-owned action/visibility hookup. Full ordered source coverage remains263.
+Stage38 program is113 words/rank, preserving its existing12 field words bytewise;
+Stage40 program is130 words/rank. Capacity checks against actual entry14 aperture.
+Candidate L19 handoff: L19.I114, entry101/producer111/END112, then L19.fence.
+Candidate L20 handoff: L20.I143, entry118/producer128/END129, then L20.fence.
+These intermediate handoffs do not require HEAD token inference, and do not claim
+next-token semantics. Planck's actual native_am_any guard remains an owner-reviewed
+binding issue for an intermediate handoff; never fabricate argmax or data.
+
+Each nonfield row lists its native unit, operand controls (valid zero addresses
+included), dynamic selectors, existing provider export AND actual scope limitation,
+clock target or explicitly unbound domain, candidate native PC and source identity.
+Existing HE is L20-only, XU helper Sinkhorn-only, TP4 helper L0-gather-only: source
+presence is not production reuse. Arch must bind real current provider semantics.
+Physical homes/slots/clocks, source40/38 SourceIo lifecycle, 37/38<->40 copies,
+accept/retire/reverse fences and composed calendar prices remain unqualified.
+
+Direct Arch/Planck continuation input is service38_40_candidate/parent_dispatch.json,
+with SAME existing schema offers/ownerorderedgroups/by-stage/NodeOrder and all
+coherent per-home images in that directory. 408 literal offers /102TP4 groups
+cover259 source instructions; source_order retains263 operations, the four
+uncompiled events above remaining explicit. Field stage37 still30 groups/rank;
+no field PHROM phase is substituted for whole source coverage.
+Source-only program model: homes35/36/37/38/40 use52/12/60/113/130 words/rank;
+93952 active bytes/rank /375808 TP4, unchanged2048bit instruction fetch face,
+16384word declared address capacity PERhome, no physical ROM shrink/area credit.
+100 generated native fragment END31 words (two original layer ENDs retained)
+carry unknown real wait/drain costs; prefetch/ACK/restore/copies are also unknown.
+No new model library/static/PQspine build or1.2GHz field adoption is requested.

@@ -33,6 +33,7 @@ module tb_hbm_accel_bmul_equiv;
         repeat (8) @(negedge clk);
         $display("BMUL_EQUIV vectors %0d mismatches %0d", N, mism);
         $display(mism == 0 ? "PASS" : "FAIL");
+        if (mism != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
