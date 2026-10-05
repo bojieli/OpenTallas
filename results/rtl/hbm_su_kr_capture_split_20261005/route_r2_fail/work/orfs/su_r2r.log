@@ -1,0 +1,63 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+R2R -1.654232 u.b_q[88]$_DFF_P_/QN -> u.u.u_e1a.genblk1.genblk1.g_keep5.u/u.u_g6.g_r.r[1]$_DFF_P_/D
+R2R -0.025424 u.u.u_ad.genblk1.genblk1.g_keep5.u/u.u_k6.g_r.r[114]$_DFF_P_/QN -> u.u.u_ad.genblk1.genblk1.g_keep5.u/u.u_k1.g_r.r[0]$_DFF_P_/D
+R2R 0.479505 u.b_q[7]$_DFF_P_/QN -> u.u.a_up$_DFF_P_/D
+Startpoint: u.b_q[88]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u.u.u_e1a.genblk1.genblk1.g_keep5.u/u.u_g6.g_r.r[1]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout   Delay    Time   Description
+---------------------------------------------------------------
+          0.00    0.00   clock core_clk (rise edge)
+        293.07  293.07   clock network delay (propagated)
+          0.00  293.07 ^ u.b_q[88]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     5  102.70  395.77 v u.b_q[88]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     3   38.77  434.54 ^ _47314_/Y (INVx1_ASAP7_75t_R)
+     1   35.08  469.62 ^ _28147_/Y (OR3x1_ASAP7_75t_R)
+    15   40.30  509.92 ^ place6777/Y (BUFx6f_ASAP7_75t_R)
+     2   28.89  538.80 v _28167_/Y (AOI21x1_ASAP7_75t_R)
+     1   64.03  602.83 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_2229_/Y (OR4x1_ASAP7_75t_R)
+     3   90.22  693.05 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_2230_/Y (OR5x1_ASAP7_75t_R)
+     2   47.24  740.29 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_2232_/Y (AND2x4_ASAP7_75t_R)
+     4   64.66  804.95 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_2242_/Y (OR3x1_ASAP7_75t_R)
+     1   25.92  830.87 ^ u.u.u_e1a.genblk1.genblk1.g_keep5.u/_4292_/Y (INVx1_ASAP7_75t_R)
+     2   21.34  852.21 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_4628_/Y (AOI21x1_ASAP7_75t_R)
+     2   44.17  896.37 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_4713_/Y (AO21x1_ASAP7_75t_R)
+     1   41.51  937.88 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_5233_/Y (XOR2x2_ASAP7_75t_R)
+     1   58.24  996.12 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_5234_/Y (OR4x1_ASAP7_75t_R)
+     1   46.90 1043.01 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/_5237_/Y (AO32x1_ASAP7_75t_R)
+          0.07 1043.08 v u.u.u_e1a.genblk1.genblk1.g_keep5.u/u.u_g6.g_r.r[1]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+               1043.08   data arrival time
+
+        833.00  833.00   clock core_clk (rise edge)
+        268.41 1101.41   clock network delay (propagated)
+        -60.00 1041.41   clock uncertainty
+          3.32 1044.73   clock reconvergence pessimism
+               1044.73 ^ u.u.u_e1a.genblk1.genblk1.g_keep5.u/u.u_g6.g_r.r[1]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+         -3.30 1041.43   library setup time
+               1041.43   data required time
+---------------------------------------------------------------
+               1041.43   data required time
+               -1043.08   data arrival time
+---------------------------------------------------------------
+                 -1.65   slack (VIOLATED)
+
+
