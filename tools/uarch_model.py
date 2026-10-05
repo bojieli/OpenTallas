@@ -8917,3 +8917,19 @@ def hbm_stream_aq_block_nonempty_choice(*, pcs=128):
                 loaded_delay_ps=None, full_slot_fit_qualified=False,
                 period_ns=.833, setup_uncertainty_ps=60,
                 hold_uncertainty_ps=25, SSFF_closed=False, adopted=False)
+
+
+def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
+    """Owner-selected mandatory baseline repair; zero speed/adoption credit.
+
+    Supersedes only model-only admission status. Original three failures and
+    review choice remain immutable. Exactly one changed-source route allowed.
+    """
+    record = hbm_stream_aq_block_nonempty_choice(pcs=pcs)
+    record.update(candidate_selected=True,
+                  selection_owner='Explicit owner technical decision after three failed variants',
+                  implementation_started=False, route_admitted=False,
+                  source_gate_required=True,
+                  qualified_route_count_allowed=1,
+                  failure_policy='stop and report actual limiting cone; no rescue')
+    return record
