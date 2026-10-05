@@ -1,0 +1,92 @@
+{
+ "p0": 1048574,
+ "newest_block": 131071,
+ "adversarial_bits": "0x40f1",
+ "ranks": {
+  "0": {
+   "blocks_j1": [
+    136,
+    110,
+    128,
+    111
+   ],
+   "blocks_j0": [
+    68,
+    55,
+    64,
+    56
+   ],
+   "late_positions_j0": 0,
+   "selected_j1": 512,
+   "selected_j0": 512,
+   "sel_j1_sha256": "7b2491a69e3a9cf8cc12e6306d76cb21b025e94918ccee5aab748ea96331e42f"
+  },
+  "1": {
+   "blocks_j1": [
+    132,
+    145,
+    140,
+    124
+   ],
+   "blocks_j0": [
+    66,
+    72,
+    70,
+    62
+   ],
+   "late_positions_j0": 0,
+   "selected_j1": 512,
+   "selected_j0": 512,
+   "sel_j1_sha256": "df9c81a782daa2995eca7166ada72dc1bc06eb4cc37edcc64d203f346905dc9f"
+  },
+  "2": {
+   "blocks_j1": [
+    137,
+    132,
+    132,
+    116
+   ],
+   "blocks_j0": [
+    69,
+    66,
+    66,
+    58
+   ],
+   "late_positions_j0": 0,
+   "selected_j1": 512,
+   "selected_j0": 512,
+   "sel_j1_sha256": "a7efeddd5f878dfc0f5b2d1d79207382d5d3df24b9eff42e098508904eb075f0"
+  },
+  "3": {
+   "blocks_j1": [
+    127,
+    133,
+    131,
+    114
+   ],
+   "blocks_j0": [
+    63,
+    67,
+    65,
+    58
+   ],
+   "late_positions_j0": 1,
+   "selected_j1": 512,
+   "selected_j0": 512,
+   "sel_j1_sha256": "39a3746f44568845daba871828234299e45c722716f2c9125fa6b2238385c014"
+  }
+ },
+ "replay": {
+  "blocks": [
+   2048,
+   0,
+   40,
+   40
+  ]
+ },
+ "golden": {
+  "cand": "570b5f5dc2d28df2e88510005bab07332aaa563d84d244f1f1f33f0745b84b0e",
+  "L24": "c7c2809d84a259425632856d9a942858c0da49a944788e69d49be098a88b9592",
+  "L28": "2bd9460587c78c912ceaee2c152f04f5ed8c3082a9b9185aff3f5cf66d7ceb09"
+ }
+}

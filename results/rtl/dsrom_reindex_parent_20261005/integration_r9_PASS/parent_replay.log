@@ -1,0 +1,4 @@
+JOB 0 pos=1048575 slot=7 start=2058 first_key=24 last_key=11993 last_scored=12041 done=12058 busy=12058 passes=3 keys=51072 out=512 errors=0
+SUMMARY njobs=1 lsw=3 mdrop=1 lat=48 key_errors=0 short=0 ovf=0 hidden_out=1 errors=0 cycles=14143
+PASS
+- /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/physical_src/rtl/dsrom_sys/integration/tb_dsrom_integ_reindex_wf.sv:344: Verilog $finish
