@@ -20,7 +20,8 @@ class BoundaryContractTest(unittest.TestCase):
                      ('act', 'gclk' if not unclocked else "1'b0", 'sq'),
                      ('cfg', 'clk', 'sq'), ('go', 'clk', 'sq'),
                      ('ret', 'clk', 'aq'), ('vr', 'clk', 'sq'),
-                     ('vw', 'clk', 'sq'), ('cap', 'gclk', 'romq[0]')]
+                     ('vw', 'clk', 'sq'), ('cap', 'gclk', 'romq[0]'),
+                     ('busy_cap', 'clk', 'gq'), ('fault_cap', 'clk', 'gq')]
             lines = ['module test_parent(input clk, input i, output o);',
                      'wire gclk, sq, aq, gq; wire [273:0] romq;',
                      "ICGx1_ASAP7_75t_R gate(.CLK(clk), .ENA(gq), .SE(1'b0), .GCLK(gclk));"]
@@ -30,6 +31,7 @@ class BoundaryContractTest(unittest.TestCase):
             for n in range(4):
                 out = 'romq' if n == 0 else ''
                 lines.append(f"ot_rom_4096x274_m8 rom{n}(.clk(gclk), .ce_in(1'b1), .addr_in(12'b0), .rd_out({out}));")
+            lines.append("DFFASRHQNx1_ASAP7_75t_R reset_cap(.CLK(gclk), .D(sq), .RESETN(gq), .SETN(1'b1), .QN());")
             lines.append('endmodule')
             netlist = tmp/'test.v'
             netlist.write_text('\n'.join(lines))
@@ -43,6 +45,7 @@ source {{{ROOT}/physical/dsrom_field_spine/field_boundary_clock.tcl}}
 set b [dict create root_port clk root_clock actual_root gated_clock actual_gated \\
     gate_input gate/CLK gate_output gate/GCLK gate_enable gate/ENA gate_enable_launch go/QN source_commit API_TEST_ONLY \\
     macro_cells {{rom0 rom1 rom2 rom3}} \\
+    reset_boundary [dict create launch go/QN capture reset_cap/RESETN] \\
     clock_anchors [dict create spine sp/CLK field field/CLK vm vm/CLK] \\
     boundaries [dict create \\
       activation [dict create launch sp/QN capture act/D] \\
@@ -51,7 +54,11 @@ set b [dict create root_port clk root_clock actual_root gated_clock actual_gated
       result [dict create launch act/QN capture ret/D] \\
       vm_read [dict create launch sp/QN capture vr/D] \\
       vm_write [dict create launch sp/QN capture vw/D] \\
-      macro_read [dict create launch {{rom0/rd_out[0]}} capture cap/D]]]
+      macro_read [dict create launch {{rom0/rd_out[0]}} capture cap/D] \\
+      busy [dict create launch go/QN capture busy_cap/D] \\
+      fault [dict create launch go/QN capture fault_cap/D] \\
+      free_to_gated [dict create launch sp/QN capture act/D] \\
+      gated_to_free_control [dict create launch act/QN capture ret/D]]]
 if {{![catch {{ot_v9_field::constrain [dict create] {corner}}} msg]}} {{error "accepted missing parent"}}
 if {{![catch {{ot_v9_field::constrain $b TT}} msg]}} {{error "accepted TT signoff"}}
 if {{[catch {{ot_v9_field::constrain $b {corner}; ot_v9_field::report $b {{{tmp}/paths}}}} msg]}} {{
