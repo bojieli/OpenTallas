@@ -1,0 +1,114 @@
+{
+  "schema": "hbrom.firstprinciples.joined_area_screen.v1",
+  "architecture_only": true,
+  "qualified": false,
+  "cases": [
+    {
+      "ranks": 64,
+      "engines_per_rank": 16,
+      "ROM_network_compute_and_global_spacing_mm2": 632.5140081066319,
+      "head_service_after_literal_HBM_to_SRAM_substitution_mm2": 225.84828717633485,
+      "head_rank_subtotal_mm2": 858.3622952829667,
+      "remaining_before_auxiliary_and_control_mm2": -44.28229528296663,
+      "status": "SCALAR_SCREEN_ONLY",
+      "notes": [
+        "Retains TP96 service widths at other rank counts; conservative reservation, not a resized service proof.",
+        "Keeps existing service SRAM allowances while adding full new state banks; no duplicate-capacity credit taken.",
+        "Dedicated local immutable weights, new dispatch/placement/routing and archive service require separate accounting.",
+        "Negative remaining area rejects this exact reservation combination, not all architectures at this rankcount."
+      ]
+    },
+    {
+      "ranks": 64,
+      "engines_per_rank": 32,
+      "ROM_network_compute_and_global_spacing_mm2": 662.141007957264,
+      "head_service_after_literal_HBM_to_SRAM_substitution_mm2": 225.84828717633485,
+      "head_rank_subtotal_mm2": 887.989295133599,
+      "remaining_before_auxiliary_and_control_mm2": -73.9092951335989,
+      "status": "SCALAR_SCREEN_ONLY",
+      "notes": [
+        "Retains TP96 service widths at other rank counts; conservative reservation, not a resized service proof.",
+        "Keeps existing service SRAM allowances while adding full new state banks; no duplicate-capacity credit taken.",
+        "Dedicated local immutable weights, new dispatch/placement/routing and archive service require separate accounting.",
+        "Negative remaining area rejects this exact reservation combination, not all architectures at this rankcount."
+      ]
+    },
+    {
+      "ranks": 96,
+      "engines_per_rank": 16,
+      "ROM_network_compute_and_global_spacing_mm2": 438.616341674632,
+      "head_service_after_literal_HBM_to_SRAM_substitution_mm2": 223.89586322387214,
+      "head_rank_subtotal_mm2": 662.5122048985041,
+      "remaining_before_auxiliary_and_control_mm2": 151.5677951014959,
+      "status": "SCALAR_SCREEN_ONLY",
+      "notes": [
+        "Retains TP96 service widths at other rank counts; conservative reservation, not a resized service proof.",
+        "Keeps existing service SRAM allowances while adding full new state banks; no duplicate-capacity credit taken.",
+        "Dedicated local immutable weights, new dispatch/placement/routing and archive service require separate accounting.",
+        "Negative remaining area rejects this exact reservation combination, not all architectures at this rankcount."
+      ]
+    },
+    {
+      "ranks": 96,
+      "engines_per_rank": 32,
+      "ROM_network_compute_and_global_spacing_mm2": 471.3618670932639,
+      "head_service_after_literal_HBM_to_SRAM_substitution_mm2": 223.89586322387214,
+      "head_rank_subtotal_mm2": 695.2577303171361,
+      "remaining_before_auxiliary_and_control_mm2": 118.82226968286398,
+      "status": "SCALAR_SCREEN_ONLY",
+      "notes": [
+        "Retains TP96 service widths at other rank counts; conservative reservation, not a resized service proof.",
+        "Keeps existing service SRAM allowances while adding full new state banks; no duplicate-capacity credit taken.",
+        "Dedicated local immutable weights, new dispatch/placement/routing and archive service require separate accounting.",
+        "Negative remaining area rejects this exact reservation combination, not all architectures at this rankcount."
+      ]
+    },
+    {
+      "ranks": 128,
+      "engines_per_rank": 16,
+      "ROM_network_compute_and_global_spacing_mm2": 337.69941277863194,
+      "head_service_after_literal_HBM_to_SRAM_substitution_mm2": 222.29842544458447,
+      "head_rank_subtotal_mm2": 559.9978382232164,
+      "remaining_before_auxiliary_and_control_mm2": 254.08216177678366,
+      "status": "SCALAR_SCREEN_ONLY",
+      "notes": [
+        "Retains TP96 service widths at other rank counts; conservative reservation, not a resized service proof.",
+        "Keeps existing service SRAM allowances while adding full new state banks; no duplicate-capacity credit taken.",
+        "Dedicated local immutable weights, new dispatch/placement/routing and archive service require separate accounting.",
+        "Negative remaining area rejects this exact reservation combination, not all architectures at this rankcount."
+      ]
+    },
+    {
+      "ranks": 128,
+      "engines_per_rank": 32,
+      "ROM_network_compute_and_global_spacing_mm2": 384.112304981264,
+      "head_service_after_literal_HBM_to_SRAM_substitution_mm2": 222.29842544458447,
+      "head_rank_subtotal_mm2": 606.4107304258484,
+      "remaining_before_auxiliary_and_control_mm2": 207.6692695741516,
+      "status": "SCALAR_SCREEN_ONLY",
+      "notes": [
+        "Retains TP96 service widths at other rank counts; conservative reservation, not a resized service proof.",
+        "Keeps existing service SRAM allowances while adding full new state banks; no duplicate-capacity credit taken.",
+        "Dedicated local immutable weights, new dispatch/placement/routing and archive service require separate accounting.",
+        "Negative remaining area rejects this exact reservation combination, not all architectures at this rankcount."
+      ]
+    }
+  ],
+  "architecture_options": [
+    {
+      "name": "colocated_ROM_reusable_compute_local_SRAM",
+      "benefit": "Avoid off-die main-weight stream; mutableKV/index fitnearcompute for singleuser1M.",
+      "obligation": "ROMselection andoperandnetwork consumearea; serviceplacement mustshortencriticalpaths."
+    },
+    {
+      "name": "separate_ROM_storage_compute_local_SRAM",
+      "benefit": "Independent sizing of immutablecapacity andcompute.",
+      "obligation": "12.878862336GB mainweights pertoken mustcrossstorageboundary; retain HCweightslocally orpayadditional15.0994944GB replicatedstream atTP96."
+    }
+  ],
+  "source_pins": {
+    "results/uarch/hbrom/first_principles/hbrom-firstprinciples-rank-frontier.json": "b1625cc9066ef667a5c39573ea9a180e5d6bd86440080d3e9e47d4bd57a9b872",
+    "results/uarch/hbrom/first_principles/hbrom-firstprinciples-state-placement.json": "a7548bf3aafd61a347514331c94724cd41e4d532404a6d9bc1f72904768eecfb",
+    "results/uarch/hbrom/global_audits/hbrom-global-service-area.json": "55c7f0809d55fe71405ac662fa5d55ac2b0c901b54d8bb23715428a9f4525d58"
+  }
+}
