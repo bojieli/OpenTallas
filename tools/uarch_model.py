@@ -8815,3 +8815,9 @@ def hbm_loader_crc_reserved_slot_price(price):
         mapped_wide_guard_area_um2=None,PDN_IR_qualified=False,full_parent_fit=False,
         routed_locality_qualified=False,SS_FF_qualified=False,composed_gain_percent=None,
         route_requires='source-pinned Kant quadrant placement and exact real port pins Tcl; one actual candidate route after component PASS')
+
+
+def dsrom_field_static_provider_price(image_directory):
+    """Current canonical immutable provider plus issuer reservation; no physical credit."""
+    from dsrom_field_static_provider import model
+    return model(image_directory)
