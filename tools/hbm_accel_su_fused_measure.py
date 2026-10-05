@@ -39,7 +39,7 @@ def main():
          '--unroll-count','4','-fno-dfg',*[f'-G{k}={v}' for k,v in params.items()],
          *map(str,src),'-CFLAGS','-O1']
     pin=dict(params=params,LM=6,LA=5,BCAST=7,RET=8,clock_target_hz=1200000000,
-        clock_actual_half_period_ns=.417,SS60_FF25_qualified=False,
+        clock_actual_half_period_ns=.416667,SS60_FF25_qualified=False,
         source_sha256={str(s.relative_to(S.ROOT)):sha(s) for s in src},
         cases_meta_sha256=sha(a.cached_root/'cases.json'),build_command=cmd,
         compared_source='cached actual1M expected only',fp_backend=a.fp,

@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 // Actual registered fusion endpoint; cached source operands/expected only.
 module tb_hbm_accel_su_fused_norm #(
  parameter integer N=256,D=1280,HC=0,RD=0,QUANT=1,RW=9,BW=9
