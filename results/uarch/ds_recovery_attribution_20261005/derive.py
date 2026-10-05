@@ -85,7 +85,7 @@ for p in f['phases']:
     scope='All 167 existing measured rank-0 field phases, representative layers 0,1,2,3,20,21,24; not all 40 layers newly measured.',
     definition='Active means assigned to this matrix phase, not simultaneous issue/activity on every edge. Pair IDs join actual canonical plans by layer, stage, alias. Installed denominator 783108 includes all 324 layer dies. Multiply rank-0 counts by TP4 only as a symmetric shape projection, not a measured four-rank trace.',
     ceiling_note='FAST1 PP1 BP0: each pair has 2 logical read ports, 4 physical ping-pong ROM4096; FP4/FP8/BF16 conditional ceilings 128/64/32 MACs per edge. Format ceilings are alternatives, not additive. Mixed-format summed ceiling is optimistic where a pair occurs in both sets.',
-    phases=phases), indent=2)+'\n')
+    phases=phases), separators=(',',':'))+'\n')
 hbm_shapes = []
 for layer in program['layers']:
     for op in layer['ops']:
