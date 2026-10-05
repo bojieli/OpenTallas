@@ -2,7 +2,7 @@
 """MATCHED DS HBM reference for the DS ROM gate (one decode token at position 1,048,575, 1M context).
 
 The inherited reference (tools/dshbm_1m_allmeasured.py -> results/rtl/dshbm_1m_allmeasured_20261004/composition.json:
-460.053 us AR, 888.077 us MTP step at tau 3.8879) is re-walked on the same executed TP-96 program, with every other
+460.053 us AR, 888.077 us MTP step; the step does not depend on tau) is re-walked on the same executed TP-96 program, with every other
 term unchanged, and with:
 
 CORRECTIONS (reports/DeepSeek_ROM_Architecture_Review.md section 1; evidence reports/deepseek_rom_review_evidence/):
@@ -505,11 +505,12 @@ def main():
     best_mtp = min(credited, key=lambda x: x["MTP_step_us"])
     tcred = [x for x in today if x["name"] != "corrected@today"]
     gate = dict(
-        rule="strict ROM admission (review section 5): ROM AR <= gate AR_us AND ROM MTP step <= gate MTP_step_us at tau "
-             "3.8879.  Each figure is the best credited HBM configuration for that mode (a lever that slows one mode is "
+        rule="ROM target (owner 2026-10-05: a measured checkpoint, not a kill switch): ROM AR <= gate AR_us AND ROM MTP "
+             f"step <= gate MTP_step_us (the step is tau-independent; MTP_tok_s at tau {best_mtp['MTP']['tau']:g}).  Each figure is the best credited HBM configuration for that mode (a lever that slows one mode is "
              "not forced on it), i.e. the harder bar for ROM",
         AR_us=best_ar["AR_us"], AR_row=best_ar["name"], MTP_step_us=best_mtp["MTP_step_us"], MTP_row=best_mtp["name"],
-        MTP_tok_s=best_mtp["MTP_tok_s"],
+        MTP_tok_s=best_mtp["MTP_tok_s"], tau=best_mtp["MTP"]["tau"], tau_source=best_mtp["MTP"]["tau_source"],
+        MTP_tok_s_tau_sensitivity=A._tau_sens(best_mtp["MTP_step_us"]),
         today_AR_us=min(x["AR_us"] for x in tcred), today_MTP_step_us=min(x["MTP_step_us"] for x in tcred),
         corrected_only_AR_us=steps[0]["AR_us"], corrected_only_MTP_step_us=steps[0]["MTP_step_us"],
         inherited_AR_us=round(t_inh, 3), inherited_MTP_step_us=m_inh["step_us"])
@@ -520,7 +521,8 @@ def main():
         inherited=dict(record=rel(INH / "composition.json"), AR_us=round(t_inh, 3), MTP_step_us=m_inh["step_us"],
                        MTP_tok_s=m_inh["mtp_tok_s"], reproduced=True),
         headline=dict(row=head["name"], AR_us=head["AR_us"], AR_tok_s=head["AR_tok_s"], MTP_step_us=head["MTP_step_us"],
-                      MTP_tok_s=head["MTP_tok_s"], tau=3.8879),
+                      MTP_tok_s=head["MTP_tok_s"], tau=head["MTP"]["tau"], tau_source=head["MTP"]["tau_source"],
+                      MTP_tok_s_tau_sensitivity=A._tau_sens(head["MTP_step_us"])),
         gate=gate, unvalidated=UNVALIDATED,
         index_path=index_path(paths[head["name"]], paths["corrected"]),
         ladder_target_clocks=steps, ladder_today_clocks=today, sensitivities=sens,

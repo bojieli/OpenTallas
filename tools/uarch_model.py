@@ -9476,6 +9476,11 @@ def qwen_rom_registered_issue_commit_price():
     return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/prebuild.json").read_text())
 
 
+def qwen_rom_receiver_fault_base_price():
+    """No-cost definition of absent PART2 local fault levels; not timing credit."""
+    return json.loads((ROOT / "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/receiver_fault_base/prebuild.json").read_text())
+
+
 def hbm_stream_aq_period_bound_candidate(*, exposed_service_cycles=None):
     """Unadopted slower-service bound from the failed two-PC extracted path.
 
@@ -9660,6 +9665,44 @@ def ha2_tu_owner_adapter_model():
     from pathlib import Path
     path = Path(__file__).with_name('ha2_tu_owner_model.py')
     spec = importlib.util.spec_from_file_location('ha2_tu_owner_model', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()
+
+
+def dshbm_expert_workgroup_model():
+    """Actual matched-reference 12-matrix source layout, not a new SM datapath.
+
+    Software loader/dispatch implementation uses existing per-SM descriptor and
+    activation/weight ports. Dynamic hardware steering has not been synthesized.
+    """
+    return dict(dies=96, SM_per_die=32, active_SM_per_die=24, idle_SM_per_die=8,
+        released_expert_count=384, routed_experts=6, matrices_per_expert=2, K=5120, matrix_rows=2304,
+        rows_per_matrix_per_die=24, rows_per_active_SM=12, k32_blocks=160,
+        exact_MACs_per_issued_line_active_column=8*32, native_columns=8,
+        hardware_MACs_per_full_issued_line=8*32*8, line_payload_bits=1088,
+        line_bytes_per_accepted_edge=136, simultaneous_weight_bits_per_die=24*1088,
+        simultaneous_weight_bytes_per_die=24*136, per_SM_lines=12*3*8, per_SM_valid_row_blocks=12*160,
+        per_SM_native_issue_groups=3, per_SM_issue_span_cycles=316,
+        activation_port_bits=2048, activation_AR_beats_per_address=2,
+        activation_AR_load_cycles_measured=49,
+        AR_start_to_done_measured_shape_cycles=396,
+        AR_start_to_done_actual_source_cycles=None,
+        source_row_order='each matrix, ascending rows; original k32 block and csum order',
+        existing_state_changed_bits=0, extra_payload_storage_bytes=0,
+        descriptor_count_per_die=24, descriptor_hardware_area_mm2=None,
+        activation_multicast_pipeline_cycles=None, boundary_routing_tracks=None,
+        new_hardware=False, hardware_steering_implemented=False,
+        physical_slot_fit=None, actual_1M_L20_exact=False, actual_1M_L3_exact=False,
+        actual_composed_token_latency_ns=None, adopted=False)
+
+
+def hbm_su_fused_endpoint_model():
+    """Default-off actual fused-SU endpoint pre-build sizing; unqualified."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_fused_price', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.model()
