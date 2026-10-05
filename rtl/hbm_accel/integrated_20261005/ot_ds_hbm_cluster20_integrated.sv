@@ -6,7 +6,7 @@
 // clk_sm for the DSpark sequencer. Host16/rings are intentionally not in this
 // path. Token17 reaches UR0 and actual RESULT17; no truncation or synthetic ACK.
 module ot_ds_hbm_cluster20_integrated #(
- parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,W2_RESULT_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
+ parameter integer COMBINED_ENABLE=0,SU_ENABLE=0,SU_REGISTERED_OUTPUTS=0,SU_REGISTERED_STATUS=0,W2_RESULT_ENABLE=0,W2_SECTOR_ENABLE=0,FORMATTER_ENABLE=0,NORMAL_GATHER_ENABLE=0,LOCAL_CP_RESET_ENABLE=0,VM_AW=0,
  parameter integer ENABLE=0, TW=17, PW=20, CONTEXT_POSITIONS=1048576, ND=2, NSM=2, NL=128, IMW=14,
  parameter integer CB=8, NS=2, NPC=2, MEM_WORDS=2097152,
  parameter integer SW_PIPE=8, USE_W2=0, HAS_DIV=1, HAS_BD=1
@@ -59,10 +59,27 @@ module ot_ds_hbm_cluster20_integrated #(
  input wire [ND*73-1:0] w2_lease_frame,w2_release_frame,
  input wire [ND*337-1:0] w2_req,output wire [ND*273-1:0] w2_rsp,
  output wire [ND-1:0] w2_lease_granted,w2_release_r,w2_req_r,w2_rsp_v,
+ // Existing readyless native caller and literal installed compact-sector map.
+ // weights_installed comes only after loading Erdos w2_p0/p1 overlays into
+ // the selected NS2 provider; CSV addresses/tags are never derived by truncation.
+ input wire [ND-1:0] w2_weights_installed,w2_native_req_v,w2_native_delivery_permit,w2_map_valid,
+ input wire [ND*32-1:0] w2_native_req_addr,w2_map_native_addr,
+ input wire [ND*10-1:0] w2_native_req_tag,
+ input wire [ND*73-1:0] w2_map_frame,
+ input wire [ND*3-1:0] w2_map_sm,w2_map_count,
+ input wire [ND*16-1:0] w2_map_compact_offset,
+ input wire [ND*4-1:0] w2_map_lanes,
+ input wire [ND*192-1:0] w2_map_byte_addresses,
+ input wire [ND*96-1:0] w2_map_tags,w2_map_cfg,
+ output wire [ND-1:0] w2_native_req_r,w2_native_rsp_pending,w2_native_rsp_v,w2_sector_drained,w2_sector_fault,w2_sector_foreign_rsp,
+ output wire [ND*10-1:0] w2_native_rsp_tag,
+ output wire [ND*1088-1:0] w2_native_rsp_data,
  output wire rst_sm_n, output wire sys_fault
 );
 initial if(COMBINED_ENABLE && (TW!=17 || PW!=20 || NSM!=2 || IMW!=14 || NS!=2 || NPC!=2 || USE_W2!=0))
  $fatal(1,"installed SU parent requires NSM2/IMW14/NS2/NPC2/defaultW2");
+initial if(COMBINED_ENABLE && W2_SECTOR_ENABLE && (!W2_RESULT_ENABLE || NS!=2 || MEM_WORDS!=2097152))
+ $fatal(1,"native W2 sector join requires real result seats and installed NS2/2097152 aperture");
 generate if(COMBINED_ENABLE==0) begin:g_original
  ot_ds_hbm_cluster20 #(.ENABLE(ENABLE),.TW(TW),.PW(PW),.CONTEXT_POSITIONS(CONTEXT_POSITIONS),
   .ND(ND),.NSM(NSM),.NL(NL),.IMW(IMW),.CB(CB),.NS(NS),.NPC(NPC),.MEM_WORDS(MEM_WORDS),
@@ -79,6 +96,9 @@ generate if(COMBINED_ENABLE==0) begin:g_original
  assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign formatter_release_r=0;
  assign gather_desc_r=0;assign gather_start_r=0;assign gather_req_r=0;assign gather_rsp_v=0;assign gather_rsp=0;
  assign gather_release_r=0;assign gather_retained=0;assign gather_arena_visible=0;assign gather_sink_visible=0;
+ assign w2_native_req_r=0;assign w2_native_rsp_pending=0;assign w2_native_rsp_v=0;
+ assign w2_native_rsp_tag=0;assign w2_native_rsp_data=0;assign w2_sector_drained=1;
+ assign w2_sector_fault=0;assign w2_sector_foreign_rsp=0;
  assign w2_reserve_r=0;assign w2_source_permit=0;assign w2_output_done=0;
  assign w2_lease_granted=0;assign w2_release_r=0;assign w2_req_r=0;assign w2_rsp_v=0;assign w2_rsp=0;
 end else if(ENABLE==0) begin:g_off
@@ -90,6 +110,9 @@ end else if(ENABLE==0) begin:g_off
  assign formatter_start_r=0;assign index_pair_r=0;assign index_pairs_v=0;assign index_pairs=0;assign formatter_release_r=0;
  assign gather_desc_r=0;assign gather_start_r=0;assign gather_req_r=0;assign gather_rsp_v=0;assign gather_rsp=0;
  assign gather_release_r=0;assign gather_retained=0;assign gather_arena_visible=0;assign gather_sink_visible=0;
+ assign w2_native_req_r=0;assign w2_native_rsp_pending=0;assign w2_native_rsp_v=0;
+ assign w2_native_rsp_tag=0;assign w2_native_rsp_data=0;assign w2_sector_drained=1;
+ assign w2_sector_fault=0;assign w2_sector_foreign_rsp=0;
  assign w2_reserve_r=0;assign w2_source_permit=0;assign w2_output_done=0;
  assign w2_lease_granted=0;assign w2_release_r=0;assign w2_req_r=0;assign w2_rsp_v=0;assign w2_rsp=0;
 
@@ -148,7 +171,7 @@ end else begin:g_on
         wire all_prior_quiet=!(|busy)&&!(|launch_v)&&!(|a_req_v)&&!(|a_rsp_v)&&
                              !(|obs_req)&&!(|obs_rsp);
         wire all_routes_drained=native_credit_empty&&shared_idle&&!su_pending&&!su_owned&&
-                                !gather_retained[d]&&!fmt_retained&&w2_quiet[d]&&!w2_sink_retained&&all_prior_quiet;
+                                !gather_retained[d]&&!fmt_retained&&w2_route_quiet&&!w2_sink_retained&&all_prior_quiet;
         assign db_rdy[d]=cp_idle&&all_routes_drained&&!cp_reset_wait;
         assign cpl_v[d]=cp_cpl_v&&all_routes_drained;
         assign cp_retire_ready=cpl_rdy[d]&&all_routes_drained;
@@ -181,31 +204,66 @@ end else begin:g_on
         wire [47:0] p_req_tag,p_rsp_tag;
         wire w2_sink_req_v,w2_sink_req_r,w2_sink_rsp_v,w2_sink_rsp_r,w2_sink_retained,w2_sink_fault,w2_sink_retire_r;
         wire [336:0] w2_sink_req;wire [272:0] w2_provider_rsp;
-        wire w2_sink_route=W2_RESULT_ENABLE&&w2_sink_req_v&&w2_assembly_drained[d];
-        wire w2_native_permit=!W2_RESULT_ENABLE||(w2_source_permit[d]&&!w2_native_done[d]);
-        assign p_req_v={w2_sink_route||(w2_req_v[d]&&w2_native_permit),su_req_v,a_req_v[0]};
+        wire w2_adapter_req_v,w2_adapter_req_r,w2_adapter_rsp_v,w2_adapter_rsp_r,w2_adapter_busy;
+        wire [336:0] w2_adapter_req;
+        wire w2_route_drained=W2_SECTOR_ENABLE?w2_sector_drained[d]:(!W2_RESULT_ENABLE||w2_assembly_drained[d]);
+        wire w2_route_quiet=w2_quiet[d]&&(!W2_SECTOR_ENABLE||w2_sector_drained[d]);
+        wire w2_route_req_v=W2_SECTOR_ENABLE?w2_adapter_req_v:w2_req_v[d];
+        wire [336:0] w2_route_req=W2_SECTOR_ENABLE?w2_adapter_req:w2_req[d*337+:337];
+        wire w2_route_rsp_r=W2_SECTOR_ENABLE?w2_adapter_rsp_r:w2_rsp_r[d];
+        if(W2_SECTOR_ENABLE)begin:g_w2_sectors
+        ot_hbm_integrated_w2_sector_adapter #(.ENABLE(1)) u_w2_sectors(
+         .clk(clk_sm),.por_n(rst_sm_n),.owner_valid(peer_grants[1]),.owner_frame(w2_lease_frame[d*73+:73]),
+         .source_accept_permit(w2_source_permit[d]&&w2_weights_installed[d]),
+         .result_seat_permit(w2_source_permit[d]),
+         .native_req_v(w2_native_req_v[d]),.native_req_r(w2_native_req_r[d]),
+         .native_req_addr(w2_native_req_addr[d*32+:32]),.native_req_tag(w2_native_req_tag[d*10+:10]),
+         .map_valid(w2_map_valid[d]&&w2_weights_installed[d]),.map_frame(w2_map_frame[d*73+:73]),
+         .map_native_addr(w2_map_native_addr[d*32+:32]),.map_sm(w2_map_sm[d*3+:3]),
+         .map_compact_offset(w2_map_compact_offset[d*16+:16]),.map_lanes(w2_map_lanes[d*4+:4]),
+         .map_count(w2_map_count[d*3+:3]),.map_byte_addresses(w2_map_byte_addresses[d*192+:192]),
+         .map_tags(w2_map_tags[d*96+:96]),.map_cfg(w2_map_cfg[d*96+:96]),
+         .sector_req_v(w2_adapter_req_v),.sector_req_r(w2_adapter_req_r),.sector_req(w2_adapter_req),
+         .sector_rsp_v(w2_adapter_rsp_v),.sector_rsp_r(w2_adapter_rsp_r),.sector_rsp(w2_provider_rsp),
+         .native_delivery_permit(w2_native_delivery_permit[d]),
+         .native_rsp_pending(w2_native_rsp_pending[d]),.native_rsp_v(w2_native_rsp_v[d]),
+         .native_rsp_tag(w2_native_rsp_tag[d*10+:10]),.native_rsp_data(w2_native_rsp_data[d*1088+:1088]),
+         .busy(w2_adapter_busy),.drained(w2_sector_drained[d]),.fault(w2_sector_fault[d]),.foreign_rsp(w2_sector_foreign_rsp[d]));
+        end else begin:g_no_w2_sectors
+         assign w2_adapter_req_v=0;assign w2_adapter_req=0;assign w2_adapter_rsp_r=0;assign w2_adapter_busy=0;
+         assign w2_native_req_r[d]=0;assign w2_native_rsp_pending[d]=0;assign w2_native_rsp_v[d]=0;
+         assign w2_native_rsp_tag[d*10+:10]=0;assign w2_native_rsp_data[d*1088+:1088]=0;
+         assign w2_sector_drained[d]=1;assign w2_sector_fault[d]=0;assign w2_sector_foreign_rsp[d]=0;
+        end
+        wire w2_sink_route=W2_RESULT_ENABLE&&w2_sink_req_v&&w2_route_drained;
+        // Reservation gates NEW native acceptance in the adapter. Once accepted,
+        // its sector debt must drain even if native_done/source permit changes.
+        wire w2_native_permit=W2_SECTOR_ENABLE||!W2_RESULT_ENABLE||(w2_source_permit[d]&&!w2_native_done[d]);
+        assign p_req_v={w2_sink_route||(w2_route_req_v&&w2_native_permit),su_req_v,a_req_v[0]};
         assign {p_req_we[2],p_req_addr[95:64],p_req_wdata[767:512],p_req_wstrb[95:64],p_req_tag[47:32]}=
-         w2_sink_route?w2_sink_req:w2_req[d*337+:337];
+         w2_sink_route?w2_sink_req:w2_route_req;
         assign {p_req_we[1],p_req_addr[63:32],p_req_wdata[511:256],p_req_wstrb[63:32],p_req_tag[31:16]}=su_request;
         assign {p_req_we[0],p_req_addr[31:0],p_req_wdata[255:0],p_req_wstrb[31:0],p_req_tag[15:0]}=
                {a_req_we[0],a_req_addr[31:0],a_req_wdata[255:0],a_req_wstrb[31:0],a_req_tag[15:0]};
-        assign w2_req_r[d]=p_req_rdy[2]&&!w2_sink_route&&w2_native_permit;assign w2_sink_req_r=p_req_rdy[2]&&w2_sink_route;assign su_req_rdy=p_req_rdy[1];assign a_req_rdy[0]=p_req_rdy[0];
+        assign w2_adapter_req_r=p_req_rdy[2]&&!w2_sink_route&&w2_native_permit;
+        assign w2_req_r[d]=!W2_SECTOR_ENABLE&&w2_adapter_req_r;assign w2_sink_req_r=p_req_rdy[2]&&w2_sink_route;assign su_req_rdy=p_req_rdy[1];assign a_req_rdy[0]=p_req_rdy[0];
         assign w2_provider_rsp={p_rsp_tag[47:32],p_rsp_we[2],p_rsp_data[767:512]};
         // Assembly drains before a result write starts; the sink retains the
         // same single CAP1 route through write ACK and readback consumption.
-        wire sink_response=W2_RESULT_ENABLE&&w2_assembly_drained[d]&&w2_sink_retained;
+        wire sink_response=W2_RESULT_ENABLE&&w2_route_drained&&w2_sink_retained;
         assign w2_sink_rsp_v=p_rsp_v[2]&&sink_response;
-        assign w2_rsp_v[d]=p_rsp_v[2]&&!sink_response;assign w2_rsp[d*273+:273]=w2_provider_rsp;
+        assign w2_adapter_rsp_v=p_rsp_v[2]&&!sink_response;
+        assign w2_rsp_v[d]=!W2_SECTOR_ENABLE&&w2_adapter_rsp_v;assign w2_rsp[d*273+:273]=w2_provider_rsp;
         assign su_rsp_v=p_rsp_v[1];assign su_response={p_rsp_tag[31:16],p_rsp_we[1],p_rsp_data[511:256]};
         assign a_rsp_v[0]=p_rsp_v[0]&&response_authorized[0];
         assign a_rsp_tag[15:0]=p_rsp_tag[15:0];assign a_rsp_we[0]=p_rsp_we[0];assign a_rsp_data[255:0]=p_rsp_data[255:0];
-        assign p_rsp_rdy={sink_response?w2_sink_rsp_r:w2_rsp_r[d],su_rsp_rdy,a_rsp_rdy[0]&&response_authorized[0]};
+        assign p_rsp_rdy={sink_response?w2_sink_rsp_r:w2_route_rsp_r,su_rsp_rdy,a_rsp_rdy[0]&&response_authorized[0]};
         assign return_offer[0]=p_rsp_v[0];
         assign obs_req[0]=a_req_v[0]&&a_req_rdy[0];assign obs_rsp[0]=a_rsp_v[0]&&a_rsp_rdy[0];
         assign obs_req_tag[15:0]=a_req_tag[15:0];assign obs_req_we[0]=a_req_we[0];
         assign obs_rsp_tag[15:0]=p_rsp_tag[15:0];assign obs_rsp_we[0]=p_rsp_we[0];
         assign w2_lease_granted[d]=peer_grants[1];
-        assign w2_release_r[d]=peer_releases[1]&&(!W2_RESULT_ENABLE||w2_sink_retire_r);
+        assign w2_release_r[d]=peer_releases[1]&&w2_route_drained&&(!W2_RESULT_ENABLE||w2_sink_retire_r);
         ot_hbm_integrated_w2_result_sink #(.ENABLE(W2_RESULT_ENABLE)) u_w2_sink(
          .clk(clk_sm),.por_n(rst_sm_n),.owned(peer_grants[1]),.installed(w2_output_installed[d]),
          .reserve_v(w2_reserve_v[d]),.reserve_r(w2_reserve_r[d]),.pair_op(w2_pair_op[d]),
@@ -218,7 +276,7 @@ end else begin:g_on
          .result_v(w2_result_v[d]),.result_op(w2_result_op[d*32+:32]),.result_row(w2_result_row[d*12+:12]),
          .result_data(w2_result_data[d*256+:256]),.native_done(w2_native_done[d]),
          .retire_v(w2_release_v[d]&&peer_releases[1]),.retire_r(w2_sink_retire_r),
-         .req_v(w2_sink_req_v),.req_r(w2_sink_req_r&&w2_assembly_drained[d]),.req(w2_sink_req),
+         .req_v(w2_sink_req_v),.req_r(w2_sink_req_r&&w2_route_drained),.req(w2_sink_req),
          .rsp_v(w2_sink_rsp_v),.rsp_r(w2_sink_rsp_r),.rsp(w2_provider_rsp));
         assign su_owned=peer_grants[0];assign su_release_r=peer_releases[0];
         ot_hbm_integrated_su_cp_bind #(.ENABLE(SU_ENABLE),.REGISTERED_OUTPUTS(SU_REGISTERED_OUTPUTS),.REGISTERED_STATUS(SU_REGISTERED_STATUS)) u_su_cp(
@@ -301,13 +359,13 @@ end else begin:g_on
          .release_job(gather_release_frame[d*73+:32]),.release_gen(gather_release_frame[d*73+32+:4]),
          .release_token(gather_release_frame[d*73+36+:17]),.release_pos(gather_release_frame[d*73+53+:20]),
          .result_published(gather_result_published[d]),.source_reverse_done(gather_reverse_done[d]),
-         .native_clients_drained(all_prior_quiet),.cdc_drained(native_credit_empty),.provider_fault(w2_sink_fault|(|cdc_f)|mem_fault|fmt_fault|store_fault),
+         .native_clients_drained(all_prior_quiet),.cdc_drained(native_credit_empty),.provider_fault(w2_sink_fault|w2_sector_fault[d]|(|cdc_f)|mem_fault|fmt_fault|store_fault),
          .observe_req(obs_req),.observe_rsp(obs_rsp),.observe_req_we(obs_req_we),.observe_rsp_we(obs_rsp_we),
          .observe_req_tag(obs_req_tag),.observe_rsp_tag(obs_rsp_tag),.return_offer(return_offer),.response_authorized(response_authorized),
          .native_job(cpl_job),.native_gen(cpl_generation),.native_token(launch_token),.native_pos(launch_pos),
          .native_credit_empty(native_credit_empty),.shared_idle(shared_idle),
-         .peer_lease_v({w2_lease_v[d],su_lease_v}),.peer_quiet({w2_quiet[d]&&!w2_sink_retained,su_quiet}),
-         .peer_release_v({w2_release_v[d]&&(!W2_RESULT_ENABLE||w2_sink_retire_r),su_release_v}),.peer_release_r(peer_releases),.peer_lease_granted(peer_grants),
+         .peer_lease_v({w2_lease_v[d],su_lease_v}),.peer_quiet({w2_route_quiet&&!w2_sink_retained,su_quiet}),
+         .peer_release_v({w2_release_v[d]&&w2_route_drained&&(!W2_RESULT_ENABLE||w2_sink_retire_r),su_release_v}),.peer_release_r(peer_releases),.peer_lease_granted(peer_grants),
          .peer_lease_job({w2_lease_frame[d*73+:32],su_job}),.peer_lease_gen({w2_lease_frame[d*73+32+:4],su_gen}),
          .peer_lease_token({w2_lease_frame[d*73+36+:17],su_token}),.peer_lease_pos({w2_lease_frame[d*73+53+:20],su_pos}),
          .peer_release_job({w2_release_frame[d*73+:32],su_job}),.peer_release_gen({w2_release_frame[d*73+32+:4],su_gen}),
@@ -319,7 +377,7 @@ end else begin:g_on
          .m_req_wdata(c_req_wdata[255:0]),.m_req_wstrb(c_req_wstrb[31:0]),.m_req_tag(c_req_tag[15:0]),
          .m_rsp_v(c_rsp_v[0]),.m_rsp_rdy(c_rsp_rdy[0]),.m_rsp_we(c_rsp_we[0]),.m_rsp_tag(c_rsp_tag[15:0]),.m_rsp_data(c_rsp_data[255:0]));
         ot_hbm_accel_su_parent_exec #(.ENABLE(SU_ENABLE),.IMW(IMW)) u_su_exec(
-         .clk(clk_sm),.rst_n(rst_sm_n),.owned(su_owned),.config_idle(db_rdy[d]&&!su_selected&&!gather_retained[d]&&!fmt_retained&&w2_quiet[d]),
+         .clk(clk_sm),.rst_n(rst_sm_n),.owned(su_owned),.config_idle(db_rdy[d]&&!su_selected&&!gather_retained[d]&&!fmt_retained&&w2_route_quiet),
          .loader_we(SU_ENABLE && im_we[d*NSM] && im_addr[IMW-1]),.loader_addr(im_addr),.loader_data(im_data),
          .selected_pc(su_pc),.job_id(su_job),.req_v(su_req_v),.req_rdy(su_req_rdy),.req(su_request),
          .rsp_v(su_rsp_v),.rsp_rdy(su_rsp_rdy),.rsp(su_response),.done(su_exec_done),.fault(su_exec_fault),
