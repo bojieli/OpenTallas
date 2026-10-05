@@ -9774,3 +9774,14 @@ def hbm_su_kr_capture_split_model(lanes=1024):
                 reset_exception_added=False, area_slot_fit=None,
                 actual_area_delta_um2=None, SSFF_closed=False, adopted=False)
 
+
+
+def hbm_su_command_bridge_model():
+    """Pre-hardware actual command/scalar producer boundary sizing."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_command_bridge_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.command_bridge_model()
