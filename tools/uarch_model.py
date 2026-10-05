@@ -8455,6 +8455,72 @@ def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
                 physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
 
 
+def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
+                                   measured_stage_cycles=73670):
+    """Unselected one-edge completion alternatives, priced on a retained trace.
+
+    This is a conditional calendar charge, not a changed RTL measurement.
+    A one-bit hop requires source-held data and identity through the new edge.
+    A finite capture holds the actual producer's token/value plus validity;
+    neither alternative licenses new work to overwrite its request context.
+    """
+    payload = nw + 32
+    choices = {}
+    for name, data_bits in [('parent_held_data_hop', 0),
+                            ('finite_result_capture', payload)]:
+        ff = data_bits + 1
+        # Payload uses unreset FFs, validity uses the existing reset cell type.
+        nand2 = 4*data_bits + 32  # hold mux plus bounded local valid control
+        buffers = 3*ff + 16      # clock/D/reset and distributed local control
+        gross = data_bits*0.2916 + 0.37908 + nand2*0.08748 + buffers*0.10206
+        choices[name] = dict(new_FF_bits=ff, retained_payload_bits=data_bits,
+                            NAND2_reservation=nand2, buffer_reservation_cells=buffers,
+                            gross_cell_reservation_um2=gross,
+                            total_growth_budget_um2=2*gross,
+                            old_cell_removal_credit_um2=0,
+                            new_clock_pin_cap_fF_SS=data_bits*0.446638 + 0.433982,
+                            new_reset_pin_cap_fF_SS=0.704025,
+                            parent_result_hold_required=(data_bits == 0),
+                            request_context_retention_required=True,
+                            new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                            new_external_payload_bits_per_edge=0,
+                            producer_payload_bits_per_capture=payload,
+                            capture_data_local_wire_bits=data_bits,
+                            local_valid_control_bits=1,
+                            routing_capacity_proven=False,
+                            actual_parent_loads=None,
+                            budget_fraction_of_smallest_failed_cell_area=2*gross/15787.9,
+                            actual_parent_slot_fit_proven=False,
+                            excludes_separate_internal_control_repair=True,
+                            added_completion_edges=1)
+    return dict(schema='opentallas.dsrom.wfc.completion_edge_price.v1',
+                model_only=True, implementation_selected=False, adopted=False,
+                source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv',
+                baseline_controller_sha256='601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099',
+                source_terms=['core_done/core_next_token/core_next_val',
+                              'job_done and TXQ payload capture',
+                              'core_free/tx_reading/VM arbitration and request context'],
+                choices=choices, MACs_per_cycle=0,
+                target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, SS_FF_closed=False,
+                calendar=dict(vehicle='original L20 stage9_w1 dependency retry PASS',
+                              measured_stage_cycles=measured_stage_cycles,
+                              actual_completion_events=exposed_completions,
+                              added_edges_if_every_event_exposed=exposed_completions,
+                              target_period_scale_only_added_ns=exposed_completions*0.833,
+                              fractional_calendar_charge=exposed_completions/measured_stage_cycles,
+                              rate_loss_if_other_edges_unchanged=exposed_completions/(measured_stage_cycles+exposed_completions),
+                              whole_token_exposed_events=None,
+                              whole_token_latency_delta_ns=None,
+                              composition='deltaT=sum(exposed completion hops * actual controller period) + changed service/phase/credit waits; no free overlap or token extrapolation'),
+                physical_gain_measured=False, actual_parent_launch_clock=None,
+                actual_parent_result_hold_contract=None, mapped_area_proven=False,
+                internal_user_position_path_repaired=False,
+                reset_recovery_failure=False,
+                owner_decision='CLAUDE chooses the actual completion/capture contract and separate internal-control repair. No RTL/campaign authorized by this model.',
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json')
+
+
 def dsrom_wfc_completion_ready_price(nw=21, txq=4):
     """Conditional same-edge completion-ready lookahead, not an adopted repair.
 
@@ -9822,9 +9888,18 @@ def qwen_hbm_selected_activation_provider_model():
     binding_path = 'results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json'
     port_path = 'results/rtl/qwen_hbm_final_tp4_20261005/existing_port_model.json'
     delta_path = 'results/rtl/qwen_hbm_final_tp4_20261005/model_delta.json'
+    inventory_path = 'results/rtl/qwen_hbm_activation_vm_inventory_20261005/provider_inventory.json'
     binding = json.loads((root/binding_path).read_text())
     port = json.loads((root/port_path).read_text())
     delta = json.loads((root/delta_path).read_text())
+    inventory = json.loads((root/inventory_path).read_text())
+    host = inventory['host_provider']
+    rf = inventory['existing_RF_namespace']
+    assert inventory['selected_source']['pins'] == binding['selected_source']['pins']
+    assert host['logical_words_per_die'] == 177808
+    assert rf['geometry']['logical_FP32_words'] == 65536
+    assert rf['source_only_timing']['best_read_II_edges'] == 3
+    assert not rf['selected'] and not inventory['existing_DS_VM_reference']['selected']
     activation = binding['prebuild_model']['activation']
     n = activation['independently_enabled_word_ports_per_die']
     data = n*activation['word_bits']
@@ -9832,7 +9907,7 @@ def qwen_hbm_selected_activation_provider_model():
     assert (n, data, address, n) == (2048, 65536, 49152, 2048)
     assert port['source_sha256'] == binding['selected_source']['pins']['rtl/hdc/ot_qwen_me_spine_h_w12.sv']
     assert delta['once_only_port_cell_reservation_per_die_um2'] == port['area']['all24_port_cell_reservation_um2']
-    inputs = [binding_path, port_path, delta_path]
+    inputs = [binding_path, port_path, delta_path, inventory_path]
     for p, expected in binding['selected_source']['pins'].items():
         assert hashlib.sha256((root/p).read_bytes()).hexdigest() == expected, p
         inputs.append(p)
@@ -9845,6 +9920,26 @@ def qwen_hbm_selected_activation_provider_model():
         request_signal_bits=address+n, response_signal_bits=data,
         total_logical_interface_signal_bits_per_die=data+address+n,
         actual_simultaneous_read_census=None,
+        actual_distinct_words_per_accepted_event=None,
+        source_affine_bank_row_lane_and_reuse_plan=None,
+        software_VM_words_per_die=host['logical_words_per_die'],
+        software_VM_bytes_per_die=host['logical_bytes_per_die'],
+        software_VM_bytes_TP4=host['total_TP4_logical_bytes'],
+        software_capacity_is_physical_capacity=False,
+        existing_RF_reference=dict(
+            selected=False, module=rf['module'], caller=rf['caller'],
+            logical_words=rf['geometry']['logical_FP32_words'],
+            missing_backing_words=host['logical_words_per_die']-rf['geometry']['logical_FP32_words'],
+            source_best_read_II_edges=rf['source_only_timing']['best_read_II_edges'],
+            source_transactions=rf['selected_2048_word_best_byte_floor'],
+            macro_body_mm2=rf['macro']['total_existing128_macro_body_um2']/1e6,
+            physical_selected_provider=False,
+            rule='Finite vector-addressed RF is not a 2048-word scatter provider; byte-volume floor applies only to distinct, vector-coalescible words within its capacity. Do not price every event as 2048 unique words.'),
+        provider_risks=dict(
+            capacity='177808 software words exceed existing RF backing by112272 words; actual live working set/reuse and full backing mapping require source-affine plan, not automatic replica selection',
+            stalls='XVM1 fixed sampling has no selected bank grant/backpressure; repeated addresses may be reused/broadcast only with matched read-before-write/version semantics. Distinct words, collisions, queued reads and all writer publication must be counted per accepted event.',
+            area='RF macro body is a reference only, not selected VM debit; storage copies, lane gather/mux/fanout, common SU/collective faces, native writer ports, clocks/CDC/corridors remain unpriced. Head/result port cost is not VM containment.',
+            next_step='Arendt source-affine finite bank/row/lane, reuse and collision plan for actual program/ports; Maxwell sizes capacity/service/area/token cost before any provider RTL or P&R'),
         source_read='one enabled vx_re word reads host m.vm[vx_addr]; raw32 response through XVM1 and unchanged spine selection',
         native_source_not_physical_VM='std::vector host access has no installed bank grant/request-ready or physical simultaneous-port proof',
         selected_VM_provider_source=None, physical_VM_capacity_bytes=None,

@@ -295,6 +295,7 @@ def main():
     ap.add_argument("--out", type=Path, default=REC / "composition.json")
     ap.add_argument('--joint-record', type=Path)
     ap.add_argument('--joint-layouts', type=Path)
+    ap.add_argument('--paired-record', type=Path)
     a = ap.parse_args()
     S = setup()
     ar0, mm0, rows1, rows6 = gate_rows(S)
@@ -337,6 +338,57 @@ def main():
             class_proxy='historical ATTN3 representative prefix retained; all-layer group substitution is modeled coverage',
             SS_FF_admitted=False, adopted=False, full_token_gain_measured=False,
             qualified_headline_rate=None, Qwen_provider_bound=False, Qwen_opt3_enabled=False)
+    if a.paired_record:
+        assert 'joint_PQ_XMAP' in out
+        paired = json.loads(a.paired_record.read_text())
+        fixture_path = a.paired_record.parent/'fixture.json'
+        fixture = json.loads(fixture_path.read_text())
+        controls_path = a.paired_record.parent/'changed_hook_cases.json'
+        controls = json.loads(controls_path.read_text())
+        assert paired['status'] == 'pass' and paired['runtime_returncode'] == 0
+        assert not paired['mismatches'] and not paired['extra']
+        assert paired['original_output_rows'] == paired['actual_output_rows'] == 86
+        assert fixture['baseline_result_sha256'] == sha(pqd/'ar_l20_f1.json')
+        assert len(fixture['composite_descriptors']) == 28
+        assert fixture['logical_op_labels'][24:27] == [[24,25], [26,27], [28,29]]
+        assert len(paired['ops']) == 28
+        for op, desc in enumerate(fixture['composite_descriptors']):
+            actual = paired['ops'][str(op)]
+            assert actual['fault'] == 0 and actual['results'] == desc[0]
+            assert actual['lines'] == actual['consumed'] == desc[4]
+        first, last = fixture['w2_groups'][0], fixture['w2_groups'][-1]
+        assert paired['ops'][str(last)]['t_done']-paired['ops'][str(first)]['t_load0'] == paired['paired_w2_cycles']
+        assert paired['incremental_cycles_saved'] == paired['baseline_pq_w2_cycles']-paired['paired_w2_cycles']
+        assert all(c['pass_check'] and c['runtime_returncode'] == 0 for c in controls.values())
+        assert controls['ordinary_flag_off']['faults'] == [0]
+        assert controls['illegal_pair_shape']['faults'] == [1]
+        assert controls['ordinary_flag_off']['executable_sha256'] == controls['illegal_pair_shape']['executable_sha256']
+        ar_joint = out['joint_PQ_XMAP']['target_clock_projection']['AR']
+        w2 = ar_joint['groups']['W2']
+        assert w2['layers'] == 40
+        assert w2['pq_group_cycles'] == paired['baseline_pq_w2_cycles'] == fixture['baseline_w2_cycles']
+        saved = (paired['baseline_pq_w2_cycles']-paired['paired_w2_cycles'])*w2['layers']/F_SM*1e6
+        assert saved > 0
+        old_ar = ar_joint['remaining_target_clock_us']
+        new_ar = old_ar-saved
+        gain = 100*(old_ar/new_ar-1)
+        out['paired_W2_increment'] = dict(
+            inputs={rel(p):sha(p) for p in (a.paired_record, fixture_path, controls_path,
+                    a.paired_record.parent/'source_pin.json', a.paired_record.parent/'source.commit')},
+            baseline='source-matched joint PQ+XMAP; W2 group unchanged from production PQ',
+            measured_component_old_cycles=paired['baseline_pq_w2_cycles'],
+            measured_component_new_cycles=paired['paired_w2_cycles'],
+            measured_component_saved_cycles=paired['incremental_cycles_saved'],
+            authoritative_exposed_W2_groups=w2['layers'],
+            target_clock_hz=F_SM, target_period_ns=1e9/F_SM,
+            incremental_AR_projection_us=saved, prior_joint_AR_projection_us=old_ar,
+            candidate_AR_projection_us=new_ar, projected_per_user_rate_gain_pct=gain,
+            model_one_percent_threshold_met=gain>=1,
+            accounting='Replace W2 interval only, forty times; unchanged handshake/barrier once; no analytic partial-wave saving added',
+            actual_combined_PQ_XMAP_PACK_measured=False, MTP_increment_us=None,
+            full_token_gain_measured=False, physical_ss_ff_qualified=False,
+            adopted=False, qualified_headline_rate=None,
+            next_integration='Rawls combined configuration must bind actual PACK caller and measure interaction; Erdos component gate is not that combined run')
     # Production records may be composed without rerunning the numeric gates.
     # Keep their benchmark clock and measured scope separate from this target
     # clock program projection and the independent, unmeasured layout forecast.

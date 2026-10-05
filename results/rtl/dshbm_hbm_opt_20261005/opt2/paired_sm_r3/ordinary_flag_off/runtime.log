@@ -1,0 +1,8 @@
+T 170 LAUNCH rows 1 g 10 bf 1 xb 0 need_q 0 since 255 d_cur 0 d_head 42 on 0
+T 306 OPEND
+T 397 RDONE row 0 oh 0 ocnt 1
+T 397 HEADDONE oh 0
+- /srv/opentallas/jobs-overflow/erdos-w2-source-6513ca594/rtl/test/tb_hbm_accel_sm_w2_pair_seq.sv:211: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 409ns; walltime 0.554 s; speed 737.549 ns/s
+- Verilator: cpu 0.554 s on 1 threads; allocated 90 MB
