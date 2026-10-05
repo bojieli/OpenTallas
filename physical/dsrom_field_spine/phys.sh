@@ -4,7 +4,7 @@
 # hierarchy, routed in context of registered neighbours.  Run from a source root holding tools/ rtl/ physical/.
 # Usage: phys.sh <scratch dir> <tag>...   tag = c<PQ>r<R>_<v>:  R 16 (core-utilization 35) or 128 (480 x 480 um die);
 #   v = a (hold target 20 ps, slew margin 30%), b (20 ps, 40%), c (25 ps, 40%), d (22 ps, 45%, routability-off GPL),
-#   e (20 ps, 40%, repair buffer budget raised), f (25 ps, 40%, budget raised);
+#   e (20 ps, 40%, repair buffer budget raised), f (25 ps, 40%, budget raised), g (22 ps, 45%, budget raised);
 #   a trailing k (e.g. c1r128_ck) also keeps ot_dsrom_aq12 as its own synthesis hierarchy: flattened, Yosys merges the
 #   quantiser's input register with the spine's BF16 stage-A register (same x_q bits) and ABC re-ripples its
 #   exponent subtract (v9 flat R128 post-CTS: aq12 m1 / s12_dd at -43..-474 ps); kept, it maps as the standalone
@@ -25,7 +25,7 @@ run() { # tag
   KM="ot_hdc_fp32_mul_f12_l5"; case $v in *k) KM="$KM ot_dsrom_aq12"; v=${v%k};; esac
   case $v in a) H=0.020; S=30; X=();; b) H=0.020; S=40; X=();; c) H=0.025; S=40; X=();;
              d) H=0.022; S=45; X=(--orfs-var GPL_ROUTABILITY_DRIVEN=0);;
-             e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; esac
+             e) H=0.020; S=40; X=("${BC[@]}");; f) H=0.025; S=40; X=("${BC[@]}");; g) H=0.022; S=45; X=("${BC[@]}");; esac
   if [ "$r" = 128 ]; then g=48; SH=(--die-area 0 0 480 480 --core-area 2.16 2.16 477.84 477.84); else g=40; SH=(--core-utilization 35); fi
   mkdir -p $O/tmp_$t; export TMPDIR=$O/tmp_$t
   echo "$(date -Is) START $t $(hostname)" >> $J/MANIFEST
