@@ -64,7 +64,7 @@
 // the lm_head op writes LG, the Markov op (oacc, amax) adds LG and takes the argmax on its own output
 // stream -- no vocab-length stream-unit add, no vocab-length XU SELECT.  With i_iwe the argmax index of copy p
 // is written (as a uint32 element) at element i_iaddr + p once the op has drained, which is where the next
-// draft row's Markov gather reads it.  A fused op's results leave DF = 7 cycles later (addend read 2 + add 5);
+// draft row's Markov gather reads it.  A fused op's results leave DF = 2 + 5 cycles later (addend read 2 + add 5; FH_ALAT);
 // the engine takes no other op until a fused op has drained (ready), so results never overlap.  Every
 // non-fused op is cycle- and bit-identical to the as-built engine.  Copy p of a multi-position op (i_m) adds
 // its own output word (+ p*ops) and writes its own index, so a batched head (L2) composes unchanged.
@@ -131,8 +131,8 @@ module ot_hdc_v41_matvec #(
     output reg  [MP*G*W-1:0]    o_mask,
     output reg  [MP*G*W*32-1:0] o_data,
     // FUSED: addend word reads, one port per group and position copy (the result ports' twin)
-    output reg  [MP*G-1:0]      ra_re,
-    output reg  [MP*G*AW-1:0]   ra_addr,
+    output wire [MP*G-1:0]      ra_re,
+    output wire [MP*G*AW-1:0]   ra_addr,
     input  wire [MP*G*W*32-1:0] ra_q,
     // argmax, per position copy
     output reg  [MP*NW-1:0]     am_idx,
@@ -174,7 +174,9 @@ module ot_hdc_v41_matvec #(
     reg              oacc_r, iwe_r;
     reg [AW-1:0]     iaddr_r;
     reg              iw_pend;
-    wire             drained, iw_go;
+    wire             drained;
+    reg              iw_go;            // FUSED: registered (see drained_nx below)
+    wire             iw_go_n;
     assign ready = !active && !fus_busy;
 
     always @(posedge clk or negedge rst_n) begin
@@ -297,8 +299,12 @@ module ot_hdc_v41_matvec #(
             s3_x[32*l +: 32] <= s2_round ? ((s2_x[32*l +: 32] + 32'h7FFF + {31'd0, s2_x[32*l + 16]}) & 32'hFFFF0000)
                                          : s2_x[32*l +: 32];
     end
-    wire [TW-1:0] a_tag;
-    ot_hdc_delay #(.W(TW), .D(10 + OD)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag));
+    //: FUSED: the tag line ends in a register of its own (a_tag_p is the tag one cycle early), so the fused
+    //: head's selects are made a cycle ahead and registered: zero added cycles, the r_* fields start at flops
+    wire [TW-1:0] a_tag_p;
+    reg  [TW-1:0] a_tag;
+    ot_hdc_delay #(.W(TW), .D(10 + OD - 1)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_p));
+    always @(posedge clk) a_tag <= a_tag_p;
     wire [10+OD:0] vline;
     ot_hdc_vline #(.D(10 + OD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
     wire [5:0] fl_first;
@@ -319,15 +325,42 @@ module ot_hdc_v41_matvec #(
             u_ops, u_fus} = a_tag;
     wire [LG:0]   u_tq = (G >> u_hg) - 1;
     wire [LG:0]   u_ports = G >> u_split;
+    // the same fields one cycle early (p_: a_tag_p, valid vline[9 + OD])
+    wire          t_v_p = vline[10 + OD - 1];
+    wire          p_last, p_oen, p_amax, p_wsrc, p_mmode, p_fus;
+    wire [1:0]    p_split, p_hg;
+    wire [AW-1:0] p_ogs, p_oa, p_ots, p_ops;
+    wire [2:0]    p_m;
+    wire [NW:0]   p_nb, p_lb, p_nout;
+    assign {p_last, p_oen, p_amax, p_wsrc, p_mmode, p_split, p_oa, p_ots, p_nb, p_lb, p_nout, p_hg, p_ogs, p_m,
+            p_ops, p_fus} = a_tag_p;
+    wire [LG:0]   p_tq = (G >> p_hg) - 1;
+    wire [LG:0]   p_ports = G >> p_split;
     //: FUSED: a fused op's tag and valid wait DF cycles (addend read 2 + add 5); its results never share a
     //: cycle with another op's (ready holds the engine until it drains), so r_* select by the delayed valid
-    localparam integer DF = 7;
-    wire [TW-1:0] f_tag;
-    ot_hdc_delay #(.W(TW), .D(DF)) u_ftag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(f_tag));
+    //: FH_ALAT (+define+OT_FH_ALAT=n, default 7): 0 is the as-built five-stage ot_hdc_fadd (DF 7, does not
+    //: close 1.2 GHz at SS); n = 5..7 is the bit-identical keep-prefix ot_hdc_fp32_add_lat #(n), DF = 2 + n.
+    //: 7 is the closed configuration (results/rtl/dsrom_fh_close_20261004)
+`ifdef OT_FH_ALAT
+    localparam integer FH_ALAT = `OT_FH_ALAT;
+`else
+    localparam integer FH_ALAT = 7;
+`endif
+    localparam integer DF = 2 + ((FH_ALAT == 0) ? 5 : FH_ALAT);
+    //: f_tag_p is the fused tag one cycle early; r_tag / r_v are f_v ? f_tag : a_tag and f_v || (t_v && !u_fus),
+    //: selected a cycle ahead from the early taps and registered
+    wire [TW-1:0] f_tag_p;
+    ot_hdc_delay #(.W(TW), .D(DF - 1)) u_ftag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(f_tag_p));
     wire [DF:0] fline;
     ot_hdc_vline #(.D(DF)) u_fv (.clk(clk), .rst_n(rst_n), .v(t_v && u_fus), .vd(fline));
     wire          f_v = fline[DF];
-    wire          r_v = f_v || (t_v && !u_fus);
+    reg  [TW-1:0] r_tag;
+    reg           r_v;
+    always @(posedge clk) r_tag <= fline[DF - 1] ? f_tag_p : a_tag_p;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) r_v <= 1'b0;
+        else r_v <= fline[DF - 1] || (t_v_p && !p_fus);
+    end
     wire          r_last, r_oen, r_amax, r_wsrc, r_mmode, r_fus;
     wire [1:0]    r_split, r_hg;
     wire [AW-1:0] r_ogs;
@@ -335,7 +368,7 @@ module ot_hdc_v41_matvec #(
     wire [2:0]    r_m;
     wire [NW:0]   r_nb, r_lb, r_nout;
     assign {r_last, r_oen, r_amax, r_wsrc, r_mmode, r_split, r_oa, r_ots, r_nb, r_lb, r_nout, r_hg, r_ogs, r_m,
-            r_ops, r_fus} = f_v ? f_tag : a_tag;
+            r_ops, r_fus} = r_tag;
     wire [LG:0]   r_tq = (G >> r_hg) - 1;         // tile-in-round mask of a port
     wire [LG:0]   r_ports = G >> r_split;
     reg  [G*W-1:0] r_mask;
@@ -431,33 +464,14 @@ module ot_hdc_v41_matvec #(
             assign tfault[lv] = |pf;
         end
     wire [G*W*32-1:0] res_u = lvl[LG];
-    //: FUSED: read the addend words at the result's own output address as it leaves the tree, hold the
-    //: result 2 cycles to meet them, add (addend + result, the golden add's operand order), 5 cycles
-    integer rq;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) ra_re[mp*G +: G] <= 0;
-        else
-            for (rq = 0; rq < G; rq = rq + 1)
-                ra_re[mp*G + rq] <= t_v && u_fus && u_last && (rq < u_ports) && (mp < u_m);
-    end
-    always @(posedge clk)
-        for (rq = 0; rq < G; rq = rq + 1)
-            ra_addr[(mp*G + rq)*AW +: AW] <= u_oa + (rq & u_tq) * u_ots + (rq >> (LG - u_hg)) * u_ogs + mp * u_ops;
-    wire [G*W*32-1:0] res_h;
-    ot_hdc_delay #(.W(G*W*32), .D(2)) u_rh (.clk(clk), .rst_n(rst_n), .d(res_u), .q(res_h));
-    wire [1:0] hline;
-    ot_hdc_vline #(.D(1)) u_hv (.clk(clk), .rst_n(rst_n), .v(t_v && u_fus && u_last), .vd(hline));
-    reg ah_v;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) ah_v <= 1'b0;
-        else ah_v <= hline[1];
-    end
+    //: FUSED: the addend read and add (ot_hdc_v41_fh_add, below)
     wire [G*W*32-1:0] fsum;
     wire [G*W-1:0]    ffault;
-    for (g = 0; g < G * W; g = g + 1) begin : g_fadd
-        ot_hdc_fadd u_add (clk, rst_n, ah_v, ra_q[(mp*G*W + g)*32 +: 32], res_h[32*g +: 32], fsum[32*g +: 32],
-                           ffault[g]);
-    end
+    ot_hdc_v41_fh_add #(.W(W), .G(G), .AW(AW), .MPI(mp), .ALAT(FH_ALAT)) u_fh (
+        .clk(clk), .rst_n(rst_n), .t_v_p(t_v_p), .p_fus(p_fus), .p_last(p_last), .p_ports(p_ports), .p_m(p_m),
+        .p_tq(p_tq), .p_hg(p_hg), .p_oa(p_oa), .p_ots(p_ots), .p_ogs(p_ogs), .p_ops(p_ops), .res_u(res_u),
+        .ra_re(ra_re[mp*G +: G]), .ra_addr(ra_addr[mp*G*AW +: G*AW]), .ra_q(ra_q[mp*G*W*32 +: G*W*32]),
+        .fsum(fsum), .ffault(ffault));
     wire [G*W*32-1:0] res = f_v ? fsum : res_u;
     //: A status bit: registered in two levels (see ot_hdc_stream).
     reg [G:0] fault_q;
@@ -495,16 +509,25 @@ module ot_hdc_v41_matvec #(
         else if (iw_go) o_we[mp*G +: G] <= {{(G-1){1'b0}}, mp < m_r};
         else o_we[mp*G +: G] <= o_we1;
     end
+    //: the iw_go select of the 2,048-bit result bus: NIW kept copies of the iw_go flop (one per 4 lanes),
+    //: each the same register (same input, same reset), so its fan-out is not one net (C7h: -4.5 ps SS)
+    localparam integer NIW = (G * W + 3) / 4;
+    wire [NIW-1:0] iwg;
+    genvar ic;
+    for (ic = 0; ic < NIW; ic = ic + 1) begin : g_iwg
+        ot_hdc_v41_fh_kreg u_iwg (.clk(clk), .rst_n(rst_n), .d(iw_go_n), .q(iwg[ic]));
+    end
+    wire [G*W*32-1:0] iw_data = {{(G*W-1){32'd0}}, {{(32-NW){1'b0}}, am_idx[mp*NW +: NW]}} << (32 * iw_e[LW-1:0]);
+    wire [G*W-1:0]    iw_mask = {{(G*W-1){1'b0}}, 1'b1} << iw_e[LW-1:0];
+    integer il, ia;
     always @(posedge clk) begin
-        if (iw_go) begin
-            o_addr[mp*G*AW +: G*AW] <= {{((G-1)*AW){1'b0}}, iw_e >> LW};
-            o_mask[mp*G*W +: G*W] <= {{(G*W-1){1'b0}}, 1'b1} << iw_e[LW-1:0];
-            o_data[mp*G*W*32 +: G*W*32] <= {{(G*W-1){32'd0}}, {{(32-NW){1'b0}}, am_idx[mp*NW +: NW]}}
-                                           << (32 * iw_e[LW-1:0]);
-        end else begin
-            o_addr[mp*G*AW +: G*AW] <= o_addr1; o_mask[mp*G*W +: G*W] <= o_mask1;
-            o_data[mp*G*W*32 +: G*W*32] <= o_data1;
+        for (il = 0; il < G * W; il = il + 1) begin
+            o_data[mp*G*W*32 + 32*il +: 32] <= iwg[il / 4] ? iw_data[32*il +: 32] : o_data1[32*il +: 32];
+            o_mask[mp*G*W + il] <= iwg[il / 4] ? iw_mask[il] : o_mask1[il];
         end
+        for (ia = 0; ia < G; ia = ia + 1)
+            o_addr[(mp*G + ia)*AW +: AW] <= iwg[ia * W / 4] ? ((ia == 0) ? (iw_e >> LW) : {AW{1'b0}})
+                                                            : o_addr1[ia*AW +: AW];
     end
 
     // -- argmax: a registered compare tree over the round-slot, then a running best --
@@ -590,7 +613,16 @@ module ot_hdc_v41_matvec #(
     assign drained = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov &&
                    !(|fline);
     // FUSED: hold the engine while a fused op drains; then write its argmax index (i_iwe)
-    assign iw_go = iw_pend && drained;
+    //: iw_go is iw_pend && drained, registered: while a fused op is pending no op is accepted, so every
+    //: in-flight bit is a shift of a bit that is in flight now, and the argmax valid tv[LV] (the last to clear)
+    //: is tv[LV-1] a cycle earlier: drained next cycle == drained_nx now (the as-built OR without tv[LV])
+    wire drained_nx = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv[LV-1:0]) &&
+                      !ov1 && !ov && !(|fline);
+    assign iw_go_n = iw_pend && !iw_go && drained_nx;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) iw_go <= 1'b0;
+        else iw_go <= iw_go_n;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             fus_busy <= 1'b0; iw_pend <= 1'b0; iwe_r <= 1'b0; iaddr_r <= 0;
@@ -607,4 +639,117 @@ module ot_hdc_v41_matvec #(
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);
     end
+endmodule
+
+// ---------------------------------------------------------------------------
+// ot_hdc_v41_fh_add: the FUSED draft head's addend read and add for one position copy (MPI) of
+// ot_hdc_v41_matvec, factored out so it hardens as a unit.  Read the addend words at the result's own output
+// address as it leaves the split tree, hold the result 2 cycles to meet them, add (addend + result, the golden
+// add's operand order).  ALAT 0: the as-built five-stage ot_hdc_fadd; 5..7: ot_hdc_fp32_add_lat #(ALAT), bit for
+// bit the same sum and fault (rtl/test/tb_w11_fp32_add_lat.sv).  fsum leaves 2 + latency cycles after t_v.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41_fh_add #(
+    parameter integer W = 16,
+    parameter integer G = 4,
+    parameter integer AW = 24,
+    parameter integer MPI = 0,
+    parameter integer ALAT = 0
+) (
+    input  wire                  clk,
+    input  wire                  rst_n,
+    // the result tag one cycle before the result leaves the split tree (engine: a_tag_p, vline[9 + OD])
+    input  wire                  t_v_p,
+    input  wire                  p_fus,
+    input  wire                  p_last,
+    input  wire [$clog2(G):0]    p_ports,
+    input  wire [2:0]            p_m,
+    input  wire [$clog2(G):0]    p_tq,
+    input  wire [1:0]            p_hg,
+    input  wire [AW-1:0]         p_oa,
+    input  wire [AW-1:0]         p_ots,
+    input  wire [AW-1:0]         p_ogs,
+    input  wire [AW-1:0]         p_ops,
+    input  wire [G*W*32-1:0]     res_u,
+    output reg  [G-1:0]          ra_re,
+    output reg  [G*AW-1:0]       ra_addr,
+    input  wire [G*W*32-1:0]     ra_q,
+    output wire [G*W*32-1:0]     fsum,
+    output wire [G*W-1:0]        ffault
+);
+    localparam integer LG = $clog2(G);
+    generate if (G > 4) begin : g_bad_g
+        ot_hdc_v41_fh_add_supports_G_up_to_4 u_trap ();   // the stride multiples are selects of 0..3 x
+    end endgenerate
+    //: ra_re / ra_addr are registered on the cycle after the result leaves the tree (t + 1), as the engine's
+    //: result port; from the early tag (t - 1) the address takes two stages: the three terms, then their sum
+    integer rq;
+    reg [G-1:0]    re0;
+    reg [G*AW-1:0] ta, tb, tc;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin re0 <= 0; ra_re <= 0; end
+        else begin
+            for (rq = 0; rq < G; rq = rq + 1)
+                re0[rq] <= t_v_p && p_fus && p_last && (rq < p_ports) && (MPI < p_m);
+            ra_re <= re0;
+        end
+    end
+    //: every carry chain is a (* keep *) Kogge-Stone (ot_hdc_ksadd_k): the multiples k * stride (k < G) are a
+    //: select of 0, x, 2x, 3x (3x by one prefix add); the sum is a 3:2 carry-save stage and one prefix add
+    localparam [AW-1:0] MPI_W = MPI;
+    wire [AW-1:0] ots3, ogs3, mops, ta_n;
+    ot_hdc_ksadd_k #(.W(AW)) u_o3 (.a(p_ots), .b(p_ots << 1), .cin(1'b0), .s(ots3), .cout());
+    ot_hdc_ksadd_k #(.W(AW)) u_g3 (.a(p_ogs), .b(p_ogs << 1), .cin(1'b0), .s(ogs3), .cout());
+    assign mops = MPI_W * p_ops;                    // MPI is a constant (0 for copy 0)
+    ot_hdc_ksadd_k #(.W(AW)) u_ta (.a(p_oa), .b(mops), .cin(1'b0), .s(ta_n), .cout());
+    function automatic [AW-1:0] kx(input [1:0] k, input [AW-1:0] x, input [AW-1:0] x3);
+        kx = (k == 2'd0) ? {AW{1'b0}} : (k == 2'd1) ? x : (k == 2'd2) ? (x << 1) : x3;
+    endfunction
+    genvar ga;
+    generate for (ga = 0; ga < G; ga = ga + 1) begin : g_ra
+        wire [AW-1:0] sa = ta[ga*AW +: AW], sb = tb[ga*AW +: AW], sc = tc[ga*AW +: AW];
+        wire [AW-1:0] cs_s = sa ^ sb ^ sc;
+        wire [AW-1:0] cs_c = ((sa & sb) | (sa & sc) | (sb & sc)) << 1;
+        wire [AW-1:0] sum;
+        ot_hdc_ksadd_k #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .cin(1'b0), .s(sum), .cout());
+        always @(posedge clk) begin
+            ta[ga*AW +: AW] <= ta_n;
+            tb[ga*AW +: AW] <= kx(2'(ga & p_tq), p_ots, ots3);
+            tc[ga*AW +: AW] <= kx(2'(ga >> (LG - p_hg)), p_ogs, ogs3);
+            ra_addr[ga*AW +: AW] <= sum;
+        end
+    end endgenerate
+    wire [G*W*32-1:0] res_h;
+    ot_hdc_delay #(.W(G*W*32), .D(2)) u_rh (.clk(clk), .rst_n(rst_n), .d(res_u), .q(res_h));
+    //: the addend valid: two cycles after the result leaves the tree (as ot_hdc_vline #(1) and a register)
+    reg hv0, hv1, ah_v;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin hv0 <= 1'b0; hv1 <= 1'b0; ah_v <= 1'b0; end
+        else begin hv0 <= t_v_p && p_fus && p_last; hv1 <= hv0; ah_v <= hv1; end
+    end
+    genvar g;
+    generate for (g = 0; g < G * W; g = g + 1) begin : g_fadd
+        if (ALAT == 0) begin : g_asb
+            ot_hdc_fadd u_add (clk, rst_n, ah_v, ra_q[32*g +: 32], res_h[32*g +: 32], fsum[32*g +: 32], ffault[g]);
+        end else begin : g_lat
+            wire [1:0] err;
+            wire       vo;
+            ot_hdc_fp32_add_lat #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(ah_v), .a(ra_q[32*g +: 32]),
+                                                     .b(res_h[32*g +: 32]), .y(fsum[32*g +: 32]), .err(err),
+                                                     .valid_out(vo));
+            assign ffault[g] = vo && (err != 2'd0);
+        end
+    end endgenerate
+endmodule
+
+// a register the synthesis flow keeps as its own instance (no merge of equal flops): fan-out copies
+(* keep_hierarchy *)
+module ot_hdc_v41_fh_kreg (
+    input  wire clk,
+    input  wire rst_n,
+    input  wire d,
+    output reg  q
+);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 1'b0;
+        else q <= d;
 endmodule
