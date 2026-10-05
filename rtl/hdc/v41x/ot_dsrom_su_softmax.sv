@@ -50,7 +50,7 @@ module ot_dsrom_su_softmax #(
     parameter integer LA    = 4,
     parameter integer ELM   = LM,        // the exp units' multiplier / add latencies (ot_hdc_v41x_exp)
     parameter integer ELA   = LA,
-    parameter integer DIVF12 = 1         // 1: ot_dsrom_su_fdiv_f12 (DEPTH 32, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
+    parameter integer DIVF12 = 1         // 1: ot_dsrom_su_fdiv_f12 (DEPTH 33, 1.2 GHz); 0: ot_hdc_v41x_fdiv (19)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -82,7 +82,7 @@ module ot_dsrom_su_softmax #(
     localparam integer NPV = 512 / LPH;
     localparam integer LH = $clog2(LPH);
     localparam integer D_EXP = 7 * ELM + 8 * ELA + 4;
-    localparam integer D_DIV = DIVF12 ? 32 : 19;
+    localparam integer D_DIV = DIVF12 ? 33 : 19;
 
     function automatic [31:0] okey(input [31:0] x);
         okey = x[31] ? ~x : {1'b1, x[30:0]};
@@ -117,17 +117,32 @@ module ot_dsrom_su_softmax #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin wcnt <= 7'd0; a_done <= 1'b0; end
         else begin
-            a_done <= smv[LM] && (wcnt + 7'd1 == nv);
+            a_done <= s_mlast;
             if (smv[LM]) wcnt <= (wcnt + 7'd1 == nv) ? 7'd0 : wcnt + 7'd1;
         end
     end
-    always @(posedge clk) begin
-        if (smv[LM]) begin
-            sbuf[wcnt] <= s_m;
-            for (i = 0; i < NL; i = i + 1)
-                rmax[32*i +: 32] <= (wcnt == 7'd0) ? s_m[32*i +: 32] : fmax(rmax[32*i +: 32], s_m[32*i +: 32]);
-        end
+    always @(posedge clk) if (smv[LM]) sbuf[wcnt] <= s_m;
+    // running max per lane: s and the "first vector" / valid flags re-registered at the lane (kept copies: the
+    // control fans out to one lane's flops only), then ONE keep-prefix ordered-key compare and a select (a
+    // recurrence: one cycle)
+    reg              s_mv;                       // valid of s_q (feeds a_done)
+    reg              s_mlast;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin s_mv <= 1'b0; s_mlast <= 1'b0; end
+        else begin s_mv <= smv[LM]; s_mlast <= smv[LM] && (wcnt + 7'd1 == nv); end
     end
+    generate for (l = 0; l < NL; l = l + 1) begin : g_rm
+        (* keep *) reg        fv, ff;            // lane copies: s_q valid, s_q is the row's first vector
+        reg  [31:0] s_q;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin fv <= 1'b0; ff <= 1'b0; end
+            else begin fv <= smv[LM]; ff <= (wcnt == 7'd0); end
+        end
+        always @(posedge clk) s_q <= s_m[32*l +: 32];
+        wire ge;
+        ot_hdc_kge #(.W(32), .K(1)) u_ge (.a(okey(rmax[32*l +: 32])), .b(okey(s_q)), .ge(ge));
+        always @(posedge clk) if (fv) rmax[32*l +: 32] <= (ff || !ge) ? s_q : rmax[32*l +: 32];
+    end endgenerate
     // per-head max tree: LH registered levels of pairwise max (order free: max on ordered keys)
     generate for (k = 0; k <= LH; k = k + 1) begin : g_mt
         wire [(NL >> k)*32-1:0] x;
@@ -139,7 +154,10 @@ module ot_dsrom_su_softmax #(
             reg [(NL >> k)*32-1:0] xr;
             reg                    vr;
             for (l = 0; l < (NL >> k); l = l + 1) begin : g_l
-                always @(posedge clk) xr[32*l +: 32] <= fmax(g_mt[k-1].x[64*l +: 32], g_mt[k-1].x[64*l + 32 +: 32]);
+                wire [31:0] xa = g_mt[k-1].x[64*l +: 32], xb = g_mt[k-1].x[64*l + 32 +: 32];
+                wire ge;
+                ot_hdc_kge #(.W(32), .K(1)) u_ge (.a(okey(xa)), .b(okey(xb)), .ge(ge));
+                always @(posedge clk) xr[32*l +: 32] <= ge ? xa : xb;
             end
             always @(posedge clk or negedge rst_n) if (!rst_n) vr <= 1'b0; else vr <= g_mt[k-1].v;
             assign x = xr;
@@ -367,7 +385,10 @@ module ot_dsrom_su_softmax #(
             ot_hdc_v41x_fdiv u_d (.clk(clk), .rst_n(rst_n), .v(piv[DIN]), .a(pv_in[32*l +: 32]), .b(denl[32*l +: 32]),
                                   .y(qd[32*l +: 32]), .vo(), .fault(fd));
         end
-        always @(posedge clk) o0[16*l +: 16] <= bf16(qd[32*l +: 32]);
+        wire [15:0] qb;                          // BF16 RNE (keep-prefix increment)
+        ot_hdc_kinc #(.W(16), .K(1)) u_bf (.a(qd[32*l + 16 +: 16]),
+                                           .inc(qd[32*l + 15] & (qd[32*l + 16] | (|qd[32*l +: 15]))), .y(qb));
+        always @(posedge clk) o0[16*l +: 16] <= qb;
     end endgenerate
     // RoPE: lane j of a tail vector, element p = u*LPH + j, pair i = (p - (512 - TAIL)) / 2
     wire [NL*16-1:0] o0_d;
@@ -395,7 +416,9 @@ module ot_dsrom_su_softmax #(
         wire [31:0] m2s = (J % 2 == 0) ? m2 : {~m2[31], m2[30:0]};
         ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a (clk, rst_n, dv[D_DIV + 1 + LM], m1, m2s, ad, f3);
         wire tail = ({2'd0, u_rd} * LPH + J) >= (512 - TAIL);
-        always @(posedge clk) ob[16*l +: 16] <= tail ? bf16(ad) : o0_d[16*l +: 16];
+        wire [15:0] adb;
+        ot_hdc_kinc #(.W(16), .K(1)) u_bf (.a(ad[31:16]), .inc(ad[15] & (ad[16] | (|ad[14:0]))), .y(adb));
+        always @(posedge clk) ob[16*l +: 16] <= tail ? adb : o0_d[16*l +: 16];
     end endgenerate
     wire [DOUT:0] oov;
     ot_hdc_vline #(.D(DOUT)) u_oov (.clk(clk), .rst_n(rst_n), .v(dv[DR]), .vd(oov));

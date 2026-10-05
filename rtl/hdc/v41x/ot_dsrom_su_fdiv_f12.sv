@@ -8,9 +8,9 @@
 // Only the register boundaries move (the 19-deep unit screens -392 ps at 0.833 ns: its radix-4 step, its
 // one-stage denormalise and its round-encode-select stage; the step subtract and the round increment are
 // keep-prefix adders, ot_hdc_kadd / ot_hdc_kinc K 1):
-//   1 decode | 27 restoring steps, ONE quotient bit a stage (the same 27 bits and final remainder as the
+//   2 decode (normalise | exponent difference) | 27 restoring steps, ONE quotient bit a stage (the same 27 bits and final remainder as the
 //   radix-4 unit: floor(2x/mb) = 2 b_k + b_{k+1}) | F1 leading bit, sig, guard, sticky, biased exponent and the
-//   subnormal shift | F2 denormalise | F3 round increment | F4 overflow test and select.   DEPTH 32, II 1.
+//   subnormal shift | F2 denormalise | F3 round increment | F4 overflow test and select.   DEPTH 33, II 1.
 // ---------------------------------------------------------------------------
 module ot_dsrom_su_fdiv_f12 (
     input  wire        clk,
@@ -23,7 +23,7 @@ module ot_dsrom_su_fdiv_f12 (
     output reg         fault
 );
     localparam integer QB = 27;
-    localparam integer DEPTH = 1 + QB + 4;     // 32
+    localparam integer DEPTH = 2 + QB + 4;     // 33
 
     wire [DEPTH:0] vd;
     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
@@ -46,16 +46,26 @@ module ot_dsrom_su_fdiv_f12 (
     wire [33:0] na = norm(a[30:23], a[22:0]);
     wire [33:0] nb = norm(b[30:23], b[22:0]);
 
+    // decode in two stages: normalise both operands (subnormal leading-one count and shift) | exponent difference
+    reg        n_sign, n_zero, n_bad;
+    reg [33:0] n_a, n_b;
+    always @(posedge clk) begin
+        n_sign <= a[31] ^ b[31];
+        n_zero <= (a[30:0] == 31'd0);
+        n_bad  <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0);
+        n_a    <= na;
+        n_b    <= nb;
+    end
     reg        d_sign, d_zero, d_bad;
     reg [23:0] d_ma, d_mb;
     reg signed [10:0] d_e;
     always @(posedge clk) begin
-        d_sign <= a[31] ^ b[31];
-        d_zero <= (a[30:0] == 31'd0);
-        d_bad  <= (a[30:23] == 8'hFF) || (b[30:23] == 8'hFF) || (b[30:0] == 31'd0);
-        d_ma   <= na[33:10];
-        d_mb   <= nb[33:10];
-        d_e    <= $signed({na[9], na[9:0]}) - $signed({nb[9], nb[9:0]});
+        d_sign <= n_sign;
+        d_zero <= n_zero;
+        d_bad  <= n_bad;
+        d_ma   <= n_a[33:10];
+        d_mb   <= n_b[33:10];
+        d_e    <= $signed({n_a[9], n_a[9:0]}) - $signed({n_b[9], n_b[9:0]});
     end
 
     reg [24:0]        r_rem  [0:QB-1];
