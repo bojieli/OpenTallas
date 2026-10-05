@@ -47,6 +47,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import dsrom_1m_measure as M  # noqa: E402
+import third_party_tau as TP  # noqa: E402
 
 REC = ROOT / "results/rtl/dsrom_1m_allmeasured_20261004"
 BASE = ROOT / "results/rtl/dsrom_1m_measured_20261004"
@@ -565,7 +566,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         still.append(dict(term="MTP draft block5 (3 DSpark blocks)", us=round(3 * dr["block5_us"], 3),
                           why="reduced-vehicle slice x transfer ratio (dsrom_dspark_step_slices_20261004), not full shape"))
     still.append(dict(term=f"tau {M.DRAFT['tau']:g}", us=None,
-                      why="published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"))
+                      why=f"acceptance, not an RTL quantity: {TP.tau_src('deepseek_v41', 5)}; published V4.1 3.8879 "
+                          "and range 3.43-4.32 kept as MTP.tau_sensitivity"))
     rec = dict(
         schema="opentallas.dsrom-1m.allmeasured.composition.v1", context=M.CTX, position=M.POS,
         baseline=a.baseline,
@@ -580,7 +582,7 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
         cdc_on_path_us=round(sum(cdc_nodes.get(p["node"], 0.0) for p in path) * 1e6, 3),
         still_modelled_total_us=round(sum(p["us"] for p in modelled) + sub_us, 3),
         MTP=dict(rule="II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; "
-                      "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} (third-party published)",
+                      "draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau " + f"{M.DRAFT['tau']:g} ({TP.tau_src('deepseek_v41', 5)})",
                  stage_busy_top=sorted(segs, key=lambda s: -s["busy_us"])[:6], worst_stage=worst,
                  II_us=round(ii, 3), verify_us=round(verify, 3), draft_us=round(draft, 3),
                  draft_terms=dict(block5_us=db["block5_us"] if db else dr["block5_us"], blocks_us=round(blocks_us, 3),
@@ -588,7 +590,8 @@ def compose(a, *, candidates=(), excluded_levers=(), graph_hook=None, write_outp
                                                 "(results/rtl/dsrom_dspark_step_slices_20261004) -- NOT full shape"),
                                   head_occ_us=head_occ, r_markov=r_markov),
                  seed_commit_us=M.DRAFT["seed_commit_us"], step_us=round(step, 3), MTP_tok_s=round(mtp, 1),
-                 tau=M.DRAFT["tau"], mtp_over_ar=round(mtp * ar / 1e6, 3)),
+                 tau=M.DRAFT["tau"], tau_source=TP.tau_src("deepseek_v41", 5), mtp_over_ar=round(mtp * ar / 1e6, 3),
+                 tau_sensitivity=TP.mtp_sensitivity(step)),
         still_modelled=still,
         measured_formerly_modelled=done,
         requires_binding=([] if a.window == "s81" else
