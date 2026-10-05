@@ -9595,6 +9595,14 @@ def hbm_existing_cp_local_pg_model():
     return cp_local_pg_model()
 
 
+def hbm_existing_r5a_parent_allocation_model():
+    """Finite default-off extension of the existing outer die, including actual ports."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        'results/uarch/hbm_r5a_finite_parent_20261005/model.json').read_text())
+
+
 def hbm_existing_cp_cts_allocation_model():
     """Measured inserted-cell census and finite ancestry-based CP CTS allocation."""
     import json
