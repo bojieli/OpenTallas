@@ -9672,7 +9672,7 @@ def dsrom_window_full_block_pipeline_model():
     column_payload = banks*rowb
     write_enable = banks*cols*depth
     ack = npc*(256+13+4+12+1)
-    read_extra = banks*3*rowb  # four parallel eight-entry reads, then final select
+    read_extra = banks*4*rowb  # four new eight-entry read registers; original final q remains
     writer_control_upper = 2048
     job_control_upper = 1024
     added = (decode_upper + winner + column_payload + write_enable + ack +
