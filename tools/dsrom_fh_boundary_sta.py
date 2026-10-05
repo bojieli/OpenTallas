@@ -58,6 +58,7 @@ def main():
     record = dict(scope="conditional G4W16 child boundary; not parent closure",
                   route=str(base), original_sha256={p.name: digest(p) for p in inputs},
                   original_context_sdc_sha256=digest(args.context_sdc),
+                  constraints=dict(period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25),
                   tool_sha256={p: digest(ROOT / p) for p in (
                       "tools/dsrom_fh_boundary_sta.py", "tools/run_abi3_physical.py",
                       "tools/orfs_allcorner_spef.py")},
@@ -130,8 +131,9 @@ puts "FHBOUND end"
             macro_constraint_reference="nominal macro setup/hold; parent input/clock slew tables remain unresolved")
         print(json.dumps({corner: record["corners"][corner]}), flush=True)
     record["valid"] = all(c["valid"] for c in record["corners"].values())
-    record["verdict"] = "CONDITIONAL_BOUNDARY_PASS" if record["valid"] and all(
-        c["boundary_met"] for c in record["corners"].values()) else "BOUNDARY_NOT_CLOSED"
+    record["verdict"] = ("EVALUATOR_FAILED" if not record["valid"] else
+        "CONDITIONAL_BOUNDARY_PASS" if all(c["boundary_met"] for c in record["corners"].values())
+        else "BOUNDARY_NOT_CLOSED")
     record["original_unchanged"] = record["original_sha256"] == {p.name: digest(p) for p in inputs}
     (out / "result.json").write_text(json.dumps(record, indent=2) + "\n")
     if not record["valid"] or not record["original_unchanged"]:
