@@ -46,6 +46,8 @@
 #include <cstdio>
 #include <cstring>
 #include <memory>
+#include <filesystem>
+#include <system_error>
 #include <sys/resource.h>
 #include <string>
 #include <type_traits>
@@ -331,6 +333,11 @@ int main(int argc, char** argv) {
         return 2;
     }
     const std::string dir = argv[3], preload = argv[4];
+    // Fail before constructing any model if the result directory is unusable.
+    std::error_code out_error;
+    std::filesystem::create_directories(dir,out_error);
+    if(out_error || !std::filesystem::is_directory(dir,out_error) || out_error)
+        fatal("cannot create/check output directory");
     long max_cycles = 0; // uncapped by default; no guessed runtime deadline
     int POS = 0, TOKEN = 0;
     bool kv_ideal = false, early_go = false, posted_wb = false;
@@ -350,6 +357,8 @@ int main(int argc, char** argv) {
     int threads = 16;
     if (const char* s = getenv("RT_THREADS")) threads = atoi(s);
     RtPool pool(threads);
+    // Keep the actual RT_THREADS workers; each compiled model is single-threaded.
+    for(int w=0;w<pool.size();++w)pool.ctx(w)->threads(1);
     // the ASAP7 macro models read +OT_ROM_DIR in their initial blocks: every context needs the arguments
     for (int i = 0; i < pool.size(); i++) pool.ctx(i)->commandArgs(argc, argv);
     auto t0 = std::chrono::steady_clock::now();
@@ -384,6 +393,8 @@ int main(int argc, char** argv) {
     for (int d = 0; d < D; d++) load_images(mem[d], stages[0].dir[d]);
     printf("images loaded in %.1f s\n", std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count());
     VerilatedContext dctx[D], cctx;
+    for(int d=0;d<D;++d)dctx[d].threads(1);
+    cctx.threads(1);
     for (int d = 0; d < D; d++) dctx[d].commandArgs(argc, argv);
     cctx.commandArgs(argc, argv);
     std::unique_ptr<Vdie> die[D];
@@ -531,6 +542,7 @@ int main(int argc, char** argv) {
                        "seq_fault=%d core_fault=%d coll_fault=%d wall=%.0fs\n", stages[cur].name.c_str(), long(cyc) - stage_start,
                        stage_start, cyc, me_busy[0] - busy0[0], me_busy[D - 1] - busy0[D - 1], die[0]->seq_ntok, die[D - 1]->seq_ntok,
                        die[0]->seq_nval, die[D - 1]->seq_nval, sf, cf, lf, sec);
+                fflush(stdout); // preserve the completed stage before any dump I/O
                 for (int d = 0; d < D; d++) {
                     Vdie& v = *die[d];
                     uint32_t s[12] = {v.st_fill_cycles, v.st_fill_sectors, v.st_wr_sectors, v.st_rsp_stall, v.st_kvok_low_desc,
@@ -543,6 +555,7 @@ int main(int argc, char** argv) {
                            s[9] - prev_stat[d][9], s[10] - prev_stat[d][10], s[11] - prev_stat[d][11], tile_edges[d], int(v.st_fill_exposed));
                     for (int k = 0; k < 12; k++) prev_stat[d][k] = s[k];
                     FILE* fp = fopen((dir + "/" + stages[cur].name + "_die" + char('0' + d) + "_x.hex").c_str(), "w");
+                    if(!fp)fatal("stage X output open",d);
                     for (int i = 0; i < H; i++) fprintf(fp, "%08x\n", rm_vm(v.rootp)[X_BASE + i]);
                     fclose(fp);
                 }
@@ -583,6 +596,7 @@ int main(int argc, char** argv) {
                     if (!kv_ideal && stages[cur].layer >= 0) {
                             // the token's K (lane P of the open tile) and V (row P) as written back to HBM
                             fp = fopen((dir + "/" + stages[cur].name + "_die" + char('0' + d) + "_kvP.hex").c_str(), "w");
+                            if(!fp)fatal("stage K/V output open",d);
                             const size_t lb = size_t(stages[cur].layer) * 131072;
                             for (int h = 0; h < 2; h++) for (int dd = 0; dd < 128; dd++) {
                                 size_t a = (size_t(h) << 16) + (POS >> 4) * 128 + dd;
@@ -601,6 +615,7 @@ int main(int argc, char** argv) {
                     double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
                     printf("QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=%zu cycles=%u edges=%ld settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d kv_ideal=%d early_go=%d posted_wb=%d\n",
                            stages.size(), final_cyc, edges, max_settle, sec, ru.ru_maxrss, threads, int(kv_ideal), int(early_go), int(posted_wb));
+                    fflush(stdout); // completion survives redirected/buffered logs
                     return busy ? 4 : 0;
                 }
             }
