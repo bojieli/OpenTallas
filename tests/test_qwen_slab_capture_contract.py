@@ -68,6 +68,11 @@ class CaptureContract(unittest.TestCase):
         del c["p_*"]
         with self.assertRaises(ValueError): subject.parent_io_sdc(c)
 
+    def test_failed_prospective_budget_refused(self):
+        c = self.contract()
+        c["res_in*"]["ff"]["launch_clock"] = [0, 0]
+        with self.assertRaises(ValueError): subject.parent_io_sdc(c)
+
     def test_ideal_receiver_load_refused(self):
         c = self.contract()
         c["tw_v"]["output_load_sta_units"] = 0

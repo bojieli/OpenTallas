@@ -86,7 +86,8 @@ def parent_io_sdc(contract):
     lines = [head.rstrip(), "# Source-owned parent IO bounds; no fractional-delay fallback."]
     for name in INPUT_GROUPS + OUTPUT_GROUPS:
         p = contract[name]
-        path_slacks(p)  # Validate finite bounds, identities and corner evidence.
+        if not path_slacks(p)["pass_path"]:
+            raise ValueError("prospective SS/FF path budget fails for " + name)
         clock = "bw_clk" if name.startswith("bw_") and name not in ("bw_r_fault", "bw_r_live") else "clk"
         ss, ff = p["ss"], p["ff"]
         if name in INPUT_GROUPS:
