@@ -211,6 +211,19 @@ module ot_hdc_v41x_qaddf #(parameter integer LAT = 3, parameter integer F12 = 0)
     assign fault = v & a[31] & b[31];
 endmodule
 
+module ot_hdc_v41x_qaddl #(parameter integer LAT = 3) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        fault
+);
+    assign y = a ^ b;
+    assign fault = v & a[31] & b[31];
+endmodule
+
 module ot_hdc_v41x_dly #(parameter integer W = 1, parameter integer D = 0) (
     input  wire         clk,
     input  wire [W-1:0] d,
