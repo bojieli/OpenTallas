@@ -9127,6 +9127,25 @@ def hbm_w2_publication_model():
         expected_address = (extents['BASE_A'] if slot<2 else extents['BASE_B']) + 32*(slot%2)
         if not (write[1]==1 and read[1]==0 and write[2]==read[2]==expected_address and write[3]==read[3]==62009 and write[0]<read[0]<cycle):
             raise ValueError('connected full-sector publication tuple/order changed')
+    # Bind the completed minimum selected-parent gate, not an assumed full-die calendar.
+    connected_rel = 'results/rtl/w2_transaction_pipeline_20261005/connected_r2_PASS'
+    connected_dir = root / connected_rel
+    connected = json.loads((connected_dir / 'terminal.json').read_text())
+    for name, digest in connected['sha256'].items():
+        if hashlib.sha256((connected_dir / name).read_bytes()).hexdigest() != digest:
+            raise ValueError('connected W2 R2 terminal artifact changed: ' + name)
+    connected_pins = json.loads((connected_dir / 'source_pin.json').read_text())
+    for name in [sink_rel, 'rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv',
+                 'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_cp_reset.sv']:
+        if hashlib.sha256((root / name).read_bytes()).hexdigest() != connected_pins['source_sha256'][name]:
+            raise ValueError('current W2 connected-gate source changed: ' + name)
+    if (connected['verdict'] != 'PASS' or connected['runtime_returncode'] != 0
+            or connected['counts'] != dict(rows=4, sectors=212, native_requests=64,
+                native_returns=64, writes=4, readbacks=4, releases=1, finish_cycle=12865)
+            or connected['release_cycle'] - int(release[0][0]) != 17
+            or connected['warm_ack']['accepted'] != connected['warm_ack']['consumed']
+            or not all(connected['warm_checks'].values())):
+        raise ValueError('selected connected publication/warm terminal is not qualified')
     # Candidate has exactly four reserved ingress seats. Identity travels with
     # each seat/stage: frame73 + op32 + row12 + slot2 + valid1 =120 raw bits,
     # two64b stripes; add a separate64b protected phase/completion word. Never
@@ -9367,7 +9386,17 @@ def hbm_w2_publication_model():
             bench='rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv',
             bench_scope='one selected pair with retained GU/SwiGLU inputs, live native W2/sector/provider/shared owner and actual CP reset hook; no SU/gather/formatter or full-die reset claim',
             warm_test='request while accepted publication debt outstanding; drain normally, preserve held CPL, ACK only after matched CPL take',
-            connected_gate_passed=False, no_physical_admission=True),
+            connected_gate_passed=True,
+            connected_terminal=connected_rel + '/terminal.json',
+            measured_release_cycle=connected['release_cycle'],
+            original_release_cycle=connected['original_release_cycle'],
+            added_observed_release_edges=connected['added_observed_release_edges'],
+            added_fixture_finish_edges=connected['added_fixture_finish_edges'],
+            finish_delta_scope='20 edges includes local warm ACK/reopen; publication release delta is17',
+            connected_warm_quarantine_passed=True,
+            warm_request=connected['warm_request'], warm_ack=connected['warm_ack'],
+            new_extracted_context_gate_passed=False,
+            no_physical_admission=True),
         parent_boundary_requirements=dict(
             consumer_owner='Turing 01a10dba-5786-7d01-b636-797f591b5657',
             implemented_instance='g_on.g_die[d].u_w2_sink.transaction_pipeline.u_pipe',
@@ -9408,11 +9437,12 @@ def hbm_w2_publication_model():
             real_parent_hooks=['g_on.g_die[d].u_w2_sink.por_n(rst_sm_n)',
                                'g_on.g_die[d].u_cp.rst_n(cp_reset_n)',
                                'all_routes_drained', 'cp_reset_wait'],
-            parent_condition='real CP reset/quarantine hook must hold root POR high and retain sink/borrower/CDC accepted debt until matched consumption; gate does not certify warm reset'),
+            selected_connected_warm_terminal=connected_rel + '/terminal.json',
+            parent_condition='Selected live W2/provider/shared-owner/CP-reset warm quarantine PASS with root POR high. Extracted CDC/context and other parent routes still require their actual protection/clock binding; no full-die warm claim'),
         finite_child_owner_contract=finite,
         model_bounded=True, parent_binding_complete=False,
         finite_child_reservation_bound=True,
-        parent_binding_remaining='actual propagated clock/receiver loads and required gateway transport installation; current connected gate',
+        parent_binding_remaining='actual propagated clock/receiver loads, inherited-register allocations/protection and required gateway transport installation; selected connected warm gate PASS',
         engine_RTL_admitted=True,
         source_permission='Finite d7f4a688e child slot/channel/budget-clock contract bound; functional integration continues, actual loaded clock and transport installation not qualified',
         physical_launch_admitted=False, adopted=False)

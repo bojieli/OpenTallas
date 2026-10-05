@@ -88,13 +88,14 @@ def prepare():
         sink_and_context_geometry_are_not_interchangeable=True,
         source_callbacks_have_no_ready=True, independent_owner_ledgers_added=0,
         local_CP_reset_cannot_clear_root_state=True,
-        connected_R2_terminal_required=True, physical_dispatch_admitted=False,
+        connected_R2_terminal='results/rtl/w2_transaction_pipeline_20261005/connected_r2_PASS/terminal.json',
+        connected_R2_gate_passed=model['connected_parent_integration']['connected_gate_passed'],
+        extracted_context_gate_passed=False, physical_dispatch_admitted=False,
         remaining_bindings=[
             'Turing: actual mapped W2 boundary source/receiver objects and inherited-register allocations',
             'Turing: source clk_sm/clk_mem/reset roots, periods/relations and propagated SS/FF clock evidence',
             'Turing: per-net SS/FF receiver pins plus extracted wire loading from selected parent',
             'Selected-parent/caller owner: installed/priced gateway transport and inherited control/CDC protection',
-            'Current-source connected R2 PASS, with publication and actual local CP warm-quarantine evidence',
         ])
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / 'binding.json').write_text(json.dumps(record, indent=2) + '\n')
