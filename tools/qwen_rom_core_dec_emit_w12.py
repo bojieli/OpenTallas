@@ -145,7 +145,7 @@ def emit_dec(text: str) -> str:
     localparam integer LA_WT = la_tz(W), LA_GT = la_tz(G), LA_ODD = G >> la_tz(G);
     localparam integer LA_NO = (VPOS != 0) ? 8 : 1;         // position offsets
     localparam integer LA_SW = NW + 2;                       // rounds operand: shifted position + ODD
-    localparam integer LA_H = (LA_SW + 1) / 2;               // divider split
+    localparam integer LA_H = LA_SW / 2 - 3;                 // divider split (low part: remainder + LA_H bits)
     // stage 1 (E1): pos_r + o; (pos_r + o) >> (WT + GT - split) + ODD for every (o, split) (rounds = that / ODD)
     reg [NW-1:0]    la_po [0:LA_NO-1];
     reg [LA_SW-1:0] la_sh [0:LA_NO*16-1];
@@ -210,7 +210,8 @@ def emit_dec(text: str) -> str:
     reg           fqd_kvd [0:7];
     reg           fqd_wd  [0:7];
 {chr(10).join(adders)}
-    always @(posedge clk) if (DEC_LA != 0 && push) begin
+    // written on pend1 alone: outside S_RUN the slot la_wr is free (never NEXT, never held), so the write is dead
+    always @(posedge clk) if (DEC_LA != 0 && pend1) begin
 {chr(10).join(push)}
             fqd_bad[la_wr] <= pq_split_bad;
             fqd_kvd[la_wr] <= prog_q[O_UNIT +: W_UNIT] == 2'd1 && prog_q[O_ME_WSRC];
@@ -244,6 +245,18 @@ def emit_dec(text: str) -> str:
     block = re.sub(r"^    reg\s+(\[[^\]]+\])?\s*([^;]+);", redecl, text[di:de], flags=re.M)
     text = text[:di] + block + text[de:]
     text = _sub1("    reg          me_kindk;\n", "    reg          me_kindk_q;\n    wire         me_kindk;\n", text)
+    # the lm_head chunk argmax: a kept tree comparator on the order keys
+    text = _sub1("    wire am_wins = am_any && (!run_any || okey(am_val) > run_key);\n",
+                 "    wire la_am_gt;\n"
+                 "    ot_qwen_core_key_gt u_la_am_gt (.a(okey(am_val)), .b(run_key), .gt(la_am_gt));\n"
+                 "    wire am_wins = am_any && (!run_any || ((DEC_LA != 0) ? la_am_gt : (okey(am_val) > run_key)));\n", text)
+    # the step cycle counter: a kept incrementer (it was the next ripple at 1.2 GHz once the decode closed)
+    text = _sub1("            if (st != S_IDLE) cycles <= cycles + 1;\n",
+                 "            if (st != S_IDLE) cycles <= (DEC_LA != 0) ? la_cycles1 : cycles + 1;\n", text)
+    text = _sub1("    always @(posedge clk or negedge rst_n) begin\n        if (!rst_n) begin\n            st <= S_IDLE;",
+                 "    wire [31:0] la_cycles1;\n"
+                 "    ot_hdc_inc_k #(.W(32)) u_la_cycles (.a(cycles), .inc(1'b1), .y(la_cycles1), .co());\n"
+                 "    always @(posedge clk or negedge rst_n) begin\n        if (!rst_n) begin\n            st <= S_IDLE;", text)
     # head-entry predecoded bits
     text = _sub1("            kvd_v <= load && ir[O_UNIT +: W_UNIT] == 2'd1 && ir[O_ME_WSRC];\n"
                  "            wd_v <= (W_HBM != 0) && load && ir[O_UNIT +: W_UNIT] == 2'd1 && !ir[O_ME_WSRC];\n",
@@ -264,6 +277,33 @@ def emit_dec(text: str) -> str:
                  "                                : (((d_unit == 2'd1) ? (d_chase_rows ? su_rows : su_progress) : me_progress) >= d_chase_n);\n",
                  text)
     text += """
+// a > b on 32-bit unsigned keys, log depth with kept levels (DEC_LA lm_head chunk argmax)
+module ot_qwen_core_key_gt (
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire        gt
+);
+    (* keep *) wire [7:0] g0, e0;
+    (* keep *) wire [3:0] g1, e1;
+    (* keep *) wire [1:0] g2, e2;
+    genvar i;
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : l0
+            assign g0[i] = a[4*i +: 4] > b[4*i +: 4];
+            assign e0[i] = a[4*i +: 4] == b[4*i +: 4];
+        end
+        for (i = 0; i < 4; i = i + 1) begin : l1
+            assign g1[i] = g0[2*i+1] | (e0[2*i+1] & g0[2*i]);
+            assign e1[i] = e0[2*i+1] & e0[2*i];
+        end
+        for (i = 0; i < 2; i = i + 1) begin : l2
+            assign g2[i] = g1[2*i+1] | (e1[2*i+1] & g1[2*i]);
+            assign e2[i] = e1[2*i+1] & e1[2*i];
+        end
+    endgenerate
+    assign gt = g2[1] | (e2[1] & g2[0]);
+endmodule
+
 // a >= b on 16-bit unsigned values, log depth with kept levels (DEC_LA chase test)
 module ot_qwen_core_ge16 (
     input  wire [15:0] a,
