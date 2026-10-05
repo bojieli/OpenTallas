@@ -10,13 +10,13 @@ def model():
     dff=ast.literal_eval(constants['DFF_UM2'])
     np=32; channels=16; rd=64; wr=8; phy=rd+wr
     # Direct PCWB address, not the hashed canonical-provider address function.
-    command_fields=dict(write=1,bank=5,row=19,column=5,data=256)
+    command_fields=dict(write=1,write_slot=3,bank=5,row=19,column=5,data=256)
     command_bits=sum(command_fields.values())
     # Real caller context retained by one selected stack phase, not an invented native identity.
     context_fields=dict(operation=64,phase=32,physical_rank=7,stack=2)
     receipt_fields=dict(operation=64,phase=32,sector=34,generation=32,slot=3,pc=5,bank=5,row=19,column=5)
     receipt_bits=sum(receipt_fields.values())
-    pending_fields=dict(receipt=receipt_bits,data=256,live=1,issued=1,visible=1)
+    pending_fields=dict(receipt=receipt_bits,data=256,state=3)
     pending_bits=sum(pending_fields.values())
     pending_coded=72*((pending_bits+63)//64)
     fifo_control_per_pc=7+7+7
@@ -61,7 +61,7 @@ def model():
       write=dict(context_fields=context_fields,receipt_fields=receipt_fields,receipt_bits=receipt_bits,
         pending_fields=pending_fields,pending_bits=pending_bits,coded_shadow_bits=pending_coded,
         controller_WQ8_order='Bind oldest not-issued retained write at actual WRissue; validate PC/bank/row/col/data before marking issued.',
-        visibility='Real PHY/CWL/burst/backing-store commit returns entire held tuple. Validate live+issued+notreturned and complete tuple; no age timer/WRissue ACK.',
+        visibility='Real PHY/CWL/burst/backing-store commit returns entire held tuple. Validate statePHYaccepted and complete tuple; state3 encodes FREE/QUEUED/CONTROLLERissued/PHYaccepted/VISIBLE. No age timer/WRissue ACK.',
         retirement='Release lease only matched visible receipt actually accepted by writer. Keep posted debt during output stalls.',
         fences='writer row emission idle AND all posted writes visible/accepted AND allPC WQempty AND no queued/inflight output; real readback descriptor held until fence.',
         reset='Cold POR only; no local reset that clears externally accepted PHY debt.',generation='Actual provider/frame irs_serial32; no synthetic/local/default generation. Missing owner/generation refuses admission; no slot reuse until matched return.',

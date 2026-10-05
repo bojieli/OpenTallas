@@ -53,7 +53,7 @@
       "posted_ingress": "wr_v/wr_r,bank[4:0],row[18:0],col[4:0],data[255:0],generation[31:0] latched actualprovider irs_serial, actualwriter to adapter; retained lease before controller WQpush",
       "controller_queue": "wq_v/wq_r,bank5,row19,col5,data256; wq_v only reserved ingress handshake. No fake writer ready.",
       "controller_issue": "col_v,col_we,col_bank5,col_row19,col_col5,col_data256; nonbackpressured. Validate oldest retained WRITE on WRissue.",
-      "PHY_output": "phy_col_v/phy_col_r,phy_we,bank5,row19,col5,data256 plus full issued receipt tuple forWRITE. FIFOenqueue on actualcol_v; pop only actualPHYaccept.",
+      "PHY_output": "phy_col_v/phy_col_r,phy_we,bank5,row19,col5,data256 plus full issued receipt tuple forWRITE. FIFOenqueue on actualcol_v; pop only actualPHYaccept. Store write_slot3 WITH the PHY FIFO command at WRissue; do not reconstruct slot from address on return.",
       "PHY_visibility": "visible_v/visible_r + operation64/phase32/sector34/generation32/slot3/pc5/bank5/row19/col5; accept only full match live+issued+actualPHYaccepted, once",
       "writer_receipt": "wr_visible_v/wr_visible_r + same tuple; free lease only writerreceipt accepted, not WRissue/PHYqueuepop",
       "status": "queued/inflight/visible-notreturned counts,all_writes_drained,fault; coldPOR only"
@@ -63,7 +63,18 @@
     "write_reservation": "8 includes controllerqueued+PHYqueued+PHYinflight+visible-notreturned. No second8 WRissue credit pool.",
     "cold_generation": "generation caller-supplied; operation/phase held. All pending retained until positive realmatchedreceipt. No warmreset/clear.",
     "out_of_order_visibility": "fullreceipt matching; FIFO WRissue binding remains originalWQ order; perwrite completed state retained until writeracceptance",
-    "owner": "Euclid; inseparable queued/issue binding in parent. Rawls only source-list helper as agreed."
+    "owner": "Euclid; inseparable queued/issue binding in parent. Rawls only source-list helper as agreed.",
+    "pending_state_encoding": {
+      "bits": 3,
+      "states": [
+        "FREE",
+        "QUEUED",
+        "CONTROLLER_ISSUED",
+        "PHY_ACCEPTED",
+        "VISIBLE_NOT_RETURNED"
+      ],
+      "note": "These are a3bit state enum in the458raw budget, not3independentflags. Visibility must match PHY_ACCEPTED, not controllerissue."
+    }
   },
   "Euclid_parent_hooks": {
     "DS_writer": "ot_hbm_accel_dskv_wb: row_kind2,row_slot6,row_r2,row_data4352,die7,pos20,sh_v/sh_slot3/sh_data4352 on service_clk. Forward wq_pc/bank/row/col/data to corresponding Rawls ingress. u_wb.wq_r=selectedadapter.wr_r, never1.",
