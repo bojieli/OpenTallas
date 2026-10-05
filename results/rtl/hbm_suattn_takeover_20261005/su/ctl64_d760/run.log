@@ -1,0 +1,44 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+|   59971 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    55980 |       0 |   59981 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    55990 |       0 |   59991 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56000 |       0 |   60001 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56010 |       0 |   60011 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56020 |       0 |   60021 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56030 |       0 |   60031 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56040 |       0 |   60041 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56050 |       0 |   60051 |            0 |   +10.3% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56060 |       0 |   60061 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56070 |       0 |   60071 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56080 |       0 |   60081 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56090 |       0 |   60091 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56100 |       0 |   60101 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56110 |       0 |   60111 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56120 |       0 |   60121 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56130 |       0 |   60131 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56140 |       0 |   60141 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56150 |       0 |   60151 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56160 |       0 |   60161 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    56170 |       0 |   60171 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+    final |       0 |   60174 |            0 |   +10.4% | -67.724 | -2316.506 | u.u_rwd.genblk1.g_line.line[38563]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 60174 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+Error: cts.tcl, 83 RSZ-0060
+
+Elapsed time: 0:08.60[h:]min:sec. CPU time: user 8.20 sys 0.38 (99%). Peak memory: 815780KB.
+Elapsed time: 15:00.23[h:]min:sec. CPU time: user 915.30 sys 17.48 (103%). Peak memory: 1234776KB.
+Elapsed time: 0:05.24[h:]min:sec. CPU time: user 4.98 sys 0.26 (99%). Peak memory: 686336KB.
+Elapsed time: 0:05.08[h:]min:sec. CPU time: user 4.83 sys 0.25 (99%). Peak memory: 589792KB.
+Elapsed time: 0:14.30[h:]min:sec. CPU time: user 13.94 sys 0.36 (99%). Peak memory: 882268KB.
+Elapsed time: 1:17.11[h:]min:sec. CPU time: user 345.16 sys 1.15 (449%). Peak memory: 1873300KB.
+Elapsed time: 0:09.72[h:]min:sec. CPU time: user 9.30 sys 0.41 (99%). Peak memory: 869752KB.
+Elapsed time: 7:22.49[h:]min:sec. CPU time: user 884.05 sys 38.30 (208%). Peak memory: 5258032KB.
+Elapsed time: 2:50.25[h:]min:sec. CPU time: user 189.83 sys 4.22 (113%). Peak memory: 1705428KB.
+Elapsed time: 4:24.32[h:]min:sec. CPU time: user 283.96 sys 4.92 (109%). Peak memory: 3758948KB.
+Elapsed time: 11:47.27[h:]min:sec. CPU time: user 726.77 sys 11.28 (104%). Peak memory: 4114900KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_su12_ctl64_asap7_su12_ctl64_d760/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/hbm-su-c12/routes/ctl64_d760/physical.json
