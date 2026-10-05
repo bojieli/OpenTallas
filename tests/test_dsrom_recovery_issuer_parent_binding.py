@@ -33,3 +33,18 @@ def test_stream_format_padding_never_truncates_data():
     assert d['parent_tables']['selected_hard_abstract'] is None
     assert not d['local_native_controls']['full_parent_image']
     assert not d['screen']['full_parent_provider']
+
+
+def test_programming_is_exposed_once_and_never_zero_from_host_assignment():
+    args=dict(phase_write_II=1,stream_write_II=2,last_write_visible_edges=2,
+              GO_visibility_guard_edges=1,programming_hz=1.2e9)
+    small=B.actor_programming_cost(100,**args)
+    large=B.actor_programming_cost(200,**args)
+    assert large['exposed_edges']-small['exposed_edges']==200
+    assert large['payload_bytes']-small['payload_bytes']==600
+    assert small['overlap_credited_edges']==0
+    assert small['exposed_edges']>small['accepted_write_edges']
+    for name in ('phase_write_II','stream_write_II','last_write_visible_edges',
+                 'GO_visibility_guard_edges','programming_hz'):
+        with pytest.raises(ValueError):
+            B.actor_programming_cost(100,**dict(args,**{name:0}))

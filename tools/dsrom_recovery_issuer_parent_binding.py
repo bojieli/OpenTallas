@@ -5,12 +5,42 @@ The local native receiver images must not be promoted to full-parent tables.
 """
 import hashlib
 import json
+import math
 from pathlib import Path
 
 import dsrom_s81_fulldie as S
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'results/rtl/dsrom_recovery_20261004/issuer_parent_binding'
+
+
+def actor_programming_cost(stream_words, *, phase_write_II, stream_write_II,
+                           last_write_visible_edges, GO_visibility_guard_edges,
+                           programming_hz):
+    """Mutable fallback only: serial source-arm cost on an explicit provider.
+
+    This function does not require mutable hardware or per-token writes for a
+    general immutable image. Existing inputs() requires cold/idle/all_quiet/prior_drained, then replaces
+    two PHROM words and the stream prefix. No overlap or hidden load credit.
+    The caller must supply actual provider II, visibility and clock binding.
+    Counts are accepted hardware writes, never software-array assignments.
+    """
+    values=(stream_words,phase_write_II,stream_write_II,
+            last_write_visible_edges,GO_visibility_guard_edges)
+    if any(type(v) is not int or v<=0 for v in values):
+        raise ValueError('positive word count, II and captured visibility/GO fence required')
+    if not math.isfinite(programming_hz) or programming_hz<=0:
+        raise ValueError('explicit positive programming clock required')
+    phase_edges=2*phase_write_II
+    stream_edges=stream_words*stream_write_II
+    edges=phase_edges+stream_edges+last_write_visible_edges+GO_visibility_guard_edges
+    return dict(PHROM_write_words=2,STREAM_write_words=stream_words,
+        payload_bytes=16+6*stream_words,
+        accepted_write_edges=phase_edges+stream_edges,
+        visible_and_GO_fence_edges=last_write_visible_edges+GO_visibility_guard_edges,
+        exposed_edges=edges,exposed_us=edges/programming_hz*1e6,
+        overlap_credited_edges=0,once_per_fresh_actor=True,
+        assumption='Serial source arm; requires measured/model-bound hardware ports and visibility, not a hardware qualification.')
 
 
 def build():
@@ -32,6 +62,7 @@ def build():
         'rtl/v41die/ot_v41_spine_pq_w17w10.sv',
         'tools/dsrom_s81_target_field_controls.py','tools/v41_die_images_w17w10.py',
         'tools/runtime/dsrom/s81_minimum_qe_controls.cpp',
+        'tools/runtime/dsrom/s81_minimum_qe.cpp',
         'physical/dsrom_recovery_field/ot_v41_pq_spine_screen.sv',
         str((OUT/'inputs/issuer_model_84528.json').relative_to(ROOT))]
     return dict(schema='opentallas.dsrom-recovery.issuer-parent-binding.v1',
@@ -60,6 +91,14 @@ def build():
             write_ports=0,ROM_reset_ports=0,ROM_clock_ports=0,
             external_interface='OT_PQ_ROM_PORTS: rom_pa0/1, rom_pq0/1, rom_sa, rom_sq',
             selected_synth_immutable_image=None,selected_hard_abstract=None,
+            immutable_capacity_status='SOURCE CATALOG READY per Arendt: stage37/38 full624/626 canonical phases and keys, conflicts0, no descriptor dynamic fields in PHROM; exact existing-body sharing with fixed SBASE. Unshared41400 append count was not a capacity impossibility.',
+            resident_catalog=dict(stage37=dict(phases=624,distinct_body_words=1208),stage38=dict(phases=626,distinct_body_words=1144),
+                image_directory='/srv/opentallas-scratch/codex/arendt-all40-source-schedules-20261005/immutable_stages_r1',
+                provenance='Arendt owner handoff; image bytes/provider enrollment not independently claimed by this record'),
+            preferred_provider='Static physical provider if general source-bound image is validated; mutable RAM fallback only if actually needed.',
+            static_access_latency_us=None,static_initialization_latency_us=None,
+            static_initialization_amortization=None,
+            immutable_per_token_write_policy='No host-write charge for a validated general hardware image. Price actual access and initialization; do not infer zero delay from capacity fit.',
             clock_to_Q_ps=None,loaded_combinational_access_ps=None,
             synthetic_or_weight_macro_timing_transfer=False,
             synthesis_gap='Internal zero init + runtime OT_ROM_DIR readmemh is a simulation image loader, not an enrolled immutable synthesis image. No actual full-parent table master is instantiated by selected reservation graph.',
@@ -73,6 +112,22 @@ def build():
             reason='One-fragment receiver controls, local phase0/base0; canonical element CFGphase is preserved separately. Not full-stage PHW10/SAW14 image.'),
         screen=dict(stream_words=256,stream_bits=48,write_port=True,
             full_parent_provider=False,SS_FF_transfer=False),
+        current_programming=dict(source='tools/runtime/dsrom/s81_minimum_qe.cpp::Impl::inputs',
+            actual_action='When !configured: wait cold/idle/obs_rows_left0/all_quiet/prior_drained; assign PHROM[2*phase], PHROM[2*phase+1], then strom[base+j]; set configured.',
+            once_per_fresh_actor=True,held_retry_reloads=False,
+            update_payload_bytes='16 +6*actual_stream_word_count',
+            shared_prefix_overwrite=True,
+            actual_hardware_write_port=None,write_II=None,last_write_visible_edges=None,
+            hardware_programming_latency_us=None,net_optional_field_gain_us=None,
+            programming_overlap_proved=False,
+            provider_selection='Static resident image selected for Epicurus physical-provider binding; mutable source-arm pricing is inactive for this case.',
+            mutable_programming_cost_applied=False,
+            per_token_host_programming_required=False,
+            matched_policy='Use SAME selected provider in serialized and47FF cases. Static case prices actual access/initialization without per-token host writes for a general image; mutable fallback prices accepted writes and positive last-write visibility beforeGO. Never overwrite active owned data.',
+            optional_adoption_threshold_rate_gain_percent=1,
+            mandatory_baseline_fix_separate=True,
+            composition_callable='MUTABLE FALLBACK ONLY actor_programming_cost: accepted2PHROM+actualstream count, explicit per-portII/clock/visibility/GOguard, zero hidden loading credit; not applied to a general static image',
+            warning='The .920us result excludes hardware programming and is an isolated scheduling measurement, not net whole-token gain.'),
         physical_build_admitted=False,
         exact_remaining_hook='Actual full-parent immutable phase/stream table image/provider and cell-placed capture owner; no writable256 screen or weight ROM substitute.')
 
