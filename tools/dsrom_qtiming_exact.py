@@ -37,7 +37,11 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=8)
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--verilator", default=str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
+    ap.add_argument("--build-workers", type=int, default=4)
+    ap.add_argument("--build-jobs", type=int, default=8)
     a = ap.parse_args()
+    if not 1 <= a.build_jobs <= 16 or a.build_workers < 1:
+        raise SystemExit("build jobs must be 1..16 and build workers positive")
     if subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip():
         raise SystemExit("exact gate requires a clean worktree")
     a.work.mkdir(parents=True, exist_ok=True)
@@ -49,7 +53,7 @@ def main() -> None:
     def build(name):
         define, tb = builds[name]
         cmd = [a.verilator, "--binary", "--timing", "-Wno-fatal", "-Wno-lint", "-Wno-style", "--top-module",
-               "tb_dsrom_qtiming_exact", "--Mdir", str(a.work / name), "-j", "8", "-CFLAGS", "-O1"]
+               "tb_dsrom_qtiming_exact", "--Mdir", str(a.work / name), "-j", str(a.build_jobs), "-CFLAGS", "-O1"]
         cmd += ([define] if define else []) + [str(ROOT / p) for p in RTL] + [str(tb)]
         with (a.work / f"{name}.build.log").open("w") as f:
             if subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode:
@@ -74,7 +78,7 @@ def main() -> None:
                   source_sha256={p: sha(ROOT / p) for p in RTL + [TB, "tools/dsrom_qtiming_exact.py"]},
                   tool_version=subprocess.check_output([a.verilator, "--version"], text=True).strip(), runs=[])
     try:
-        with cf.ThreadPoolExecutor(4) as ex:
+        with cf.ThreadPoolExecutor(a.build_workers) as ex:
             record["build_commands"] = dict(zip(builds, ex.map(build, builds)))
         jobs = [("positive", s) for s in range(1, a.seeds + 1)] + [("fix0", 101), ("neg_cg", 1), ("neg_hit", 1)]
         with cf.ThreadPoolExecutor(a.jobs) as ex:

@@ -120,6 +120,7 @@ module tb_a3_dependence_table_depth;
         $display("cycles=%0d stage1_checks=%0d stage2_checks=%0d errors=%0d",
                  cycle, checks, deep_checks, errors);
         if (errors == 0) $display("PASS"); else $display("FAIL");
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
