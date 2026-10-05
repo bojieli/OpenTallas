@@ -10007,7 +10007,7 @@ def qwen_hbm_finite_activation_vm_model():
     protection_path = 'results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json'
     protection = json.loads((root/protection_path).read_text())['SRAM_protection_candidate']
     # One checked bank window at a time; no 64 read copies or raw ACK release.
-    checked_read_edges, checked_write_edges = 9, 22
+    checked_read_edges, checked_write_edges = 9, 28
     codec_pairs = ports['maximum_aggregate_snapshot_read_seats'] + ports['maximum_aggregate_write_seats'] + 64
     cut_bits = 32*72*5
     codec_body = codec_pairs*protection['pair_cell_body_um2']/1e6
@@ -10024,14 +10024,14 @@ def qwen_hbm_finite_activation_vm_model():
         writes = sum(r['analysis']['write_events'] for r in records)
         # Serialized checked windows: no overlap credit. Source single-edge
         # issue is removed once; rawACK is not protected publication.
-        read_extra = w['ds_read_issue_beats']*checked_read_edges - w['logical_ME_read_edges']
-        write_charge = w['ds_ME_write_beats']*checked_write_edges
+        read_extra = w['ds_read_issue_beats']*11 - w['logical_ME_read_edges']
+        write_charge = w['ds_ME_write_beats']*30
         stages.append(dict(stage=w['stage'], logical_ME_read_edges=w['logical_ME_read_edges'],
             read_issue_beats=w['ds_read_issue_beats'], write_beats=w['ds_ME_write_beats'],
             write_events=writes, conservative_extra_read_service_edges=read_extra,
             conservative_write_visibility_service_edges=write_charge,
             isolated_serial_service_charge_us_at_target=(read_extra+write_charge)/1.2e3,
-            scope='per-rank ME source-workload reservation, not an actual accepted trace or critical-path delta; SU/collective interference and clock crossings additional'))
+            scope='per-rank ME missed-window/flush subcomponent only, not a complete frame or actual accepted critical-path delta; scalar read/write slot walkers, skip/pack, SU/collective interference and crossings additional'))
     head = p['head_source_reuse_proposal']
     head_coded_bits = ((head['staging_data_bits']+63)//64)*72
     return dict(schema='opentallas.qwen-hbm.finite-activation-vm-candidate.v1',
@@ -10052,7 +10052,10 @@ def qwen_hbm_finite_activation_vm_model():
         old_read_and_writer_order='All frame old reads finish before writes; ME, MX, SU, reducer, collective scalar precedence retained. Equal-address later writer wins only with its actual commit.',
         hazard_policy='Track read macro accept+1 versus write macro accept+2 across commands; release after ACK+positive next-edge capture. No reliance on same-command collision flag alone.',
         read_calendar='CAP1 checked window: raw result4 +held decode3 +capture/nativeXVM2 =9 target edges per physical window; next window after release, notII1',
-        write_calendar='CAP1 RMW: oldread4/decode3/merge1/encode2/commitACK3/postread4/decode3/compare1/release1 =22 target edges per bank window; rawACK not checked visibility',
+        write_calendar='CAP1 actual registered RMW handoff: postverifiedACK28 after accept; maskedflush30 extra beyond scalar slot walker. Replaces lower22edge sizing; rawACK not checked visibility',
+        serial_frame_calendar=dict(capture_edges=1,read_slot_visits=ports['maximum_aggregate_snapshot_read_seats'],read_miss_extra_edges=11,write_slot_visits=ports['maximum_aggregate_write_seats'],masked_flush_extra_edges=30,admit_edges=1,
+            formula='1+actual_read_slot_visits+11*window_misses+actual_write_slot_visits+30*masked_commands+1; skip/pack extra; empty/ownedreadonly fast path only under real source conditions',
+            basis='Arendt14:39 literal controller source accounting, not runtime measurement'),
         peak_ME_windows=64, peak_W1_same_bank_write_beats=48,
         SU_operand_windows_per_source_edge=3,
         source_distinct_ME_words=sorted({r['analysis']['read_max']['distinct_scalars'] for r in p['records'] if r['unit']=='ME'}),
@@ -10075,7 +10078,7 @@ def qwen_hbm_finite_activation_vm_model():
         protection_source='rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
         head_level2_candidate=dict(producer_pc=head['producer_pc'], consumer_pcs=head['consumer_pcs'],
             source_region=head['source_region'], readonly_after_actual_producer_visibility=True,
-            words=4096, fill_issue_beats=64, conservative_fill_capture_alignment_edges=69,
+            words=4096, fill_issue_beats=64, conservative_fill_capture_alignment_edges=576,
             protected_staging_bits=head_coded_bits,
             protected_FF_body_floor_mm2=head_coded_bits*DFF_UM2/1e6,
             local_mux_assumed_floor_mm2=head['mux_body_assumed_um2']/1e6,
@@ -10144,8 +10147,9 @@ def hbm_index_ordered_adapter_model():
         raw_output_sink_capacity_IDs=512,source_NO_READY_sink_reserved_before_GO=True,
         checked_load_service_edges=checked_load_edges,selection_service_edges=selection_edges,
         serial_load_edges=load_edges,serial_selection_edges=select_edges,
-        serial_service_budget_edges=load_edges+select_edges,
-        serial_service_budget_us_at_target_1p2=(load_edges+select_edges)/1200,
+        actual_consumer_load_edges=load_words,
+        serial_service_budget_edges=load_edges+select_edges+load_words,
+        serial_service_budget_us_at_target_1p2=(load_edges+select_edges+load_words)/1200,
         target_clock_not_qualified=True,
         budget_excludes='input gather/held-source stalls, actual loaded tree/CDC/publication/positive credit return; 8edges is candidate register plan, not STA closure',
         current_index_footprint_mm2=current['area_screen']['minimum_footprint_at_explicit_50pct_utilization_mm2'],
@@ -10204,3 +10208,48 @@ def dshbm_expert_workgroup_interleave_model():
         clock_target_ghz=1.2,measured_start_delay_ps=None,token_latency_delta_us=None,
         start_delay_estimate_us_NOT_CREDITED=1.8,x_load_overlap_credit_us=0,
         whole_token_rate_qualified=False,ss_ff_closed=False)
+
+
+def qwen_rom_stream4_fulltoken_measurement():
+    """Actual plain-AR full36+HEAD run; cycles do not qualify a clock or MTP."""
+    import hashlib
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    folder = root/'results/rtl/qwen_plain_ar_stream4_P8191_20261005'
+    terminal = json.loads((folder/'terminal.json').read_text())
+    source = json.loads((folder/'source.json').read_text())
+    assert terminal['status']=='PASS' and terminal['process_exit']==0
+    assert terminal['position']==8191 and terminal['mode']['stream4']
+    assert not terminal['mode']['near_hbm_compute'] and not terminal['mode']['dspark']
+    assert terminal['layer_x']['checks']==144 and terminal['layer_x']['mismatches']==0
+    assert terminal['current_kv']['checks']==144 and terminal['current_kv']['mismatches']==0
+    assert terminal['head']['exact_all_ranks'] and terminal['writeback']['drained']
+    assert len(terminal['stages'])==37 and terminal['stages'][-1]['stage']=='head'
+    pins={}
+    for name,expected in terminal['evidence_sha256'].items():
+        actual=hashlib.sha256((folder/name).read_bytes()).hexdigest()
+        if actual!=expected: raise ValueError('Fulltoken evidence changed: '+name)
+        pins[str((folder/name).relative_to(root))]=actual
+    for name in ('source.json','terminal.json'):
+        pins[str((folder/name).relative_to(root))]=hashlib.sha256((folder/name).read_bytes()).hexdigest()
+    stages=terminal['stages']
+    stage_cycles=sum(x['cycles'] for x in stages)
+    initial=stages[0]['start_cycle']
+    gaps=sum(b['start_cycle']-a['end_cycle'] for a,b in zip(stages,stages[1:]))
+    assert stage_cycles+initial+gaps==terminal['total_cycles']
+    return dict(schema='qwen.rom.stream4.actual-fulltoken.v1',
+        operating_mode='plain AR; STREAM4; NEAR_HBM0; DSparkOFF',
+        actual_fulltoken_cycles=terminal['total_cycles'],actual_scope=terminal['scope'],
+        position=8191,input_token=terminal['input_token'],next_token=terminal['head']['next_token'],
+        winning_logit_bits=terminal['head']['winning_logit_bits'],ranks=4,layers=36,
+        layer_FP32_checks=144,current_KV_checks=144,writeback_drained=True,process_exit=0,
+        initial_edges=initial,stage_handoff_edges=gaps,measured_stage_cycles=stage_cycles,
+        L0_cycles=stages[0]['cycles'],chained_layer_cycles=[x['cycles'] for x in stages[1:-1]],
+        head_cycles=stages[-1]['cycles'],
+        selected_top=source['top'],selected_parameters=source['parameters'],
+        executable_sha256=terminal['executable_sha256'],source_sha256=pins,
+        clock_basis='actual functional cycle measurement only; no selected full-system SS/FF clock qualification',
+        qualified_latency_us=None,qualified_rate_tok_s=None,MTP_credit=None,
+        physical_qualified=False,
+        limitations='No full-vocabulary-logit dump; exact argmax/winning logit/Xnorm plus all36 decoder outputs and all144 currentKV checks. No HBM activation-provider or DS optimization credit transferred.')

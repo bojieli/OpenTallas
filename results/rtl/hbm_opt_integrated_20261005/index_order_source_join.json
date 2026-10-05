@@ -1,0 +1,150 @@
+{
+  "owner": "Sagan",
+  "combined_top_owner": "Rawls",
+  "selector_owner": "Confucius",
+  "source_paths": [
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv",
+    "rtl/chip/ot_coll_topk_merge.sv"
+  ],
+  "source_candidates": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+      "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": {
+      "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+      "sha256": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007"
+    },
+    "rtl/chip/ot_coll_topk_merge.sv": {
+      "commit": "8d816bde54da6599894b2b73649c38c73dd1db79",
+      "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+    }
+  },
+  "component_binding": {
+    "source_sha256": {
+      "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "rtl/hbm_accel/index/ot_hbm_accel_index_order_adapter.sv": "ce3929d6e93371c85af7524506eaf0b1a88e701b94930fae42673cefd6af5007",
+      "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+    },
+    "parameters": {
+      "ENABLE": 1,
+      "N": 2,
+      "NPER": 16
+    },
+    "exact_receipts": [
+      {
+        "path": "results/rtl/hbm_index_path_20261005/ordered_adapter_8d816_r1/result.json",
+        "sha256": "716bbb17c3f7b9ca1e59927229d28b66cf832891ea8685b6c936ed8ba0913a06",
+        "pass_path": [
+          "verdict"
+        ],
+        "pass_value": "PASS_ORDER_ADAPTER_WITH_UNCHANGED_W15_COMPONENT_ONLY",
+        "source_pins_path": [
+          "source_sha256"
+        ]
+      }
+    ],
+    "physical": null
+  },
+  "default_enabled": false,
+  "formatter": null,
+  "formatter_owner": "Sagan",
+  "formatter_delegated_direct": true,
+  "enclosing_holds": [
+    "Sagan actual checked sourceformatter for separate existing W15 score and ID words; no rawlayout reinterpretation",
+    "Existing VM/gather owner: exclusive393216-byte extent and all source writers drained, matched checked read responses",
+    "Real merger_load_permit and command owner; ordered_loaded only after6144 accepted score/ID loadwords",
+    "Actual pre-reserved512-ID/2048-byte result sink, matched frame release after merger_done AND publication AND positive reverse",
+    "Globalcandidate mask feedback and masked localtop producer; component raw/unmasked top does not qualify fullindex",
+    "Live-owner reset/rearm and complete mutable-control protection; loaded SS60/FF25 and Claude slot/link correction"
+  ],
+  "planning": {
+    "existing_model_edges": 448512,
+    "additional_explicit_output_load_edges": 6144,
+    "serial_floor_edges_at_priced_checked_service": 454656,
+    "conditional_us_at_1p2": 378.88,
+    "model_delta_writer": "Maxwell",
+    "no_rate_credit": true
+  },
+  "source_join": "results/rtl/hbm_opt_integrated_20261005/index_order_source_join.json",
+  "component_exact_record": "results/rtl/hbm_index_path_20261005/ordered_adapter_8d816_r1/result.json",
+  "component_exact_receipt_sha256": "716bbb17c3f7b9ca1e59927229d28b66cf832891ea8685b6c936ed8ba0913a06",
+  "component_parameters": {
+    "ENABLE": 1,
+    "N": 2,
+    "NPER": 16
+  },
+  "target_parameters": {
+    "ENABLE": 0,
+    "N": 96,
+    "NPER": 512
+  },
+  "source_closure_callable": "tools/hbm_opt_integrated_20261005.py::index_order_source_files",
+  "ports": {
+    "frame": "job32/gen4/pos20; physical producer rank7 in request/response and literal globalID checks",
+    "read": "one borrowed checked512b response: 8 interleaved {literalID32,score32} pairs, rank7/word6/tag16 and full frame match",
+    "W15": "ld_valid accepted only merger_load_permit; ld_id/ld_rank/ld_word/ld_data, n512/stride0 after ordered_loaded; logical ranks are NOT physical producers",
+    "terminal": "real merger_done latched, matched release frame AND result_published AND source_reverse_done; gather ownership/sink reservation retained until this edge"
+  },
+  "source_constraints": [
+    "source caller must hold exclusive real393216B gather extent lease and all writers drained",
+    "source gather formatter must actually produce interleaved pair layout; existing separate score/ID word arrays are NOT silently reinterpreted",
+    "merger_load_permit is enclosing hardware ownership, not constant fixture authority",
+    "no-ready W15 result requires actual pre-reserved512-ID publication capacity",
+    "por_n is cold reset; live owner debt reset/rearm integration is not qualified"
+  ],
+  "connections": [
+    "Existing W15 sourceformatter provides8 pairs per checked512b response: each64b = {literalID32,score32}; read request rank7/word6/tag16 and heldjob32/gen4/pos20 matched through real read/rsp handshake",
+    "Adapter ld_valid/ld_id/ld_rank/ld_word/ld_data -> unchanged ot_coll_topk_merge corresponding load ports; ld_valid only realmerger_load_permit",
+    "Adapter ordered_loaded -> enclosing W15 go authorization; n512/stride0 target, logical ld_rank is not physical producer identity",
+    "Merger done -> adapter merger_done; realpublication sink+source reverse+matched release frame -> adapter release_v/r",
+    "Actual owner-derived gather_exclusive/gather_writers_drained/result_capacity_reserved required before start&&start_ready; no constantties"
+  ],
+  "W15_storage_source": {
+    "path": "rtl/chip/ot_w15_coll_dma.sv",
+    "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+    "layout": "separate score words at src, ID words at ibase; not interleaved",
+    "storage_reinterpretation_allowed": false,
+    "additional_backing_SRAM_selected": false,
+    "TOPK_mode_gather_delivery": "Direct o_data -> selector load; no gathered VM copy is installed by TOPK mode",
+    "actual_selected_gather_VM_owner": null,
+    "actual_selected_gather_descriptor": null
+  },
+  "actual_checks_consumed": [
+    "literal globalID8 wins equal score against768 for k1",
+    "k2 actual IDs8,768 emitted ascending by unchanged W15 merger",
+    "4 actual checked fixture reads and4 actual W15 loadedges per case",
+    "provider and load bubbles",
+    "wrong generation response not ACKed, fault/debt retained",
+    "merger_done does not release before publication and positive reverse"
+  ],
+  "measured_executable": "ot-epyc1tb:/srv/opentallas/jobs-overflow/sagan-index-order-8d816bde5-r1/gate.vvp",
+  "standalone_replay_required": false,
+  "installed_provider": false,
+  "final_selection_connected": false,
+  "global_ordered_gather_qualified": false,
+  "full96_exact": false,
+  "full_index_replayed": false,
+  "SS_FF_admitted": false,
+  "rate_credit": false,
+  "constant_ready_or_drained_ties_allowed": false,
+  "formatter_source_claim": {
+    "owner": "Sagan",
+    "path": "rtl/hbm_accel/index/ot_hbm_accel_index_w15_source_formatter.sv",
+    "implementation_commit": null,
+    "sha256": null,
+    "physical_gather_binding": null,
+    "existing_TOPK_mode_installs_gathered_VM_copy": false,
+    "normal_gather_address_source": "ot_w15_coll_dma.gather_addr = dst_r + n_r*o_rank + wr_k/N",
+    "selected_normal_gather_command": null,
+    "selected_held_VM_extent": null,
+    "proposed_source_reads": 12288,
+    "pair_ready_adapter_model_reads": 6144,
+    "proposed_additional_read_service_edges": 55296,
+    "extra_assembly_and_publication_edges": null,
+    "model_delta_owner": "Maxwell",
+    "default_enabled": false
+  },
+  "planning_scope": "Adapter pair-ready checked-response floor only; separate score/ID formatter reads, assembly and real publication cost not included. No measured runtime or native-index latency credit."
+}
