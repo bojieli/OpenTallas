@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm.su.reducer.t6.clock_candidate_terminal.v1",
+  "route": "t6_u40p1",
+  "host": "ot-epyc1tb",
+  "original_job_root": "/srv/opentallas-scratch/claude/hbm-su-red/r6/routes/t6_u40p1",
+  "source_verified": true,
+  "source_root": "/srv/opentallas-scratch/claude/hbm-su-red/r6/src",
+  "original_physical_status": "not_met",
+  "signoff_ss_ff": false,
+  "SS_setup_ps": -14.066193,
+  "FF_hold_ps": 1.284473,
+  "SS_violating_d_pins": 1,
+  "FF_violating_d_pins": 0,
+  "clock_ps": 833.0,
+  "setup_uncertainty_ps": 60.0,
+  "hold_uncertainty_ps": 25.0,
+  "original_io_false_paths": true,
+  "actual_qualified_rate_comparison": null,
+  "adopted": false,
+  "note": "Existing full t6 reducer leaf route; native SS failure preserved, independent SS/FF confirms one setup violator. No tuning/rebuild/adoption; remaining required reducer routes stay live.",
+  "full_reducer_context_qualified": false
+}

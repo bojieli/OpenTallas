@@ -238,27 +238,27 @@ place_pin -pin_name {por_n} -layer M6 -location {17.280000000 17.360000000}
 set ot_block [ord::get_db_block]
 set ot_dbu [$ot_block getDbUnitsPerMicron]
 set ot_region [odb::dbRegion_create $ot_block cp_body]
-$ot_region setType EXCLUSIVE
+$ot_region setRegionType EXCLUSIVE
 odb::dbBox_create $ot_region [expr {round(17.280000000*$ot_dbu)}] [expr {round(17.280000000*$ot_dbu)}] [expr {round(60.480000000*$ot_dbu)}] [expr {round(56.160000000*$ot_dbu)}]
-set ot_group_cp_body [odb::dbGroup_create $ot_block cp_body]
-$ot_group_cp_body setRegion $ot_region
+set ot_group_cp_body [odb::dbGroup_create $ot_region cp_body]
 set ot_region [odb::dbRegion_create $ot_block cp_association]
-$ot_region setType EXCLUSIVE
+$ot_region setRegionType EXCLUSIVE
 odb::dbBox_create $ot_region [expr {round(17.280000000*$ot_dbu)}] [expr {round(56.160000000*$ot_dbu)}] [expr {round(22.464000000*$ot_dbu)}] [expr {round(60.480000000*$ot_dbu)}]
-set ot_group_cp_association [odb::dbGroup_create $ot_block cp_association]
-$ot_group_cp_association setRegion $ot_region
+set ot_group_cp_association [odb::dbGroup_create $ot_region cp_association]
 set ot_assoc_members 0
 set ot_cp_members 0
 foreach ot_inst [$ot_block getInsts] {
  if {[[$ot_inst getMaster] isBlock]} {error "Unexpected macro in CP-only context"}
- set ot_association_cell 0
+ set ot_association_cell 0; set ot_signal_outputs 0
  foreach ot_iterm [$ot_inst getITerms] {
   if {[[$ot_iterm getMTerm] getIoType] ne "OUTPUT"} {continue}
+  incr ot_signal_outputs
   set ot_net [$ot_iterm getNet]; if {$ot_net eq "NULL"} {continue}
   set ot_name [$ot_net getName]
   if {[string match {u_su_association.on.*} $ot_name] ||
       $ot_name in {exec_owned new_request_permit association_fault}} {set ot_association_cell 1}
  }
+ if {$ot_signal_outputs==0} {continue} ;# Physical-only tap/endcap cells have no source cone.
  if {$ot_association_cell} {
   $ot_group_cp_association addInst $ot_inst; incr ot_assoc_members
  } else {

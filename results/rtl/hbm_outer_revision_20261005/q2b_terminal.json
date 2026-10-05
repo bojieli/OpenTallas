@@ -1,0 +1,296 @@
+{
+  "case": "b",
+  "exit": 0,
+  "wall": "4:41:56",
+  "peak_rss_mb": 12800,
+  "manifest": {
+    "case": "b",
+    "tag": "base",
+    "bundle_k": 16,
+    "congestion_iterations": 50,
+    "empty_baseline": false,
+    "instances": 1737,
+    "bundle_pins": 21689,
+    "bundle_nets": 217095,
+    "wires": 3468326,
+    "coverage": {
+      "field": 0.0878,
+      "hub": 0.0878,
+      "spine": 0.0878,
+      "svc": 0.25,
+      "channel": 0.0878
+    },
+    "variant": {
+      "x_trunk": 1.0,
+      "die": "qwen"
+    }
+  },
+  "grt": {
+    "layers": {
+      "M1": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M2": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M3": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M4": {
+        "resource": 8800,
+        "demand": 247,
+        "usage_pct": 2.81,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M5": {
+        "resource": 241745,
+        "demand": 21889,
+        "usage_pct": 9.05,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M6": {
+        "resource": 9305413,
+        "demand": 951088,
+        "usage_pct": 10.22,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M7": {
+        "resource": 9312070,
+        "demand": 924222,
+        "usage_pct": 9.92,
+        "overflow_h": 0,
+        "overflow_v": 2,
+        "overflow_total": 28
+      },
+      "M8": {
+        "resource": 49006394,
+        "demand": 4829685,
+        "usage_pct": 9.86,
+        "overflow_h": 1,
+        "overflow_v": 0,
+        "overflow_total": 2
+      },
+      "M9": {
+        "resource": 48914983,
+        "demand": 5958916,
+        "usage_pct": 12.18,
+        "overflow_h": 0,
+        "overflow_v": 2,
+        "overflow_total": 2497
+      }
+    },
+    "total": {
+      "resource": 116789405,
+      "demand": 12686047,
+      "usage_pct": 10.86,
+      "overflow_h": 1,
+      "overflow_v": 4,
+      "overflow_total": 2527
+    },
+    "total_wirelength_bundle_um": 121386138.0,
+    "grt_runtime": "04:37:44",
+    "errors": [],
+    "elapsed_s": null
+  },
+  "grt_s": 16665,
+  "wire_by_class": {
+    "tree_spine": {
+      "bundle_nets": 3072,
+      "bundle_um": 33483357.2,
+      "max_um": 25003.4,
+      "wire_m": 535.7
+    },
+    "clock_trunk": {
+      "bundle_nets": 1,
+      "bundle_um": 22074.4,
+      "max_um": 22074.4,
+      "wire_m": 0.4
+    },
+    "corridor_hop": {
+      "bundle_nets": 53760,
+      "bundle_um": 141926.4,
+      "max_um": 18.5,
+      "wire_m": 2.3
+    },
+    "corridor": {
+      "bundle_nets": 7680,
+      "bundle_um": 1376658.4,
+      "max_um": 268.0,
+      "wire_m": 22.0
+    },
+    "collective": {
+      "bundle_nets": 416,
+      "bundle_um": 645155.3,
+      "max_um": 2152.9,
+      "wire_m": 10.3
+    },
+    "phy_dfi": {
+      "bundle_nets": 5560,
+      "bundle_um": 6141985.1,
+      "max_um": 2642.6,
+      "wire_m": 98.3
+    },
+    "fill_hop": {
+      "bundle_nets": 47520,
+      "bundle_um": 1310407.6,
+      "max_um": 489.7,
+      "wire_m": 21.0
+    },
+    "fill": {
+      "bundle_nets": 3168,
+      "bundle_um": 606005.4,
+      "max_um": 249.5,
+      "wire_m": 9.7
+    },
+    "load": {
+      "bundle_nets": 1521,
+      "bundle_um": 2429362.3,
+      "max_um": 5728.8,
+      "wire_m": 38.9
+    },
+    "hub": {
+      "bundle_nets": 16,
+      "bundle_um": 173610.4,
+      "max_um": 13961.6,
+      "wire_m": 2.8
+    },
+    "host": {
+      "bundle_nets": 64,
+      "bundle_um": 108145.0,
+      "max_um": 2679.6,
+      "wire_m": 1.7
+    },
+    "link": {
+      "bundle_nets": 256,
+      "bundle_um": 444083.6,
+      "max_um": 2966.0,
+      "wire_m": 7.1
+    },
+    "spine_port": {
+      "bundle_nets": 1664,
+      "bundle_um": 4518323.3,
+      "max_um": 17066.3,
+      "wire_m": 72.3
+    },
+    "stream_status": {
+      "bundle_nets": 144,
+      "bundle_um": 207890.8,
+      "max_um": 1903.4,
+      "wire_m": 3.3
+    },
+    "tree_block": {
+      "bundle_nets": 92160,
+      "bundle_um": 68383401.2,
+      "max_um": 5710.3,
+      "wire_m": 1094.1
+    },
+    "head_chain": {
+      "bundle_nets": 80,
+      "bundle_um": 1393752.4,
+      "max_um": 21529.2,
+      "wire_m": 22.3
+    }
+  },
+  "congestion_windows": null,
+  "gcell_window_usage": {
+    "M2": {
+      "windows": 606390,
+      "over_0p7": 605694,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M3": {
+      "windows": 606390,
+      "over_0p7": 605521,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M4": {
+      "windows": 606390,
+      "over_0p7": 605694,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M5": {
+      "windows": 606390,
+      "over_0p7": 605001,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M6": {
+      "windows": 606390,
+      "over_0p7": 537552,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M7": {
+      "windows": 606390,
+      "over_0p7": 536512,
+      "over_1": 8,
+      "max": 1.028
+    },
+    "M8": {
+      "windows": 606390,
+      "over_0p7": 10116,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M9": {
+      "windows": 606390,
+      "over_0p7": 9901,
+      "over_1": 100,
+      "max": 1.224
+    }
+  },
+  "errors": [],
+  "source_commit": "06a6e0b62ac6c3804be07c4cc69711237da1ada5",
+  "missing_global_routes": [
+    "n_clk_sp_core[0]",
+    "n_clk_sp_port0[0]",
+    "n_clk_sp_port1[0]",
+    "n_clk_sp_port2[0]",
+    "n_clk_sp_port3[0]",
+    "n_clk_sp_scale0[0]",
+    "n_clk_sp_scale1[0]",
+    "n_clk_sp_scale2[0]",
+    "n_clk_sp_scale3[0]",
+    "n_clk_svc_NE[0]",
+    "n_clk_svc_NW[0]",
+    "n_clk_svc_SE[0]",
+    "n_clk_svc_SW[0]"
+  ],
+  "qualified_clock": false,
+  "source_sha256": {
+    "manifest.json": "bbfa3087d349aaa5ee620bc0af7444156a9a9626bd1fe9c12629e99bde58f2ca",
+    "run.log": "8cd0772659168d32ad8c1d1e9670b0aa3354fef972d19f18bf1b1a9e4095da7e",
+    "wirelength.csv": "54c1ce1faa6896d94296c88b2bd845cc495eea6ea040afab84f454a8ff0a9e84",
+    "run.tcl": "f7daa806a3c073b6ce1cfdb6c74b0c4b8655aac2ea93f8e3600987771f356925",
+    "tech.lef": "a72a55475ea73167735d8f6e1cab13adab2809da00764313ec00c10e667bae54",
+    "elements.lef": "222eabf196d0a86816a62c1f4179bd011ef2350f25981fc26db7bceb94f44ad3",
+    "die.v": "b35a681a8901355c407834c031820a1258b51a288801fb05fc48db00e6f8b4d8"
+  },
+  "original_root": "/srv/opentallas-scratch/claude/qwen-hbm-die/cases/q2b/b_k16_i50",
+  "verdict": "FAIL_GRT_OVERFLOW_2527_AND_MISSING_CLOCK_ROUTES",
+  "headline_claim": false
+}

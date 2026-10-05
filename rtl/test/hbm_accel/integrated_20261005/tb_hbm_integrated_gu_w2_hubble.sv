@@ -254,7 +254,8 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0,PROTECTE
   if(result_v)begin
    slot=result_op==OPA?integer'(result_row):(result_op==OPB?2+integer'(result_row):-1);
    if(slot<0||slot>=4||result_seen[slot]||result_data!==expected_rows[slot]||!retained||!grants[2])
-    $fatal(1,"native result bits/owner/row mismatch");
+    $fatal(1,"native result bits/owner/row mismatch cycle=%0d op=%0d row=%0d slot=%0d seen=%b retained=%b grants=%b actual=%h expected=%h",
+     cycle,result_op,result_row,slot,result_seen,retained,grants,result_data,expected_rows[slot]);
    result_seen[slot]<=1;captured_rows[slot]<=result_data;
    $display("ACTUAL_NATIVE_RESULT cycle=%0d op=%0d row=%0d data=%h",cycle,result_op,result_row,result_data);
   end
@@ -371,6 +372,9 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0,PROTECTE
   reserve_v=1;wait(reserve_r);@(negedge clk);reserve_v=0;lease_requested=0;
   // Protected metadata is checked before admitting the native no-ready producer.
   wait(source_permit);
+  // META can grant permission after a rising edge. Start operand loading on
+  // the drive edge so beat zero remains stable through a full capture edge.
+  @(negedge clk);
   if(!retained||!grants[2])$fatal(1,"missing real four-seat reservation");
   if(LIVE_SWIGLU)begin
    producer_start=1;@(negedge clk);producer_start=0;

@@ -98,11 +98,11 @@ def assemble():
     tech = Tech()
     design = Design(tech)
     plat = '/OpenROAD-flow-scripts/flow/platforms/asap7'
-    design.readLef(plat+'/lef/asap7_tech_1x_201209.lef')
-    design.readLef(plat+'/lef/asap7sc7p5t_28_R_1x_220121a.lef')
-    design.readLef(str(ROOT/plan['leaf']))
+    tech.readLef(plat+'/lef/asap7_tech_1x_201209.lef')
+    tech.readLef(plat+'/lef/asap7sc7p5t_28_R_1x_220121a.lef')
+    tech.readLef(str(ROOT/plan['leaf']))
     db = design.getDb()
-    chip = odb.dbChip_create(db)
+    chip = odb.dbChip_create(db, db.getTech())
     block = odb.dbBlock_create(chip, 'hbm_existing_outer_attention_cut')
     block.setDefUnits(1000)
     dbu = db.getTech().getDbUnitsPerMicron()
@@ -110,6 +110,7 @@ def assemble():
     block.setDieArea(odb.Rect(0, 0, *[coord(x) for x in plan['die_um']]))
     design.evalTclString('set_thread_count 24')
     design.evalTclString('source '+plat+'/openRoad/make_tracks.tcl')
+    design.evalTclString('set_routing_layers -signal M2-M9')
     nets = {}
     def net(name):
         if name not in nets: nets[name] = odb.dbNet_create(block, name)

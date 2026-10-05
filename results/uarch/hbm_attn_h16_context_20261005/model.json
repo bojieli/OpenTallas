@@ -168,8 +168,53 @@
     "physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/export_ss.tcl": "b327577ed2f35d388384c9af2797248966857f452c483b6ea1e353f1eca4a374",
     "physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib": "55ced69cc7da41a731f2e21d00adfa35a4d6924d3b76d302bd5302f78b81f41b",
     "physical/hbm_fmax_attn_context/ot_attn_tile_m6h1.sv": "db20bcb84304b9e2141d972bfa58a98ae81c6adc73b7f241dea5b0b6fd8ada04",
-    "physical/hbm_fmax_attn_context/macro_placement.tcl": "d5aa94dceea7779c2e9b6868a2c33ecd9e5ea7856e9b0cdfde2adc2dd4339ba4",
-    "physical/hbm_fmax_attn_context/parent.sdc": "5e632c4e25d294316b31360c27653468987fa8af4949fd01955d67582a911d76"
+    "physical/hbm_fmax_attn_context/macro_placement.tcl": "63e6c428a9a5f17d61b187842a7948fe83951ab37fa3591a715bb46268d44bfc",
+    "physical/hbm_fmax_attn_context/parent.sdc": "5e632c4e25d294316b31360c27653468987fa8af4949fd01955d67582a911d76",
+    "physical/hbm_fmax_attn_context/pdn.tcl": "e10ba0878d3e397dea6d4a00c3e37823d81121cac8f7c546637e869d73611d39"
   },
-  "fixed_placement": "Exact Turing coordinates with FIRM instances; no rescaling or automatic relocation"
+  "fixed_placement": "Exact Turing coordinates with FIRM instances; no rescaling or automatic relocation",
+  "actual_macro_power_interface": {
+    "leaf_LEF_unchanged": true,
+    "leaf_pg_pin_layer": "M6",
+    "parent_reserved_mesh_layers": [
+      "M8",
+      "M9"
+    ],
+    "native_default_macro_connect": [
+      "M4",
+      "M5"
+    ],
+    "native_default_failed": "PDN-0233",
+    "selected_actual_connect": [
+      "M6",
+      "M9"
+    ],
+    "mesh_stripe_width_um": 0.474,
+    "mesh_pitch_um": 5.4,
+    "mesh_combined_VDD_VSS_fraction": 0.17555555555555555,
+    "existing_reserved_fraction": 0.1756,
+    "added_RTL_cycles": 0,
+    "power_connected_qualification": false,
+    "IR_qualified": false,
+    "row_keepout_halo_um": 5,
+    "native_default_row_cut_halo_um": 2,
+    "source_orfs_vars": {
+      "PDN_TCL": "/src/physical/hbm_fmax_attn_context/pdn.tcl",
+      "MACRO_ROWS_HALO_X": 5,
+      "MACRO_ROWS_HALO_Y": 5
+    },
+    "standard_cell_stack": [
+      "M1",
+      "M2",
+      "M5",
+      "M8",
+      "M9"
+    ],
+    "native_default_channel_failure": "PDN-0179 isolated M6 channel fragments at tile boundary; keep source failures, direct M5-to-M8 standard-cell supply instead of floating M6 fragments",
+    "finite_mesh_pairs": {
+      "M8": 250,
+      "M9": 249,
+      "reason": "final complete pair end offset+249*pitch+pairspacing+2width=1349.274um fits height1349.976 but exceeds width1349.112; no clipped boundary stripe. Periodic PGreservation retained conservatively; IR not qualified."
+    }
+  }
 }
