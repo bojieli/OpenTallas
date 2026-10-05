@@ -72,11 +72,13 @@ OTHER = WARM + [("L0/L1 wq_a-class fp8 K6144 (9 rows)", "fp8", 6144, 9, 1), ("ra
 SEQS = dict(ar_l20=L20, wg=WG, other=OTHER, p6_l20=L20, p6_wg=WG, p6_other=OTHER)
 
 
-def gen_op(fmt, R, K, NC, rng, X=None):
+def gen_op(fmt, R, K, NC, rng, X=None, *, released_fp4=None):
     """Weight lines in the element's group-slot issue order, x-store fragment words (used addresses only) and the
     golden per column -- the same construction as tools/rtl_gpu_sm_exact.smv_case (gs = True)."""
     e4m3_codes, e2m1_codes = S._codes()
     LB, LF = SUB * LBS, SUB * LSB
+    if released_fp4 is not None and (fmt != "v41_fp4" or X is None):
+        raise ValueError("released FP4 rows require actual supplied activation X")
     if X is None:                                    # a reused context passes the resident op's x
         X = [rng.standard_normal(K).astype(F) * F(rng.choice([0.1, 1.0, 8.0])) for _ in range(NC)]
     c = 8
@@ -93,10 +95,20 @@ def gen_op(fmt, R, K, NC, rng, X=None):
         C = -(-nb // c)
         LA = LB if fp4 else LB // 2
         if fp4:
-            mag = rng.integers(0, 8, size=(R, K))
-            wv = V.E2M1_VALUES[mag] * np.where(rng.random((R, K)) < 0.5, -1.0, 1.0)
-            wcode = e2m1_codes(wv.reshape(-1)).reshape(R, K)
-            we = rng.integers(-6, 0, size=(R, nb))
+            if released_fp4 is None:
+                mag = rng.integers(0, 8, size=(R, K))
+                wv = V.E2M1_VALUES[mag] * np.where(rng.random((R, K)) < 0.5, -1.0, 1.0)
+                wcode = e2m1_codes(wv.reshape(-1)).reshape(R, K)
+                we = rng.integers(-6, 0, size=(R, nb))
+            else:
+                packed, scale_bytes = released_fp4
+                if (packed.dtype != np.uint8 or packed.shape != (R, K // 2)
+                        or scale_bytes.dtype != np.uint8 or scale_bytes.shape != (R, nb)):
+                    raise ValueError("released FP4 packed rows/scales do not match SM shape")
+                wcode = np.empty((R, K), dtype=np.uint8)
+                wcode[:, 0::2], wcode[:, 1::2] = packed & 15, packed >> 4
+                wv = V.E2M1_VALUES[wcode & 7] * np.where(wcode & 8, -1.0, 1.0)
+                we = scale_bytes.astype(np.int64) - 127
         else:
             cc = rng.integers(0, 256, size=(R, K))
             cc = np.where((cc & 0x7F) == 0x7F, cc ^ 0x01, cc)
