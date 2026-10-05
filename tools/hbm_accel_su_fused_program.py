@@ -51,9 +51,29 @@ class NativeRetainedBackend:
             raise ValueError('missing actual archived ABI, not inferred from file presence')
 
     def execute_retained(self, state, ops, indexes, work):
-        work=Path(work);work.mkdir(parents=True,exist_ok=False)
+        # Saved raw ops are NOT executable scheduling words: schedule() added
+        # producer credits/waits to the original archived prog.hex. Reuse those
+        # actual words verbatim; never regenerate the oracle or rebase debt.
+        if list(indexes)!=list(range(state['original_op_count'])):
+            raise IntegrationHold('partial retained dispatch needs the actual shared issuer credit sequence')
+        program=self.contract.get('scheduled_programs',{}).get(state['case_name'])
+        if program is None:
+            raise IntegrationHold('missing pinned archived scheduled prog.hex for this saved case')
+        path=Path(program['path']);payload=path.read_bytes()
+        if hashlib.sha256(payload).hexdigest()!=program['sha256']:
+            raise ValueError('archived scheduled native words changed')
         fields=self.contract['word_fields']
-        words=[native_word(op,fields) for op in ops]
+        width=sum(fields.values());scheduled=[int(x,16) for x in payload.decode().split()]
+        if len(scheduled)!=len(ops):raise ValueError('archived original instruction count')
+        control={'ch_src','ch_seq','ch_lead','ch_mul','w_idle','w_rseq_en','w_rseq','w_dseq_en','w_dseq','x_start'}
+        for op,word in zip(ops,scheduled):
+            offset=0
+            for key,size in fields.items():
+                actual=(word>>offset)&((1<<size)-1);offset+=size
+                if key not in control and actual!=int(op[key]):
+                    raise ValueError('archived instruction semantics differ from saved source')
+        words=[(word,width) for word in scheduled]
+        work=Path(work);work.mkdir(parents=True,exist_ok=False)
         if not words:raise ValueError('empty native dispatch')
         width=words[0][1]
         write_words(work/'vm.hex',state['vm']);write_words(work/'kv.hex',state['kv'])
@@ -117,7 +137,7 @@ def execute_saved(cases_path, case_index, backend, work, enabled=False):
     if enabled and not getattr(backend,'actual_shared_vm_parent',False):
         raise IntegrationHold('no actual VEC/fused shared-VM issuer/arbiter lease-transfer binding')
     c=backend.contract
-    state=dict(vm=np.zeros(1<<c['VMA'],dtype=np.uint32),kv=np.zeros(1<<c['KVA'],dtype=np.uint32),
+    state=dict(case_name=case['name'],original_op_count=len(record['original_ops']),vm=np.zeros(1<<c['VMA'],dtype=np.uint32),kv=np.zeros(1<<c['KVA'],dtype=np.uint32),
                cr_lo=bits(case['cr_lo']).copy(),cr_hi=bits(case['cr_hi']).copy(),
                wr=np.zeros(1<<c['WRA'],dtype=np.uint16))
     if len(state['cr_lo'])!=1<<c['CRA'] or len(state['cr_hi'])!=1<<c['CRA']:
