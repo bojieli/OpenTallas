@@ -24,7 +24,7 @@ def price():
                    FF_cell_area_floor_um2=936*0.2916),
         codecs=dict(payload_encode64_instances=4, payload_decode64_instances=8,
                     visible_metadata_encode64_instances=4, visible_metadata_decode64_instances=4,
-                    control_encode64_instances=1, source='rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
+                    control_encode64_instances=1, control_decode64_instances=1, source='rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
                     correction_after_read_register=True, combinational_delay_ps=None,
                     decode_mux_fanout_area_um2=None),
         latency=dict(macro_read_edges=1, protected_read_capture_edges=1,
