@@ -9888,9 +9888,18 @@ def qwen_hbm_selected_activation_provider_model():
     binding_path = 'results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json'
     port_path = 'results/rtl/qwen_hbm_final_tp4_20261005/existing_port_model.json'
     delta_path = 'results/rtl/qwen_hbm_final_tp4_20261005/model_delta.json'
+    inventory_path = 'results/rtl/qwen_hbm_activation_vm_inventory_20261005/provider_inventory.json'
     binding = json.loads((root/binding_path).read_text())
     port = json.loads((root/port_path).read_text())
     delta = json.loads((root/delta_path).read_text())
+    inventory = json.loads((root/inventory_path).read_text())
+    host = inventory['host_provider']
+    rf = inventory['existing_RF_namespace']
+    assert inventory['selected_source']['pins'] == binding['selected_source']['pins']
+    assert host['logical_words_per_die'] == 177808
+    assert rf['geometry']['logical_FP32_words'] == 65536
+    assert rf['source_only_timing']['best_read_II_edges'] == 3
+    assert not rf['selected'] and not inventory['existing_DS_VM_reference']['selected']
     activation = binding['prebuild_model']['activation']
     n = activation['independently_enabled_word_ports_per_die']
     data = n*activation['word_bits']
@@ -9898,7 +9907,7 @@ def qwen_hbm_selected_activation_provider_model():
     assert (n, data, address, n) == (2048, 65536, 49152, 2048)
     assert port['source_sha256'] == binding['selected_source']['pins']['rtl/hdc/ot_qwen_me_spine_h_w12.sv']
     assert delta['once_only_port_cell_reservation_per_die_um2'] == port['area']['all24_port_cell_reservation_um2']
-    inputs = [binding_path, port_path, delta_path]
+    inputs = [binding_path, port_path, delta_path, inventory_path]
     for p, expected in binding['selected_source']['pins'].items():
         assert hashlib.sha256((root/p).read_bytes()).hexdigest() == expected, p
         inputs.append(p)
@@ -9911,6 +9920,26 @@ def qwen_hbm_selected_activation_provider_model():
         request_signal_bits=address+n, response_signal_bits=data,
         total_logical_interface_signal_bits_per_die=data+address+n,
         actual_simultaneous_read_census=None,
+        actual_distinct_words_per_accepted_event=None,
+        source_affine_bank_row_lane_and_reuse_plan=None,
+        software_VM_words_per_die=host['logical_words_per_die'],
+        software_VM_bytes_per_die=host['logical_bytes_per_die'],
+        software_VM_bytes_TP4=host['total_TP4_logical_bytes'],
+        software_capacity_is_physical_capacity=False,
+        existing_RF_reference=dict(
+            selected=False, module=rf['module'], caller=rf['caller'],
+            logical_words=rf['geometry']['logical_FP32_words'],
+            missing_backing_words=host['logical_words_per_die']-rf['geometry']['logical_FP32_words'],
+            source_best_read_II_edges=rf['source_only_timing']['best_read_II_edges'],
+            source_transactions=rf['selected_2048_word_best_byte_floor'],
+            macro_body_mm2=rf['macro']['total_existing128_macro_body_um2']/1e6,
+            physical_selected_provider=False,
+            rule='Finite vector-addressed RF is not a 2048-word scatter provider; byte-volume floor applies only to distinct, vector-coalescible words within its capacity. Do not price every event as 2048 unique words.'),
+        provider_risks=dict(
+            capacity='177808 software words exceed existing RF backing by112272 words; actual live working set/reuse and full backing mapping require source-affine plan, not automatic replica selection',
+            stalls='XVM1 fixed sampling has no selected bank grant/backpressure; repeated addresses may be reused/broadcast only with matched read-before-write/version semantics. Distinct words, collisions, queued reads and all writer publication must be counted per accepted event.',
+            area='RF macro body is a reference only, not selected VM debit; storage copies, lane gather/mux/fanout, common SU/collective faces, native writer ports, clocks/CDC/corridors remain unpriced. Head/result port cost is not VM containment.',
+            next_step='Arendt source-affine finite bank/row/lane, reuse and collision plan for actual program/ports; Maxwell sizes capacity/service/area/token cost before any provider RTL or P&R'),
         source_read='one enabled vx_re word reads host m.vm[vx_addr]; raw32 response through XVM1 and unchanged spine selection',
         native_source_not_physical_VM='std::vector host access has no installed bank grant/request-ready or physical simultaneous-port proof',
         selected_VM_provider_source=None, physical_VM_capacity_bytes=None,
