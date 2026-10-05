@@ -10,14 +10,17 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import gzip
 import itertools
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hbrom_allocator
+import hbrom_transport
 
 SCHEMA = 'opentallas.hbrom.inputs.v1'
 
@@ -91,6 +94,21 @@ def pack_stage(tensors, tp, pairs_per_cluster, clusters_per_die, payload_bytes_p
                 capacity_bytes_per_rank=capacity * clusters_per_die,
                 max_cluster_bytes=max(occupancy, default=0), tensors=tensor_rows,
                 mapping='whole rows; cyclic tile owner; four-lane row-word stripe; storage groups rotate')
+
+
+def storage_record_lower_bound(tensors, tp):
+    """Necessary capacity screen only; admitted rows still run full allocator."""
+    records = 0
+    for t in tensors:
+        fmt = hbrom_allocator.normalize_format(t.get('format', 'raw'))
+        k = int(t.get('k') or 0)
+        if fmt in ('fp4', 'fp8', 'bf16') and k > 1 and not t.get('is_scale') and not t['name'].endswith('.scale'):
+            records_per_row = hbrom_allocator.row_geometry(fmt, k)['records_per_row']
+            count = int(t.get('rows') or 1) * records_per_row
+        else:
+            count = ceildiv(int(t['bytes']), 128)
+        records += count * t.get('replicas_per_rank', 1) * (tp if t.get('replicated') else 1)
+    return ceildiv(records, tp)
 
 
 def schedule(nodes):
@@ -186,7 +204,8 @@ def weight_service(node, geom, compute, macro, network, tp):
     # Banks holding one row cannot supply more streams than its stored words.
     resident_streams = min(network['output_streams_per_tile'], max(1, ceildiv(row_bytes, macro['payload_Bpc'][fmt])))
     resident_Bpc = min(weight_Bpc, resident_streams * macro['payload_Bpc'][fmt])
-    weight_cycles = row_batches * ceildiv(row_bytes, resident_Bpc)
+    source_request_cycles = row_batches * groups * 8 + (7 if (row_batches * groups) % 2 else 0)
+    weight_cycles = max(row_batches * ceildiv(row_bytes, resident_Bpc), source_request_cycles)
     activation_bytes = positive(node, 'activation_bytes')
     input_cycles = max(ceildiv(activation_bytes, positive(compute, 'activation_load_Bpc')),
                        ceildiv(activation_bytes, positive(geom, 'activation_root_Bpc')))
@@ -211,6 +230,7 @@ def weight_service(node, geom, compute, macro, network, tp):
                 activation_bytes_per_cycle_per_tile=compute['activation_load_Bpc'],
                 result_bytes_per_cycle_per_tile=compute['result_Bpc'],
                 compute_cycles=compute_cycles, weight_cycles=weight_cycles,
+                source_request_cycles_upper=source_request_cycles,
                 input_cycles=input_cycles, output_cycles=output_cycles,
                 recurrence_cycles=recurrence, pipeline_cycles=pipeline,
                 compute_intensity_MAC_per_weight_byte=k / row_bytes,
@@ -241,6 +261,9 @@ def evaluate(inputs, candidate):
     cluster_area = ntiles * (pairs * pair_area + tile_area + positive(network, 'area_mm2')) + shared_area
     cluster_slot_area = cluster_area / positive(physical, 'cluster_packing_fraction')
     count = math.floor((die_area - fixed_area) / cluster_slot_area)
+    geometry_slot_limit = physical.get('cluster_slots_by_geometry', {}).get(f'{pairs}:{ntiles}')
+    if geometry_slot_limit is not None:
+        count = min(count, int(geometry_slot_limit))
     if physical.get('max_cluster_slots') is not None:
         count = min(count, int(physical['max_cluster_slots']))
     if count < 1:
@@ -266,9 +289,17 @@ def evaluate(inputs, candidate):
         else:
             stage = t.get('stage', 'auxiliary')
         stages.setdefault(stage, []).append(t)
-    packed = {name: hbrom_allocator.allocate(ts, tp, count * ntiles, pairs,
-                    emit_runs=False, emit_summaries=False, layout_mode=candidate.get('layout_mode', 'padded'))
-              for name, ts in stages.items()}
+    packed = {}
+    rank_capacity_records = (pairs // 4) * 8192 * count * ntiles
+    for name, ts in stages.items():
+        bound = storage_record_lower_bound(ts, tp)
+        if bound > rank_capacity_records:
+            packed[name] = dict(fits=False, necessary_records_per_rank=bound,
+                                capacity_records_per_rank=rank_capacity_records,
+                                rejection='aggregate native-record lower bound already exceeds capacity')
+        else:
+            packed[name] = hbrom_allocator.allocate(ts, tp, count * ntiles, pairs,
+                emit_runs=False, emit_summaries=False, layout_mode=candidate.get('layout_mode', 'padded'))
     rejection = []
     if any(not p['fits'] for p in packed.values()):
         rejection.append('stage storage exceeds integer cluster capacity')
@@ -285,19 +316,37 @@ def evaluate(inputs, candidate):
                          dies=ceildiv(auxiliary_bytes, aux_capacity),
                          role='storage-only retained tables and inactive checkpoint payload')
     dies = len(stages) * tp + auxiliary['dies'] + inputs.get('additional_service_dies', 0)
+    stacks_per_compute = physical.get('hbm_stacks_per_compute_die')
+    hbm_stacks = None if stacks_per_compute is None else len(stages) * tp * stacks_per_compute
+    dram_per_stack = physical.get('hbm_dram_dies_per_stack')
+    base_per_stack = physical.get('hbm_base_dies_per_stack')
+    dram_dies = None if hbm_stacks is None or dram_per_stack is None else hbm_stacks * dram_per_stack
+    base_dies = None if hbm_stacks is None or base_per_stack is None else hbm_stacks * base_per_stack
+    memory_inventory = dict(hbm_stacks=hbm_stacks, dram_dies=dram_dies, hbm_base_dies=base_dies,
+        total_physical_dies=None if dram_dies is None or base_dies is None else dies + dram_dies + base_dies,
+        basis=physical.get('hbm_inventory_basis', 'unqualified stack construction assumption'),
+        hbm_dram_area_mm2=None, total_silicon_area_mm2=None,
+        area_status='HBM DRAM/base actual die areas missing; no iso-total-silicon claim')
     if dies > inputs['max_logic_dies']:
         rejection.append('logic die envelope exceeded')
     if rejection:
         return dict(candidate=candidate, feasible=False, rejection=rejection,
                     geometry=geom, storage=packed,
                     topology=dict(tp=tp, stages=list(stages), logic_dies=dies,
-                                  auxiliary=auxiliary, layers_per_stage=layers_per_stage),
+                                  auxiliary=auxiliary, memory_inventory=memory_inventory, layers_per_stage=layers_per_stage),
                     qualified=False, default_enabled=False)
-    nodes = copy.deepcopy(inputs.get('dag_by_tp', {}).get(str(tp), inputs['dag']))
-    if tp != 4 and str(tp) not in inputs.get('dag_by_tp', {}):
+    nodes = (hbrom_transport.reprice_nodes(inputs['baseline_dag'], tp, layers_per_stage)
+             if 'baseline_dag' in inputs else
+             copy.deepcopy(inputs.get('dag_by_tp', {}).get(str(tp), inputs['dag'])))
+    if tp != 4 and 'baseline_dag' not in inputs and str(tp) not in inputs.get('dag_by_tp', {}):
         raise ValueError('non-TP4 candidate requires explicit per-TP communication/service DAG')
     services = {}
     for node in nodes:
+        if node.get('layer') is not None and 0 <= int(node['layer']) < 40:
+            layer = int(node['layer'])
+            node['resources'] = [re.sub(r'^stage([0-9]+):', r'layer_\1:',
+                                 r.replace(f'layer_{layer}:', f'layer_{layer // layers_per_stage}:'))
+                                 for r in node.get('resources', [])]
         if node.get('kind') == 'weight':
             service = weight_service(node, geom, compute, macro, network, tp)
             node['duration_ns'] = service['duration_ns']
@@ -314,7 +363,9 @@ def evaluate(inputs, candidate):
         blockers.append('cluster-shared RF/vector service requires finite port implementation gate')
     if inputs.get('auxiliary_storage_bytes', 0):
         blockers.append('auxiliary storage placement/read network provisional')
-    if layers_per_stage != 1:
+    if 'baseline_dag' in inputs:
+        blockers.append('own row-ownership transport DAG is analytical, not measured integration')
+    elif layers_per_stage != 1:
         blockers.append('legacy transport DAG retained; stage-local hop removal not credited')
     if inputs.get('complete_checkpoint') is not True:
         blockers.append('complete storage census unverified')
@@ -322,7 +373,7 @@ def evaluate(inputs, candidate):
         blockers.append('full token dependency DAG unverified')
     return dict(candidate=candidate, feasible=not rejection, rejection=rejection,
                 geometry=geom, topology=dict(tp=tp, stages=list(stages),
-                logic_dies=dies, auxiliary=auxiliary, layers_per_stage=layers_per_stage,
+                logic_dies=dies, auxiliary=auxiliary, memory_inventory=memory_inventory, layers_per_stage=layers_per_stage,
                 links=inputs.get('topology', {})), storage=packed,
                 service=services, schedule=scheduled,
                 tpot_us=scheduled['tpot_ns'] / 1000,
@@ -361,8 +412,11 @@ def main():
     parser.add_argument('--inputs', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
     args = parser.parse_args()
-    result = sweep(json.loads(args.inputs.read_text()))
-    result['inputs_sha256'] = hashlib.sha256(args.inputs.read_bytes()).hexdigest()
+    raw = args.inputs.read_bytes()
+    if args.inputs.suffix == '.gz':
+        raw = gzip.decompress(raw)
+    result = sweep(json.loads(raw))
+    result['inputs_sha256'] = hashlib.sha256(raw).hexdigest()
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + '\n')
 
