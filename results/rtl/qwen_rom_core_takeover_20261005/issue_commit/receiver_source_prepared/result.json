@@ -1,0 +1,26 @@
+{
+  "status": "SOURCE_PREPARATION_COMPLETE_NOT_ELABORATED",
+  "source_core_sha256": "3a85cd3ccc69c7026be4e9e278edf67e8fbfef228e0f558e71f1e9c6c32b890d",
+  "original_RTL_pin": "b50b7c4f45f6c1e6d753e46bb87de0362a8997e7",
+  "receiver_hook_pin": "acc25becc",
+  "metadata_text_correction": "9a9ac5346, no core source/connectivity change",
+  "remote_root": "/srv/opentallas-scratch/codex/qwen-rom-real-receiver-binding-pinned-20261005",
+  "source_prepare_exit": 0,
+  "sequencer_RTL_implemented": true,
+  "receiver_retention_implemented": true,
+  "receiver_blackbox_expose_removed": true,
+  "old_passive_port_reuse_forbidden": true,
+  "next_execution_owner": "Hubble",
+  "next_command": "Yosys hierarchy/synthesis from actual prepared/prepare.ys, then registeredport +2actualfloorplan fanout after actual inventory/boundary binding",
+  "remaining_source_hook": null,
+  "remaining_measurement": "Hierarchy/mapping must resolve actual receiver cells and full consumer geometry; source-generation success is not elaboration, STA or port-load qualification",
+  "new_route_launched_by_Beauvoir": false,
+  "new_component_or_fulltoken_run": false,
+  "clock_policy_ps": [
+    833,
+    60,
+    25
+  ],
+  "default_off": true,
+  "adopted": false
+}
