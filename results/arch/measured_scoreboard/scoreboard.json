@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "eb5b887d5",
+ "generated_from_commit": "1d1140f9a",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -1268,7 +1268,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 1686.5,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
@@ -1298,7 +1298,7 @@
    "note": "as-built S81 microarchitecture, before the recovery levers",
    "value": 1362.2,
    "resolved": true,
-   "blob": "13c7fc0099fe05f395d59af170e6673ae276664b",
+   "blob": "c1bd8b52d9731e1ff52401b564ba919f1ec368ad",
    "last_commit": "3210e9ce7 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m": {
@@ -1310,10 +1310,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4946.7,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published": {
@@ -1325,10 +1325,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
-   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05",
+   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4624.3,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_low": {
@@ -1340,9 +1340,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4079.7,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_tau_published_high": {
@@ -1354,9 +1355,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 5135.2,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
@@ -1383,10 +1385,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
-   "note": "as-built S81 microarchitecture, before the recovery levers",
+   "note": "as-built S81 microarchitecture, before the recovery levers; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 2599.2,
    "resolved": true,
-   "blob": "13c7fc0099fe05f395d59af170e6673ae276664b",
+   "blob": "c1bd8b52d9731e1ff52401b564ba919f1ec368ad",
    "last_commit": "3210e9ce7 2026-10-05"
   },
   "ds_rom.mtp_as_built_tok_s_1m": {
@@ -1431,7 +1433,7 @@
    "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
    "value": 592.926,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
@@ -1458,10 +1460,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.verify_us",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 718.33,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
@@ -1487,10 +1489,10 @@
    "status": "composed_from_measured",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.II_us",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)",
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 25.081,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
@@ -1707,10 +1709,10 @@
    "status": "partial",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.tau",
-   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows",
+   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal.",
    "value": 4.159,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.tau_published_sensitivity": {
@@ -4599,7 +4601,7 @@
    "note": "rest listed in still_modelled",
    "value": 0.9999,
    "resolved": true,
-   "blob": "80537a187de5145d8310b2abd6fc8a5113761153",
+   "blob": "86b3a343cfbeaca951aa2ef3e89485784ffa0206",
    "last_commit": "688ab761e 2026-10-05"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
@@ -5427,7 +5429,7 @@
    "value": 1.493,
    "resolved": true,
    "blob": "9374370192b89638c8e5b138dde1cd3b58a86cd3",
-   "last_commit": null
+   "last_commit": "0c4a9fb42 2026-10-05"
   },
   "hbm_ds.joint_pq_xmap_p1_l20_cycles": {
    "target": "hbm_ds",
@@ -5457,7 +5459,7 @@
    "value": 26.933,
    "resolved": true,
    "blob": "9374370192b89638c8e5b138dde1cd3b58a86cd3",
-   "last_commit": null
+   "last_commit": "0c4a9fb42 2026-10-05"
   },
   "hbm_ds.joint_pq_xmap_p6_l20_cycles": {
    "target": "hbm_ds",
