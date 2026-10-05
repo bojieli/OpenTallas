@@ -31,11 +31,21 @@ puts "PARENT_MACROS [llength $macros]"
 set block [ord::get_db_block]
 set dbu [$block getDbUnitsPerMicron]
 set area 0.0
+set physical_area 0.0
 foreach inst [$block getInsts] {
     set m [$inst getMaster]
-    if {![$m isBlock]} {set area [expr {$area+double([$m getWidth])*[$m getHeight]/$dbu/$dbu}]}
+    if {[$m isBlock]} {continue}
+    set cell_area [expr {double([$m getWidth])*[$m getHeight]/$dbu/$dbu}]
+    # ORFS physical-only types do not belong to the functional/CTS cell cap.
+    set only 0
+    foreach pattern {COVER COVER_BUMP RING PAD_SPACER CORE_FEEDTHROUGH CORE_SPACER CORE_ANTENNACELL CORE_WELLTAP ENDCAP*} {
+        if {[string match $pattern [$m getType]]} {set only 1}
+    }
+    if {$only} {set physical_area [expr {$physical_area+$cell_area}]} else {set area [expr {$area+$cell_area}]}
 }
-puts "PARENT_STANDARD_CELL_AREA_UM2 $area CAP_UM2 37452.2"
+puts "PARENT_FUNCTIONAL_CTS_LEF_AREA_UM2 $area PHYSICAL_ONLY_LEF_AREA_UM2 $physical_area CAP_UM2 37452.2"
+# The driver's finish__design__instance__area__stdcell metric remains the
+# authoritative cap comparison; keep this independent LEF inventory separate.
 set endpoints [all_registers -data_pins]
 set core {}
 foreach pin $endpoints {
