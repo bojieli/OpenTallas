@@ -1,0 +1,38 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "source_commit": "e73b07389",
+  "selected_parameters": {
+    "OPT_KC6": 1,
+    "OPT_KC7": 1,
+    "OPT_SPLIT_CMP": 1,
+    "default_enabled": false
+  },
+  "case_count": 20,
+  "all_cycles_equal_kc7": true,
+  "worst_real": {
+    "name": "real_rank1_p2",
+    "cycles": 738,
+    "sectors": 9197,
+    "bytes": 294304,
+    "achieved_TBps": 0.4787,
+    "fraction_of_peak": 0.1197
+  },
+  "added_ff_model": 128,
+  "added_clock_reset_loads_model": 128,
+  "added_edges": 0,
+  "new_ports": 0,
+  "model_gross_extra_um2": 138.10176,
+  "route": {
+    "host": "ot-epyc1tb",
+    "launcher_pid": 622178,
+    "driver_pid": 878511,
+    "status": "LIVE",
+    "output": "/srv/opentallas-scratch/codex/russell-reindex-parallel-20261005/split2"
+  },
+  "u40_driver_pid": 485317,
+  "u45_driver_pid": 503740,
+  "original_kc7_preserved": true,
+  "ss_ff_closed": false,
+  "physical_adopted": false,
+  "whole_token_qualified": false
+}
