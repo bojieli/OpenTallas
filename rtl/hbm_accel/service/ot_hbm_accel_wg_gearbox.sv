@@ -1,5 +1,5 @@
 `timescale 1ps/1fs
-// Static group-slot FP4 byte unpacker. One 256-byte elastic seat, no numeric
+// Static group-slot FP4 byte unpacker. One 260-byte elastic seat, no numeric
 // operations. A source task has 255 data lines and one required zero pad line.
 // Each accepted native line advances the unchanged wave,t,slot issue order.
 module ot_hbm_accel_wg_gearbox #(parameter integer ENABLE=0)(
@@ -8,9 +8,12 @@ module ot_hbm_accel_wg_gearbox #(parameter integer ENABLE=0)(
  output wire [1087:0] out_data,output wire done,output wire fault
 );
  generate if(!ENABLE) begin : off
+ // All lengths are multiples4. A residual132 needs4 more bytes for the
+ // next136-byte word. 132+128=260 is the minimum whole-input elastic seat;
+ // the original256-byte seat deadlocked at accepted26/issued27/count132.
  assign in_ready=0;assign out_valid=0;assign out_data=0;assign done=0;assign fault=0;
  end else begin : on
- reg [2047:0] bytes_q,bytes_n;
+ reg [2079:0] bytes_q,bytes_n;
  reg [8:0] count,count_n,issued;
  reg [8:0] accepted;
  reg [2:0] wave,t,slot;
@@ -20,14 +23,17 @@ module ot_hbm_accel_wg_gearbox #(parameter integer ENABLE=0)(
  wire take=out_valid&&out_ready;
  assign out_valid=!done_q&&!fault_q&&issued<288&&count>=need;
  assign out_data=tail?{32'b0,bytes_q[543:512],512'b0,bytes_q[511:0]}:bytes_q[1087:0];
+ // All lengths are multiples4. A residual132 needs4 more bytes for the
+ // next136-byte word. 132+128=260 is the minimum whole-input elastic seat;
+ // the original256-byte seat deadlocked at accepted26/issued27/count132.
  assign in_ready=!done_q&&!fault_q&&accepted<256&&
-                 (int'(count)-(take?int'(need):0)<=128);
+                 (int'(count)-(take?int'(need):0)<=132);
  assign done=done_q;assign fault=fault_q;
  always @* begin
   bytes_n=bytes_q;count_n=count;
   if(take) begin bytes_n=bytes_n>>(int'(need)*8);count_n=count_n-need;end
   if(in_valid&&in_ready) begin
-   bytes_n=bytes_n|({1024'b0,in_data}<<(int'(count_n)*8));count_n=count_n+9'd128;
+   bytes_n=bytes_n|({1056'b0,in_data}<<(int'(count_n)*8));count_n=count_n+9'd128;
   end
  end
  always @(posedge clk or negedge rst_n) begin

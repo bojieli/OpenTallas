@@ -68,7 +68,7 @@ def test_a8_descriptors_preserve_default_and_actual_row_views():
 
 
 def test_w2_real_source_rows_tail_and_prefix_are_not_uniform():
- from dshbm_expert_workgroup_interleave import w2_source_rows,w2_legacy_tail,w2_compact_stream
+ from dshbm_expert_workgroup_interleave import w2_source_rows,w2_legacy_tail,w2_compact_stream,w2_stream
  from dshbm_matched_sm_seq import gen_op
  def read(e,m,a,b):
   assert m=='w2'
@@ -81,6 +81,17 @@ def test_w2_real_source_rows_tail_and_prefix_are_not_uniform():
  raw,lut,prefix,native=w2_legacy_tail(views)
  assert len(raw)==136*128 and lut[-4:]==((255,255),)*4
  assert len(prefix[0])==64 and len(prefix[4])==96
+ full,full_lut,counts,full_native=w2_stream(views)
+ assert counts==(10,10,0,0,29,29,29,29) and len(full)==len(raw)==136*128
+ assert len(full_lut)==136 and all(m<8 for m,l in full_lut)
+ offset=0
+ for i,v in enumerate(views):
+  source,_=w2_compact_stream(v['packed'],v['scale'])
+  assert full[offset:offset+len(source)]==source
+  assert all(x==0 for x in full[offset+len(source):offset+counts[i]*128])
+  offset+=counts[i]*128
+ assert full_native==native
+
  off=0
  for i,v in enumerate(views):
   compact,words=w2_compact_stream(v['packed'],v['scale']);n=v['suffix_capacity_lines']*128

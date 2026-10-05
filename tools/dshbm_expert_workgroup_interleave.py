@@ -199,3 +199,22 @@ def w2_exported_reader(root,layer,ids):
             result.append(data[start-a:stop-a].copy())
         return tuple(result)
     return read
+
+
+def w2_stream(views):
+    """Standalone complete W2 rows in the unchanged 136-line sector extent.
+
+    GU's new compact A-layout no longer carries legacy 64/96-byte seams.
+    Repack those SAME W2 bytes into their own SM's final tail line. Counts
+    change 10,10,0,0,28,28,28,28 -> 10,10,0,0,29,29,29,29, with no new sectors,
+    no separate prefix store or payload loss, and no change to FP4 issue order.
+    The caller must use this returned literal cfg_lut/counts together.
+    """
+    tail=bytearray();lut=[];counts=[];native={}
+    for local,v in enumerate(views):
+        raw,words=w2_compact_stream(v['packed'],v['scale'])
+        n=(len(raw)+127)//128;counts.append(n);native[local]=words
+        tail+=raw+bytes(n*128-len(raw));lut.extend((local,line) for line in range(n))
+    if len(lut)>136:raise ValueError('W2 source-owned sector capacity')
+    pad=136-len(lut);tail+=bytes(pad*128);lut.extend((255,255) for _ in range(pad))
+    return bytes(tail),tuple(lut),tuple(counts),native
