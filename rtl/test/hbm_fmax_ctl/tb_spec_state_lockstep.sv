@@ -18,7 +18,7 @@ module tb_spec_state_lockstep;
         .RLOG(RLOG), .CKMAX(CKMAX), .TW(TW), .AW(AW)) d0 (.clk(clk), .rst_n(rst_n), .n_set(n_set), .n_val(n_val), .n(n0),
         .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok), .req_v(req_v), .req_ready(r0), .req_kind(req_kind),
         .req_idx(req_idx), .req_pos(req_pos), .a_v(v0), .a_addr(ad0), .a_tok(t0), .a_pad(p0), .a_last(l0), .a_err(e0));
-    ot_dshbm_spec_state_f_token_edge #(.TOKEN_EDGE_FIX(1),.W(W), .PMAX(PMAX), .WR(WR), .SR(SR), .TR(TR), .NG(NG), .NL(NL), .NST(NST), .NSRC(NSRC),
+    ot_dshbm_spec_state_f #(.W(W), .PMAX(PMAX), .WR(WR), .SR(SR), .TR(TR), .NG(NG), .NL(NL), .NST(NST), .NSRC(NSRC),
         .RLOG(RLOG), .CKMAX(CKMAX), .TW(TW), .AW(AW)) d1 (.clk(clk), .rst_n(rst_n), .n_set(n_set), .n_val(n_val), .n(n1),
         .tw_v(tw_v), .tw_pos(tw_pos), .tw_tok(tw_tok), .req_v(req_v), .req_ready(r1), .req_kind(req_kind),
         .req_idx(req_idx), .req_pos(req_pos), .a_v(v1), .a_addr(ad1), .a_tok(t1), .a_pad(p1), .a_last(l1), .a_err(e1));

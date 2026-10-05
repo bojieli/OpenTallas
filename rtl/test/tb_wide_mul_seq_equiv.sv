@@ -141,6 +141,7 @@ module tb_wide_mul_seq_equiv;
                      checked, DUTS);
         else
             $display("FAIL tb_wide_mul_seq_equiv %0d mismatches", errors);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
