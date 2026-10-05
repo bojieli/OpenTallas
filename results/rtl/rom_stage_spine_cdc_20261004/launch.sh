@@ -23,6 +23,8 @@ bad = [p for p, h in m['required_rtl_sources'].items()
        if hashlib.sha256(Path(p).read_bytes()).hexdigest() != h]
 if bad:
     raise SystemExit('Re-pin boundary calibration source mismatch; do not revert corrected RTL: ' + ', '.join(bad))
+if not m.get('current_target_launch_ready', False):
+    raise SystemExit('Re-pin not admitted by actual current IO budget: ' + m['status'])
 PY
   REPIN=(--step-tcl PRE_IO_PLACEMENT=physical/abi3/rom_stage_cdc_repin_e1.tcl)
 fi
