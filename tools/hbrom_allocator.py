@@ -98,6 +98,29 @@ def swizzle(fmt, words):
     return result
 
 
+def summarize_storage_records(tensors, tp=1):
+    """Cheap necessary capacity bound, before per-owner/group-tail allocation.
+
+    Omits only allocation holes, never native SM lane padding. Passing this
+    bound is not a fit verdict. Count inline quantized scales through records;
+    separately listed source scale archives remain charged.
+    """
+    total=0; cache={}
+    for tensor in tensors:
+        fmt=normalize_format(tensor.get('format','raw'))
+        k=int(tensor.get('k',tensor.get('K',0)) or 0)
+        matrix=(fmt in ('fp4','fp8','bf16') and k>1 and not tensor.get('is_scale') and not tensor['name'].endswith('.scale'))
+        if matrix:
+            key=(fmt,k)
+            if key not in cache: cache[key]=row_geometry(fmt,k)['records_per_row']
+            records=int(tensor.get('rows') or 1)*cache[key]
+        else: records=ceildiv(int(tensor['bytes']),128)
+        total+=records*int(tensor.get('replicas_per_rank',1))*(tp if tensor.get('replicated',False) else 1)
+    return dict(total_records=total,physical_words=4*total,
+                excludes='per-group tail holes and per-matrix eight-record alignment',
+                is_necessary_bound_only=True)
+
+
 def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=4096, emit_runs=True, layout_mode="padded", emit_summaries=True):
     """Allocate source records; clusters here are independent compute tiles.
 
@@ -129,7 +152,10 @@ def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=40
         for rank in range(tp):
             for tile in range(clusters_per_die):
                 owner=tile if replicated else rank*clusters_per_die+tile
-                first=(owner-rotate)%stride
+                # All executable matrices share source-row ownership. In particular,
+                # gate/up rows and every selected/shared down output row meet at
+                # the same rank/tile; raw archives may rotate for capacity.
+                first=owner if matrix else (owner-rotate)%stride
                 count=0 if first>=logical_rows else 1+(logical_rows-1-first)//stride
                 if not count: continue
                 for replica in range(replicas):
@@ -153,7 +179,7 @@ def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=40
                         cursors[rank][tile]=cur+take*rpr;source+=take*stride;left-=take
         if emit_summaries: summaries.append(dict(name=n,geometry=geom,logical_rows=logical_rows,owners=entries))
         useful+=int(tensor['bytes'])*(tp if replicated else 1)*replicas
-        rotate=(rotate+logical_rows)%stride
+        if not matrix: rotate=(rotate+logical_rows)%stride
     peak=max(max(row) for row in cursors); fits=peak<=groups*depth
     return dict(schema='opentallas.hbrom.allocator.v1',fits=fits,tp=tp,tiles_per_die=clusters_per_die,
                 pairs_per_tile=pairs_per_cluster,rows_per_macro=rows_per_macro,groups_per_tile=groups,
@@ -162,7 +188,7 @@ def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=40
                 max_cluster_bytes=peak*128,capacity_bytes_per_rank=groups*depth*128*clusters_per_die,
                 allocated_bytes_per_rank=max(sum(r) for r in cursors)*128,
                 useful_bytes_per_rank=ceildiv(useful,tp),group_tail_padding_records=padding,
-                tensors=summaries,runs=runs,mapping='whole rows; 4-stream SM issue-order padded records; physical group bounded',
+                tensors=summaries,runs=runs,mapping='aligned matrix row modulo rank/tile; 4-stream native SM records; physical group bounded',
                 fit_is_not_physical_qualification=True)
 
 
