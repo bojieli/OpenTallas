@@ -7879,3 +7879,91 @@ def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
                 service_period_fs=service_period_fs,
                 combined_context_clock_closed=False, floorplan_fit=False, adopted=False,
                 source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')
+
+
+def hbm_loader_install_contract(*, partitions=2, dies=2, queue_depth=4,
+                                reorder_entries=16, cdc_aw=5, host_period_ns=1.0,
+                                service_period_ns=0.833, existing_clients=4, partition_ports=1):
+    """Item8(c) boot/restore/STORE boundaries, before successor RTL/build.
+
+    The adapter distributes an ordered engine request stream to one finite
+    client queue per 128-byte-interleaved partition. It does not invent an
+    NS-fold increase in host bandwidth. STORE waits real AXI B completions.
+    Clock periods are targets, not measured closures; no decode gain claimed.
+    """
+    assert partitions >= 1 and partitions & (partitions-1) == 0
+    assert queue_depth >= 2 and queue_depth & (queue_depth-1) == 0
+    assert cdc_aw >= 2
+    request_bits=1+32+256+32+16
+    response_bits=1+256+16
+    queue_bits=partitions*queue_depth*request_bits
+    reorder_bits=reorder_entries*(256+16+2)
+    cdc_payload_bits=(1<<cdc_aw)*256+4*64+4*68
+    return dict(default_enabled=False, MACs_per_cycle=0,
+                dies=dies, partitions_per_die=partitions,
+                additional_memory_clients_per_die=partition_ports,
+                memory_clients_before=existing_clients,
+                memory_clients_selected=existing_clients+partition_ports,
+                request_bits_per_partition_boundary=request_bits,
+                response_bits_per_partition_boundary=response_bits,
+                peak_memory_payload_bytes_per_edge=32*partitions,
+                ordered_engine_bytes_per_edge=32,
+                host_payload_bits_per_edge=64, engine_payload_bits_per_edge=256,
+                host_AXI_address_bits=64, host_AXI_response_bits=2,
+                host_target_period_ns=host_period_ns,
+                service_target_period_ns=service_period_ns,
+                host_width_ceiling_GBps=8/host_period_ns, engine_width_ceiling_GBps=32/host_period_ns,
+                installed_DMA_serialization="4 actual 64-bit beats per sector; read owner held through RLAST, write owner through B; actual PCIe/AXI response tail must be measured",
+                PCIe5_x16_encoded_ceiling_GBps=32*16*(128/130)/8,
+                PCIe_payload_after_packet_overhead_GBps=None,
+                raw_partition_request_queue_bits_per_die=queue_bits if partition_ports>1 else 0,
+                unselected_partition_recipe_queue_bits_per_die=queue_bits,
+                raw_STORE_reorder_bits_per_die=reorder_bits,
+                raw_STORE_CDC_payload_bits_per_die=cdc_payload_bits,
+                queue_registered_edges=1 if partition_ports>1 else 0, added_CRC_edges=0,
+                reorder_retirement_edges=1,
+                CDC_latency='actual ot_gpu_cdc_fifo two synchronizer edges plus pointer/consumer edges in each direction; measure under both clocks',
+                LOAD_completion='all engine write ACKs, optional ordered readback CRC, then actual completion CDC',
+                STORE_completion='all matched MREQ reads, ordered CDC/W handshakes, all AXI B responses, matching payload/memory CRC',
+                latency_formula='LOAD+STORE measured elapsed host edges*host_period; include finite queue, CDC, memory/refresh, AXI backpressure and B tail',
+                steady_decode_added_cycles=0,
+                steady_decode_clock_or_arbitration_delta='UNKNOWN until selected-context check',
+                mux_demux_cost='installed: one loader client/die at NCL, ND+host AXI arbiter + BAR decoder; optional recipe partition queues are separate until selected',
+                routing_tracks_required='UNKNOWN: boundary bit inventory above; floorplan/channel capacities needed',
+                area_um2='UNKNOWN: queues/reorder/CDC plus control and muxes require actual synthesis',
+                replica_cost='per die; no ROM/ECC changes', floorplan_fit=None,
+                clock_closed=False, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, composed_decode_gain_percent=None,
+                adopted=False,
+                historical_single_client_GBps={'write_only':9.788,'with_readback':4.998},
+                historical_record='results/rtl/tapeout_hbm_loader_20261004/record.json')
+
+
+def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
+    """Exact current-queue bank mask cut for the retained AQ row controller.
+
+    Register the OR of surviving slots plus an accepted push. This equals the
+    current queue's bank set at every edge; the existing prior-cycle hold stays
+    in PRE exclusion. No eligibility or row/column issue edge moves.
+    """
+    if queue_depth < 2 or queue_depth & (queue_depth-1) or pcs < 1:
+        raise ValueError('retained AQ queue needs power-of-two depth >=2 and real PC count')
+    bits = 32
+    return dict(default_enabled=False, MACs_per_cycle=0, pcs=pcs,
+                existing_queue_depth=queue_depth, added_state_bits_per_pc=bits,
+                total_added_state_bits=pcs*bits,
+                register_cell_area_floor_um2_per_pc=bits*0.2916,
+                register_cell_area_floor_um2_total=pcs*bits*0.2916,
+                area_floor_excludes='queue-survivor OR, push decode, enable mux, clock/reset/wires',
+                mask_fanin_per_bank=queue_depth+1, late_pop_mux_bits=32,
+                extra_memory_ports=0, extra_memory_bytes_per_cycle=0,
+                boundary_bits_added=0, external_routing_tracks_added=0,
+                local_registered_mask_bits=32, local_placement_fit='pending selected service route',
+                added_row_command_cycles=0, added_column_command_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                composed_single_user_token_delta_ns=0,
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                refresh_and_DRAM_eligibility='unchanged exact current and prior queue hold masks',
+                interface_and_tags='unchanged accepted push/pop; no payload/visibility or grant changes',
+                SSFF_closed=False, adopted=False,
+                source_basis='svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv')
