@@ -17,9 +17,10 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--owner', type=Path, required=True)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--connectivity', type=Path, help='Retained canonical return connectivity when staged outside owner')
     a = p.parse_args()
     execution = CanonicalS81Execution(a.owner)
-    connectivity = json.loads((a.owner/'results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/connectivity.json').read_text())
+    connectivity = json.loads((a.connectivity or a.owner/'results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/connectivity.json').read_text())
     a.out.mkdir(parents=True, exist_ok=False)
     cpp = ['#pragma once', '#include "s81_minimum_qe.hpp"']
     operations = []
