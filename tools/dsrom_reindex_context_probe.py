@@ -34,7 +34,7 @@ foreach cell $selected {
     foreach pin [get_pins -of_objects $cell] {
         if {[get_property $pin direction] == "output"} {
             foreach net [get_nets -of_objects $pin] {
-                report_net -digits 6 $net
+                report_net -digits 6 [get_full_name $net]
             }
         }
     }
