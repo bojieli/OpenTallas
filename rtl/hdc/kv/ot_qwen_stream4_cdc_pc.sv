@@ -105,11 +105,23 @@ module ot_qwen_stream4_cdc_pc #(
             lw_bin <= 0; lw_gray <= 0; lr_seen <= 0; h_cred <= 0;
             for (s = 0; s < SYNC; s = s + 1) lr_s[s] <= 0;
         end else begin
-            if (h_lv && !l_full) lmem[lw_bin[LA-1:0]] <= {h_lsec, h_lrow, h_ldata};
             lw_bin <= lw_bin_n; lw_gray <= (lw_bin_n >> 1) ^ lw_bin_n;
             lr_s[0] <= lr_gray; for (s = 1; s < SYNC; s = s + 1) lr_s[s] <= lr_s[s-1];
             h_cred <= 3'(lr_sb - lr_seen); lr_seen <= lr_sb;
         end
+    end
+    // Storage write: NG column groups, each with a KEPT copy of the write index, and NOT gated by the
+    // synchronized-pointer full flag (route r1: lr_s -> l_full -> 18k write enables missed by 3 ps).
+    // The controller reserves a credit before every RD, so a push into a full FIFO is a protocol fault:
+    // h_fault rises and the pointer does not advance (the overwritten slot is never presented as valid
+    // data before the sticky fault).
+    localparam integer LNG = 5, LGW = (281 + LNG - 1) / LNG;
+    wire [LNG*LGW-1:0] l_in = {{(LNG*LGW-281){1'b0}}, h_lsec, h_lrow, h_ldata};
+    for (genvar gw = 0; gw < LNG; gw = gw + 1) begin : lwg
+        localparam integer LO = gw * LGW, HI = (LO + LGW > 281) ? 281 : LO + LGW;
+        (* keep *) reg [LA-1:0] wi;
+        always @(posedge hclk or negedge h_rl) if (!h_rl) wi <= 0; else wi <= lw_bin_n[LA-1:0];
+        always @(posedge hclk) if (h_lv) lmem[wi][HI-1:LO] <= l_in[HI-1:LO];
     end
     wire        l_empty = lr_gray == lw_s[SYNC-1];
     wire        l_ren   = !l_empty && (!l_v || l_pop);
@@ -145,9 +157,6 @@ module ot_qwen_stream4_cdc_pc #(
     always @(*) {l_sec, l_row, l_data} = l_q[280:0];
 
     // =========================== write queue: CLK -> HCLK ===========================
-    reg [23:0]     wm_sec  [0:WB-1];
-    reg [255:0]    wm_data [0:WB-1];
-    reg [TAGW-1:0] wm_tag  [0:WB-1];
     reg [WA:0] ww_bin, ww_gray;                                   // CLK
     reg [WA:0] wh_bin, wc_bin, wc_gray;                           // HCLK: hand-off, completion
     (* async_reg = "true" *) reg [WA:0] ww_s [0:SYNC-1];          // ww_gray in HCLK
@@ -166,10 +175,17 @@ module ot_qwen_stream4_cdc_pc #(
             w_room <= (WB[WA:0] - (ww_bin_n - wc_sb)) >= 3;
         end
     end
-    always @(posedge clk)
-        if (w_v && !w_full) begin
-            wm_sec[ww_bin[WA-1:0]] <= w_sec; wm_data[ww_bin[WA-1:0]] <= w_data; wm_tag[ww_bin[WA-1:0]] <= w_tag;
-        end
+    // storage write: kept index copies per column group, not gated by the synchronized full flag (a push
+    // into a full queue raises the sticky c_fault; the service checks w_room first)
+    localparam integer WNG = 5, WW = 24 + 256 + TAGW, WGW = (WW + WNG - 1) / WNG;
+    reg  [WW-1:0] wmem [0:WB-1];
+    wire [WNG*WGW-1:0] w_in = {{(WNG*WGW-WW){1'b0}}, w_sec, w_data, w_tag};
+    for (genvar gw = 0; gw < WNG; gw = gw + 1) begin : wwg
+        localparam integer LO = gw * WGW, HI = (LO + WGW > WW) ? WW : LO + WGW;
+        (* keep *) reg [WA-1:0] wi;
+        always @(posedge clk or negedge c_rw) if (!c_rw) wi <= 0; else wi <= ww_bin_n[WA-1:0];
+        always @(posedge clk) if (w_v) wmem[wi][HI-1:LO] <= w_in[HI-1:LO];
+    end
     wire [WA:0] ww_sb = g2b_w(ww_s[SYNC-1]);
     wire [WA:0] wh_bin_n = wh_bin + {{WA{1'b0}}, h_hand};
     wire [WA:0] wc_bin_n = wc_bin + {{WA{1'b0}}, h_wcon};
@@ -185,9 +201,9 @@ module ot_qwen_stream4_cdc_pc #(
         end
     end
     always @(posedge hclk) begin
-        h_wsec <= wm_sec[wh_bin_n[WA-1:0]];
+        h_wsec <= wmem[wh_bin_n[WA-1:0]][WW-1 -: 24];
         if (h_wcon) begin
-            h_csec <= wm_sec[wc_bin[WA-1:0]]; h_cdata <= wm_data[wc_bin[WA-1:0]]; h_ctag <= wm_tag[wc_bin[WA-1:0]];
+            h_csec <= wmem[wc_bin[WA-1:0]][WW-1 -: 24]; h_cdata <= wmem[wc_bin[WA-1:0]][TAGW +: 256]; h_ctag <= wmem[wc_bin[WA-1:0]][TAGW-1:0];
         end
     end
 
