@@ -10,8 +10,10 @@ set dbu [ot_mts::get_dbu]
 set core [$block getCoreArea]
 set cx0 [expr {double([$core xMin]) / $dbu}]; set cy0 [expr {double([$core yMin]) / $dbu}]
 set cx1 [expr {double([$core xMax]) / $dbu}]; set cy1 [expr {double([$core yMax]) / $dbu}]
-set gx [expr {[info exists ::env(OT_R5A_GAP_X)] ? $::env(OT_R5A_GAP_X) : 6.0}]
-set gy [expr {[info exists ::env(OT_R5A_GAP_Y)] ? $::env(OT_R5A_GAP_Y) : 5.0}]
+# e11 physical-only recipe: leave room for both 3 um macro halos and legal cells.
+# Defaults matter: run_abi3_physical does not forward these environment variables.
+set gx [expr {[info exists ::env(OT_R5A_GAP_X)] ? $::env(OT_R5A_GAP_X) : 20.0}]
+set gy [expr {[info exists ::env(OT_R5A_GAP_Y)] ? $::env(OT_R5A_GAP_Y) : 12.0}]
 set keyed {}
 foreach inst [$block getInsts] {
     if {![[$inst getMaster] isBlock]} { continue }
