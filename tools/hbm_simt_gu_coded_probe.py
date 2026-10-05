@@ -11,10 +11,21 @@ IMAGE='sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'
 HERE=Path(__file__).resolve().parents[1]
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--work',type=Path,required=True);p.add_argument('--source',type=Path,required=True);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--work',type=Path,required=True);p.add_argument('--source',type=Path,required=True);p.add_argument('--resume-yosys',type=Path);a=p.parse_args()
  w=a.work.resolve();src=a.source.resolve();w.mkdir(parents=True,exist_ok=False)
  cfg=HERE/'results/uarch/hbm_simt_gu_coded_20261005/probe'
  for name in ['config.mk','constraint.sdc','pins.tcl']:shutil.copy2(cfg/name,w/name)
+ if a.resume_yosys:
+  old=a.resume_yosys.resolve()
+  assert json.loads((old/'flow_exit.json').read_text())['rc']!=0
+  oldpins=json.loads((old/'source_binding.json').read_text())['source_sha256']
+  for f,h in oldpins.items():assert sha(src/f)==h,f
+  base=next((old/'results/asap7').glob('*/base'))
+  assert (base/'1_2_yosys.v').is_file() and not (base/'1_synth.odb').exists()
+  for sub in ['results','objects']:shutil.copytree(old/sub,w/sub)
+  (w/'resumed_yosys.json').write_text(json.dumps(dict(previous=str(old),
+   retained_netlist_sha256=sha(base/'1_2_yosys.v'),source_byte_identical=True,
+   failure='Missing WC_LIB_FILES/BC_LIB_FILES aliases; add actual SS/FF lists, no synthesis replay'),indent=2)+'\n')
  sysroot='/srv/opentallas-scratch'
  import sys;sys.path.insert(0,sysroot);import admit_core
  def guard(stage):
@@ -36,7 +47,10 @@ def main():
  def docker(command):
   return ['docker','run','--rm','-v',str(src)+':/src:ro','-v',str(w)+':/work','-w','/OpenROAD-flow-scripts/flow',IMAGE,'bash','-lc',command]
  guard('flow');(w/'status').write_text('LIVE_MINIMUM_CODED_ELEMENT_FLOW\n')
- cmd=docker('source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=8 finish')
+ targets='finish'
+ if a.resume_yosys:
+  targets='do-1_synth do-floorplan do-place do-cts do-route do-finish'
+ cmd=docker('source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=8 '+targets)
  (w/'command.json').write_text(json.dumps(cmd,indent=2)+'\n')
  with (w/'flow.log').open('w') as f:rc=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT).returncode
  subprocess.run(docker('chmod -R a+rwX /work'),check=True)
