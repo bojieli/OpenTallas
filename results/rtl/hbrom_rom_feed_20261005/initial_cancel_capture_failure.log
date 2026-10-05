@@ -1,0 +1,7 @@
+PASS normal rows3 groups3 fmt2 gs1 base0 lines72
+PASS normal rows9 groups2 fmt1 gs0 base8192 lines144
+PASS normal rows3 groups10 fmt0 gs1 base57344 lines240
+PASS normal rows3 groups5 fmt1 gs1 base131072 lines120
+PASS normal rows3 groups2 fmt2 gs0 base253952 lines48
+FATAL: rtl/test/hbrom/tb_hbrom_rom_feed.sv:59: capture timing macro0 delta1108
+       Time: 840255 Scope: tb_hbrom_rom_feed
