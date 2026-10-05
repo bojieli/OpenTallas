@@ -10511,3 +10511,9 @@ def dsrom_v9_field_boundary_model():
     """Source-owned enclosing field clock/load terms; no invented arrivals."""
     from dsrom_v9_field_boundary import model
     return model(Path(__file__).resolve().parents[1])
+
+
+def dsrom_v9_parent_context_model():
+    """Full-slot source register/clock cut, with actual loaded QX10 ports."""
+    from dsrom_v9_parent_context import model
+    return model(Path(__file__).resolve().parents[1])
