@@ -99,7 +99,7 @@ def emit(root, out):
         raw = subprocess.check_output(['git','show',crc_commit+':'+path],cwd=root)
         crc_sources[path] = hashlib.sha256(raw).hexdigest()
     model = dict(selected_route_source=dict(commit=crc_commit,sha256=crc_sources,
-        facade='ot_hbm_accel_loader_host_addr_crc',parameters=dict(ND=1,ADDR_W=37,STACK_W=2,STACK_BYTES=22500000000,CRC_MATRIX=1)), name='service.loader',status='PROVISIONAL_ISOLATED_CRC_CLOSURE_INPUT',
+        facade='ot_hbm_accel_loader_host_addr_crc',parameters=dict(ENABLE=1,ND=1,ADDR_W=37,STACK_W=2,STACK_BYTES=22500000000,CRC_MATRIX=1)), name='service.loader',status='PROVISIONAL_ISOLATED_CRC_CLOSURE_INPUT',
         default_enabled=False, actual_fit=False, signoff=False, full_parent_adopted=False,
         die_box_xyxy_um=[0,0,outer,outer],core_box_xyxy_um=core,
         outer_area_um2=outer**2, core_area_um2=core_area,

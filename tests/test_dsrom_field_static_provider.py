@@ -60,6 +60,13 @@ class StaticProvider(unittest.TestCase):
         self.assertIn('`ifdef RT_CUT',top)
         self.assertIn('.STATIC_CONTROLS(STATIC_CONTROLS)',top)
 
+    def test_context_parser_correction_is_whitespace_only(self):
+        fixed=(ROOT/'physical/dsrom_static_provider_context/ot_v41_static_provider_context.sv').read_text()
+        failed=(ROOT/'results/rtl/dsrom_field_address_lookahead_20261005/static_context_attempt_r1/failed_context.sv').read_text()
+        self.assertRegex(failed,r"\d+'d\d+\?")
+        self.assertNotRegex(fixed,r"\d+'d\d+\?")
+        self.assertEqual(re.sub(r'\s+','',failed),re.sub(r'\s+','',fixed))
+
     def test_source_image_tamper_refuses(self):
         import shutil
         with tempfile.TemporaryDirectory() as d:

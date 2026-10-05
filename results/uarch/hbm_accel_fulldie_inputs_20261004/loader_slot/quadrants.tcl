@@ -1,5 +1,5 @@
 # Opt-in post-link/post-floorplan hook for ot_hbm_accel_loader_host_addr_crc.
-# ND1 ADDR37 STACK2 STACK_BYTES22500000000 CRC_MATRIX1.
+# ENABLE1 ND1 ADDR37 STACK2 STACK_BYTES22500000000 CRC_MATRIX1.
 # No new clock, stage, credit, ACK, macro or parent floorplan.
 # Call ot_loader_crc_quadrants with a dict of the four exclusive synthesized
 # matrix/input-buffer/hold-mux instance-name lists. Existing CRC FFs are added
