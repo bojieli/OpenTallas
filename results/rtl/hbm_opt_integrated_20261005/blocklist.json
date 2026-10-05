@@ -1,0 +1,189 @@
+{
+  "schema": "opentallas.hbm-opt-integrated-blocklist.v1",
+  "consumer": "Claude HBM die floorplan owner",
+  "floorplan_namespace": "results/rtl/hbm_accel_die_floorplan_20261005/",
+  "profile": "candidate_on (parent-selected production join)",
+  "installed_or_clock_admitted": false,
+  "blocks": [
+    {
+      "lever": "pipelined_issue",
+      "owner": "Euclid",
+      "source_paths": [
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Production cursor-fold and selected combined bench source/fixture binding pending."
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "format_masked_activation",
+      "owner": "Pauli",
+      "source_paths": [
+        "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv",
+        "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Owner leaf available; production XMAP forwarding/selected combined exact executable pending"
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "partial_wave_packing",
+      "owner": "Erdos",
+      "source_paths": [],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Optional: >=1% measured incremental gain over PQ; source/ABI not landed."
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "expert_workgroup",
+      "owner": "Hubble",
+      "source_paths": [
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Baseline files exist; WG implementation and selected native fetch-to-SM gearbox binding pending."
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "fused_su",
+      "owner": "Einstein",
+      "source_paths": [
+        "rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv",
+        "rtl/hbm_accel/su/ot_hbm_accel_su_fused_mreq.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Component exactness exists; selected whole-command finite VM issuer/readback join is required before integrated enable."
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "su_physical",
+      "owner": "Nash",
+      "source_paths": [
+        "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected_flat.sv",
+        "rtl/hdc/ot_hdc_prefix.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Nash12:03 actual KR r2 SS full -114.181664ps/r2r -1.654232ps, FF +2.673556ps: REJECTED. WHOLE_SU_1p2_SSFF_CLOSED=false; no duplicate route or extrapolated-frequency credit."
+      ],
+      "source_replacements": {
+        "rtl/hdc/v41/ot_hdc_fsqrt.sv": "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_f12.sv": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected_flat.sv"
+      },
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "index_path",
+      "owner": "Sagan",
+      "source_paths": [
+        "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv",
+        "rtl/hbm_accel/index/ot_hbm_accel_index_query_source.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": true,
+      "parameters": {
+        "ENABLE": 1,
+        "SOURCE_VM_ENABLE": 1,
+        "NS": 16,
+        "NK": 4
+      },
+      "physical_holds": [
+        "selected loaded SS/FF context unbound"
+      ],
+      "implementation_holds": [],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "endpoint_sm",
+      "owner": "Goodall",
+      "source_paths": [
+        "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv"
+      ],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Selected endpoint/SM closure and receiving parent binding required."
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    },
+    {
+      "lever": "attention",
+      "owner": "Noether",
+      "source_paths": [],
+      "default_enabled": false,
+      "candidate_exact_selected": false,
+      "parameters": null,
+      "physical_holds": [
+        "physical binding absent"
+      ],
+      "implementation_holds": [
+        "Await selected export and minimum-component executable mapping; no ideal provider."
+      ],
+      "source_replacements": {},
+      "slot_macro_channel_binding": null
+    }
+  ],
+  "index_component_geometry": {
+    "NS": 16,
+    "NK": 4,
+    "rank": 0,
+    "global_context": 1048576,
+    "production_VM_CDC_protected_SRAM_and_final_ordered_gather_qualified": false
+  },
+  "area_accounting": "Source inventories only; no new area totals, no zero-cost missing wires/provider/storage. Consume primary model/physical records; unknown installed slots remain null.",
+  "production_join_selection": "results/rtl/hbm_opt_integrated_20261005/production_join_selection.json"
+}
