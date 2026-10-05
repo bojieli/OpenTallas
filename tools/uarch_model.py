@@ -9990,6 +9990,8 @@ def hbm_r5a_protected_pipeline_model():
     # Fixed critical path edge additions: ingress1, descriptor2, landing3,
     # SRAM corrected output2. Credit32 unchanged; steady sectors per PC remains1.
     extra_ns=clk_ns*(1+3+3)+hclk_ns*2
+    r2_path=ROOT / "results/rtl/hbm_accel_r5a_p2_20261005/r2_EXACT/latency_price.json"
+    r2=json.loads(r2_path.read_text()) if r2_path.exists() else None
     return dict(item=6,status='PREBUILD_DEFAULT_OFF',enabled_default=False,
         evidence=dict(path=str(measured.relative_to(ROOT)),sha256=hashlib.sha256(measured.read_bytes()).hexdigest()),
         shape=dict(NPC=pcs,NSM=sms,banks=banks,depth=depth,landing_credit=32,
@@ -10020,7 +10022,8 @@ def hbm_r5a_protected_pipeline_model():
             physical_reservation_mm2=side*side/1e6,requested_outline_um=[side,side],
             existing_service_estimate_mm2=1.4,parent_slot_fit=True,finite_parent_allocation=str(parent_path.relative_to(ROOT)),allocation_owner='Turing'),
         routing=dict(demand_tracks=tracks,requested_channel_width_um=617.76,layers=4,
-            pitch_um=.08,PG_via_reserved_fraction=.2256,clock_tracks=64,
+            native_channel_layers=parent["allocations"][0]["channel_layers"],
+            allocation_tracks_from_committed_parent=True,
             capacity_tracks=capacity,local_reservation_fits=tracks<=capacity,
             actual_parent_residual_tracks=capacity-tracks,parent_channel_fit=True,
             finite_parent_die_mm2=parent["area_mm2"],
@@ -10030,7 +10033,10 @@ def hbm_r5a_protected_pipeline_model():
             DS_token_added_us_upper=40*extra_ns/1000,
             old_measured_gain_us=13.343,remaining_gain_us_lower=13.343-40*extra_ns/1000,
             golden_sector_sequence_unchanged=True,steady_PC_sectors_per_hclk=1,
-            bounds_analytical_until_changed_source_bench=True),
+            bounds_analytical_until_changed_source_bench=True,
+            prior_increment_estimate_is_not_verified_upper_bound=True,
+            measured_previous_revision=r2,
+            measured_current_capture_revision=False),
         targets={m:dict(applicable=m in ('qwen_hbm','v41_hbm'),
             token_added_ns_per_fetch=extra_ns if m.endswith('_hbm') else 0)
             for m in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
