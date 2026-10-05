@@ -42,12 +42,15 @@ module ot_dsrom_reindex_list_macro (
  // Protected prefix counts distinguish unwritten storage from valid entries.
  // 'seen' counts accepted writes, 'committed' advances ONLY on actual macro write.
  reg [11:0] seen[0:7], seen_n[0:7], committed[0:7], committed_n[0:7];
- reg wr,wr_n;reg [2:0] ws;reg [10:0] wa;reg [34:0] wd;
+ reg wr,wr_n;reg [2:0] ws,ws_n;reg [10:0] wa,wa_n;reg [34:0] wd;
  wire prefix_ok=(seen[w_slot]==~seen_n[w_slot])&&(committed[w_slot]==~committed_n[w_slot]);
  wire w_ok=prefix_ok&&!(active&&w_slot==active_slot)&&
            ((w_addr==0)||(12'(w_addr)==seen[w_slot]));
  assign active_count=committed[active_slot];
  assign writer_pending=wr||!wr_n;
+ wire [27:0] write_payload=unpack_word(wd);
+ wire write_clean=(ws==~ws_n)&&(wa==~wa_n)&&(syndrome(wd)==0)&&!(^wd)&&
+                  write_payload[27:14]=={ws,wa};
  wire [3:0] rb={r_slot,r_pair[9]};
  wire [3:0] wb={ws,wa[10]};
  wire [127:0] macro_q[0:15];
@@ -60,11 +63,12 @@ module ot_dsrom_reindex_list_macro (
  generate for(b=0;b<16;b=b+1)begin:g_b
   ot_sram_1r1w_512x128_m4_r2c2 u_macro(
    .clk(clk),.r_ce_in(r_re&&rp_good&&!fault&&(rb==b)),.r_addr_in(r_pair[8:0]),.rd_out(macro_q[b]),
-   .w_ce_in(wr&&!wr_n&&!fault&&(wb==b)),.w_addr_in(wa[9:1]),.wd_in(write_word),.w_mask_in(write_mask),
+   .w_ce_in(wr&&!wr_n&&write_clean&&!fault&&(wb==b)),.w_addr_in(wa[9:1]),.wd_in(write_word),.w_mask_in(write_mask),
    .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(14'd0));
  end endgenerate
  reg [69:0] capture[0:15],partial[0:3],joined,checked_word;
- reg [5:0] se,so;reg pe,po;
+ reg [5:0] se,so,se_n,so_n;reg pe,po,pe_n,po_n;
+ reg [13:0] even_n,odd_n;reg r_valid_n;
  reg [4:0] valid_pipe,valid_n;
  reg [3:0] bank_pipe[0:2],bank_n[0:2];
  reg [13:0] echo[0:4],echo_n[0:4];
@@ -77,23 +81,24 @@ module ot_dsrom_reindex_list_macro (
   if(pe&&!ue)begin if(se==0)fe[34]=~fe[34];else fe[se-1]=~fe[se-1];end
   if(po&&!uo)begin if(so==0)fo[34]=~fo[34];else fo[so-1]=~fo[so-1];end
   de=unpack_word(fe);doo=unpack_word(fo);
-  good=(echo[4]==~echo_n[4])&&(masks[4]==~masks_n[4])&&
+  good=(se==~se_n)&&(so==~so_n)&&(pe!=pe_n)&&(po!=po_n)&&(echo[4]==~echo_n[4])&&(masks[4]==~masks_n[4])&&
        (!masks[4][0]||(!ue&&de[27:14]==echo[4]))&&
        (!masks[4][1]||(!uo&&doo[27:14]==(echo[4]|14'd1)));
  end
  always @(posedge clk)begin
   if(!rst_n)begin
-   wr<=0;wr_n<=1;fault<=0;valid_pipe<=0;valid_n<=5'b11111;r_valid<=0;corrected<=0;
+   wr<=0;wr_n<=1;fault<=0;valid_pipe<=0;valid_n<=5'b11111;r_valid<=0;r_valid_n<=1;corrected<=0;
    for(i=0;i<8;i=i+1)begin seen[i]<=0;seen_n[i]<=12'hfff;committed[i]<=0;committed_n[i]<=12'hfff;end
   end else begin
    wr<=w_v&&w_ok&&!fault;wr_n<=!(w_v&&w_ok&&!fault);
-   if(wr==wr_n||valid_pipe!=~valid_n)fault<=1;
+   if(wr==wr_n||valid_pipe!=~valid_n||(wr&&!write_clean)||r_valid==r_valid_n||
+      (r_valid&&((r_even!=~even_n)||(r_odd!=~odd_n))))fault<=1;
    if(w_v&&!w_ok)fault<=1;
    if(w_v&&w_ok&&!fault)begin
-    ws<=w_slot;wa<=w_addr;wd<=encode({w_slot,w_addr,w_block});
+    ws<=w_slot;ws_n<=~w_slot;wa<=w_addr;wa_n<=~w_addr;wd<=encode({w_slot,w_addr,w_block});
     seen[w_slot]<=12'(w_addr)+1'b1;seen_n[w_slot]<=~(12'(w_addr)+1'b1);
    end
-   if(wr&&!fault)begin committed[ws]<=12'(wa)+1'b1;committed_n[ws]<=~(12'(wa)+1'b1);end
+   if(wr&&!wr_n&&write_clean&&!fault)begin committed[ws]<=12'(wa)+1'b1;committed_n[ws]<=~(12'(wa)+1'b1);end
    if(r_re&&!rp_good)fault<=1;
    valid_pipe<={valid_pipe[3:0],r_re&&rp_good&&!fault};
    valid_n<={valid_n[3:0],!(r_re&&rp_good&&!fault)};
@@ -108,11 +113,13 @@ module ot_dsrom_reindex_list_macro (
    for(i=0;i<4;i=i+1)partial[i]<=capture[4*i+bank_pipe[1][1:0]];
    joined<=partial[bank_pipe[2][3:2]];
    checked_word<=joined;se<=syndrome(joined[34:0]);so<=syndrome(joined[69:35]);pe<=^joined[34:0];po<=^joined[69:35];
+   se_n<=~syndrome(joined[34:0]);so_n<=~syndrome(joined[69:35]);pe_n<=!(^joined[34:0]);po_n<=!(^joined[69:35]);
    r_valid<=valid_pipe[4]&&(valid_pipe==~valid_n)&&good&&!fault;
+   r_valid_n<=!(valid_pipe[4]&&(valid_pipe==~valid_n)&&good&&!fault);
    corrected<=valid_pipe[4]&&good&&!fault?{po&&masks[4][1],pe&&masks[4][0]}:2'd0;
    if(valid_pipe[4]&&!good)fault<=1;
    if((valid_pipe[1]&&(bank_pipe[1]!=~bank_n[1]))||(valid_pipe[2]&&(bank_pipe[2]!=~bank_n[2])))fault<=1;
-   if(valid_pipe[4]&&good&&!fault)begin r_even<=de[13:0];r_odd<=doo[13:0];end
+   if(valid_pipe[4]&&good&&!fault)begin r_even<=de[13:0];even_n<=~de[13:0];r_odd<=doo[13:0];odd_n<=~doo[13:0];end
   end
  end
 endmodule
