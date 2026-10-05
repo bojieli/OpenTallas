@@ -9129,3 +9129,9 @@ def hbm_attn_m6h1_replication_model():
                 adopted=False, gain_claim=None,
                 source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                                for p in (leaf_path, corner_path, die_path, macro_path)})
+
+
+def dsrom_v9_field_boundary_model():
+    """Source-owned enclosing field clock/load terms; no invented arrivals."""
+    from dsrom_v9_field_boundary import model
+    return model(Path(__file__).resolve().parents[1])
