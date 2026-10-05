@@ -30,6 +30,8 @@ def main():
     ys += [f'hierarchy -check -top {top}',f'synth -top {top} -flatten',
            f'dfflibmap -liberty {w}/seq_ss.lib',
            'abc '+ ' '.join('-liberty '+str(p) for p in libs['ss'])+' -D 833.333333333333',
+           *[f'read_liberty -lib {p}' for p in libs['ss']],
+           f'write_rtlil {w}/mapped.precheck.il',
            'check -assert', 'splitnets -ports', 'opt_clean',
            f'tee -o {w}/stat.json stat -json '+ ' '.join('-liberty '+str(p) for p in libs['ss']),
            f'write_json {w}/mapped.json', f'write_verilog -noattr -noexpr {w}/mapped.v']
@@ -83,7 +85,7 @@ def main():
             p=subprocess.Popen(cmd,stdout=out,stderr=subprocess.STDOUT,cwd=ROOT);item['pid']=p.pid;write(w/'record.json',record);rc=p.wait()
         log=(w/f'{name}.log').read_text(errors='replace')
         item.update(returncode=rc,elapsed_s=time.monotonic()-start,log_sha256=sha(w/f'{name}.log'),status='TERMINAL')
-        item['errors']=re.findall(r'^(?:ERROR|Error:).*',log,re.M)
+        item['errors']=re.findall(r'^(?:\[[^]]+\] )?(?:ERROR|Error:).*',log,re.M)
         item['warnings']=re.findall(r'^Warning:.*',log,re.M)
         item['worst_slack_ps']=re.findall(r'worst slack\s+([-+0-9.eE]+)',log)
         record['child_maxrss_KiB']=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
