@@ -1,0 +1,95 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/6_1_fill.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/6_1_fill.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+write_db /work/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/6_final.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs_c0r16_h30s40/base/6_final.sdc
+Deleted 0 routing obstructions
+[INFO RCX-0431] Defined process_corner X with ext_model_index 0
+[INFO RCX-0029] Defined extraction corner X
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0436] RC segment generation ot_v41_pqc_spine_screen (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 2490174 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_v41_pqc_spine_screen ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 10% of 2555446 wires extracted
+[INFO RCX-0442] 17% of 2555446 wires extracted
+[INFO RCX-0442] 23% of 2555446 wires extracted
+[INFO RCX-0442] 30% of 2555446 wires extracted
+[INFO RCX-0442] 36% of 2555446 wires extracted
+[INFO RCX-0442] 43% of 2555446 wires extracted
+[INFO RCX-0442] 50% of 2555446 wires extracted
+[INFO RCX-0442] 55% of 2555446 wires extracted
+[INFO RCX-0442] 63% of 2555446 wires extracted
+[INFO RCX-0442] 73% of 2555446 wires extracted
+[INFO RCX-0442] 78% of 2555446 wires extracted
+[INFO RCX-0442] 83% of 2555446 wires extracted
+[INFO RCX-0442] 89% of 2555446 wires extracted
+[INFO RCX-0442] 94% of 2555446 wires extracted
+[INFO RCX-0442] 100% of 2555446 wires extracted
+[INFO RCX-0045] Extract 346621 nets, 2836748 rsegs, 2836748 caps, 3519997 ccs
+[INFO RCX-0042] 100000 nets finished
+[INFO RCX-0042] 200000 nets finished
+[INFO RCX-0042] 300000 nets finished
+[INFO RCX-0443] 346621 nets finished
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : WC
+Total power      : 2.96e-01 W
+Supply voltage   : 6.30e-01 V
+Worstcase voltage: 6.25e-01 V
+Average voltage  : 6.29e-01 V
+Average IR drop  : 6.64e-04 V
+Worstcase IR drop: 4.59e-03 V
+Percentage drop  : 0.73 %
+######################################
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : WC
+Total power      : 2.96e-01 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 4.07e-03 V
+Average voltage  : 6.65e-04 V
+Average IR drop  : 6.65e-04 V
+Worstcase IR drop: 4.07e-03 V
+Percentage drop  : 0.65 %
+######################################
+Cell type report:                        Count        Area
+  Fill cell                             546855    61202.67
+  Tap cell                                9556      278.65
+  Tie cell                                3804      166.39
+  Clock buffer                            4526     1636.42
+  Timing Repair Buffer                   74380     6148.81
+  Inverter                               33022     1497.41
+  Clock inverter                          1426      170.43
+  Sequential cell                        51334    15313.52
+  Multi-Input combinational cell        177535    17375.35
+  Total                                 902438   103789.64
+Report metrics stage 6, finish...
+
+==========================================================================
+finish report_design_area
+--------------------------------------------------------------------------
+Design area 42587 um^2 41% utilization.
+[WARNING GUI-0076] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/work/tmp/runtime-root'
+Elapsed time: 14:16.06[h:]min:sec. CPU time: user 959.05 sys 52.71 (118%). Peak memory: 9286140KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+6_report                                856           9068                  N/A
