@@ -8577,6 +8577,40 @@ def dsrom_wfc_decoded_read_price(maxu=866, nw=21, group_size=32):
         scope='RD0 decoded selects -> same RD1 old-data read -> same RD2 group capture -> same EX; invalid user returns zero; same-edge writes retain read-before-write semantics')
 
 
+def dsrom_wfc_parent_cut_price():
+    """Native parent controller/router/visibility cut, before elaboration.
+
+    Reuses the real NP3/BUF4/DESTS64 router and two-edge reset release.
+    Completion/configuration and VM/prompt producers remain explicit ports;
+    no artificial registers or fabricated completion/coverage are added.
+    The cut alone cannot qualify those external producer timing boundaries.
+    """
+    np, fw, depth, dests = 3, 512, 4, 64
+    ff = np*depth*(fw+1+np) + np*(2*2+3+1) + dests*np
+    ff += 2*np + 2*np*np + 2 + np*(fw+2) + 33 + 2
+    nand2 = 4*ff + 2*np*np*fw + 256
+    buffers = 3*ff
+    gross = ff*0.37908 + nand2*0.08748 + buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.parent_cut.v1',
+        source_parent='rtl/dsrom_sys/wavefront_parent/native/ot_chip_v41x_die_owner_safe_c8.sv',
+        router=dict(NP=np,FW=fw,BUF=depth,DESTS=dests,INPUT_READY_VALID=1),
+        context_FF_bits_preoptimization=ff, NAND2_reservation=nand2,
+        buffer_reservation_cells=buffers,gross_context_cell_reservation_um2=gross,
+        total_context_growth_budget_um2=2*gross,
+        controller_reservation='dsrom_wfc_decoded_read_price plus retained measured controller baseline; no area removal credit',
+        MACs_per_cycle=0,replicas=1,new_memory_ports=0,
+        existing_router_payload_bits_per_edge=np*fw,
+        existing_router_payload_bytes_per_edge=np*fw/8,
+        new_external_boundary_bits_per_edge=0, new_pipeline_edges=0,
+        native_router_empty_header_latency_edges=3,
+        native_reset_release_edges=2,single_user_latency_delta_cycles=0,
+        actual_external_producer_launch_clocks=None,actual_pin_loads=None,
+        routing_tracks_required=None,channel_capacity=None,parent_floorplan_slot=None,
+        route_build_ready=False,SS_FF_closed=False,adopted=False,
+        target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+        scope='source-faithful minimum parent cut; completion/config/VM/prompt caller still require actual timing binding; no S81 native wiring or authority change')
+
+
 def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
                                    measured_stage_cycles=73670):
     """Unselected one-edge completion alternatives, priced on a retained trace.
