@@ -1,0 +1,117 @@
+{
+  "scope": "Default-off native HBM index implementation and new source/quant packing component gates. Entire scorer/select parent numerical qualification and current SU/provider/SSFF remain open.",
+  "component_results": [
+    {
+      "name": "query_packing_a09_r1",
+      "source_commit": "a09c790476a2b67460c1f08e95395425488a3b87",
+      "exit": 0,
+      "head_receipts": 64,
+      "frames": 2,
+      "actual_gate": "native FP4 packing, hold, bubbles, ordered input and malformed refusal",
+      "host": "ot-epyc1tb"
+    },
+    {
+      "name": "native_vm_query_9a_r2",
+      "source_commit": "9a255f79ebf59d516919278598a8629a9e733af4",
+      "exit": 0,
+      "head_receipts": 32,
+      "FP32_blocks": 128,
+      "VM_reads": 129,
+      "wrong_generation": "response not accepted; pending read retained",
+      "host": "ot-epyc2",
+      "source_bytes": "original entering Q prefix plus retained actual native O tails and BF16-rounded IWo. Expected AQ bytes comparator ONLY.",
+      "historical_native_source": "N64 M16 BCAST4 RET5 ML4 AL3, not current BCAST7 RET8 perf/context."
+    }
+  ],
+  "preserved_failures": [
+    {
+      "name": "native_vm_query_launch_r1",
+      "exit": 2,
+      "phase": "launch before compilation",
+      "cause": "--no-checkout sparse worktree not materialized; fixed checkout in r2 without any DUT/SU/golden duplicate"
+    }
+  ],
+  "native_parent": {
+    "source_commit": "fcbd1aed7c3f5083e2c8ea246eb3e9ec18391fd2",
+    "module": "ot_hbm_accel_index_path",
+    "ENABLE_default": 0,
+    "SOURCE_VM_ENABLE_default": 0,
+    "source_choice": "SOURCE_VM_ENABLE=1 selects actual matched native VM client; otherwise actual external native SU stream, never an expected payload source",
+    "instances": [
+      "u_source",
+      "u_index_q",
+      "u_index_scores",
+      "u_topk_local",
+      "u_cand_local"
+    ],
+    "geometry": {
+      "NS": 16,
+      "NK": 4,
+      "Q": 4,
+      "W": 16,
+      "IH": 32,
+      "head_dim": 128,
+      "IW": 20,
+      "FPL": 7,
+      "FML": 5,
+      "QL": 5
+    },
+    "held_identity_bits": {
+      "job": 32,
+      "generation": 4,
+      "position": 20,
+      "rank": 7
+    },
+    "final_select": "blocked on Claude ordered gather for actual TP96 striped global IDs. No 419-cycle credit.",
+    "score_publication": "Raw scored tap is a required explicitly accepted third consumer; actual native candidate maxima/IDs are separate cand_out_* ports.",
+    "quarter_input": "Owned ordinal floor(global_ID/8/96) must lie in quarter range342*q..342*(q+1)-1; malformed source metadata held rather than accepted.",
+    "physical_candidate_memory": "Current child full1024x68 logical source. Parent bounded171-line ingress is implemented, but fullshape bound, protected macro/placement/receiver clock not qualified or installed.",
+    "retention": "Both selectors accepted every quarter-last, both busy drained, and actual downstream candidate_drained required. No linkaccept/phaseend release substitute.",
+    "fullgeometry_elaboration": "TERMINAL exit0 at full NS16/NK4/Q4: lint-only, not runtime; remote full log retained /srv/opentallas-scratch/jobs/sagan-hbm-index-elab-fcbd1aed7-r1/elab/elaborate.log",
+    "latest_guard_note": "Latest full8-key group guard post-fcbd is not covered by this historical fcbd elaboration; changed-source full-scorer numeric gate remains required.",
+    "fullshape_partition_numerical_qualified": false,
+    "elaboration_resources": {
+      "wall_seconds": 1389.185,
+      "reported_allocated_MB": 111221.051,
+      "generated_CPP_MB": 3803.008,
+      "executable_created": false,
+      "source_commit": "fcbd1aed7c3f5083e2c8ea246eb3e9ec18391fd2"
+    }
+  },
+  "actual_VM_source_binding": {
+    "original_q_base": 64,
+    "rotated_q_base": 4160,
+    "rotated_tail_first_word": 4224,
+    "scaled_weight_base": 8288,
+    "tail_words": 64,
+    "producer_opcode_export": "results/rtl/hbm_su_fused_compiler_20261005/index_q_L20.json",
+    "export_origin_commit": "0ef2994d5",
+    "base_translation": "rotated_q_base = saved RoPE obase - (128 - saved nin); literal obase4224 minus64. Unwritten O prefixes never read.",
+    "request_words": 32,
+    "outstanding": 1,
+    "response_bits": 1024,
+    "min_serial_read_edges": 386,
+    "VM_physical_assembler_and_CDC_qualified": false
+  },
+  "complete_index_qualified": false,
+  "full_token_qualified": false,
+  "SS_FF_1p2GHz_closed": false,
+  "physical_build_admitted": false,
+  "adopted": false,
+  "artifact_hashes": {
+    "native_vm_query_9a_r2/build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "native_vm_query_9a_r2/inputs.json": "161e676fea06006a5f45f578364f1b764363b96ab4c78db682b353973539deaa",
+    "native_vm_query_9a_r2/runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "native_vm_query_9a_r2/runtime.log": "e66b40cee8e939d0c855bc166f92b80d4df0b345cba69c2487bf47a61ec368da",
+    "native_vm_query_launch_r1/exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "native_vm_query_launch_r1/launch.log": "e9dde7d0276fa482cec56d9825e6ed8e59d4cebc5b638dc8a38d9fa34385579a",
+    "query_packing_a09_r1/build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "query_packing_a09_r1/inputs.json": "aaa725c73672712fb5d3ca7aec8208b2e0d07d4c8870d6717ba2cc912519b765",
+    "query_packing_a09_r1/runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "query_packing_a09_r1/runtime.log": "75aa99e1041b2a57ef7d185b60b8c3f889c382d4be3d72503d9624771831cc33",
+    "full_parent_fcbd_elab/source.json": "5158716524aab00aece9d91a91a22f92ef21c87d5728c9176c266d7c09a4b04e",
+    "full_parent_fcbd_elab/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "full_parent_fcbd_elab/summary.log": "d753213e09ed30789444d1a7d66c43edf07c198e3eabc824bc5cf6aacb0f5a54"
+  },
+  "scoreboard_check": "No new headline/spec rows; check not usable in sparse checkout (missing unrelated cited artifacts). Shared main checkout read-only reference also lacks63 cited artifacts/pointers at this spec. Generated failure outputs kept /tmp/sagan-hbm-index-scoreboard-check-20261005; published scoreboard untouched."
+}

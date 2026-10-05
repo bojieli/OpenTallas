@@ -57,6 +57,9 @@ def main():
         f'hierarchy -check -top {TOP}', f'synth -top {TOP} -flatten',
         'dfflibmap -liberty ' + str(ss[3]),
         'abc ' + libargs + ' -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -D 833.333333',
+        # Match the standard ASAP7 ORFS mapping front door. Physical fanout
+        # repair supplies local ties; never reinterpret literals as PG rails.
+        'hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L',
         'splitnets -ports', 'opt_clean -purge',
         f'tee -o {work}/stat.txt stat ' + libargs,
         f'write_verilog -noattr {work}/mapped.v', f'write_json {work}/mapped.json', ''])
