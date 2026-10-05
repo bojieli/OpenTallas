@@ -36,7 +36,7 @@ TB = "tb_hbm_accel_sm_pq_seq"
 SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
     "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv",
     "rtl/test/tb_hbm_accel_sm_pq_seq.sv"]
-SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
+SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_bd_col_prefix.sv", "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 
@@ -78,10 +78,13 @@ def seq_ops(name, serial):
 def cmd_run(a):
     import hdc_golden_v41 as V2
     V2.set_arith("chunk8")
+    if a.bd_prefix and not a.smh:
+        raise SystemExit("--bd-prefix requires --smh")
+    suffix = "_bp1" if a.bd_prefix else ""
     seqname = a.seq
     ops, dep = seq_ops(seqname, a.serial)
     rng = np.random.default_rng(20261005)
-    d = Path(a.workdir) / (seqname + ("_serial" if a.serial else "") + f"_haz{a.haz}_g{a.g1asb}" +
+    d = Path(a.workdir) / (seqname + ("_serial" if a.serial else "") + f"_haz{a.haz}_g{a.g1asb}" + suffix +
                            (f"_smh_a{a.active}" if a.smh else ""))
     d.mkdir(parents=True, exist_ok=True)
     xb = -(-a.active * MS.XC // 2048)
@@ -108,8 +111,8 @@ def cmd_run(a):
     (d / "lines.hex").write_text("\n".join(lines) + "\n")
     (d / "x.hex").write_text("\n".join(xw) + "\n")
     params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
-                  HAZ=a.haz, G1ASB=a.g1asb)
-    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else ""))
+                  HAZ=a.haz, G1ASB=a.g1asb, BD_PREFIX=a.bd_prefix)
+    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + suffix + ("_smh" if a.smh else ""))
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
@@ -153,7 +156,7 @@ def cmd_run(a):
                element=("ot_hbm_accel_smh (hierarchical: front / identical leaf tiles / column back ends; pipelined "
                         "issue, G1 select by the producing column)" if a.smh else
                         "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc,
-               active_columns=a.active, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
+               active_columns=a.active, bd_prefix=a.bd_prefix, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
                mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                build_command=cmd, source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest()
@@ -204,6 +207,7 @@ def main(argv=None):
     ap.add_argument("--haz", type=int, default=1)
     ap.add_argument("--g1asb", type=int, default=0, help="1 = as-built leaf G1 select (negative test)")
     ap.add_argument("--serial", action="store_true")
+    ap.add_argument("--bd-prefix", type=int, choices=(0, 1), default=0, help="opt-in SMH kept-prefix rounding successor")
     ap.add_argument("--smh", action="store_true", help="DUT = the hierarchical element ot_hbm_accel_smh")
     ap.add_argument("--expect-fail", action="store_true")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")

@@ -47,6 +47,7 @@ module ot_hbm_accel_smh #(
     parameter integer PIO  = 2,
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
+    parameter integer BD_PREFIX = 0,    // opt-in kept-prefix rounding, same latency
     parameter integer RPT  = 2          // leaves (rows) per hardened tile
 ) (
     input  wire                    clk,
@@ -197,20 +198,20 @@ module ot_hbm_accel_smh #(
                 assign sg2[j*5 +: 5] = SG2;
             end
             if (DEF != 0 && c < NL) begin : g_tw
-                ot_hbm_accel_smh_tile_w u_t (
+                ot_hbm_accel_smh_tile_w #(.BD_PREFIX(BD_PREFIX)) u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
                 .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
                 .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
                 .gout(t_go[T*SUB*GLW +: SUB*GLW]));
             end else if (DEF != 0) begin : g_te
-                ot_hbm_accel_smh_tile_e u_t (
+                ot_hbm_accel_smh_tile_e #(.BD_PREFIX(BD_PREFIX)) u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
                 .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
                 .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
                 .gout(t_go[T*SUB*GLW +: SUB*GLW]));
             end else begin : g_tp
                 ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW),
-                                        .XD(XD), .NBEAT(NBEAT), .TCK(TCK), .A1B(A1B), .A2B(A2B)) u_t (
+                                        .XD(XD), .NBEAT(NBEAT), .TCK(TCK), .BD_PREFIX(BD_PREFIX), .A1B(A1B), .A2B(A2B)) u_t (
                 .clk(clk), .rst_n(rst_n), .xs_a1(sa1), .xs_g1(sg1), .xs_a2(sa2), .xs_g2(sg2),
                 .rin(t_ri[T*TRW +: TRW]), .bin(t_bi[T*BBW +: BBW]), .rout(t_ro[T*TRW +: TRW]),
                 .bout(t_bo[T*BBW +: BBW]), .gin(t_gi[T*TGI +: (TGI > 0 ? TGI : 1)]),
@@ -585,6 +586,7 @@ module ot_hbm_accel_smh_tile #(
     parameter integer XD  = 128,
     parameter integer NBEAT = 13,
     parameter integer TCK = 1,
+    parameter integer BD_PREFIX = 0,
     parameter integer NMG = 32,             // mask bits per one-hot replica
     parameter integer A1B = 9,              // strap bits of the block-dot field offset (its low 11 - A1B bits are 0)
     parameter integer A2B = 7               // strap bits of the BF16 field offset
@@ -632,7 +634,7 @@ module ot_hbm_accel_smh_tile #(
         end
         wire gv, gf; wire [31:0] gy; wire [TAGW-1:0] gt;
         ot_hbm_accel_smh_leaf #(.LBS(LBS), .LSB(LSB), .IL(IL), .TAGW(TAGW), .XD(XD), .NBEAT(NBEAT), .TCK(TCK),
-                                .NMG(NMG), .A1B(A1B), .A2B(A2B)) u_leaf (
+                                .NMG(NMG), .BD_PREFIX(BD_PREFIX), .A1B(A1B), .A2B(A2B)) u_leaf (
             .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
             .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]),
             .c_l(rl[RBW-1 -: CW]), .w_l(rl[XW+1 +: WSW]), .x_ce(rl[XW]), .x_a(rl[XW-1:0]),
@@ -660,6 +662,7 @@ module ot_hbm_accel_smh_leaf #(
     parameter integer XD  = 128,
     parameter integer NBEAT = 13,
     parameter integer TCK = 1,
+    parameter integer BD_PREFIX = 0,
     parameter integer NMG = 32,
     parameter integer A1B = 9,
     parameter integer A2B = 7
@@ -796,10 +799,17 @@ module ot_hbm_accel_smh_leaf #(
     end endgenerate
     generate
         if (TCK != 0) begin : g_k
+            if (BD_PREFIX != 0) begin : g_prefix
+            ot_hbm_accel_bd_col_prefix #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
+                .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+                .ov(bov), .y(by), .otag(btag), .fault(bfault));
+            end else begin : g_legacy
             ot_hbm_accel_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov), .y(by), .otag(btag), .fault(bfault));
+            end
             ot_hbm_accel_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
                 .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
                 .w(iw[LBS*266 +: LSB*16]), .x(ix[LBS*266 +: LSB*16]),
@@ -916,21 +926,21 @@ endmodule
 // the bundle pins on opposite edges, so each needs its own master name in the parent.  _e: row bundles enter west and
 // leave east (tiles right of the front) / results leave east (back ends left of the front); _w: the mirror.
 // ---------------------------------------------------------------------------
-module ot_hbm_accel_smh_tile_e (
+module ot_hbm_accel_smh_tile_e #(parameter integer BD_PREFIX = 0) (
     input  wire clk, input wire rst_n,
     input  wire [17:0] xs_a1, input wire [9:0] xs_g1, input wire [13:0] xs_a2, input wire [9:0] xs_g2,
     input  wire [1635:0] rin, input wire [2068:0] bin, output wire [1635:0] rout, output wire [2068:0] bout,
     input  wire [99:0] gin, output wire [199:0] gout
 );
-    ot_hbm_accel_smh_tile u (.*);
+    ot_hbm_accel_smh_tile #(.BD_PREFIX(BD_PREFIX)) u (.*);
 endmodule
-module ot_hbm_accel_smh_tile_w (
+module ot_hbm_accel_smh_tile_w #(parameter integer BD_PREFIX = 0) (
     input  wire clk, input wire rst_n,
     input  wire [17:0] xs_a1, input wire [9:0] xs_g1, input wire [13:0] xs_a2, input wire [9:0] xs_g2,
     input  wire [1635:0] rin, input wire [2068:0] bin, output wire [1635:0] rout, output wire [2068:0] bout,
     input  wire [99:0] gin, output wire [199:0] gout
 );
-    ot_hbm_accel_smh_tile u (.*);
+    ot_hbm_accel_smh_tile #(.BD_PREFIX(BD_PREFIX)) u (.*);
 endmodule
 module ot_hbm_accel_smh_be_e (
     input  wire clk, input wire rst_n, input wire [199:0] gin, input wire [137:0] qin, output wire [183:0] qout

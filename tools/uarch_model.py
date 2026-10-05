@@ -10505,3 +10505,31 @@ def qwen_rom_stream4_periodic_provider_model():
     """Periodic controller causal paths and protected finite-ring sizing."""
     from qwen_rom_periodic_provider_registration import model
     return model(Path(__file__).resolve().parents[1])
+
+
+def hbm_smh_round_prefix_price():
+    """TileE_b3 observed P5->P6 ripple repair; combinational only, default off.
+
+    Existing measured SMH composition carries all issue, landing and drain edges.
+    Kept prefix changes no edge, port, identity or reduction order. Area below is
+    a conservative gate reservation for the new logic, not a synthesis result.
+    """
+    lanes = 8 * 4 * 2
+    inc_groups = sum(25 - (1 << i) for i in range(5))
+    add_groups = sum(13 - (1 << i) for i in range(4))
+    return dict(schema='opentallas.hbm.smh.round_prefix.price.v1',
+        basis='results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json',
+        replicas=lanes, bterm_latency_cycles=11, accumulator_IL=8,
+        added_cycles=0, added_register_bits=0,
+        MACs_per_cycle_delta=0, memory_bytes_per_cycle_delta=0,
+        boundary_bits_per_cycle_delta=0, boundary_track_delta=0,
+        inc24_prefix_AND_nodes=inc_groups,
+        exponent12_prefix_groups_per_adder=add_groups,
+        parallel_exponent_adders_per_lane=2,
+        new_mux_bits_per_lane=12,
+        new_logic_gate_reservation_per_lane=512,
+        tile_bterm_lanes=4, tile_new_logic_gate_reservation=2048,
+        tile_die_um=[319.68, 509.76],
+        area_and_slot_fit='Map reserved gates using actual WC cells; measure mapping delta before route; no area or fit PASS inferred.',
+        latency_composition_delta_us=0, physical_adopted=False,
+        constraints=dict(period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25))
