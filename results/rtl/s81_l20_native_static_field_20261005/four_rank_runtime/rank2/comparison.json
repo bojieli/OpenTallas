@@ -1,0 +1,34 @@
+{
+  "scope": "rank2 stage37 full native I7/I8 on produced SIM_ONLY I6 XN",
+  "rank": 2,
+  "position": 1048575,
+  "token": 16754,
+  "full_token": false,
+  "exact": true,
+  "results": [
+    {
+      "node": "L20.I7",
+      "rows": 320,
+      "bit_mismatches": 0,
+      "native_output_sha256": "b9a672208902ba09cef779910245d0e00e3b9ac9d76c6529607f4b9104a98e47",
+      "source_template_sha256": "9d2b0d4e62423f0d42b68e14d4dece5c48e8d5f59638f2356829768c639cb222",
+      "first_differences": []
+    },
+    {
+      "node": "L20.I8",
+      "rows": 128,
+      "bit_mismatches": 0,
+      "native_output_sha256": "faca4a8d08b5d3780f6830f9ca05a99f65db952d778a800f2ca3efd03bd84d2a",
+      "source_template_sha256": "35022b0feb6672c8b2efa236f77b9406ac5f36ba81a22b426b9ceb77589c4826",
+      "first_differences": []
+    }
+  ],
+  "input_sha256": "09489d179fd8089130771861da792fcf7dea5368bbe1becaaa56150c53d7818f",
+  "source_inputs_sha256": {
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434"
+  }
+}
