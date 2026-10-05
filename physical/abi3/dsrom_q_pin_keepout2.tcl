@@ -1,3 +1,4 @@
+# v4 (2026-10-05): v3 without the clk pin (clock NDR spacing).
 # v3 (2026-10-04): v2 plus no flank within one half-track of any M5 pin box.
 # v2 (dsrom_q_pin_keepout2.tcl, 2026-10-04): M5 flanks only, 0.096 um deep.  v1 (M4 / M6 over the pin, 0.288 um) left
 # ~136 of ~200 detail-route violations against its own obstructions in every route (Z5a / Z6 / Z7): the element router
@@ -25,6 +26,9 @@ set ot_pins {}
 array set ot_occ {}
 foreach bt [$ot_blk getBTerms] {
     if {[$bt getSigType] in {POWER GROUND}} continue
+    # v4: no keepout at the clock pin (its net is routed under the clock non-default rule's wider spacing, so a flank
+    # at regular spacing is itself a violation: Z10e's 4 DRC; S81 found the clock pin accessible)
+    if {[$bt getName] eq "clk"} continue
     foreach bp [$bt getBPins] {
         foreach box [$bp getBoxes] {
             if {[$box getTechLayer] ne $ot_m5} continue
@@ -53,4 +57,4 @@ foreach p $ot_pins {
         incr ot_n5
     }
 }
-puts "OT_PIN_KEEPOUT pins=[llength $ot_pins] m5_flank=$ot_n5 m4m6=$ot_n46 depth_um=0.096 version=3"
+puts "OT_PIN_KEEPOUT pins=[llength $ot_pins] m5_flank=$ot_n5 m4m6=$ot_n46 depth_um=0.096 version=4"
