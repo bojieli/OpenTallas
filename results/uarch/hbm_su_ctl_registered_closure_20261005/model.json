@@ -43,8 +43,7 @@
     "minimum_setup_window_ps": 416.6666665,
     "setup_uncertainty_ps": 60,
     "hold_uncertainty_ps": 25,
-    "clock_pin_and_inverter_distribution_qualified": false,
-    "clock_pin_capacitance_upper_fF": 407644.06640199997
+    "clock_pin_and_inverter_distribution_qualified": false
   },
   "added_FF_declared_upper": 944509,
   "FF_cell_area_upper_um2": 358044.47172,
@@ -122,7 +121,8 @@
     "kept_local_prefix_wire_bits": 16636,
     "local_flag_target_max_data_fanout": 32,
     "actual_max_data_fanout": null,
-    "dynamic_state_bank_split_complete": false,
+    "dynamic_address_state_bank_split_complete": true,
+    "remaining_counter_flag_fanout_mapped": false,
     "local_flag_banks": 128,
     "new_parent_tracks": 0,
     "local_prefix_wire_capacity_qualified": false,
@@ -179,6 +179,49 @@
     "timing_rows_qualified": false,
     "actual_measured_successor_cycles": null
   },
+  "minimum_physical_context": {
+    "N": 64,
+    "M": 16,
+    "source": "retained ctl64_d760 controller + registered lane/side/reducer endpoint fixture",
+    "full_SU_parent": false,
+    "original_IO_falsepaths": true,
+    "die_area_um": [
+      0,
+      0,
+      760,
+      760
+    ],
+    "core_area_um": [
+      5,
+      5,
+      755,
+      755
+    ],
+    "placement_density": 0.55,
+    "core_area_um2": 562500,
+    "original_mapped_logic_um2": 33343.982,
+    "added_FF_upper": 127669,
+    "added_logic_upper_um2": 9667.706400000001,
+    "clock_inverter_buffer_reserve_um2": 1791.5904,
+    "preserved_hold_buffer_reserve_um2": 4386.6846,
+    "original_CTS_buffer_reserve_um2": 3277.8756000000003,
+    "local_return_stage_boundary_bits": 7770,
+    "projected_local_channel_tracks": 10937.5,
+    "local_track_basis": "one retained local M4/M5 channel at 70% availability; no parent-channel claim",
+    "added_external_ports": 0,
+    "physical_clock_halves_ps": [
+      416.666667,
+      416.666667
+    ],
+    "preserved_uncertainties_ps": [
+      60,
+      25
+    ],
+    "actual_context_clock_qualified": false,
+    "total_cell_area_upper_um2": 100864.60352,
+    "fixture_area_admitted": true,
+    "local_return_tracks_admitted": true
+  },
   "parent_slot_fit": null,
   "SS_setup_ps": null,
   "FF_hold_ps": null,
@@ -186,9 +229,9 @@
   "hold_uncertainty_ps": 25,
   "actual_qualified_rate_comparison": null,
   "source_sha256": {
-    "tools/uarch_model.py": "610434300a2525fc96578da2fbcedc42f13d1c1aacad1163f65506539e304c8b",
+    "tools/uarch_model.py": "d24d8073009b18c9d4046cc92c1c28f205b3c7d3d871e3a8cfa6d91819ed26dc",
     "rtl/hdc/v41x/ot_hdc_v41x_vec_c13.sv": "d0126dfb7b2be34180acdd357ef18f21ad1ba91cbc18dd01bf9c6768d42f8812",
     "rtl/hdc/v41x/ot_hdc_su_ctl_c13_primitives.sv": "262e2e926bc08f2ea766fddc042be06b12afefd0bd6d75b7c055de97d1b22324",
-    "tools/hbm_su_ctl_c13.py": "f1c383406516cf6c53f05a89fe2ab6b0ebe91710dc37fa3b036d3b03e9d0dc8a"
+    "rtl/hdc/v41x/phys/ot_hdc_su_ctl_c13_phys.sv": "151308eeb0a7377fce55158560273e3fc9544f226e4251004b97b8a24bd450e3"
   }
 }
