@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.dsrom-reindex.kc7-model.v1",
+  "selected": false,
+  "default_enabled": false,
+  "parent": "kc6 OPT_KC6=1; actual route FAIL",
+  "parent_source_sha256": "8db9e624bfb3155205b55a7c08b0a600f8c8dac0489b33d4643fa3663d573483",
+  "mechanism": [
+    "precomputed drain seq/left/inuse and rob_ok alternatives",
+    "independent scale/code payload then eligible/ready final hold mux",
+    "kc6 free-running derived cpart and reset-valid mask retained"
+  ],
+  "dimensions": {
+    "NPC": 32,
+    "WB": 128,
+    "DF": 8,
+    "AW": 28,
+    "TAGW": 16,
+    "LENW": 4,
+    "QW": 12,
+    "GS": 8
+  },
+  "compute": {
+    "new_macs_per_cycle": 0,
+    "new_rounding_points": 0
+  },
+  "state": {
+    "added_ff_bits": 0,
+    "added_clock_sinks": 0,
+    "accepted_debt_reset_semantics": "unchanged"
+  },
+  "timing": {
+    "new_edges": 0,
+    "new_cdc": 0,
+    "token_latency_delta_cycles": 0,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "ready_external_side_budget_ps": 166.6,
+    "boundary_checks": "original max AND min groups",
+    "ready_sampled": false,
+    "ss_ff_closed": false,
+    "actual_gate_required": true
+  },
+  "ports": {
+    "new_bits_per_cycle": 0,
+    "new_bytes_per_cycle": 0,
+    "request_per_pc_bits": 49,
+    "request_ready_per_pc_bits": 1,
+    "response_control_per_pc_bits": 21,
+    "response_ready_per_pc_bits": 1,
+    "response_payload_bytes_per_pc": 32,
+    "drain_bits": 71,
+    "drain_ready_bits": 1,
+    "list_data_bits": 28,
+    "list_address_bits": 10,
+    "list_enable_bits": 1
+  },
+  "replicas": {
+    "control_per_stack": 1,
+    "stacks_per_rank": 4,
+    "ranks": 4,
+    "request_slices_per_pc": 6,
+    "payload_bits_per_slice": 8,
+    "drain_state_slices": 9,
+    "drain_bits_per_slice": 4,
+    "rob_predicate_slices": 1
+  },
+  "construction": {
+    "arithmetic_bits": 84,
+    "drain_mux_bits": 111,
+    "rob_comparator_bits": 36,
+    "payload_mux_bits": 4608,
+    "local_predicate_allowance": 202,
+    "gross_nand2_equivalents": 22488,
+    "gross_um2": 1967.25024,
+    "footprint_basis": "same kc6 NAND2 footprint 0.08748um2; no TT timing transfer",
+    "removed_logic_credit_um2": 0,
+    "mapped_buffers_and_net_delta_um2": null
+  },
+  "slot": {
+    "core_um2": 93630.5,
+    "max_cell_fraction": 0.4,
+    "max_cells_um2": 37452.2,
+    "measured_kc6_cells_um2": 34279.5,
+    "gross_plus_baseline_um2": 36246.75024,
+    "remaining_cts_buffer_mapping_budget_um2": 1205.44976,
+    "fit_verified": false,
+    "parent_die_reservation": false
+  },
+  "routing": {
+    "new_arithmetic_candidate_nets": 84,
+    "new_payload_candidate_nets": 1536,
+    "request_ready_final_mux_loads_per_pc": 48,
+    "drain_ready_mux_loads": 37,
+    "required_added_tracks": null,
+    "available_tracks": null,
+    "acceptance": "same core/budgets; zero DRC antenna slew cap fanout; actual channel fit"
+  },
+  "admission": "one original semantic gate then one extracted contextual route; no adoption before complete closure"
+}

@@ -286,7 +286,10 @@ module tb_wf_ctrl_equiv;
             (SOURCE && (fin_cyc[0] == 0 || fin_cyc[1] == 0 || fault_cyc[0] != 0 ||
                         ok_n[0] != USERS * (PLEN + GEN - 1) || ok_n[1] != USERS * (PLEN + GEN - 1))) ||
             (!SOURCE && iss_n[0] != iss_n[1]))
-            $display("EQUIV FAIL");
+            begin
+                $display("EQUIV FAIL");
+                $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+            end
         else
             $display("EQUIV PASS");
         $finish;
