@@ -8889,7 +8889,7 @@ def hbm_w2_publication_model():
              root / codec_rel, root / 'tools/hbm_accel_sm_v_floorplan.py',
              root / 'results/floorplan/hbm_gpu/v41_hbm_die.json']
     # Source-pinned minimum component measurement; no connected-parent replay.
-    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS'
+    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS'
     candidate = json.loads((candidate_dir / 'result.json').read_text())
     for name, expected in candidate['artifact_sha256'].items():
         if hashlib.sha256((candidate_dir / name).read_bytes()).hexdigest() != expected:
@@ -9014,9 +9014,40 @@ def hbm_w2_publication_model():
             measured_calendar_scope='same four-row inputs/stalls; arrival-seat schedule differs; delta is observed calendar, not sum of cut inventory',
             release_181_plus_planned_edges_is_not_a_measurement=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        parent_boundary_requirements=dict(
+            consumer_owner='Turing 01a10dba-5786-7d01-b636-797f591b5657',
+            implemented_instance='g_on.g_die[d].u_w2_sink.transaction_pipeline.u_pipe',
+            source='rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv',
+            source_state_words=78, source_clocked_bits=5616, source_async_root_POR_bits=5616,
+            state_bits_are_preoptimization=True, protection_representation='one72bit W6 codeword per64bit stripe; no independent TMR credit',
+            state_sequence=['IDLE','META','CAPTURE','SYNDROME','CHECK','CHECKED_CAPTURE','BUILD_WRITE','WRITE','WAIT_WRITE','ACK_FENCE','BUILD_READ','READ','WAIT_READ','RESPONSE_CHECK','VERIFIED_FENCE','COMPLETION_FENCE','DONE','FAIL'],
+            boundary_inputs_bits=dict(clk=1,por_n=1,owned=1,installed=1,reserve_v=1,pair_op=1,
+                rows_a=2,rows_b=2,op_a=32,op_b=32,base_a=32,limit_a=32,base_b=32,limit_b=32,
+                provider_tag=16,frame=73,result_v=1,result_op=32,result_row=12,result_data=256,
+                native_done=1,retire_v=1,req_r=1,rsp_v=1,rsp=273),
+            boundary_outputs_bits=dict(reserve_r=1,source_permit=1,retained=1,done=1,quiet=1,fault=1,
+                retire_r=1,req_v=1,req=337,rsp_r=1),
+            internal_payload_identity_cut_bits=504, external_provider_data_bits=610,
+            ingress_payload_replication=4, result_callback_ready_exists=False,
+            ingress_capture_during_CE_required=True, outstanding_provider_requests=1,
+            loaded_distribution_needs=['clock/POR distribution to up to5616 preoptimization FF bits',
+                'CTRL slot/arrival-seat decoded enables and four-seat504bit select paths',
+                'normal/fault permission tree from all78 CE/DUE checks to handshake gates and state/data capture enables',
+                '337bit stable held request and273bit response matched-consumption boundary',
+                '73bit frame and owner/installed permission boundary with actual source/receiver loads'],
+            measured_loaded_fanout=None, measured_pin_capacitance_fF=None,
+            buffer_tree_load7_is_analytical_only=True,
+            needed_clock_contract=['bound clk_sm domain period and SS60ps/FF25ps uncertainty',
+                'actual propagated clock phase/insertion/skew at child',
+                'per-boundary input/output delays, clock relation and receiver capacitance',
+                'root POR remains distinct from CP warm reset/quarantine'],
+            physical_reservation_requirements=['finite child bbox and placement capacity including CTS/PG/hold repair',
+                'instance/replica mapping and actual parent source pin',
+                'channel length, layer/pitch, residual track allocation after competing trunks'],
+            no_slot_or_clock_fit_claim=True),
         measured_successor_component=candidate,
-        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json',
-            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept', 'payload_CE_with_accepted_debt'],
+        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json',
+            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept', 'payload_CE_with_accepted_debt', 'selected_checked_payload_CE_with_accepted_debt'],
             assertions='accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high',
             warm_hook_in_component=False,
             immutable_parent_source='inputs/immutable_parent.sv (f835c8641)',
