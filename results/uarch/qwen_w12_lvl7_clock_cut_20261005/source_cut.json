@@ -84,6 +84,75 @@
     "retained_copy": "selected_top.args.f",
     "sha256": "3f594f557fe8261053f73a8130e411d534f517c62c7209ce7d068c7cd2fee2de"
   },
+  "service_clock_binding": {
+    "accepted_scale_protocol": "hold original address/bankselect/owner metadata until service accepts; match and capture actual returned data once; positive capture capacity before next release; serial consumes only captured operand; no stale weight/scale hold assumption",
+    "capture_CDC_FF_and_mux_price": null,
+    "controller_clock_decision": {
+      "controller_startup_and_HBM_CDC_owner": "Ampere",
+      "gated_average_not_periodic_clock": true,
+      "implemented_in_retained_source": false,
+      "no_automatic_related_3_4_credit": true,
+      "requested_periodic_hclk_ns": 1.024,
+      "retained_literal_average_ns": 1.024,
+      "retained_literal_minimum_interval_ns": 0.833333
+    },
+    "controller_source_owner": "Ampere; no Goodall controller edits",
+    "landing_source_owner": "Peirce selected inline FILL8",
+    "logical_clock_source_owner": "Goodall W12 common advance and original upper tree wrapper",
+    "physical_admission": false,
+    "related_pair_only": {
+      "VCO_hz": 3600000000,
+      "no_falsepaths": true,
+      "serial_period_ns": 1.1111111111111112,
+      "stream_period_ns": 0.8333333333333334
+    },
+    "scale_provider": {
+      "additional_wire_and_buffer_cap_fF": null,
+      "banks_per_port": 13,
+      "clock_pin_cap_fF": {
+        "ff": 6472.8768,
+        "ss": 5418.6912
+      },
+      "existing_area_mm2_once": 4.782303452159999,
+      "macro_output_bits_per_macro": 266,
+      "per_accept_address_bits": 1152,
+      "per_accept_payload_bytes": 1536,
+      "ports": 48,
+      "remote_root": "/srv/opentallas/repos/laplace-qwen-tagged-accept1-a60af57e4",
+      "replicas": 624,
+      "scale_addr_bits": 1152,
+      "scale_gre_bits": 48,
+      "scale_q_payload_bits": 12288,
+      "scale_re_bits": 1,
+      "scope": "48 scale ports only; does not cover all field tile clocks",
+      "used_payload_bits_per_macro": 256,
+      "view_geometry_selected": "v1 exact retained; no v2 switch",
+      "views": {
+        "ot_rom_4096x266_m8.lef": {
+          "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+          "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+        },
+        "ot_rom_4096x266_m8.v": {
+          "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+          "sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b"
+        },
+        "ot_rom_4096x266_m8_ff.lib": {
+          "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib",
+          "sha256": "d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346"
+        },
+        "ot_rom_4096x266_m8_ss.lib": {
+          "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib",
+          "sha256": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805"
+        }
+      }
+    },
+    "service_to_logical_clock_loaded_SS_FF": null,
+    "source_manifest": "results/rtl/qwen_rom_runtime_pc_context_20261005/source_manifest.json",
+    "source_manifest_sha256": "c4f70c8779d957a7f9136d434fec92fca72c46d63684471ad37e171ddd072f3f",
+    "source_record": "results/rtl/qwen_rom_runtime_pc_context_20261005/model_with_retained_macro_binding_r2.json",
+    "source_record_sha256": "a243996f459d79b9c568ec9cc9e2c4cfe46d6f4b95c04ce79be43bbebd6c645d",
+    "ungated_clock_contract": "controller/HBM capture and service/cap clocks continue during logical advance pause; no clear of accepted memory debt"
+  },
   "source_extraction": {
     "accepted_beat": "payload24576 + canonicaltag167 + valid1 + matchedfault1",
     "consumer": "existing upper g_lvl[8..13], post-scale/result/AMAX on serial domain",
