@@ -1,6 +1,7 @@
 # HBM accelerator executable composition inputs
 
-Owner: Kant (input compiler only). Sagan confirmed no active whole-die
+Owner: Kant (joined physical model and placement inputs); Sagan owns current
+measured-target source/port/width/hierarchy selection. Sagan confirmed no active whole-die
 assembler at 03:47:26; component owners and shared inventories stay unchanged.
 Claude owns the full-target source selection and any structural design change.
 
@@ -15,7 +16,7 @@ python3 tools/hbm_accel_fulldie_inputs.py --target qwen --out /path/to/new/input
 ```
 
 Current inputs return exit 2 and a machine-readable BLOCKED result listing
-the four missing binding groups. They create no placement output directory.
+the missing binding groups including service.loader. They create no placement output directory.
 After the authority supplies explicit records, replace only the target's
 `selected_instances` and `unified_model` references with repository-relative
 `{path, sha256, pointer}` references (pointer is optional JSON Pointer).
@@ -112,3 +113,66 @@ instance names and master identity before placing anything. The composition JSON
 carries exact ports, boundaries, layer reservations and prices for the physical
 owner's existing flow. It always says `signoff: false`; emitting inputs is not
 RTL exactness, SS/FF closure, routability, power or performance evidence.
+
+## Current measured-target physical join
+
+`python3 tools/hbm_accel_physical_join.py --target deepseek` (or `qwen`)
+emits integration demands from pinned Sagan component authority, the actual DS
+composition, Qwen **TP4 measured** record, captured SM context, PHY metadata and
+Turing's existing unified-model loader geometry price. This reads existing
+results; it performs no RTL measurement or model replay.
+
+The DS candidate 32-SM footprint/macro sum is explicitly conditional: captured
+SM source 3b4 differs from current measured component source 88e6. It cannot be
+charged as adopted until Sagan resolves source compatibility. Qwen TP4 measured
+NWS5/TWS38/ORD7 supersedes the reconciliation common NWS4/TWS30/ORD4 tuple for
+that measurement; final fmax successors still require Sagan selection. No DS
+SM geometry is transferred to Qwen's 421.5 MiB storage residence.
+
+`physical_join.allocation` can point to a pinned JSON record keyed by target.
+Each target supplies existing `service_box_um`, `loader_box_um` (both x/y/w/h),
+`parent_budget_name: "service"`, `parent_includes_loader_area: true`,
+`blocked_area_um2`, `repair_clock_buffer_area_um2`, `unallocated_service_area_um2`,
+and `fold_regions` for crc_got_load, crc_got_store, vcrc_load, mcrc_store.
+The named allocation is **service.loader**, contained in the existing service
+budget: loader slot area is charged once, while new exclusive corridor area is
+charged against remaining service capacity. The isolated 68379.6 um2 vehicle
+is never used as the parent rectangle.
+
+`corridors` names MREQ, RSP, DMA64 and CRC with `box_um`, layers containing
+actual `direction`, `pitch_um`, `reserved_tracks`, `port_coordinates_um`,
+`additional_exclusive_area_um2`, `clock_period_ns`, `wire_cycles`, `cdc_cycles`,
+`credit_cycles` and `exposed_token_traversals`. This joins physical width/cut
+capacity and incremental exposed latency, without average-throughput discounts
+or zero-cost clock repair. The CRC demand remains the conservative 35520-track
+all-cut bound until Turing supplies a source-bound locality reduction. Actual
+clock/reset/IRQ routing and full service/compute/collective bounds must also be
+joined before full-die admission; loader geometric admission alone cannot
+select a CRC repair or authorize a build. Allocation is currently null because
+no source-selected service rectangle exists. Total die area, physical token
+latency and physical fit remain unknown until the full component join is supplied.
+
+Exact budget contradiction: HA9's DS 340.5 mm2 right-size inherits
+`uarch_model.right_size_hbm_die` and HBM_SHORE 8.5 mm/PHY (19 mm long edge
+including two 1 mm corners). The actual existing PHY LEF is 12.000096 mm wide;
+four stacks placed two per edge need 26.000192 mm with those same corners.
+The actual old full rectangles are 815 mm2 GPU comparator layouts with pending
+SM abstracts, not current sm_v/TU96 or W12 instances. DS service r11 explicitly
+sets DS_provider_area_fit=false. Thus no current source-selected die/core/service
+rectangle can be obtained from these authorities without a geometry selection;
+`budget_join` emits the exact pinned conflict and never imports those slots.
+Kant has sent this specific conflict to Sagan/Claude/Turing. The missing work
+is current rectangle selection plus actual component costs/ports, not approval
+of the already implemented record compiler.
+
+The owner decision now supersedes 340.5 mm2 with actual 12 mm PHY sizing.
+`deepseek_physical_model.json` and `qwen_physical_model.json` are the current
+joined integration models, consuming Sagan's committed per-target portmap.
+Their `current_frame` uses 33 x 26 mm / 858 mm2 limits and actual four-PHY
+constraints, with no change to rank, SM, tile or stack counts. The DS captured
+four-by-two eight-SM group envelope is 8811.072 x 4145.58 um before external
+channels/halos; source compatibility and remaining dedicated/service/clock/PG
+bounds are explicit. These partial envelopes are not minimum feasible dies.
+No loader coordinates can be emitted safely until actual service geometry,
+port locality and repair capacity fill those bounds. The named service.loader
+allocation and corridor pricing are executable when those real fields arrive.
