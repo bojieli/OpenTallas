@@ -1,0 +1,43 @@
+{
+  "owner": "Codex:item9",
+  "source_commit": "bfc9d9564",
+  "main_model_restored_commit": "6201754cc",
+  "host": "ot-epyc2",
+  "source_root": "/srv/opentallas/repos/codex-item9-20261005",
+  "exact_endpoint": "results/rtl/hbm_item9_closure_20261005/endpoint_r2/result.json",
+  "exact_mux": "results/rtl/hbm_item9_closure_20261005/exact_r1/result.json",
+  "command": [
+    "bash",
+    "tools/hbm_item9_route.sh",
+    "/srv/opentallas-scratch2/codex/item9-closure-20261005/route-r1",
+    "item9_owner64_rxoh_r1",
+    "results/rtl/hbm_item9_closure_20261005/endpoint_r2/result.json",
+    "results/rtl/hbm_item9_closure_20261005/exact_r1/result.json"
+  ],
+  "constraints": {
+    "all_clocks_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "false_IO": false,
+    "threads": 16
+  },
+  "admission": {
+    "guard": "/srv/opentallas-scratch/admit.sh",
+    "memory_estimate_GiB": 24,
+    "cap": false,
+    "E2_load_must_be_below": 128,
+    "CPU_threads_must_fit": 16,
+    "fresh_CPU_RAM_disk_inventory_required": true
+  },
+  "state": "SOURCE_READY_FOR_KANT_ADMISSION_NO_NEW_ROUTE_LAUNCHED",
+  "qualification_scope": "Existing full NL128 NSM2 registered wrapper, all external IO timed; actual finite outer allocation still requested from Turing",
+  "adoption": false,
+  "endpoint_exact_cases": 984,
+  "endpoint_mismatches": 0,
+  "mux_config_cycles": 800000,
+  "mux_mismatches": 0,
+  "new_cycles_per_collective": 0,
+  "new_cycles_per_record": 0,
+  "live_existing_routes_preserved": true,
+  "HA2_fullPF384_existing_routes_reused": true
+}
