@@ -1,0 +1,36 @@
+violation type: Metal Spacing
+	srcs: net:net1159 net:VSS
+	bbox = (563.9970, 238.6630) - (564.0120, 238.6640) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net272178 net:VSS
+	bbox = (563.9970, 242.4430) - (564.0120, 242.4440) on Layer M3
+violation type: Metal Spacing
+	srcs: net:net267975 net:VDD
+	bbox = (564.1890, 213.5530) - (564.1920, 213.5870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:net277824
+	bbox = (564.1890, 248.1130) - (564.1920, 248.1470) on Layer M3
+violation type: Metal Spacing
+	srcs: net:_18436_ net:net269028
+	bbox = (562.4160, 238.1980) - (562.4400, 238.2130) on Layer M5
+violation type: Short
+	srcs: net:net271868 net:VDD
+	bbox = (564.0990, 211.3930) - (564.1020, 211.4270) on Layer M3
+violation type: Short
+	srcs: net:net269110 net:VDD
+	bbox = (564.0990, 213.5530) - (564.1020, 213.5870) on Layer M3
+violation type: Short
+	srcs: net:net248569 net:VDD
+	bbox = (564.0990, 248.1130) - (564.1020, 248.1470) on Layer M3
+violation type: Lef58EolKeepOut
+	srcs: net:_18436_ net:net269028
+	bbox = (562.4160, 238.1980) - (562.4160, 238.2130) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:_18436_ net:net269028
+	bbox = (562.4160, 238.1980) - (562.4400, 238.2130) on Layer M5
+violation type: Lef58EolKeepOut
+	srcs: net:_18436_ net:net269028
+	bbox = (562.4400, 238.1980) - (562.4400, 238.2130) on Layer M5
+violation type: Lef58SpacingEndOfLine
+	srcs: net:_18436_ net:net269028
+	bbox = (562.4160, 238.1980) - (562.4400, 238.2130) on Layer M5
