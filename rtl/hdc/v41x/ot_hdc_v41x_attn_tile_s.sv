@@ -68,16 +68,22 @@ module ot_hdc_v41x_attn_hgrp_s #(
     end
 
     genvar gh, gk;
-    // -- D1: dequantise
-    reg [TD*18-1:0] d1_b;
+    // -- D1: dequantise, split across the D1 register (zero added cycles): ot_hdc_v41x_attn_deq_a (format decode,
+    //    significand product, exponent sum) ahead of it, ot_hdc_v41x_attn_deq_b (normalise, range check, encode)
+    //    behind it, so d1_b = {pad, flt, bf16} is the same value in the same cycle as tile_l's D1 register
+    wire [TD*18-1:0] d1_b;
+    reg  [TD*21-1:0] d1_a;
     reg [BW-1:0]    d1_bank;
     reg             d1_v;
     generate
         for (gk = 0; gk < TD; gk = gk + 1) begin : g_dq
+            wire [20:0] da;
+            ot_hdc_v41x_attn_deq_a u_da (.e(r_ib[gk*18 +: 18]), .d(da));
+            always @(posedge clk) d1_a[gk*21 +: 21] <= da;
             wire [15:0] y;
             wire f;
-            ot_hdc_v41x_attn_deq u_dq (.e(r_ib[gk*18 +: 18]), .y(y), .flt(f));
-            always @(posedge clk) d1_b[gk*18 +: 18] <= {r_ib[gk*18 + 17], f, y};
+            ot_hdc_v41x_attn_deq_b u_db (.d(d1_a[gk*21 +: 21]), .y(y), .flt(f));
+            assign d1_b[gk*18 +: 18] = {d1_a[gk*21 + 20], f, y};
         end
     endgenerate
     always @(posedge clk) d1_bank <= r_ibank;
@@ -434,4 +440,70 @@ module ot_hdc_v41x_qaddf #(
             ot_hdc_v41x_qaddl #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y), .fault(fault));
         end
     endgenerate
+endmodule
+
+// The attention dequantiser ot_hdc_v41x_attn_deq (rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv) split in two: _a computes
+// {pad, nan, sgn, prod[5:0], bx[10:0]} (bx before the msb correction), _b the rest of the same expressions.
+module ot_hdc_v41x_attn_deq_a (
+    input  wire [17:0] e,          // {pad, fmt, code[7:0], scale[7:0]}
+    output wire [20:0] d           // {pad, nan, sgn, prod[5:0], bx[10:0]} -- 1 + 1 + 1 + 6 + 11 = 20 bits + spare
+);
+    wire pad = e[17];
+    wire fmt = e[16];
+    wire [7:0] c = e[15:8];
+    wire [7:0] s = e[7:0];
+    reg signed [10:0] bx;
+    reg [5:0] prod;
+    reg sgn, nan;
+    always @* begin
+        if (!fmt) begin
+            sgn = c[7];
+            nan = ((c[6:3] == 4'hf) && (c[2:0] == 3'd7)) || (s == 8'hff);
+            prod = {2'b00, (c[6:3] != 4'd0), c[2:0]};
+            bx = $signed({7'd0, (c[6:3] == 4'd0) ? 4'd1 : c[6:3]}) + $signed({3'd0, s}) - 11'sd137;
+        end else begin
+            sgn = c[3] ^ s[7];
+            nan = (s[6:3] == 4'hf) && (s[2:0] == 3'd7);
+            prod = {(c[2:1] != 2'd0), c[0]} * {(s[6:3] != 4'd0), s[2:0]};
+            bx = $signed({9'd0, (c[2:1] == 2'd0) ? 2'd1 : c[2:1]}) - 11'sd2
+               + $signed({7'd0, (s[6:3] == 4'd0) ? 4'd1 : s[6:3]}) - 11'sd10;
+        end
+    end
+    assign d = {pad, 1'b0, nan, sgn, prod, bx};
+endmodule
+
+module ot_hdc_v41x_attn_deq_b (
+    input  wire [20:0] d,
+    output reg  [15:0] y,
+    output reg         flt
+);
+    wire pad = d[20];
+    wire nan = d[18];
+    wire sgn = d[17];
+    wire [5:0] prod = d[16:11];
+    wire signed [10:0] bx0 = d[10:0];
+    reg signed [10:0] bx;
+    reg [6:0] man;
+    reg [2:0] msb;
+    reg zero;
+    integer i;
+    always @* begin
+        msb = 3'd0;
+        zero = (prod == 6'd0);
+        for (i = 0; i < 6; i = i + 1)
+            if (prod[i]) msb = i[2:0];
+        bx = bx0 + $signed({8'd0, msb}) + 11'sd127;
+        man = ({1'b0, prod} << (3'd6 - msb));
+        if (pad) begin
+            y = 16'd0; flt = 1'b0;
+        end else if (nan) begin
+            y = 16'd0; flt = 1'b1;
+        end else if (zero) begin
+            y = {sgn, 15'd0}; flt = 1'b0;
+        end else if ((bx < 11'sd1) || (bx > 11'sd254)) begin
+            y = 16'd0; flt = 1'b1;
+        end else begin
+            y = {sgn, bx[7:0], man[5:0], 1'b0}; flt = 1'b0;
+        end
+    end
 endmodule

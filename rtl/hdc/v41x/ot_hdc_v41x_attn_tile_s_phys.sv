@@ -29,6 +29,29 @@ module ot_attn_hgrp_m (
         .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
 endmodule
 
+// The same element with the 1.2 GHz f12 adds (FPL 4: ot_hdc_fp32_add_f12_l4 in the chunk chains and trees).
+module ot_attn_hgrp_m4 (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [7:0]    gid,
+    input  wire          ld_v,
+    input  wire          ld_mode,
+    input  wire [2:0]    ld_bank,
+    input  wire [7:0]    ld_grp,
+    input  wire [1023:0] ld_w,
+    input  wire          ld_w2v,
+    input  wire          iv,
+    input  wire [2:0]    ibank,
+    input  wire [575:0]  ib,
+    output wire          ov,
+    output wire [127:0]  oy,
+    output wire [3:0]    oflt
+);
+    ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(4), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(4), .FML(6), .F12(1)) u (
+        .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
+        .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+endmodule
+
 module ot_attn_tile_m (
     input  wire          clk,
     input  wire          rst_n,

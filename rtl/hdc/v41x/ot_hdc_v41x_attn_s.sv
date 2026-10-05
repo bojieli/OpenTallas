@@ -83,7 +83,8 @@ endmodule
 // ---------------------------------------------------------------------------
 // The block merge with PER-HEAD control copies (engine MFAN = 1): ot_hdc_v41x_attn_merge_s's function and ring
 // order exactly, but every level's ring is split per head (H x 33 bits x DPT entries) and each head slice is
-// steered by its own registered copy of the level's {v, fin, live, blk} (kept, so synthesis cannot merge them):
+// steered by its own registered copy of the level's {v, fin, live, blk} (ot_hdc_v41x_kreg, a keep_hierarchy
+// register, so synthesis cannot merge the equal copies):
 // the shift enable of one 528-bit x DPT ring was one net with ~4,000 loads (routed SS -739 ps in the D = 64
 // controller vehicle).  Level 0's copies need a register: the merge input (beat, tags, partials) is registered
 // once, +1 cycle on the p.v output only (the engine delays pv_c by the same cycle).
@@ -120,14 +121,10 @@ module ot_hdc_v41x_attn_merge_x #(
         assign lx[0 +: H*32] = r_iy;
         assign lf[0 +: H] = r_if;
         for (gh = 0; gh < H; gh = gh + 1) begin : g_c0
-            (* keep *) reg c_v;
-            (* keep *) reg c_fin;
-            (* keep *) reg [MLEV-1:0] c_blk;
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) c_v <= 1'b0;
-                else c_v <= iv;
-            end
-            always @(posedge clk) begin c_fin <= ifin; c_blk <= iblk; end
+            wire c_v, c_fin;
+            wire [MLEV-1:0] c_blk;
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_cv (.clk(clk), .rst_n(rst_n), .d(iv), .q(c_v));
+            ot_hdc_v41x_kreg #(.W(1 + MLEV), .R(0)) u_ct (.clk(clk), .rst_n(rst_n), .d({ifin, iblk}), .q({c_fin, c_blk}));
             assign cv[gh] = c_v;
             assign cfin[gh] = c_fin;
             assign clive[gh] = 1'b1;
@@ -169,14 +166,10 @@ module ot_hdc_v41x_attn_merge_x #(
                 assign lx[((gl+1)*H+gh)*32 +: 32] = y;
                 assign lf[(gl+1)*H+gh] = fdq | af;
                 // next level's control copy for this head
-                (* keep *) reg n_v;
-                (* keep *) reg n_fin, n_live;
-                (* keep *) reg [MLEV-1:0] n_blk;
-                always @(posedge clk or negedge rst_n) begin
-                    if (!rst_n) n_v <= 1'b0;
-                    else n_v <= dv;
-                end
-                always @(posedge clk) {n_fin, n_live, n_blk} <= dt;
+                wire n_v, n_fin, n_live;
+                wire [MLEV-1:0] n_blk;
+                ot_hdc_v41x_kreg #(.W(1), .R(1)) u_nv (.clk(clk), .rst_n(rst_n), .d(dv), .q(n_v));
+                ot_hdc_v41x_kreg #(.W(2 + MLEV), .R(0)) u_nt (.clk(clk), .rst_n(rst_n), .d(dt), .q({n_fin, n_live, n_blk}));
                 assign cv[(gl+1)*H+gh] = n_v;
                 assign cfin[(gl+1)*H+gh] = n_fin;
                 assign clive[(gl+1)*H+gh] = n_live;
@@ -959,4 +952,25 @@ module ot_hdc_v41x_attn_s #(
     always @(posedge clk) begin
         pv_c <= m_c; pv_y <= m_y; pv_f <= m_f;
     end
+endmodule
+
+// A register in its own kept hierarchy: duplicate copies of one signal stay separate cells (yosys merges equal
+// flip-flops inside a flattened module whatever their wire attributes).  R = 1: asynchronous active-low reset to 0.
+(* keep_hierarchy *)
+module ot_hdc_v41x_kreg #(
+    parameter integer W = 1,
+    parameter integer R = 0
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    generate if (R != 0) begin : g_r
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) q <= {W{1'b0}};
+            else q <= d;
+    end else begin : g_n
+        always @(posedge clk) q <= d;
+    end endgenerate
 endmodule

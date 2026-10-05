@@ -12,6 +12,7 @@ module tb_hdc_v41x_attn_tile_s_lockstep (input wire clk);
     parameter integer FPL = 7;
     parameter integer FML = 6;
     parameter integer HG = 4;
+    parameter integer F12 = 0;              // tile_s with the f12 adds (tile_l keeps ot_hdc_fp32_add_lat, same function)
     parameter integer NCYC = 20000;
     reg rst_n = 1'b0;
     reg ld_v, ld_mode, ld_w2v, iv;
@@ -26,7 +27,7 @@ module tb_hdc_v41x_attn_tile_s_lockstep (input wire clk);
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
         .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_l), .oy(oy_l), .oflt(of_l));
     ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML),
-                              .HG(HG)) u_s (
+                              .HG(HG), .F12(F12)) u_s (
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp), .ld_w(ld_w),
         .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov_s), .oy(oy_s), .oflt(of_s));
     integer cyc = 0, mism = 0, nov = 0, i;
