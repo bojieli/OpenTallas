@@ -21,6 +21,8 @@ def model(root=ROOT):
         ('landing', 281, 64, 'HCLK', 'CLK', 0),
         ('write', 289, 16, 'CLK', 'HCLK', 1),
         ('write_done', 9, 64, 'HCLK', 'CLK', 2),
+        ('descriptor', 30, 4, 'CLK', 'HCLK', 3),
+        ('GO', 3, 4, 'CLK', 'HCLK', 4),
     ):
         a = int(math.log2(depth)); p = a + 1
         # The wrap bit travels with the payload. Every 44-bit piece has the
@@ -37,12 +39,18 @@ def model(root=ROOT):
                  else 2 * (p + 3) if name == 'landing' else 0)
         ff = depth * cw + controls + reset + pipeline + cache + extra
         mux = cw * (depth - 1) * 3
+        if name == 'write':
+            mux += 2 * (width + p + 1) * (depth - 1) * 3
+            extra += 8  # two DMR sticky protocol bits + duplicate warm release SYNC2
+            ff += 8
         checker = 3 * (pipeline // 2 + controls // 2 + cache // 2 + extra // 2)
+        semantic = 3*(2*7+24+8) if name == 'write' else 3*30 if name == 'descriptor' else 0
+        checker += semantic
         buffers = math.ceil(ff / 7)
         body = ff * .2916 + (mux + checker) * .08748 + buffers * .10206 + n * pair
         rows.append(dict(name=name, payload_bits=width, depth=depth, pointer_bits=p,
             source_domain=source, destination_domain=destination, kind=kind,
-            replicas=128, source_payload_bytes_per_edge=width/8,
+            replicas=128 if name in ('landing', 'write', 'write_done') else 1, source_payload_bytes_per_edge=width/8,
             coded_memory_write_bytes_per_edge=cw/8, coded_memory_read_bytes_per_edge=cw/8,
             compute_intensity_MAC_per_byte=0,
             communication_intensity='one payload per accepted source edge; one coded read per fetched destination edge',
@@ -56,7 +64,7 @@ def model(root=ROOT):
             pointer_counter_fault_DMR_and_sync_FF=controls,
             POR_release_synchronizer_FF=reset, total_pipeline_FF=pipeline,
             checked_HCLK_write_cache_DMR_FF=cache, port_credit_extra_DMR_FF=extra,
-            total_FF=ff, read_mux_NAND2=mux, check_NAND2=checker,
+            total_FF=ff, read_mux_NAND2=mux, check_NAND2=checker, semantic_guard_NAND2=semantic,
             fanout8_buffer_estimate=buffers, codec_pairs=n,
             estimated_cell_area_mm2=body/1e6,
             read_ports=1, write_ports=1, cache_read_ports=2 if name=='write' else 0,
@@ -74,6 +82,7 @@ def model(root=ROOT):
             pointer_CDC='dual-rail Gray through SYNC2; mismatch suspends pointer use, no transient mismatch treated as ACK; each rail source-period max-delay/skew bound',
             fault='UE/seal/wrap/control mismatch quarantines new grants and invalid retire; existing owned records stay until POR or explicit repair',
             fault_model='single mutable-state upset detected or corrected; SECDED payload double-bit UE detected; correlated faults affecting both DMR rails are not claimed'))
+    shared_rows=rows[3:]; rows=rows[:3]
     cell = sum(x['estimated_cell_area_mm2'] for x in rows)
     # A positive per-PC home rather than an undersized repeated instance. The
     # raw r5 routes measured 0.0169 mm2 cell area; no old mapped-area credit.
@@ -81,12 +90,21 @@ def model(root=ROOT):
     core = cell/util
     width = 500
     height = math.ceil(core*1e6/width/2.16)*2.16
-    shared = dict(descriptor_payload_bits=30, GO_payload_bits=1,
+    shared_extra_ff=28+4+4  # source/destination owner/sticky DMR; duplicate warm release; dual-rail sticky H fault SYNC2
+    shared_extra_area=(shared_extra_ff*.2916 + 3*shared_extra_ff/2*.08748 + math.ceil(shared_extra_ff/7)*.10206)/1e6
+    shared_cell=sum(x['estimated_cell_area_mm2'] for x in shared_rows)+shared_extra_area
+    shared = dict(rings=shared_rows, extra_control_FF=shared_extra_ff,
+        total_FF=sum(x['total_FF'] for x in shared_rows)+shared_extra_ff,
+        cell_area_mm2=shared_cell, required_home_um=[200,math.ceil(shared_cell/util*1e6/200/2.16)*2.16],
+        descriptor_payload_bits=30, GO_payload_bits=3,
         descriptor_ring_depth=4, GO_ring_depth=4,
         descriptor_sealed_bits=72, GO_sealed_bits=72,
         maximum_outstanding_descriptors=1, maximum_outstanding_GO=1,
         protection='same sealed pipeline/control primitive; completion acknowledged only after real destination consumption',
-        ordering='GO withheld until the corresponding descriptor is accepted by all actual controllers',
+        ordering='GO carries source descriptor ordinal3; checked source issued and destination consumed counters bind GO to matching descriptor. Delivery only when all real controllers accepted descriptor and busy_all.',
+        GO_identity_bits=3, source_control_DMR_bits=14, destination_control_DMR_bits=14,
+        configuration_bounds='descriptor row < MEM_WORDS/131072, count1..1024; write sector < MEM_WORDS and payload port identity == PC_ID; landing row/port same bounds',
+        cold_reset='rst_n/POR erases; warm_rst_n only gates fresh admission through duplicated local release, never resets ring, cache, controller or simulator due queues',
         producer_clock='CLK833.333', consumer_clock='HCLK1024',
         descriptor_visibility_bound_ps=833.333+6*1024,
         GO_visibility_bound_ps=833.333+6*1024,
@@ -95,10 +113,10 @@ def model(root=ROOT):
     # Cost expose-once at the service boundary; the unchanged posted chain
     # actually measured B_fill_exposed=0, so do not multiply by 36 layers.
     causal = dict(RD_to_checked_landing_ps=23*1024+1024+6*833.333,
-        write_accept_to_handoff_ps=833.333+6*1024,
+        write_accept_to_handoff_ps=833.333+8*1024,
         WR_to_checked_write_done_ps=17*1024+1024+6*833.333,
         landing_added_vs_r5_ps=1024+3*833.333,
-        write_added_vs_r5_before_handoff_ps=833.333+3*1024,
+        write_added_vs_r5_before_handoff_ps=833.333+5*1024,
         completion_added_vs_r5_ps=1024+3*833.333,
         source_program='results/rtl/qwen_plain_ar_stream4_P8191_20261005',
         composed_service_delta='max(exposed landing path, ordered token write->actualWR->checkedwrite_done path); queue/refresh and measured source stalls retained once',
@@ -116,6 +134,8 @@ def model(root=ROOT):
         cell_area_per_PC_mm2=cell, required_per_PC_home_um=[width,height],
         per_PC_core_area_mm2=core, utilization=util,
         replicated_PC_core_area_mm2=128*core,
+        complete_interface_core_area_mm2=128*core+shared_cell/util,
+        parent_slot_fit=False, slot_reason='Required PC array plus shared home exceeds historical 4x4mm slot; no compression/undersized physical vehicle admitted',
         replicated_PC_array_um=[8*width,16*height],
         local_routing=dict(layers=['M2','M3','M4','M5','M6','M7'],
             channel_width_um=40, pitch_um=.048, tracks_per_layer=int(40/.048),
@@ -124,7 +144,7 @@ def model(root=ROOT):
             simultaneous_paths='three code reads plus two independent write-cache heads',
             no_remote_payload_redistribution=True),
         physical_admission=False, implementation_admission=True,
-        implementation_scope='per-PC rings only; shared descriptor/GO sizing incomplete, no shared RTL admission', adopted=False,
+        implementation_scope='all128PC selected interface + one shared descriptor/GO boundary; actual parent phase/skew and placement remain qualification gates', adopted=False,
         physical_gates=['exact32 changed-source + CE/UE/seal/control/warm-held-debt gate',
                         'actual source-cell shadow retention census',
                         'contextual SS60 setup + FF25 hold, slew/cap/fanout/DRC clean',
