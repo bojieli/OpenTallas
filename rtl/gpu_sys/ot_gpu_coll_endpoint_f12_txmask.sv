@@ -152,10 +152,13 @@ module ot_gpu_coll_endpoint_f12_txmask #(
                             end else begin : g_pad
                                 assign mask_n[mw*MG+mb]=1'b0;
                             end
+                            // Separate retained hierarchy per identical copy: a vector
+                            // register would let opt_merge collapse its duplicate bits.
+                            ot_gpu_kreg_oh #(.W(1), .RV(1'b0)) u_mask_bit (
+                                .clk(clk_sm), .rst_n(rst_sm_n),
+                                .d(mask_n[mw*MG+mb]), .q(mask_q[mw*MG+mb]));
                         end
                     end
-                    ot_gpu_kreg_oh #(.W(NW*MG), .RV('0)) u_mask (
-                        .clk(clk_sm), .rst_n(rst_sm_n), .d(mask_n), .q(mask_q));
                 end else begin : g_mask_off
                     assign mask_q='0;
                 end
