@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.dshbm_baseline_su_chains.v1",
- "generated_utc": "2026-10-05T16:52:07Z",
+ "generated_utc": "2026-10-05T19:05:00Z",
  "source_commit": "",
  "config": {
   "N": 1024,
@@ -31,7 +31,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 524,
+    "cycles": 532,
     "pass_": true
    },
    "checks": [
@@ -79,308 +79,308 @@
     }
    ],
    "vm_out_sha256": "3ccfec56395c237aefc1ba31d11ff1fddd98e8fa371f0a836c757a9cd7c220ff",
-   "cycles_end": 524,
-   "first_emit_to_last_write": 504,
+   "cycles_end": 532,
+   "first_emit_to_last_write": 512,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 20,
-     "last_write": 74,
+     "last_write": 75,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 25,
-     "last_write": 79,
+     "last_write": 80,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 35,
-     "last_write": 89,
+     "last_write": 90,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 40,
-     "last_write": 94,
+     "last_write": 95,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 63,
-     "last_emit": 67,
-     "last_write": 121,
+     "first_emit": 64,
+     "last_emit": 68,
+     "last_write": 123,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 68,
-     "last_emit": 72,
-     "last_write": 126,
+     "first_emit": 69,
+     "last_emit": 73,
+     "last_write": 128,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 73,
-     "last_emit": 77,
-     "last_write": 131,
+     "first_emit": 74,
+     "last_emit": 78,
+     "last_write": 133,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 78,
-     "last_emit": 82,
-     "last_write": 136,
+     "first_emit": 79,
+     "last_emit": 83,
+     "last_write": 138,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 83,
-     "last_emit": 87,
-     "last_write": 141,
+     "first_emit": 84,
+     "last_emit": 88,
+     "last_write": 143,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 88,
-     "last_emit": 92,
-     "last_write": 146,
+     "first_emit": 89,
+     "last_emit": 93,
+     "last_write": 148,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 115,
-     "last_emit": 119,
-     "last_write": 173,
-     "last_result": 286,
-     "vectors": 5,
-     "nout": 8,
-     "nin": 640,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 120,
-     "last_emit": 124,
-     "last_write": 178,
+     "first_emit": 117,
+     "last_emit": 121,
+     "last_write": 176,
      "last_result": 291,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 125,
-     "last_emit": 129,
-     "last_write": 183,
+     "first_emit": 122,
+     "last_emit": 126,
+     "last_write": 181,
      "last_result": 296,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 130,
-     "last_emit": 134,
-     "last_write": 188,
+     "first_emit": 127,
+     "last_emit": 131,
+     "last_write": 186,
      "last_result": 301,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 135,
-     "last_emit": 139,
-     "last_write": 193,
+     "first_emit": 132,
+     "last_emit": 136,
+     "last_write": 191,
      "last_result": 306,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 140,
-     "last_emit": 144,
-     "last_write": 198,
+     "first_emit": 137,
+     "last_emit": 141,
+     "last_write": 196,
      "last_result": 311,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 292,
-     "last_emit": 292,
-     "last_write": 437,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
+     "first_emit": 142,
+     "last_emit": 146,
+     "last_write": 201,
+     "last_result": 316,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
     },
     {
      "first_emit": 297,
      "last_emit": 297,
-     "last_write": 442,
+     "last_write": 444,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 302,
      "last_emit": 302,
-     "last_write": 447,
+     "last_write": 449,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 307,
      "last_emit": 307,
-     "last_write": 452,
+     "last_write": 454,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 312,
      "last_emit": 312,
-     "last_write": 457,
+     "last_write": 459,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 317,
      "last_emit": 317,
-     "last_write": 462,
+     "last_write": 464,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 431,
-     "last_emit": 435,
-     "last_write": 489,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 469,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 438,
+     "last_emit": 442,
+     "last_write": 497,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 436,
-     "last_emit": 440,
-     "last_write": 494,
+     "first_emit": 443,
+     "last_emit": 447,
+     "last_write": 502,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 441,
-     "last_emit": 445,
-     "last_write": 499,
+     "first_emit": 448,
+     "last_emit": 452,
+     "last_write": 507,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 446,
-     "last_emit": 450,
-     "last_write": 504,
+     "first_emit": 453,
+     "last_emit": 457,
+     "last_write": 512,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 451,
-     "last_emit": 455,
-     "last_write": 509,
+     "first_emit": 458,
+     "last_emit": 462,
+     "last_write": 517,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 456,
-     "last_emit": 460,
-     "last_write": 514,
+     "first_emit": 463,
+     "last_emit": 467,
+     "last_write": 522,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -402,7 +402,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 484,
+    "cycles": 490,
     "pass_": true
    },
    "checks": [
@@ -492,428 +492,428 @@
     }
    ],
    "vm_out_sha256": "9a757ff5c203856920ab638cf80919ef28037f04d91fd2b54b0e0b310305d768",
-   "cycles_end": 484,
-   "first_emit_to_last_write": 464,
+   "cycles_end": 490,
+   "first_emit_to_last_write": 470,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 66,
-     "last_result": 167,
+     "last_write": 67,
+     "last_result": 170,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 17,
-     "last_write": 71,
-     "last_result": 172,
+     "last_write": 72,
+     "last_result": 175,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 22,
-     "last_write": 76,
-     "last_result": 177,
+     "last_write": 77,
+     "last_result": 180,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 27,
-     "last_write": 81,
-     "last_result": 182,
+     "last_write": 82,
+     "last_result": 185,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 32,
-     "last_write": 86,
-     "last_result": 187,
+     "last_write": 87,
+     "last_result": 190,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 37,
-     "last_write": 91,
-     "last_result": 192,
+     "last_write": 92,
+     "last_result": 195,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 50,
      "last_emit": 50,
-     "last_write": 104,
-     "last_result": 193,
+     "last_write": 105,
+     "last_result": 196,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 51,
-     "last_write": 105,
-     "last_result": 194,
+     "last_write": 106,
+     "last_result": 197,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 56,
      "last_emit": 56,
-     "last_write": 110,
-     "last_result": 199,
+     "last_write": 111,
+     "last_result": 202,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 61,
      "last_emit": 61,
-     "last_write": 115,
-     "last_result": 204,
+     "last_write": 116,
+     "last_result": 207,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 66,
      "last_emit": 66,
-     "last_write": 120,
-     "last_result": 209,
+     "last_write": 121,
+     "last_result": 212,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 71,
      "last_emit": 71,
-     "last_write": 125,
-     "last_result": 214,
+     "last_write": 126,
+     "last_result": 217,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 173,
-     "last_emit": 173,
-     "last_write": 318,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
-    },
-    {
-     "first_emit": 178,
-     "last_emit": 178,
+     "first_emit": 176,
+     "last_emit": 176,
      "last_write": 323,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 183,
-     "last_emit": 183,
+     "first_emit": 181,
+     "last_emit": 181,
      "last_write": 328,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 188,
-     "last_emit": 188,
+     "first_emit": 186,
+     "last_emit": 186,
      "last_write": 333,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 193,
-     "last_emit": 193,
+     "first_emit": 191,
+     "last_emit": 191,
      "last_write": 338,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 198,
-     "last_emit": 198,
+     "first_emit": 196,
+     "last_emit": 196,
      "last_write": 343,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 203,
-     "last_emit": 203,
+     "first_emit": 201,
+     "last_emit": 201,
      "last_write": 348,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 208,
-     "last_emit": 208,
+     "first_emit": 206,
+     "last_emit": 206,
      "last_write": 353,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 213,
-     "last_emit": 213,
+     "first_emit": 211,
+     "last_emit": 211,
      "last_write": 358,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 218,
-     "last_emit": 218,
+     "first_emit": 216,
+     "last_emit": 216,
      "last_write": 363,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 223,
-     "last_emit": 223,
+     "first_emit": 221,
+     "last_emit": 221,
      "last_write": 368,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 228,
-     "last_emit": 228,
+     "first_emit": 226,
+     "last_emit": 226,
      "last_write": 373,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 320,
-     "last_emit": 321,
-     "last_write": 375,
+     "first_emit": 231,
+     "last_emit": 231,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 324,
+     "last_emit": 325,
+     "last_write": 380,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 322,
-     "last_emit": 323,
-     "last_write": 377,
-     "last_result": null,
-     "vectors": 2,
-     "nout": 1,
-     "nin": 1280,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 327,
-     "last_emit": 328,
+     "first_emit": 326,
+     "last_emit": 327,
      "last_write": 382,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 332,
-     "last_emit": 333,
+     "first_emit": 331,
+     "last_emit": 332,
      "last_write": 387,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 337,
-     "last_emit": 338,
+     "first_emit": 336,
+     "last_emit": 337,
      "last_write": 392,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 342,
-     "last_emit": 343,
+     "first_emit": 341,
+     "last_emit": 342,
      "last_write": 397,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 347,
+     "first_emit": 346,
      "last_emit": 347,
-     "last_write": 401,
+     "last_write": 402,
      "last_result": null,
-     "vectors": 1,
+     "vectors": 2,
      "nout": 1,
-     "nin": 512,
-     "depth_model": 54
+     "nin": 1280,
+     "depth_model": 55
     },
     {
-     "first_emit": 352,
-     "last_emit": 352,
+     "first_emit": 351,
+     "last_emit": 351,
      "last_write": 406,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 357,
-     "last_emit": 357,
+     "first_emit": 356,
+     "last_emit": 356,
      "last_write": 411,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 362,
-     "last_emit": 362,
+     "first_emit": 361,
+     "last_emit": 361,
      "last_write": 416,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 367,
-     "last_emit": 367,
+     "first_emit": 366,
+     "last_emit": 366,
      "last_write": 421,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 372,
-     "last_emit": 372,
+     "first_emit": 371,
+     "last_emit": 371,
      "last_write": 426,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 395,
-     "last_emit": 395,
-     "last_write": 449,
+     "first_emit": 376,
+     "last_emit": 376,
+     "last_write": 431,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
-     "nin": 64,
-     "depth_model": 54
+     "nin": 512,
+     "depth_model": 55
     },
     {
      "first_emit": 400,
      "last_emit": 400,
-     "last_write": 454,
+     "last_write": 455,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 405,
      "last_emit": 405,
-     "last_write": 459,
+     "last_write": 460,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 410,
      "last_emit": 410,
-     "last_write": 464,
+     "last_write": 465,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 415,
      "last_emit": 415,
-     "last_write": 469,
+     "last_write": 470,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 420,
      "last_emit": 420,
-     "last_write": 474,
+     "last_write": 475,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
+    },
+    {
+     "first_emit": 425,
+     "last_emit": 425,
+     "last_write": 480,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -933,7 +933,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 130,
+    "cycles": 131,
     "pass_": true
    },
    "checks": [
@@ -981,128 +981,128 @@
     }
    ],
    "vm_out_sha256": "cc8ab024b1c01b721e0447d3b952f1438c94dcd280a64052cdf745020097ff97",
-   "cycles_end": 130,
-   "first_emit_to_last_write": 110,
+   "cycles_end": 131,
+   "first_emit_to_last_write": 111,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
+     "last_write": 71,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
+     "last_write": 76,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
+     "last_write": 81,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
+     "last_write": 86,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
+     "last_write": 91,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 41,
      "last_emit": 41,
-     "last_write": 95,
+     "last_write": 96,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 46,
      "last_emit": 46,
-     "last_write": 100,
+     "last_write": 101,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 51,
-     "last_write": 105,
+     "last_write": 106,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 56,
      "last_emit": 56,
-     "last_write": 110,
+     "last_write": 111,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 61,
      "last_emit": 61,
-     "last_write": 115,
+     "last_write": 116,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 66,
      "last_emit": 66,
-     "last_write": 120,
+     "last_write": 121,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1123,7 +1123,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 580,
+    "cycles": 589,
     "pass_": true
    },
    "checks": [
@@ -1213,368 +1213,368 @@
     }
    ],
    "vm_out_sha256": "b3a3638574e576ef023a26870878e88c1f378de9826f0087f72e4097aa50699a",
-   "cycles_end": 580,
-   "first_emit_to_last_write": 560,
+   "cycles_end": 589,
+   "first_emit_to_last_write": 569,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 142,
+     "last_write": 66,
+     "last_result": 145,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
-     "last_result": 147,
+     "last_write": 71,
+     "last_result": 150,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
-     "last_result": 152,
+     "last_write": 76,
+     "last_result": 155,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
-     "last_result": 157,
+     "last_write": 81,
+     "last_result": 160,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
-     "last_result": 162,
+     "last_write": 86,
+     "last_result": 165,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
-     "last_result": 167,
+     "last_write": 91,
+     "last_result": 170,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 148,
-     "last_emit": 148,
-     "last_write": 296,
-     "last_result": 373,
+     "first_emit": 151,
+     "last_emit": 151,
+     "last_write": 300,
+     "last_result": 379,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 153,
-     "last_emit": 153,
-     "last_write": 301,
-     "last_result": 378,
+     "first_emit": 156,
+     "last_emit": 156,
+     "last_write": 305,
+     "last_result": 384,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 158,
-     "last_emit": 158,
-     "last_write": 306,
-     "last_result": 383,
+     "first_emit": 161,
+     "last_emit": 161,
+     "last_write": 310,
+     "last_result": 389,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 163,
-     "last_emit": 163,
-     "last_write": 311,
-     "last_result": 388,
+     "first_emit": 166,
+     "last_emit": 166,
+     "last_write": 315,
+     "last_result": 394,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 168,
-     "last_emit": 168,
-     "last_write": 316,
-     "last_result": 393,
+     "first_emit": 171,
+     "last_emit": 171,
+     "last_write": 320,
+     "last_result": 399,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 173,
-     "last_emit": 173,
-     "last_write": 321,
-     "last_result": 398,
+     "first_emit": 176,
+     "last_emit": 176,
+     "last_write": 325,
+     "last_result": 404,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 178,
-     "last_emit": 178,
-     "last_write": 326,
+     "first_emit": 181,
+     "last_emit": 181,
+     "last_write": 330,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 183,
-     "last_emit": 183,
-     "last_write": 331,
+     "first_emit": 186,
+     "last_emit": 186,
+     "last_write": 335,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 188,
-     "last_emit": 188,
-     "last_write": 336,
+     "first_emit": 191,
+     "last_emit": 191,
+     "last_write": 340,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 193,
-     "last_emit": 193,
-     "last_write": 341,
+     "first_emit": 196,
+     "last_emit": 196,
+     "last_write": 345,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 198,
-     "last_emit": 198,
-     "last_write": 346,
+     "first_emit": 201,
+     "last_emit": 201,
+     "last_write": 350,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 203,
-     "last_emit": 203,
-     "last_write": 351,
+     "first_emit": 206,
+     "last_emit": 206,
+     "last_write": 355,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 379,
-     "last_emit": 379,
-     "last_write": 433,
+     "first_emit": 385,
+     "last_emit": 385,
+     "last_write": 440,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 384,
-     "last_emit": 384,
-     "last_write": 438,
+     "first_emit": 390,
+     "last_emit": 390,
+     "last_write": 445,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 389,
-     "last_emit": 389,
-     "last_write": 443,
+     "first_emit": 395,
+     "last_emit": 395,
+     "last_write": 450,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 394,
-     "last_emit": 394,
-     "last_write": 448,
+     "first_emit": 400,
+     "last_emit": 400,
+     "last_write": 455,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 399,
-     "last_emit": 399,
-     "last_write": 453,
+     "first_emit": 405,
+     "last_emit": 405,
+     "last_write": 460,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 404,
-     "last_emit": 404,
-     "last_write": 458,
+     "first_emit": 410,
+     "last_emit": 410,
+     "last_write": 465,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 427,
-     "last_emit": 428,
-     "last_write": 497,
+     "first_emit": 434,
+     "last_emit": 435,
+     "last_write": 505,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 432,
-     "last_emit": 433,
-     "last_write": 502,
+     "first_emit": 439,
+     "last_emit": 440,
+     "last_write": 510,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 437,
-     "last_emit": 438,
-     "last_write": 507,
+     "first_emit": 444,
+     "last_emit": 445,
+     "last_write": 515,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 442,
-     "last_emit": 443,
-     "last_write": 512,
+     "first_emit": 449,
+     "last_emit": 450,
+     "last_write": 520,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 447,
-     "last_emit": 448,
-     "last_write": 517,
+     "first_emit": 454,
+     "last_emit": 455,
+     "last_write": 525,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 452,
-     "last_emit": 453,
-     "last_write": 522,
+     "first_emit": 459,
+     "last_emit": 460,
+     "last_write": 530,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 491,
-     "last_emit": 491,
-     "last_write": 545,
+     "first_emit": 499,
+     "last_emit": 499,
+     "last_write": 554,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 496,
-     "last_emit": 496,
-     "last_write": 550,
+     "first_emit": 504,
+     "last_emit": 504,
+     "last_write": 559,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 501,
-     "last_emit": 501,
-     "last_write": 555,
+     "first_emit": 509,
+     "last_emit": 509,
+     "last_write": 564,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 506,
-     "last_emit": 506,
-     "last_write": 560,
+     "first_emit": 514,
+     "last_emit": 514,
+     "last_write": 569,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 511,
-     "last_emit": 511,
-     "last_write": 565,
+     "first_emit": 519,
+     "last_emit": 519,
+     "last_write": 574,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 516,
-     "last_emit": 516,
-     "last_write": 570,
+     "first_emit": 524,
+     "last_emit": 524,
+     "last_write": 579,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1595,7 +1595,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 554,
+    "cycles": 555,
     "pass_": true
    },
    "checks": [
@@ -1643,248 +1643,248 @@
     }
    ],
    "vm_out_sha256": "8b63d32dffc07d7f03de003976fbf8ee61f0e855a7516112e20b11a0a313e72f",
-   "cycles_end": 554,
-   "first_emit_to_last_write": 534,
+   "cycles_end": 555,
+   "first_emit_to_last_write": 535,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 50,
-     "last_write": 104,
+     "last_write": 105,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 70,
-     "last_write": 124,
+     "last_write": 125,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 71,
      "last_emit": 90,
-     "last_write": 144,
+     "last_write": 145,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 91,
      "last_emit": 110,
-     "last_write": 164,
+     "last_write": 165,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 111,
      "last_emit": 130,
-     "last_write": 184,
+     "last_write": 185,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 131,
      "last_emit": 150,
-     "last_write": 204,
+     "last_write": 205,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 151,
      "last_emit": 170,
-     "last_write": 224,
+     "last_write": 225,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 171,
      "last_emit": 190,
-     "last_write": 244,
+     "last_write": 245,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 191,
      "last_emit": 210,
-     "last_write": 264,
+     "last_write": 265,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 211,
      "last_emit": 230,
-     "last_write": 284,
+     "last_write": 285,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 231,
      "last_emit": 250,
-     "last_write": 304,
+     "last_write": 305,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 251,
      "last_emit": 270,
-     "last_write": 324,
+     "last_write": 325,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 271,
      "last_emit": 290,
-     "last_write": 344,
+     "last_write": 345,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 291,
      "last_emit": 310,
-     "last_write": 364,
+     "last_write": 365,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 311,
      "last_emit": 330,
-     "last_write": 384,
+     "last_write": 385,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 331,
      "last_emit": 350,
-     "last_write": 404,
+     "last_write": 405,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 351,
      "last_emit": 370,
-     "last_write": 424,
+     "last_write": 425,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 371,
      "last_emit": 390,
-     "last_write": 444,
+     "last_write": 445,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 391,
      "last_emit": 410,
-     "last_write": 464,
+     "last_write": 465,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 411,
      "last_emit": 430,
-     "last_write": 484,
+     "last_write": 485,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 431,
      "last_emit": 450,
-     "last_write": 504,
+     "last_write": 505,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 451,
      "last_emit": 470,
-     "last_write": 524,
+     "last_write": 525,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 471,
      "last_emit": 490,
-     "last_write": 544,
+     "last_write": 545,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1904,7 +1904,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 524,
+    "cycles": 532,
     "pass_": true
    },
    "checks": [
@@ -1952,308 +1952,308 @@
     }
    ],
    "vm_out_sha256": "9cff5fd3743f87ee6987671f879c34fb7ace53084ea2bad121938acbc0a8ff4c",
-   "cycles_end": 524,
-   "first_emit_to_last_write": 504,
+   "cycles_end": 532,
+   "first_emit_to_last_write": 512,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 20,
-     "last_write": 74,
+     "last_write": 75,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 25,
-     "last_write": 79,
+     "last_write": 80,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 35,
-     "last_write": 89,
+     "last_write": 90,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 40,
-     "last_write": 94,
+     "last_write": 95,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 63,
-     "last_emit": 67,
-     "last_write": 121,
+     "first_emit": 64,
+     "last_emit": 68,
+     "last_write": 123,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 68,
-     "last_emit": 72,
-     "last_write": 126,
+     "first_emit": 69,
+     "last_emit": 73,
+     "last_write": 128,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 73,
-     "last_emit": 77,
-     "last_write": 131,
+     "first_emit": 74,
+     "last_emit": 78,
+     "last_write": 133,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 78,
-     "last_emit": 82,
-     "last_write": 136,
+     "first_emit": 79,
+     "last_emit": 83,
+     "last_write": 138,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 83,
-     "last_emit": 87,
-     "last_write": 141,
+     "first_emit": 84,
+     "last_emit": 88,
+     "last_write": 143,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 88,
-     "last_emit": 92,
-     "last_write": 146,
+     "first_emit": 89,
+     "last_emit": 93,
+     "last_write": 148,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 115,
-     "last_emit": 119,
-     "last_write": 173,
-     "last_result": 286,
-     "vectors": 5,
-     "nout": 8,
-     "nin": 640,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 120,
-     "last_emit": 124,
-     "last_write": 178,
+     "first_emit": 117,
+     "last_emit": 121,
+     "last_write": 176,
      "last_result": 291,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 125,
-     "last_emit": 129,
-     "last_write": 183,
+     "first_emit": 122,
+     "last_emit": 126,
+     "last_write": 181,
      "last_result": 296,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 130,
-     "last_emit": 134,
-     "last_write": 188,
+     "first_emit": 127,
+     "last_emit": 131,
+     "last_write": 186,
      "last_result": 301,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 135,
-     "last_emit": 139,
-     "last_write": 193,
+     "first_emit": 132,
+     "last_emit": 136,
+     "last_write": 191,
      "last_result": 306,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 140,
-     "last_emit": 144,
-     "last_write": 198,
+     "first_emit": 137,
+     "last_emit": 141,
+     "last_write": 196,
      "last_result": 311,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 292,
-     "last_emit": 292,
-     "last_write": 437,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
+     "first_emit": 142,
+     "last_emit": 146,
+     "last_write": 201,
+     "last_result": 316,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
     },
     {
      "first_emit": 297,
      "last_emit": 297,
-     "last_write": 442,
+     "last_write": 444,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 302,
      "last_emit": 302,
-     "last_write": 447,
+     "last_write": 449,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 307,
      "last_emit": 307,
-     "last_write": 452,
+     "last_write": 454,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 312,
      "last_emit": 312,
-     "last_write": 457,
+     "last_write": 459,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 317,
      "last_emit": 317,
-     "last_write": 462,
+     "last_write": 464,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 431,
-     "last_emit": 435,
-     "last_write": 489,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 469,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 438,
+     "last_emit": 442,
+     "last_write": 497,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 436,
-     "last_emit": 440,
-     "last_write": 494,
+     "first_emit": 443,
+     "last_emit": 447,
+     "last_write": 502,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 441,
-     "last_emit": 445,
-     "last_write": 499,
+     "first_emit": 448,
+     "last_emit": 452,
+     "last_write": 507,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 446,
-     "last_emit": 450,
-     "last_write": 504,
+     "first_emit": 453,
+     "last_emit": 457,
+     "last_write": 512,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 451,
-     "last_emit": 455,
-     "last_write": 509,
+     "first_emit": 458,
+     "last_emit": 462,
+     "last_write": 517,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 456,
-     "last_emit": 460,
-     "last_write": 514,
+     "first_emit": 463,
+     "last_emit": 467,
+     "last_write": 522,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2273,7 +2273,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 378,
+    "cycles": 380,
     "pass_": true
    },
    "checks": [
@@ -2321,68 +2321,68 @@
     }
    ],
    "vm_out_sha256": "8d5e430d69415ebf926171c4d18c9e76368ea9c8cbf9ebd83b45374925021376",
-   "cycles_end": 378,
-   "first_emit_to_last_write": 358,
+   "cycles_end": 380,
+   "first_emit_to_last_write": 360,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 14,
-     "last_write": 343,
+     "last_write": 345,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 16,
      "last_emit": 19,
-     "last_write": 348,
+     "last_write": 350,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 21,
      "last_emit": 24,
-     "last_write": 353,
+     "last_write": 355,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 26,
      "last_emit": 29,
-     "last_write": 358,
+     "last_write": 360,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 31,
      "last_emit": 34,
-     "last_write": 363,
+     "last_write": 365,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 36,
      "last_emit": 39,
-     "last_write": 368,
+     "last_write": 370,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     }
    ],
    "exact": true
@@ -2402,7 +2402,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 312,
+    "cycles": 317,
     "pass_": true
    },
    "checks": [
@@ -2492,248 +2492,248 @@
     }
    ],
    "vm_out_sha256": "63d7dd224d038e09b95ff83f5408ba74e3312b2142eb9c72a1ae60d652bac95d",
-   "cycles_end": 312,
-   "first_emit_to_last_write": 292,
+   "cycles_end": 317,
+   "first_emit_to_last_write": 297,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
+     "last_write": 71,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
+     "last_write": 76,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
+     "last_write": 81,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
+     "last_write": 86,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
+     "last_write": 91,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 41,
      "last_emit": 41,
-     "last_write": 98,
-     "last_result": 151,
+     "last_write": 99,
+     "last_result": 154,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 46,
      "last_emit": 46,
-     "last_write": 103,
-     "last_result": 156,
+     "last_write": 104,
+     "last_result": 159,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 51,
      "last_emit": 51,
-     "last_write": 108,
-     "last_result": 161,
+     "last_write": 109,
+     "last_result": 164,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 56,
      "last_emit": 56,
-     "last_write": 113,
-     "last_result": 166,
+     "last_write": 114,
+     "last_result": 169,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 61,
      "last_emit": 61,
-     "last_write": 118,
-     "last_result": 171,
+     "last_write": 119,
+     "last_result": 174,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 66,
      "last_emit": 66,
-     "last_write": 123,
-     "last_result": 176,
+     "last_write": 124,
+     "last_result": 179,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
-     "first_emit": 157,
-     "last_emit": 157,
-     "last_write": 211,
+     "first_emit": 160,
+     "last_emit": 160,
+     "last_write": 215,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 162,
-     "last_emit": 162,
-     "last_write": 216,
+     "first_emit": 165,
+     "last_emit": 165,
+     "last_write": 220,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 167,
-     "last_emit": 167,
-     "last_write": 221,
+     "first_emit": 170,
+     "last_emit": 170,
+     "last_write": 225,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 172,
-     "last_emit": 172,
-     "last_write": 226,
+     "first_emit": 175,
+     "last_emit": 175,
+     "last_write": 230,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 177,
-     "last_emit": 177,
-     "last_write": 231,
+     "first_emit": 180,
+     "last_emit": 180,
+     "last_write": 235,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 182,
-     "last_emit": 182,
-     "last_write": 236,
+     "first_emit": 185,
+     "last_emit": 185,
+     "last_write": 240,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 205,
-     "last_emit": 205,
-     "last_write": 277,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 6,
-     "depth_model": 72
-    },
-    {
-     "first_emit": 210,
-     "last_emit": 210,
+     "first_emit": 209,
+     "last_emit": 209,
      "last_write": 282,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 215,
-     "last_emit": 215,
+     "first_emit": 214,
+     "last_emit": 214,
      "last_write": 287,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 220,
-     "last_emit": 220,
+     "first_emit": 219,
+     "last_emit": 219,
      "last_write": 292,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 225,
-     "last_emit": 225,
+     "first_emit": 224,
+     "last_emit": 224,
      "last_write": 297,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 230,
-     "last_emit": 230,
+     "first_emit": 229,
+     "last_emit": 229,
      "last_write": 302,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
+    },
+    {
+     "first_emit": 234,
+     "last_emit": 234,
+     "last_write": 307,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
     }
    ],
    "exact": true
@@ -2753,7 +2753,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -2801,68 +2801,68 @@
     }
    ],
    "vm_out_sha256": "cfeb3014a41101b1aabaf43e864ac09459aca3f2414f34be02adff32a60e412e",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -2882,7 +2882,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -2930,68 +2930,68 @@
     }
    ],
    "vm_out_sha256": "99b906c2293b35c27034e8cfff99cc22a4adb0bb6a688817250158bca994c997",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -3011,7 +3011,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -3059,68 +3059,68 @@
     }
    ],
    "vm_out_sha256": "e771b16e0c779c119f3c2143de5af367e4bd5e1e6f03fab848325b07d396d244",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -3140,7 +3140,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -3188,68 +3188,68 @@
     }
    ],
    "vm_out_sha256": "97d5a83b48d5636b48a415182f4d0d38de058b5fe9894cbdf1c3d067c69b46fd",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -3269,7 +3269,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -3317,68 +3317,68 @@
     }
    ],
    "vm_out_sha256": "cfe07990539335d45a975270bd18472b72afb854e4f1b5ede97b419fb75cf647",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -3398,7 +3398,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -3446,68 +3446,68 @@
     }
    ],
    "vm_out_sha256": "4776e3d89b716760e4c95492772823d3a1fb3574ebb89affae9cfc0fe2ab4971",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -3527,7 +3527,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -3575,68 +3575,68 @@
     }
    ],
    "vm_out_sha256": "d0ef0a05ed19ea493202ad41eac2306d487462f075a42b62737a8758eefd0921",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -3656,7 +3656,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 185,
+    "cycles": 187,
     "pass_": true
    },
    "checks": [
@@ -3704,68 +3704,68 @@
     }
    ],
    "vm_out_sha256": "57e1f7cad033d23d266a312135224e578c12603a4a86fe8c4947e59f4e6d1f97",
-   "cycles_end": 185,
-   "first_emit_to_last_write": 133,
+   "cycles_end": 187,
+   "first_emit_to_last_write": 136,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 118,
+     "last_write": 66,
+     "last_result": 121,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
-     "last_result": 123,
+     "last_write": 71,
+     "last_result": 126,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
-     "last_result": 128,
+     "last_write": 76,
+     "last_result": 131,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
-     "last_result": 133,
+     "last_write": 81,
+     "last_result": 136,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
-     "last_result": 138,
+     "last_write": 86,
+     "last_result": 141,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
-     "last_result": 143,
+     "last_write": 91,
+     "last_result": 146,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -3786,7 +3786,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 554,
+    "cycles": 555,
     "pass_": true
    },
    "checks": [
@@ -3834,248 +3834,248 @@
     }
    ],
    "vm_out_sha256": "753bc03519748c07416790f8a09a116c33deaa69e4342c2cdf38f98b1b1b09f3",
-   "cycles_end": 554,
-   "first_emit_to_last_write": 534,
+   "cycles_end": 555,
+   "first_emit_to_last_write": 535,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 50,
-     "last_write": 104,
+     "last_write": 105,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 70,
-     "last_write": 124,
+     "last_write": 125,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 71,
      "last_emit": 90,
-     "last_write": 144,
+     "last_write": 145,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 91,
      "last_emit": 110,
-     "last_write": 164,
+     "last_write": 165,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 111,
      "last_emit": 130,
-     "last_write": 184,
+     "last_write": 185,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 131,
      "last_emit": 150,
-     "last_write": 204,
+     "last_write": 205,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 151,
      "last_emit": 170,
-     "last_write": 224,
+     "last_write": 225,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 171,
      "last_emit": 190,
-     "last_write": 244,
+     "last_write": 245,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 191,
      "last_emit": 210,
-     "last_write": 264,
+     "last_write": 265,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 211,
      "last_emit": 230,
-     "last_write": 284,
+     "last_write": 285,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 231,
      "last_emit": 250,
-     "last_write": 304,
+     "last_write": 305,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 251,
      "last_emit": 270,
-     "last_write": 324,
+     "last_write": 325,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 271,
      "last_emit": 290,
-     "last_write": 344,
+     "last_write": 345,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 291,
      "last_emit": 310,
-     "last_write": 364,
+     "last_write": 365,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 311,
      "last_emit": 330,
-     "last_write": 384,
+     "last_write": 385,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 331,
      "last_emit": 350,
-     "last_write": 404,
+     "last_write": 405,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 351,
      "last_emit": 370,
-     "last_write": 424,
+     "last_write": 425,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 371,
      "last_emit": 390,
-     "last_write": 444,
+     "last_write": 445,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 391,
      "last_emit": 410,
-     "last_write": 464,
+     "last_write": 465,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 411,
      "last_emit": 430,
-     "last_write": 484,
+     "last_write": 485,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 431,
      "last_emit": 450,
-     "last_write": 504,
+     "last_write": 505,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 451,
      "last_emit": 470,
-     "last_write": 524,
+     "last_write": 525,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 471,
      "last_emit": 490,
-     "last_write": 544,
+     "last_write": 545,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -4095,7 +4095,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 524,
+    "cycles": 532,
     "pass_": true
    },
    "checks": [
@@ -4143,308 +4143,308 @@
     }
    ],
    "vm_out_sha256": "bb7071120b502668f3a1053dd83160999c67884705bf9189098710dbbe3f660a",
-   "cycles_end": 524,
-   "first_emit_to_last_write": 504,
+   "cycles_end": 532,
+   "first_emit_to_last_write": 512,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 20,
-     "last_write": 74,
+     "last_write": 75,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 25,
-     "last_write": 79,
+     "last_write": 80,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 35,
-     "last_write": 89,
+     "last_write": 90,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 40,
-     "last_write": 94,
+     "last_write": 95,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 63,
-     "last_emit": 67,
-     "last_write": 121,
+     "first_emit": 64,
+     "last_emit": 68,
+     "last_write": 123,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 68,
-     "last_emit": 72,
-     "last_write": 126,
+     "first_emit": 69,
+     "last_emit": 73,
+     "last_write": 128,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 73,
-     "last_emit": 77,
-     "last_write": 131,
+     "first_emit": 74,
+     "last_emit": 78,
+     "last_write": 133,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 78,
-     "last_emit": 82,
-     "last_write": 136,
+     "first_emit": 79,
+     "last_emit": 83,
+     "last_write": 138,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 83,
-     "last_emit": 87,
-     "last_write": 141,
+     "first_emit": 84,
+     "last_emit": 88,
+     "last_write": 143,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 88,
-     "last_emit": 92,
-     "last_write": 146,
+     "first_emit": 89,
+     "last_emit": 93,
+     "last_write": 148,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 115,
-     "last_emit": 119,
-     "last_write": 173,
-     "last_result": 286,
-     "vectors": 5,
-     "nout": 8,
-     "nin": 640,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 120,
-     "last_emit": 124,
-     "last_write": 178,
+     "first_emit": 117,
+     "last_emit": 121,
+     "last_write": 176,
      "last_result": 291,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 125,
-     "last_emit": 129,
-     "last_write": 183,
+     "first_emit": 122,
+     "last_emit": 126,
+     "last_write": 181,
      "last_result": 296,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 130,
-     "last_emit": 134,
-     "last_write": 188,
+     "first_emit": 127,
+     "last_emit": 131,
+     "last_write": 186,
      "last_result": 301,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 135,
-     "last_emit": 139,
-     "last_write": 193,
+     "first_emit": 132,
+     "last_emit": 136,
+     "last_write": 191,
      "last_result": 306,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 140,
-     "last_emit": 144,
-     "last_write": 198,
+     "first_emit": 137,
+     "last_emit": 141,
+     "last_write": 196,
      "last_result": 311,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 292,
-     "last_emit": 292,
-     "last_write": 437,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
+     "first_emit": 142,
+     "last_emit": 146,
+     "last_write": 201,
+     "last_result": 316,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
     },
     {
      "first_emit": 297,
      "last_emit": 297,
-     "last_write": 442,
+     "last_write": 444,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 302,
      "last_emit": 302,
-     "last_write": 447,
+     "last_write": 449,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 307,
      "last_emit": 307,
-     "last_write": 452,
+     "last_write": 454,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 312,
      "last_emit": 312,
-     "last_write": 457,
+     "last_write": 459,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 317,
      "last_emit": 317,
-     "last_write": 462,
+     "last_write": 464,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 431,
-     "last_emit": 435,
-     "last_write": 489,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 469,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 438,
+     "last_emit": 442,
+     "last_write": 497,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 436,
-     "last_emit": 440,
-     "last_write": 494,
+     "first_emit": 443,
+     "last_emit": 447,
+     "last_write": 502,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 441,
-     "last_emit": 445,
-     "last_write": 499,
+     "first_emit": 448,
+     "last_emit": 452,
+     "last_write": 507,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 446,
-     "last_emit": 450,
-     "last_write": 504,
+     "first_emit": 453,
+     "last_emit": 457,
+     "last_write": 512,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 451,
-     "last_emit": 455,
-     "last_write": 509,
+     "first_emit": 458,
+     "last_emit": 462,
+     "last_write": 517,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 456,
-     "last_emit": 460,
-     "last_write": 514,
+     "first_emit": 463,
+     "last_emit": 467,
+     "last_write": 522,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -4466,7 +4466,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 484,
+    "cycles": 490,
     "pass_": true
    },
    "checks": [
@@ -4556,428 +4556,428 @@
     }
    ],
    "vm_out_sha256": "7969c4ee9bda146c6b4fc350dccf53cb23806eb7bb7ffafdf82c496ff1d184f6",
-   "cycles_end": 484,
-   "first_emit_to_last_write": 464,
+   "cycles_end": 490,
+   "first_emit_to_last_write": 470,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 66,
-     "last_result": 167,
+     "last_write": 67,
+     "last_result": 170,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 17,
-     "last_write": 71,
-     "last_result": 172,
+     "last_write": 72,
+     "last_result": 175,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 22,
-     "last_write": 76,
-     "last_result": 177,
+     "last_write": 77,
+     "last_result": 180,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 27,
-     "last_write": 81,
-     "last_result": 182,
+     "last_write": 82,
+     "last_result": 185,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 32,
-     "last_write": 86,
-     "last_result": 187,
+     "last_write": 87,
+     "last_result": 190,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 37,
-     "last_write": 91,
-     "last_result": 192,
+     "last_write": 92,
+     "last_result": 195,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 50,
      "last_emit": 50,
-     "last_write": 104,
-     "last_result": 193,
+     "last_write": 105,
+     "last_result": 196,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 51,
-     "last_write": 105,
-     "last_result": 194,
+     "last_write": 106,
+     "last_result": 197,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 56,
      "last_emit": 56,
-     "last_write": 110,
-     "last_result": 199,
+     "last_write": 111,
+     "last_result": 202,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 61,
      "last_emit": 61,
-     "last_write": 115,
-     "last_result": 204,
+     "last_write": 116,
+     "last_result": 207,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 66,
      "last_emit": 66,
-     "last_write": 120,
-     "last_result": 209,
+     "last_write": 121,
+     "last_result": 212,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 71,
      "last_emit": 71,
-     "last_write": 125,
-     "last_result": 214,
+     "last_write": 126,
+     "last_result": 217,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 173,
-     "last_emit": 173,
-     "last_write": 318,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
-    },
-    {
-     "first_emit": 178,
-     "last_emit": 178,
+     "first_emit": 176,
+     "last_emit": 176,
      "last_write": 323,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 183,
-     "last_emit": 183,
+     "first_emit": 181,
+     "last_emit": 181,
      "last_write": 328,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 188,
-     "last_emit": 188,
+     "first_emit": 186,
+     "last_emit": 186,
      "last_write": 333,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 193,
-     "last_emit": 193,
+     "first_emit": 191,
+     "last_emit": 191,
      "last_write": 338,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 198,
-     "last_emit": 198,
+     "first_emit": 196,
+     "last_emit": 196,
      "last_write": 343,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 203,
-     "last_emit": 203,
+     "first_emit": 201,
+     "last_emit": 201,
      "last_write": 348,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 208,
-     "last_emit": 208,
+     "first_emit": 206,
+     "last_emit": 206,
      "last_write": 353,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 213,
-     "last_emit": 213,
+     "first_emit": 211,
+     "last_emit": 211,
      "last_write": 358,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 218,
-     "last_emit": 218,
+     "first_emit": 216,
+     "last_emit": 216,
      "last_write": 363,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 223,
-     "last_emit": 223,
+     "first_emit": 221,
+     "last_emit": 221,
      "last_write": 368,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 228,
-     "last_emit": 228,
+     "first_emit": 226,
+     "last_emit": 226,
      "last_write": 373,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 320,
-     "last_emit": 321,
-     "last_write": 375,
+     "first_emit": 231,
+     "last_emit": 231,
+     "last_write": 378,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 324,
+     "last_emit": 325,
+     "last_write": 380,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 322,
-     "last_emit": 323,
-     "last_write": 377,
-     "last_result": null,
-     "vectors": 2,
-     "nout": 1,
-     "nin": 1280,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 327,
-     "last_emit": 328,
+     "first_emit": 326,
+     "last_emit": 327,
      "last_write": 382,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 332,
-     "last_emit": 333,
+     "first_emit": 331,
+     "last_emit": 332,
      "last_write": 387,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 337,
-     "last_emit": 338,
+     "first_emit": 336,
+     "last_emit": 337,
      "last_write": 392,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 342,
-     "last_emit": 343,
+     "first_emit": 341,
+     "last_emit": 342,
      "last_write": 397,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 347,
+     "first_emit": 346,
      "last_emit": 347,
-     "last_write": 401,
+     "last_write": 402,
      "last_result": null,
-     "vectors": 1,
+     "vectors": 2,
      "nout": 1,
-     "nin": 512,
-     "depth_model": 54
+     "nin": 1280,
+     "depth_model": 55
     },
     {
-     "first_emit": 352,
-     "last_emit": 352,
+     "first_emit": 351,
+     "last_emit": 351,
      "last_write": 406,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 357,
-     "last_emit": 357,
+     "first_emit": 356,
+     "last_emit": 356,
      "last_write": 411,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 362,
-     "last_emit": 362,
+     "first_emit": 361,
+     "last_emit": 361,
      "last_write": 416,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 367,
-     "last_emit": 367,
+     "first_emit": 366,
+     "last_emit": 366,
      "last_write": 421,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 372,
-     "last_emit": 372,
+     "first_emit": 371,
+     "last_emit": 371,
      "last_write": 426,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 395,
-     "last_emit": 395,
-     "last_write": 449,
+     "first_emit": 376,
+     "last_emit": 376,
+     "last_write": 431,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
-     "nin": 64,
-     "depth_model": 54
+     "nin": 512,
+     "depth_model": 55
     },
     {
      "first_emit": 400,
      "last_emit": 400,
-     "last_write": 454,
+     "last_write": 455,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 405,
      "last_emit": 405,
-     "last_write": 459,
+     "last_write": 460,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 410,
      "last_emit": 410,
-     "last_write": 464,
+     "last_write": 465,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 415,
      "last_emit": 415,
-     "last_write": 469,
+     "last_write": 470,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 420,
      "last_emit": 420,
-     "last_write": 474,
+     "last_write": 475,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
+    },
+    {
+     "first_emit": 425,
+     "last_emit": 425,
+     "last_write": 480,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -4997,7 +4997,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 130,
+    "cycles": 131,
     "pass_": true
    },
    "checks": [
@@ -5045,128 +5045,128 @@
     }
    ],
    "vm_out_sha256": "75744c77bb0742aaf3a935c2999a9a15c1cae48fa2fbd6f8a760d396223660fe",
-   "cycles_end": 130,
-   "first_emit_to_last_write": 110,
+   "cycles_end": 131,
+   "first_emit_to_last_write": 111,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
+     "last_write": 71,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
+     "last_write": 76,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
+     "last_write": 81,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
+     "last_write": 86,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
+     "last_write": 91,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 41,
      "last_emit": 41,
-     "last_write": 95,
+     "last_write": 96,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 46,
      "last_emit": 46,
-     "last_write": 100,
+     "last_write": 101,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 51,
-     "last_write": 105,
+     "last_write": 106,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 56,
      "last_emit": 56,
-     "last_write": 110,
+     "last_write": 111,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 61,
      "last_emit": 61,
-     "last_write": 115,
+     "last_write": 116,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 66,
      "last_emit": 66,
-     "last_write": 120,
+     "last_write": 121,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -5187,7 +5187,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 618,
+    "cycles": 627,
     "pass_": true
    },
    "checks": [
@@ -5277,368 +5277,368 @@
     }
    ],
    "vm_out_sha256": "533d4c48e39ce6911eac0e7f1ecb5dd07caa6db5da007ce096588da8543793db",
-   "cycles_end": 618,
-   "first_emit_to_last_write": 598,
+   "cycles_end": 627,
+   "first_emit_to_last_write": 607,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 160,
+     "last_write": 66,
+     "last_result": 163,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
-     "last_result": 165,
+     "last_write": 71,
+     "last_result": 168,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
-     "last_result": 170,
+     "last_write": 76,
+     "last_result": 173,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
-     "last_result": 175,
+     "last_write": 81,
+     "last_result": 178,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
-     "last_result": 180,
+     "last_write": 86,
+     "last_result": 183,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
-     "last_result": 185,
+     "last_write": 91,
+     "last_result": 188,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 166,
-     "last_emit": 168,
-     "last_write": 316,
-     "last_result": 411,
+     "first_emit": 169,
+     "last_emit": 171,
+     "last_write": 320,
+     "last_result": 417,
      "vectors": 3,
      "nout": 1,
      "nin": 640,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 171,
-     "last_emit": 173,
-     "last_write": 321,
-     "last_result": 416,
+     "first_emit": 174,
+     "last_emit": 176,
+     "last_write": 325,
+     "last_result": 422,
      "vectors": 3,
      "nout": 1,
      "nin": 640,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 176,
-     "last_emit": 178,
-     "last_write": 326,
-     "last_result": 421,
+     "first_emit": 179,
+     "last_emit": 181,
+     "last_write": 330,
+     "last_result": 427,
      "vectors": 3,
      "nout": 1,
      "nin": 640,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 181,
-     "last_emit": 183,
-     "last_write": 331,
-     "last_result": 426,
+     "first_emit": 184,
+     "last_emit": 186,
+     "last_write": 335,
+     "last_result": 432,
      "vectors": 3,
      "nout": 1,
      "nin": 640,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 186,
-     "last_emit": 188,
-     "last_write": 336,
-     "last_result": 431,
+     "first_emit": 189,
+     "last_emit": 191,
+     "last_write": 340,
+     "last_result": 437,
      "vectors": 3,
      "nout": 1,
      "nin": 640,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 191,
-     "last_emit": 193,
-     "last_write": 341,
-     "last_result": 436,
-     "vectors": 3,
-     "nout": 1,
-     "nin": 640,
-     "depth_model": 148
-    },
-    {
-     "first_emit": 196,
+     "first_emit": 194,
      "last_emit": 196,
-     "last_write": 344,
+     "last_write": 345,
+     "last_result": 442,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 640,
+     "depth_model": 149
+    },
+    {
+     "first_emit": 199,
+     "last_emit": 199,
+     "last_write": 348,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 201,
-     "last_emit": 201,
-     "last_write": 349,
+     "first_emit": 204,
+     "last_emit": 204,
+     "last_write": 353,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 206,
-     "last_emit": 206,
-     "last_write": 354,
+     "first_emit": 209,
+     "last_emit": 209,
+     "last_write": 358,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 211,
-     "last_emit": 211,
-     "last_write": 359,
+     "first_emit": 214,
+     "last_emit": 214,
+     "last_write": 363,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 216,
-     "last_emit": 216,
-     "last_write": 364,
+     "first_emit": 219,
+     "last_emit": 219,
+     "last_write": 368,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 221,
-     "last_emit": 221,
-     "last_write": 369,
+     "first_emit": 224,
+     "last_emit": 224,
+     "last_write": 373,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 417,
-     "last_emit": 417,
-     "last_write": 471,
+     "first_emit": 423,
+     "last_emit": 423,
+     "last_write": 478,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 422,
-     "last_emit": 422,
-     "last_write": 476,
+     "first_emit": 428,
+     "last_emit": 428,
+     "last_write": 483,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 427,
-     "last_emit": 427,
-     "last_write": 481,
+     "first_emit": 433,
+     "last_emit": 433,
+     "last_write": 488,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 432,
-     "last_emit": 432,
-     "last_write": 486,
+     "first_emit": 438,
+     "last_emit": 438,
+     "last_write": 493,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 437,
-     "last_emit": 437,
-     "last_write": 491,
+     "first_emit": 443,
+     "last_emit": 443,
+     "last_write": 498,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 442,
-     "last_emit": 442,
-     "last_write": 496,
+     "first_emit": 448,
+     "last_emit": 448,
+     "last_write": 503,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 465,
-     "last_emit": 466,
-     "last_write": 535,
+     "first_emit": 472,
+     "last_emit": 473,
+     "last_write": 543,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 470,
-     "last_emit": 471,
-     "last_write": 540,
+     "first_emit": 477,
+     "last_emit": 478,
+     "last_write": 548,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 475,
-     "last_emit": 476,
-     "last_write": 545,
+     "first_emit": 482,
+     "last_emit": 483,
+     "last_write": 553,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 480,
-     "last_emit": 481,
-     "last_write": 550,
+     "first_emit": 487,
+     "last_emit": 488,
+     "last_write": 558,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 485,
-     "last_emit": 486,
-     "last_write": 555,
+     "first_emit": 492,
+     "last_emit": 493,
+     "last_write": 563,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 490,
-     "last_emit": 491,
-     "last_write": 560,
+     "first_emit": 497,
+     "last_emit": 498,
+     "last_write": 568,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 529,
-     "last_emit": 529,
-     "last_write": 583,
+     "first_emit": 537,
+     "last_emit": 537,
+     "last_write": 592,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 534,
-     "last_emit": 534,
-     "last_write": 588,
+     "first_emit": 542,
+     "last_emit": 542,
+     "last_write": 597,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 539,
-     "last_emit": 539,
-     "last_write": 593,
+     "first_emit": 547,
+     "last_emit": 547,
+     "last_write": 602,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 544,
-     "last_emit": 544,
-     "last_write": 598,
+     "first_emit": 552,
+     "last_emit": 552,
+     "last_write": 607,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 549,
-     "last_emit": 549,
-     "last_write": 603,
+     "first_emit": 557,
+     "last_emit": 557,
+     "last_write": 612,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 554,
-     "last_emit": 554,
-     "last_write": 608,
+     "first_emit": 562,
+     "last_emit": 562,
+     "last_write": 617,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -5659,7 +5659,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 554,
+    "cycles": 555,
     "pass_": true
    },
    "checks": [
@@ -5707,248 +5707,248 @@
     }
    ],
    "vm_out_sha256": "d8d20f2f47d5248c3de3d1a88692e47c755394bab6f2591ccdce46ca78cc2e46",
-   "cycles_end": 554,
-   "first_emit_to_last_write": 534,
+   "cycles_end": 555,
+   "first_emit_to_last_write": 535,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 50,
-     "last_write": 104,
+     "last_write": 105,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 70,
-     "last_write": 124,
+     "last_write": 125,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 71,
      "last_emit": 90,
-     "last_write": 144,
+     "last_write": 145,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 91,
      "last_emit": 110,
-     "last_write": 164,
+     "last_write": 165,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 111,
      "last_emit": 130,
-     "last_write": 184,
+     "last_write": 185,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 131,
      "last_emit": 150,
-     "last_write": 204,
+     "last_write": 205,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 151,
      "last_emit": 170,
-     "last_write": 224,
+     "last_write": 225,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 171,
      "last_emit": 190,
-     "last_write": 244,
+     "last_write": 245,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 191,
      "last_emit": 210,
-     "last_write": 264,
+     "last_write": 265,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 211,
      "last_emit": 230,
-     "last_write": 284,
+     "last_write": 285,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 231,
      "last_emit": 250,
-     "last_write": 304,
+     "last_write": 305,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 251,
      "last_emit": 270,
-     "last_write": 324,
+     "last_write": 325,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 271,
      "last_emit": 290,
-     "last_write": 344,
+     "last_write": 345,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 291,
      "last_emit": 310,
-     "last_write": 364,
+     "last_write": 365,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 311,
      "last_emit": 330,
-     "last_write": 384,
+     "last_write": 385,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 331,
      "last_emit": 350,
-     "last_write": 404,
+     "last_write": 405,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 351,
      "last_emit": 370,
-     "last_write": 424,
+     "last_write": 425,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 371,
      "last_emit": 390,
-     "last_write": 444,
+     "last_write": 445,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 391,
      "last_emit": 410,
-     "last_write": 464,
+     "last_write": 465,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 411,
      "last_emit": 430,
-     "last_write": 484,
+     "last_write": 485,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 431,
      "last_emit": 450,
-     "last_write": 504,
+     "last_write": 505,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 451,
      "last_emit": 470,
-     "last_write": 524,
+     "last_write": 525,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 471,
      "last_emit": 490,
-     "last_write": 544,
+     "last_write": 545,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -5968,7 +5968,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 524,
+    "cycles": 532,
     "pass_": true
    },
    "checks": [
@@ -6016,308 +6016,308 @@
     }
    ],
    "vm_out_sha256": "c2343139373014540408dcf78e9a9afa060a610d37bce23d80ea3ac73785b9be",
-   "cycles_end": 524,
-   "first_emit_to_last_write": 504,
+   "cycles_end": 532,
+   "first_emit_to_last_write": 512,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 20,
-     "last_write": 74,
+     "last_write": 75,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 25,
-     "last_write": 79,
+     "last_write": 80,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 35,
-     "last_write": 89,
+     "last_write": 90,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 40,
-     "last_write": 94,
+     "last_write": 95,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 63,
-     "last_emit": 67,
-     "last_write": 121,
+     "first_emit": 64,
+     "last_emit": 68,
+     "last_write": 123,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 68,
-     "last_emit": 72,
-     "last_write": 126,
+     "first_emit": 69,
+     "last_emit": 73,
+     "last_write": 128,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 73,
-     "last_emit": 77,
-     "last_write": 131,
+     "first_emit": 74,
+     "last_emit": 78,
+     "last_write": 133,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 78,
-     "last_emit": 82,
-     "last_write": 136,
+     "first_emit": 79,
+     "last_emit": 83,
+     "last_write": 138,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 83,
-     "last_emit": 87,
-     "last_write": 141,
+     "first_emit": 84,
+     "last_emit": 88,
+     "last_write": 143,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 88,
-     "last_emit": 92,
-     "last_write": 146,
+     "first_emit": 89,
+     "last_emit": 93,
+     "last_write": 148,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 115,
-     "last_emit": 119,
-     "last_write": 173,
-     "last_result": 286,
-     "vectors": 5,
-     "nout": 8,
-     "nin": 640,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 120,
-     "last_emit": 124,
-     "last_write": 178,
+     "first_emit": 117,
+     "last_emit": 121,
+     "last_write": 176,
      "last_result": 291,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 125,
-     "last_emit": 129,
-     "last_write": 183,
+     "first_emit": 122,
+     "last_emit": 126,
+     "last_write": 181,
      "last_result": 296,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 130,
-     "last_emit": 134,
-     "last_write": 188,
+     "first_emit": 127,
+     "last_emit": 131,
+     "last_write": 186,
      "last_result": 301,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 135,
-     "last_emit": 139,
-     "last_write": 193,
+     "first_emit": 132,
+     "last_emit": 136,
+     "last_write": 191,
      "last_result": 306,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 140,
-     "last_emit": 144,
-     "last_write": 198,
+     "first_emit": 137,
+     "last_emit": 141,
+     "last_write": 196,
      "last_result": 311,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 292,
-     "last_emit": 292,
-     "last_write": 437,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
+     "first_emit": 142,
+     "last_emit": 146,
+     "last_write": 201,
+     "last_result": 316,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
     },
     {
      "first_emit": 297,
      "last_emit": 297,
-     "last_write": 442,
+     "last_write": 444,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 302,
      "last_emit": 302,
-     "last_write": 447,
+     "last_write": 449,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 307,
      "last_emit": 307,
-     "last_write": 452,
+     "last_write": 454,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 312,
      "last_emit": 312,
-     "last_write": 457,
+     "last_write": 459,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 317,
      "last_emit": 317,
-     "last_write": 462,
+     "last_write": 464,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 431,
-     "last_emit": 435,
-     "last_write": 489,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 469,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 438,
+     "last_emit": 442,
+     "last_write": 497,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 436,
-     "last_emit": 440,
-     "last_write": 494,
+     "first_emit": 443,
+     "last_emit": 447,
+     "last_write": 502,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 441,
-     "last_emit": 445,
-     "last_write": 499,
+     "first_emit": 448,
+     "last_emit": 452,
+     "last_write": 507,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 446,
-     "last_emit": 450,
-     "last_write": 504,
+     "first_emit": 453,
+     "last_emit": 457,
+     "last_write": 512,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 451,
-     "last_emit": 455,
-     "last_write": 509,
+     "first_emit": 458,
+     "last_emit": 462,
+     "last_write": 517,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 456,
-     "last_emit": 460,
-     "last_write": 514,
+     "first_emit": 463,
+     "last_emit": 467,
+     "last_write": 522,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -6337,7 +6337,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 378,
+    "cycles": 380,
     "pass_": true
    },
    "checks": [
@@ -6385,68 +6385,68 @@
     }
    ],
    "vm_out_sha256": "07f7ed29bbdf86e20dca608fb61af59f1a1ee3a603244c1e226a7c3da11f99ce",
-   "cycles_end": 378,
-   "first_emit_to_last_write": 358,
+   "cycles_end": 380,
+   "first_emit_to_last_write": 360,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 14,
-     "last_write": 343,
+     "last_write": 345,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 16,
      "last_emit": 19,
-     "last_write": 348,
+     "last_write": 350,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 21,
      "last_emit": 24,
-     "last_write": 353,
+     "last_write": 355,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 26,
      "last_emit": 29,
-     "last_write": 358,
+     "last_write": 360,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 31,
      "last_emit": 34,
-     "last_write": 363,
+     "last_write": 365,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     },
     {
      "first_emit": 36,
      "last_emit": 39,
-     "last_write": 368,
+     "last_write": 370,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     }
    ],
    "exact": true
@@ -6466,7 +6466,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 312,
+    "cycles": 317,
     "pass_": true
    },
    "checks": [
@@ -6556,248 +6556,248 @@
     }
    ],
    "vm_out_sha256": "7cc92a1db425df565bdd5cda40830d33755ec33bedf46466fbf5bfc607b37842",
-   "cycles_end": 312,
-   "first_emit_to_last_write": 292,
+   "cycles_end": 317,
+   "first_emit_to_last_write": 297,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
+     "last_write": 71,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
+     "last_write": 76,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
+     "last_write": 81,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
+     "last_write": 86,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
+     "last_write": 91,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 41,
      "last_emit": 41,
-     "last_write": 98,
-     "last_result": 151,
+     "last_write": 99,
+     "last_result": 154,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 46,
      "last_emit": 46,
-     "last_write": 103,
-     "last_result": 156,
+     "last_write": 104,
+     "last_result": 159,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 51,
      "last_emit": 51,
-     "last_write": 108,
-     "last_result": 161,
+     "last_write": 109,
+     "last_result": 164,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 56,
      "last_emit": 56,
-     "last_write": 113,
-     "last_result": 166,
+     "last_write": 114,
+     "last_result": 169,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 61,
      "last_emit": 61,
-     "last_write": 118,
-     "last_result": 171,
+     "last_write": 119,
+     "last_result": 174,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
      "first_emit": 66,
      "last_emit": 66,
-     "last_write": 123,
-     "last_result": 176,
+     "last_write": 124,
+     "last_result": 179,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
-     "first_emit": 157,
-     "last_emit": 157,
-     "last_write": 211,
+     "first_emit": 160,
+     "last_emit": 160,
+     "last_write": 215,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 162,
-     "last_emit": 162,
-     "last_write": 216,
+     "first_emit": 165,
+     "last_emit": 165,
+     "last_write": 220,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 167,
-     "last_emit": 167,
-     "last_write": 221,
+     "first_emit": 170,
+     "last_emit": 170,
+     "last_write": 225,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 172,
-     "last_emit": 172,
-     "last_write": 226,
+     "first_emit": 175,
+     "last_emit": 175,
+     "last_write": 230,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 177,
-     "last_emit": 177,
-     "last_write": 231,
+     "first_emit": 180,
+     "last_emit": 180,
+     "last_write": 235,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 182,
-     "last_emit": 182,
-     "last_write": 236,
+     "first_emit": 185,
+     "last_emit": 185,
+     "last_write": 240,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 205,
-     "last_emit": 205,
-     "last_write": 277,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 6,
-     "depth_model": 72
-    },
-    {
-     "first_emit": 210,
-     "last_emit": 210,
+     "first_emit": 209,
+     "last_emit": 209,
      "last_write": 282,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 215,
-     "last_emit": 215,
+     "first_emit": 214,
+     "last_emit": 214,
      "last_write": 287,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 220,
-     "last_emit": 220,
+     "first_emit": 219,
+     "last_emit": 219,
      "last_write": 292,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 225,
-     "last_emit": 225,
+     "first_emit": 224,
+     "last_emit": 224,
      "last_write": 297,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     },
     {
-     "first_emit": 230,
-     "last_emit": 230,
+     "first_emit": 229,
+     "last_emit": 229,
      "last_write": 302,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
+    },
+    {
+     "first_emit": 234,
+     "last_emit": 234,
+     "last_write": 307,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth_model": 73
     }
    ],
    "exact": true
@@ -6817,7 +6817,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -6865,68 +6865,68 @@
     }
    ],
    "vm_out_sha256": "7c73ec6053604664c973eab3633de42b87adb568ae1b69fbe8a77b172b61f5ea",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -6946,7 +6946,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -6994,68 +6994,68 @@
     }
    ],
    "vm_out_sha256": "91412389cd5281c14d633d2ecc2fca5e338f31669fb9aa05c4033eabce2113f9",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -7075,7 +7075,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -7123,68 +7123,68 @@
     }
    ],
    "vm_out_sha256": "bbebb6cb1e9332ccdcc8271c4ff73c11d233db1841f31fcf93de69a8cad46151",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -7204,7 +7204,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -7252,68 +7252,68 @@
     }
    ],
    "vm_out_sha256": "852cc7584fc9bcb4f58c92df872b84b2aa93c0987d11cddfea538be62cd9dc27",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -7333,7 +7333,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -7381,68 +7381,68 @@
     }
    ],
    "vm_out_sha256": "ff5996b3caa541e0867132a855d79501d85a061a1a3ef82f55a0e136e054f790",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -7462,7 +7462,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -7510,68 +7510,68 @@
     }
    ],
    "vm_out_sha256": "f099b411277e0f8f3bd7bfca76e199e7b40b642eb177f6db22707da0d379cb34",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -7591,7 +7591,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 221,
+    "cycles": 222,
     "pass_": true
    },
    "checks": [
@@ -7639,68 +7639,68 @@
     }
    ],
    "vm_out_sha256": "4f0f0b9e98fc652e733da9b496b1c042c2831d1798bf0a8876f6e3d0aba7c331",
-   "cycles_end": 221,
-   "first_emit_to_last_write": 201,
+   "cycles_end": 222,
+   "first_emit_to_last_write": 202,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 191,
+     "last_write": 192,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 196,
+     "last_write": 197,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 201,
+     "last_write": 202,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 206,
+     "last_write": 207,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 211,
+     "last_write": 212,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -7720,7 +7720,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 185,
+    "cycles": 187,
     "pass_": true
    },
    "checks": [
@@ -7768,68 +7768,68 @@
     }
    ],
    "vm_out_sha256": "e715ec4997488e740b1197b8ca3b8fded7bd907fb69d4e7f014b3bb6381db8d3",
-   "cycles_end": 185,
-   "first_emit_to_last_write": 133,
+   "cycles_end": 187,
+   "first_emit_to_last_write": 136,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 118,
+     "last_write": 66,
+     "last_result": 121,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
-     "last_result": 123,
+     "last_write": 71,
+     "last_result": 126,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 21,
-     "last_write": 75,
-     "last_result": 128,
+     "last_write": 76,
+     "last_result": 131,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 26,
-     "last_write": 80,
-     "last_result": 133,
+     "last_write": 81,
+     "last_result": 136,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 31,
-     "last_write": 85,
-     "last_result": 138,
+     "last_write": 86,
+     "last_result": 141,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 36,
-     "last_write": 90,
-     "last_result": 143,
+     "last_write": 91,
+     "last_result": 146,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -7850,7 +7850,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 554,
+    "cycles": 555,
     "pass_": true
    },
    "checks": [
@@ -7898,248 +7898,248 @@
     }
    ],
    "vm_out_sha256": "35a08a6a8fc7494817eeeead125c7c0f0dbf016aca60ebf031339b853cdf90b1",
-   "cycles_end": 554,
-   "first_emit_to_last_write": 534,
+   "cycles_end": 555,
+   "first_emit_to_last_write": 535,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 50,
-     "last_write": 104,
+     "last_write": 105,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 51,
      "last_emit": 70,
-     "last_write": 124,
+     "last_write": 125,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 71,
      "last_emit": 90,
-     "last_write": 144,
+     "last_write": 145,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 91,
      "last_emit": 110,
-     "last_write": 164,
+     "last_write": 165,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 111,
      "last_emit": 130,
-     "last_write": 184,
+     "last_write": 185,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 131,
      "last_emit": 150,
-     "last_write": 204,
+     "last_write": 205,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 151,
      "last_emit": 170,
-     "last_write": 224,
+     "last_write": 225,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 171,
      "last_emit": 190,
-     "last_write": 244,
+     "last_write": 245,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 191,
      "last_emit": 210,
-     "last_write": 264,
+     "last_write": 265,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 211,
      "last_emit": 230,
-     "last_write": 284,
+     "last_write": 285,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 231,
      "last_emit": 250,
-     "last_write": 304,
+     "last_write": 305,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 251,
      "last_emit": 270,
-     "last_write": 324,
+     "last_write": 325,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 271,
      "last_emit": 290,
-     "last_write": 344,
+     "last_write": 345,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 291,
      "last_emit": 310,
-     "last_write": 364,
+     "last_write": 365,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 311,
      "last_emit": 330,
-     "last_write": 384,
+     "last_write": 385,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 331,
      "last_emit": 350,
-     "last_write": 404,
+     "last_write": 405,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 351,
      "last_emit": 370,
-     "last_write": 424,
+     "last_write": 425,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 371,
      "last_emit": 390,
-     "last_write": 444,
+     "last_write": 445,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 391,
      "last_emit": 410,
-     "last_write": 464,
+     "last_write": 465,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 411,
      "last_emit": 430,
-     "last_write": 484,
+     "last_write": 485,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 431,
      "last_emit": 450,
-     "last_write": 504,
+     "last_write": 505,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 451,
      "last_emit": 470,
-     "last_write": 524,
+     "last_write": 525,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 471,
      "last_emit": 490,
-     "last_write": 544,
+     "last_write": 545,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -8159,7 +8159,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 524,
+    "cycles": 532,
     "pass_": true
    },
    "checks": [
@@ -8207,308 +8207,308 @@
     }
    ],
    "vm_out_sha256": "caf53758304da3786a7d47b4cc3d448872daf39c98f783879bff8a7adf28d1cf",
-   "cycles_end": 524,
-   "first_emit_to_last_write": 504,
+   "cycles_end": 532,
+   "first_emit_to_last_write": 512,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 20,
-     "last_write": 74,
+     "last_write": 75,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 25,
-     "last_write": 79,
+     "last_write": 80,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 35,
-     "last_write": 89,
+     "last_write": 90,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 40,
-     "last_write": 94,
+     "last_write": 95,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 63,
-     "last_emit": 67,
-     "last_write": 121,
+     "first_emit": 64,
+     "last_emit": 68,
+     "last_write": 123,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 68,
-     "last_emit": 72,
-     "last_write": 126,
+     "first_emit": 69,
+     "last_emit": 73,
+     "last_write": 128,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 73,
-     "last_emit": 77,
-     "last_write": 131,
+     "first_emit": 74,
+     "last_emit": 78,
+     "last_write": 133,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 78,
-     "last_emit": 82,
-     "last_write": 136,
+     "first_emit": 79,
+     "last_emit": 83,
+     "last_write": 138,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 83,
-     "last_emit": 87,
-     "last_write": 141,
+     "first_emit": 84,
+     "last_emit": 88,
+     "last_write": 143,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 88,
-     "last_emit": 92,
-     "last_write": 146,
+     "first_emit": 89,
+     "last_emit": 93,
+     "last_write": 148,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 115,
-     "last_emit": 119,
-     "last_write": 173,
-     "last_result": 286,
-     "vectors": 5,
-     "nout": 8,
-     "nin": 640,
-     "depth_model": 54
-    },
-    {
-     "first_emit": 120,
-     "last_emit": 124,
-     "last_write": 178,
+     "first_emit": 117,
+     "last_emit": 121,
+     "last_write": 176,
      "last_result": 291,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 125,
-     "last_emit": 129,
-     "last_write": 183,
+     "first_emit": 122,
+     "last_emit": 126,
+     "last_write": 181,
      "last_result": 296,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 130,
-     "last_emit": 134,
-     "last_write": 188,
+     "first_emit": 127,
+     "last_emit": 131,
+     "last_write": 186,
      "last_result": 301,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 135,
-     "last_emit": 139,
-     "last_write": 193,
+     "first_emit": 132,
+     "last_emit": 136,
+     "last_write": 191,
      "last_result": 306,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 140,
-     "last_emit": 144,
-     "last_write": 198,
+     "first_emit": 137,
+     "last_emit": 141,
+     "last_write": 196,
      "last_result": 311,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 292,
-     "last_emit": 292,
-     "last_write": 437,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
+     "first_emit": 142,
+     "last_emit": 146,
+     "last_write": 201,
+     "last_result": 316,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth_model": 55
     },
     {
      "first_emit": 297,
      "last_emit": 297,
-     "last_write": 442,
+     "last_write": 444,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 302,
      "last_emit": 302,
-     "last_write": 447,
+     "last_write": 449,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 307,
      "last_emit": 307,
-     "last_write": 452,
+     "last_write": 454,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 312,
      "last_emit": 312,
-     "last_write": 457,
+     "last_write": 459,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
      "first_emit": 317,
      "last_emit": 317,
-     "last_write": 462,
+     "last_write": 464,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 431,
-     "last_emit": 435,
-     "last_write": 489,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 469,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 438,
+     "last_emit": 442,
+     "last_write": 497,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 436,
-     "last_emit": 440,
-     "last_write": 494,
+     "first_emit": 443,
+     "last_emit": 447,
+     "last_write": 502,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 441,
-     "last_emit": 445,
-     "last_write": 499,
+     "first_emit": 448,
+     "last_emit": 452,
+     "last_write": 507,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 446,
-     "last_emit": 450,
-     "last_write": 504,
+     "first_emit": 453,
+     "last_emit": 457,
+     "last_write": 512,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 451,
-     "last_emit": 455,
-     "last_write": 509,
+     "first_emit": 458,
+     "last_emit": 462,
+     "last_write": 517,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 456,
-     "last_emit": 460,
-     "last_write": 514,
+     "first_emit": 463,
+     "last_emit": 467,
+     "last_write": 522,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -8528,7 +8528,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 202,
+    "cycles": 205,
     "pass_": true
    },
    "checks": [
@@ -8576,68 +8576,68 @@
     }
    ],
    "vm_out_sha256": "380b6ec8c6410eebb9909950f44fc286c192066172015a5af01887ad25248b86",
-   "cycles_end": 202,
-   "first_emit_to_last_write": 182,
+   "cycles_end": 205,
+   "first_emit_to_last_write": 185,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 66,
-     "last_result": 167,
+     "last_write": 67,
+     "last_result": 170,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 17,
-     "last_write": 71,
-     "last_result": 172,
+     "last_write": 72,
+     "last_result": 175,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 21,
      "last_emit": 22,
-     "last_write": 76,
-     "last_result": 177,
+     "last_write": 77,
+     "last_result": 180,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 26,
      "last_emit": 27,
-     "last_write": 81,
-     "last_result": 182,
+     "last_write": 82,
+     "last_result": 185,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 31,
      "last_emit": 32,
-     "last_write": 86,
-     "last_result": 187,
+     "last_write": 87,
+     "last_result": 190,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 36,
      "last_emit": 37,
-     "last_write": 91,
-     "last_result": 192,
+     "last_write": 92,
+     "last_result": 195,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -8658,7 +8658,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 164,
+    "cycles": 166,
     "pass_": true
    },
    "checks": [
@@ -8706,128 +8706,128 @@
     }
    ],
    "vm_out_sha256": "100eaa3ef85cb3e1932c9582d6e808168c9924db2f02592be4d402b0397512b7",
-   "cycles_end": 164,
-   "first_emit_to_last_write": 144,
+   "cycles_end": 166,
+   "first_emit_to_last_write": 146,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 81,
+     "last_write": 82,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 16,
      "last_emit": 17,
-     "last_write": 86,
+     "last_write": 87,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 21,
      "last_emit": 22,
-     "last_write": 91,
+     "last_write": 92,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 26,
      "last_emit": 27,
-     "last_write": 96,
+     "last_write": 97,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 31,
      "last_emit": 32,
-     "last_write": 101,
+     "last_write": 102,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 36,
      "last_emit": 37,
-     "last_write": 106,
+     "last_write": 107,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 75,
-     "last_emit": 75,
-     "last_write": 129,
+     "first_emit": 76,
+     "last_emit": 76,
+     "last_write": 131,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 80,
-     "last_emit": 80,
-     "last_write": 134,
+     "first_emit": 81,
+     "last_emit": 81,
+     "last_write": 136,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 85,
-     "last_emit": 85,
-     "last_write": 139,
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 141,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 90,
-     "last_emit": 90,
-     "last_write": 144,
+     "first_emit": 91,
+     "last_emit": 91,
+     "last_write": 146,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 95,
-     "last_emit": 95,
-     "last_write": 149,
+     "first_emit": 96,
+     "last_emit": 96,
+     "last_write": 151,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 100,
-     "last_emit": 100,
-     "last_write": 154,
+     "first_emit": 101,
+     "last_emit": 101,
+     "last_write": 156,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -8848,7 +8848,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 164,
+    "cycles": 166,
     "pass_": true
    },
    "checks": [
@@ -8896,128 +8896,128 @@
     }
    ],
    "vm_out_sha256": "b62d7b9a386f316e591279ce426720c39158e5947fdfa8a438f22dfe3a9544ed",
-   "cycles_end": 164,
-   "first_emit_to_last_write": 144,
+   "cycles_end": 166,
+   "first_emit_to_last_write": 146,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 81,
+     "last_write": 82,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 16,
      "last_emit": 17,
-     "last_write": 86,
+     "last_write": 87,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 21,
      "last_emit": 22,
-     "last_write": 91,
+     "last_write": 92,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 26,
      "last_emit": 27,
-     "last_write": 96,
+     "last_write": 97,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 31,
      "last_emit": 32,
-     "last_write": 101,
+     "last_write": 102,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
      "first_emit": 36,
      "last_emit": 37,
-     "last_write": 106,
+     "last_write": 107,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 75,
-     "last_emit": 75,
-     "last_write": 129,
+     "first_emit": 76,
+     "last_emit": 76,
+     "last_write": 131,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 80,
-     "last_emit": 80,
-     "last_write": 134,
+     "first_emit": 81,
+     "last_emit": 81,
+     "last_write": 136,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 85,
-     "last_emit": 85,
-     "last_write": 139,
+     "first_emit": 86,
+     "last_emit": 86,
+     "last_write": 141,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 90,
-     "last_emit": 90,
-     "last_write": 144,
+     "first_emit": 91,
+     "last_emit": 91,
+     "last_write": 146,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 95,
-     "last_emit": 95,
-     "last_write": 149,
+     "first_emit": 96,
+     "last_emit": 96,
+     "last_write": 151,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 100,
-     "last_emit": 100,
-     "last_write": 154,
+     "first_emit": 101,
+     "last_emit": 101,
+     "last_write": 156,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -9027,10 +9027,10 @@
   "tools/dshbm_baseline_measure.py": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978",
   "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
   "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv": "0ca34cd37668f4f2cc93e410523f02a8ef42c161ba4c2816724665c16579bd7d",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "58f7c2f04a66f2c9d0aa933dd74df5ea403c37e33845f62fca04d91a2d72cbdb",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "6058109ddcedd031445e886a0cf9ca01fd466c6041bfa9c08fb4ce4d2531e754",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "892f7682b07b74323ead1186f6d76ea1807f1152d429db3575b2f160c77bea66",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "b71ea0f1f3845333487f4ad3788868913fc8ff204788bb3e26cb0f16277074fb",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "2cd24466a57c47077da2dcccdbb1b7f8f703e2812e43e610886a768485c892ba",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "cf8c7c91f7d7ce9f2e1c061180a401af8aef0b366e60200cd369cd0725878633",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "d38f90bbf195fe065421aa096dde72707498214a2c61d50f3e4794a82ca4fb0e",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "98e6c9747a9c4b5e5f57e969f49bfc4dfbff95dfa3bb9db523e8975c007a4a43",
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
@@ -9051,7 +9051,7 @@
   "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
   "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
   "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
-  "rtl/test/tb_hdc_v41x_vec_c12.sv": "7786436e62f3846edd744bfa052200aa08f3982328783476a9b93998deee1f47"
+  "rtl/test/tb_hdc_v41x_vec_c12.sv": "c475d659d83b3fa5ebd5047be7ee6e97c984e57e8a4b251fa2c8d5cfe4f183ac"
  },
  "cases_sha256": "e3491e868f4cbaeda3de5b8ba20e9bfbbb6a0818442489d2d0a5b4a0a52530a3",
  "cases": "su_cases_p6om_ildr.pkl",

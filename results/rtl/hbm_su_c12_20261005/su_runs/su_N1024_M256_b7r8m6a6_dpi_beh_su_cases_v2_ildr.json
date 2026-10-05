@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.dshbm_baseline_su_chains.v1",
- "generated_utc": "2026-10-05T16:48:21Z",
+ "generated_utc": "2026-10-05T19:01:00Z",
  "source_commit": "",
  "config": {
   "N": 1024,
@@ -9,7 +9,7 @@
   "RET": 8,
   "MLAT": 6,
   "ALAT": 6,
-  "build_s": 336.1,
+  "build_s": 350.5,
   "fp": "dpi_beh",
   "fp_note": "as dpi, and the keep-prefix integer adders (rtl/hdc/ot_hdc_prefix.sv) are the behavioural `+` (rtl/test/sim_hdc_prefix_beh.sv, combinational, same function); equivalence: su-equiv at N 64."
  },
@@ -31,7 +31,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 491,
+    "cycles": 499,
     "pass_": true
    },
    "checks": [
@@ -44,58 +44,58 @@
     }
    ],
    "vm_out_sha256": "4713f658434c3e98a7266e9883915998a0e58fc609409dfe25b35f310653b73e",
-   "cycles_end": 491,
-   "first_emit_to_last_write": 471,
+   "cycles_end": 499,
+   "first_emit_to_last_write": 479,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 63,
-     "last_write": 117,
+     "first_emit": 60,
+     "last_emit": 64,
+     "last_write": 119,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 111,
-     "last_write": 165,
-     "last_result": 278,
+     "first_emit": 109,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": 283,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 284,
-     "last_emit": 284,
-     "last_write": 429,
+     "first_emit": 289,
+     "last_emit": 289,
+     "last_write": 436,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 423,
-     "last_emit": 427,
-     "last_write": 481,
+     "first_emit": 430,
+     "last_emit": 434,
+     "last_write": 489,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -117,7 +117,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 429,
+    "cycles": 436,
     "pass_": true
    },
    "checks": [
@@ -137,78 +137,78 @@
     }
    ],
    "vm_out_sha256": "934a6eb1095178056693ea74a23af5fae1798a60d7ee20852487c5fcbcd4f9fa",
-   "cycles_end": 429,
-   "first_emit_to_last_write": 409,
+   "cycles_end": 436,
+   "first_emit_to_last_write": 416,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 66,
-     "last_result": 167,
+     "last_write": 67,
+     "last_result": 170,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 25,
      "last_emit": 25,
-     "last_write": 79,
-     "last_result": 168,
+     "last_write": 80,
+     "last_result": 171,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 173,
-     "last_emit": 173,
-     "last_write": 318,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
-    },
-    {
-     "first_emit": 178,
-     "last_emit": 178,
+     "first_emit": 176,
+     "last_emit": 176,
      "last_write": 323,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 312,
-     "last_emit": 313,
-     "last_write": 367,
+     "first_emit": 181,
+     "last_emit": 181,
+     "last_write": 328,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 317,
+     "last_emit": 318,
+     "last_write": 373,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 317,
-     "last_emit": 317,
-     "last_write": 371,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 377,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 365,
-     "last_emit": 365,
-     "last_write": 419,
+     "first_emit": 371,
+     "last_emit": 371,
+     "last_write": 426,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -228,7 +228,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 80,
+    "cycles": 81,
     "pass_": true
    },
    "checks": [
@@ -241,28 +241,28 @@
     }
    ],
    "vm_out_sha256": "a945aaec872d71127666d48c06c65982e010bc553fdbf61c69556baeac25391d",
-   "cycles_end": 80,
-   "first_emit_to_last_write": 60,
+   "cycles_end": 81,
+   "first_emit_to_last_write": 61,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
+     "last_write": 71,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -283,7 +283,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 555,
+    "cycles": 564,
     "pass_": true
    },
    "checks": [
@@ -303,68 +303,68 @@
     }
    ],
    "vm_out_sha256": "667b8ef9332de13c832bffe8c70e14c844eee0934f41e21ab1a46b2bf1675f9a",
-   "cycles_end": 555,
-   "first_emit_to_last_write": 535,
+   "cycles_end": 564,
+   "first_emit_to_last_write": 544,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 142,
+     "last_write": 66,
+     "last_result": 145,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 148,
-     "last_emit": 148,
-     "last_write": 296,
-     "last_result": 373,
+     "first_emit": 151,
+     "last_emit": 151,
+     "last_write": 300,
+     "last_result": 379,
      "vectors": 1,
      "nout": 1,
      "nin": 128,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 153,
-     "last_emit": 153,
-     "last_write": 301,
+     "first_emit": 156,
+     "last_emit": 156,
+     "last_write": 305,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 379,
-     "last_emit": 379,
-     "last_write": 433,
+     "first_emit": 385,
+     "last_emit": 385,
+     "last_write": 440,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 427,
-     "last_emit": 428,
-     "last_write": 497,
+     "first_emit": 434,
+     "last_emit": 435,
+     "last_write": 505,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 491,
-     "last_emit": 491,
-     "last_write": 545,
+     "first_emit": 499,
+     "last_emit": 499,
+     "last_write": 554,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -385,7 +385,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 238,
+    "cycles": 242,
     "pass_": true
    },
    "checks": [
@@ -398,48 +398,48 @@
     }
    ],
    "vm_out_sha256": "a816edfeb127c2e88b0a8eaa948c8badcad2246d7c1ef0d4643b3eccb89583fd",
-   "cycles_end": 238,
-   "first_emit_to_last_write": 218,
+   "cycles_end": 242,
+   "first_emit_to_last_write": 222,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 78,
-     "last_write": 132,
+     "first_emit": 60,
+     "last_emit": 79,
+     "last_write": 134,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 126,
-     "last_write": 180,
+     "first_emit": 109,
+     "last_emit": 128,
+     "last_write": 183,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 155,
-     "last_emit": 174,
-     "last_write": 228,
+     "first_emit": 158,
+     "last_emit": 177,
+     "last_write": 232,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -459,7 +459,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 491,
+    "cycles": 499,
     "pass_": true
    },
    "checks": [
@@ -472,58 +472,58 @@
     }
    ],
    "vm_out_sha256": "247e6a29db3d81df4c992af2cc9a18724b582280456059433aab77beb038b181",
-   "cycles_end": 491,
-   "first_emit_to_last_write": 471,
+   "cycles_end": 499,
+   "first_emit_to_last_write": 479,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 63,
-     "last_write": 117,
+     "first_emit": 60,
+     "last_emit": 64,
+     "last_write": 119,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 111,
-     "last_write": 165,
-     "last_result": 278,
+     "first_emit": 109,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": 283,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 284,
-     "last_emit": 284,
-     "last_write": 429,
+     "first_emit": 289,
+     "last_emit": 289,
+     "last_write": 436,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 423,
-     "last_emit": 427,
-     "last_write": 481,
+     "first_emit": 430,
+     "last_emit": 434,
+     "last_write": 489,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -543,7 +543,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 353,
+    "cycles": 355,
     "pass_": true
    },
    "checks": [
@@ -556,18 +556,18 @@
     }
    ],
    "vm_out_sha256": "1fc1155f398f6d740ac3d3cb4724f206d0df49292ca947b0ea73a703aade4795",
-   "cycles_end": 353,
-   "first_emit_to_last_write": 333,
+   "cycles_end": 355,
+   "first_emit_to_last_write": 335,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 14,
-     "last_write": 343,
+     "last_write": 345,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     }
    ],
    "exact": true
@@ -587,7 +587,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 262,
+    "cycles": 267,
     "pass_": true
    },
    "checks": [
@@ -607,48 +607,48 @@
     }
    ],
    "vm_out_sha256": "ca42e7df1488878798ad927bec914b10ce0a9d8401142634316265ff0640720d",
-   "cycles_end": 262,
-   "first_emit_to_last_write": 242,
+   "cycles_end": 267,
+   "first_emit_to_last_write": 247,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 73,
-     "last_result": 126,
+     "last_write": 74,
+     "last_result": 129,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
-     "first_emit": 132,
-     "last_emit": 132,
-     "last_write": 186,
+     "first_emit": 135,
+     "last_emit": 135,
+     "last_write": 190,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 180,
-     "last_emit": 180,
-     "last_write": 252,
+     "first_emit": 184,
+     "last_emit": 184,
+     "last_write": 257,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     }
    ],
    "exact": true
@@ -668,7 +668,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -681,18 +681,18 @@
     }
    ],
    "vm_out_sha256": "42c8f86c59f86518f8666d5f235a1c28ea533cb9438cbd43564473860359bc79",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -712,7 +712,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -725,18 +725,18 @@
     }
    ],
    "vm_out_sha256": "71c733dea67203566b2b8228b424dc0c107483349d289ea08ec2ed0d90432e61",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -756,7 +756,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -769,18 +769,18 @@
     }
    ],
    "vm_out_sha256": "c3f49d24445962b547499a75feeff7166754b98be41b82a98f37a6235bd43a4e",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -800,7 +800,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -813,18 +813,18 @@
     }
    ],
    "vm_out_sha256": "964578f82f1bd1b1446b21c2942a124b2f272ff68bfc86fc8ed79db37e0f380f",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -844,7 +844,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -857,18 +857,18 @@
     }
    ],
    "vm_out_sha256": "632b9b952ead8580dae64f7cc3e75253cf04b51e3348e7b13f55bd2f8966655c",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -888,7 +888,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -901,18 +901,18 @@
     }
    ],
    "vm_out_sha256": "097a5b358de4feef3bd8b131edee06b469678cad6aa44d416b068f7c79321b8d",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -932,7 +932,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -945,18 +945,18 @@
     }
    ],
    "vm_out_sha256": "5814c7a6dc8b50731aa4995b5980351875f824e58ab8e8c4163f76cf9a6e1d2c",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -976,7 +976,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 160,
+    "cycles": 162,
     "pass_": true
    },
    "checks": [
@@ -989,18 +989,18 @@
     }
    ],
    "vm_out_sha256": "4614511e7b0ce920370aa09ed219c44c5e92aa3e60c60a4c3b8bca4a6d8a80d9",
-   "cycles_end": 160,
-   "first_emit_to_last_write": 108,
+   "cycles_end": 162,
+   "first_emit_to_last_write": 111,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 118,
+     "last_write": 66,
+     "last_result": 121,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1021,7 +1021,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 238,
+    "cycles": 242,
     "pass_": true
    },
    "checks": [
@@ -1034,48 +1034,48 @@
     }
    ],
    "vm_out_sha256": "84a882240ad8df02ccdd54bda02ac52c40b3519b7519736fed2b4972b45e113d",
-   "cycles_end": 238,
-   "first_emit_to_last_write": 218,
+   "cycles_end": 242,
+   "first_emit_to_last_write": 222,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 78,
-     "last_write": 132,
+     "first_emit": 60,
+     "last_emit": 79,
+     "last_write": 134,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 126,
-     "last_write": 180,
+     "first_emit": 109,
+     "last_emit": 128,
+     "last_write": 183,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 155,
-     "last_emit": 174,
-     "last_write": 228,
+     "first_emit": 158,
+     "last_emit": 177,
+     "last_write": 232,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1095,7 +1095,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 491,
+    "cycles": 499,
     "pass_": true
    },
    "checks": [
@@ -1108,58 +1108,58 @@
     }
    ],
    "vm_out_sha256": "9b96f20523e320ee4a86db6b22546ff82ae91e8381b366dca3064aa542ed9143",
-   "cycles_end": 491,
-   "first_emit_to_last_write": 471,
+   "cycles_end": 499,
+   "first_emit_to_last_write": 479,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 63,
-     "last_write": 117,
+     "first_emit": 60,
+     "last_emit": 64,
+     "last_write": 119,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 111,
-     "last_write": 165,
-     "last_result": 278,
+     "first_emit": 109,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": 283,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 284,
-     "last_emit": 284,
-     "last_write": 429,
+     "first_emit": 289,
+     "last_emit": 289,
+     "last_write": 436,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 423,
-     "last_emit": 427,
-     "last_write": 481,
+     "first_emit": 430,
+     "last_emit": 434,
+     "last_write": 489,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1181,7 +1181,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 429,
+    "cycles": 436,
     "pass_": true
    },
    "checks": [
@@ -1201,78 +1201,78 @@
     }
    ],
    "vm_out_sha256": "85692ad1c8b68418f86b701f0d670fa97148a069389037295e7d0a543f228d3e",
-   "cycles_end": 429,
-   "first_emit_to_last_write": 409,
+   "cycles_end": 436,
+   "first_emit_to_last_write": 416,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 66,
-     "last_result": 167,
+     "last_write": 67,
+     "last_result": 170,
      "vectors": 2,
      "nout": 8,
      "nin": 160,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 25,
      "last_emit": 25,
-     "last_write": 79,
-     "last_result": 168,
+     "last_write": 80,
+     "last_result": 171,
      "vectors": 1,
      "nout": 8,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 173,
-     "last_emit": 173,
-     "last_write": 318,
-     "last_result": null,
-     "vectors": 1,
-     "nout": 1,
-     "nin": 1,
-     "depth_model": 145
-    },
-    {
-     "first_emit": 178,
-     "last_emit": 178,
+     "first_emit": 176,
+     "last_emit": 176,
      "last_write": 323,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 312,
-     "last_emit": 313,
-     "last_write": 367,
+     "first_emit": 181,
+     "last_emit": 181,
+     "last_write": 328,
+     "last_result": null,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth_model": 147
+    },
+    {
+     "first_emit": 317,
+     "last_emit": 318,
+     "last_write": 373,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 1280,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 317,
-     "last_emit": 317,
-     "last_write": 371,
+     "first_emit": 322,
+     "last_emit": 322,
+     "last_write": 377,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 512,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 365,
-     "last_emit": 365,
-     "last_write": 419,
+     "first_emit": 371,
+     "last_emit": 371,
+     "last_write": 426,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1292,7 +1292,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 80,
+    "cycles": 81,
     "pass_": true
    },
    "checks": [
@@ -1305,28 +1305,28 @@
     }
    ],
    "vm_out_sha256": "024eb36d8c56084f7efb13ff82d4e14fae5c418fccc7f57a87f52eb0f4b4d321",
-   "cycles_end": 80,
-   "first_emit_to_last_write": 60,
+   "cycles_end": 81,
+   "first_emit_to_last_write": 61,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 448,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 70,
+     "last_write": 71,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1347,7 +1347,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 593,
+    "cycles": 602,
     "pass_": true
    },
    "checks": [
@@ -1367,68 +1367,68 @@
     }
    ],
    "vm_out_sha256": "4a557ae3f8997afbbc0aeba8ad12ccfb5cc51e5147e0c5b830f9455627d006ba",
-   "cycles_end": 593,
-   "first_emit_to_last_write": 573,
+   "cycles_end": 602,
+   "first_emit_to_last_write": 582,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 160,
+     "last_write": 66,
+     "last_result": 163,
      "vectors": 1,
      "nout": 1,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 166,
-     "last_emit": 168,
-     "last_write": 316,
-     "last_result": 411,
+     "first_emit": 169,
+     "last_emit": 171,
+     "last_write": 320,
+     "last_result": 417,
      "vectors": 3,
      "nout": 1,
      "nin": 640,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 171,
-     "last_emit": 171,
-     "last_write": 319,
+     "first_emit": 174,
+     "last_emit": 174,
+     "last_write": 323,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 148
+     "depth_model": 149
     },
     {
-     "first_emit": 417,
-     "last_emit": 417,
-     "last_write": 471,
+     "first_emit": 423,
+     "last_emit": 423,
+     "last_write": 478,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 465,
-     "last_emit": 466,
-     "last_write": 535,
+     "first_emit": 472,
+     "last_emit": 473,
+     "last_write": 543,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 529,
-     "last_emit": 529,
-     "last_write": 583,
+     "first_emit": 537,
+     "last_emit": 537,
+     "last_write": 592,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1449,7 +1449,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 238,
+    "cycles": 242,
     "pass_": true
    },
    "checks": [
@@ -1462,48 +1462,48 @@
     }
    ],
    "vm_out_sha256": "0ec283d270ccedb89f176976ad06b5b9ed45f834a70533c10a86815cbc35a918",
-   "cycles_end": 238,
-   "first_emit_to_last_write": 218,
+   "cycles_end": 242,
+   "first_emit_to_last_write": 222,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 78,
-     "last_write": 132,
+     "first_emit": 60,
+     "last_emit": 79,
+     "last_write": 134,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 126,
-     "last_write": 180,
+     "first_emit": 109,
+     "last_emit": 128,
+     "last_write": 183,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 155,
-     "last_emit": 174,
-     "last_write": 228,
+     "first_emit": 158,
+     "last_emit": 177,
+     "last_write": 232,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1523,7 +1523,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 491,
+    "cycles": 499,
     "pass_": true
    },
    "checks": [
@@ -1536,58 +1536,58 @@
     }
    ],
    "vm_out_sha256": "b616568e305733167fb70b97b60f13568873ce78d158a167955f316bf33ce0bb",
-   "cycles_end": 491,
-   "first_emit_to_last_write": 471,
+   "cycles_end": 499,
+   "first_emit_to_last_write": 479,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 63,
-     "last_write": 117,
+     "first_emit": 60,
+     "last_emit": 64,
+     "last_write": 119,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 111,
-     "last_write": 165,
-     "last_result": 278,
+     "first_emit": 109,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": 283,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 284,
-     "last_emit": 284,
-     "last_write": 429,
+     "first_emit": 289,
+     "last_emit": 289,
+     "last_write": 436,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 423,
-     "last_emit": 427,
-     "last_write": 481,
+     "first_emit": 430,
+     "last_emit": 434,
+     "last_write": 489,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -1607,7 +1607,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 353,
+    "cycles": 355,
     "pass_": true
    },
    "checks": [
@@ -1620,18 +1620,18 @@
     }
    ],
    "vm_out_sha256": "9242ac64c2e63fa447d60ec5066244f517e15ef11292fcfff83dda34f41d7fd7",
-   "cycles_end": 353,
-   "first_emit_to_last_write": 333,
+   "cycles_end": 355,
+   "first_emit_to_last_write": 335,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 14,
-     "last_write": 343,
+     "last_write": 345,
      "last_result": null,
      "vectors": 4,
      "nout": 1,
      "nin": 4,
-     "depth_model": 329
+     "depth_model": 331
     }
    ],
    "exact": true
@@ -1651,7 +1651,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 262,
+    "cycles": 267,
     "pass_": true
    },
    "checks": [
@@ -1671,48 +1671,48 @@
     }
    ],
    "vm_out_sha256": "38caedec3237d18e74fb4ce8453c1fa50dc65f1084bd77e678035d1175bdf16b",
-   "cycles_end": 262,
-   "first_emit_to_last_write": 242,
+   "cycles_end": 267,
+   "first_emit_to_last_write": 247,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
+     "last_write": 66,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 384,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
      "first_emit": 16,
      "last_emit": 16,
-     "last_write": 73,
-     "last_result": 126,
+     "last_write": 74,
+     "last_result": 129,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 57
+     "depth_model": 58
     },
     {
-     "first_emit": 132,
-     "last_emit": 132,
-     "last_write": 186,
+     "first_emit": 135,
+     "last_emit": 135,
+     "last_write": 190,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 180,
-     "last_emit": 180,
-     "last_write": 252,
+     "first_emit": 184,
+     "last_emit": 184,
+     "last_write": 257,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 6,
-     "depth_model": 72
+     "depth_model": 73
     }
    ],
    "exact": true
@@ -1732,7 +1732,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -1745,18 +1745,18 @@
     }
    ],
    "vm_out_sha256": "e2f41d8584bbbb060a84c7815bcf3a7053ed32ec924cc8245cce60422c26ea10",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -1776,7 +1776,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -1789,18 +1789,18 @@
     }
    ],
    "vm_out_sha256": "ef1fed6f85b604af7dc609dd0e653a2f20c0bc3221d1034357cfdcdf4e419904",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -1820,7 +1820,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -1833,18 +1833,18 @@
     }
    ],
    "vm_out_sha256": "5629d402b9e74d58a98e2f7a39878d727d1a04db57f2bda4406e043aa83d2878",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -1864,7 +1864,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -1877,18 +1877,18 @@
     }
    ],
    "vm_out_sha256": "649ddf064408cccf4168098b02c181ee38f00f082064a2c782b0bf9e8306c857",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -1908,7 +1908,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -1921,18 +1921,18 @@
     }
    ],
    "vm_out_sha256": "d95a0b0753f44004bc16685bfecf280439d26dca677e460c1fc3961b4f0ffc8e",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -1952,7 +1952,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -1965,18 +1965,18 @@
     }
    ],
    "vm_out_sha256": "fb95b228dba1cbbc6fd599a79471a52e1925f9010a96edf02df41d8b6c8c4496",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -1996,7 +1996,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 196,
+    "cycles": 197,
     "pass_": true
    },
    "checks": [
@@ -2009,18 +2009,18 @@
     }
    ],
    "vm_out_sha256": "9790311ee5dbf95ac69cd0c32544d3b02b6616755656486c851a37954703a4a9",
-   "cycles_end": 196,
-   "first_emit_to_last_write": 176,
+   "cycles_end": 197,
+   "first_emit_to_last_write": 177,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 186,
+     "last_write": 187,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 24,
-     "depth_model": 175
+     "depth_model": 176
     }
    ],
    "exact": true
@@ -2040,7 +2040,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 160,
+    "cycles": 162,
     "pass_": true
    },
    "checks": [
@@ -2053,18 +2053,18 @@
     }
    ],
    "vm_out_sha256": "3a55a8eaf4d00e84b0102152f3b3d87245f3e3f72cf8724e79778cd9c0e626ef",
-   "cycles_end": 160,
-   "first_emit_to_last_write": 108,
+   "cycles_end": 162,
+   "first_emit_to_last_write": 111,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 11,
-     "last_write": 65,
-     "last_result": 118,
+     "last_write": 66,
+     "last_result": 121,
      "vectors": 1,
      "nout": 54,
      "nin": 7,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2085,7 +2085,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 238,
+    "cycles": 242,
     "pass_": true
    },
    "checks": [
@@ -2098,48 +2098,48 @@
     }
    ],
    "vm_out_sha256": "b696887f8bc23fbdd217459d2e128dcb5ab54b9d3d3042e2520a03345fc39cc2",
-   "cycles_end": 238,
-   "first_emit_to_last_write": 218,
+   "cycles_end": 242,
+   "first_emit_to_last_write": 222,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 30,
-     "last_write": 84,
+     "last_write": 85,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 78,
-     "last_write": 132,
+     "first_emit": 60,
+     "last_emit": 79,
+     "last_write": 134,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 126,
-     "last_write": 180,
+     "first_emit": 109,
+     "last_emit": 128,
+     "last_write": 183,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 155,
-     "last_emit": 174,
-     "last_write": 228,
+     "first_emit": 158,
+     "last_emit": 177,
+     "last_write": 232,
      "last_result": null,
      "vectors": 20,
      "nout": 4,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2159,7 +2159,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 491,
+    "cycles": 499,
     "pass_": true
    },
    "checks": [
@@ -2172,58 +2172,58 @@
     }
    ],
    "vm_out_sha256": "ed10f6f2360d702f82a69b0d2584920fea69d3c63e99be224efc0770d6fe1218",
-   "cycles_end": 491,
-   "first_emit_to_last_write": 471,
+   "cycles_end": 499,
+   "first_emit_to_last_write": 479,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 15,
-     "last_write": 69,
+     "last_write": 70,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 59,
-     "last_emit": 63,
-     "last_write": 117,
+     "first_emit": 60,
+     "last_emit": 64,
+     "last_write": 119,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 107,
-     "last_emit": 111,
-     "last_write": 165,
-     "last_result": 278,
+     "first_emit": 109,
+     "last_emit": 113,
+     "last_write": 168,
+     "last_result": 283,
      "vectors": 5,
      "nout": 8,
      "nin": 640,
-     "depth_model": 54
+     "depth_model": 55
     },
     {
-     "first_emit": 284,
-     "last_emit": 284,
-     "last_write": 429,
+     "first_emit": 289,
+     "last_emit": 289,
+     "last_write": 436,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 1,
-     "depth_model": 145
+     "depth_model": 147
     },
     {
-     "first_emit": 423,
-     "last_emit": 427,
-     "last_write": 481,
+     "first_emit": 430,
+     "last_emit": 434,
+     "last_write": 489,
      "last_result": null,
      "vectors": 5,
      "nout": 1,
      "nin": 5120,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2243,7 +2243,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 177,
+    "cycles": 180,
     "pass_": true
    },
    "checks": [
@@ -2256,18 +2256,18 @@
     }
    ],
    "vm_out_sha256": "df0df1cb8fe71928d12e8d532c8444a95be0c72b51a1eaba5cd149fa367940f8",
-   "cycles_end": 177,
-   "first_emit_to_last_write": 157,
+   "cycles_end": 180,
+   "first_emit_to_last_write": 160,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 66,
-     "last_result": 167,
+     "last_write": 67,
+     "last_result": 170,
      "vectors": 2,
      "nout": 1,
      "nin": 1347,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2288,7 +2288,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 139,
+    "cycles": 141,
     "pass_": true
    },
    "checks": [
@@ -2301,28 +2301,28 @@
     }
    ],
    "vm_out_sha256": "649802aac057b9236d4af98a868522185321f806875051a7bf1fa1efd16cc0b7",
-   "cycles_end": 139,
-   "first_emit_to_last_write": 119,
+   "cycles_end": 141,
+   "first_emit_to_last_write": 121,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 81,
+     "last_write": 82,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 75,
-     "last_emit": 75,
-     "last_write": 129,
+     "first_emit": 76,
+     "last_emit": 76,
+     "last_write": 131,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2343,7 +2343,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 139,
+    "cycles": 141,
     "pass_": true
    },
    "checks": [
@@ -2356,28 +2356,28 @@
     }
    ],
    "vm_out_sha256": "42aa04247356fb6dc96b7b4a0d03788c7b1c737dd4ef45ebaa89d6b59e8424be",
-   "cycles_end": 139,
-   "first_emit_to_last_write": 119,
+   "cycles_end": 141,
+   "first_emit_to_last_write": 121,
    "per_op": [
     {
      "first_emit": 11,
      "last_emit": 12,
-     "last_write": 81,
+     "last_write": 82,
      "last_result": null,
      "vectors": 2,
      "nout": 1,
      "nin": 512,
-     "depth_model": 69
+     "depth_model": 70
     },
     {
-     "first_emit": 75,
-     "last_emit": 75,
-     "last_write": 129,
+     "first_emit": 76,
+     "last_emit": 76,
+     "last_write": 131,
      "last_result": null,
      "vectors": 1,
      "nout": 1,
      "nin": 64,
-     "depth_model": 54
+     "depth_model": 55
     }
    ],
    "exact": true
@@ -2387,10 +2387,10 @@
   "tools/dshbm_baseline_measure.py": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978",
   "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
   "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv": "0ca34cd37668f4f2cc93e410523f02a8ef42c161ba4c2816724665c16579bd7d",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "58f7c2f04a66f2c9d0aa933dd74df5ea403c37e33845f62fca04d91a2d72cbdb",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "6058109ddcedd031445e886a0cf9ca01fd466c6041bfa9c08fb4ce4d2531e754",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "892f7682b07b74323ead1186f6d76ea1807f1152d429db3575b2f160c77bea66",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "b71ea0f1f3845333487f4ad3788868913fc8ff204788bb3e26cb0f16277074fb",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv": "2cd24466a57c47077da2dcccdbb1b7f8f703e2812e43e610886a768485c892ba",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv": "cf8c7c91f7d7ce9f2e1c061180a401af8aef0b366e60200cd369cd0725878633",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv": "d38f90bbf195fe065421aa096dde72707498214a2c61d50f3e4794a82ca4fb0e",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv": "98e6c9747a9c4b5e5f57e969f49bfc4dfbff95dfa3bb9db523e8975c007a4a43",
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
@@ -2411,7 +2411,7 @@
   "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
   "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
   "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
-  "rtl/test/tb_hdc_v41x_vec_c12.sv": "7786436e62f3846edd744bfa052200aa08f3982328783476a9b93998deee1f47"
+  "rtl/test/tb_hdc_v41x_vec_c12.sv": "c475d659d83b3fa5ebd5047be7ee6e97c984e57e8a4b251fa2c8d5cfe4f183ac"
  },
  "cases_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108",
  "cases": "su_cases_v2_ildr.pkl",
