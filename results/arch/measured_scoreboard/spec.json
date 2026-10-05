@@ -3824,7 +3824,7 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "dspark_speedup_vs_ar_8k_stream4",
-   "label": "DSpark speedup vs AR at 8K on STREAM4 (best measured variant below 1: DSpark off)",
+   "label": "DSpark speedup vs AR at 8K on STREAM4 (baseline verify program; every measured variant is below 1: DSpark off)",
    "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
    "pointer": "variants.baseline_np4.speedup_vs_ar_upper",
    "unit": "x",

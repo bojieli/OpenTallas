@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "6617b9607",
+ "generated_from_commit": "cda5aae15",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -20,7 +20,7 @@
    "status": "partial",
    "path": "results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json",
    "pointer": "per_user_accepted_tok_s",
-   "note": "HEADLINE. L0 verify/AR/drafter measured exact at P8187..8191 on REAL_MEM one-stack path, x36 composed; tau third-party published (not measured); drafter ingest+Markov priced; no SS/FF of new logic",
+   "note": "SUPERSEDED as headline (2026-10-04): one-stack REAL_MEM path, whose verify shared a KV-fill stall that STREAM4 removed; L0 verify/AR/drafter measured exact at P8187..8191 on REAL_MEM one-stack path, x36 composed; tau third-party published (not measured); drafter ingest+Markov priced; no SS/FF of new logic",
    "value": 3568.2168277536803,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
@@ -80,7 +80,7 @@
    "status": "partial",
    "path": "results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json",
    "pointer": "speedup_vs_ar",
-   "note": "both sides on the REAL_MEM one-stack path",
+   "note": "SUPERSEDED: both sides on the REAL_MEM one-stack path; on STREAM4 DSpark is 0.704x (AR mode)",
    "value": 1.569013329985825,
    "resolved": true,
    "blob": "8777d02e2d6005c4376e2d4f098895c955843176",
@@ -289,8 +289,8 @@
    "note": "93.4% of 4.000 TB/s peak",
    "value": 3.734,
    "resolved": true,
-   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
-   "last_commit": "3ae50a082 2026-10-04"
+   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
+   "last_commit": "b8031cb09 2026-10-04"
   },
   "qwen_rom.stream4_fill_pct_peak": {
    "target": "qwen_rom",
@@ -303,8 +303,8 @@
    "pointer": "regex:\\| STREAM4 \\(this\\) \\|[^\\n]*\\| ([\\d.]+ %) \\|",
    "value": "93.4 %",
    "resolved": true,
-   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
-   "last_commit": "3ae50a082 2026-10-04"
+   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
+   "last_commit": "b8031cb09 2026-10-04"
   },
   "qwen_rom.stream4_bench_P8191_pct": {
    "target": "qwen_rom",
@@ -318,8 +318,8 @@
    "note": "15/15 PASS bench",
    "value": "93.0 %",
    "resolved": true,
-   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
-   "last_commit": "3ae50a082 2026-10-04"
+   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
+   "last_commit": "b8031cb09 2026-10-04"
   },
   "qwen_rom.kv_ideal_L0_P8191": {
    "target": "qwen_rom",
@@ -333,8 +333,8 @@
    "note": "README only; no committed JSON for this job",
    "value": 5290,
    "resolved": true,
-   "blob": "2a9c2c8c237a36ee9c09c9d9b0e9fd0b90ea2d99",
-   "last_commit": "3ae50a082 2026-10-04"
+   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
+   "last_commit": "b8031cb09 2026-10-04"
   },
   "qwen_rom.realmem_L0_P8191": {
    "target": "qwen_rom",
@@ -1269,7 +1269,7 @@
    "value": 1612.7,
    "resolved": true,
    "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
-   "last_commit": "b3735abe8 2026-10-04"
+   "last_commit": "e497a111a 2026-10-04"
   },
   "ds_rom.ar_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1314,7 +1314,7 @@
    "value": 4462.1,
    "resolved": true,
    "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
-   "last_commit": "b3735abe8 2026-10-04"
+   "last_commit": "e497a111a 2026-10-04"
   },
   "ds_rom.mtp_tok_s_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1389,7 +1389,7 @@
    "value": 620.078,
    "resolved": true,
    "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
-   "last_commit": "b3735abe8 2026-10-04"
+   "last_commit": "e497a111a 2026-10-04"
   },
   "ds_rom.ar_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1419,7 +1419,7 @@
    "value": 748.887,
    "resolved": true,
    "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
-   "last_commit": "b3735abe8 2026-10-04"
+   "last_commit": "e497a111a 2026-10-04"
   },
   "ds_rom.verify_us_1m_reindex_partial": {
    "target": "ds_rom",
@@ -1448,7 +1448,7 @@
    "value": 25.762,
    "resolved": true,
    "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
-   "last_commit": "b3735abe8 2026-10-04"
+   "last_commit": "e497a111a 2026-10-04"
   },
   "ds_rom.wavefront_ii_us_reindex_partial": {
    "target": "ds_rom",
@@ -4542,7 +4542,7 @@
    "value": 0.9999,
    "resolved": true,
    "blob": "718bb87d7b8c30b08958f55d9aa0576f99d7b24f",
-   "last_commit": "b3735abe8 2026-10-04"
+   "last_commit": "e497a111a 2026-10-04"
   },
   "ds_rom.window_s81_asbuilt_c8_us": {
    "target": "ds_rom",
@@ -5058,11 +5058,26 @@
    "blob": "5dbdf56233af1161397ad9fe46f3fff6596ddbc9",
    "last_commit": "d43eb275c 2026-10-04"
   },
+  "qwen_rom.operating_mode_8k": {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "operating_mode_8k",
+   "label": "Qwen ROM operating mode at 8K (HEADLINE mode: AR on STREAM4; DSpark built, exact, off)",
+   "unit": "verdict",
+   "status": "composed_from_measured",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "verdict",
+   "note": "AR_MODE: no DSpark variant beats AR on STREAM4 (baseline 0.704x, MERGE_SU 0.742x, MERGE_SU np3 0.691-0.744x); free-draft bound 0.969x; derivation docs/ANALYTICAL_REPORT.md",
+   "value": "AR_MODE",
+   "resolved": true,
+   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
+   "last_commit": "b8031cb09 2026-10-04"
+  },
   "qwen_rom.ar_tok_s_8k_stream4": {
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_8k_stream4",
-   "label": "AR per-user rate at 8K on the 4-stack full-bandwidth KV path (STREAM4)",
+   "label": "HEADLINE. AR per-user rate at 8K on the 4-stack full-bandwidth KV path (STREAM4); the Qwen ROM operating mode",
    "unit": "tok/s",
    "status": "composed_from_measured",
    "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
@@ -5092,16 +5107,75 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "dspark_tok_s_8k_stream4",
-   "label": "DSpark per-user accepted rate at 8K on STREAM4 (verify measured exact on STREAM4)",
+   "label": "DSpark per-user accepted rate at 8K on STREAM4 (OFF: below AR; verify measured exact on STREAM4, ingest/Markov measured)",
    "unit": "tok/s",
    "status": "partial",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json",
-   "pointer": "per_user_accepted_tok_s",
-   "note": "verify L0 17,197 exact on STREAM4 (P8187..8190, commit 1, rollback) x36 + verify head; draft from the REAL_MEM record; tau third-party 3.1445; below AR-with-prefetch (0.763x): verify not weight-reusing (ME 1.47x/2.09x)",
-   "value": 4710.4,
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.baseline_np4.tok_s_upper",
+   "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200; tau third-party 3.1445; 0.704x AR",
+   "value": 4346.2,
    "resolved": true,
-   "blob": "be3019fd4e57ad987ec03d47918e343e5ad99ab7",
-   "last_commit": "e1c0371be 2026-10-04"
+   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
+   "last_commit": "b8031cb09 2026-10-04"
+  },
+  "qwen_rom.dspark_speedup_vs_ar_8k_stream4": {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "dspark_speedup_vs_ar_8k_stream4",
+   "label": "DSpark speedup vs AR at 8K on STREAM4 (baseline verify program; every measured variant is below 1: DSpark off)",
+   "unit": "x",
+   "status": "partial",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.baseline_np4.speedup_vs_ar_upper",
+   "note": "MERGE_SU np4 0.742x, MERGE_SU np3 0.691-0.744x; drafter layers on REAL_MEM path, argmax/gather priced",
+   "value": 0.704,
+   "resolved": true,
+   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
+   "last_commit": "b8031cb09 2026-10-04"
+  },
+  "qwen_rom.dspark_breakeven_verify_layer_8k_stream4": {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "dspark_breakeven_verify_layer_8k_stream4",
+   "label": "Break-even DSpark verify layer at 8K on STREAM4 (measured 17,197)",
+   "unit": "cycles",
+   "status": "composed_from_measured",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.baseline_np4.break_even_verify_layer_draft_upper",
+   "value": 10069.1,
+   "resolved": true,
+   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
+   "last_commit": "b8031cb09 2026-10-04"
+  },
+  "qwen_rom.dspark_merge_su_np4_vs_ar": {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "dspark_merge_su_np4_vs_ar",
+   "label": "DSpark with per-position SU work merged (MERGE_SU, np4) vs AR on STREAM4",
+   "unit": "x",
+   "status": "partial",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.merge_su_np4.speedup_vs_ar_upper",
+   "note": "verify layer 15,971 exact",
+   "value": 0.742,
+   "resolved": true,
+   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
+   "last_commit": "b8031cb09 2026-10-04"
+  },
+  "qwen_rom.dspark_merge_su_np3_vs_ar": {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "dspark_merge_su_np3_vs_ar",
+   "label": "DSpark shorter draft (MERGE_SU, np3, tau 2.5441) vs AR on STREAM4, lower-draft bound",
+   "unit": "x",
+   "status": "partial",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.merge_su_np3.speedup_vs_ar_lower",
+   "note": "verify layer 13,104 exact; upper-draft bound 0.691x",
+   "value": 0.744,
+   "resolved": true,
+   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
+   "last_commit": "b8031cb09 2026-10-04"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
@@ -5144,13 +5218,13 @@
    "label": "Qwen ROM AR / 8x H100 TP8 FP8 AR (both 8K)",
    "unit": "x",
    "inputs": [
-    "qwen_rom.ar_tok_s_8k_realmem",
+    "qwen_rom.ar_tok_s_8k_stream4",
     "gpu_qwen.h100_tp8_fp8_decode_8k"
    ],
    "expr": "x0/x1",
    "derived": true,
-   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR",
-   "value": 7.6059,
+   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = AR on STREAM4 (operating mode)",
+   "value": 20.6344,
    "resolved": true,
    "status": "composed_from_measured"
   },
@@ -5161,13 +5235,13 @@
    "label": "Qwen ROM AR / 1x H100 FP8 AR (both 8K)",
    "unit": "x",
    "inputs": [
-    "qwen_rom.ar_tok_s_8k_realmem",
+    "qwen_rom.ar_tok_s_8k_stream4",
     "gpu_qwen.h100_tp1_fp8_decode_8k"
    ],
    "expr": "x0/x1",
    "derived": true,
-   "note": "not iso-area",
-   "value": 12.6343,
+   "note": "not iso-area; ROM side = AR on STREAM4 (operating mode)",
+   "value": 34.2761,
    "resolved": true,
    "status": "composed_from_measured"
   },
@@ -5175,7 +5249,7 @@
    "target": "qwen_rom",
    "section": "ratios",
    "key": "dspark_over_h100_tp8_ar_8k",
-   "label": "Qwen ROM DSpark / 8x H100 TP8 FP8 AR (8K)",
+   "label": "Qwen ROM DSpark / 8x H100 TP8 FP8 AR (8K) (SUPERSEDED: REAL_MEM DSpark; DSpark off at 8K)",
    "unit": "x",
    "inputs": [
     "qwen_rom.dspark_tok_s_8k",
@@ -5362,12 +5436,6 @@
   },
   {
    "target": "qwen_rom",
-   "item": "Headline uses the one-stack REAL_MEM KV path; STREAM4 (4-stack) measured on L0 only, no chained/prefetch layer and no composed STREAM4 token",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/README.md",
-   "path_exists": true
-  },
-  {
-   "target": "qwen_rom",
    "item": "Near-HBM attention: RTL with DPI float stand-ins, not integrated; combined P8191 L0 run SIM_ONLY and FAIL (host SIGSEGV); 5,236.6 tok/s is MODEL_ONLY",
    "path": "results/rtl/qwen_combined_P8191_sim_only_20261004/result.json",
    "path_exists": true
@@ -5502,6 +5570,12 @@
    "target": "hbm_qwen",
    "item": "Collective link LAT (TP4 339 cyc board / TP2 11 cyc UCIe) budget inside ot_rom_oneshot_allreduce; embedding row ~60 cyc not simulated",
    "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json",
+   "path_exists": true
+  },
+  {
+   "target": "qwen_rom",
+   "item": "DSpark on STREAM4 (off): drafter layers measured on the REAL_MEM path, draft argmax/gather priced, drafter layers at S < 3 bounded; single-pass MAC area is an estimate",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
    "path_exists": true
   }
  ],
@@ -5859,15 +5933,21 @@
   {
    "target": "qwen_rom",
    "lever": "DSpark speculative decoding",
-   "verdict": "ADOPT",
-   "path": "results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json",
-   "numbers": "1.516x at 8K; P255 0.833x superseded",
+   "verdict": "OFF at 8K (AR mode): built and exact, below AR on STREAM4",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "numbers": "0.704x baseline, 0.742x MERGE_SU, 0.691-0.744x np3; free-draft 0.969x; break-even verify 10,069 vs 17,197; superseded: P255 0.833x reject, REAL_MEM 1.569x adopt",
    "figures": [
-    "qwen_rom.dspark_speedup_vs_ar_8k"
+    "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
+    "qwen_rom.dspark_breakeven_verify_layer_8k_stream4",
+    "qwen_rom.dspark_merge_su_np4_vs_ar",
+    "qwen_rom.dspark_merge_su_np3_vs_ar"
    ],
    "path_exists": true,
    "figure_values": {
-    "qwen_rom.dspark_speedup_vs_ar_8k": 1.569013329985825
+    "qwen_rom.dspark_speedup_vs_ar_8k_stream4": 0.704,
+    "qwen_rom.dspark_breakeven_verify_layer_8k_stream4": 10069.1,
+    "qwen_rom.dspark_merge_su_np4_vs_ar": 0.742,
+    "qwen_rom.dspark_merge_su_np3_vs_ar": 0.744
    }
   },
   {
@@ -5887,19 +5967,21 @@
   {
    "target": "qwen_rom",
    "lever": "STREAM4 4-stack KV fill",
-   "verdict": "measured, no token verdict yet",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/runtime_P8191/L0_iso/result.json",
-   "numbers": "L0 only (c14759ef1)",
+   "verdict": "ADOPT (operating path)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
+   "numbers": "token 194,498 cycles = 6,169.7 tok/s, 2.99x REAL_MEM; chained layer 5,282 = compute bound 5,283",
    "figures": [
     "qwen_rom.stream4_L0_cycles_P8191",
     "qwen_rom.stream4_fill_TBps",
-    "qwen_rom.stream4_fill_pct_peak"
+    "qwen_rom.stream4_fill_pct_peak",
+    "qwen_rom.ar_tok_s_8k_stream4"
    ],
    "path_exists": true,
    "figure_values": {
     "qwen_rom.stream4_L0_cycles_P8191": 6468,
     "qwen_rom.stream4_fill_TBps": 3.734,
-    "qwen_rom.stream4_fill_pct_peak": "93.4 %"
+    "qwen_rom.stream4_fill_pct_peak": "93.4 %",
+    "qwen_rom.ar_tok_s_8k_stream4": 6169.7
    }
   },
   {
@@ -6308,13 +6390,6 @@
   }
  ],
  "open_items": [
-  {
-   "target": "qwen_rom",
-   "item": "STREAM4 chained L0-L2 run and composed STREAM4 token at P8191",
-   "owner": "Claude (Qwen 8K load path)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/README.md",
-   "path_exists": true
-  },
   {
    "target": "qwen_rom",
    "item": "Native STREAM4 multi-position tagged-row hook (qwen_stream4_wire_native_tagged_rows) for the combined die",
