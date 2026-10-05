@@ -9677,9 +9677,10 @@ def dshbm_expert_workgroup_model():
     activation/weight ports. Dynamic hardware steering has not been synthesized.
     """
     return dict(dies=96, SM_per_die=32, active_SM_per_die=24, idle_SM_per_die=8,
-        routed_experts=6, matrices_per_expert=2, K=5120, matrix_rows=2304,
+        released_expert_count=384, routed_experts=6, matrices_per_expert=2, K=5120, matrix_rows=2304,
         rows_per_matrix_per_die=24, rows_per_active_SM=12, k32_blocks=160,
-        exact_MACs_per_issued_line=8*32, line_payload_bits=1088,
+        exact_MACs_per_issued_line_active_column=8*32, native_columns=8,
+        hardware_MACs_per_full_issued_line=8*32*8, line_payload_bits=1088,
         line_bytes_per_accepted_edge=136, simultaneous_weight_bits_per_die=24*1088,
         simultaneous_weight_bytes_per_die=24*136, per_SM_lines=12*3*8, per_SM_valid_row_blocks=12*160,
         per_SM_native_issue_groups=3, per_SM_issue_span_cycles=316,

@@ -7,7 +7,7 @@ from dshbm_expert_workgroup import steer, weight_lines, restore_rows
 
 
 def test_source_ids_and_all_row_partitions():
-    ids = (3, 8, 49, 117, 201, 255)
+    ids = (3, 8, 49, 117, 259, 266)
     all_rows = {}
     for die in range(96):
         ds = steer(ids, die)
@@ -18,7 +18,7 @@ def test_source_ids_and_all_row_partitions():
     assert all(rows == list(range(2304)) for rows in all_rows.values())
 
 
-@pytest.mark.parametrize('ids', [(0,0,1,2,3,4), (5,4,3,2,1,0), (0,1,2,3,4,256), (False,1,2,3,4,5)])
+@pytest.mark.parametrize('ids', [(0,0,1,2,3,4), (5,4,3,2,1,0), (0,1,2,3,4,384), (False,1,2,3,4,5)])
 def test_cannot_substitute_or_alias_router_ids(ids):
     with pytest.raises(ValueError): steer(ids, 0)
 
@@ -41,7 +41,7 @@ def test_every_native_line_recovers_original_bytes_and_tail_padding():
 
 
 def test_results_restore_source_identity_and_order():
-    ds = steer((0,2,4,6,8,255),95)
+    ds = steer((0,2,4,6,8,383),95)
     results = {d.sm: list(range(d.row_start,d.row_stop)) for d in reversed(ds)}
     out = restore_rows(ds,results)
     assert len(out)==12
