@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS",
+  "scope": "One actual closed I61 Sscaled/MAX native VM readback against actual QK readback; no endpoint recalculation",
+  "host": "ot-epyc2",
+  "capture_root": "/srv/opentallas-scratch/jobs/arch-qk-su-pv-minimum-20261005",
+  "boundary_cycles": {
+    "Sscaled": 329853,
+    "MAX": 329933
+  },
+  "pins": {
+    "captured/QK.u32": "304b7740b13c9aec67fc481736dc46039501018ee098d2efd38df90ab2a9b1da",
+    "captured/Sscaled.u32": "8b70d0e9d93e0118e80162546ce3d353718f901b5781c27f6b0d9dab06dc5f06",
+    "captured/MAX.u32": "766b02164d7d7e04571e0de8a9ded066a4c8997d9c03790339e88c07be1e64f1",
+    "source/capture.cpp": "ad167166a393eb237782bf987d443bda2738ca05e64be089303a0f845ae29d88",
+    "source/literals.hpp": "4461606293e54780f10342dac2b6162b5ab1abaff803a359843435843005a024",
+    "headers/tools/runtime/dsrom/s81_minimum_su256.cpp": "ed01838c03aebb9103aa7114e905c202978d06a679bfae8da00dc42e4000ace9"
+  },
+  "descriptor": {
+    "producer": 2532,
+    "nout": 16,
+    "nin_dynamic_selector": 34,
+    "nin_effective": 640,
+    "m1": 3,
+    "m2": 0,
+    "qm": 0,
+    "ad": 0,
+    "sfu": 0,
+    "e1": 0,
+    "e2": 0,
+    "arnd": 0,
+    "rnd": 0,
+    "red": 2,
+    "redrnd": 0,
+    "imm1": "3d3504f3",
+    "a_base": 63936,
+    "a_so": 640,
+    "a_si": 1,
+    "output_base": 63936,
+    "r_base": 74176
+  },
+  "full_stage_flow_qualified": false,
+  "original_full_run_qualified": false,
+  "next_boundary": "actual closed I62 EXP/SUM"
+}

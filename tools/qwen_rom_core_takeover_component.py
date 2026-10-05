@@ -33,16 +33,19 @@ def model():
       clock=dict(period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,qualified=False),
       adoption=False,default_DEC_LA=0,baseline_P0_edited=False)
 
-def component(bounded=False,chaseq=False,counter_la=False):
+def component(bounded=False,chaseq=False,counter_la=False,am_commit=False):
     text=E.emit(E.V.E.CORE.read_text())
-    if bounded or chaseq or counter_la:
+    if bounded or chaseq or counter_la or am_commit:
         from qwen_rom_core_dec_bound_emit_w12 import apply
         text=apply(text)
-    if chaseq or counter_la:
+    if chaseq or counter_la or am_commit:
         from qwen_rom_core_dec_chaseq_emit_w12 import apply
         text=apply(text)
-    if counter_la:
+    if counter_la or am_commit:
         from qwen_rom_core_dec_counter_emit_w12 import apply
+        text=apply(text)
+    if am_commit:
+        from qwen_rom_core_dec_commit_emit_w12 import apply
         text=apply(text)
     seq=text[text.index('    localparam integer LW'):text.index('    always @(posedge clk or negedge rst_n) begin\n        if (!rst_n) begin kvd_v')]
     seq=seq.replace('    wire       me_ready, me_idle, su_ready, su_idle;','')
@@ -56,7 +59,7 @@ def component(bounded=False,chaseq=False,counter_la=False):
     body=baseline[baseline.index(E.DEC_START)+len(E.DEC_START):baseline.index(E.DEC_END)]
     fields=[name for name,_ in E._statements(body)]
     helpers=text[text.index('// a > b on 32-bit unsigned keys'):]
-    header='''module decode_component #(parameter DEC_LA=0, VPOS=0, DEC_LA_BOUND=0, DEC_LA_CHASE_Q=0, DEC_LA_COUNT_LA=0)(
+    header='''module decode_component #(parameter DEC_LA=0, VPOS=0, DEC_LA_BOUND=0, DEC_LA_CHASE_Q=0, DEC_LA_COUNT_LA=0, DEC_LA_AM_COMMIT=0)(
 input clk,rst_n,start, input [17:0] token,pos,
 input me_ready,me_idle,su_ready,su_idle,
 input [15:0] me_progress,su_progress,su_rows,
@@ -74,9 +77,13 @@ wire kv_ok=1,kvd_v=0,w_ok=1,wd_v=0,emb_ok=1,kv_write_drained=1;
 wire [15:0] kv_we=0; wire kv_write_flush;
 assign accepted=issue; assign invalid_at_load=dyn_tiles_bad_instruction;
 '''
+    if am_commit:
+        seq=seq.replace('    wire me_en;\n','')
+        header=header.replace('input me_ready,me_idle,su_ready,su_idle,', 'input me_ready,me_idle,su_ready,su_idle,\ninput me_en,kv_ok,w_ok,emb_ok,kv_write_drained,')
+        header=header.replace('assign me_en=1;\n','').replace('wire kv_ok=1,kvd_v=0,w_ok=1,wd_v=0,emb_ok=1,kv_write_drained=1;', 'wire kvd_v=0,wd_v=0;')
     return (header+seq+argmax+dyn+'\nassign decoded={'+','.join(fields)+'};\nendmodule\n'+helpers).replace('`include "ot_hdc_isa.svh"',(E.V.E.CORE.parent/'ot_hdc_isa.svh').read_text())
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--model',action='store_true');p.add_argument('--out',type=Path);p.add_argument('--bounded',action='store_true');p.add_argument('--chaseq',action='store_true');p.add_argument('--counter-la',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--model',action='store_true');p.add_argument('--out',type=Path);p.add_argument('--bounded',action='store_true');p.add_argument('--chaseq',action='store_true');p.add_argument('--counter-la',action='store_true');p.add_argument('--am-commit',action='store_true');a=p.parse_args()
     if a.model:print(json.dumps(model(),indent=2,sort_keys=True))
-    else:a.out.write_text(component(a.bounded,a.chaseq,a.counter_la))
+    else:a.out.write_text(component(a.bounded,a.chaseq,a.counter_la,a.am_commit))
