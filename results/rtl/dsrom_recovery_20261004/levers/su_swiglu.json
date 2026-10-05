@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.dsrom-recovery.lever.v1",
  "lever": "su_swiglu",
- "verdict": "PENDING_BINDING",
+ "verdict": "PENDING_SSFF",
  "exact": true,
  "ss_ff": {
   "period_ps": 833.0,
@@ -25,7 +25,8 @@
    "ss_setup_wns_ps": 11.51,
    "ff_hold_wns_ps": 0.51,
    "cell_area_um2": 11200.5,
-   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/route_aq_q5_corner_sta.json"
+   "record": "results/rtl/dsrom_recovery_20261004/su_swiglu/r4/route_aq_q5_corner_sta.json",
+   "source_binding": "Quantiser top MLAT5 module bytes identical to recovered route-pinned R3 files; supporting file pins match current. See binding_record."
   },
   "rounds": {
    "r1": "lane SS -51.67 / quantiser -11.85 (REJECT record superseded)",
@@ -92,6 +93,6 @@
   "idx_q": "exact (87 cyc = 0.0725 us vs 0.291 us); NOT adopted until its RoPE front routes (runs open)"
  },
  "default": "opt-in: applied only in the recovery baseline; new files only, nothing existing swapped",
- "binding_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/swiglu_current_binding.json",
- "note": "Active adoption withheld: quantiser aq_q5 physical pins for ot_dsrom_su_swiglu.sv and ot_dsrom_su_f12.sv differ from current source. Historical ADOPT retained separately. Lane current pins match. Parent boundary setup/hold remains required; idx_q excluded until current RoPE routes terminal."
+ "binding_record": "results/rtl/dsrom_recovery_20261004/su_fusion_takeover/quantiser_source_difference.json",
+ "note": "Quantiser top-source binding characterized: containing files have real changes in unused exp/lane modules, quantiser module and supporting source pins byte-identical. Current numerical gate source pins match; no replay. Active adoption remains PENDING_SSFF for parent boundary setup/hold and actual integration; historical ADOPT preserved. idx_q remains excluded pending RoPE routes."
 }
