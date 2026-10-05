@@ -3,7 +3,7 @@
 // HBM SU c12 (claude hbm-su-attn, 2026-10-05): copy of the hbm-fmax-su controller stubs
 // (claude/hbm-fmax-su-20261004 rtl/hdc/v41x/phys/ot_hdc_v41x_vec_ctl_stubs.sv) accepting the c12 parameters, plus the
 // controller vehicle top ot_su12_ctl64 (rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv at N 64 / M 16, BCAST 7 / RET 8, MLAT 6 /
-// ALAT 6, OPR 1, DDIV 21, SIDEX 3, FSQ 1, RPAD / RSL / RTAP 1).
+// ALAT 6, OPR 1, DDIV 21, SIDEX 3, FSQ 1, RPAD 1 / RSL 2 / RTAP 1).
 // PHYSICAL VEHICLE ONLY (hbm-fmax-su 2026-10-04): register stubs for the stream unit's lanes, side pipe and reducer,
 // so ot_hdc_v41x_vec's CONTROLLER (issue, checkpoints, chaining credits, control pipe, insertion lines, broadcast
 // tree, return stages, published state) is hardened on its own.  The lane / side / reducer are hardened separately
@@ -113,5 +113,5 @@ module ot_su12_ctl64 #(parameter integer N = 64, parameter integer M = 16, param
     output wire dbg_res, output wire [7:0] dbg_sseq
 );
     ot_hdc_v41x_vec #(.N(N), .M(M), .AW(AW), .NW(NW), .BCAST_STAGES(7), .RET_STAGES(8), .MLAT(6), .ALAT(6), .OPR(1),
-                      .DDIV(21), .SIDEX(3), .FSQ(1), .RPAD(1), .RSL(1), .RTAP(1), .RSLICE(64)) u (.*);
+                      .DDIV(21), .SIDEX(3), .FSQ(1), .RPAD(1), .RSL(2), .RTAP(1), .RSLICE(64)) u (.*);
 endmodule
