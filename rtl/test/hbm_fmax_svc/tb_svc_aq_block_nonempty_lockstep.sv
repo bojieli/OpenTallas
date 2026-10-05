@@ -68,6 +68,68 @@ module tb_svc_aq_block_nonempty_lockstep;
     desc_v = 0; go = 0; next_posted = 0; row_gnt = 0; desc_row = 0; desc_n = 0; cred_ret = 0;
     wr_v = 0; wr_bank = 0; wr_col = 0; wr_rd = 0;
     repeat (3) @(posedge clk); #10 rst_n = 1;
+    if ($test$plusargs("DIRECTED_ONLY")) begin
+      // A bounded transition-priority test. Counter/command state is seeded
+      // identically in original/off/on; actual queue accepts and row_gnt are
+      // real input events. Neither blk nor the cached predicate is forced.
+      @(negedge clk);
+      force a.on.ref_c = a.on.LEAD; force b.on.ref_c = b.on.LEAD; force c.on.ref_c = c.on.LEAD;
+      force a.on.ep = 0; force b.on.ep = 0; force c.on.ep = 0;
+      force a.on.pin = 0; force b.on.pin = 0; force c.on.pin = 0;
+      force a.on.c_v = 0; force b.on.c_v = 0; force c.on.c_v = 0;
+      row_gnt=1; wr_v=1; wr_bank=5'd7; wr_col=0; wr_rd=1;
+      desc_v=1; desc_n=1024; desc_row=19'd11; go=0;
+      @(posedge clk); #2;
+      if (!(|b.on.blk) || b.on.blk_nonempty_q !== 1 || !b.on.wq_ne || !b.on.streaming)
+        $fatal(1,"DIRECTED_SET_WITH_ACTUAL_QUEUE_AND_DESCRIPTOR_DEBT");
+      if (oa !== ob || oa !== oc) $fatal(1,"DIRECTED_SET_CALENDAR");
+      @(negedge clk); wr_v=0; desc_v=0;
+      force a.on.c_v = 1; force b.on.c_v = 1; force c.on.c_v = 1;
+      force a.on.c_op = 6; force b.on.c_op = 6; force c.on.c_op = 6;
+      #2;
+      if (!b.on.row_fire || b.on.ref_c != b.on.LEAD || b.on.ep || b.on.pin != 0 ||
+          b.on.blk_n !== 0 || b.on.blk_nonempty_n !== 0)
+        $fatal(1,"DIRECTED_FINAL_CLEAR_OVER_SET_PRECONDITION");
+      @(posedge clk); #2;
+      if (b.on.blk !== 0 || b.on.blk_nonempty_q !== 0 || oa !== ob || oa !== oc)
+        $fatal(1,"DIRECTED_FINAL_CLEAR_OVER_SET");
+      $display("DIRECTED_FINAL_REFPB_CLEAR_OVER_LEAD_SET PASS actual_row_fire=1");
+      @(negedge clk);
+      force a.on.c_v = 0; force b.on.c_v = 0; force c.on.c_v = 0;
+      @(posedge clk); #2;
+      if (!(|b.on.blk) || b.on.blk_nonempty_q !== 1 || !b.on.wq_ne || !b.on.streaming)
+        $fatal(1,"DIRECTED_WARM_DEBT_BLOCK_PRECONDITION");
+      // An actual service edge HOLD with pending queue/descriptor/block debt.
+      @(negedge clk);
+      release a.on.ref_c; release b.on.ref_c; release c.on.ref_c;
+      release a.on.ep; release b.on.ep; release c.on.ep;
+      release a.on.pin; release b.on.pin; release c.on.pin;
+      force a.on.ref_c = a.on.LEAD+1; force b.on.ref_c = b.on.LEAD+1; force c.on.ref_c = c.on.LEAD+1;
+      #2; if (b.on.blk_n !== b.on.blk || b.on.blk_nonempty_n !== 1)
+        $fatal(1,"DIRECTED_WARM_DEBT_HOLD_PRECONDITION");
+      @(posedge clk); #2;
+      if (!(|b.on.blk) || b.on.blk_nonempty_q !== 1 || !b.on.wq_ne || oa !== ob || oa !== oc)
+        $fatal(1,"DIRECTED_WARM_DEBT_HOLD");
+      @(negedge clk);
+      release a.on.ref_c; release b.on.ref_c; release c.on.ref_c;
+      release a.on.c_v; release b.on.c_v; release c.on.c_v;
+      release a.on.c_op; release b.on.c_op; release c.on.c_op;
+      if (!(|b.on.blk) || !b.on.wq_ne || !b.on.streaming)
+        $fatal(1,"DIRECTED_RESET_REQUIRES_NONZERO_BLOCK_AND_DEBT");
+      reset_with_debt=reset_with_debt+1;
+      rst_n=0; #2;
+      if (a.on.blk !== 0 || b.on.blk !== 0 || c.on.blk !== 0 || b.on.blk_nonempty_q !== 0 ||
+          b.on.wq_ne || b.on.streaming || oa !== ob || oa !== oc)
+        $fatal(1,"DIRECTED_ASYNC_RESET_WITH_DEBT");
+      @(posedge clk); #2;
+      @(negedge clk); rst_n=1;
+      @(posedge clk); #2;
+      if (b.on.blk_nonempty_q !== (|b.on.blk) || oa !== ob || oa !== oc)
+        $fatal(1,"DIRECTED_POST_WARM_RESET");
+      if (clear_overrides==0 || reset_with_debt==0) $fatal(1,"DIRECTED_REQUIRED_COVERAGE");
+      $display("PASS_BLOCK_DIRECTED_PRIORITY_AND_WARM_DEBT overrides=%0d reset_debt=%0d holds=%0d",clear_overrides,reset_with_debt,mirror_holds);
+      $finish;
+    end
     for (i = 0; i < cyc; i = i + 1) begin
       @(negedge clk);
       if (oa !== ob || oa !== oc) begin mism = mism + 1; if (mism < 10) $display("MISMATCH cyc=%0d a=%h b=%h", i, oa, ob); end
