@@ -19,7 +19,8 @@ OWN_FILES = [OWN + n + '.sv' for n in (
     'ot_ds_hbm_cluster20_integrated', 'ot_hbm_integrated_cp_reset',
     'ot_hbm_integrated_prior_debt', 'ot_hbm_integrated_sm0_borrow',
     'ot_hbm_integrated_gather_bridge', 'ot_hbm_integrated_gather_owner',
-    'ot_hbm_integrated_su_cp_bind', 'ot_hbm_integrated_header_decode',
+    'ot_hbm_integrated_su_cp_bind', 'ot_hbm_integrated_su_cp_association',
+    'ot_hbm_integrated_header_decode',
     'ot_hbm_integrated_formatter_provider', 'ot_hbm_integrated_w15_store',
     'ot_hbm_integrated_w2_result_sink')]
 PEER_FILES = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
