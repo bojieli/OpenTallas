@@ -15,6 +15,7 @@ module tb_hbm_integrated_gather_exact;
  reg [16:0] token=0;
  reg [19:0] pos=0;
  wire  retained;
+ wire [31:0] bound_arena_base, bound_arena_limit;
  wire  arena_visible;
  wire  sink_visible;
  wire  fault;
