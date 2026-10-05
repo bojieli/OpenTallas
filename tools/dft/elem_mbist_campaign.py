@@ -36,7 +36,7 @@ RTL += [f"rtl/v41rom/{n}.sv" for n in ("ot_v41_bterm", "ot_v41_chain", "ot_v41_s
         "ot_v41_bterm3_w10", "ot_v41_segtree3")]
 RTL += [f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")]
 RTL += ["rtl/common/ot_prefix.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv"]
-RTL += [f"rtl/dft/{n}.sv" for n in ("ot_mbist_ctrl", "ot_mbist_bira", "ot_mbist_rom_collar", "ot_mbist_sram_collar")]
+RTL += [f"rtl/dft/{n}.sv" for n in ("ot_mbist_ctrl", "ot_mbist_bira", "ot_mbist_rom_collar", "ot_mbist_rom_collar_par", "ot_mbist_sram_collar")]
 MODELS = [f"physical/asap7_memory_macros/{n}/{n}.v" for n in
           ("ot_rom_4096x274_m8", "ot_rom_8192x274_m8", "ot_sram_1r1w_256x256_m2_r2c2")]
 ROM_SHEET = ROOT / "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json"
