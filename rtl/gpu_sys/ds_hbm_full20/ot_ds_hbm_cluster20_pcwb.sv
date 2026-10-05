@@ -33,14 +33,14 @@ module ot_ds_hbm_cluster20_pcwb #(
  input wire [ND*PCWB_STACKS-1:0] row_acc,
  input wire [ND*PCWB_STACKS*7-1:0] row_die,
  input wire [ND*PCWB_STACKS*20-1:0] row_pos,
- output wire [ND*PCWB_STACKS-1:0] assoc_fault,
+ output wire [ND*PCWB_STACKS-1:0] assoc_fault, source_window_owned,
  output wire rst_sm_n, output wire sys_fault
 );
 generate if(ENABLE==0) begin:g_off
  assign db_rdy=0; assign cpl_v=0; assign cpl_data=0;
  assign rst_sm_n=0; assign sys_fault=0;
  assign owner_v=0; assign owner_job=0; assign owner_gen=0; assign owner_pos=0;
- assign owner_rank=0; assign owner_stack=0; assign assoc_fault=0;
+ assign owner_rank=0; assign owner_stack=0; assign assoc_fault=0; assign source_window_owned=0;
 end else begin:g_on
  initial begin
     if (PCWB_ENABLE && (TW!=17 || PW!=20 || ND>128 || PCWB_STACKS<1 || PCWB_STACKS>4))
@@ -86,7 +86,7 @@ end else begin:g_on
                 .o_job(owner_job[P*32+:32]),.o_gen(owner_gen[P*4+:4]),.o_pos(owner_pos[P*20+:20]),
                 .o_rank(owner_rank[P*7+:7]),.o_stack(owner_stack[P*2+:2]),
                 .row_acc(row_acc[P]),.row_die(row_die[P*7+:7]),.row_pos(row_pos[P*20+:20]),
-                .assoc_fault(assoc_fault[P]));
+                .assoc_fault(assoc_fault[P]),.source_window_owned(source_window_owned[P]));
         end
         ot_ds_hbm_cmdproc20 #(.TW(TW),.PW(PW),.CONTEXT_POSITIONS(CONTEXT_POSITIONS), .ENABLE(1), .NSM(NSM), .NCMD(1 << CB)) u_cp (
             .clk(clk_sm), .rst_n(rst_sm_n), .cmd_we(cmd_we[d]), .cmd_addr(cmd_addr[d*CB +: CB]), .cmd_wdata(cmd_wdata[d*64 +: 64]),

@@ -1,0 +1,156 @@
+{
+  "HBM_per_die": {
+    "PCs": 128,
+    "credits_per_PC": 32,
+    "read_bytes_per_controller_edge_upper_bound": 4096,
+    "sector_bytes": 32,
+    "sectors_per_PC_per_word": 24,
+    "stacks": 4,
+    "window_bytes": 22020096,
+    "window_words": 224
+  },
+  "clock_adopted": false,
+  "clock_ps": {
+    "FF_hold_uncertainty": 25,
+    "HBM_controller": 1024,
+    "SS_setup_uncertainty": 60,
+    "core": 833.333
+  },
+  "collective": {
+    "FIFO_depth": 16,
+    "bytes_per_cycle_parameter": 3600,
+    "lanes": 16,
+    "link_latency": 11,
+    "participants": 4,
+    "track_capacity_and_physical_slot_fit": null
+  },
+  "compiled_templates": {
+    "collective": 1,
+    "die": 1,
+    "tile": 1,
+    "wstream": 1
+  },
+  "delta_from_selected_tp2": {
+    "all_other_compiled_parameters_identical": true,
+    "collective_N": [
+      2,
+      4
+    ],
+    "die_D": [
+      2,
+      4
+    ]
+  },
+  "engine": {
+    "G": 6144,
+    "additional_engine_ports_vs_selected_tp2_per_die": 0,
+    "lanes": 16,
+    "port_elements_per_die": 24,
+    "result_bits_per_active_edge_per_die": 49152,
+    "result_groups_per_die": 96,
+    "weight_MACs_per_active_edge": 98304,
+    "weight_MACs_per_byte": 1,
+    "weight_bytes_per_accepted_word": 98304
+  },
+  "latency": {
+    "final_source_TP4_stage_cycles": null,
+    "interlayer_prefetch_carryover_qualification": null,
+    "no_legacy_transfer_or_TP2_cycle_division": true,
+    "purpose": "measure actual launches, pipeline, collective, HBM waits and retirement together",
+    "three_stage_batch_is_not_full_token": true
+  },
+  "legacy_tp4_is_not_selected": true,
+  "new_RTL_area_delta_vs_same_selected_TP4_source_um2": 0,
+  "new_cut_or_pipeline_edges_vs_selected_source": 0,
+  "once_only_port_cell_reservation_per_die_um2": 1557514.92,
+  "once_only_port_cell_reservation_tp4_um2": 6230059.68,
+  "physical_qualified": false,
+  "retained_port_area_model": "existing_port_model.json",
+  "role": "existing source integration measurement; no hardware change or physical admission",
+  "runtime_replication": {
+    "dies": 4,
+    "tile_instances_per_die": 1536,
+    "wstreams": 4
+  },
+  "schema": "opentallas.qwen.ha8.final-source.tp4-layer-vehicle.v1",
+  "selected_arithmetic": {
+    "ACC_LAT": 7,
+    "FAST_ISSUE": 1,
+    "KV_PREP": 3,
+    "MEM_EXTRA": 1,
+    "MUL_LAT": 6,
+    "SCALE_LAT": 6,
+    "TREE_LAT": 7
+  },
+  "selected_build_params": {
+    "coll": [
+      "-GN=4",
+      "-GLANES=16",
+      "-GTAGW=32",
+      "-GDEPTH=16",
+      "-GLAT=11",
+      "-GBPC_NUM=3600"
+    ],
+    "die": [
+      "-GG=6144",
+      "-GNW=18",
+      "-GSNW=18",
+      "-GQWEN_FULLSHAPE=1",
+      "-GME_IDLE_GATE=1",
+      "-GD=4",
+      "-GSW=64",
+      "-GLV=7",
+      "-GSCALE_LOCAL=0",
+      "-GMEM_EXTRA=1",
+      "-GENABLE_AR256=0",
+      "-GLAGW=40",
+      "-GSMIN=6",
+      "-GSMAX=11",
+      "-GTCUT=6",
+      "-GBD=31",
+      "-GXVM=1",
+      "-GNWS=4",
+      "-GTWS=30",
+      "-GORD=4",
+      "-GACC_LAT=7",
+      "-GTREE_LAT=7",
+      "-GMUL_LAT=6",
+      "-GFAST_ISSUE=1",
+      "-GKV_PREP=3",
+      "-DOT_SPINE_H_SCALE_LAT=6"
+    ],
+    "tile": [
+      "-GGT=6144",
+      "-GNW=18",
+      "-GSMIN=6",
+      "-GCODE_BANKS=10",
+      "-GIREG=1",
+      "-GMEM_EXTRA=1",
+      "-GNREG=1",
+      "-GKV_LOCAL=0",
+      "-GACC_LAT=7",
+      "-GTREE_LAT=7",
+      "-GMUL_LAT=6",
+      "-GFAST_ISSUE=1",
+      "-GKV_PREP=3"
+    ],
+    "wst": [
+      "-GENABLE=1",
+      "-GNSTK=4",
+      "-GREF_MODE=1",
+      "-GWINW=224",
+      "-GSPW=24",
+      "-GCRED=32"
+    ]
+  },
+  "stage_inputs": {
+    "position": 8191,
+    "preroll_controller_cycles": {
+      "L20": 1000,
+      "L5": 5000,
+      "head": 0
+    },
+    "token": 24
+  },
+  "whole_die_area_or_route_fit": null
+}

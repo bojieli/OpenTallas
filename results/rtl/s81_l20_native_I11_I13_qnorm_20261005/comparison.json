@@ -1,0 +1,107 @@
+{
+  "scope": "Native I11/I12/I13 on actual I9 QA; golden comparison after native terminal, no field I14/full token/timing qualification",
+  "source_cpp_sha256": "6cf0d7bb4348e76b4471e73e2bac891dc049f967068bd22fdce1ab57aa441754",
+  "crom_sha256": "843919beb3c7bca3bc977f8e31e4fbe49bc3821bfc5cd0ccb3f99f155a5b11f1",
+  "initial_h_sha256": "a00c7f2922f58f7d2d694dc5397f425028f0aad2af2273e2969fc29184c17161",
+  "source_arithmetic_sha256": "5d3e4dae0100b400a4ab7972b9090f5472a4d19237863c235b96187ffe633b09",
+  "expected_outputs_used_by_native": false,
+  "exact": true,
+  "results": [
+    {
+      "rank": 0,
+      "node": "L20.I11",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "f315095b9c9efd6849eb64612b180368a9f5ac6f265dde3af9022ac550b92a22",
+      "first": []
+    },
+    {
+      "rank": 0,
+      "node": "L20.I12",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "c807674fd4efd4949cadd92645e4795bb16c63c6ea1e77b57f7e2b8fc9671d4e",
+      "first": []
+    },
+    {
+      "rank": 0,
+      "node": "L20.I13",
+      "compared": 1280,
+      "bit_mismatches": 0,
+      "output_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+      "first": []
+    },
+    {
+      "rank": 1,
+      "node": "L20.I11",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "f315095b9c9efd6849eb64612b180368a9f5ac6f265dde3af9022ac550b92a22",
+      "first": []
+    },
+    {
+      "rank": 1,
+      "node": "L20.I12",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "c807674fd4efd4949cadd92645e4795bb16c63c6ea1e77b57f7e2b8fc9671d4e",
+      "first": []
+    },
+    {
+      "rank": 1,
+      "node": "L20.I13",
+      "compared": 1280,
+      "bit_mismatches": 0,
+      "output_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+      "first": []
+    },
+    {
+      "rank": 2,
+      "node": "L20.I11",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "f315095b9c9efd6849eb64612b180368a9f5ac6f265dde3af9022ac550b92a22",
+      "first": []
+    },
+    {
+      "rank": 2,
+      "node": "L20.I12",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "c807674fd4efd4949cadd92645e4795bb16c63c6ea1e77b57f7e2b8fc9671d4e",
+      "first": []
+    },
+    {
+      "rank": 2,
+      "node": "L20.I13",
+      "compared": 1280,
+      "bit_mismatches": 0,
+      "output_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+      "first": []
+    },
+    {
+      "rank": 3,
+      "node": "L20.I11",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "f315095b9c9efd6849eb64612b180368a9f5ac6f265dde3af9022ac550b92a22",
+      "first": []
+    },
+    {
+      "rank": 3,
+      "node": "L20.I12",
+      "compared": 1,
+      "bit_mismatches": 0,
+      "output_sha256": "c807674fd4efd4949cadd92645e4795bb16c63c6ea1e77b57f7e2b8fc9671d4e",
+      "first": []
+    },
+    {
+      "rank": 3,
+      "node": "L20.I13",
+      "compared": 1280,
+      "bit_mismatches": 0,
+      "output_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+      "first": []
+    }
+  ]
+}

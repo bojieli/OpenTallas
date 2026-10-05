@@ -1,0 +1,19 @@
+{
+  "scope": "Source constant inputs only, no expected Q/activation/result",
+  "position": 1048575,
+  "kind": 1,
+  "params": {
+    "rope_head_dim": 64,
+    "original_seq_len": 65536,
+    "compress_rope_theta": 160000,
+    "rope_factor": 16,
+    "beta_fast": 32,
+    "beta_slow": 1
+  },
+  "config_path": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+  "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "source_function": "hdc_golden_v41.rope_freqs/rope_cs; same table definition as native RoPE-cache fixture source",
+  "source_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "binary_sha256": "d353ad30c6f2b6fd1dcc1d3600aac8d95c21bac6fb0fcc2f8b3751d8b754dfd0",
+  "native_prefetch_claim": false
+}
