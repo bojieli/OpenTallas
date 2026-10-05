@@ -1153,29 +1153,39 @@ module ot_v41_rom_elem_qx_w10 #(
         $display("QY_CHECK FAIL: w_cl register %b != %b at %t", w_cl_r, w_cl0, $time); $fatal(1);
     end
 `endif
-    // QX = 6: w_sf_r loaded with the flags of the w_s the walker loads (go: s0_first; on an issue with the segment's
-    // last word: s + 1 within the class, s0_live at an MTP restart, else the next class's first segment, an AND-OR
-    // select of the per-class flags of c_s0[k] by the one-hot next class)
+    // QX = 6: w_sf_r holds s_x[w_s] for the w_s after each edge.  It is a free-clock register: the configuration is
+    // written on the free clock, also while a walk runs, so besides the walker's loads (go: s0_first; on an issue
+    // with the segment's last word: s + 1 within the class, s0_live at an MTP restart, else the next class's first
+    // segment, an AND-OR select by the one-hot next class) a segment write to the index w_s holds next overrides it
+    // with the written flags.  The walker loads only on gclk edges (go_e and issue both hold the gate open).
     function automatic [3:0] qx_sfl(input [SW-1:0] i);
         qx_sfl = {s_fp4[i], s_bf[i], s_hi[i], s_lo[i]};
     endfunction
-    reg [3:0] qx_sf_nx;
+    wire       qx_swr = cfg_v_e && {27'd0, cfg_a_e} < NSEG;               // a segment configuration write
+    wire [SW-1:0] qx_sa = cfg_a_e[SW-1:0];
+    wire [3:0] qx_swd = {cfg_d_e[26], cfg_d_e[42], cfg_d_e[28], cfg_d_e[27]};
+    reg  [3:0] qx_sf_nx;
+    reg        qx_sw_nx;                                                    // the write hits the next class's s0
     always @* begin
-        qx_sf_nx = 4'd0;
-        for (int k = 0; k < NSEG; k++) qx_sf_nx = qx_sf_nx | ({4{qx_nxoh[k]}} & qx_sfl(c_s0[k]));
-    end
-    always @(posedge gclk) if (rst_n) begin
-        if (go_e) w_sf_r <= qx_sfl(s0_first);
-        else if (issue && w_seg_last) begin
-            if (!w_cl) w_sf_r <= qx_sfl(s_next);
-            else if (w_restart) w_sf_r <= qx_sfl(s0_live);
-`ifdef QX_MUTANT_SF
-            else w_sf_r <= qx_sfl(s_next);                 // negative control: next class's segment taken as s + 1
-`else
-            else w_sf_r <= qx_sf_nx;
-`endif
+        qx_sf_nx = 4'd0; qx_sw_nx = 1'b0;
+        for (int k = 0; k < NSEG; k++) begin
+            qx_sf_nx = qx_sf_nx | ({4{qx_nxoh[k]}} & qx_sfl(c_s0[k]));
+            qx_sw_nx = qx_sw_nx | (qx_nxoh[k] && qx_sa == c_s0[k]);
         end
     end
+    wire qx_sld = go_e || issue && w_seg_last;                              // the walker loads w_s
+    wire [3:0] qx_sf_ld = go_e ? qx_sfl(s0_first) : !w_cl ? qx_sfl(s_next) : w_restart ? qx_sfl(s0_live) :
+`ifdef QX_MUTANT_SF
+                          qx_sfl(s_next);                                   // negative control: next class as s + 1
+`else
+                          qx_sf_nx;
+`endif
+    wire qx_sw_ld = go_e ? qx_sa == s0_first : !w_cl ? qx_sa == s_next : w_restart ? qx_sa == s0_live : qx_sw_nx;
+    wire qx_sw_hit = qx_swr && (qx_sld ? qx_sw_ld : qx_sa == w_s);
+    // in reset w_s holds (the walker does not load) but the configuration may still be written
+    always @(posedge clk)
+        if (rst_n) w_sf_r <= qx_sw_hit ? qx_swd : qx_sld ? qx_sf_ld : w_sf_r;
+        else if (qx_swr && qx_sa == w_s) w_sf_r <= qx_swd;
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 6 && rst_n && qy_seen && w_sf_r !== {s_fp4[w_s], s_bf[w_s], s_hi[w_s], s_lo[w_s]}) begin
         $display("QX_CHECK FAIL: segment flags %b for w_s %0d at %t", w_sf_r, w_s, $time); $fatal(1);
