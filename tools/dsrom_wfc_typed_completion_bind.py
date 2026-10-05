@@ -52,7 +52,7 @@ def rewrite(source):
     for pin, result in [('wf_stage_done','joined_stage_done'),
                         ('wf_stage_next_token','joined_stage_token'),
                         ('wf_stage_next_val','joined_stage_value')]:
-        s = one(s, f'.{pin}({pin})', f'.{pin}(WFC_TYPED_COMPLETION_JOIN ? {"joined_token_result_valid" if pin == "wf_stage_done" else result} : {pin})')
+        s = one(s, f'.{pin}({pin})', f'.{pin}(WFC_TYPED_COMPLETION_JOIN ? {"joined_controller_done" if pin == "wf_stage_done" else result} : {pin})')
     # Reuse the exact existing selected native producer/END readouts. This is
     # an opt-in extension of observation selection, not a new numerical source.
     for name in ('active','done','producer_take','am_any','end_take'):
@@ -77,6 +77,12 @@ def rewrite(source):
     // entry remains stable while registered retire_v is sampled before edge.
     assign wf_join_retire_entry = c8_engine_entry;
     wire joined_terminal_kind, joined_token_result_valid, joined_stage_handoff_done;
+    // An intermediate controller forwards HIDDEN/carry records, not a new
+    // token result. Raw core-carried payload remains byte-for-byte unchanged.
+    // A SOURCE/reducing/RESULT-producing controller must use TOKEN_RESULT.
+    localparam integer HANDOFF_CONTROLLER = !SOURCE && !SEND_RESULT && !COMBINE_IN;
+    wire joined_controller_done = joined_stage_done &&
+                                  (!joined_terminal_kind || HANDOFF_CONTROLLER);
     assign wf_join_done = joined_stage_done;
     assign wf_join_terminal_kind = joined_terminal_kind;
     assign wf_join_token_result_valid = joined_token_result_valid;
@@ -104,7 +110,8 @@ def rewrite(source):
         .c8_quarantine(c8_write_quarantine || c8_stage_quarantine), .c8_fault(c8_write_fault),
         .capture_live(capture_live), .capture_drained(capture_drained), .capture_fault(capture_fault),
         .collective_busy(dut.coll_busy), .collective_fault(dut.die_coll_fault), .native_fault(fault),
-        .stage_accepted(joined_terminal_kind ? wf_join_handoff_accepted : wf_stage_accepted),
+        .stage_accepted(joined_terminal_kind ?
+            (wf_join_handoff_accepted || (HANDOFF_CONTROLLER && wf_stage_accepted)) : wf_stage_accepted),
         .terminal_kind(joined_terminal_kind), .token_result_valid(joined_token_result_valid),
         .stage_handoff_done(joined_stage_handoff_done), .stage_done(joined_stage_done),
         .stage_next_token(joined_stage_token), .stage_next_value(joined_stage_value),
