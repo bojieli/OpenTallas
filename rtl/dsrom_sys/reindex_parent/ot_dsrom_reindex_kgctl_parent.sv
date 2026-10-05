@@ -52,7 +52,7 @@ module ot_dsrom_reindex_kgctl_parent #(
     localparam integer QW = LMW + 1;
     localparam integer FW = $clog2(DF);
     localparam integer ND = 5;              // decode stages (fixed latency, never stall)
-    localparam integer PD = 16;              // decoded-pair FIFO depth
+    localparam integer PD = 8;              // decoded-pair FIFO depth
     localparam integer PW = $clog2(PD);
     localparam integer GS = 8;              // copies of the dispatch write stage
     localparam integer SG = WB / GS;        // slots fed by one slot-side copy
