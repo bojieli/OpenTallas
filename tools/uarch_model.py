@@ -71,7 +71,9 @@ def dsrom_fh_capture_model():
         SRAM_raw_codewords=64*55, SRAM_decoded_payload=64*32,
         SRAM_read_identity_valid=64*(9+1), SRAM_write_payload_addr_valid=64*(32+9+1),
         SRAM_write_codeword_addr_valid=64*(55+9+1),
-        SRAM_fault_status=64*3)
+        SRAM_fault_status=64*3,
+        context_existing_result_consumer=2048+64+4*24+4,
+        context_existing_argmax_level1=32*(1+32+nw))
     macro_area = spec['area']['macro_area_um2']*64
     ff_area = sum(ff.values())*DFF_UM2
     # Combinational protection is conservatively charged separately until synth.
@@ -108,6 +110,7 @@ def dsrom_fh_capture_model():
             fits_area_proxy=cell_proxy/(2000*660-macro_area)<0.35,
             parent_die_slot_fit='No parent placement credit until composition'),
         latency=dict(protected_return_extra_cycles=2, pre_ALAT7_capture_cycles=1,
+            context_consumers='Existing result capture and argmax first level; no new production cycles',
             matching_mask_tag_row_cycles=3, index_prepare_cycles=1,
             write_pipeline_cycles=2, old_fused_DF=9,new_fused_DF=12, extra_cycles_per_fused_op=4,
             five_chain_added_cycles=20, predicted_five_chain_cycles=62873,
