@@ -36,8 +36,7 @@ ulimit -v unlimited
  --sdc-append results/rtl/hbm_item9_closure_20261005/context32_clocks.sdc \
  --clock-period-ns .833 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 \
  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 \
- --die-area 0 0 1814.376 1403.976 --core-area 2.16 2.16 1812.216 1401.816 \
- --stages synth --core-utilization 30 --place-density .55 --orfs-var ADDER_MAP_FILE= \
+ --stages synth \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
  --purpose characterization --nickname-tag item9_loaded32_synth_r1 \
  --keep-workdir "$out/work" --output "$out/physical.json" > "$out/run.log" 2>&1
