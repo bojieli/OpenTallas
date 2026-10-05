@@ -9023,6 +9023,11 @@ def hbm_w2_publication_model():
         connected_parent_integration=dict(
             parent_source='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv',
             parameter='W2_PROTECTED_TRANSACTION_PIPELINE', default=0,
+            actual_parent_basis='72e15410b (published parent join main2eb337dc8)',
+            preserved_CP_parameters=['SU_REGISTERED_OUTPUTS','SU_REGISTERED_STATUS','SU_REGISTERED_BOUNDARY','SU_BALANCED_OWNER_BOUNDARY'],
+            preserved_association='ot_hbm_integrated_su_cp_association; accepted executor lifetime separate from live admission',
+            inherited_CP_join_terminal='results/rtl/hbm_cp_parent_association_20261005/functional_r1/terminal.json (266checks/17responses; no replay or W2 credit)',
+            actual_parent_diff_scope='only W2 default-off parameter and u_w2_sink binding; all CP/association hooks unchanged',
             finite_ingress_seats=4, added_sink_state_bits=0,
             CP_writer='Harvey; ot_ds_hbm_cmdproc20 and ot_hbm_integrated_su_cp_bind remain unchanged',
             reset_hook='ot_hbm_integrated_cp_reset; CP local reset after CP idle and all_routes_drained',
