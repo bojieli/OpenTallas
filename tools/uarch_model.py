@@ -54,6 +54,69 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_fh_capture_model():
+    """Item2 G4W16 capture successor, before RTL; no adopted rate credit.
+
+    A TP4 head rank owns 32,320 logits: 505 64-lane rounds. Each pair of
+    FP32 lanes occupies one protected 512x128 macro (80-bit identity/payload,
+    eight SECDED bits). All 32 macro clocks and return paths route in context.
+    """
+    g, w, tw, nw, alat = 4, 16, 160, 16, 7
+    macro = 'ot_sram_1r1w_512x128_m4_r2c2'
+    spec = json.loads((ROOT/'physical/asap7_memory_macros'/macro/(macro+'.json')).read_text())
+    ff = dict(addend_and_result_capture=2*g*w*32, capture_valid_per_lane=g*w,
+        matching_tag_extension=3*tw, matching_valid_extension=3,
+        fused_select_copies=g*w, extra_index_select_copies=g*w-16,
+        prepared_index_and_onehot=w*(nw+1), prepared_index_write_valid=1,
+        SRAM_raw_codewords=32*88, SRAM_decoded_payload=32*64,
+        SRAM_read_identity_valid=32*(9+1), SRAM_write_codeword_addr_valid=32*(88+9+1),
+        SRAM_fault_status=32*3)
+    macro_area = spec['area']['macro_area_um2']*32
+    ff_area = sum(ff.values())*DFF_UM2
+    # Combinational protection is conservatively charged separately until synth.
+    ecc_gate_proxy = 32*1200
+    ecc_area_proxy = ecc_gate_proxy*0.20
+    cell_proxy = 40416 + ff_area + ecc_area_proxy
+    return dict(parameter='OT_FH_CAPTURE', default=0, G=g, W=w, MP=1, ALAT=alat,
+        MACs_per_cycle=0, FP32_adds_per_cycle=64,
+        memory_ports=dict(read=32, write=32, data_payload_bytes_per_cycle=256,
+                          protected_codeword_bytes_per_cycle=352),
+        boundary_bits_per_cycle=dict(addend_payload=2048, result_payload=2048,
+            read_address_enable=g*(24+1), write_payload=2048, metadata=tw+64+16),
+        replicas=dict(lanes=64, protected_macro_slices=32, position_copies=1),
+        mux_demux=dict(SRAM_depth_mux=0, lane_result_select_bits=2048,
+            lane_index_select_bits=2048, index_lane_onehot_bits=16),
+        fanout=dict(fused_select_max_logical_loads_per_lane=64,
+            index_select_max_logical_loads_per_lane=33+24,
+            macro_clock_pins=32, macro_clock_cap_ff={c:32*spec['timing'][c]['clk_cap_ff'] for c in ('ss','ff')}),
+        FF_bits=ff, FF_area_proxy_um2=ff_area, ECC_gate_proxy=ecc_gate_proxy,
+        ECC_area_proxy_um2=ecc_area_proxy, std_cell_area_proxy_um2=cell_proxy,
+        SRAM=dict(macro=macro, count=32, raw_bits=512*128*32,
+            payload_bits=512*64*32, logits_per_rank=32320, used_rows=505,
+            identity='row9 + slice5 + zero2 + payload64, K80 SECDED88',
+            area_um2=macro_area, no_protection_removal=True,
+            timing={c:spec['timing'][c] for c in ('ss','ff')}),
+        routing=dict(macro_columns=4, macro_rows=8, column_pitch_um=240,
+            row_pitch_um=70, per_slice_return_tracks=88,
+            per_slice_channel_capacity_M4_M6_tracks=math.floor(40/0.048)+math.floor(40/0.064),
+            signal_capacity_fraction=0.70, parent_hub_new_tracks=0,
+            statement='Local macro/capture routes; no new die or hub crossings'),
+        floorplan=dict(width_um=1040,height_um=660,area_um2=1040*660,
+            macro_area_um2=macro_area, std_cell_area_proxy_um2=cell_proxy,
+            free_std_cell_area_um2=1040*660-macro_area,
+            fits_area_proxy=cell_proxy/(1040*660-macro_area)<0.35,
+            parent_die_slot_fit='No parent placement credit until composition'),
+        latency=dict(protected_return_extra_cycles=2, pre_ALAT7_capture_cycles=1,
+            matching_mask_tag_row_cycles=3, index_prepare_cycles=1,
+            old_fused_DF=9,new_fused_DF=12, extra_cycles_per_fused_op=4,
+            five_chain_added_cycles=20, predicted_five_chain_cycles=62873,
+            predicted_tail_cycles=48,
+            single_user_five_chain_added_ns=20*0.833333,
+            conditional_l1_chain_ratio=1+32/4096+48/(12.37*1200)),
+        exactness='Same addend-first RNE add and golden reduction/argmax ordering; no arithmetic primitive change',
+        adoption=False, physical_closed=False, measured_cycles=None)
+
+
 def dsrom_field_spine_route_price(r=16, pq=0):
     """Immutable a721 spine, physical-only hold/slew repair budget.
 
