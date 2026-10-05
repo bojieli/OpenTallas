@@ -92,7 +92,7 @@ def record(m, root, out=None, only=''):
                     cases[key]['windows_baseline_subtracted'] = windows(d, m, base)
                 else:
                     cases[key]['windows'] = windows(d, m)
-                if d.parent.name != F.FINAL_ROUND:
+                if d.parent.name != m.get('final_round', F.FINAL_ROUND):
                     cases[key]['note'] = ('earlier round: wire_by_class / window labels use the final net and region map '
                                           '(approximate); overflow figures are exact')
             elif man.get('case') == 'c':
@@ -148,11 +148,19 @@ def routed_paths(m, grt_work):
     by = {it.name: it for it in m['insts']}
     bus = {b_[0]: b_ for b_ in m['buses']}
 
+    pxy = m.get('pin_xy')
+
     def manh(b):
         def near(it, q):
             return (min(max(q[0], it.x), it.x + it.w), min(max(q[1], it.y), it.y + it.h))
         e = bus[b][3]
         A, B = by[e[0][0]], by[e[-1][0]]
+        if pxy:                 # fixed-pin elements: from the pin (the box distance of abutting tiles is 0)
+            pa, pb = pxy(*e[0]), pxy(*e[-1])
+            if pa or pb:
+                pa = pa or near(A, pb)
+                pb = pb or near(B, pa)
+                return abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
         a = near(A, (B.x + B.w / 2, B.y + B.h / 2))
         bb = near(B, a)
         a = near(A, bb)
@@ -352,3 +360,141 @@ def _price(m, rp, cm, key):
                      'measured inside its cycles; the W12 tile die (1,536 tiles, 421.5 MiB SRAM residence, ~382 mm2 tile '
                      'core) is NOT this SM die and is not floorplanned here')
     return dict(one_way_cycles=S, compositions=comps, qwen_8k=qwen)
+
+
+# ------------------------------------------------------------------------------------------------ Qwen tile die
+Q_BASES = (('stages_430', 'BOUND: longest k16 bundle of each routed segment (every bit registered in time)'),
+           ('stages_430_median_bundle', 'median bundle of each routed segment (GRT outlier detours excluded)'),
+           ('stages_430_mean_bundle', 'mean bundle of each routed segment'),
+           ('stages_430_manhattan', 'FLOOR: Manhattan length between the placed pins of each segment (no detour)'))
+
+
+def _q_vehicle(rel):
+    """The measured vehicle's own wire-stage parameters (bd, nws, tws, ord) from a stage's token_result.json."""
+    d = json.loads((ROOT / rel).read_text())['design_point']
+    return {k: d[k] for k in ('tp', 'bd', 'nws', 'tws', 'ord')}
+
+
+def q_one_way(m, rp, key):
+    """One-way die-level depths (cycles at 1.2 GHz) of the Qwen tile die for one basis.  Element-internal forwarding
+    is fixed by construction: hop_stages per tile pitch (corridor and fill banks every <= 430.56 um)."""
+    T = m['tile_element']
+    hop = T['hop_stages']
+
+    def mx(prefix):
+        v = [(e[key], p) for p, e in rp.items() if p.startswith(prefix) and key in e]
+        return max(v) if v else (0, None)
+    bd, bdp = mx('bd_')
+    tr, trp = mx('tree_')
+    tw, twp = mx('tws_')
+    fl, flp = mx('fill_')
+    st, stp = mx('stat_')
+    lk, lkp = mx('link_')
+    return dict(
+        bd=bd + 8 * hop, bd_worst=bdp, bd_die_net=bd, bd_element=8 * hop,
+        tree=tr, tree_worst=trp,
+        tws=tw + MESO_CYC, tws_worst=twp,
+        coll=rp['coll_tx'][key] + rp['coll_rx'][key],
+        link=lk, link_worst=lkp,
+        fill=fl + F.QROWS * hop + MESO_CYC, fill_worst=flp, fill_element=F.QROWS * hop,
+        stat=st, stat_worst=stp)
+
+
+def _q_price(m, S_, key):
+    hz = F.CLK_HZ
+    me = json.loads((ROOT / F.Q_ME_OPS).read_text())['me_ops']
+    qa = json.loads((ROOT / F.QWEN_ALL).read_text())
+    ch = json.loads((ROOT / F.Q_CHAINS).read_text())
+    out = {}
+    veh_of_tp = {}
+
+    def terms(veh, stages):
+        """stages: [(name, count, decoder layer?, crossings, kv first access?)]"""
+        me_ops = sum(c * (me['per_layer_pass'] if dec else me['per_head']) for _, c, dec, _, _ in stages)
+        cr = sum(c * x for _, c, _, x, _ in stages)
+        kv = sum(c * k for _, c, _, _, k in stages)
+        t = dict(
+            bd_delta=dict(count=me_ops, cycles_each=max(0, S_['bd'] - veh['bd']),
+                          basis=f'x / instruction broadcast: floorplan {S_["bd"]} (head chain + entry + 8 tile hops) '
+                                f'against the vehicle bd {veh["bd"]}, once per ME op (6 a layer, 1 the head)'),
+            tree_delta=dict(count=me_ops, cycles_each=max(0, S_['tree'] - 4 * veh['nws']),
+                            basis=f'in-block split tree, worst leaf -> root {S_["tree"]} against 4 levels x nws '
+                                  f'{veh["nws"]}, once per ME op'),
+            tws_delta=dict(count=me_ops, cycles_each=max(0, S_['tws'] - veh['tws']),
+                           basis=f'block word -> port slice -> core tree top {S_["tws"]} (incl. meso 2) against the '
+                                 f'vehicle tws {veh["tws"]}, once per ME op'),
+            collective=dict(count=cr, cycles_each=S_['coll'] + 2 * S_['link'],
+                            basis='core <-> collective block round trip + collective <-> farthest SerDes both ways, per '
+                                  'switch crossing (the TP link budget LAT excludes the on-die run)'),
+            kv_first_access=dict(count=kv, cycles_each=S_['fill'] + S_['stat'],
+                                 basis='stream service -> farthest tile of its column (fill net + 16 element hops + '
+                                       'async FIFO) + service -> core status counts, per layer whose KV segment the '
+                                       'engine waits for (kv_wait > 0)'),
+            stream_first_word=dict(count=1, cycles_each=S_['fill'] + S_['stat'],
+                                   basis='the same depth once a token for the stream\'s first word (later words are '
+                                         'prefetched behind it: a constant pipeline shift)'))
+        for v in t.values():
+            v['cycles'] = v['count'] * v['cycles_each']
+        return t, me_ops
+    for dn_, d in qa['designs'].items():
+        veh = _q_vehicle(d['stages'][-1]['source'])
+        veh_of_tp[veh['tp']] = veh
+        st_ = [(s_['stage'], s_['count'], s_['stage'] != 'head', s_.get('coll_crossings', 0),
+                1 if s_['attribution_die0'].get('kv_wait', 0) > 0 else 0) for s_ in d['stages']]
+        t, me_ops = terms(veh, st_)
+        add = sum(v['cycles'] for v in t.values())
+        base = d['composed_cycles']
+        out[dn_] = dict(composed_cycles=base, ar_tok_s=d['ar_tok_s'], vehicle_wire_stages=veh, me_ops=me_ops,
+                        terms=t, added_cycles=add, priced_cycles=base + add,
+                        ar_tok_s_priced=round(hz / (base + add), 1), delta_pct=round(100 * add / base, 2),
+                        source=F.QWEN_ALL)
+    for row, tp in (('a_AR_spread', 2), ('b_AR_spread', 4)):
+        r_ = ch['rows'][row]
+        st_ = []
+        for cnt, term, cyc in r_['composition']:
+            head = 'head' in term
+            st_.append((term, cnt, not head, 1 if head else 2, 0 if head else 1))
+        t, me_ops = terms(veh_of_tp[tp], st_)
+        add = sum(v['cycles'] for v in t.values())
+        base = r_['cycles']
+        out[row] = dict(composed_cycles=base, ar_tok_s=r_['tok_s'], vehicle_wire_stages=veh_of_tp[tp], me_ops=me_ops,
+                        terms=t, added_cycles=add, priced_cycles=base + add,
+                        ar_tok_s_priced=round(hz / (base + add), 1), delta_pct=round(100 * add / base, 2),
+                        source=F.Q_CHAINS, note='every layer streamed (spread): 2 crossings and a KV first access a '
+                                                'layer, head 1 crossing')
+    return out
+
+
+def price_qwen(m, grt_work, out=None):
+    grt_work = Path(grt_work)
+    tp = F.q_tree_paths(m)
+    m2 = dict(m, paths=dict(m['paths'], **{f'tree_{t}': ids for t, ids in tp.items()}))
+    rp = routed_paths(m2, grt_work)
+    rec = dict(schema='opentallas.hbm-accel-qwen-die.wire-stages.v1', grt_case=str(grt_work.name),
+               stage_pitch_um=F.LINK_STAGE_UM, meso_crossing_cycles=MESO_CYC, clock_hz=F.CLK_HZ,
+               tile_hop_stages=m['tile_element']['hop_stages'], bases={})
+    for key, basis in Q_BASES:
+        S_ = q_one_way(m2, rp, key)
+        rows = _q_price(m, S_, key)
+        rec['bases'][key] = dict(basis=basis, one_way_cycles=S_, rows=rows,
+                                 summary={k: dict(ar_tok_s=v['ar_tok_s'], ar_tok_s_priced=v['ar_tok_s_priced'],
+                                                  delta_pct=v['delta_pct'], added_cycles=v['added_cycles'])
+                                          for k, v in rows.items()})
+    b = rec['bases']['stages_430']
+    rec.update(one_way_cycles=b['one_way_cycles'], qwen_8k=b['rows'])
+    rec['paths'] = {p: v for p, v in rp.items() if not p.startswith('tree_')}
+    tr = {p: v for p, v in rp.items() if p.startswith('tree_') and 'stages_430' in v}
+    rec['tree_paths_summary'] = dict(paths=len(tr), max_stages_430=max(v['stages_430'] for v in tr.values()),
+                                     max_stages_430_manhattan=max(v['stages_430_manhattan'] for v in tr.values()))
+    rec['me_ops_source'] = F.Q_ME_OPS
+    rec['scope'] = ('Qwen3-8B HBM accelerator tile die (the HA8 W12 vehicle\'s organisation): the vehicle cycles carry '
+                    'its own bd / nws / tws stage parameters; the floorplan prices the excess of the routed depths '
+                    'over them per ME op, plus the die-level collective run per crossing and the fill + status depth '
+                    'per KV first access and once a token.  Deltas are clamped at 0 (a shorter floorplan path is not '
+                    'credited).  Bounds from routed length, not die-level STA.')
+    rec['tool_sha256'] = dict(fp=F.sha('tools/hbm_accel_die_fp.py'), price=F.sha('tools/hbm_accel_die_price.py'))
+    out = Path(out) if out else ROOT / F.Q_OUT / 'wire_stages.json'
+    out.write_text(json.dumps(rec, indent=1) + '\n')
+    print(json.dumps({k: dict(one_way=v['one_way_cycles'], summary=v['summary']) for k, v in rec['bases'].items()},
+                     indent=1, default=str)[:8000])
+    return 0
