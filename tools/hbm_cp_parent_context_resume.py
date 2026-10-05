@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import shlex
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -16,6 +17,8 @@ def main():
     parser.add_argument('--r1-root', type=Path, required=True)
     parser.add_argument('--retry-root', type=Path, required=True)
     parser.add_argument('--corrected-sdc', type=Path, required=True)
+    parser.add_argument('--checkpoint', choices=['mapped','tapcell','pdn','gp-no-io','placed'], required=True)
+    parser.add_argument('--checkpoint-sha256', required=True)
     args = parser.parse_args()
     r1, retry = args.r1_root.resolve(), args.retry_root.resolve()
     assert retry.parent == r1, 'Retry must remain under the same context job'
@@ -39,6 +42,26 @@ def main():
     rel = original[0].relative_to(r1/'work/orfs')
     mapped = retry/'work/orfs'/rel
     assert sha(mapped) == sha(original[0]), 'Copied mapped netlist changed'
+    checkpoint_names={'mapped':'1_2_yosys.v','tapcell':'2_3_floorplan_tapcell.odb',
+                      'pdn':'2_4_floorplan_pdn.odb','gp-no-io':'3_1_place_gp_skip_io.odb',
+                      'placed':'3_place.odb'}
+    checkpoint=mapped.parent/checkpoint_names[args.checkpoint]
+    assert sha(checkpoint)==args.checkpoint_sha256, 'Retained checkpoint differs from the selected source artifact'
+    limits={'mapped':(1,2),'tapcell':(2,3),'pdn':(2,4),'gp-no-io':(3,1),'placed':(3,99)}
+    limit=limits[args.checkpoint]
+    frozen={}
+    for file in mapped.parent.iterdir():
+        if args.checkpoint=='mapped' and file!=mapped:continue
+        if file.suffix not in ('.odb','.sdc','.v') or 'error' in file.name.lower():continue
+        parts=file.stem.split('_')
+        if not parts[0].isdigit():continue
+        stage=(int(parts[0]),int(parts[1]) if len(parts)>1 and parts[1].isdigit() else 99)
+        if stage>limit:continue
+        if file.suffix=='.sdc' and args.checkpoint!='mapped':
+            text=file.read_text()
+            assert 'set_clock_latency -early 90' not in text and 'set_clock_latency -late 100' not in text, file
+        frozen[file]=sha(file)
+    frozen[mapped]=sha(mapped)
     validation = (retry/'network_api_validation.log').read_text()
     assert 'OT_NETWORK_SDC_PARSE_PASS' in validation and '[ERROR' not in validation
     argv = record['runner']['argv'][1:]
@@ -54,7 +77,9 @@ def main():
                    hardware_sources=record['design']['sources'],same_context=True,
                    changed_network_API_only=True,source_phase_ps=0,
                    analytical_network_latency_ps=[90,100],setup_ps=60,hold_ps=25,
-                   original_failure_preserved=True,synthesis_reused=False)
+                   original_failure_preserved=True,synthesis_reused=False,
+                   resume_checkpoint=str(checkpoint),resume_checkpoint_sha256=sha(checkpoint),
+                   frozen_upstream_artifacts={str(p.relative_to(retry/'work/orfs')):h for p,h in frozen.items()})
     (retry/'resume.json').write_text(json.dumps(receipt,indent=2)+'\n')
     import run_abi3_physical as driver
     original_run = driver.run
@@ -74,12 +99,16 @@ def main():
             # Make must not re-map RTL due solely to copied-source/config timestamps.
             assert reused == 1
             command = list(command)
+            keep=[]
+            for file in frozen:keep.extend(['-o','/work/'+str(file.relative_to(retry/'work/orfs'))])
             command[-1] = command[-1].replace('make DESIGN_CONFIG=/work/config.mk',
-                'make -o /work/'+str(rel)+' DESIGN_CONFIG=/work/config.mk',1)
+                'make '+shlex.join(keep)+' DESIGN_CONFIG=/work/config.mk',1)
         return original_run(command, **kwargs)
     driver.run = run
     rc = driver.main(argv)
     assert reused == 1, 'Mapped-netlist resume hook was not consumed exactly once'
+    for file,digest in frozen.items():
+        assert sha(file)==digest, 'Upstream stage replayed despite retained-checkpoint selection: '+str(file)
     return rc
 
 if __name__ == '__main__':
