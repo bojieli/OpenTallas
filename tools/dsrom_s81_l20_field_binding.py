@@ -32,14 +32,27 @@ def main():
                                             for k, v in literal.items()})
         if hashlib.sha256(word.to_bytes(256, 'little')).hexdigest() != node['template_word_sha256']:
             raise ValueError('source literal changed')
-        info = emit(execution, node['id'], 0, a.out/f'I{pc}', connectivity)
-        if (info['stage'], info['phase'], info['rows'], info['output_base']) != (
-                37, 18 if pc == 7 else 19, 320 if pc == 7 else 128,
-                419776 if pc == 7 else 420096):
-            raise ValueError('selected full field binding changed')
-        cpp += [f'#include "I{pc}/native_field_bindings.hpp"',
-                f'inline auto s81_native_field_i{pc}_bindings(uint64_t id)'
-                '{return '+info['cpp_binding_symbol']+'(id);}']
+        calls = []
+        for rank in range(4):
+            directory = a.out/f'rank{rank}'/f'I{pc}'
+            info = emit(execution, node['id'], rank, directory, connectivity)
+            if (info['stage'], info['phase'], info['rows'], info['output_base']) != (
+                    37, 18 if pc == 7 else 19, 320 if pc == 7 else 128,
+                    419776 if pc == 7 else 420096):
+                raise ValueError('selected full field binding changed')
+            # Rank selects source/CFG ownership; the native leaf has no RANK parameter.
+            for filename in ('spine_phase.hex', 'spine_stream.hex'):
+                if rank and (directory/filename).read_bytes() != (a.out/'rank0'/f'I{pc}'/filename).read_bytes():
+                    raise ValueError(f'rank{rank} {filename} differs from the retained rank0 native body')
+            symbol = info['cpp_binding_symbol']
+            unique = symbol+f'_r{rank}'
+            header = directory/'native_field_bindings.hpp'
+            header.write_text(header.read_text().replace(symbol, unique))
+            cpp.append(f'#include "rank{rank}/I{pc}/native_field_bindings.hpp"')
+            calls.append(f'case {rank}:return {unique}(id);')
+        cpp.append(f'inline auto s81_native_field_i{pc}_bindings(uint64_t id,unsigned rank)'
+                   '{switch(rank){'+''.join(calls)+
+                   'default:throw std::runtime_error("field rank outside 0..3");}}')
         words = ','.join(f'{(word >> (32*i)) & 0xffffffff}u' for i in range(64))
         operations.append('{'+f'{producer},3,"{node["template_word_sha256"]}",'
                           '{'+words+'}}')
