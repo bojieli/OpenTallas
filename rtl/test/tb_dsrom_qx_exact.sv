@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 9 by default).
+// QX exactness bench (2026-10-04): tb_dsrom_qy_exact with dut = ot_v41_rom_elem_q_qx_w10 (QX = 10 by default).
 // SEQ (QX >= 9, the segment tree ot_v41_segtree5: a tree level costs one more cycle, so output TIMES are later and
 // data-dependent): the outputs are compared as sequences, per (macro, segment, position) key, every dut event against
 // the reference's event of that key in order (value, row, segments, error); the walker / FIFO / issue state is still
@@ -33,7 +33,7 @@ module tb_dsrom_qx_exact;
  parameter integer QP = 1, XS = 1, CAP = 0, P1 = 1, CSAM = 10;   // QP = 0: the copy's default (no shift)
  parameter integer QZ = 1;                                         // QZ = 0: the qp circuit
  parameter integer QY = 1;                                         // QY = 0: the qz circuit
- parameter integer QX = 9;                                         // 2, 1: earlier QX levels, 0: the qy circuit
+ parameter integer QX = 10;                                         // 2, 1: earlier QX levels, 0: the qy circuit
  localparam integer FL = QY != 0 ? 2 : 0;                          // fault reporting delay
  localparam integer QK = QP != 0 ? CAP + P1 : 0;
  localparam integer L = QP != 0 ? XS + QK : 0;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """QX exactness gate for ot_v41_rom_elem_q_qx_w10 (2026-10-04): the QY gate below on the QX copy
-(rtl/test/tb_dsrom_qx_exact.sv): pos / xs0 / negatives with QX = 9 (segtree5; outputs compared as per-key sequences), qx8 (QX = 8), qx7 (QX = 7), qx6 (QX = 6), qx5 (QX = 5), qx4 (QX = 4), qx3 (QX = 3), qx2 (QX = 2), qx1 (QX = 1), qx0 (QX = 0: the qy circuit), qy0 (QX = QY = 0:
+(rtl/test/tb_dsrom_qx_exact.sv): pos / xs0 / negatives with QX = 10 (QX = 9 + zero-cycle fixes; outputs compared as per-key sequences), qx9 (QX = 9), qx8 (QX = 8), qx7 (QX = 7), qx6 (QX = 6), qx5 (QX = 5), qx4 (QX = 4), qx3 (QX = 3), qx2 (QX = 2), qx1 (QX = 1), qx0 (QX = 0: the qy circuit), qy0 (QX = QY = 0:
 the qz circuit), qz0 (QX = QY = QZ = 0: the qp circuit), plus neg_qxlu (the one-hot lookahead ignoring a sub-block
 advance) and neg_qxca (the registered case-A decision ignoring it).
 
@@ -39,7 +39,7 @@ RTL = ["rtl/v41rom/ot_v41_rom_elem_q_w10.sv", "rtl/v41rom/ot_v41_rom_elem_q_qp_w
        "rtl/v41rom/ot_v41_kreg.sv", "rtl/v41rom/ot_v41_chain3.sv"]
 RTL += [f"rtl/v41rom/{n}.sv" for n in ("ot_v41_bterm", "ot_v41_chain", "ot_v41_segtree", "ot_v41_bf16_lanes",
         "ot_v41_fadd", "ot_v41_bmul2", "ot_v41_bterm2_w10", "ot_v41_chain2", "ot_v41_segtree2", "ot_v41_bf16_lanes2",
-        "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5")]
+        "ot_v41_bterm3_w10", "ot_v41_bterm4_w10", "ot_v41_segtree3", "ot_v41_segtree4", "ot_v41_segtree5", "ot_v41_chain4", "ot_v41_fadd2")]
 RTL += [f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")]
 RTL += ["rtl/common/ot_prefix.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv"]
 PASS = re.compile(r"PASS QP=(\d+) XS=(\d+) CAP=(\d+) P1=(\d+) L=(\d+) compared=(\d+) exempt=(\d+) seed=(\d+) cycles=(\d+) "
@@ -53,7 +53,7 @@ CHK = ["+define+QT_CHECK", "+define+QP_CHECK"]
 BUILDS = {"pos": CHK, "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
           "qz0": CHK + ["-GQX=0", "-GQY=0", "-GQZ=0"], "neg_qxlu": ["+define+QX_MUTANT_LU", "-GQX=8"],
           "neg_qxca": ["+define+QX_MUTANT_CA", "-GQX=8"], "neg_qxnca": ["+define+QX_MUTANT_NCA", "-GQX=8"],
-          "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "qx7": CHK + ["-GQX=7"], "qx8": CHK + ["-GQX=8"], "neg_fw": ["+define+ST_MUTANT_FW"], "neg_tree9": ["+define+QP_MUTANT_TREE"], "neg_xc": ["+define+ST_MUTANT_XC", "-GQX=8"], "neg_qxsf": ["+define+QX_MUTANT_SF", "-GQX=8"], "neg_qxhz": ["+define+QX_MUTANT_HZ", "-GQX=8"], "neg_p2s": ["+define+BT_MUTANT_P2S", "-GQX=8"],
+          "qx2": CHK + ["-GQX=2"], "qx3": CHK + ["-GQX=3"], "qx4": CHK + ["-GQX=4"], "qx5": CHK + ["-GQX=5"], "qx6": CHK + ["-GQX=6"], "qx7": CHK + ["-GQX=7"], "qx8": CHK + ["-GQX=8"], "neg_fw": ["+define+ST_MUTANT_FW"], "qx9": CHK + ["-GQX=9"], "neg_ns": ["+define+BT_MUTANT_NS"], "neg_pd": ["+define+CH_MUTANT_PD"], "neg_dp10": ["+define+QP_MUTANT_DP"], "neg_tree9": ["+define+QP_MUTANT_TREE"], "neg_xc": ["+define+ST_MUTANT_XC", "-GQX=8"], "neg_qxsf": ["+define+QX_MUTANT_SF", "-GQX=8"], "neg_qxhz": ["+define+QX_MUTANT_HZ", "-GQX=8"], "neg_p2s": ["+define+BT_MUTANT_P2S", "-GQX=8"],
           "neg_bk": ["+define+QZ_MUTANT_BK", "-GQX=8"], "neg_z": ["+define+QZ_MUTANT_Z", "-GQX=8"], "neg_cl": ["+define+QY_MUTANT_CL", "-GQX=8"],
           "neg_dp": ["+define+QP_MUTANT_DP", "-GQX=8"], "neg_tree": ["+define+QP_MUTANT_TREE", "-GQX=8"],
           "neg_half": ["+define+QP_MUTANT_HALF", "-GQX=8"], "neg_shadow": ["+define+QP_MUTANT_SHADOW", "-GQX=8"],
@@ -101,7 +101,7 @@ def main() -> None:
                   parameters=dict(NB=2, MTP=1, EARLY=1, FAST=1, PP=1, FRONT_PAR=0, QTIMING_FIX=1, HC=3, QPIPE=1,
                                   QP_XS="1 (pos, qz0) / 0 (xs0)", QP_CAP=0, QP_P1=1, QP_CSAM=10,
                                   QZ="1 / 0 (qz0)", QZ_NS=8, QZ_NE=4, QY="1 (pos, xs0, qx0, negatives) / 0 (qy0, qz0)",
-                                  QX="9 (pos, xs0, negatives; SEQ output compare) / 8 (qx8) / 7 (qx7) / 6 (qx6) / 5 (qx5) / 4 (qx4) / 3 (qx3) / 2 (qx2) / 1 (qx1) / 0 (qx0, qy0, qz0)",
+                                  QX="10 (pos, xs0, negatives; SEQ output compare) / 9 (qx9) / 8 (qx8) / 7 (qx7) / 6 (qx6) / 5 (qx5) / 4 (qx4) / 3 (qx3) / 2 (qx2) / 1 (qx1) / 0 (qx0, qy0, qz0)",
                                   fault_report_delay_cycles=2),
                   reference="pinned rtl/v41rom/ot_v41_rom_elem_q_w10.sv + ot_v41_rom_elem_w10.sv (unchanged)",
                   comparison="every cycle: dut pv, busy and fault equal the ref's L cycles earlier, and every data field "
@@ -117,6 +117,7 @@ def main() -> None:
         with cf.ThreadPoolExecutor(len(BUILDS)) as ex:
             record["build_commands"] = dict(zip(BUILDS, ex.map(build, BUILDS)))
         jobs = [("pos", s) for s in range(1, a.seeds + 1)] + [("qz0", 100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
+        jobs += [("qx9", 1400 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("qx8", 1300 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("qx7", 1200 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("qx6", 1100 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
@@ -129,7 +130,7 @@ def main() -> None:
         jobs += [("qy0", 400 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("xs0", 200 + s) for s in range(1, max(2, a.seeds // 2) + 1)]
         jobs += [("neg_dp", 1), ("neg_tree", 1), ("neg_half", 1), ("neg_shadow", 1), ("neg_lu", 3), ("neg_bk", 1),
-                 ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1)]
+                 ("neg_z", 1), ("neg_cl", 1), ("neg_qxlu", 3), ("neg_qxca", 3), ("neg_qxnca", 3), ("neg_p2s", 1), ("neg_qxhz", 1), ("neg_qxsf", 1), ("neg_xc", 1), ("neg_fw", 1), ("neg_tree9", 1), ("neg_ns", 1), ("neg_pd", 1), ("neg_dp10", 1)]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
             results = list(ex.map(lambda j: run(*j), jobs))
         for name, seed, rc, log, lsha in results:
