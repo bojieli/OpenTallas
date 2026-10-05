@@ -1,0 +1,17 @@
+{
+  "results/rtl/qwen_hbm_registered_admission_20261005/model.json": "ce24981fc016e564c369c707c51499b40c59f90257469a74f242495517d425bb",
+  "results/rtl/qwen_hbm_registered_admission_20261005/component_PASS.log": "9fd61fb244beec26d9b08846a77fb0472d57003f8d9032c327b8bfd3ae632b20",
+  "results/rtl/qwen_hbm_registered_admission_20261005/source_step.json": "e694df60ad5d9251f1b94278395cd919ab884925024a6fb3ff5a412cf2e8dc23",
+  "results/rtl/qwen_hbm_registered_admission_20261005/compile_missing_source_FAIL.log": "16bc9dc4b63535a519a6362275e2f815a6a30d29c9257a5a9af56a5c2440b429",
+  "results/rtl/qwen_hbm_registered_admission_20261005/baseline_f4_FAIL/core_ctx2_f4/corner_sta.json": "31fbb6a826f9a423c2268fad3742767fda1144c3e4dfc725f878dc47eb6a5cf4",
+  "results/rtl/qwen_hbm_registered_admission_20261005/baseline_f4_FAIL/core_ctx4_f4/corner_sta.json": "a7fcde87d8681484197668b9cc36d699e1dd302f7fc102b816412f15a5eece54",
+  "results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_hbmacc_gate_f12.sv": "4923916510cae05d8c2201d331ec7909b6a86c8fd49c25659f06c4dd8197f052",
+  "results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_hbmacc_core_ctx.sv": "a41da3f2cd6f83ad844b750c647915c48113e2444793846afe7dd0b3cd3eaa3b",
+  "results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_qwen_core_ctx_stubs.sv": "e98d688cdccfd3af9dd6535f16e78339bb18f9b491a87836673a4ad3734b8f0a",
+  "results/rtl/qwen_hbm_registered_admission_20261005/sources/ot_hdc_core_vector_weight_f12.sv": "f940ce16f2c36fee2d6d6f620cb1c987801fc222dccdb87f72d13d10e54e1bed",
+  "rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_gate_admission.sv": "0da46b40fd23b7146c784fed2275ff8d50e98caf8339fd4c234af377baf19f4d",
+  "rtl/hbm_accel/qwen/fmax/ot_qwen_hbmacc_core_ctx_admission.sv": "25644f3b4ba64c59bc49b986d01436d6bda5daf2b423365879bc96b8cf236e29",
+  "rtl/test/hbm_accel_qwen/fmax/tb_registered_admission.sv": "a02f4e9fce3aa684c4872996d1b0fe0fde68db49daf17eaebfa38923e6e011f6",
+  "tools/qwen_hbmacc_core_admission_emit.py": "f41b794952b1b7f11feaf8f9956e1d06f3482aa615d5a50e8d6443e5d45d5487",
+  "tests/test_qwen_hbm_registered_admission.py": "e23f1773384263ee741e46f834e3d4e7577ffd05fd6bb5ce0271c54d9a1340a9"
+}

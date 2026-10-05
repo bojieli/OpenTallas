@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/qwen-rom-issue-commit-component1-20261005/src/tools/qwen_rom_core_takeover_component.py", line 88, in <module>
+    else:a.out.write_text(component(a.bounded,a.chaseq,a.counter_la,a.am_commit))
+                          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/qwen-rom-issue-commit-component1-20261005/src/tools/qwen_rom_core_takeover_component.py", line 49, in component
+    text=apply(text)
+  File "/srv/opentallas-scratch/codex/qwen-rom-issue-commit-component1-20261005/src/tools/qwen_rom_core_dec_commit_emit_w12.py", line 52, in apply
+    assert text.count(old)==1
+           ^^^^^^^^^^^^^^^^^^
+AssertionError

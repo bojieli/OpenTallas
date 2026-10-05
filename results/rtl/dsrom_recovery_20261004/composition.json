@@ -4,30 +4,25 @@
  "position": 1048575,
  "baseline": "recovery",
  "base": "candidate_gather.lat259 (results/rtl/dsrom_reindex_candidates_20261004/composition.json, 394.911 us)",
- "AR_us": 713.09,
- "AR_tok_s": 1402.3,
+ "AR_us": 620.078,
+ "AR_tok_s": 1612.7,
  "critical_path_us_by_class": {
   "zero": 0.0,
-  "measured": 650.347,
+  "measured": 557.321,
   "measured+vendor_phy": 45.096,
   "inside_measured": 0.19,
   "extra_S81_hops": 17.422
  },
- "measured_share": 1.0,
+ "measured_share": 0.9999,
  "modelled_on_path_us": 0,
  "modelled_on_path_by_family": {},
  "modelled_inside_measured_nodes_us": 0,
  "modelled_inside_measured_note": "none: CDC measured (su_cdc.json)",
- "cdc_on_path_us": 4.31,
+ "cdc_on_path_us": 4.293,
  "still_modelled_total_us": 0,
  "MTP": {
   "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
   "stage_busy_top": [
-   {
-    "first": "head.hc_pre",
-    "hop": "token.return",
-    "busy_us": 74.3285888888889
-   },
    {
     "first": "L19.ffn.hc_pre",
     "hop": "L20.substage_hop0",
@@ -52,28 +47,33 @@
     "first": "L27.ffn.hc_pre",
     "hop": "L28.substage_hop0",
     "busy_us": 14.7611
+   },
+   {
+    "first": "L31.ffn.hc_pre",
+    "hop": "L32.substage_hop0",
+    "busy_us": 14.7611
    }
   ],
   "worst_stage": {
-   "first": "head.hc_pre",
-   "hop": "token.return",
-   "busy_us": 74.3285888888889
+   "first": "L19.ffn.hc_pre",
+   "hop": "L20.substage_hop0",
+   "busy_us": 24.9027
   },
-  "II_us": 75.389,
-  "verify_us": 1090.037,
-  "draft_us": 454.72,
+  "II_us": 25.762,
+  "verify_us": 748.887,
+  "draft_us": 119.211,
   "draft_terms": {
    "block5_us": 38.3718,
    "blocks_us": 83.992,
    "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
-   "head_occ_us": 73.571,
+   "head_occ_us": 6.9892,
    "r_markov": 0.00781
   },
   "seed_commit_us": 3.217,
-  "step_us": 1547.974,
-  "MTP_tok_s": 2511.6,
+  "step_us": 871.315,
+  "MTP_tok_s": 4462.1,
   "tau": 3.8879,
-  "mtp_over_ar": 1.791
+  "mtp_over_ar": 2.767
  },
  "still_modelled": [
   {
@@ -135,7 +135,7 @@
   {
    "term": "domain crossings (meso FIFO + 3:4 ratio FIFO) on every slow<->fast edge",
    "record": "su_cdc.json",
-   "us_on_path": 4.31,
+   "us_on_path": 4.293,
    "exact": true,
    "was": "model W18 4 slow cycles on SU nodes (1.773 us on path); the s2f charge was lost on patched fast nodes"
   },
@@ -154,9 +154,7 @@
    "was": "43.215 us reduced-vehicle"
   }
  ],
- "requires_binding": [
-  "WINDOW load: ot_dsrom_window_stream_la measured 93.9% of peak; the as-built S81 prefetch measures 124.5 us a layer -- composition REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)"
- ],
+ "requires_binding": [],
  "info": {
   "hop_us": 0.7575,
   "cand": {
@@ -165,14 +163,34 @@
   },
   "head": {
    "lm_head_us": 73.571,
-   "argmax_drain_us": 35.47111111111111,
-   "stage_occupancy_us": 73.571
+   "argmax_drain_us": 0.01,
+   "stage_occupancy_us": 6.9892
   },
   "window": {
-   "per_layer_us": 0.6616666666666666,
-   "asbuilt_c1_us": 124.5352,
-   "fraction_of_peak_sustained": 0.9392,
-   "mode": "stream_la"
+   "mode": "s81",
+   "terms_cycles": {
+    "window_only": {
+     "own_row_write_cycles": 649.8,
+     "window_cycles": 295.0,
+     "source": "L0.lf: start -> rows delivered"
+    },
+    "scan": {
+     "own_row_write_cycles": 3220.6,
+     "window_cycles": 260.0,
+     "source": "L20.lf_scan: write under scan, load after it"
+    },
+    "reindex": {
+     "own_row_write_cycles": 1129.9,
+     "window_cycles": 201.2,
+     "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it"
+    },
+    "reuse": {
+     "own_row_write_cycles": 649.8,
+     "window_cycles": 164.0,
+     "source": "L24.lf: no concurrent index traffic"
+    }
+   },
+   "record": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json"
   },
   "hop_tier": "light_fec",
   "engram": {
@@ -200,17 +218,29 @@
     {
      "lever": "draft",
      "record": "results/rtl/dsrom_recovery_20261004/levers/draft.json",
-     "sha256": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
+     "sha256": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+     "verdict": "ADOPT"
+    },
+    {
+     "lever": "head",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/head.json",
+     "sha256": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
      "verdict": "ADOPT"
     },
     {
      "lever": "router",
      "record": "results/rtl/dsrom_recovery_20261004/levers/router.json",
-     "sha256": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+     "sha256": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
      "verdict": "ADOPT"
     }
    ],
    "not_applied": [
+    {
+     "lever": "field",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/field.json",
+     "sha256": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+     "verdict": "REJECT"
+    },
     {
      "lever": "hop",
      "record": "results/rtl/dsrom_recovery_20261004/levers/hop.json",
@@ -220,7 +250,7 @@
    ]
   },
   "cdc": {
-   "edges": 1247,
+   "edges": 1287,
    "f2s_us": 0.0055,
    "s2f_us": 0.00495,
    "model_f2s_us": 0.00444,
@@ -2444,340 +2474,660 @@
   },
   {
    "node": "head.lm_head",
-   "model_us": 12.39,
-   "measured_us": 73.571,
+   "model_us": 73.571,
+   "measured_us": 6.9892,
    "cls": "measured",
-   "source": "one S81 head return group (8 BP=2 element pairs, 408 real rows, packed), scaled 409.6/408, +34 wire cyc",
+   "source": "head: ot_dsrom_head_bundle (5 logical macros, 16 BF16 mult/macro, skewed ROM, streaming tree, join) go->last logit 8353 cyc measured + 34 labelled wire cyc @1.2 GHz; every bundle of the rank runs in lockstep (252.5 bundles = 2,525 ROM4096)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.00495
   },
   {
    "node": "head.argmax",
-   "model_us": 0.1808,
-   "measured_us": 35.4711,
+   "model_us": 35.4711,
+   "measured_us": 0.01,
    "cls": "measured",
-   "source": "S81 native ordered-root terminal, as built: rows contiguous per group, so 31,912 rows drain after the sweep at 1 row / 0.9 GHz cycle + 12-cycle tail (all 32,320 exact)",
+   "source": "head: in-element lowest-id first-max + 2-level bundle compare tree measured (4 cyc after the last logit) + 8 labelled rank compare levels (1 cyc each, same node)",
    "modelled_part_us": 0.0,
    "cdc_measured_us": 0.0055
   },
   {
+   "node": "L0.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L0.lf: start -> rows delivered (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
    "node": "L0.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.2458,
+   "cls": "measured",
+   "source": "L0.lf: start -> rows delivered (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L1.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L0.lf: start -> rows delivered (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L1.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.2458,
+   "cls": "measured",
+   "source": "L0.lf: start -> rows delivered (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L2.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 2.6838,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L2.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.2167,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L3.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L3.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L4.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L4.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L5.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L5.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L6.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L6.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L7.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L7.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L8.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 2.6838,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L8.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.2167,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L9.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L9.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L10.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L10.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L11.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L11.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L12.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L12.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L13.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L13.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L14.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 2.6838,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L14.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.2167,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L15.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L15.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L16.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L16.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L17.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L17.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L18.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L18.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L19.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L19.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L20.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 2.6838,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L20.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.2167,
+   "cls": "measured",
+   "source": "L20.lf_scan: write under scan, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L21.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L21.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L22.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L22.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L23.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L23.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L24.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.9416,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L24.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1677,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L25.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L25.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L26.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L26.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L27.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L27.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L28.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.9416,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L28.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1677,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L29.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L29.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L30.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L30.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L31.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L31.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L32.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.9416,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L32.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1677,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L33.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L33.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L34.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L34.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L35.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L35.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L36.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.9416,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L36.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1677,
+   "cls": "measured",
+   "source": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L37.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L37.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L38.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L38.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
+   "cdc_measured_us": 0.00495
+  },
+  {
+   "node": "L39.attn.own_row_write",
+   "model_us": 0.0,
+   "measured_us": 0.5415,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
    "node": "L39.attn.window_load",
    "model_us": 0.0,
-   "measured_us": 0.6617,
-   "cls": "measured_requires_binding",
-   "source": "WINDOW 128 rows x 17 sectors, ot_dsrom_window_stream_la on timed HBM3E, worst of 64 phases (794 cyc; 93.9% of peak sustained) -- REQUIRES S81 BINDING OF THE WINDOW MODULE (Codex)",
+   "measured_us": 0.1367,
+   "cls": "measured",
+   "source": "L24.lf: no concurrent index traffic (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)",
    "cdc_measured_us": 0.00495
   },
   {
@@ -22426,33 +22776,33 @@
    "cls": "measured"
   },
   {
-   "node": "L0.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L0.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L0.attn.q_norm.rsqrt",
+   "node": "L0.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L0.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L0.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L0.attn.q_quant",
-   "us": 0.1,
+   "node": "L0.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L0.attn.wq_b",
-   "us": 0.3416,
+   "node": "L0.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L0.attn.q_rope",
-   "us": 0.0922,
+   "node": "L0.attn.window_load",
+   "us": 0.2508,
    "cls": "measured"
   },
   {
@@ -22651,33 +23001,33 @@
    "cls": "measured"
   },
   {
-   "node": "L1.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L1.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L1.attn.q_norm.rsqrt",
+   "node": "L1.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L1.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L1.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L1.attn.q_quant",
-   "us": 0.1,
+   "node": "L1.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L1.attn.wq_b",
-   "us": 0.3416,
+   "node": "L1.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L1.attn.q_rope",
-   "us": 0.0922,
+   "node": "L1.attn.window_load",
+   "us": 0.2508,
    "cls": "measured"
   },
   {
@@ -23106,33 +23456,33 @@
    "cls": "measured"
   },
   {
-   "node": "L3.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L3.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L3.attn.q_norm.rsqrt",
+   "node": "L3.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L3.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L3.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L3.attn.q_quant",
-   "us": 0.1,
+   "node": "L3.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L3.attn.wq_b",
-   "us": 0.3416,
+   "node": "L3.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L3.attn.q_rope",
-   "us": 0.0922,
+   "node": "L3.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -23316,33 +23666,33 @@
    "cls": "measured"
   },
   {
-   "node": "L4.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L4.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L4.attn.q_norm.rsqrt",
+   "node": "L4.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L4.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L4.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L4.attn.q_quant",
-   "us": 0.1,
+   "node": "L4.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L4.attn.wq_b",
-   "us": 0.3416,
+   "node": "L4.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L4.attn.q_rope",
-   "us": 0.0922,
+   "node": "L4.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -23531,33 +23881,33 @@
    "cls": "measured"
   },
   {
-   "node": "L5.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L5.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L5.attn.q_norm.rsqrt",
+   "node": "L5.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L5.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L5.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L5.attn.q_quant",
-   "us": 0.1,
+   "node": "L5.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L5.attn.wq_b",
-   "us": 0.3416,
+   "node": "L5.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L5.attn.q_rope",
-   "us": 0.0922,
+   "node": "L5.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -23741,33 +24091,33 @@
    "cls": "measured"
   },
   {
-   "node": "L6.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L6.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L6.attn.q_norm.rsqrt",
+   "node": "L6.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L6.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L6.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L6.attn.q_quant",
-   "us": 0.1,
+   "node": "L6.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L6.attn.wq_b",
-   "us": 0.3416,
+   "node": "L6.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L6.attn.q_rope",
-   "us": 0.0922,
+   "node": "L6.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -23956,33 +24306,33 @@
    "cls": "measured"
   },
   {
-   "node": "L7.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L7.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L7.attn.q_norm.rsqrt",
+   "node": "L7.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L7.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L7.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L7.attn.q_quant",
-   "us": 0.1,
+   "node": "L7.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L7.attn.wq_b",
-   "us": 0.3416,
+   "node": "L7.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L7.attn.q_rope",
-   "us": 0.0922,
+   "node": "L7.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -24411,33 +24761,33 @@
    "cls": "measured"
   },
   {
-   "node": "L9.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L9.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L9.attn.q_norm.rsqrt",
+   "node": "L9.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L9.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L9.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L9.attn.q_quant",
-   "us": 0.1,
+   "node": "L9.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L9.attn.wq_b",
-   "us": 0.3416,
+   "node": "L9.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L9.attn.q_rope",
-   "us": 0.0922,
+   "node": "L9.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -24621,33 +24971,33 @@
    "cls": "measured"
   },
   {
-   "node": "L10.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L10.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L10.attn.q_norm.rsqrt",
+   "node": "L10.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L10.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L10.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L10.attn.q_quant",
-   "us": 0.1,
+   "node": "L10.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L10.attn.wq_b",
-   "us": 0.3416,
+   "node": "L10.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L10.attn.q_rope",
-   "us": 0.0922,
+   "node": "L10.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -24831,33 +25181,33 @@
    "cls": "measured"
   },
   {
-   "node": "L11.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L11.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L11.attn.q_norm.rsqrt",
+   "node": "L11.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L11.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L11.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L11.attn.q_quant",
-   "us": 0.1,
+   "node": "L11.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L11.attn.wq_b",
-   "us": 0.3416,
+   "node": "L11.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L11.attn.q_rope",
-   "us": 0.0922,
+   "node": "L11.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -25046,33 +25396,33 @@
    "cls": "measured"
   },
   {
-   "node": "L12.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L12.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L12.attn.q_norm.rsqrt",
+   "node": "L12.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L12.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L12.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L12.attn.q_quant",
-   "us": 0.1,
+   "node": "L12.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L12.attn.wq_b",
-   "us": 0.3416,
+   "node": "L12.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L12.attn.q_rope",
-   "us": 0.0922,
+   "node": "L12.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -25256,33 +25606,33 @@
    "cls": "measured"
   },
   {
-   "node": "L13.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L13.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L13.attn.q_norm.rsqrt",
+   "node": "L13.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L13.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L13.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L13.attn.q_quant",
-   "us": 0.1,
+   "node": "L13.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L13.attn.wq_b",
-   "us": 0.3416,
+   "node": "L13.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L13.attn.q_rope",
-   "us": 0.0922,
+   "node": "L13.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -25726,33 +26076,33 @@
    "cls": "measured"
   },
   {
-   "node": "L15.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L15.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L15.attn.q_norm.rsqrt",
+   "node": "L15.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L15.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L15.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L15.attn.q_quant",
-   "us": 0.1,
+   "node": "L15.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L15.attn.wq_b",
-   "us": 0.3416,
+   "node": "L15.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L15.attn.q_rope",
-   "us": 0.0922,
+   "node": "L15.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -25941,33 +26291,33 @@
    "cls": "measured"
   },
   {
-   "node": "L16.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L16.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L16.attn.q_norm.rsqrt",
+   "node": "L16.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L16.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L16.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L16.attn.q_quant",
-   "us": 0.1,
+   "node": "L16.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L16.attn.wq_b",
-   "us": 0.3416,
+   "node": "L16.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L16.attn.q_rope",
-   "us": 0.0922,
+   "node": "L16.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -26151,33 +26501,33 @@
    "cls": "measured"
   },
   {
-   "node": "L17.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L17.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L17.attn.q_norm.rsqrt",
+   "node": "L17.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L17.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L17.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L17.attn.q_quant",
-   "us": 0.1,
+   "node": "L17.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L17.attn.wq_b",
-   "us": 0.3416,
+   "node": "L17.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L17.attn.q_rope",
-   "us": 0.0922,
+   "node": "L17.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -26366,33 +26716,33 @@
    "cls": "measured"
   },
   {
-   "node": "L18.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L18.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L18.attn.q_norm.rsqrt",
+   "node": "L18.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L18.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L18.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L18.attn.q_quant",
-   "us": 0.1,
+   "node": "L18.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L18.attn.wq_b",
-   "us": 0.3416,
+   "node": "L18.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L18.attn.q_rope",
-   "us": 0.0922,
+   "node": "L18.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -26576,33 +26926,33 @@
    "cls": "measured"
   },
   {
-   "node": "L19.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L19.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L19.attn.q_norm.rsqrt",
+   "node": "L19.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L19.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L19.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L19.attn.q_quant",
-   "us": 0.1,
+   "node": "L19.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L19.attn.wq_b",
-   "us": 0.3416,
+   "node": "L19.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L19.attn.q_rope",
-   "us": 0.0922,
+   "node": "L19.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -27031,33 +27381,33 @@
    "cls": "measured"
   },
   {
-   "node": "L21.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L21.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L21.attn.q_norm.rsqrt",
+   "node": "L21.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L21.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L21.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L21.attn.q_quant",
-   "us": 0.1,
+   "node": "L21.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L21.attn.wq_b",
-   "us": 0.3416,
+   "node": "L21.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L21.attn.q_rope",
-   "us": 0.0922,
+   "node": "L21.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -27241,33 +27591,33 @@
    "cls": "measured"
   },
   {
-   "node": "L22.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L22.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L22.attn.q_norm.rsqrt",
+   "node": "L22.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L22.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L22.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L22.attn.q_quant",
-   "us": 0.1,
+   "node": "L22.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L22.attn.wq_b",
-   "us": 0.3416,
+   "node": "L22.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L22.attn.q_rope",
-   "us": 0.0922,
+   "node": "L22.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -27456,33 +27806,33 @@
    "cls": "measured"
   },
   {
-   "node": "L23.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L23.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L23.attn.q_norm.rsqrt",
+   "node": "L23.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L23.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L23.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L23.attn.q_quant",
-   "us": 0.1,
+   "node": "L23.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L23.attn.wq_b",
-   "us": 0.3416,
+   "node": "L23.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L23.attn.q_rope",
-   "us": 0.0922,
+   "node": "L23.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -27911,33 +28261,33 @@
    "cls": "measured"
   },
   {
-   "node": "L25.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L25.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L25.attn.q_norm.rsqrt",
+   "node": "L25.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L25.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L25.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L25.attn.q_quant",
-   "us": 0.1,
+   "node": "L25.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L25.attn.wq_b",
-   "us": 0.3416,
+   "node": "L25.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L25.attn.q_rope",
-   "us": 0.0922,
+   "node": "L25.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -28121,33 +28471,33 @@
    "cls": "measured"
   },
   {
-   "node": "L26.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L26.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L26.attn.q_norm.rsqrt",
+   "node": "L26.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L26.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L26.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L26.attn.q_quant",
-   "us": 0.1,
+   "node": "L26.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L26.attn.wq_b",
-   "us": 0.3416,
+   "node": "L26.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L26.attn.q_rope",
-   "us": 0.0922,
+   "node": "L26.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -28336,33 +28686,33 @@
    "cls": "measured"
   },
   {
-   "node": "L27.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L27.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L27.attn.q_norm.rsqrt",
+   "node": "L27.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L27.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L27.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L27.attn.q_quant",
-   "us": 0.1,
+   "node": "L27.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L27.attn.wq_b",
-   "us": 0.3416,
+   "node": "L27.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L27.attn.q_rope",
-   "us": 0.0922,
+   "node": "L27.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -28791,33 +29141,33 @@
    "cls": "measured"
   },
   {
-   "node": "L29.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L29.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L29.attn.q_norm.rsqrt",
+   "node": "L29.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L29.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L29.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L29.attn.q_quant",
-   "us": 0.1,
+   "node": "L29.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L29.attn.wq_b",
-   "us": 0.3416,
+   "node": "L29.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L29.attn.q_rope",
-   "us": 0.0922,
+   "node": "L29.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -29001,33 +29351,33 @@
    "cls": "measured"
   },
   {
-   "node": "L30.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L30.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L30.attn.q_norm.rsqrt",
+   "node": "L30.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L30.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L30.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L30.attn.q_quant",
-   "us": 0.1,
+   "node": "L30.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L30.attn.wq_b",
-   "us": 0.3416,
+   "node": "L30.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L30.attn.q_rope",
-   "us": 0.0922,
+   "node": "L30.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -29211,33 +29561,33 @@
    "cls": "measured"
   },
   {
-   "node": "L31.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L31.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L31.attn.q_norm.rsqrt",
+   "node": "L31.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L31.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L31.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L31.attn.q_quant",
-   "us": 0.1,
+   "node": "L31.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L31.attn.wq_b",
-   "us": 0.3416,
+   "node": "L31.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L31.attn.q_rope",
-   "us": 0.0922,
+   "node": "L31.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -29666,33 +30016,33 @@
    "cls": "measured"
   },
   {
-   "node": "L33.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L33.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L33.attn.q_norm.rsqrt",
+   "node": "L33.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L33.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L33.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L33.attn.q_quant",
-   "us": 0.1,
+   "node": "L33.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L33.attn.wq_b",
-   "us": 0.3416,
+   "node": "L33.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L33.attn.q_rope",
-   "us": 0.0922,
+   "node": "L33.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -29881,33 +30231,33 @@
    "cls": "measured"
   },
   {
-   "node": "L34.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L34.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L34.attn.q_norm.rsqrt",
+   "node": "L34.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L34.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L34.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L34.attn.q_quant",
-   "us": 0.1,
+   "node": "L34.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L34.attn.wq_b",
-   "us": 0.3416,
+   "node": "L34.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L34.attn.q_rope",
-   "us": 0.0922,
+   "node": "L34.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -30091,33 +30441,33 @@
    "cls": "measured"
   },
   {
-   "node": "L35.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L35.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L35.attn.q_norm.rsqrt",
+   "node": "L35.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L35.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L35.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L35.attn.q_quant",
-   "us": 0.1,
+   "node": "L35.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L35.attn.wq_b",
-   "us": 0.3416,
+   "node": "L35.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L35.attn.q_rope",
-   "us": 0.0922,
+   "node": "L35.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -30546,33 +30896,33 @@
    "cls": "measured"
   },
   {
-   "node": "L37.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L37.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L37.attn.q_norm.rsqrt",
+   "node": "L37.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L37.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L37.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L37.attn.q_quant",
-   "us": 0.1,
+   "node": "L37.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L37.attn.wq_b",
-   "us": 0.3416,
+   "node": "L37.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L37.attn.q_rope",
-   "us": 0.0922,
+   "node": "L37.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -30761,33 +31111,33 @@
    "cls": "measured"
   },
   {
-   "node": "L38.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L38.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L38.attn.q_norm.rsqrt",
+   "node": "L38.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L38.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L38.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L38.attn.q_quant",
-   "us": 0.1,
+   "node": "L38.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L38.attn.wq_b",
-   "us": 0.3416,
+   "node": "L38.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L38.attn.q_rope",
-   "us": 0.0922,
+   "node": "L38.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -30971,33 +31321,33 @@
    "cls": "measured"
   },
   {
-   "node": "L39.attn.q_norm.sumsq",
-   "us": 0.1677,
+   "node": "L39.attn.kv_norm.sumsq",
+   "us": 0.1577,
    "cls": "measured"
   },
   {
-   "node": "L39.attn.q_norm.rsqrt",
+   "node": "L39.attn.kv_norm.rsqrt",
    "us": 0.1611,
    "cls": "measured"
   },
   {
-   "node": "L39.attn.q_norm.scale",
-   "us": 0.06,
+   "node": "L39.attn.kv_norm.scale",
+   "us": 0.0589,
    "cls": "measured"
   },
   {
-   "node": "L39.attn.q_quant",
-   "us": 0.1,
+   "node": "L39.attn.kv_rope_qdq",
+   "us": 0.1322,
    "cls": "measured"
   },
   {
-   "node": "L39.attn.wq_b",
-   "us": 0.3416,
+   "node": "L39.attn.own_row_write",
+   "us": 0.5464,
    "cls": "measured"
   },
   {
-   "node": "L39.attn.q_rope",
-   "us": 0.0922,
+   "node": "L39.attn.window_load",
+   "us": 0.1416,
    "cls": "measured"
   },
   {
@@ -31172,12 +31522,12 @@
   },
   {
    "node": "head.lm_head",
-   "us": 73.5759,
+   "us": 6.9941,
    "cls": "measured"
   },
   {
    "node": "head.argmax",
-   "us": 35.4766,
+   "us": 0.0155,
    "cls": "measured"
   },
   {
@@ -31202,10 +31552,13 @@
   "results/rtl/dsrom_1m_allmeasured_20261004/su_cdc.json": "641395e891d004439cdd0ede1d9ceca8a6011391ebb79d63d3e7fe31b3a2d6df",
   "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
   "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json": "3d4837a6cbdffce831ab48dc8a7677ff7e8eae2ef03cf7e84f985129e5d01775",
-  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "a2e50ea6af09a8c91c0370859a7056ae0b778aa5cb6af72d135bbc48d0179a76",
+  "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+  "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+  "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
-  "results/rtl/dsrom_recovery_20261004/levers/router.json": "413e2559a3db27b51846fe48a577bcb76b26b4bf9c7f23d94b416a22d94414d8",
+  "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
+  "results/rtl/dsrom_s81_window_bind_20261004/window_load.json": "afe2d8443098eff0b7fe7cd5418e3b5660dc705e3b4f16b4cb9d4518d7ccd6f2",
   "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
   "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json": "aa7c78726595290552e17201782429a761ee51667de1ca3f73d72b7995a62051",
   "results/rtl/dsrom_1m_measured_20261004/reader.json": "580267417a12eb4873a7e611757a9745557255009eab8cfd126c00468c36f26e",
@@ -31214,7 +31567,7 @@
   "results/rtl/dsrom_reindex_candidates_20261004/select.json": "1b6fc6822b9f211af799335153f1b4a952ce35fc62ff0342a3929e791fcdf315"
  },
  "tool_sha256": {
-  "tools/dsrom_1m_allmeasured.py": "7521e7f0cd3d3609d783c84ed5e8cc534bf418df72fa6551971d26b17448e462",
+  "tools/dsrom_1m_allmeasured.py": "fe00f7b183697337c02e069deec5f6873ce24369e991b4f664c6586763ab5ff5",
   "tools/dsrom_1m_measure.py": "76ad2faed9f8a4683d350b7aa91548e0b78468261c88b416e377c94937757bff"
  }
 }

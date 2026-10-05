@@ -1,0 +1,92 @@
+{
+  "schema": "dsrom-i63-same-accepted-bytes-r1",
+  "scope": "ONE controlled-source rank0 I63 PV; SIM_ONLY endpoint/native adapter; no original-run input attribution or hardware timing",
+  "source_commit": "0321e8097fea31bd790a69e4f0c187762211f23b",
+  "capture_root": "/srv/opentallas-scratch/jobs/arch-i63-minimum-capture-20261005",
+  "python": "3.14.4",
+  "numpy": "2.3.5",
+  "tool_sha256": "a23cbaea9f90c1cb56d01185e0dab0b6608e74a07698f7ee0ff831e138325246",
+  "capture_pins": {
+    "terminal.json": "58aa2268cde9ebfd6a66bc932f86c3df8c0a27ccb1ca7c5589c2340a608b2b61",
+    "inputs/frozen_inputs.json": "168636d2e98f217a0507ba1d775b412c2b061a61a2a8d4e3898b5f5b6c75abc8",
+    "captured/events.tsv": "189bf2e9176a4569937b619d55e82a1fe690771e8e7900168a2c4f6f812d5808",
+    "captured/accepted_p.u32": "e54de59cb6671deed0eebbb304c54a08f24aa3b773b2b7ca9cfa039a7f7a66b4",
+    "captured/accepted_kv.u32": "2061b434f96db7ebab3bbf3bf9ffca388bd6ab6de8dda1fe3d226896d5b596b6",
+    "captured/old_pv_bus.u32": "6527439c824e2f9370fc67f94ad8dbf3131f240b14dd068032cef83cb6269e94",
+    "captured/adapter_PV.u32": "8d828db3f7e6bc8bff395e1561b0236dcf7d1f47fc29eee6d902233d0ba08690",
+    "source/capture.cpp": "de8a28e9195598cf6a7734613b31964fa801a962b438c076ebb1e7e499a23992",
+    "source/s81_sim_only_attention_endpoint.hpp": "4741300afb2199eaf261add2badae02c397ef28f5f76017ad196662e2fcb8f1f",
+    "source/s81_minimum_attention_cut.hpp": "0d84be8dd8e2a31ab90b6f444b9a94cb87caceb06030f8561746eab3fc1b4185",
+    "source/adapter_config.hpp": "fea85aa19b3c06e838292db3c914183d62668ed7d330e22456765b8dcc0401f1"
+  },
+  "geometry": {
+    "heads": 16,
+    "dimensions": 512,
+    "rows": 640,
+    "row_bits": 4240,
+    "products": 5242880,
+    "chunk_size": 8,
+    "chunks": 80,
+    "padded_chunks": 128
+  },
+  "fp4_rows_by_group": [
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512,
+    512
+  ],
+  "checks": {
+    "integer_vs_golden": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "integer_vs_old_pv": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "golden_vs_old_pv": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "old_pv_vs_adapter": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "golden_vs_adapter": {
+      "compared": 8192,
+      "mismatches": 0,
+      "first": null
+    },
+    "dequant_integer_vs_format_tables": {
+      "compared": 327680,
+      "mismatches": 0,
+      "first": null
+    }
+  },
+  "stage_checks": {
+    "product_mismatches": 0,
+    "chunk8_mismatches": 0,
+    "tree_mismatches": 0,
+    "integer_faults": 0
+  },
+  "original_full_run_qualification": false,
+  "hardware_timing_qualification": false,
+  "elapsed_seconds": 0.9393845650010917,
+  "verdict": "PASS"
+}

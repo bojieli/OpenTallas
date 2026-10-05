@@ -1,0 +1,680 @@
+{
+  "verdict": "PASS_RECORD_INTEGRATION_ONLY",
+  "observed_utc": "2026-10-05T05:38:28.098873+00:00",
+  "owner": "Codex:dsrom-wf-ctrl",
+  "source_sha256": "8d7bb5c06d662f44b7877ae506b7ddc5c3060f67998cb3bc3d61706deba70eaf",
+  "basis": "Read preserved final route records only; no new STA/build/simulation. Correct nested metrics and retain per-route source identity, surrogate timing and actual-parent unbound distinction.",
+  "routes": {
+    "R11_stg_old_source": {
+      "route_args": {
+        "args": [
+          "--view",
+          "asap7",
+          "--top",
+          "ot_rom_pkg_ctrl_wfc",
+          "--source",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+          "--clock-period-ns",
+          "0.833",
+          "--clock-uncertainty-ns",
+          "0.060",
+          "--clock-uncertainty-hold-ns",
+          "0.025",
+          "--orfs-corner",
+          "WC",
+          "--hold-corners",
+          "WC,BC",
+          "--stages",
+          "pnr",
+          "--io-delay-fraction",
+          "0.2",
+          "--max-transition-ns",
+          "library",
+          "--max-fanout",
+          "32",
+          "--core-utilization",
+          "40",
+          "--nickname-tag",
+          "stg",
+          "--keep-workdir",
+          "/srv/opentallas-scratch/claude/dsrom-wf-close/R11_stg/work",
+          "--output",
+          "/srv/opentallas-scratch/claude/dsrom-wf-close/R11_stg/physical.json",
+          "--param",
+          "WAVE=1",
+          "--param",
+          "WIN=6",
+          "--param",
+          "FLIT=512",
+          "--param",
+          "NW=21",
+          "--param",
+          "AW=30",
+          "--param",
+          "VWA=15",
+          "--param",
+          "USER_W=10",
+          "--param",
+          "MAXU=866",
+          "--param",
+          "KVW=32768",
+          "--param",
+          "SEND_HIDDEN=1",
+          "--param",
+          "HID_DEST=1",
+          "--param",
+          "FWD_TOKEN=1",
+          "--param",
+          "SOURCE=0",
+          "--param",
+          "XWORDS=46",
+          "--param",
+          "RXWORDS=41"
+        ],
+        "source_sha256": "0fe0843069fca93b80490847dc5804afce4628c2e84de894f2f7b947124af717"
+      },
+      "route_source_sha256": "0fe0843069fca93b80490847dc5804afce4628c2e84de894f2f7b947124af717",
+      "current_source_sha256": "d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790",
+      "current_source_matches": false,
+      "flow_completed": true,
+      "driver_status": "not_met",
+      "area_um2": 15968.9,
+      "core_area_um2": 37498,
+      "cells": 127152,
+      "utilization": 0.425861,
+      "drc": 0,
+      "antenna": 0,
+      "signal_integrity": {
+        "max_slew_violations": 17,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0
+      },
+      "signal_integrity_clean": false,
+      "orfs_setup_wns_ns": -0.275561,
+      "orfs_hold_wns_ns": 0.0101181,
+      "synth": {
+        "cell_area_um2": null,
+        "cell_count": null,
+        "sequential_cell_count": null
+      },
+      "elapsed_s": 4145.221,
+      "signoff_sta": {
+        "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at 20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+        "artifacts_sha256": {
+          "6_final.odb": "b013cbaca9159f7f7035dca710a42f41e9ef754069900991ec0879d8d0e3255c",
+          "6_final.sdc": "d349cccf7cf1e02df798d01db04969593ba4b26bb8c73207e0aa59fed8e0eb29",
+          "6_final.spef": "fc983c13853ac7fc3d4afaf03cf527c7ed68d5edf0c2a1d5588a600d5f33a5af"
+        },
+        "corners": {
+          "SS": {
+            "exit": 0,
+            "done": true,
+            "insertion_ps": [
+              315.5,
+              359.1
+            ],
+            "block": {
+              "setup_wns_ps": -275.6,
+              "hold_wns_ps": 28.3,
+              "failing_setup": 703,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "txs[4]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_n",
+                "rst_q$_DFF_PN0_"
+              ]
+            },
+            "incontext": {
+              "setup_wns_ps": -198.5,
+              "hold_wns_ps": 53.0,
+              "failing_setup": 2281,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "txs[4]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "kv_base[17]$_DFFE_PN0P_"
+              ]
+            },
+            "reg2reg": {
+              "setup_wns_ps": -42.7,
+              "hold_wns_ps": 53.0,
+              "failing_setup": 138,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "txs[4]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "kv_base[17]$_DFFE_PN0P_"
+              ]
+            }
+          },
+          "FF": {
+            "exit": 0,
+            "done": true,
+            "insertion_ps": [
+              196.5,
+              228.6
+            ],
+            "block": {
+              "setup_wns_ps": 127.0,
+              "hold_wns_ps": 11.0,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "txs[4]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "kv_base[17]$_DFFE_PN0P_"
+              ]
+            },
+            "incontext": {
+              "setup_wns_ps": 183.1,
+              "hold_wns_ps": 11.0,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_n",
+                "rst_q$_DFF_PN0_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "kv_base[17]$_DFFE_PN0P_"
+              ]
+            },
+            "reg2reg": {
+              "setup_wns_ps": 355.1,
+              "hold_wns_ps": 11.0,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "txs[4]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "kv_base[17]$_DFFE_PN0P_"
+              ]
+            }
+          }
+        },
+        "signoff": {
+          "block": false,
+          "incontext": false,
+          "reg2reg": false
+        }
+      },
+      "closed_incontext": false,
+      "routed_surrogate_timing_met": false,
+      "routed_surrogate_physical_met": false,
+      "actual_parent_completion_binding": null,
+      "actual_parent_context_qualified": false,
+      "current_controller_adoptable": false
+    },
+    "R12_reset_stg": {
+      "route_args": {
+        "args": [
+          "--view",
+          "asap7",
+          "--top",
+          "ot_rom_pkg_ctrl_wfc",
+          "--source",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+          "--clock-period-ns",
+          "0.833",
+          "--clock-uncertainty-ns",
+          "0.060",
+          "--clock-uncertainty-hold-ns",
+          "0.025",
+          "--orfs-corner",
+          "WC",
+          "--hold-corners",
+          "WC,BC",
+          "--stages",
+          "pnr",
+          "--io-delay-fraction",
+          "0.2",
+          "--max-transition-ns",
+          "library",
+          "--max-fanout",
+          "32",
+          "--core-utilization",
+          "40",
+          "--nickname-tag",
+          "stg",
+          "--keep-workdir",
+          "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_reset_stg/work",
+          "--output",
+          "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_reset_stg/physical.json",
+          "--param",
+          "WAVE=1",
+          "--param",
+          "WIN=6",
+          "--param",
+          "FLIT=512",
+          "--param",
+          "NW=21",
+          "--param",
+          "AW=30",
+          "--param",
+          "VWA=15",
+          "--param",
+          "USER_W=10",
+          "--param",
+          "MAXU=866",
+          "--param",
+          "KVW=32768",
+          "--param",
+          "SEND_HIDDEN=1",
+          "--param",
+          "HID_DEST=1",
+          "--param",
+          "FWD_TOKEN=1",
+          "--param",
+          "SOURCE=0",
+          "--param",
+          "XWORDS=46",
+          "--param",
+          "RXWORDS=41"
+        ],
+        "source_sha256": "26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba"
+      },
+      "route_source_sha256": "26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba",
+      "current_source_sha256": "d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790",
+      "current_source_matches": false,
+      "flow_completed": true,
+      "driver_status": "not_met",
+      "area_um2": 15990.6,
+      "core_area_um2": 37498,
+      "cells": 127272,
+      "utilization": 0.42644,
+      "drc": 0,
+      "antenna": 0,
+      "signal_integrity": {
+        "max_slew_violations": 72,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0
+      },
+      "signal_integrity_clean": false,
+      "orfs_setup_wns_ns": -0.27183999999999997,
+      "orfs_hold_wns_ns": 0.008041930000000001,
+      "synth": {
+        "cell_area_um2": null,
+        "cell_count": null,
+        "sequential_cell_count": null
+      },
+      "elapsed_s": 1692.422,
+      "signoff_sta": {
+        "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at 20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+        "artifacts_sha256": {
+          "6_final.odb": "c8701e6fff4a3b19cc7932c480883372572352858f538e55f3c865dabb997203",
+          "6_final.sdc": "d349cccf7cf1e02df798d01db04969593ba4b26bb8c73207e0aa59fed8e0eb29",
+          "6_final.spef": "0b8543a5400855adbd8bd625515ed33e84f839e79940baa6056537617a485355"
+        },
+        "corners": {
+          "SS": {
+            "exit": 0,
+            "done": true,
+            "insertion_ps": [
+              317.1,
+              353.0
+            ],
+            "block": {
+              "setup_wns_ps": -271.8,
+              "hold_wns_ps": 21.6,
+              "failing_setup": 585,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "upos_hr[7]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_n",
+                "rst_q$_DFF_PN0_"
+              ]
+            },
+            "incontext": {
+              "setup_wns_ps": -49.5,
+              "hold_wns_ps": 51.2,
+              "failing_setup": 987,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "upos_hr[7]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "rx_st[1]$_DFF_PN0_"
+              ]
+            },
+            "reg2reg": {
+              "setup_wns_ps": -18.5,
+              "hold_wns_ps": 51.2,
+              "failing_setup": 21,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "upos_hr[7]$_DFFE_PN0P_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "rx_st[1]$_DFF_PN0_"
+              ]
+            }
+          },
+          "FF": {
+            "exit": 0,
+            "done": true,
+            "insertion_ps": [
+              197.2,
+              222.7
+            ],
+            "block": {
+              "setup_wns_ps": 138.2,
+              "hold_wns_ps": 9.3,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "g_upos[2].ug/rq$_DFF_PN0_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "rx_st[1]$_DFF_PN0_"
+              ]
+            },
+            "incontext": {
+              "setup_wns_ps": 218.6,
+              "hold_wns_ps": 9.3,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_n",
+                "rst_q$_DFF_PN0_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "rx_st[1]$_DFF_PN0_"
+              ]
+            },
+            "reg2reg": {
+              "setup_wns_ps": 286.5,
+              "hold_wns_ps": 9.3,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "rst_q$_DFF_PN0_",
+                "g_upos[2].ug/rq$_DFF_PN0_"
+              ],
+              "worst_min_path": [
+                "rst_q$_DFF_PN0_",
+                "rx_st[1]$_DFF_PN0_"
+              ]
+            }
+          }
+        },
+        "signoff": {
+          "block": false,
+          "incontext": false,
+          "reg2reg": false
+        }
+      },
+      "closed_incontext": false,
+      "routed_surrogate_timing_met": false,
+      "routed_surrogate_physical_met": false,
+      "actual_parent_completion_binding": null,
+      "actual_parent_context_qualified": false,
+      "current_controller_adoptable": false
+    },
+    "R13_local_stg": {
+      "route_args": {
+        "args": [
+          "--view",
+          "asap7",
+          "--top",
+          "ot_rom_pkg_ctrl_wfc",
+          "--source",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+          "--clock-period-ns",
+          "0.833",
+          "--clock-uncertainty-ns",
+          "0.060",
+          "--clock-uncertainty-hold-ns",
+          "0.025",
+          "--orfs-corner",
+          "WC",
+          "--hold-corners",
+          "WC,BC",
+          "--stages",
+          "pnr",
+          "--io-delay-fraction",
+          "0.2",
+          "--max-transition-ns",
+          "library",
+          "--max-fanout",
+          "32",
+          "--core-utilization",
+          "40",
+          "--nickname-tag",
+          "stg",
+          "--keep-workdir",
+          "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R13_local_stg/work",
+          "--output",
+          "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R13_local_stg/physical.json",
+          "--param",
+          "WAVE=1",
+          "--param",
+          "WIN=6",
+          "--param",
+          "FLIT=512",
+          "--param",
+          "NW=21",
+          "--param",
+          "AW=30",
+          "--param",
+          "VWA=15",
+          "--param",
+          "USER_W=10",
+          "--param",
+          "MAXU=866",
+          "--param",
+          "KVW=32768",
+          "--param",
+          "SEND_HIDDEN=1",
+          "--param",
+          "HID_DEST=1",
+          "--param",
+          "FWD_TOKEN=1",
+          "--param",
+          "SOURCE=0",
+          "--param",
+          "XWORDS=46",
+          "--param",
+          "RXWORDS=41",
+          "--param",
+          "LOCAL_CONTROL=1"
+        ],
+        "source_sha256": "d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790"
+      },
+      "route_source_sha256": "d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790",
+      "current_source_sha256": "d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790",
+      "current_source_matches": true,
+      "flow_completed": true,
+      "driver_status": "not_met",
+      "area_um2": 15824.8,
+      "core_area_um2": 36779.9,
+      "cells": 125389,
+      "utilization": 0.430257,
+      "drc": 0,
+      "antenna": 0,
+      "signal_integrity": {
+        "max_slew_violations": 17,
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0
+      },
+      "signal_integrity_clean": false,
+      "orfs_setup_wns_ns": -0.222826,
+      "orfs_hold_wns_ns": 0.006081540000000001,
+      "synth": {
+        "cell_area_um2": null,
+        "cell_count": null,
+        "sequential_cell_count": null
+      },
+      "elapsed_s": 2312.671,
+      "signoff_sta": {
+        "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one ASAP7 RVT liberty corner per run, propagated clock. block = the routed SDC (IO at 20 % of the period vs an ideal clock); incontext = IO at 20 % vs a virtual clock carrying the block's own min/max insertion delay (same die tree as the neighbours); reg2reg = IO false-pathed. 60 ps setup / 25 ps hold uncertainty.",
+        "artifacts_sha256": {
+          "6_final.odb": "602051a00a29b0f43bbe51c3d153179f887cb3c611423fe1ef42da10a280963d",
+          "6_final.sdc": "d349cccf7cf1e02df798d01db04969593ba4b26bb8c73207e0aa59fed8e0eb29",
+          "6_final.spef": "df47bc3aa8199bea4b35dc22d38de9f89f08d0c5b433d251ec3cdbca6809cf14"
+        },
+        "corners": {
+          "SS": {
+            "exit": 0,
+            "done": true,
+            "insertion_ps": [
+              312.1,
+              344.7
+            ],
+            "block": {
+              "setup_wns_ps": -222.8,
+              "hold_wns_ps": 42.8,
+              "failing_setup": 560,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "txq_r[0]$_DFFE_PN0P_",
+                "out_data[364]"
+              ],
+              "worst_max_path_slack_ps": -222.8,
+              "worst_max_path_group": "core_clk",
+              "worst_min_path": [
+                "uchk2$_DFF_PN0_",
+                "uchk3$_DFF_PN0_"
+              ],
+              "worst_min_path_slack_ps": 42.8,
+              "worst_min_path_group": "core_clk"
+            },
+            "incontext": {
+              "setup_wns_ps": -92.2,
+              "hold_wns_ps": 42.8,
+              "failing_setup": 1967,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "core_done",
+                "txq_d[1][162]$_SDFFCE_PP0P_"
+              ],
+              "worst_max_path_slack_ps": -92.2,
+              "worst_max_path_group": "core_clk",
+              "worst_min_path": [
+                "uchk2$_DFF_PN0_",
+                "uchk3$_DFF_PN0_"
+              ],
+              "worst_min_path_slack_ps": 42.8,
+              "worst_min_path_group": "core_clk"
+            },
+            "reg2reg": {
+              "setup_wns_ps": 3.0,
+              "hold_wns_ps": 42.8,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "uchk4$_DFF_PN0_",
+                "g_upos[24].ug/upos[2][18]$_DFFE_PP_"
+              ],
+              "worst_max_path_slack_ps": 3.0,
+              "worst_max_path_group": "core_clk",
+              "worst_min_path": [
+                "uchk2$_DFF_PN0_",
+                "uchk3$_DFF_PN0_"
+              ],
+              "worst_min_path_slack_ps": 42.8,
+              "worst_min_path_group": "core_clk"
+            }
+          },
+          "FF": {
+            "exit": 0,
+            "done": true,
+            "insertion_ps": [
+              192.9,
+              217.7
+            ],
+            "block": {
+              "setup_wns_ps": 146.9,
+              "hold_wns_ps": 6.4,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "txq_r[0]$_DFFE_PN0P_",
+                "out_data[364]"
+              ],
+              "worst_max_path_slack_ps": 146.9,
+              "worst_max_path_group": "core_clk",
+              "worst_min_path": [
+                "uchk2$_DFF_PN0_",
+                "uchk3$_DFF_PN0_"
+              ],
+              "worst_min_path_slack_ps": 6.4,
+              "worst_min_path_group": "core_clk"
+            },
+            "incontext": {
+              "setup_wns_ps": 225.8,
+              "hold_wns_ps": 6.4,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "core_done",
+                "in_ready"
+              ],
+              "worst_max_path_slack_ps": 225.8,
+              "worst_max_path_group": "vclk",
+              "worst_min_path": [
+                "uchk2$_DFF_PN0_",
+                "uchk3$_DFF_PN0_"
+              ],
+              "worst_min_path_slack_ps": 6.4,
+              "worst_min_path_group": "core_clk"
+            },
+            "reg2reg": {
+              "setup_wns_ps": 376.1,
+              "hold_wns_ps": 6.4,
+              "failing_setup": 0,
+              "failing_hold": 0,
+              "worst_max_path": [
+                "uchk4$_DFF_PN0_",
+                "g_upos[8].ug/upos[3][5]$_DFFE_PP_"
+              ],
+              "worst_max_path_slack_ps": 376.1,
+              "worst_max_path_group": "core_clk",
+              "worst_min_path": [
+                "uchk2$_DFF_PN0_",
+                "uchk3$_DFF_PN0_"
+              ],
+              "worst_min_path_slack_ps": 6.4,
+              "worst_min_path_group": "core_clk"
+            }
+          }
+        },
+        "signoff": {
+          "block": false,
+          "incontext": false,
+          "reg2reg": true
+        }
+      },
+      "closed_incontext": false,
+      "routed_surrogate_timing_met": false,
+      "routed_surrogate_physical_met": false,
+      "actual_parent_completion_binding": null,
+      "actual_parent_context_qualified": false,
+      "current_controller_adoptable": false
+    }
+  }
+}

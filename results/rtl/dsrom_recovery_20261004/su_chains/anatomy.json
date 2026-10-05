@@ -1,0 +1,6892 @@
+{
+ "schema": "opentallas.dsrom-recovery.su-anatomy.v1",
+ "scope": "Latency anatomy of the SU chains on the recovery AR token's critical path at position 1,048,575 (1M), from the committed wired full-shape RTL runs (ot_hdc_v41x_vec N 1,024 / M 256, MLAT 5 / ALAT 4, BCAST 22 / RET 15, 0.9 GHz) and the quantiser wired record; no new simulation.",
+ "method": "Each chain's timeline (first_emit / last_emit / last_write / last_result of every op, wired run) is cut\nalong its critical sequence: op k's window runs from the completion of the latest earlier op that completes before\nop k's last write (its anchor) to op k's own completion.  The window splits into\n  setup          controller accept + set-up before the chain's first emit\n  issue_barrier  anchor -> first emit of a dependent op (credit / result-port waits, the checkpoint ordering rule)\n  stream         vectors after the first (lane width; the scalar side pipe; one quantiser instance: a beat a block)\n  depth          the op's emit -> last write pipeline, itself split into\n                   wire          BCAST 22 + RET 15 hub stages (the part not hidden under the anchor)\n                   vm_round_trip broadcast register + fetch 3 + PRE 1 + OUT 1: the write -> VM -> re-read of\n                                 every dependent op\n                   arith         FP units the op USES (M1 / M2 / AD / S / E1 / E2 at MLAT 5 / ALAT 4; divide 19)\n                   passthrough   fixed lane stages the op passes but does not use (every lane stage is fixed depth)\n  reduction      the reducer after the last write: IN/OUT 2, square MLAT, 7-add chunk chain, log2 tree, time levels\nand per node, measured CDC (su_cdc.json values as patched into the composition) and serial select (top-6).\nNode windows are the composition's node increments (completion of the node minus completion of the previous node\nof its chain), so every node's categories sum to its su.json wired cycles (checked).",
+ "clock_hz": 900000000.0,
+ "token": {
+  "AR_us": 620.078,
+  "AR_tok_s": 1612.7,
+  "cdc_on_path_us": 4.293
+ },
+ "su_on_path_us": 176.234,
+ "su_on_path_nodes": 1132,
+ "su_on_path_share": 0.2842,
+ "categories_on_path_us": {
+  "setup": 4.999,
+  "issue_barrier": 1.34,
+  "stream": 27.289,
+  "wire": 49.203,
+  "vm_round_trip": 8.747,
+  "arith": 45.867,
+  "passthrough": 21.454,
+  "reduction": 13.427,
+  "cdc": 2.453,
+  "serial_select": 1.466
+ },
+ "by_node_family": [
+  {
+   "node": "ffn.softplus_sqrt",
+   "on_path": 40,
+   "us_on_path": 17.508,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 4.222,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 9.6,
+    "passthrough": 1.067,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "attn.hc_post",
+   "on_path": 40,
+   "us_on_path": 11.596,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.844,
+    "wire": 4.711,
+    "vm_round_trip": 1.067,
+    "arith": 1.822,
+    "passthrough": 2.444,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "ffn.hc_post",
+   "on_path": 40,
+   "us_on_path": 11.596,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.844,
+    "wire": 4.711,
+    "vm_round_trip": 1.067,
+    "arith": 1.822,
+    "passthrough": 2.444,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "attn.quant",
+   "on_path": 40,
+   "us_on_path": 9.332,
+   "categories_us": {
+    "stream": 7.067,
+    "wire": 1.644,
+    "arith": 0.622
+   }
+  },
+  {
+   "node": "ffn.swiglu",
+   "on_path": 40,
+   "us_on_path": 8.62,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.756,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 4.622,
+    "passthrough": 0.622,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "ffn.hc_pre",
+   "on_path": 40,
+   "us_on_path": 8.576,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.178,
+    "wire": 3.689,
+    "vm_round_trip": 0.8,
+    "arith": 1.422,
+    "passthrough": 1.778,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "attn.exp",
+   "on_path": 40,
+   "us_on_path": 8.399,
+   "categories_us": {
+    "issue_barrier": 0.267,
+    "stream": 2.0,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 3.333,
+    "passthrough": 0.889
+   }
+  },
+  {
+   "node": "attn.hc_pre",
+   "on_path": 40,
+   "us_on_path": 8.361,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.178,
+    "wire": 3.689,
+    "vm_round_trip": 0.8,
+    "arith": 1.422,
+    "passthrough": 1.778,
+    "cdc": 0.005
+   }
+  },
+  {
+   "node": "attn.max",
+   "on_path": 40,
+   "us_on_path": 7.094,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.636,
+    "wire": 1.644,
+    "vm_round_trip": 0.356,
+    "arith": 0.222,
+    "passthrough": 1.067,
+    "reduction": 2.462,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "ffn.quant2",
+   "on_path": 40,
+   "us_on_path": 7.024,
+   "categories_us": {
+    "stream": 4.756,
+    "wire": 1.644,
+    "arith": 0.622
+   }
+  },
+  {
+   "node": "attn.normalize",
+   "on_path": 40,
+   "us_on_path": 6.932,
+   "categories_us": {
+    "stream": 0.756,
+    "wire": 2.667,
+    "vm_round_trip": 0.533,
+    "arith": 1.467,
+    "passthrough": 1.289,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "attn.norm.rsqrt",
+   "on_path": 40,
+   "us_on_path": 6.444,
+   "categories_us": {
+    "issue_barrier": 0.267,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 3.6,
+    "passthrough": 0.667
+   }
+  },
+  {
+   "node": "ffn.norm.rsqrt",
+   "on_path": 40,
+   "us_on_path": 6.444,
+   "categories_us": {
+    "issue_barrier": 0.267,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 3.6,
+    "passthrough": 0.667
+   }
+  },
+  {
+   "node": "attn.sink",
+   "on_path": 40,
+   "us_on_path": 6.4,
+   "categories_us": {
+    "issue_barrier": 0.267,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 3.556,
+    "passthrough": 0.667
+   }
+  },
+  {
+   "node": "attn.z_quant",
+   "on_path": 40,
+   "us_on_path": 5.288,
+   "categories_us": {
+    "stream": 2.8,
+    "wire": 1.644,
+    "arith": 0.622,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "attn.kv_norm.rsqrt",
+   "on_path": 32,
+   "us_on_path": 5.155,
+   "categories_us": {
+    "issue_barrier": 0.213,
+    "wire": 1.316,
+    "vm_round_trip": 0.213,
+    "arith": 2.88,
+    "passthrough": 0.533
+   }
+  },
+  {
+   "node": "attn.kv_norm.sumsq",
+   "on_path": 32,
+   "us_on_path": 5.046,
+   "categories_us": {
+    "setup": 0.391,
+    "wire": 1.316,
+    "vm_round_trip": 0.284,
+    "arith": 0.178,
+    "passthrough": 0.853,
+    "reduction": 1.849,
+    "cdc": 0.176
+   }
+  },
+  {
+   "node": "attn.kv_rope_qdq",
+   "on_path": 32,
+   "us_on_path": 4.23,
+   "categories_us": {
+    "stream": 0.533,
+    "wire": 2.133,
+    "vm_round_trip": 0.213,
+    "arith": 0.996,
+    "passthrough": 0.356
+   }
+  },
+  {
+   "node": "ffn.bias",
+   "on_path": 40,
+   "us_on_path": 3.688,
+   "categories_us": {
+    "setup": 0.489,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 0.178,
+    "passthrough": 0.889,
+    "cdc": 0.22
+   }
+  },
+  {
+   "node": "ffn.route_w",
+   "on_path": 40,
+   "us_on_path": 3.688,
+   "categories_us": {
+    "setup": 0.489,
+    "stream": 0.222,
+    "wire": 1.644,
+    "vm_round_trip": 0.267,
+    "arith": 0.222,
+    "passthrough": 0.844
+   }
+  },
+  {
+   "node": "attn.norm.sumsq",
+   "on_path": 40,
+   "us_on_path": 3.332,
+   "categories_us": {
+    "vm_round_trip": 0.089,
+    "arith": 0.222,
+    "reduction": 3.022
+   }
+  },
+  {
+   "node": "ffn.norm.sumsq",
+   "on_path": 40,
+   "us_on_path": 3.332,
+   "categories_us": {
+    "vm_round_trip": 0.089,
+    "arith": 0.222,
+    "reduction": 3.022
+   }
+  },
+  {
+   "node": "attn.den",
+   "on_path": 40,
+   "us_on_path": 2.773,
+   "categories_us": {
+    "vm_round_trip": 0.089,
+    "passthrough": 0.222,
+    "reduction": 2.462
+   }
+  },
+  {
+   "node": "attn.norm.scale",
+   "on_path": 40,
+   "us_on_path": 2.532,
+   "categories_us": {
+    "wire": 1.2,
+    "vm_round_trip": 0.267,
+    "arith": 0.444,
+    "passthrough": 0.622
+   }
+  },
+  {
+   "node": "ffn.norm.scale",
+   "on_path": 40,
+   "us_on_path": 2.532,
+   "categories_us": {
+    "wire": 1.2,
+    "vm_round_trip": 0.267,
+    "arith": 0.444,
+    "passthrough": 0.622
+   }
+  },
+  {
+   "node": "attn.idx.q",
+   "on_path": 8,
+   "us_on_path": 2.329,
+   "categories_us": {
+    "setup": 0.098,
+    "stream": 1.138,
+    "wire": 0.658,
+    "vm_round_trip": 0.053,
+    "arith": 0.249,
+    "passthrough": 0.089,
+    "cdc": 0.044
+   }
+  },
+  {
+   "node": "attn.kv_norm.scale",
+   "on_path": 32,
+   "us_on_path": 1.885,
+   "categories_us": {
+    "wire": 0.818,
+    "vm_round_trip": 0.213,
+    "arith": 0.356,
+    "passthrough": 0.498
+   }
+  },
+  {
+   "node": "ffn.top6_order",
+   "on_path": 40,
+   "us_on_path": 1.468,
+   "categories_us": {
+    "serial_select": 1.468
+   }
+  },
+  {
+   "node": "attn.q_norm.sumsq",
+   "on_path": 8,
+   "us_on_path": 1.342,
+   "categories_us": {
+    "setup": 0.098,
+    "stream": 0.009,
+    "wire": 0.329,
+    "vm_round_trip": 0.071,
+    "arith": 0.044,
+    "passthrough": 0.213,
+    "reduction": 0.533,
+    "cdc": 0.044
+   }
+  },
+  {
+   "node": "attn.q_norm.rsqrt",
+   "on_path": 8,
+   "us_on_path": 1.289,
+   "categories_us": {
+    "issue_barrier": 0.053,
+    "wire": 0.329,
+    "vm_round_trip": 0.053,
+    "arith": 0.72,
+    "passthrough": 0.133
+   }
+  },
+  {
+   "node": "attn.q_quant",
+   "on_path": 8,
+   "us_on_path": 0.8,
+   "categories_us": {
+    "stream": 0.347,
+    "wire": 0.329,
+    "arith": 0.124
+   }
+  },
+  {
+   "node": "attn.q_norm.scale",
+   "on_path": 8,
+   "us_on_path": 0.48,
+   "categories_us": {
+    "wire": 0.213,
+    "vm_round_trip": 0.053,
+    "arith": 0.089,
+    "passthrough": 0.124
+   }
+  },
+  {
+   "node": "hc_pre",
+   "on_path": 1,
+   "us_on_path": 0.214,
+   "categories_us": {
+    "setup": 0.012,
+    "stream": 0.004,
+    "wire": 0.092,
+    "vm_round_trip": 0.02,
+    "arith": 0.036,
+    "passthrough": 0.044,
+    "cdc": 0.005
+   }
+  },
+  {
+   "node": "ffn.top6",
+   "on_path": 40,
+   "us_on_path": 0.196,
+   "categories_us": {
+    "cdc": 0.198,
+    "serial_select": -0.002
+   }
+  },
+  {
+   "node": "norm.rsqrt",
+   "on_path": 1,
+   "us_on_path": 0.161,
+   "categories_us": {
+    "issue_barrier": 0.007,
+    "wire": 0.041,
+    "vm_round_trip": 0.007,
+    "arith": 0.09,
+    "passthrough": 0.017
+   }
+  },
+  {
+   "node": "norm.sumsq",
+   "on_path": 1,
+   "us_on_path": 0.083,
+   "categories_us": {
+    "vm_round_trip": 0.002,
+    "arith": 0.006,
+    "reduction": 0.076
+   }
+  },
+  {
+   "node": "norm.scale",
+   "on_path": 1,
+   "us_on_path": 0.063,
+   "categories_us": {
+    "wire": 0.03,
+    "vm_round_trip": 0.007,
+    "arith": 0.011,
+    "passthrough": 0.016
+   }
+  }
+ ],
+ "unmatched_path_nodes": [],
+ "floors": {
+  "norm": {
+   "covers": [
+    "hc_pre",
+    "norm.sumsq",
+    "norm.rsqrt",
+    "norm.scale",
+    "quant"
+   ],
+   "floor_cycles_1p2GHz": 265,
+   "floor_us": 0.22083,
+   "terms": {
+    "hub_in": 33,
+    "hc_mix_mul_3add_rnd": 18,
+    "square": 5,
+    "chunk_chain": 28,
+    "tree_640_chunks": 40,
+    "red_wire": 9,
+    "div_n": 19,
+    "add_eps": 4,
+    "rsqrt": 58,
+    "scale_mul_mul_rnd": 11,
+    "quant": 13,
+    "stream_5_vectors": 4,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "hc_pre": 0.2144,
+    "norm.sumsq": 0.0833,
+    "norm.rsqrt": 0.1611,
+    "norm.scale": 0.0633,
+    "quant": 0.2333
+   }
+  },
+  "q_norm": {
+   "covers": [
+    "q_norm.sumsq",
+    "q_norm.rsqrt",
+    "q_norm.scale",
+    "q_quant"
+   ],
+   "floor_cycles_1p2GHz": 236,
+   "floor_us": 0.19667,
+   "terms": {
+    "hub_in": 33,
+    "square": 5,
+    "chunk_chain": 28,
+    "tree_160_chunks": 32,
+    "red_wire": 9,
+    "div_n": 19,
+    "add_eps": 4,
+    "rsqrt": 58,
+    "scale_mul_mul_rnd": 11,
+    "quant": 13,
+    "stream_2_vectors": 1,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "q_norm.sumsq": 0.1677,
+    "q_norm.rsqrt": 0.1611,
+    "q_norm.scale": 0.06,
+    "q_quant": 0.1
+   }
+  },
+  "kv_norm": {
+   "covers": [
+    "kv_norm.sumsq",
+    "kv_norm.rsqrt",
+    "kv_norm.scale",
+    "kv_rope_qdq"
+   ],
+   "floor_cycles_1p2GHz": 237,
+   "floor_us": 0.1975,
+   "terms": {
+    "hub_in": 33,
+    "square": 5,
+    "chunk_chain": 28,
+    "tree_64_chunks": 24,
+    "red_wire": 9,
+    "div_n": 19,
+    "add_eps": 4,
+    "rsqrt": 58,
+    "scale_mul_mul_rnd": 11,
+    "rope_mul_add_rnd": 10,
+    "qdq": 13,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "kv_norm.sumsq": 0.1577,
+    "kv_norm.rsqrt": 0.1611,
+    "kv_norm.scale": 0.0589,
+    "kv_rope_qdq": 0.1322
+   }
+  },
+  "softmax_T640": {
+   "covers": [
+    "max",
+    "exp",
+    "den",
+    "sink",
+    "normalize"
+   ],
+   "floor_cycles_1p2GHz": 308,
+   "floor_us": 0.25667,
+   "terms": {
+    "hub_in": 33,
+    "scale_mul": 5,
+    "max_chain": 28,
+    "max_tree_80_chunks": 28,
+    "red_wire": 9,
+    "sub": 4,
+    "exp": 71,
+    "sum_chain": 28,
+    "sum_tree": 28,
+    "red_wire2": 9,
+    "den_add": 4,
+    "divide": 19,
+    "inv_rope": 10,
+    "stream_10_vectors": 9,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "max": 0.17735,
+    "exp": 0.20998,
+    "den": 0.06933,
+    "sink": 0.16,
+    "normalize": 0.1733
+   }
+  },
+  "hc_post": {
+   "covers": [
+    "hc_post"
+   ],
+   "floor_cycles_1p2GHz": 97,
+   "floor_us": 0.08083,
+   "terms": {
+    "hub_in": 33,
+    "mul": 5,
+    "add_chain_4": 16,
+    "rnd": 1,
+    "stream_20_vectors": 19,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "hc_post": 0.2899
+   }
+  },
+  "router_act": {
+   "covers": [
+    "softplus_sqrt"
+   ],
+   "floor_cycles_1p2GHz": 219,
+   "floor_us": 0.1825,
+   "terms": {
+    "field_root_in": 2,
+    "sqrt_softplus": 216,
+    "stream_96_lanes": 0,
+    "out_reg": 1
+   },
+   "now_us_on_path_per_occurrence": {
+    "softplus_sqrt": 0.4377
+   }
+  },
+  "bias": {
+   "covers": [
+    "bias"
+   ],
+   "floor_cycles_1p2GHz": 4,
+   "floor_us": 0.00333,
+   "terms": {
+    "add_in_select_front": 4
+   },
+   "now_us_on_path_per_occurrence": {
+    "bias": 0.0922
+   }
+  },
+  "swiglu": {
+   "covers": [
+    "swiglu",
+    "route_w",
+    "quant2"
+   ],
+   "floor_cycles_1p2GHz": 178,
+   "floor_us": 0.14833,
+   "terms": {
+    "hub_in": 33,
+    "clip": 1,
+    "silu": 94,
+    "mul_u": 5,
+    "mul_w": 5,
+    "rnd": 1,
+    "quant": 13,
+    "stream_4_vectors": 3,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "swiglu": 0.2155,
+    "route_w": 0.0922,
+    "quant2": 0.1756
+   }
+  },
+  "z_quant": {
+   "covers": [
+    "z_quant"
+   ],
+   "floor_cycles_1p2GHz": 39,
+   "floor_us": 0.0325,
+   "terms": {
+    "field_root_in": 2,
+    "quant_32_instances": 13,
+    "stream_2_beats": 1,
+    "hub_out": 23
+   },
+   "now_us_on_path_per_occurrence": {
+    "z_quant": 0.1322
+   }
+  }
+ },
+ "floors_note": "documented iteration targets, not measurements: the FLOOR of each fused chain is the same exact arithmetic in one 1.2 GHz pipeline (see FLOORS in the tool); each lever record refines its own",
+ "chains": [
+  {
+   "chain": "L20.attn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L20",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L20.attn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L20.attn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L20",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L20.attn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L20.attn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.hc_post",
+   "fn": "hc_post",
+   "layer": "L20",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L20",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L20.ffn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.ffn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L20.ffn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L20",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L20.ffn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L20.ffn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.ffn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.hc_post",
+   "fn": "hc_post",
+   "layer": "L20",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.q_norm",
+   "fn": "q_norm",
+   "layer": "L20",
+   "total_cycles": 345,
+   "total_us": 0.38333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 1,
+    "wire": 98,
+    "vm_round_trip": 20,
+    "arith": 96,
+    "passthrough": 53,
+    "reduction": 60
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.q_norm.sumsq",
+     "cycles": 146,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 60
+    },
+    {
+     "node": "L20.attn.q_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.q_norm.scale",
+     "cycles": 54,
+     "wire": 24,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 8,
+      "total": 67
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.kv_norm_rope",
+   "fn": "kv_norm_rope",
+   "layer": "L20",
+   "total_cycles": 388,
+   "total_us": 0.43111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 120,
+    "vm_round_trip": 26,
+    "arith": 110,
+    "passthrough": 63,
+    "reduction": 52
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.kv_norm.sumsq",
+     "cycles": 137,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 52
+    },
+    {
+     "node": "L20.attn.kv_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.kv_norm.scale",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    },
+    {
+     "node": "L20.attn.kv_rope_qdq",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 6,
+      "total": 59
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.q_rope",
+   "fn": "q_rope",
+   "layer": "L20",
+   "total_cycles": 78,
+   "total_us": 0.08667,
+   "categories": {
+    "setup": 11,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 14,
+    "passthrough": 10
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.q_rope",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.cmp.norm_row",
+   "fn": "cmp_norm_row",
+   "layer": "L20",
+   "total_cycles": 388,
+   "total_us": 0.43111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 120,
+    "vm_round_trip": 26,
+    "arith": 110,
+    "passthrough": 63,
+    "reduction": 52
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.cmp.norm.sumsq",
+     "cycles": 137,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 52
+    },
+    {
+     "node": "L20.attn.cmp.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.cmp.norm.scale",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    },
+    {
+     "node": "L20.attn.cmp.row_qdq",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 6,
+      "total": 59
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.cmp.k_norm_rope",
+   "fn": "cmp_k_norm_rope",
+   "layer": "L20",
+   "total_cycles": 380,
+   "total_us": 0.42222,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 120,
+    "vm_round_trip": 26,
+    "arith": 110,
+    "passthrough": 63,
+    "reduction": 44
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.cmp.k_norm.sumsq",
+     "cycles": 129,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 44
+    },
+    {
+     "node": "L20.attn.cmp.k_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.cmp.k_norm.scale",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    },
+    {
+     "node": "L20.attn.cmp.k_rope_qdq",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 4,
+      "total": 51
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 128,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.idx.q",
+   "fn": "idx_q",
+   "layer": "L20",
+   "total_cycles": 79,
+   "total_us": 0.08778,
+   "categories": {
+    "setup": 11,
+    "stream": 1,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 14,
+    "passthrough": 10
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.idx.q",
+     "cycles": 79,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 32,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.attn.softmax_T640",
+   "fn": "attend",
+   "layer": "L20",
+   "total_cycles": 705,
+   "total_us": 0.78333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 79,
+    "wire": 171,
+    "vm_round_trip": 34,
+    "arith": 193,
+    "passthrough": 93,
+    "reduction": 112
+   },
+   "nodes": [
+    {
+     "node": "L20.attn.max",
+     "cycles": 156,
+     "setup": 11,
+     "stream": 15,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 56
+    },
+    {
+     "node": "L20.attn.exp",
+     "cycles": 191,
+     "issue_barrier": 6,
+     "stream": 47,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 75,
+     "passthrough": 20
+    },
+    {
+     "node": "L20.attn.den",
+     "cycles": 63,
+     "vm_round_trip": 2,
+     "passthrough": 5,
+     "reduction": 56
+    },
+    {
+     "node": "L20.attn.sink",
+     "cycles": 144,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 80,
+     "passthrough": 15
+    },
+    {
+     "node": "L20.attn.normalize",
+     "cycles": 151,
+     "stream": 17,
+     "wire": 60,
+     "vm_round_trip": 12,
+     "arith": 33,
+     "passthrough": 29
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 16,
+     "nout": 16,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 3,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": {
+      "levels": 7,
+      "total": 63
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 48,
+     "nout": 16,
+     "nin": 640,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": {
+      "levels": 7,
+      "total": 63
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 80,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth": 81,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 19,
+     "passthrough": 19,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.router_act",
+   "fn": "router_act",
+   "layer": "L20",
+   "total_cycles": 389,
+   "total_us": 0.43222,
+   "categories": {
+    "setup": 11,
+    "stream": 95,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 216,
+    "passthrough": 24
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.softplus_sqrt",
+     "cycles": 389,
+     "setup": 11,
+     "stream": 95,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 216,
+     "passthrough": 24
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth": 283,
+     "sfu": "sqrt(softplus)",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 216,
+     "passthrough": 24,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.route",
+   "fn": "route",
+   "layer": "L20",
+   "total_cycles": 262,
+   "total_us": 0.29111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 97,
+    "vm_round_trip": 22,
+    "arith": 32,
+    "passthrough": 66,
+    "reduction": 28
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.bias",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 4,
+     "passthrough": 20
+    },
+    {
+     "node": "L20.ffn.weights",
+     "cycles": 184,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 16,
+     "arith": 28,
+     "passthrough": 46,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 69,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 83,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 24,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.swiglu",
+   "fn": "swiglu",
+   "layer": "L20",
+   "total_cycles": 189,
+   "total_us": 0.21,
+   "categories": {
+    "setup": 11,
+    "stream": 17,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 104,
+    "passthrough": 14
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.swiglu",
+     "cycles": 189,
+     "setup": 11,
+     "stream": 17,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 104,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 104,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.shared_swiglu",
+   "fn": "shared_swiglu",
+   "layer": "L20",
+   "total_cycles": 174,
+   "total_us": 0.19333,
+   "categories": {
+    "setup": 11,
+    "stream": 2,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 99,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.shared_swiglu",
+     "cycles": 174,
+     "setup": 11,
+     "stream": 2,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 99,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 99,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L0",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L0.attn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.attn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L0.attn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L0",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L0.attn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L0.attn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.attn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.hc_post",
+   "fn": "hc_post",
+   "layer": "L0",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L0",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L0.ffn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.ffn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L0.ffn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L0",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L0.ffn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L0.ffn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.ffn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.hc_post",
+   "fn": "hc_post",
+   "layer": "L0",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.q_norm",
+   "fn": "q_norm",
+   "layer": "L0",
+   "total_cycles": 345,
+   "total_us": 0.38333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 1,
+    "wire": 98,
+    "vm_round_trip": 20,
+    "arith": 96,
+    "passthrough": 53,
+    "reduction": 60
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.q_norm.sumsq",
+     "cycles": 146,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 60
+    },
+    {
+     "node": "L0.attn.q_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.attn.q_norm.scale",
+     "cycles": 54,
+     "wire": 24,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 8,
+      "total": 67
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.kv_norm_rope",
+   "fn": "kv_norm_rope",
+   "layer": "L0",
+   "total_cycles": 388,
+   "total_us": 0.43111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 120,
+    "vm_round_trip": 26,
+    "arith": 110,
+    "passthrough": 63,
+    "reduction": 52
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.kv_norm.sumsq",
+     "cycles": 137,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 52
+    },
+    {
+     "node": "L0.attn.kv_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.attn.kv_norm.scale",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    },
+    {
+     "node": "L0.attn.kv_rope_qdq",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 6,
+      "total": 59
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.q_rope",
+   "fn": "q_rope",
+   "layer": "L0",
+   "total_cycles": 78,
+   "total_us": 0.08667,
+   "categories": {
+    "setup": 11,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 14,
+    "passthrough": 10
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.q_rope",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.attn.softmax_T128",
+   "fn": "attend",
+   "layer": "L0",
+   "total_cycles": 627,
+   "total_us": 0.69667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 25,
+    "wire": 171,
+    "vm_round_trip": 34,
+    "arith": 193,
+    "passthrough": 93,
+    "reduction": 88
+   },
+   "nodes": [
+    {
+     "node": "L0.attn.max",
+     "cycles": 130,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 44
+    },
+    {
+     "node": "L0.attn.exp",
+     "cycles": 151,
+     "issue_barrier": 6,
+     "stream": 7,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 75,
+     "passthrough": 20
+    },
+    {
+     "node": "L0.attn.den",
+     "cycles": 51,
+     "vm_round_trip": 2,
+     "passthrough": 5,
+     "reduction": 44
+    },
+    {
+     "node": "L0.attn.sink",
+     "cycles": 144,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 80,
+     "passthrough": 15
+    },
+    {
+     "node": "L0.attn.normalize",
+     "cycles": 151,
+     "stream": 17,
+     "wire": 60,
+     "vm_round_trip": 12,
+     "arith": 33,
+     "passthrough": 29
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 16,
+     "nin": 128,
+     "depth": 67,
+     "sfu": null,
+     "m1": 3,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": {
+      "levels": 4,
+      "total": 51
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 8,
+     "nout": 16,
+     "nin": 128,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": {
+      "levels": 4,
+      "total": 51
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 80,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth": 81,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 19,
+     "passthrough": 19,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.router_act",
+   "fn": "router_act",
+   "layer": "L0",
+   "total_cycles": 389,
+   "total_us": 0.43222,
+   "categories": {
+    "setup": 11,
+    "stream": 95,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 216,
+    "passthrough": 24
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.softplus_sqrt",
+     "cycles": 389,
+     "setup": 11,
+     "stream": 95,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 216,
+     "passthrough": 24
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth": 283,
+     "sfu": "sqrt(softplus)",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 216,
+     "passthrough": 24,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.route",
+   "fn": "route",
+   "layer": "L0",
+   "total_cycles": 262,
+   "total_us": 0.29111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 97,
+    "vm_round_trip": 22,
+    "arith": 32,
+    "passthrough": 66,
+    "reduction": 28
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.bias",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 4,
+     "passthrough": 20
+    },
+    {
+     "node": "L0.ffn.weights",
+     "cycles": 184,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 16,
+     "arith": 28,
+     "passthrough": 46,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 69,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 83,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 24,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.swiglu",
+   "fn": "swiglu",
+   "layer": "L0",
+   "total_cycles": 189,
+   "total_us": 0.21,
+   "categories": {
+    "setup": 11,
+    "stream": 17,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 104,
+    "passthrough": 14
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.swiglu",
+     "cycles": 189,
+     "setup": 11,
+     "stream": 17,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 104,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 104,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.shared_swiglu",
+   "fn": "shared_swiglu",
+   "layer": "L0",
+   "total_cycles": 174,
+   "total_us": 0.19333,
+   "categories": {
+    "setup": 11,
+    "stream": 2,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 99,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.shared_swiglu",
+     "cycles": 174,
+     "setup": 11,
+     "stream": 2,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 99,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 99,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L3",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L3.attn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.attn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L3.attn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L3",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L3.attn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L3.attn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.attn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.hc_post",
+   "fn": "hc_post",
+   "layer": "L3",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L3",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L3.ffn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.ffn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L3.ffn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L3",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L3.ffn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L3.ffn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.ffn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.hc_post",
+   "fn": "hc_post",
+   "layer": "L3",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.q_norm",
+   "fn": "q_norm",
+   "layer": "L3",
+   "total_cycles": 345,
+   "total_us": 0.38333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 1,
+    "wire": 98,
+    "vm_round_trip": 20,
+    "arith": 96,
+    "passthrough": 53,
+    "reduction": 60
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.q_norm.sumsq",
+     "cycles": 146,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 60
+    },
+    {
+     "node": "L3.attn.q_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.attn.q_norm.scale",
+     "cycles": 54,
+     "wire": 24,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 8,
+      "total": 67
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.kv_norm_rope",
+   "fn": "kv_norm_rope",
+   "layer": "L3",
+   "total_cycles": 388,
+   "total_us": 0.43111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 120,
+    "vm_round_trip": 26,
+    "arith": 110,
+    "passthrough": 63,
+    "reduction": 52
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.kv_norm.sumsq",
+     "cycles": 137,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 52
+    },
+    {
+     "node": "L3.attn.kv_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.attn.kv_norm.scale",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    },
+    {
+     "node": "L3.attn.kv_rope_qdq",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 6,
+      "total": 59
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.q_rope",
+   "fn": "q_rope",
+   "layer": "L3",
+   "total_cycles": 78,
+   "total_us": 0.08667,
+   "categories": {
+    "setup": 11,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 14,
+    "passthrough": 10
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.q_rope",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.attn.softmax_T640",
+   "fn": "attend",
+   "layer": "L3",
+   "total_cycles": 705,
+   "total_us": 0.78333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 79,
+    "wire": 171,
+    "vm_round_trip": 34,
+    "arith": 193,
+    "passthrough": 93,
+    "reduction": 112
+   },
+   "nodes": [
+    {
+     "node": "L3.attn.max",
+     "cycles": 156,
+     "setup": 11,
+     "stream": 15,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 56
+    },
+    {
+     "node": "L3.attn.exp",
+     "cycles": 191,
+     "issue_barrier": 6,
+     "stream": 47,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 75,
+     "passthrough": 20
+    },
+    {
+     "node": "L3.attn.den",
+     "cycles": 63,
+     "vm_round_trip": 2,
+     "passthrough": 5,
+     "reduction": 56
+    },
+    {
+     "node": "L3.attn.sink",
+     "cycles": 144,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 80,
+     "passthrough": 15
+    },
+    {
+     "node": "L3.attn.normalize",
+     "cycles": 151,
+     "stream": 17,
+     "wire": 60,
+     "vm_round_trip": 12,
+     "arith": 33,
+     "passthrough": 29
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 16,
+     "nout": 16,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 3,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": {
+      "levels": 7,
+      "total": 63
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 48,
+     "nout": 16,
+     "nin": 640,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": {
+      "levels": 7,
+      "total": 63
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 80,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth": 81,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 19,
+     "passthrough": 19,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.router_act",
+   "fn": "router_act",
+   "layer": "L3",
+   "total_cycles": 389,
+   "total_us": 0.43222,
+   "categories": {
+    "setup": 11,
+    "stream": 95,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 216,
+    "passthrough": 24
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.softplus_sqrt",
+     "cycles": 389,
+     "setup": 11,
+     "stream": 95,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 216,
+     "passthrough": 24
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth": 283,
+     "sfu": "sqrt(softplus)",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 216,
+     "passthrough": 24,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.route",
+   "fn": "route",
+   "layer": "L3",
+   "total_cycles": 262,
+   "total_us": 0.29111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 97,
+    "vm_round_trip": 22,
+    "arith": 32,
+    "passthrough": 66,
+    "reduction": 28
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.bias",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 4,
+     "passthrough": 20
+    },
+    {
+     "node": "L3.ffn.weights",
+     "cycles": 184,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 16,
+     "arith": 28,
+     "passthrough": 46,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 69,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 83,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 24,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.swiglu",
+   "fn": "swiglu",
+   "layer": "L3",
+   "total_cycles": 189,
+   "total_us": 0.21,
+   "categories": {
+    "setup": 11,
+    "stream": 17,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 104,
+    "passthrough": 14
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.swiglu",
+     "cycles": 189,
+     "setup": 11,
+     "stream": 17,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 104,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 104,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.shared_swiglu",
+   "fn": "shared_swiglu",
+   "layer": "L3",
+   "total_cycles": 174,
+   "total_us": 0.19333,
+   "categories": {
+    "setup": 11,
+    "stream": 2,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 99,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.shared_swiglu",
+     "cycles": 174,
+     "setup": 11,
+     "stream": 2,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 99,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 99,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L24",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L24.attn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.attn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L24.attn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L24",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L24.attn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L24.attn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.attn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.hc_post",
+   "fn": "hc_post",
+   "layer": "L24",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.hc_mix",
+   "fn": "hc_mix",
+   "layer": "L24",
+   "total_cycles": 706,
+   "total_us": 0.78444,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 19,
+    "wire": 157,
+    "vm_round_trip": 34,
+    "arith": 276,
+    "passthrough": 93,
+    "reduction": 104
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.hc.sumsq",
+     "cycles": 180,
+     "setup": 11,
+     "stream": 19,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 76
+    },
+    {
+     "node": "L24.ffn.hc.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.ffn.hc.pre_post",
+     "cycles": 149,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 115,
+     "passthrough": 5
+    },
+    {
+     "node": "L24.ffn.hc.sinkhorn",
+     "cycles": 232,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 14,
+     "arith": 75,
+     "passthrough": 49,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 8,
+     "nin": 2560,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 4,
+     "depth": 161,
+     "sfu": "sigmoid",
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 113,
+     "passthrough": 5,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 16,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 5,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 6,
+     "vectors": 1,
+     "nout": 4,
+     "nin": 4,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "L24",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "L24.ffn.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "L24.ffn.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.ffn.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.hc_post",
+   "fn": "hc_post",
+   "layer": "L24",
+   "total_cycles": 256,
+   "total_us": 0.28444,
+   "categories": {
+    "setup": 11,
+    "stream": 19,
+    "wire": 106,
+    "vm_round_trip": 24,
+    "arith": 41,
+    "passthrough": 55
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.hc_post",
+     "cycles": 256,
+     "setup": 11,
+     "stream": 19,
+     "wire": 106,
+     "vm_round_trip": 24,
+     "arith": 41,
+     "passthrough": 55
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 20,
+     "nout": 4,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.q_norm",
+   "fn": "q_norm",
+   "layer": "L24",
+   "total_cycles": 345,
+   "total_us": 0.38333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 1,
+    "wire": 98,
+    "vm_round_trip": 20,
+    "arith": 96,
+    "passthrough": 53,
+    "reduction": 60
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.q_norm.sumsq",
+     "cycles": 146,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 60
+    },
+    {
+     "node": "L24.attn.q_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.attn.q_norm.scale",
+     "cycles": 54,
+     "wire": 24,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 8,
+     "nin": 160,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 8,
+      "total": 67
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 2,
+     "nout": 1,
+     "nin": 1280,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.kv_norm_rope",
+   "fn": "kv_norm_rope",
+   "layer": "L24",
+   "total_cycles": 388,
+   "total_us": 0.43111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 120,
+    "vm_round_trip": 26,
+    "arith": 110,
+    "passthrough": 63,
+    "reduction": 52
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.kv_norm.sumsq",
+     "cycles": 137,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 52
+    },
+    {
+     "node": "L24.attn.kv_norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.attn.kv_norm.scale",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    },
+    {
+     "node": "L24.attn.kv_rope_qdq",
+     "cycles": 53,
+     "wire": 23,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 8,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 6,
+      "total": 59
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 512,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.q_rope",
+   "fn": "q_rope",
+   "layer": "L24",
+   "total_cycles": 78,
+   "total_us": 0.08667,
+   "categories": {
+    "setup": 11,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 14,
+    "passthrough": 10
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.q_rope",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.idx.q",
+   "fn": "idx_q",
+   "layer": "L24",
+   "total_cycles": 79,
+   "total_us": 0.08778,
+   "categories": {
+    "setup": 11,
+    "stream": 1,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 14,
+    "passthrough": 10
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.idx.q",
+     "cycles": 79,
+     "setup": 11,
+     "stream": 1,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 14,
+     "passthrough": 10
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 2,
+     "nout": 32,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.attn.softmax_T640",
+   "fn": "attend",
+   "layer": "L24",
+   "total_cycles": 705,
+   "total_us": 0.78333,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 12,
+    "stream": 79,
+    "wire": 171,
+    "vm_round_trip": 34,
+    "arith": 193,
+    "passthrough": 93,
+    "reduction": 112
+   },
+   "nodes": [
+    {
+     "node": "L24.attn.max",
+     "cycles": 156,
+     "setup": 11,
+     "stream": 15,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "arith": 5,
+     "passthrough": 24,
+     "reduction": 56
+    },
+    {
+     "node": "L24.attn.exp",
+     "cycles": 191,
+     "issue_barrier": 6,
+     "stream": 47,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 75,
+     "passthrough": 20
+    },
+    {
+     "node": "L24.attn.den",
+     "cycles": 63,
+     "vm_round_trip": 2,
+     "passthrough": 5,
+     "reduction": 56
+    },
+    {
+     "node": "L24.attn.sink",
+     "cycles": 144,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 80,
+     "passthrough": 15
+    },
+    {
+     "node": "L24.attn.normalize",
+     "cycles": 151,
+     "stream": 17,
+     "wire": 60,
+     "vm_round_trip": 12,
+     "arith": 33,
+     "passthrough": 29
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 16,
+     "nout": 16,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 3,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": {
+      "levels": 7,
+      "total": 63
+     }
+    },
+    {
+     "op": 1,
+     "vectors": 48,
+     "nout": 16,
+     "nin": 640,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 75,
+     "passthrough": 20,
+     "reducer": {
+      "levels": 7,
+      "total": 63
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 1,
+     "depth": 138,
+     "sfu": "exp",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 80,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 32,
+     "nout": 16,
+     "nin": 512,
+     "depth": 81,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 19,
+     "passthrough": 19,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 1,
+     "nout": 16,
+     "nin": 64,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.router_act",
+   "fn": "router_act",
+   "layer": "L24",
+   "total_cycles": 389,
+   "total_us": 0.43222,
+   "categories": {
+    "setup": 11,
+    "stream": 95,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 216,
+    "passthrough": 24
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.softplus_sqrt",
+     "cycles": 389,
+     "setup": 11,
+     "stream": 95,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 216,
+     "passthrough": 24
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 96,
+     "nout": 1,
+     "nin": 96,
+     "depth": 283,
+     "sfu": "sqrt(softplus)",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 216,
+     "passthrough": 24,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.route",
+   "fn": "route",
+   "layer": "L24",
+   "total_cycles": 262,
+   "total_us": 0.29111,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "wire": 97,
+    "vm_round_trip": 22,
+    "arith": 32,
+    "passthrough": 66,
+    "reduction": 28
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.bias",
+     "cycles": 78,
+     "setup": 11,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 4,
+     "passthrough": 20
+    },
+    {
+     "node": "L24.ffn.weights",
+     "cycles": 184,
+     "issue_barrier": 6,
+     "wire": 60,
+     "vm_round_trip": 16,
+     "arith": 28,
+     "passthrough": 46,
+     "reduction": 28
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 384,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 69,
+     "sfu": null,
+     "m1": 0,
+     "red": 1,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 0,
+      "total": 35
+     }
+    },
+    {
+     "op": 2,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 4,
+     "passthrough": 20,
+     "reducer": null
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 6,
+     "depth": 83,
+     "sfu": null,
+     "m1": 4,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 24,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.swiglu",
+   "fn": "swiglu",
+   "layer": "L24",
+   "total_cycles": 189,
+   "total_us": 0.21,
+   "categories": {
+    "setup": 11,
+    "stream": 17,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 104,
+    "passthrough": 14
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.swiglu",
+     "cycles": 189,
+     "setup": 11,
+     "stream": 17,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 104,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 18,
+     "nout": 6,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 104,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.shared_swiglu",
+   "fn": "shared_swiglu",
+   "layer": "L24",
+   "total_cycles": 174,
+   "total_us": 0.19333,
+   "categories": {
+    "setup": 11,
+    "stream": 2,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 99,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.shared_swiglu",
+     "cycles": 174,
+     "setup": 11,
+     "stream": 2,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 99,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 3,
+     "nout": 1,
+     "nin": 576,
+     "depth": 161,
+     "sfu": "silu",
+     "m1": 0,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 99,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "head.hc_pre_norm",
+   "fn": "hc_pre_norm",
+   "layer": "head",
+   "total_cycles": 465,
+   "total_us": 0.51667,
+   "categories": {
+    "setup": 11,
+    "issue_barrier": 6,
+    "stream": 4,
+    "wire": 147,
+    "vm_round_trip": 32,
+    "arith": 128,
+    "passthrough": 69,
+    "reduction": 68
+   },
+   "nodes": [
+    {
+     "node": "head.hc_pre",
+     "cycles": 188,
+     "setup": 11,
+     "stream": 4,
+     "wire": 83,
+     "vm_round_trip": 18,
+     "arith": 32,
+     "passthrough": 40
+    },
+    {
+     "node": "head.norm.sumsq",
+     "cycles": 75,
+     "vm_round_trip": 2,
+     "arith": 5,
+     "reduction": 68
+    },
+    {
+     "node": "head.norm.rsqrt",
+     "cycles": 145,
+     "issue_barrier": 6,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 81,
+     "passthrough": 15
+    },
+    {
+     "node": "head.norm.scale",
+     "cycles": 57,
+     "wire": 27,
+     "vm_round_trip": 6,
+     "arith": 10,
+     "passthrough": 14
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 14,
+     "passthrough": 10,
+     "reducer": null
+    },
+    {
+     "op": 1,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 2,
+     "vectors": 5,
+     "nout": 8,
+     "nin": 640,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 1,
+     "redsq": 1,
+     "arith_used": 9,
+     "passthrough": 15,
+     "reducer": {
+      "levels": 10,
+      "total": 75
+     }
+    },
+    {
+     "op": 3,
+     "vectors": 1,
+     "nout": 1,
+     "nin": 1,
+     "depth": 139,
+     "sfu": "rsqrt",
+     "m1": 5,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 81,
+     "passthrough": 15,
+     "reducer": null
+    },
+    {
+     "op": 4,
+     "vectors": 5,
+     "nout": 1,
+     "nin": 5120,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 10,
+     "passthrough": 14,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "head.argmax",
+   "fn": "argmax",
+   "layer": "head",
+   "total_cycles": 192,
+   "total_us": 0.21333,
+   "categories": {
+    "setup": 11,
+    "stream": 31,
+    "wire": 37,
+    "vm_round_trip": 8,
+    "passthrough": 29,
+    "reduction": 76
+   },
+   "nodes": [
+    {
+     "node": "head.argmax",
+     "cycles": 192,
+     "setup": 11,
+     "stream": 31,
+     "wire": 37,
+     "vm_round_trip": 8,
+     "passthrough": 29,
+     "reduction": 76
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 32,
+     "nout": 1,
+     "nin": 32320,
+     "depth": 67,
+     "sfu": null,
+     "m1": 0,
+     "red": 2,
+     "redsq": 0,
+     "arith_used": 0,
+     "passthrough": 24,
+     "reducer": {
+      "levels": 12,
+      "total": 83
+     }
+    }
+   ]
+  },
+  {
+   "chain": "L20.ffn.route_w",
+   "fn": "route_w",
+   "layer": "L20",
+   "total_cycles": 83,
+   "total_us": 0.09222,
+   "categories": {
+    "setup": 11,
+    "stream": 5,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 5,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L20.ffn.route_w",
+     "cycles": 83,
+     "setup": 11,
+     "stream": 5,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 5,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 6,
+     "nout": 6,
+     "nin": 576,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L0.ffn.route_w",
+   "fn": "route_w",
+   "layer": "L0",
+   "total_cycles": 83,
+   "total_us": 0.09222,
+   "categories": {
+    "setup": 11,
+    "stream": 5,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 5,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L0.ffn.route_w",
+     "cycles": 83,
+     "setup": 11,
+     "stream": 5,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 5,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 6,
+     "nout": 6,
+     "nin": 576,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L3.ffn.route_w",
+   "fn": "route_w",
+   "layer": "L3",
+   "total_cycles": 83,
+   "total_us": 0.09222,
+   "categories": {
+    "setup": 11,
+    "stream": 5,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 5,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L3.ffn.route_w",
+     "cycles": 83,
+     "setup": 11,
+     "stream": 5,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 5,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 6,
+     "nout": 6,
+     "nin": 576,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  },
+  {
+   "chain": "L24.ffn.route_w",
+   "fn": "route_w",
+   "layer": "L24",
+   "total_cycles": 83,
+   "total_us": 0.09222,
+   "categories": {
+    "setup": 11,
+    "stream": 5,
+    "wire": 37,
+    "vm_round_trip": 6,
+    "arith": 5,
+    "passthrough": 19
+   },
+   "nodes": [
+    {
+     "node": "L24.ffn.route_w",
+     "cycles": 83,
+     "setup": 11,
+     "stream": 5,
+     "wire": 37,
+     "vm_round_trip": 6,
+     "arith": 5,
+     "passthrough": 19
+    }
+   ],
+   "ops": [
+    {
+     "op": 0,
+     "vectors": 6,
+     "nout": 6,
+     "nin": 576,
+     "depth": 67,
+     "sfu": null,
+     "m1": 1,
+     "red": 0,
+     "redsq": 0,
+     "arith_used": 5,
+     "passthrough": 19,
+     "reducer": null
+    }
+   ]
+  }
+ ],
+ "constants": {
+  "MLAT": 5,
+  "ALAT": 4,
+  "divide": 19,
+  "BCAST": 22,
+  "RET": 15,
+  "vm_round_trip": 6,
+  "sfu_depth": {
+   "exp": 71,
+   "sigmoid": 94,
+   "silu": 94,
+   "rsqrt": 58,
+   "sqrt": 31,
+   "sqrt(softplus)": 216,
+   "egate": 127
+  }
+ },
+ "inputs": {
+  "results/rtl/dsrom_1m_allmeasured_20261004/su_runs/su_N1024_M256_b22r15m5a4_dpi_beh.json": "d983881dc46e49978aa09bdb3d2b0c022c5817d7b2f42b7ee2cabce4842226e6",
+  "results/rtl/dsrom_1m_allmeasured_20261004/su_runs/su_N1024_M256_b22r15m5a4_dpi_beh_su_cases_rw.json": "fa5b8a66b4c74b5db9700e9a911878bc977a2d5ac36b43ee4fcd17db1b863a7e",
+  "results/rtl/dsrom_1m_allmeasured_20261004/su.json": "26ebdffa021c36d278d9e55c07affb85f696448ccf258412d5e4257ce12a5a65",
+  "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
+  "results/rtl/dsrom_recovery_20261004/composition.json": "52e8bbb212788b162129afea8c26fef35f137d6a1d3e83a611fd312fafdacd5d"
+ },
+ "cases_sha256": {
+  "su_cases.pkl": "1e00804b3cb6a348dbf9bdd739d531816aa671a209f94b16e0f0ca4395fc1851",
+  "su_cases_rw.pkl": "5b1f462c4890d033069ee0c57ca689d77707decf734a5e8911179fbf5e7c5f34"
+ },
+ "tool_sha256": "c758ef7a8abb84d37d149be4cb67f091213e114d59006fd454237927519ae96c"
+}

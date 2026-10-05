@@ -1,0 +1,23 @@
+{
+  "PDN_changed": false,
+  "analysis_completed": false,
+  "assumed_screen_basis": "existing tools/signoff_analysis.py uses assumed1mA/um; ASAP7 publishes no EM limit",
+  "authority": "S81 feasibility main21fcf6469 c5_field; tools/dsrom_s81_fulldie.py peak power model; pre-recovery r5 placement same as r7 except VM pins; 4706 return nodes historical not current strict5090",
+  "current_recovery_die_qualified": false,
+  "em_rule_authority": null,
+  "exit_code": 127,
+  "foundry_violation_count": null,
+  "input_receipt_sha256": "f31bd97669999ae8966d2a5fd270df03e84fa459e14772e92f42ea2a7bb7db17",
+  "log_sha256": "3d529a5ec6a9ec80ec5dc01d9583262a08a76e5ffc68feb75494d456cbc070ae",
+  "power_w": 25.196559736,
+  "qualification": "MEASURED_PSM_CURRENTS_ONLY_EM_LIMIT_NOT_AVAILABLE",
+  "rails": {
+    "VDD": {
+      "analysis_completed": false
+    },
+    "VSS": {
+      "analysis_completed": false
+    }
+  },
+  "schema": "opentallas.die_window_em.actual.v1"
+}

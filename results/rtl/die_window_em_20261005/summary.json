@@ -1,0 +1,144 @@
+{
+  "PDN_changed": false,
+  "cases": {
+    "qwen-shoreline_w-r1": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 2.8020833333333335,
+          "M9": 2.18125
+        },
+        "VSS": {
+          "M8": 3.391666666666667,
+          "M9": 3.089583333333333
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 9.884784,
+      "result": "result.json",
+      "result_sha256": "2f375eef4d4726d680b83c12ddc00832f0f6ba4ddc8659ee981574e7708c1338",
+      "source_receipt_sha256": "2eae6a3aced65d0fa176992e0ff850ad296ffe75727774e88809563673863fb5",
+      "terminal_checks_passed": false
+    },
+    "qwen-spine_hub-r1": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 1.6522916666666667,
+          "M9": 2.0827083333333336
+        },
+        "VSS": {
+          "M8": 2.8895833333333334,
+          "M9": 3.5541666666666667
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 5.50732,
+      "result": "result.json",
+      "result_sha256": "1dc6bfa5970be2379c31c3b098eb9c695f320a56fb64bcd13a4268a04c882320",
+      "source_receipt_sha256": "78edd65fa9fb141f7e78be923c8df7f52aa081a1bc8e8a6b764cb66f053fe9cd",
+      "terminal_checks_passed": false
+    },
+    "qwen-tile_field-r1": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 1.7972916666666667,
+          "M9": 1.5439583333333333
+        },
+        "VSS": {
+          "M8": 2.8895833333333334,
+          "M9": 3.5541666666666667
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 6.7725,
+      "result": "result.json",
+      "result_sha256": "67ff731220f96135f424d4bc937c70debb7684adac2be9aaee18959dd12c2eab",
+      "source_receipt_sha256": "a1fbbd0948df7126d80ed48a6013c63318c6f5e68d91430cd887ddb92f2b3ab9",
+      "terminal_checks_passed": false
+    },
+    "s81-c5-band_s-r1": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 4.708333333333333,
+          "M9": 3.185416666666667
+        },
+        "VSS": {
+          "M8": 4.058333333333334,
+          "M9": 3.8333333333333335
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 10.546137237,
+      "result": "actual_psm_summary.json",
+      "result_sha256": "df72d4a3467c9990dea5b9b6291c37ff6146f0a7538d96da0ff6b14c13ecb8ee",
+      "source_receipt_sha256": "a5bd044aa35324224ce7619e19b0d3ef71f84a40f8f7e01e712953b682b759ab",
+      "terminal_checks_passed": false
+    },
+    "s81-c5-field-r2": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 4.191666666666666,
+          "M9": 3.5270833333333336
+        },
+        "VSS": {
+          "M8": 4.460416666666667,
+          "M9": 5.333333333333334
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 25.196559736,
+      "result": "actual_psm_summary.json",
+      "result_sha256": "67ddae95840ff67746a1d367b5477d0ec48b695357baccfddae2152a446b5f14",
+      "source_receipt_sha256": "04806b835544a9f075ea9e87033d7420f586d47a1351cf9d7649b1e837592d58",
+      "terminal_checks_passed": false
+    },
+    "s81-c5-field_bf-r1": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 4.0791666666666675,
+          "M9": 3.4458333333333337
+        },
+        "VSS": {
+          "M8": 4.602083333333334,
+          "M9": 4.772916666666666
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 18.835392413,
+      "result": "actual_psm_summary.json",
+      "result_sha256": "54843beadd5d1e0c9c974102d0dfbab1c215f3c0d8fedebf06b5584ddb1cf882",
+      "source_receipt_sha256": "04751faae1d3dab71536519db856e4f38890d844efbd25e7a6e706cba284f0c6",
+      "terminal_checks_passed": false
+    },
+    "s81-c5-spine-r1": {
+      "currents_mA_per_um": {
+        "VDD": {
+          "M8": 4.016666666666667,
+          "M9": 3.4625000000000004
+        },
+        "VSS": {
+          "M8": 4.54375,
+          "M9": 5.847916666666666
+        }
+      },
+      "em_rule_authority": null,
+      "foundry_violation_count": null,
+      "power_w": 9.233505426,
+      "result": "actual_psm_summary.json",
+      "result_sha256": "53555954fe9caf43b8c141f5c53aedf55d853646b16f07e0b2903d4b73202b6e",
+      "source_receipt_sha256": "789497c838c58e822d7275ff117c6a50c74992cb8926019149e68161434eea24",
+      "terminal_checks_passed": false
+    }
+  },
+  "completed_rail_solves": 14,
+  "completed_windows": 7,
+  "current_geometry_adoption": false,
+  "em_accepted": false,
+  "new_full_die_routes": 0,
+  "schema": "opentallas.die_window_em.completed.v1"
+}
