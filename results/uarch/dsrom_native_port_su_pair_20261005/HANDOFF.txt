@@ -35,3 +35,48 @@ retaining current full-system authority/headlines and >=1percent gate.
 EINSTEIN: review native lane/packet geometry and local bank placement; keep
 current wide candidate records/jobs untouched. This owns one new model helper,
 not sharedDAG edits or another nativeunit. No RTL authorized by this record.
+
+Concrete existing-source integration boundary (source review; NOT RTL GO):
+rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv SRC_VM/CLO/CHI/WROM exhausts the
+2-bit source selector; no retained-local source exists. Keep the opcode width
+and existing FP32 mul/add pipelines. A default-off pair qualifier would select
+local T only for op1 C input, original matching producer/address/epoch/lane,
+without repurposing any ordinary source code. All other ops stay unchanged.
+rtl/hdc/v41x/ot_hdc_v41x_vec.sv cr_cnt/cr_dseq contract explicitly means a
+next-cycle VM read sees the written value. Private T1 capture MUST NOT advance
+those public VM credits as if a write landed. Finite local capture/consume
+credits must be separate, scoped to this exact pair and invalidated on reset;
+no additional public interface width or clock domain is proposed.
+tools/runtime/dsrom/s81_minimum_prefix.hpp prepare waits for engine idle AND
+vm.outputs_visible before the next instruction. NativeSu::capture/prepare in
+tools/runtime/dsrom/s81_minimum_su256.cpp creates immutable scalar publication
+and waits for SourceIo visibility. PrefixPublication::on_prefix_scalar_ack in
+tools/runtime/dsrom/s81_prefix_publication.hpp consumes a real VM receipt.
+These existing owners cannot retire a suppressed T1 through the normal VM ACK.
+Specific blocker: opt-in internal pair completion/lease must be represented
+explicitly in the existing SU scheduler/ISA lowering and native owner, while
+T2 keeps normal scalar version reservation, publication, accepted-write receipt
+and VM readspan lease. Merely changing DST_NONE or faking outputs_visible is
+not permitted. Also SU256 is an ownership-contract reference, not proof that
+the selected logical1024-lane S81 physical placement fits this allocation.
+
+If Maxwell establishes >=1percent actual exposed rate gain AND named slot fit,
+coordinate Einstein engine and native caller/publication owners before edits:
+1. Compile only the proven sole-consumer ops0/1 into the default-off pair;
+   original source instructions/FP32 rounding and op2 VM boundary remain.
+2. Add priced finite lane-local capture/select and local owner completion;
+   preserve all real global publication/ACK/credit events. Reprice any added
+   ownership hardware beyond the current explicit metadata allowance.
+3. One representative existing SU component validation, original exact oracle:
+   T2 and retained op2/reduction match; held operands, local backpressure,
+   repeated equal-bit producer versions, reset and finite credit exhaustion
+   preserve ownership. No golden intermediate restore or fake VM receipt.
+   No whole-array/proof campaign; SS/FF context admission still required.
+
+For one modeled invocation, >=1percent rate gain requires same-candidate
+baseline L <= 101*0.353333333us =35.686667us, even before overlap or extra ACK
+cost. A roughly618us L20 composition therefore cannot qualify this one
+invocation (upper-envelope rate improvement about0.0572percent). Other exposed
+occurrences must be actual source/DAG-bound, never all-layer extrapolation.
+Until those and the physical slot are resolved this candidate remains
+MODEL ONLY / NOT ADOPTED, with no engine RTL or component build launched.
