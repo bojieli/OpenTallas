@@ -24,7 +24,7 @@ foreach cell [get_cells *] {
     set name [get_full_name $cell]
     if {[string match {rst_q*} $name]} {lappend selected $cell}
     if {[regexp {^u_l\.q\[([0-9]+)\]} $name -> bit] &&
-        ($bit == 0 || ($bit >= 672 && $bit < 704) || $bit >= 747)} {
+        ($bit == 0 || ($bit >= 673 && $bit < 705) || $bit >= 748)} {
         lappend selected $cell
     }
 }
