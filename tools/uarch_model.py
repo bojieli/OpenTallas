@@ -8020,9 +8020,10 @@ def hbm_w2_publication_model():
     placement = 2 * body * 1.05
     # Local cut inventory relative to the rejected registered source. These
     # edges compose serially; stalls can change observed release alignment.
-    cuts = dict(metadata_decode_check_capture=2, payload_select_decode_check_capture=3 * rows,
-                request_data_parity_capture=2 * rows, response_check_capture=rows,
-                verified_feedback_positive_fence=rows, final_completion_fence=1)
+    cuts = dict(metadata_check=0, payload_select_syndrome_check_protected_capture=2 * rows,
+                protected_request_capture=0, write_ACK_positive_fence=rows,
+                response_capture_compare=0, verified_feedback_positive_fence=rows,
+                final_completion_fence=1)
     extra = sum(cuts.values())
     paths = [seq_path, alloc_path, prepare_path, connected_gate_path,
              inputs / 'immutable_parent.sv', snapshot / 'endpoint_groups.json',

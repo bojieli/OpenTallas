@@ -326,15 +326,16 @@
     "parent_sink_clock_port": "clk_sm (immutable_parent.sv u_w2_sink .clk)",
     "planned_added_local_edges_by_cut": {
       "final_completion_fence": 1,
-      "metadata_decode_check_capture": 2,
-      "payload_select_decode_check_capture": 12,
-      "request_data_parity_capture": 8,
-      "response_check_capture": 4,
-      "verified_feedback_positive_fence": 4
+      "metadata_check": 0,
+      "payload_select_syndrome_check_protected_capture": 8,
+      "protected_request_capture": 0,
+      "response_capture_compare": 0,
+      "verified_feedback_positive_fence": 4,
+      "write_ACK_positive_fence": 4
     },
-    "planned_added_local_edges_per_publication": 31,
+    "planned_added_local_edges_per_publication": 17,
     "release_181_plus_planned_edges_is_not_a_measurement": true,
-    "selected_recipe_serial_local_delta_ns": 25.833333333333336,
+    "selected_recipe_serial_local_delta_ns": 14.166666666666668,
     "target_clock_ps": 833.333,
     "total_fault_stall_bound": null,
     "whole_token_added_latency_ns": null
