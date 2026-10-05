@@ -8246,7 +8246,7 @@ def dsrom_s81_native_port_hc_pair():
             staging='32-lane groups filled one per VM beat; two ping-pong packets each with two operand capture masks; full1024-lane packet admitted only when complete. Hold the active pack through capture.',
             local_bank='1024 lane banks x5 FP32 words, one read and one write per bank; original packet sequence retained.',
             local_select='5:1 per bit; same-lane T1 read for op1, one priced select/capture stage.',
-            prefetch_credit_required=True, finite_buffer_words=added_ff//32,
+            prefetch_credit_required=True, finite_buffer_words=(t_bits+input_pack_bits+output_pack_bits)//32,
             new_cross_die_bits=0, new_cdc=False,
             new_global_routing_tracks=0, local_routing_track_capacity=None,
             local_read_selector_levels=3,

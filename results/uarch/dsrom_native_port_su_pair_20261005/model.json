@@ -57,7 +57,7 @@
     "local_bank": "1024 lane banks x5 FP32 words, one read and one write per bank; original packet sequence retained.",
     "local_select": "5:1 per bit; same-lane T1 read for op1, one priced select/capture stage.",
     "prefetch_credit_required": true,
-    "finite_buffer_words": 10249,
+    "finite_buffer_words": 10240,
     "new_cross_die_bits": 0,
     "new_cdc": false,
     "new_global_routing_tracks": 0,
@@ -150,7 +150,7 @@
     "next_owner_action": "Maxwell map native-port calendar onto real critical-chain exposure; Einstein review same-lane bank/packet binding; no RTL/build authorized by this model."
   },
   "source_sha256": {
-    "tools/uarch_model.py": "6ecd85ef3eafed9b855bb34d75b4a410fecb840f66a229d33cfdbdf53e56e6d0",
+    "tools/uarch_model.py": "7889b4134dc6b29e8d2db8443c51a641752286e4d9ff1deb6b96ea6aaa40c57e",
     "tools/dshbm_baseline_measure.py": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978",
     "tools/dsrom_1m_su.py": "62d0096b88ae6ce5044674fc5cbbcdd82311e0c510e2d949dfca688b1bd40b32",
     "tools/dsrom_s81_fulldie.py": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955",
