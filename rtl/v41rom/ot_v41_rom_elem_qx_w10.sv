@@ -25,6 +25,8 @@
 // QX = 5 (after route Z7's post-CTS screen, SS -40.7 ps on w_cnt -> hazard compare -> issue -> walker enables): the
 // issue hazard is a register loaded with its next-cycle value (three register-only candidates selected by go / issue).
 // QP_CHECK asserts it equals the original every cycle.  Zero added cycles.
+// QX = 6 (after CTS screen Z9s2, SS -22.6 ps on w_s -> s_x[w_s] lookups -> w_seg_last -> w_h): w_s's segment flags
+// are a register loaded wherever w_s is.  QP_CHECK asserts it.  Zero added cycles.
 //
 // ot_v41_rom_elem_qy_w10: ot_v41_rom_elem_qz_w10 (byte-identical body, renamed) plus the opt-in QY (default 0 = the qz
 // circuit).  QY = 1 (requires QZ = 1; DS-V4.1 ROM q-pair SS closure, 2026-10-04, after route Z1's post-CTS screen):
@@ -856,9 +858,12 @@ module ot_v41_rom_elem_qx_w10 #(
     // value for the walker's next state, case by case exactly as the walker loads that state (below)
     reg  w_lu_r;
     wire w_lastu  = (QPIPE != 0 && FAST != 0) ? w_lu_r : w_lastu0;
-    wire [1:0] hv = {!(w_lastu && !s_hi[w_s]), !(w_firstu && !s_lo[w_s])};
-    wire w_fp4 = s_fp4[w_s];
-    wire w_bf = s_bf[w_s];
+    // QX = 6: w_s's segment flags {fp4, bf, hi, lo} held in w_sf_r, loaded wherever w_s is (below)
+    reg  [3:0] w_sf_r;
+    wire [3:0] w_sf = (QX >= 6) ? w_sf_r : {s_fp4[w_s], s_bf[w_s], s_hi[w_s], s_lo[w_s]};
+    wire [1:0] hv = {!(w_lastu && !w_sf[1]), !(w_firstu && !w_sf[0])};
+    wire w_fp4 = w_sf[3];
+    wire w_bf = w_sf[2];
     wire w_seg_last = w_fp4 || w_bf || w_h || !hv[1];          // the segment's last word for this unit
     wire w_cl0 = w_s == c_s1[w_c];
     reg  w_cl_r;                        // QY: w_cl0 held in a register (see the header)
@@ -1146,6 +1151,34 @@ module ot_v41_rom_elem_qx_w10 #(
     always @(posedge gclk) if (go_e) qy_seen <= 1'b1;
     always @(negedge clk) if (QY != 0 && rst_n && qy_seen && w_run && w_cl_r !== w_cl0) begin
         $display("QY_CHECK FAIL: w_cl register %b != %b at %t", w_cl_r, w_cl0, $time); $fatal(1);
+    end
+`endif
+    // QX = 6: w_sf_r loaded with the flags of the w_s the walker loads (go: s0_first; on an issue with the segment's
+    // last word: s + 1 within the class, s0_live at an MTP restart, else the next class's first segment, an AND-OR
+    // select of the per-class flags of c_s0[k] by the one-hot next class)
+    function automatic [3:0] qx_sfl(input [SW-1:0] i);
+        qx_sfl = {s_fp4[i], s_bf[i], s_hi[i], s_lo[i]};
+    endfunction
+    reg [3:0] qx_sf_nx;
+    always @* begin
+        qx_sf_nx = 4'd0;
+        for (int k = 0; k < NSEG; k++) qx_sf_nx = qx_sf_nx | ({4{qx_nxoh[k]}} & qx_sfl(c_s0[k]));
+    end
+    always @(posedge gclk) if (rst_n) begin
+        if (go_e) w_sf_r <= qx_sfl(s0_first);
+        else if (issue && w_seg_last) begin
+            if (!w_cl) w_sf_r <= qx_sfl(s_next);
+            else if (w_restart) w_sf_r <= qx_sfl(s0_live);
+`ifdef QX_MUTANT_SF
+            else w_sf_r <= qx_sfl(s_next);                 // negative control: next class's segment taken as s + 1
+`else
+            else w_sf_r <= qx_sf_nx;
+`endif
+        end
+    end
+`ifdef QP_CHECK
+    always @(negedge clk) if (QX >= 6 && rst_n && qy_seen && w_sf_r !== {s_fp4[w_s], s_bf[w_s], s_hi[w_s], s_lo[w_s]}) begin
+        $display("QX_CHECK FAIL: segment flags %b for w_s %0d at %t", w_sf_r, w_s, $time); $fatal(1);
     end
 `endif
     // QX = 3: n_coh / n_cgt / n_ca_r loaded exactly where n_c is (go; on a hit: MTP restart or step), the restart /
