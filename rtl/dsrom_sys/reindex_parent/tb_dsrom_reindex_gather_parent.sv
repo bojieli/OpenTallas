@@ -85,6 +85,10 @@ module tb_hdc_v41x_idx_kgather #(
             .o_kv(s_kv[s*16 +:16]),.o_key(s_key[s*16*544 +:16*544]),.o_blk(s_blk[s*2*LBW +:2*LBW]),
             .cnt_keys_streamed(s_keys[s*48 +:48]),
             .cnt_hbm_beats(s_beats[s*48 +:48]));
+        always @(posedge clk) if(rst_n && s_fault[s]) begin
+            $display("PARENT_FAULT stack=%0d core=%b list=%b command=%b bad_command=%b req=%h drain=%b rd_seq=%0d list_v=%b count=%0d reserved=%0d",s,kg.cfault,kg.mfault,kg.command_fault,kg.bad_command,kg.qfault,kg.dfault,kg.u_c.rd_seq,kg.u_c.list_v,kg.list_count,kg.u_d.reserved);
+            $fatal(1,"production parent fault");
+        end
     end endgenerate
     function automatic [255:0] pat(input [AW-1:0] sec);
         integer w;
