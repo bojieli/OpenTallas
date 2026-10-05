@@ -128,5 +128,56 @@
   "tools/dsrom_1m_head.py": "6ff62a735b76dc920edf64e89bf650a3c836e1ee7ca8eaa4fccabf784f6c2059",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "physical/abi3/v41_w10_elem_pp_multicycle.sdc": "e29aab97de40ea9d6687997f9929ae8a72e6b3dac6e81343fc9d6361fbed72fd"
+ },
+ "physical_cost": {
+  "area_um2_per_element": {
+   "A": 75752.1,
+   "B": 72310.4,
+   "A_std_cell": 15976.1,
+   "B_std_cell": 13701.9,
+   "macros": "2 x ot_rom_4096x274_m8 (7,881.4 um2 each) per element",
+   "per_ROM4096_new": 37876.1,
+   "per_ROM4096_old_S81_lm_head_pair": 76324.2,
+   "old_element": "S81 head-die lm-head pair: dsfd_bf (BF pair, 1,002.9 x 157.7) + NV5 extension dsfd_nvx + 7 cfg ROM (ot_rom_4096x72_m8) + 2 return nodes, 305,297 um2 for 4 x ot_rom_4096x274_m8 (the same ROM macro as the S81 q pair, 4 a pair)"
+  },
+  "area_mm2_per_die": -31.94,
+  "area_mm2_per_die_detail": {
+   "new": 32.48,
+   "old": 64.42,
+   "new_elements": 425,
+   "old_pairs": 211,
+   "head_die_placed_footprint_mm2": [
+    383.81,
+    206.88
+   ],
+   "note": "per head die (1 of 12): 85 bundles = 340 A + 85 B elements replace 211 NV5 lm-head pairs; the head die also loses the DSpark drafter pairs (moved to the draft dies, priced in the draft lever) -- placed footprint 383.81 -> 206.88 mm2"
+  },
+  "area_mm2_total": -383.3,
+  "dies_added": 0,
+  "elements": {
+   "per_rank_ROM4096": 2525,
+   "per_rank_elements": 1262.5,
+   "per_rank_bundles": 252.5,
+   "per_head_die_elements": "420.8 (85 bundles = 425 placed)",
+   "x_port": "256-bit skewed x per element (xa to the 4 A, xb to the B of a bundle) fanned out at the region FIFO from the trunk lane-x channels; the S81 head pair took a 266-bit chained x per lane (2 lanes) plus the 1,064-bit NV handoff"
+  },
+  "ss_wns_ps": {
+   "A": 24.4,
+   "B": 28.9
+  },
+  "ff_hold_wns_ps": {
+   "A": 8.5,
+   "B": 2.3
+  },
+  "slack_basis": "routed element (ORFS WC=SS setup at 60 ps, WC+BC=FF hold at 25 ps, 833 ps), r4_A / r4_B physical.json; 0 DRC / slew / cap / fanout / antenna",
+  "grt_overflow": 0,
+  "worst_window_use_cap": null,
+  "congestion_basis": "BLOCK level only: the element routes clean (detail route, 0 DRC, 0 antenna) in its own 275 x 275 um outline; IN CONTEXT pending: the head-die rerun is Codex item 10 (inputs: floorplan head/ with the real abstracts in physcost/abstracts/)",
+  "grt_cases": {},
+  "real": null,
+  "ir_mv": null,
+  "s81_rerun_needed": true,
+  "s81_rerun_why": "new element abstract (ot_dsrom_head_elem A/B, 2 x ot_rom_4096x274_m8, 256-bit x port) replaces the NV5 lm-head pairs; NV5 extension and the DSpark drafter leave the head die (draft moved to DP1-EP5): SCHEDULED (Codex item 10)",
+  "source": "tools/dsrom_recovery_physcost.py levers"
  }
 }
