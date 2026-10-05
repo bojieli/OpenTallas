@@ -488,6 +488,13 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
              "I55 requires cold actual stage37 rank0 BF caller");
         const char* dir=std::getenv("DSROM_S81_NATIVE_L20_ATT_INPUT");
         const char* history=std::getenv("DSROM_S81_NATIVE_L20_ATT_HISTORY");
+        // Native I19/I23 outputs are fresh input data, not carried VM leases.
+        // Both are required together; historical SIM_ONLY boundary stays opt-out.
+        const char* q_rope=std::getenv("DSROM_S81_NATIVE_L20_Q_ROPE_INPUT");
+        const char* k_rope=std::getenv("DSROM_S81_NATIVE_L20_K_ROPE_INPUT");
+        const bool native_rope=q_rope&&*q_rope;
+        need(native_rope==bool(k_rope&&*k_rope),
+             "ATT native RoPE carry requires both actual I19 KVN and I23 Q directories");
         const char* sim=std::getenv("DSROM_S81_SIM_ONLY_KV_SOURCE");
         need(dir&&*dir&&history&&*history&&sim&&std::string(sim)=="1",
              "I55 needs actual operand/history directories and explicit SIM_ONLY source boundary");
@@ -513,10 +520,19 @@ struct L20AttentionRun : std::enable_shared_from_this<L20AttentionRun> {
             r.bank=std::make_unique<DsromS81MinimumL20Bank>(r.runtime,L20_ID,vm,
                 dsrom_s81_bind_minimum_source_tags(r.runtime,L20_ID),h_pc!=0);
             auto name=std::to_string(i);
-            r.inputs={{2490,54720,load(std::string(dir)+"/I20.KVN_rank"+name+".u32",512)},
+            r.inputs={{2490,54720,load(native_rope?
+                          std::string(k_rope)+"/native_L20_I19_rank"+name+".u32":
+                          std::string(dir)+"/I20.KVN_rank"+name+".u32",512)},
                       {2508,93728,load(std::string(dir)+"/I38.LAT_rank"+name+".u32",512)},
                       {2518,447360,load(std::string(dir)+"/I47.SELG_rank"+name+".u32",512)},
-                      {2525,55744,load(std::string(dir)+"/I55.Q_rank"+name+".u32",8192)}};
+                      // Canonical Q's last writer is I23, not I54/KR. Preserve
+                      // the old boundary namespace only for frozen old callers.
+                      {native_rope?2494u:2525u,55744,load(native_rope?
+                          std::string(q_rope)+"/native_L20_I23_rank"+name+".u32":
+                          std::string(dir)+"/I55.Q_rank"+name+".u32",8192)}};
+            if(native_rope)fprintf(stderr,
+                "ATT_ROPE_CARRY rank=%u KVN=I19:2490 Q=I23:2494 fresh_VM_ACK_required=1 "
+                "I18_coefficients=SIM_ONLY LAT_SELG=SIM_ONLY_boundary native_prefetch_timing=0\n",i);
             for(const auto& in:r.inputs)r.bank->publication().enroll_literal(in.producer,{{in.base,uint32_t(in.data.size())}});
             if(pre_i75_boundary)r.bank->entry().install_sim_only_pre_i75(pre_i75);
             // The boundary owns the actual I74 T publication. Do not enroll

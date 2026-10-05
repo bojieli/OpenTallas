@@ -1,0 +1,101 @@
+{
+  "schema": "opentallas.dsrom-reindex.kc6-model.v1",
+  "selected": false,
+  "default_enabled": false,
+  "mandatory_baseline_repair": true,
+  "parent_source": "2d3057fb8",
+  "parent_source_sha256": "88864591d588add3b2f23578e778557ece9f53f9bfe7abd698aa15b60938d89d",
+  "mechanism": [
+    "free-running derived cpart; reset-cleared adm_q/cmp retained",
+    "FIFO count alternatives with actual late pop selection",
+    "ready-last head rotation with eight local 16-bit slices"
+  ],
+  "dimensions": {
+    "NPC": 32,
+    "WB": 128,
+    "DF": 8,
+    "AW": 28,
+    "TAGW": 16,
+    "GS": 8
+  },
+  "compute": {
+    "new_macs_per_cycle": 0,
+    "new_arithmetic_rounding_points": 0
+  },
+  "ports": {
+    "list_read_bits": 28,
+    "list_address_bits": 10,
+    "list_read_enable_bits": 1,
+    "request_bits_per_pc": 49,
+    "request_ready_bits_per_pc": 1,
+    "response_control_bits_per_pc": 21,
+    "response_ready_bits_per_pc": 1,
+    "unchanged_payload_bytes_per_response_pc": 32,
+    "control_only_payload_ports": true,
+    "drain_bits": 71,
+    "drain_ready_bits": 1,
+    "new_boundary_bits_per_cycle": 0,
+    "new_memory_bytes_per_cycle": 0
+  },
+  "replicas": {
+    "control_per_stack": 1,
+    "stacks_per_rank": 4,
+    "ranks": 4,
+    "local_head_slices": 8,
+    "bits_per_slice": 16,
+    "new_clock_sinks": 0,
+    "gross_mux_selectors": 1152
+  },
+  "state": {
+    "new_ff_bits": 0,
+    "retained_cpart_bits": 1024,
+    "reset_enable_loads_removed": 1024,
+    "reset_switching_increases": true,
+    "accepted_debt_reset_policy": "unchanged source policy; no new drain proof"
+  },
+  "area": {
+    "gross_nand2_equivalents": 11616,
+    "nand2_um2": 0.08748,
+    "nand2_basis": "TT cell footprint ONLY, not timing",
+    "library_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "gross_logic_allowance_um2": 1016.16768,
+    "net_mapped_delta_um2": null,
+    "removed_enable_credit_um2": 0,
+    "mapped_buffers_um2": null
+  },
+  "slot": {
+    "scope": "kc5 register-to-register context core, not parent die",
+    "baseline_core_um2": 93630.5,
+    "baseline_standard_cells_um2": 34438.8,
+    "max_standard_cell_fraction": 0.4,
+    "max_standard_cells_um2": 37452.200000000004,
+    "gross_plus_baseline_um2": 35454.96768,
+    "remaining_buffer_and_mapping_budget_um2": 1997.23232,
+    "fit_verified": false,
+    "admission": "mapped cells including repair/CTS <= cap; explicit unchanged-core route required"
+  },
+  "routing": {
+    "new_count_alternative_nets_max": 768,
+    "candidate_head_nets": 128,
+    "extra_track_capacity": null,
+    "channel_occupancy_measured": false,
+    "acceptance": "same slot; zero DRC/antenna/slew/cap/fanout violations"
+  },
+  "timing": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "external_side_budget_ps": 166.6,
+    "new_registered_edges": 0,
+    "new_cdc": 0,
+    "predicted_token_latency_delta_cycles": 0,
+    "same_program_cycles_measured": false,
+    "ss_ff_closed": false
+  },
+  "adoption": false,
+  "blockers": [
+    "actual mapped area/buffers must satisfy slot cap",
+    "unchanged-core routing capacity and SS60/FF25/boundary closure",
+    "original component exactness and measured cycle reconciliation"
+  ]
+}

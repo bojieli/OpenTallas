@@ -112,7 +112,8 @@ module tb_hdc_sfu_equiv (input wire clk);
                 $display("SFUEQ func=%0d lo=%h hi=%h checked=%0d mismatches=%0d blocks=%0d fault_blocks=%0d fault_mismatches=%0d",
                          func, lo, hi, checked, bad, blocks, fblocks, fbad);
                 if (bad == 0 && fbad == 0 && checked == expect_n && qw == qr) $display("PASS"); else $display("FAIL");
-                $finish;
+                if (!(bad == 0 && fbad == 0 && checked == expect_n && qw == qr)) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+        $finish;
             end
         end
     end

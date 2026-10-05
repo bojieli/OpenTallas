@@ -1,0 +1,13 @@
+{
+  "scope": "Lightweight parent-selected source configuration only; no DUT/model numerical work",
+  "pass": true,
+  "checks": [
+    "hardware defaults remain off",
+    "source-bound connected index remains enrolled",
+    "unclosed admitted profile remains off",
+    "both remote hosts supported with distinct NVMe roots",
+    "prototype XMAP top excluded from production selection"
+  ],
+  "combined_executable_launched": false,
+  "runner_sha256": "eb22b12cf5c9704bcba5fb37f199041e0465452bedae29c22de187271628f73e"
+}

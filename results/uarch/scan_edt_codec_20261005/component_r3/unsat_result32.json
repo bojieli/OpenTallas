@@ -1,0 +1,25 @@
+{
+  "encodable": false,
+  "unsat_cycle": 0,
+  "unsat_chain": 4,
+  "care_bits_processed": 2,
+  "source_pins": {},
+  "coverage_status": "PASS_SUPPLIED_RESPONSE_SET",
+  "faults": {
+    "single": {
+      "raw_detected": true,
+      "compact_detected": true,
+      "lost_detection": false
+    }
+  },
+  "expected_compact": [
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "integrated_atpg_coverage": "UNVALIDATED",
+  "edge_protocol": "scan_en1 pattern_reset1 first shift: zero chain inputs and observe captured OLD outputs; clear codec. Then pattern_reset0 and L encoded shifts. Responses begin on the first reset-shift edge; never extra functional capture."
+}

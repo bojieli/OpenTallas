@@ -1,0 +1,21 @@
+{
+  "source_commit": "f5753dda5",
+  "scope": "One host provider TU synchronous XR response timing correction; same native QE/VM/caller objects; no RTL/arithmetic/nativearchive rebuild",
+  "sources": {
+    "s81_minimum_qe_quantizer.cpp": "d0c91eea5aa438028843e30d56c9b8d81336c1265ad0687db4f05330a038e2eb",
+    "s81_minimum_qe_quantizer.hpp": "e2b4f459c9fb3a782e55500ceaa52e3b25badcaf33a84d85b9ca4103e67f9d25"
+  },
+  "stages": [
+    {
+      "name": "s81_minimum_qe_quantizer",
+      "exit": 0,
+      "seconds": 2.049363140016794
+    },
+    {
+      "name": "link",
+      "exit": 0,
+      "seconds": 0.9574556520092301
+    }
+  ],
+  "exit": 0
+}

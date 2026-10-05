@@ -1,0 +1,627 @@
+
+### 2026-10-04T18:29:02 make /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/1_2_yosys.v
+mkdir -p /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/
+echo 833 > /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/scr_ot_dsrom_s81_wl_screen/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/clock_period.txt
+Setting clock period to 833
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/phys/ot_dsrom_s81_wl_screen.sv
+12. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv
+13. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv
+14. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv
+15. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv
+16. Executing Verilog-2005 frontend: /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv
+17. Executing Verilog-2005 frontend: /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv
+18. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_refill_schedule.sv
+19. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_retention.sv
+20. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_row_codec.sv
+21. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_stage4.sv
+22. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_stream.sv
+23. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_attn_row_merge.sv
+24. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+25. Executing HIERARCHY pass (managing design hierarchy).
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_s81_wl_screen'.
+26.1. Analyzing design hierarchy..
+26.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_hbm_wmux'.
+Warning: Replacing memory \g_on.g_pc[31].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[31].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[31].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[30].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[30].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[30].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[29].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[29].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[29].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[28].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[28].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[28].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[27].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[27].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[27].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[26].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[26].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[26].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[25].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[25].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[25].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[24].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[24].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[24].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[23].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[23].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[23].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[22].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[22].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[22].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[21].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[21].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[21].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[20].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[20].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[20].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[19].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[19].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[19].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[18].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[18].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[18].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[17].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[17].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[17].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[16].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[16].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[16].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[15].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[15].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[15].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[14].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[14].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[14].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[13].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[13].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[13].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[12].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[12].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[12].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[11].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[11].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[11].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[10].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[10].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[10].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[9].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[9].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[9].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[8].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[8].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[8].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[7].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[7].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[7].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[6].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[6].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[6].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[5].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[5].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[5].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[4].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[4].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[4].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[3].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[3].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[3].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[2].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[2].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[2].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[1].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[1].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[1].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[0].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[0].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[0].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+26.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_window_attn_source_la'.
+Warning: Replacing memory \g_la.muser with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv:169
+Warning: Replacing memory \g_la.mtag with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv:169
+26.4. Analyzing design hierarchy..
+26.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_chip_v41x_attn_row_merge'.
+26.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_window_la_stage'.
+Warning: Replacing memory \b_col with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv:205
+Warning: Replacing memory \b_slot with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv:205
+Warning: Replacing memory \b_sec with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv:205
+Warning: Replacing memory \b_data with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv:204
+Warning: Replacing memory \b_beat with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv:203
+Warning: Replacing memory \b_tag with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv:203
+26.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_window_stream_la_s81'.
+Warning: Replacing memory \d5 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:166
+Warning: Replacing memory \d4 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:164
+Warning: Replacing memory \sl4 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:163
+Warning: Replacing memory \t4 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:163
+Warning: Replacing memory \d3 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:162
+Warning: Replacing memory \s3 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:162
+Warning: Replacing memory \sl3 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:162
+Warning: Replacing memory \d2 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:160
+Warning: Replacing memory \s2 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:160
+Warning: Replacing memory \x2 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:159
+Warning: Replacing memory \d1 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:158
+Warning: Replacing memory \s1 with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:157
+Warning: Replacing memory \rtag with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:107
+Warning: Replacing memory \raddr with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:107
+Warning: Replacing memory \jq with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:107
+Warning: Replacing memory \Grel with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:107
+Warning: Replacing memory \Glo with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:107
+Warning: Replacing memory \gp with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:77, /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:73
+Warning: Replacing memory \gs with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:73, /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_stream_la_s81.sv:72
+26.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_chip_v41x_window_kv_prefetch_owner_safe'.
+Warning: Replacing memory \stage_user with list of registers. See /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv:379
+Warning: Replacing memory \stage_tag with list of registers. See /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv:378
+Warning: Replacing memory \block_valid with list of registers. See /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv:303
+Warning: Replacing memory \row_user with list of registers. See /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv:302
+Warning: Replacing memory \row_tag with list of registers. See /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv:301
+26.9. Analyzing design hierarchy..
+26.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_chip_v41x_window_stage4'.
+Warning: Replacing memory \g_bank[3].user with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:74
+Warning: Replacing memory \g_bank[3].tag with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:73
+Warning: Replacing memory \g_bank[3].mem with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:69
+Warning: Replacing memory \g_bank[2].user with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:74
+Warning: Replacing memory \g_bank[2].tag with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:73
+Warning: Replacing memory \g_bank[2].mem with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:69
+Warning: Replacing memory \g_bank[1].user with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:74
+Warning: Replacing memory \g_bank[1].tag with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:73
+Warning: Replacing memory \g_bank[1].mem with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:69
+Warning: Replacing memory \g_bank[0].user with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:74
+Warning: Replacing memory \g_bank[0].tag with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:73
+Warning: Replacing memory \g_bank[0].mem with list of registers. See /src/rtl/chip/ot_chip_v41x_window_stage4.sv:69
+26.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_chip_v41x_window_row_codec'.
+26.12. Analyzing design hierarchy..
+26.13. Analyzing design hierarchy..
+27. Executing OPT_CLEAN pass (remove unused cells and wires).
+Warning: Ignoring module $paramod$5a1e99306995dea58eea478b33160cfd946702f1\ot_chip_v41x_attn_row_merge because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$258c51d00d9ea13273bf59d70812d969c3ee6e98\ot_dsrom_window_attn_source_la because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux because it contains processes (run 'proc' command first).
+Warning: Ignoring module ot_dsrom_s81_wl_screen because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$2b7d72b9e7aa607eabbfb32727aca94a31636d95\ot_chip_v41x_window_stage4 because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$e928a2bb5e7734c4bdd07e697feef646031a82d4\ot_chip_v41x_window_kv_prefetch_owner_safe because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$8da4c9199ab933e9e89b86d92e9f2dc126038e58\ot_dsrom_window_stream_la_s81 because it contains processes (run 'proc' command first).
+Warning: Ignoring module $paramod$954597ffabe5cdd2ce9e277c3e197134d023afb7\ot_dsrom_window_la_stage because it contains processes (run 'proc' command first).
+28. Executing RTLIL backend.
+Warnings: 149 unique messages, 149 total
+End of script. Logfile hash: e4ba914226, time: 26.91s, user: 26.23s, system: 0.26s, MEM: 859.28 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 95% 1x hierarchy (25 sec), 3% 12x read_liberty (0 sec), ...
+Elapsed time: 0:27.19[h:]min:sec. CPU time: user 26.42 sys 0.37 (98%). Peak memory: 879904KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil         27            859 71c6ffe8ea75d123bfe9
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/scr_ot_dsrom_s81_wl_screen/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/clock_period.txt
+Setting clock period to 833
+1. Executing RTLIL frontend.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[31].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5948': $auto$proc_dlatch.cc:543:proc_dlatch$320150
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[31].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5948': $auto$proc_dlatch.cc:545:proc_dlatch$320153
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[31].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5948': $auto$proc_dlatch.cc:543:proc_dlatch$320156
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[30].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5895': $auto$proc_dlatch.cc:543:proc_dlatch$320165
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[30].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5895': $auto$proc_dlatch.cc:545:proc_dlatch$320168
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[30].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5895': $auto$proc_dlatch.cc:543:proc_dlatch$320171
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[29].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5842': $auto$proc_dlatch.cc:543:proc_dlatch$320180
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[29].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5842': $auto$proc_dlatch.cc:545:proc_dlatch$320183
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[29].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5842': $auto$proc_dlatch.cc:543:proc_dlatch$320186
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[28].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5789': $auto$proc_dlatch.cc:543:proc_dlatch$320195
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[28].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5789': $auto$proc_dlatch.cc:545:proc_dlatch$320198
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[28].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5789': $auto$proc_dlatch.cc:543:proc_dlatch$320201
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[27].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5736': $auto$proc_dlatch.cc:543:proc_dlatch$320210
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[27].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5736': $auto$proc_dlatch.cc:545:proc_dlatch$320213
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[27].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5736': $auto$proc_dlatch.cc:543:proc_dlatch$320216
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[26].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5683': $auto$proc_dlatch.cc:543:proc_dlatch$320225
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[26].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5683': $auto$proc_dlatch.cc:545:proc_dlatch$320228
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[26].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5683': $auto$proc_dlatch.cc:543:proc_dlatch$320231
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[25].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5630': $auto$proc_dlatch.cc:543:proc_dlatch$320240
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[25].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5630': $auto$proc_dlatch.cc:545:proc_dlatch$320243
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[25].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5630': $auto$proc_dlatch.cc:543:proc_dlatch$320246
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[24].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5577': $auto$proc_dlatch.cc:543:proc_dlatch$320255
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[24].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5577': $auto$proc_dlatch.cc:545:proc_dlatch$320258
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[24].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5577': $auto$proc_dlatch.cc:543:proc_dlatch$320261
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[23].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5524': $auto$proc_dlatch.cc:543:proc_dlatch$320270
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[23].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5524': $auto$proc_dlatch.cc:545:proc_dlatch$320273
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[23].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5524': $auto$proc_dlatch.cc:543:proc_dlatch$320276
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[22].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5471': $auto$proc_dlatch.cc:543:proc_dlatch$320285
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[22].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5471': $auto$proc_dlatch.cc:545:proc_dlatch$320288
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[22].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5471': $auto$proc_dlatch.cc:543:proc_dlatch$320291
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[21].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5418': $auto$proc_dlatch.cc:543:proc_dlatch$320300
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[21].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5418': $auto$proc_dlatch.cc:545:proc_dlatch$320303
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[21].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5418': $auto$proc_dlatch.cc:543:proc_dlatch$320306
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[20].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5365': $auto$proc_dlatch.cc:543:proc_dlatch$320315
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[20].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5365': $auto$proc_dlatch.cc:545:proc_dlatch$320318
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[20].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5365': $auto$proc_dlatch.cc:543:proc_dlatch$320321
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[19].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5312': $auto$proc_dlatch.cc:543:proc_dlatch$320330
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[19].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5312': $auto$proc_dlatch.cc:545:proc_dlatch$320333
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[19].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5312': $auto$proc_dlatch.cc:543:proc_dlatch$320336
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[18].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5259': $auto$proc_dlatch.cc:543:proc_dlatch$320345
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[18].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5259': $auto$proc_dlatch.cc:545:proc_dlatch$320348
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[18].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5259': $auto$proc_dlatch.cc:543:proc_dlatch$320351
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[17].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5206': $auto$proc_dlatch.cc:543:proc_dlatch$320360
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[17].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5206': $auto$proc_dlatch.cc:545:proc_dlatch$320363
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[17].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5206': $auto$proc_dlatch.cc:543:proc_dlatch$320366
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[16].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5153': $auto$proc_dlatch.cc:543:proc_dlatch$320375
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[16].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5153': $auto$proc_dlatch.cc:545:proc_dlatch$320378
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[16].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5153': $auto$proc_dlatch.cc:543:proc_dlatch$320381
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[15].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5100': $auto$proc_dlatch.cc:543:proc_dlatch$320390
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[15].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5100': $auto$proc_dlatch.cc:545:proc_dlatch$320393
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[15].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5100': $auto$proc_dlatch.cc:543:proc_dlatch$320396
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[14].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5047': $auto$proc_dlatch.cc:543:proc_dlatch$320405
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[14].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5047': $auto$proc_dlatch.cc:545:proc_dlatch$320408
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[14].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$5047': $auto$proc_dlatch.cc:543:proc_dlatch$320411
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[13].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4994': $auto$proc_dlatch.cc:543:proc_dlatch$320420
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[13].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4994': $auto$proc_dlatch.cc:545:proc_dlatch$320423
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[13].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4994': $auto$proc_dlatch.cc:543:proc_dlatch$320426
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[12].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4941': $auto$proc_dlatch.cc:543:proc_dlatch$320435
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[12].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4941': $auto$proc_dlatch.cc:545:proc_dlatch$320438
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[12].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4941': $auto$proc_dlatch.cc:543:proc_dlatch$320441
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[11].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4888': $auto$proc_dlatch.cc:543:proc_dlatch$320450
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[11].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4888': $auto$proc_dlatch.cc:545:proc_dlatch$320453
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[11].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4888': $auto$proc_dlatch.cc:543:proc_dlatch$320456
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[10].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4835': $auto$proc_dlatch.cc:543:proc_dlatch$320465
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[10].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4835': $auto$proc_dlatch.cc:545:proc_dlatch$320468
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[10].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4835': $auto$proc_dlatch.cc:543:proc_dlatch$320471
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[9].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4782': $auto$proc_dlatch.cc:543:proc_dlatch$320480
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[9].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4782': $auto$proc_dlatch.cc:545:proc_dlatch$320483
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[9].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4782': $auto$proc_dlatch.cc:543:proc_dlatch$320486
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[8].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4729': $auto$proc_dlatch.cc:543:proc_dlatch$320495
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[8].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4729': $auto$proc_dlatch.cc:545:proc_dlatch$320498
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[8].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4729': $auto$proc_dlatch.cc:543:proc_dlatch$320501
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[7].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4676': $auto$proc_dlatch.cc:543:proc_dlatch$320510
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[7].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4676': $auto$proc_dlatch.cc:545:proc_dlatch$320513
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[7].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4676': $auto$proc_dlatch.cc:543:proc_dlatch$320516
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[6].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4623': $auto$proc_dlatch.cc:543:proc_dlatch$320525
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[6].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4623': $auto$proc_dlatch.cc:545:proc_dlatch$320528
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[6].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4623': $auto$proc_dlatch.cc:543:proc_dlatch$320531
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[5].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4570': $auto$proc_dlatch.cc:543:proc_dlatch$320540
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[5].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4570': $auto$proc_dlatch.cc:545:proc_dlatch$320543
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[5].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4570': $auto$proc_dlatch.cc:543:proc_dlatch$320546
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[4].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4517': $auto$proc_dlatch.cc:543:proc_dlatch$320555
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[4].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4517': $auto$proc_dlatch.cc:545:proc_dlatch$320558
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[4].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4517': $auto$proc_dlatch.cc:543:proc_dlatch$320561
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[3].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4464': $auto$proc_dlatch.cc:543:proc_dlatch$320570
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[3].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4464': $auto$proc_dlatch.cc:545:proc_dlatch$320573
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[3].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4464': $auto$proc_dlatch.cc:543:proc_dlatch$320576
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[2].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4411': $auto$proc_dlatch.cc:543:proc_dlatch$320585
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[2].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4411': $auto$proc_dlatch.cc:545:proc_dlatch$320588
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[2].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4411': $auto$proc_dlatch.cc:543:proc_dlatch$320591
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[1].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4358': $auto$proc_dlatch.cc:543:proc_dlatch$320600
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[1].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4358': $auto$proc_dlatch.cc:545:proc_dlatch$320603
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[1].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4358': $auto$proc_dlatch.cc:543:proc_dlatch$320606
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[0].$fordecl_block$4237.c [0]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4305': $auto$proc_dlatch.cc:543:proc_dlatch$320615
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[0].$fordecl_block$4237.c [1]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4305': $auto$proc_dlatch.cc:545:proc_dlatch$320618
+Warning: Latch inferred for signal `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.\g_on.g_pc[0].$fordecl_block$4237.c [31:2]' from process `$paramod$3a80b8f994340c4e3b2b3a294a2f4ed02b9c95c3\ot_dsrom_hbm_wmux.$proc$/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:147$4305': $auto$proc_dlatch.cc:543:proc_dlatch$320621
+Warning: Latch inferred for signal `$paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec.\b [3:0]' from process `$paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec.$proc$/src/rtl/chip/ot_chip_v41x_window_row_codec.sv:44$35673': $auto$proc_dlatch.cc:543:proc_dlatch$320656
+Warning: Latch inferred for signal `$paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec.\b [5:4]' from process `$paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec.$proc$/src/rtl/chip/ot_chip_v41x_window_row_codec.sv:44$35673': $auto$proc_dlatch.cc:547:proc_dlatch$320659
+Warning: Latch inferred for signal `$paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec.\b [31:6]' from process `$paramod$87db7e5e386800002fcb9c52da5df2d85bfbec0d\ot_chip_v41x_window_row_codec.$proc$/src/rtl/chip/ot_chip_v41x_window_row_codec.sv:44$35673': $auto$proc_dlatch.cc:543:proc_dlatch$320662
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$337970 ($dff)
+    port Q[1] of cell $procdff$337970 ($dff)
+    port Q[2] of cell $procdff$337970 ($dff)
+    port Q[3] of cell $procdff$337970 ($dff)
+    port Q[4] of cell $procdff$337970 ($dff)
+    port Q[6] of cell $procdff$337970 ($dff)
+    port Q[7] of cell $procdff$337970 ($dff)
+    port Q[8] of cell $procdff$337970 ($dff)
+    port Q[9] of cell $procdff$337970 ($dff)
+    port Q[10] of cell $procdff$337970 ($dff)
+    port Q[11] of cell $procdff$337970 ($dff)
+    port Q[12] of cell $procdff$337970 ($dff)
+    port Q[13] of cell $procdff$337970 ($dff)
+    port Q[14] of cell $procdff$337970 ($dff)
+    port Q[15] of cell $procdff$337970 ($dff)
+    port Q[16] of cell $procdff$337970 ($dff)
+    port Q[17] of cell $procdff$337970 ($dff)
+    port Q[18] of cell $procdff$337970 ($dff)
+    port Q[19] of cell $procdff$337970 ($dff)
+    port Q[20] of cell $procdff$337970 ($dff)
+    port Q[21] of cell $procdff$337970 ($dff)
+    port Q[22] of cell $procdff$337970 ($dff)
+    port Q[23] of cell $procdff$337970 ($dff)
+    port Q[24] of cell $procdff$337970 ($dff)
+    port Q[25] of cell $procdff$337970 ($dff)
+    port Q[26] of cell $procdff$337970 ($dff)
+    port Q[27] of cell $procdff$337970 ($dff)
+    port Q[28] of cell $procdff$337970 ($dff)
+    port Q[29] of cell $procdff$337970 ($dff)
+    port Q[30] of cell $procdff$337970 ($dff)
+    port Q[31] of cell $procdff$337970 ($dff)
+    port Q[0] of cell $procdff$335275 ($adff)
+    port Q[1] of cell $procdff$335275 ($adff)
+    port Q[2] of cell $procdff$335275 ($adff)
+    port Q[3] of cell $procdff$335275 ($adff)
+    port Q[4] of cell $procdff$335275 ($adff)
+    port Q[6] of cell $procdff$335275 ($adff)
+    port Q[7] of cell $procdff$335275 ($adff)
+    port Q[8] of cell $procdff$335275 ($adff)
+    port Q[9] of cell $procdff$335275 ($adff)
+    port Q[10] of cell $procdff$335275 ($adff)
+    port Q[11] of cell $procdff$335275 ($adff)
+    port Q[12] of cell $procdff$335275 ($adff)
+    port Q[13] of cell $procdff$335275 ($adff)
+    port Q[14] of cell $procdff$335275 ($adff)
+    port Q[15] of cell $procdff$335275 ($adff)
+    port Q[16] of cell $procdff$335275 ($adff)
+    port Q[17] of cell $procdff$335275 ($adff)
+    port Q[18] of cell $procdff$335275 ($adff)
+    port Q[19] of cell $procdff$335275 ($adff)
+    port Q[20] of cell $procdff$335275 ($adff)
+    port Q[21] of cell $procdff$335275 ($adff)
+    port Q[22] of cell $procdff$335275 ($adff)
+    port Q[23] of cell $procdff$335275 ($adff)
+    port Q[24] of cell $procdff$335275 ($adff)
+    port Q[25] of cell $procdff$335275 ($adff)
+    port Q[26] of cell $procdff$335275 ($adff)
+    port Q[27] of cell $procdff$335275 ($adff)
+    port Q[28] of cell $procdff$335275 ($adff)
+    port Q[29] of cell $procdff$335275 ($adff)
+    port Q[30] of cell $procdff$335275 ($adff)
+    port Q[31] of cell $procdff$335275 ($adff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[5] of cell $procdff$337970 ($dff)
+    port Q[5] of cell $procdff$335275 ($adff)
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+3.8.23. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Rerunning OPT passes. (Removed registers in this run.)
+4.1.6. Executing OPT_EXPR pass (perform const folding).
+4.1.7. Executing OPT_MERGE pass (detect identical cells).
+4.1.8. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.10. Rerunning OPT passes. (Removed registers in this run.)
+4.1.11. Executing OPT_EXPR pass (perform const folding).
+4.1.12. Executing OPT_MERGE pass (detect identical cells).
+4.1.13. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.15. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.13. Executing OPT_MERGE pass (detect identical cells).
+4.3.14. Executing OPT_SHARE pass.
+4.3.15. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.17. Executing OPT_EXPR pass (perform const folding).
+4.3.18. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.21. Executing OPT_MERGE pass (detect identical cells).
+4.3.22. Executing OPT_SHARE pass.
+4.3.23. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.25. Executing OPT_EXPR pass (perform const folding).
+4.3.26. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.29. Executing OPT_MERGE pass (detect identical cells).
+4.3.30. Executing OPT_SHARE pass.
+4.3.31. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.33. Executing OPT_EXPR pass (perform const folding).
+4.3.34. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.4.199. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.200. Executing OPT_EXPR pass (perform const folding).
+4.4.231. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.232. Executing OPT_EXPR pass (perform const folding).
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.5. Executing OPT_MERGE pass (detect identical cells).
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.8. Executing OPT_EXPR pass (perform const folding).
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.12. Executing OPT_MERGE pass (detect identical cells).
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.15. Executing OPT_EXPR pass (perform const folding).
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/scr_ot_dsrom_s81_wl_screen/base/abc.constr -D 833
+11. Executing ABC pass (technology mapping using ABC).
+11.1. Extracting gate netlist of module `\ot_dsrom_s81_wl_screen' to `<abc-temp-dir>/input.blif'..
+11.1.1. Executed ABC.
+11.1.2. Re-integrating ABC results.
+Took 14191 seconds: abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/scr_ot_dsrom_s81_wl_screen/base/abc.constr -D 833
+12. Executing SPLITNETS pass (splitting up multi-bit signals).
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+14. Executing HILOMAP pass (mapping to constant drivers).
+15. Executing INSBUF pass (insert buffer cells for connected wires).
+16. Executing CHECK pass (checking for obvious problems).
+17. Printing statistics.
+18. Executing CHECK pass (checking for obvious problems).
+19. Executing Verilog backend.
+19.1. Executing BMUXMAP pass.
+19.2. Executing DEMUXMAP pass.
+Warnings: 101 unique messages, 101 total
+End of script. Logfile hash: 5fe7de1a43, time: 17392.33s, user: 3642.43s, system: 32.47s, MEM: 18242.13 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 79% 1x abc (14186 sec), 7% 46x opt_dff (1422 sec), ...
+Elapsed time: 4:50:00.48[h:]min:sec. CPU time: user 17749.77 sys 51.92 (102%). Peak memory: 18679940KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v          17400          18242 981c19b869bd049560f5

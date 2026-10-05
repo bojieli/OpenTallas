@@ -1,0 +1,161 @@
+{
+  "schema": "opentallas.hbm_index_selected_context_price.v1",
+  "decision": "NOFIT_PREBUILD_CURRENT_R7_BINDING",
+  "reason": "Selected latency-cut index cell estimate alone exceeds the existing TOTAL index reservation. The source-selected 1024-bit/quarter key link also does not deliver the native 8704-bit/quarter payload per edge.",
+  "scope": "One existing r7 context vs actual measured NS16NK4 rank0 path. Estimates are prebuild screening, not mapped area or routed signoff. No final gather design or block movement is adopted.",
+  "selected_source": {
+    "native_index_commit": "29a9e9710",
+    "measured_milestone": "9ead9838d",
+    "module": "ot_hbm_accel_index_path",
+    "ENABLE_default": 0,
+    "SOURCE_VM_ENABLE_default": 0,
+    "geometry": {
+      "NS": 16,
+      "NK": 4,
+      "Q": 4,
+      "W": 16,
+      "IH": 32,
+      "head_dim": 128,
+      "FPL": 7,
+      "FML": 5,
+      "QL": 5,
+      "IW": 20,
+      "rank": 0,
+      "global_context": 1048576
+    },
+    "measured_keys": 10928,
+    "measured_component_edges": 1801
+  },
+  "area_screen": {
+    "r7_total_index_reservation_mm2": 20.57,
+    "r7_source_grade": "model",
+    "r7_reservation_per_quarter_mm2": 5.1425,
+    "current_scorer_and_join_CELL_estimate_mm2": 23.67273884544,
+    "current_cell_per_quarter_mm2": 5.91818471136,
+    "cell_deficit_against_entire_reservation_mm2": 3.102738845440001,
+    "cell_area_excludes": [
+      "selector/quantiser complete mapped bodies",
+      "protected selector macros/codec/receiver",
+      "loaded clock and boundary nets",
+      "any final ordered gather adapter"
+    ],
+    "minimum_footprint_at_explicit_50pct_utilization_mm2": 47.34547769088,
+    "minimum_per_quarter_at_50pct_mm2": 11.83636942272,
+    "footprint_deficit_at_50pct_mm2": 26.775477690880003,
+    "model_cell_estimate_is_not_mapped_area": true,
+    "slot_fit": false
+  },
+  "key_boundary": {
+    "r7_existing_payload_wires_per_quarter": 1024,
+    "native_payload_bits_per_quarter_beat": 8704,
+    "native_metadata_bits_per_quarter_beat": 368,
+    "native_payload_plus_metadata_bits_per_quarter_beat": 9072,
+    "metadata": "globalID20 + lv/ref/keep3 per key; last and held job32/gen4/pos20/rank7 additional, not free",
+    "quarter_max_keys": 2736,
+    "quarter_max_beats": 171,
+    "old_link_payload_only_lower_bound_edges": 1454,
+    "old_link_payload_metadata_lower_bound_edges": 1515,
+    "whole_beat_framed_edges_each": 9,
+    "whole_beat_framed_phase_edges": 1539,
+    "payload_width_ratio": 8.5,
+    "route_paths": {
+      "ik_SW": {
+        "segments": 5,
+        "um": 6855.7,
+        "stages_430": 18,
+        "stages_504": 17
+      },
+      "ik_SE": {
+        "segments": 5,
+        "um": 6856.2,
+        "stages_430": 18,
+        "stages_504": 17
+      },
+      "ik_NW": {
+        "segments": 5,
+        "um": 6855.7,
+        "stages_430": 18,
+        "stages_504": 17
+      },
+      "ik_NE": {
+        "segments": 5,
+        "um": 6856.2,
+        "stages_430": 18,
+        "stages_504": 17
+      }
+    },
+    "planned_forward_stages_max": 18,
+    "source_clock_domains": {
+      "stream_1p2": "SM array, attention, index, collective endpoint, VM, cmdproc, router, waypoints (1.2 GHz, 0.833 ns)",
+      "serial_0p9": "SU + fused chains, SFU, HC, quantisers (0.9 GHz by design, 1.2 GHz lever L2)",
+      "hbm": "PHY + stream service (1.024 ns CK/2)",
+      "link": "SerDes / host (own clocks)",
+      "regions": [
+        "4 SM groups (one region per group, <= 5.25 mm: 9.68 x 4.75 mm groups split in two column halves)",
+        "hub W (index + attention)",
+        "spine",
+        "hub E (SU/SFU/HC)",
+        "4 stream services",
+        "link strips"
+      ],
+      "crossings": "async FIFOs at every svc <-> SM/hub boundary (hbm <-> stream), ratio CDC at SU/SFU/HC (0.9 <-> 1.2, 3:4), mesochronous FIFO at each group entry (x multicast, control) and at the spine side of each trunk"
+    },
+    "CDC_accepted_hold_ready_capacity_source": null,
+    "existing_forward_payload_FF": 73728,
+    "native_full_payload_forward_FF_lower_bound": 626688,
+    "native_payload_metadata_forward_FF_lower_bound": 653184,
+    "incremental_payload_metadata_FF": 579456,
+    "incremental_payload_metadata_CELL_mm2": 0.1689693696,
+    "additional_costs_unbound": [
+      "clock/reset/mux",
+      "ready/accepted debt return",
+      "CDC depth/quiet rearm",
+      "real loaded route/port receiver"
+    ],
+    "not_selected_alternatives": "Neither widening nor serialized assembly is adopted: existing design owner must bind ONE source-compatible interface and price its actual exposure.",
+    "no_free_overlap": true
+  },
+  "candidate_memory_context": {
+    "original_child_AW": 10,
+    "logical_original_words": 1024,
+    "actual_parent_ingress_bound_blocks_each_quarter": 342,
+    "line_capacity_bound": 171,
+    "rank0_numeric_bound_checked": true,
+    "all_rank_numeric_qualified": false,
+    "no_address_truncation": "256-word physical view needs explicit upper-address refusal or priced additive AW successor; do not silently drop address9:8",
+    "protected_storage_and_loaded_receiver_installed": false,
+    "existing_response_edges": 1
+  },
+  "handoff": {
+    "global_ordered_gather_writer": "Claude per latest Rawls b400b585d; Confucius owns final selector boundary slice",
+    "index_RTL_writer": "Sagan",
+    "combined_config_writer": "Rawls",
+    "actual_local_topk": "Q4W16 accepted BF16/globalID20/lv,last streams; globally ordered within each quarter; held tuple through consumer drain. Measured current parent topk uses UNMASKED scores, not full-program candidate-mask feedback.",
+    "full_program_dependency": "Canonical global candidate-block selection -> actual candidate-mask publication/feedback -> local masked topk -> final global select must remain causal; the measured simultaneous raw topk is component-only and cannot replace masked localtop in the full program.",
+    "approved_collective_sources": [
+      "rtl/chip/ot_w15_coll_dma.sv",
+      "rtl/chip/ot_coll_topk_merge.sv"
+    ],
+    "required_final_boundary": "Hardware canonical GLOBALID ordered gather before existing W15 FILTER, or explicitly approved successor. Rank-major TP96 buffers violate tie and ascending output contracts. Never host-sort DUT traffic.",
+    "actual_W15_gather_bytes_per_rank": 4096,
+    "actual_W15_gather_bytes_total": 393216,
+    "prepaid_final_result_words": 32,
+    "final_output_backpressure": "Existing merger has NO out_ready: reserve all512IDs/32words before GO; actual downstream publication/reverse retains frame.",
+    "required_next_design_choice": "Claude fixed-r7 frame/ik interface correction using this source tuple, and actual ordered gather source. Keep original index and collective files byte-identical until opt-in successor is priced."
+  },
+  "period_ps": 833,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "source_pins": {
+    "results/uarch/hbm_index_context_20261005/inputs/r7_floorplan.json": "4d06a65d4e779f92e6d50ed659efb6670c82136986c29096ae132019185950df",
+    "results/uarch/hbm_index_context_20261005/inputs/r7_floorplan_source.py": "afbb6e43bfc88b8ed043fb051420f1cbf3bbb73150baf71a881619ad32d6ffdd",
+    "results/uarch/hbm_index_path_20261005/model.json": "620fdb67cef739c1d8943f94812db8878d12d7b6abc0a8b57e9802dd2d4ea994",
+    "results/rtl/hbm_index_path_20261005/connected_29a9_r1/result.json": "e0bec4a199c344140587133a85d436adbf3d41fea31e3a3a47864c70cd0ea1c4",
+    "rtl/hbm_accel/index/ot_hbm_accel_index_path.sv": "1ca1dff79e7ee4375e8a422d8c5b916b86644a3a3231810653636556db29b279",
+    "rtl/chip/ot_w15_coll_dma.sv": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+    "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+  },
+  "P_and_R_launch_allowed": false,
+  "SS_FF_closed": false,
+  "adopted": false
+}

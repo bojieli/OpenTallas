@@ -1,0 +1,78 @@
+{
+  "scope": "lightweight binding of actual existing source bytes; no DUT/golden/numerical replay",
+  "checks": {
+    "L20": {
+      "passed": true,
+      "counts": [
+        10,
+        10,
+        0,
+        0,
+        29,
+        29,
+        29,
+        29
+      ],
+      "cfg_lut_words": 136,
+      "ids": [
+        41,
+        65,
+        158,
+        164,
+        259,
+        266
+      ],
+      "input_sha256": {
+        "w2.hex": "23859d777e138c2b6caa10fe4471e9467d455ae623401e0c09dcc1c0aa5fb7e0",
+        "cfg_lines.hex": "ef57828c1439b4ad1f0c3043f39edeb51798b19ef05e70992680f245be363f11",
+        "cfg_lut.hex": "cfad36a00b179f275f2de319c6f01c416c73bc818a54cd6abe137643f7ef8f2e"
+      },
+      "receipt_sha256": "84cf006e27b10436665760f4ee9c1ea050cdfdb027776e09f144db64d5641ab4",
+      "actual_source": "ot-epyc1tb:/srv/opentallas/jobs-overflow/hubble-wg-service-r2/L20"
+    },
+    "L3": {
+      "passed": true,
+      "counts": [
+        10,
+        10,
+        0,
+        0,
+        29,
+        29,
+        29,
+        29
+      ],
+      "cfg_lut_words": 136,
+      "ids": [
+        128,
+        129,
+        142,
+        159,
+        160,
+        228
+      ],
+      "input_sha256": {
+        "w2.hex": "3bcb208ffbd16bd738373926cb56417b5497c0e4fc9f5f09d176df97e69fc22f",
+        "cfg_lines.hex": "ef57828c1439b4ad1f0c3043f39edeb51798b19ef05e70992680f245be363f11",
+        "cfg_lut.hex": "cfad36a00b179f275f2de319c6f01c416c73bc818a54cd6abe137643f7ef8f2e"
+      },
+      "receipt_sha256": "84cf006e27b10436665760f4ee9c1ea050cdfdb027776e09f144db64d5641ab4",
+      "actual_source": "ot-epyc1tb:/srv/opentallas/jobs-overflow/hubble-wg-service-r2/L3"
+    },
+    "wrong_layer_bytes_refused": {
+      "passed": true,
+      "reason": "missing/changed released W2 service input: w2.hex"
+    },
+    "expert_candidate_remains_off": {
+      "passed": true,
+      "holds": [
+        "OFF: 81f77 complete W2 byte service passed; exact postweighted BF16 SwiGLU/unbiased router input, actual connected SM/provider and numerical gate missing."
+      ]
+    }
+  },
+  "arithmetic_qualified": false,
+  "production_provider_connected": false,
+  "rate_credit": false,
+  "SS_FF_admitted": false,
+  "global_ordered_gather_qualified": false
+}

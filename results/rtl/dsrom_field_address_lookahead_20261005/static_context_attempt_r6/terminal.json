@@ -1,0 +1,22 @@
+{
+  "verdict": "FAIL_CTS_HOOK_LOCAL_VARIABLE_BEFORE_CTS",
+  "source_commit": "d6110e07fd61afa806402fbefe78480378f191d1",
+  "supervisor_pid": 1979211,
+  "terminal_exit": 1,
+  "progress": "PG, provider/issuer fencing and actual global/detailed placement completed. PRE_CTS hook failed before CTS.",
+  "diagnosis": "clock.tcl referenced block from regions.tcl, but CTS runs in separate process; Tcl block variable undefined.",
+  "smallest_correction": "Fetch ord::get_db_block in clock hook itself; make named NDR lookup idempotent across PRE_CTS and POST_CTS. Same NDR widths/spacings, geometry/RTL/clock/load/state/cycles.",
+  "next_action": "Reuse completed 3_place.odb/sdc and all source/hash-bound ORFS artifacts; resume only CTS/route/final stages.",
+  "SS_FF_timing_qualified": false,
+  "sha256": {
+    "physical.json": "98d041507e0a4b6e73de5e94c2e4369d009ae0dd5ea8832313329381f73912f3",
+    "route.log": "3aaee9166d4be9d93fd77edfb16759af75e2d61c866595cda932fa69e807d67b",
+    "launch.json": "4ddabec3e6de63687ab22411def902a70a752bd0a7ac0c63ab4a16eaa517c96a",
+    "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "supervise.py": "3cf5929941caf70612cb6cd339d1d9b7d6f5dd23e1b9a609344e312d48c46155",
+    "supervisor.pid": "e1e7be165b1e42239b012a04190b31df6da5eb08d2e940e6b2a43a112445a380",
+    "driver_args.json": "133bb1a03188f858a588e5065b5c15afadf251449e0ca9d312bf33d4db608f8e",
+    "admission.json": "bc9c38931cff533abc043c3cb7bfcc428e18902a4ee10a832abb469971730d9c"
+  }
+}
