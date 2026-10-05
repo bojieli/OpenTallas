@@ -10675,3 +10675,45 @@ def hbm_simt_gu_retirement_export_model(nl=128, imw=13):
         composed_full_image_ready=False, physical_build_admitted=False,
         adopted=False, period_ps=833, SS_setup_uncertainty_ps=60,
         FF_hold_uncertainty_ps=25)
+
+
+def hbm_simt_gu_coded_retention_model(nl=128, imw=13, nv=256):
+    """Replace raw authority with W6 rows; minimum mechanism priced pre-RTL.
+
+    Pack three raw flags into phase2; retain destination and completion debt.
+    No unprotected authoritative shadow and no copied ALU payload. A persistent
+    coded completion bit survives CE service after the original done pulse.
+    """
+    base = hbm_simt_gu_retirement_export_model(nl, imw)
+    rb = (nv-1).bit_length()
+    useful = base['metadata_register_bits'] - 1 + 1 + rb
+    rows = (useful + 63) // 64
+    return dict(schema='opentallas.hbm.simt.gu_coded_retention.v1',
+        raw_predecessor_bits=base['metadata_register_bits'], useful_metadata_bits=useful,
+        additional_completion_debt_bits=1, phase_bits=2, retained_destination_bits=rb, codec='ot_gpu_w6_secded_pkg encode64/decode64',
+        code_rows=rows, code_register_bits=rows*72, padding_bits=rows*64-useful,
+        parity_bits=rows*8, extra_register_bits_over_raw=rows*72-base['metadata_register_bits'],
+        added_payload_register_bits=0, reused_payload='original alu_wy/alu_wv/VR destination pend',
+        authoritative_raw_shadow_bits=0, replicas_per_sm=1,
+        encoders=rows, decoders=rows, read_width_bits=rows*72, write_width_bits=rows*72,
+        write_events=['accepted enrolled/unenrolled kernel launch','bound conversion issue',
+                      'actual gu_join_v && gu_join_accept','actual kernel drain completion','CE scrub'],
+        scrub='All CE rows corrected by existing decode64 and atomically re-encoded; DUE freezes code/debt',
+        normal_pipeline_cut_register_bits=0, normal_added_cut_cycles=0,
+        CE_minimum_scrub_edges=1, CE_authorization='No issue, GU accept, launch, completion or warm ack during CE',
+        DUE='Immediate permissions blocked; existing SM fault latch sticky; only root POR clears',
+        warm_quarantine='New launch blocked while request; active kernel/accepted LSU debt drains; ack only owner span and native debts quiet',
+        minimum_added_blocking_cycles_per_span=1,
+        minimum_full_four_vector_export_added_cycles=768,
+        minimum_full_four_vector_export_added_ns=768*.833,
+        CE_latency='one scrub edge per event plus actual upstream/downstream backpressure; never free correction',
+        MACs_per_cycle_delta=0,memory_bytes_per_cycle_delta=0,
+        boundary_payload_bits=nl*16,boundary_identity_bits=base['boundary_identity_bits'],
+        boundary_control_bits=base['boundary_control_bits']+5,
+        tracks_required=base['tracks_required']+5,channel_capacity=None,parent_slot_fit=None,
+        FF_cell_area_floor_um2=rows*72*.2916,clock_pins=rows*72, clock_pin_capacitance_ff=rows*72*.433982,
+        clock_load_basis='same existing model SEQ DFF input-cap reservation; actual mapped clock cell/load pending',
+        area='216 retained FFs at IMW13 plus THREE real encoder/decoder trees and normal/CE/DUE/control cones; mapped area/timing required',
+        physical_build_scope='Minimum coded metadata controller with actual descriptor outputs/feedback loaded, no SM route replay',
+        full_calendar_ready=False,parent_context_ready=False,
+        period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,adopted=False)
