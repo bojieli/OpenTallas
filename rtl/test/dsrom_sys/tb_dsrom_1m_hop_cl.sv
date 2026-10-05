@@ -31,7 +31,7 @@
 // Compile-time: -DFB= -DCH= -DCRED= -DSEQW= -DCHU= -DCREDU= -DSEQWU=
 //               -DPNUM= -DPDEN= -DMODE= -DERRF= -DERRR=
 // Plusargs: +bytes= +seed= +case=
-// Compile-time also: -DBMEM= (board-leg storage: 0 flops, 1 SRAM macros)
+// Compile-time also: -DBMEM= / -DUMEM= (board / UCIe-leg storage: 0 flops, 1 SRAM macros)
 // Prints one HOPCT_SUMMARY line.
 // ---------------------------------------------------------------------------
 `ifndef FB
@@ -69,6 +69,9 @@
 `endif
 `ifndef BMEM
 `define BMEM 0
+`endif
+`ifndef UMEM
+`define UMEM 0
 `endif
 `ifndef ERRR
 `define ERRR 0
@@ -129,7 +132,7 @@ module tb_dsrom_1m_hop_cl;
         end
         if (`MODE != 0) begin : g_u
             ot_dsrom_link_cl #(.FLIT_BYTES(FB), .CHANNEL_CYCLES(`CHU),
-                               .CREDITS(`CREDU), .SEQW(`SEQWU), .LINK_CLASS(0), .PHY_NUM(0), .PHY_DEN(1), .MEM(0)) u_ucie (
+                               .CREDITS(`CREDU), .SEQW(`SEQWU), .LINK_CLASS(0), .PHY_NUM(0), .PHY_DEN(1), .MEM(`UMEM)) u_ucie (
                 .clk(clk), .rst_n(rst_n), .channel_cycles(chcyc),
                 .in_valid(b_ov[d]), .in_ready(b_or[d]), .in_data(b_od[d]), .in_last(b_ol[d]),
                 .out_valid(u_ov[d]), .out_ready(1'b1), .out_data(u_od[d]), .out_last(u_ol[d]),

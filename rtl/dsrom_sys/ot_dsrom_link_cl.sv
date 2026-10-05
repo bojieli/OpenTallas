@@ -44,9 +44,13 @@
 //      out_data / out_last leave from an output register fed from the skid
 //      or, bypassing it, straight from the read register (no added cycle),
 //      so no port output carries logic behind the propagated clock.     0 cyc
-//  (g) The receive-overflow and credit-return checks stay as faults but no
-//      longer gate the state update (a correct link never raises them; the
-//      fault latches either way).
+//  (g) The ACK-window, receive-overflow and credit-return checks stay as
+//      faults but no longer gate the state update (a correct link never
+//      raises them; the fault latches either way).  ACK processing uses no
+//      subtract-compare chain: occ_a = nxt - ack, progress = (ack != una),
+//      an ACK overtaking snd is the window test on (ack - snd), which needs
+//      SEQW >= log2(CREDITS) + 2.  The receiver's in-order test is
+//      precomputed a stage early against exp_seq and exp_seq + 1.
 //
 // fault_code: 1 retry exhausted, 2 ACK beyond the window, 3 receive buffer
 // overflow, 4 replay buffer overflow, 5 credit return beyond the credits
@@ -59,7 +63,7 @@ module ot_dsrom_link_cl #(
     parameter integer CHANNEL_CYCLES = 60,
     parameter integer CREDITS        = 256,   // power of two; replay buffer = CREDITS
     parameter integer DYNAMIC_DELAY  = 0,
-    parameter integer SEQW           = 9,     // > log2(CREDITS)
+    parameter integer SEQW           = 10,    // >= log2(CREDITS) + 2
     parameter integer ERR_PERIOD_FWD = 0,
     parameter integer ERR_PERIOD_REV = 0,
     parameter integer ERR_OFFSET     = 0,
@@ -120,8 +124,8 @@ module ot_dsrom_link_cl #(
     initial begin
         if ((1 << IW) != CREDITS || CREDITS < 2)
             $fatal(1, "ot_dsrom_link_cl: CREDITS=%0d must be a power of two >= 2", CREDITS);
-        if (SEQW < IW + 1)
-            $fatal(1, "ot_dsrom_link_cl: SEQW must exceed log2(CREDITS)");
+        if (SEQW < IW + 2)
+            $fatal(1, "ot_dsrom_link_cl: SEQW must be >= log2(CREDITS) + 2");
         if (CHANNEL_CYCLES < 1 || KEEPALIVE < 1 || MAX_RETRY < 1)
             $fatal(1, "ot_dsrom_link_cl: CHANNEL_CYCLES, KEEPALIVE, MAX_RETRY must be >= 1");
         if (PHY_NUM < 0 || PHY_DEN < 1 || PHY_NUM > FLIT_BYTES * PHY_DEN)
@@ -156,11 +160,11 @@ module ot_dsrom_link_cl #(
     reg  [SEQW-1:0] ra_ack;
     reg  [CW-1:0]   ra_fr;
 
-    wire [SEQW-1:0] d_ack    = ra_ack - una;
+    wire [SEQW-1:0] d_ack    = ra_ack - una;                       // fault check only
     wire [SEQW-1:0] occ_s    = {{(SEQW-IW-1){1'b0}}, occ};
     wire            ack_bad  = ra_ok && (d_ack > occ_s);
-    wire            ack_ok   = ra_ok && !ack_bad;
-    wire            progress = ack_ok && (d_ack != 0);
+    wire            ack_ok   = ra_ok;
+    wire            progress = ra_ok && (ra_ack != una);
     wire [CW-1:0]   d_fr     = ra_fr - fr_seen;
     wire [CW:0]     cred_sum = {1'b0, credits} + {1'b0, d_fr};
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
@@ -194,10 +198,10 @@ module ot_dsrom_link_cl #(
     // ACK overtaking a rewound pointer, decided on snd - una (not snd_l - una): when an ACK lands exactly one
     // past snd in a launch cycle both choices give snd + 1 = ra_ack, so the result equals link_rt's, and the
     // late `launch` only selects the final mux.
-    wire [SEQW-1:0] snd_off = snd - una;
-    wire            ack_skip = ack_ok && (d_ack > snd_off);
-    wire [IW:0]     dk     = ack_ok ? d_ack[IW:0] : {(IW+1){1'b0}};
-    wire [IW:0]     occ_a  = occ - dk;
+    wire [SEQW-1:0] d_sk   = ra_ack - snd;                         // > 0 and inside the half window: ACK past snd
+    wire            ack_skip = ack_ok && (d_sk != 0) && !d_sk[SEQW-1];
+    wire [SEQW-1:0] nmack  = nxt - ra_ack;
+    wire [IW:0]     occ_a  = ack_ok ? nmack[IW:0] : occ;           // = occ - (ack - una), since occ = nxt - una
     // next-state values (the always block assigns these) and the readiness they imply
     wire [IW:0]     occ_n  = accept ? occ_a + 1'b1 : occ_a;
     wire [SEQW-1:0] nxt_n  = accept ? nxt + 1'b1 : nxt;
@@ -213,7 +217,7 @@ module ot_dsrom_link_cl #(
     // overtake snd_n = una_n, so it replays iff occ_n != 0 (occ_n = occ - dk + accept); otherwise only an ongoing
     // replay continues, and it ends when the last outstanding flit relaunches
     wire            last_rp = (snd + 1'b1 == nxt);
-    wire            rpl_n  = (rewind || ack_skip) ? (accept || (occ != dk)) : (replaying && !(rp_go && last_rp));
+    wire            rpl_n  = (rewind || ack_skip) ? (accept || (occ_a != 0)) : (replaying && !(rp_go && last_rp));
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
     wire            rdy_n  = !occ_n[IW] && !rpl_n && pace_ok_n;
 `else
@@ -260,7 +264,7 @@ module ot_dsrom_link_cl #(
     wire [31:0]     x0_crc;
     ot_link_crc32 #(.W(FPW)) u_rx_crc (.d(x0_f[FFW-1:32]), .crc(x0_crc));
     reg  [31:0]     x1_crc;
-    reg             x2_ok;
+    reg             x2_ok, x2_eq;
 `ifdef OT_DSROM_LINK_MUT_NOCRC
     wire            c_crc_ok = 1'b1;
 `else
@@ -281,7 +285,7 @@ module ot_dsrom_link_cl #(
     wire [SEQW-1:0] c_back   = exp_seq - c_seq;
     wire            c_good   = c_v && c_crc_ok;
     wire            c_crcerr = c_v && !c_crc_ok;
-    wire            c_inord  = c_good && (c_diff == 0);
+    wire            c_inord  = c_good && x2_eq;                   // == (c_diff == 0), precomputed
     wire            c_full   = (fill == CRED_C);
     wire            c_acc    = c_inord && !c_full;
     wire            c_ovf    = c_inord && c_full;
@@ -344,7 +348,7 @@ module ot_dsrom_link_cl #(
             rd_v1 <= 1'b0; rd_v2 <= 1'b0; rd_s1 <= 0; rd_s2 <= 0;
             t0_v <= 1'b0; t0_first <= 1'b0; t0_last <= 1'b0; t0_seq <= 0;
             t1_v <= 1'b0;
-            x0_v <= 1'b0; x1_v <= 1'b0; x2_v <= 1'b0; x2_ok <= 1'b0;
+            x0_v <= 1'b0; x1_v <= 1'b0; x2_v <= 1'b0; x2_ok <= 1'b0; x2_eq <= 1'b0;
             exp_seq <= 0; nak_sent <= 1'b0; nak_req <= 1'b0; dup_req <= 1'b0;
             freed <= 0; fill <= 0; cm <= 0; head <= 0; tail <= 0;
             wq_v <= 1'b0; r_v1 <= 1'b0; r_v2 <= 1'b0; sk_cnt <= 0; sk_hd <= 0; sk_tl <= 0; ov <= 1'b0;
@@ -385,6 +389,7 @@ module ot_dsrom_link_cl #(
             x0_v <= fch_v; x0_f <= fch_f;
             x1_v <= x0_v;  x1_f <= x0_f; x1_crc <= x0_crc;
             x2_v <= x1_v;  x2_f <= x1_f; x2_ok <= (x1_crc == x1_f[31:0]);
+            x2_eq <= c_acc ? (x1_f[FFW-1 -: SEQW] == exp_seq + 1'b1) : (x1_f[FFW-1 -: SEQW] == exp_seq);
             if (c_acc) begin
                 exp_seq <= exp_seq + 1'b1;
                 nak_sent <= 1'b0;
@@ -436,6 +441,17 @@ module ot_dsrom_link_cl #(
 `endif
     always @(posedge clk) if (rst_n && (rdy_r !== rdy_direct))
         $fatal(1, "ot_dsrom_link_cl: registered in_ready %b != direct %b at %0t", rdy_r, rdy_direct, $time);
+    // the arithmetic-free ACK forms equal link_rt's on every in-window ACK, and the precomputed in-order test
+    // equals the direct compare
+    wire [SEQW-1:0] snd_off_ref = snd - una;
+    always @(posedge clk) if (rst_n && ra_ok && !ack_bad) begin
+        if (ack_skip !== (d_ack > snd_off_ref))
+            $fatal(1, "ot_dsrom_link_cl: ack_skip mismatch at %0t", $time);
+        if (occ_a !== occ - d_ack[IW:0])
+            $fatal(1, "ot_dsrom_link_cl: occ_a mismatch at %0t", $time);
+    end
+    always @(posedge clk) if (rst_n && x2_v && (x2_eq !== (c_diff == 0)))
+        $fatal(1, "ot_dsrom_link_cl: in-order precompute mismatch at %0t", $time);
 `endif
 
     // status counters (registered increments, split carry)

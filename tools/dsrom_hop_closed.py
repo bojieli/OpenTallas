@@ -42,8 +42,8 @@ FB = 96
 def cases():
     L = H.lanes()
     pn, pd = L["bytes_per_cycle"].numerator, L["bytes_per_cycle"].denominator
-    base = dict(FB=FB, CH=H.CH_LFEC, CHU=H.CH_UCIE, CRED=256, SEQW=9, CREDU=64, SEQWU=8, PNUM=pn, PDEN=pd, MODE=1,
-                BMEM=1)
+    base = dict(FB=FB, CH=H.CH_LFEC, CHU=H.CH_UCIE, CRED=256, SEQW=10, CREDU=256, SEQWU=10, PNUM=pn, PDEN=pd, MODE=1,
+                BMEM=1, UMEM=1)
     return [
         ("hop_cl_halves", base, H.RESIDUAL_B, "HEADLINE stage hop (board legs on the SRAM macro model)", "PASS"),
         ("hop_cl_halves_err", dict(base, ERRF=37, ERRR=29), H.RESIDUAL_B,
@@ -52,7 +52,8 @@ def cases():
         ("hop_cl_halves_draft5", base, H.DRAFT_B, "DSpark draft 5-row hop (204,880 B) at the hardened depth 256",
          "PASS"),
         ("hop_cl_halves_kp4", dict(base, CH=H.CH_KP4), H.RESIDUAL_B, "sensitivity: 209 ns full-KP4 tier", "PASS"),
-        ("hop_cl_halves_flop", dict(base, BMEM=0), H.RESIDUAL_B, "storage-form equivalence: flop arrays", "PASS"),
+        ("hop_cl_halves_flop", dict(base, BMEM=0, UMEM=0), H.RESIDUAL_B, "storage-form equivalence: flop arrays",
+         "PASS"),
         ("neg_nocrc_err", dict(base, ERRF=37, ERRR=29, OT_DSROM_LINK_MUT_NOCRC=1), H.RESIDUAL_B,
          "negative control: receiver ignores the CRC under injected errors -> must FAIL", "FAIL"),
     ]
@@ -99,23 +100,25 @@ def params(credits, seqw, mem):
 
 
 def cmd_screen(a):
+    """Pre-layout screens, flop storage depth 16: the paced board endpoint and the unpaced UCIe-leg endpoint."""
     work = Path(a.work)
-    args = [sys.executable, str(ROOT / "tools/dsrom_reindex_screen.py"), "--top", "ot_dsrom_link_cl",
-            "--period-ps", "833", "--work", str(work / "screen_pre")]
-    for s in ENDPOINT:
-        args += ["--source", s]
-    for k, v in params(16, 5, 0).items():
-        args += ["--param", f"{k}={v}"]
-    subprocess.run(args, check=True, cwd=ROOT)
+    for nm, extra in (("screen_pre", {}), ("screen_pre_ucie", dict(PHY_NUM=0, PHY_DEN=1))):
+        args = [sys.executable, str(ROOT / "tools/dsrom_reindex_screen.py"), "--top", "ot_dsrom_link_cl",
+                "--period-ps", "833", "--work", str(work / nm)]
+        for s in ENDPOINT:
+            args += ["--source", s]
+        for k, v in dict(params(16, 6, 0), **extra).items():
+            args += ["--param", f"{k}={v}"]
+        subprocess.run(args, check=True, cwd=ROOT)
 
 
 CONTEXT_SDC = "physical/dsrom_link/context_io.sdc"
 # routed configurations, both under the in-context I/O constraints of the baseline link-clock record
-ROUTES = {
+ROUTES = {  # the UCIe leg uses the same hardened endpoint (pacer off)
     # the hardened S81 board-leg endpoint at its real storage: CREDITS 256 on 6 ot_sram_1r1w_256x256 macros
-    "hard": dict(credits=256, seqw=9, mem=1),
+    "hard": dict(credits=256, seqw=10, mem=1),
     # like-for-like with results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL (flop storage, 16 credits)
-    "ctx16": dict(credits=16, seqw=5, mem=0),
+    "ctx16": dict(credits=16, seqw=6, mem=0),
 }
 
 
@@ -218,8 +221,9 @@ def physical_cost(work, routes, pre):
                     total_um2=round((std_hard or 0) + 6 * MACRO_UM2, 1),
                     basis="routed hard endpoint (FLIT 96, CREDITS 256): std-cell area of the routed run (incl. CTS and "
                           "hold buffers) + 6 x ot_sram_1r1w_256x256_m2_r2c2 macro outlines")
-    cl_ucie = dict(total_um2=sc("area_ucie64_cl"), basis="ORFS synthesis cell area, ot_dsrom_link_cl FLIT 96 CREDITS 64 "
-                   "flop storage, unpaced (the in-package UCIe leg); pre-CTS, no hold buffers")
+    cl_ucie = dict(total_um2=cl_board["total_um2"], basis="the same hardened endpoint (CREDITS 256 on 6 SRAM macros) "
+                   "with the pacer off (PHY_NUM 0) for the in-package UCIe leg; priced at the routed board endpoint's area "
+                   "(the pacer is a few gates, so this slightly over-prices it)")
     a64 = sc("area_rt64")
     slope = (a64 - RT_A16_UM2) / 48.0
     rt_board = dict(total_um2=round(RT_A16_UM2 + slope * (512 - 16), 1), basis=f"pinned ot_dsrom_link_rt FLIT 64 at the "
@@ -297,6 +301,7 @@ def cmd_record(a):
                wire_stage_cycles=wire, total_cycles=ret_cyc, us=round(ret_cyc / H.CLK * 1e6, 4))
     exact = all(r["as_expected"] for r in runs.values())
     pre = json.loads((work / "screen_pre/screen.json").read_text())
+    pre_u = json.loads((work / "screen_pre_ucie/screen.json").read_text())
     routes = {}
     for nm in ROUTES:
         d = work / f"route_{nm}"
@@ -316,7 +321,8 @@ def cmd_record(a):
                                                      "utilization_fraction", "routed_wirelength_um")})
     ok = lambda r: (r["ss_setup_wns_ps"] is not None and r["ff_hold_wns_ps"] is not None
                     and r["ss_setup_wns_ps"] >= 0 and r["ff_hold_wns_ps"] >= 0)
-    closes = pre["ss_setup_wns_ps"] >= 0 and pre["ff_hold_wns_ps"] >= 0 and all(ok(r) for r in routes.values())
+    closes = (pre["ss_setup_wns_ps"] >= 0 and pre["ff_hold_wns_ps"] >= 0 and pre_u["ss_setup_wns_ps"] >= 0
+              and pre_u["ff_hold_wns_ps"] >= 0 and all(ok(r) for r in routes.values()))
     ct = json.loads((REC / "hop/hop_ct.json").read_text())
     old = json.loads(H.LINKS.read_text())["hop"]
     detail = dict(
@@ -342,7 +348,7 @@ def cmd_record(a):
                      link_ct_rejected=dict(hop_us=ct["hop"]["us"], total_cycles=ct["hop"]["total_cycles"],
                                            draft_hop_us=ct["draft_hop_5row"]["us"],
                                            screen_ss_ps=ct["screen"]["ss_setup_wns_ps"], closes=False)),
-        screen_prelayout=pre,
+        screen_prelayout=pre, screen_prelayout_ucie_leg=pre_u,
         routes=routes, context_sdc=CONTEXT_SDC, macro=MACRO,
         runs=runs, simulator=sim["simulator"], sources=sim["sources"],
         pinned_unchanged={p: H.sha(ROOT / p) for p in ("rtl/dsrom_sys/ot_dsrom_link_rt.sv",
@@ -360,7 +366,8 @@ def cmd_record(a):
                              "(results/rtl/dsrom_recovery_20261004/hop/hop_ct.json screen.baseline_link_rt_same_screen) "
                              "and, routed in context, SS -176.6 ps / FF hold -44.7 ps "
                              "(results/rtl/dsrom_baseline_link_clock_20261004/context_r1_FAIL/verdict.json)"),
-        ss_ff=dict(prelayout=dict(ss_setup_wns_ps=pre["ss_setup_wns_ps"], ff_hold_wns_ps=pre["ff_hold_wns_ps"],
+        ss_ff=dict(prelayout_ucie_leg=dict(ss_setup_wns_ps=pre_u["ss_setup_wns_ps"], ff_hold_wns_ps=pre_u["ff_hold_wns_ps"]),
+                   prelayout=dict(ss_setup_wns_ps=pre["ss_setup_wns_ps"], ff_hold_wns_ps=pre["ff_hold_wns_ps"],
                                   basis="ORFS yosys/abc CORNER=WC (ADDER_MAP_FILE off), OpenSTA SS/FF, ideal clock, "
                                         "I/O false-pathed; flop storage depth 16"),
                    routed_in_context={nm: dict(ss_setup_wns_ps=r["ss_setup_wns_ps"], ff_hold_wns_ps=r["ff_hold_wns_ps"],
